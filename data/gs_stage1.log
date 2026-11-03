@@ -1,0 +1,43 @@
+lock acquired after 510s
+=== eval seize_h ===
+gs_seize_h 1000 1 7539.0 4328.74 3210.26 a_ms=31.07 trig=22
+gs_seize_h 1000 0 6996.91 4226.57 2770.34 a_ms=84.64 trig=22
+gs_seize_h 1001 0 9662.01 5914.73 3747.28 a_ms=72.85 trig=119
+gs_seize_h 1001 1 7618.08 7380.53 237.55 a_ms=42.33 trig=120
+=== eval guard_h ===
+gs_guard_h 1000 1 7539.0 4328.74 3210.26 a_ms=36.17 trig=22
+gs_guard_h 1000 0 6996.91 4226.57 2770.34 a_ms=36.63 trig=22
+gs_guard_h 1001 0 9662.01 5914.73 3747.28 a_ms=23.82 trig=119
+gs_guard_h 1001 1 7618.08 7380.53 237.55 a_ms=27.55 trig=120
+=== eval seize_base ===
+gs_seize_base 1000 0 6027.88 6482.11 -454.23 a_ms=21.83 trig=22
+gs_seize_base 1000 1 6482.11 6027.88 454.23 a_ms=24.4 trig=22
+gs_seize_base 1001 1 6516.54 7238.05 -721.51 a_ms=24.61 trig=None
+gs_seize_base 1001 0 6373.54 5830.04 543.5 a_ms=24.97 trig=None
+=== eval guard_base ===
+gs_guard_base 1000 1 3616.33 4369.3 -752.97 a_ms=19.63 trig=22
+gs_guard_base 1000 0 4289.16 5676.02 -1386.86 a_ms=23.59 trig=22
+gs_guard_base 1001 1 6516.54 7238.05 -721.51 a_ms=25.28 trig=None
+gs_guard_base 1001 0 6373.54 5830.04 543.5 a_ms=28.96 trig=None
+=== record traces ===
+recording 16 games for tags ['gs_seize_h', 'gs_guard_h', 'gs_seize_base', 'gs_guard_base']
+gs_seize_h seed1000 side1: rerun 7539.00:4328.74 vs eval 7539.00:4328.74 diff +0.00/+0.00 OK
+gs_seize_h seed1000 side0: rerun 6996.91:4226.57 vs eval 6996.91:4226.57 diff +0.00/+0.00 OK
+gs_seize_h seed1001 side0: rerun 9662.01:5914.73 vs eval 9662.01:5914.73 diff +0.00/+0.00 OK
+gs_seize_h seed1001 side1: rerun 7618.08:7380.53 vs eval 7618.08:7380.53 diff +0.00/+0.00 OK
+gs_guard_h seed1000 side1: rerun 7539.00:4328.74 vs eval 7539.00:4328.74 diff +0.00/+0.00 OK
+gs_guard_h seed1000 side0: rerun 6996.91:4226.57 vs eval 6996.91:4226.57 diff +0.00/+0.00 OK
+gs_guard_h seed1001 side1: rerun 7618.08:7380.53 vs eval 7618.08:7380.53 diff +0.00/+0.00 OK
+gs_guard_h seed1001 side0: rerun 9662.01:5914.73 vs eval 9662.01:5914.73 diff +0.00/+0.00 OK
+gs_seize_base seed1000 side0: rerun 6027.88:6482.11 vs eval 6027.88:6482.11 diff +0.00/+0.00 OK
+gs_seize_base seed1000 side1: rerun 6482.11:6027.88 vs eval 6482.11:6027.88 diff +0.00/+0.00 OK
+gs_seize_base seed1001 side1: rerun 6516.54:7238.05 vs eval 6516.54:7238.05 diff +0.00/+0.00 OK
+gs_guard_base seed1000 side1: rerun 3616.33:4369.30 vs eval 3616.33:4369.30 diff +0.00/+0.00 OK
+gs_seize_base seed1001 side0: rerun 6373.54:5830.04 vs eval 6373.54:5830.04 diff +0.00/+0.00 OK
+gs_guard_base seed1001 side1: rerun 6516.54:7238.05 vs eval 6516.54:7238.05 diff +0.00/+0.00 OK
+gs_guard_base seed1000 side0: rerun 4289.16:5676.02 vs eval 4289.16:5676.02 diff +0.00/+0.00 OK
+gs_guard_base seed1001 side0: rerun 6373.54:5830.04 vs eval 6373.54:5830.04 diff +0.00/+0.00 OK
+
+16/16 games reproduce the eval final scores exactly (0.00).
+INDEX.md GS section appended.
+=== GS STAGE1 DONE ===

@@ -1,0 +1,226 @@
+seed1001 side1: cash 7207.44:4852.41 plants [26, 16] income [3245.1, 681.0]
+seed1000 side1: cash 7203.67:4530.65 plants [26, 16] income [2491.9, 808.0]
+seed1000 side0: cash 4339.54:8600.11 plants [20, 24] income [755.8, 3230.9]
+seed1001 side0: cash 3664.66:7919.16 plants [13, 29] income [600.8, 3310.1]
+seed1003 side0: cash 4847.04:9006.69 plants [9, 30] income [510.6, 3460.0]
+seed1002 side1: cash 8943.61:4394.58 plants [29, 18] income [3564.0, 831.1]
+seed1003 side1: cash 8497.87:4507.72 plants [24, 20] income [3644.9, 1177.9]
+seed1002 side0: cash 5022.84:9544.97 plants [17, 31] income [1126.1, 4208.8]
+CHECK {"seed": 1000, "side": 0, "cash_diff": [0.0, 0.0], "income_diff": [0.0, 0.0], "plant_diff": [0, 0], "seize_diff": [0, 0], "ok": true}
+CHECK {"seed": 1000, "side": 1, "cash_diff": [0.0, 0.0], "income_diff": [0.0, 0.0], "plant_diff": [0, 0], "seize_diff": [0, 0], "ok": true}
+CHECK {"seed": 1001, "side": 0, "cash_diff": [0.0, 0.0], "income_diff": [0.0, 0.0], "plant_diff": [0, 0], "seize_diff": [0, 0], "ok": true}
+CHECK {"seed": 1001, "side": 1, "cash_diff": [0.0, 0.0], "income_diff": [0.0, 0.0], "plant_diff": [0, 0], "seize_diff": [0, 0], "ok": true}
+CHECK {"seed": 1002, "side": 0, "cash_diff": [0.0, 0.0], "income_diff": [0.0, 0.0], "plant_diff": [0, 0], "seize_diff": [0, 0], "ok": true}
+CHECK {"seed": 1002, "side": 1, "cash_diff": [0.0, 0.0], "income_diff": [0.0, 0.0], "plant_diff": [0, 0], "seize_diff": [0, 0], "ok": true}
+CHECK {"seed": 1003, "side": 0, "cash_diff": [0.0, 0.0], "income_diff": [0.0, 0.0], "plant_diff": [0, 0], "seize_diff": [0, 0], "ok": true}
+CHECK {"seed": 1003, "side": 1, "cash_diff": [0.0, 0.0], "income_diff": [0.0, 0.0], "plant_diff": [0, 0], "seize_diff": [0, 0], "ok": true}
+
+===== PROFILE us (policy_v0_4) =====
+{
+ "n_planted": 129,
+ "plant_step_buckets_50": [
+  3,
+  29,
+  41,
+  37,
+  17,
+  2,
+  0
+ ],
+ "d_own_base": {
+  "n": 129,
+  "mean": 4.7,
+  "median": 5
+ },
+ "d_enemy_base": {
+  "n": 129,
+  "mean": 5.2,
+  "median": 5
+ },
+ "cell_carbon": {
+  "n": 129,
+  "mean": 7.0,
+  "median": 3.1
+ },
+ "nb4_sum": {
+  "n": 129,
+  "mean": 95.6,
+  "median": 89.9
+ },
+ "lifetime": {
+  "n": 129,
+  "mean": 49.7,
+  "median": 50
+ },
+ "lifetime_buckets": {
+  "<10": 0,
+  "10-24": 0,
+  "25-49": 2,
+  "full50": 127,
+  "censored_alive_at_300": 2
+ },
+ "income_to_planter": {
+  "n": 129,
+  "mean": 44.8,
+  "median": 40.2
+ },
+ "income_buckets": {
+  "0": 0,
+  "0-25": 28,
+  "25-75": 89,
+  "75-150": 11,
+  "150+": 1
+ },
+ "seized_ever_rate": 0.558,
+ "mean_flips": 0.81,
+ "time_to_first_seize": {
+  "n": 72,
+  "mean": 11.1,
+  "median": 10.0
+ },
+ "income_total_of_my_trees": 9561.9,
+ "income_kept_share": 0.604,
+ "income_lost_to_enemy": 3784.8,
+ "xtab_d<=3": {
+  "n": 43,
+  "income_mean": 41.0,
+  "seized_rate": 0.49,
+  "lifetime_mean": 49.6
+ },
+ "xtab_d4-6": {
+  "n": 56,
+  "income_mean": 43.0,
+  "seized_rate": 0.62,
+  "lifetime_mean": 49.7
+ },
+ "xtab_d>=7": {
+  "n": 30,
+  "income_mean": 53.6,
+  "seized_rate": 0.53,
+  "lifetime_mean": 50
+ },
+ "xtab_nb4_low": {
+  "n": 43,
+  "income_mean": 38.3,
+  "seized_rate": 0.47,
+  "lifetime_mean": 49.2
+ },
+ "xtab_nb4_mid": {
+  "n": 43,
+  "income_mean": 43.2,
+  "seized_rate": 0.6,
+  "lifetime_mean": 50
+ },
+ "xtab_nb4_high": {
+  "n": 43,
+  "income_mean": 52.9,
+  "seized_rate": 0.6,
+  "lifetime_mean": 50
+ }
+}
+
+===== PROFILE juzi =====
+{
+ "n_planted": 219,
+ "plant_step_buckets_50": [
+  106,
+  32,
+  12,
+  9,
+  23,
+  37,
+  0
+ ],
+ "d_own_base": {
+  "n": 219,
+  "mean": 4.9,
+  "median": 5
+ },
+ "d_enemy_base": {
+  "n": 219,
+  "mean": 5.2,
+  "median": 5
+ },
+ "cell_carbon": {
+  "n": 219,
+  "mean": 13.6,
+  "median": 0.3
+ },
+ "nb4_sum": {
+  "n": 219,
+  "mean": 143.1,
+  "median": 130.1
+ },
+ "lifetime": {
+  "n": 219,
+  "mean": 46.3,
+  "median": 50
+ },
+ "lifetime_buckets": {
+  "<10": 0,
+  "10-24": 19,
+  "25-49": 18,
+  "full50": 182,
+  "censored_alive_at_300": 37
+ },
+ "income_to_planter": {
+  "n": 219,
+  "mean": 106.7,
+  "median": 98.0
+ },
+ "income_buckets": {
+  "0": 0,
+  "0-25": 1,
+  "25-75": 63,
+  "75-150": 108,
+  "150+": 47
+ },
+ "seized_ever_rate": 0.087,
+ "mean_flips": 0.15,
+ "time_to_first_seize": {
+  "n": 19,
+  "mean": 16.3,
+  "median": 16
+ },
+ "income_total_of_my_trees": 24084.9,
+ "income_kept_share": 0.97,
+ "income_lost_to_enemy": 713.9,
+ "xtab_d<=3": {
+  "n": 48,
+  "income_mean": 100.3,
+  "seized_rate": 0.06,
+  "lifetime_mean": 46.9
+ },
+ "xtab_d4-6": {
+  "n": 137,
+  "income_mean": 108.7,
+  "seized_rate": 0.1,
+  "lifetime_mean": 46.4
+ },
+ "xtab_d>=7": {
+  "n": 34,
+  "income_mean": 107.8,
+  "seized_rate": 0.06,
+  "lifetime_mean": 44.9
+ },
+ "xtab_nb4_low": {
+  "n": 73,
+  "income_mean": 73.8,
+  "seized_rate": 0.05,
+  "lifetime_mean": 41.1
+ },
+ "xtab_nb4_mid": {
+  "n": 73,
+  "income_mean": 98.9,
+  "seized_rate": 0.03,
+  "lifetime_mean": 47.7
+ },
+ "xtab_nb4_high": {
+  "n": 73,
+  "income_mean": 147.4,
+  "seized_rate": 0.18,
+  "lifetime_mean": 50
+ }
+}
+
+checks ok: 8/8

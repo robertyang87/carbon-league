@@ -1,0 +1,49 @@
+[worker_smoke] train=387832 val=94692 label counts=[181895.0, 58887.0, 48201.0, 54349.0, 44500.0] cw=[0.5847060680389404, 1.0276334285736084, 1.1358472108840942, 1.0696758031845093, 1.182137370109558]
+/home/hatch/workspace/carbon-league/train_distill.py:94: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss) * len(idx)
+[worker_smoke] ep0 train_ce=1.1816 val_ce=1.0097 val_top1=0.5958
+[worker_smoke] ep1 train_ce=1.0328 val_ce=0.9727 val_top1=0.6124
+[worker_smoke] train=387832 val=94692 label counts=[181895.0, 58887.0, 48201.0, 54349.0, 44500.0] cw=[0.5847060680389404, 1.0276334285736084, 1.1358472108840942, 1.0696758031845093, 1.182137370109558]
+[worker_smoke] resumed from checkpoint at ep2 (best ep1 val_ce=0.9727)
+/home/hatch/workspace/carbon-league/train_distill.py:94: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss) * len(idx)
+[worker_smoke] ep2 train_ce=1.0050 val_ce=0.9556 val_top1=0.6201
+[worker_smoke] ep3 train_ce=0.9906 val_ce=0.9505 val_top1=0.6230
+[base_smoke] train=86400 val=21600 label counts=[83347.0, 1845.0, 1208.0] cw=[0.18717741966247559, 1.2580567598342896, 1.5547658205032349]
+[base_smoke] ep0 train_ce=0.1793 val_ce=0.1516 val_top1=0.9632
+[base_smoke] ep1 train_ce=0.1365 val_ce=0.1367 val_top1=0.9632
+[base_smoke] ep2 train_ce=0.1284 val_ce=0.1318 val_top1=0.9657
+[base_smoke] ep3 train_ce=0.1237 val_ce=0.1284 val_top1=0.9565
+[base_smoke] ep4 train_ce=0.1211 val_ce=0.1268 val_top1=0.9540
+[base_smoke] ep5 train_ce=0.1200 val_ce=0.1263 val_top1=0.9525
+{
+ "worker": {
+  "best_epoch": 3,
+  "val_ce": 0.9504721970309001,
+  "val_top1": 0.6229565327588392,
+  "val_top1_by_phase": {
+   "0": 0.5113539769277474,
+   "1": 0.6416816220550613,
+   "2": 0.6211449866486692
+  },
+  "val_top1_by_state": {
+   "-1": 0.6270661157024794,
+   "0": 0.5736345689844264,
+   "1": 0.6440974005959108
+  },
+  "val_top1_by_type": {
+   "0": 0.6682159502848265,
+   "1": 0.4226449690579876
+  }
+ },
+ "base": {
+  "best_epoch": 5,
+  "val_ce": 0.1263147297611943,
+  "val_top1": 0.9525462962962963
+ },
+ "weights_bytes": 652378,
+ "wall_sec": 49.9
+}
+wrote /home/hatch/workspace/carbon-league/distilled_v0_weights.npz (652378 bytes)

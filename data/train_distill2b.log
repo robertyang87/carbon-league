@@ -1,0 +1,67 @@
+[worker] train=396127 val=94692 label counts=[182216.0, 61197.0, 50238.0, 56851.0, 45625.0] cw=[0.593910813331604, 1.0248243808746338, 1.1310930252075195, 1.063274621963501, 1.1868971586227417]
+/home/hatch/workspace/carbon-league/train_distill.py:106: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss) * len(idx)
+[worker] ep0 train_ce=1.1330 val_ce=0.9722 val_top1=0.6044
+[worker] ep1 train_ce=0.9557 val_ce=0.9132 val_top1=0.6306
+[worker] ep2 train_ce=0.8739 val_ce=0.8681 val_top1=0.6469
+[worker] ep3 train_ce=0.8007 val_ce=0.8286 val_top1=0.6693
+[worker] ep4 train_ce=0.7467 val_ce=0.8093 val_top1=0.6735
+[worker] ep5 train_ce=0.7105 val_ce=0.8009 val_top1=0.6807
+[worker] ep6 train_ce=0.6841 val_ce=0.7906 val_top1=0.6857
+[worker] ep7 train_ce=0.6625 val_ce=0.7973 val_top1=0.6796
+[worker] ep8 train_ce=0.6456 val_ce=0.7952 val_top1=0.6819
+[worker] ep9 train_ce=0.6316 val_ce=0.7932 val_top1=0.6852
+[worker] ep10 train_ce=0.6193 val_ce=0.7964 val_top1=0.6832
+[worker] ep11 train_ce=0.6098 val_ce=0.7973 val_top1=0.6860
+[worker] early stop at ep11 (best ep6)
+[base] train=108000 val=21600 label counts=[104830.0, 1923.0, 1247.0] cw=[0.02149312198162079, 1.1716712713241577, 1.8068355321884155]
+[base] ep0 train_ce=0.0554 val_ce=0.0531 val_top1=0.8119
+[base] ep1 train_ce=0.0353 val_ce=0.0402 val_top1=0.8415
+[base] ep2 train_ce=0.0275 val_ce=0.0351 val_top1=0.8626
+[base] ep3 train_ce=0.0224 val_ce=0.0321 val_top1=0.8800
+[base] ep4 train_ce=0.0188 val_ce=0.0296 val_top1=0.8880
+[base] ep5 train_ce=0.0161 val_ce=0.0285 val_top1=0.8892
+[base] ep6 train_ce=0.0142 val_ce=0.0294 val_top1=0.9072
+[base] ep7 train_ce=0.0126 val_ce=0.0281 val_top1=0.8894
+[base] ep8 train_ce=0.0113 val_ce=0.0291 val_top1=0.8931
+[base] ep9 train_ce=0.0103 val_ce=0.0296 val_top1=0.8951
+[base] ep10 train_ce=0.0093 val_ce=0.0307 val_top1=0.9020
+[base] ep11 train_ce=0.0087 val_ce=0.0308 val_top1=0.8988
+[base] ep12 train_ce=0.0081 val_ce=0.0328 val_top1=0.9085
+[base] early stop at ep12 (best ep7)
+{
+ "worker": {
+  "best_epoch": 6,
+  "val_ce": 0.7906222443553838,
+  "val_top1": 0.6856967853672961,
+  "val_top1_by_phase": {
+   "0": 0.5922282938676381,
+   "1": 0.7085608461567834,
+   "2": 0.6731418175415945
+  },
+  "val_top1_by_state": {
+   "-1": 0.6766098484848485,
+   "0": 0.6503180522044308,
+   "1": 0.7066063906298161
+  },
+  "val_top1_by_type": {
+   "0": 0.7195365095805282,
+   "1": 0.5359271143708457
+  }
+ },
+ "base": {
+  "best_epoch": 7,
+  "val_ce": 0.028124645374439382,
+  "val_top1": 0.8893981481481481,
+  "val_recall_per_class": {
+   "0": 0.8911800048065369,
+   "1": 0.8255578093306288,
+   "2": 0.8708609271523179
+  }
+ },
+ "weights_bytes": 652378,
+ "wall_sec": 578.9,
+ "dataset": "/home/hatch/workspace/carbon-league/bc_data/distill_dataset_dagger.npz"
+}
+wrote /home/hatch/workspace/carbon-league/distilled_v1_weights.npz (652378 bytes)

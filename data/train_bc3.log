@@ -1,0 +1,28 @@
+featurized 6877 decision points in 17.9s
+worker samples: 62566 (train 49060, val 13506)
+base samples:   13754 (train 10764, val 2990)
+worker class weights: [0.76 1.06 1.12 1.1  1.15]
+  early stop at epoch 18
+worker val top-1: 0.5545
+  collector: acc 0.5725  stay-baseline 0.4244  random 0.2000  n=11297
+  planter: acc 0.4622  stay-baseline 0.1086  random 0.2000  n=2209
+base class weights: [ 0.35 12.55 13.  ] train class counts: [10258.   286.   220.]
+  early stop at epoch 27
+base val top-1: 0.9428  always-none baseline: 0.9592
+  RECCOLLECTOR: recall 0.7600  n=75
+  RECPLANTER: recall 0.5957  n=47
+saved shadow_weights.npz + shadow_train_metrics.json
+{
+ "worker_collector_acc": 0.572541382667965,
+ "worker_collector_stay_baseline": 0.4244489687527662,
+ "worker_planter_acc": 0.4622000905387053,
+ "worker_planter_stay_baseline": 0.1086464463558171,
+ "worker_val_acc": 0.554494321346283,
+ "worker_val_stay_baseline": 0.3727972752850585,
+ "base_RECCOLLECTOR_recall": 0.76,
+ "base_RECPLANTER_recall": 0.5957446808510638,
+ "base_val_acc": 0.9428093433380127,
+ "base_val_none_baseline": 0.9591973244147157,
+ "base_val_pred_positive_rate": 0.08494983277591973,
+ "base_val_true_positive_rate": 0.04080267558528428
+}

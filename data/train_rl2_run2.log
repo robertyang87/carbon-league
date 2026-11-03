@@ -1,0 +1,48 @@
+/home/hatch/workspace/carbon-league/rl2_common.py:45: RuntimeWarning: invalid value encountered in cast
+  h = h @ weights[f"{prefix}W{i}"].T + weights[f"{prefix}b{i}"]
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/concurrent/futures/process.py", line 263, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/process.py", line 212, in _process_chunk
+    return [fn(*args) for args in chunk]
+            ^^^^^^^^^
+  File "/home/hatch/workspace/carbon-league/train_rl2.py", line 375, in _rollout_batch
+    out.append(_rollout_game2(wnet, bnet, job, snap_weights))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/carbon-league/train_rl2.py", line 277, in _rollout_game2
+    _r = opp_actor.act_canonical(
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/carbon-league/rl2_common.py", line 309, in act_canonical
+    acts, masks, fb = sequential_sample(
+                      ^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/carbon-league/rl2_common.py", line 124, in sequential_sample
+    a = int(rng.choice(5, p=pr))
+            ^^^^^^^^^^^^^^^^^^^
+  File "numpy/random/_generator.pyx", line 895, in numpy.random._generator.Generator.choice
+ValueError: Probabilities contain NaN
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/hatch/workspace/carbon-league/train_rl2.py", line 679, in <module>
+    main()
+  File "/home/hatch/workspace/carbon-league/train_rl2.py", line 575, in main
+    for batch in ex.map(_rollout_batch, tasks):
+  File "/usr/lib/python3.12/concurrent/futures/process.py", line 642, in _chain_from_iterable_of_lists
+    for element in iterable:
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+ValueError: Probabilities contain NaN

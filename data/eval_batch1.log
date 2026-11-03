@@ -1,0 +1,35 @@
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/concurrent/futures/process.py", line 263, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/carbon-league/eval_v1.py", line 91, in run_pair
+    return [play_game(seed, 0, opp_kind), play_game(seed, 1, opp_kind)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/carbon-league/eval_v1.py", line 53, in play_game
+    opp = load_agent_fn(os.path.join(HERE, f"{opp_kind}.py"), opp_kind)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/carbon-league/eval_v1.py", line 43, in load_agent_fn
+    s.loader.exec_module(m)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/hatch/workspace/carbon-league/reference_juzi.py", line 6, in <module>
+    from zerosum_env.envs.carbon.helpers import RecrtCenterAction, WorkerAction, Board
+ModuleNotFoundError: No module named 'zerosum_env'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/hatch/workspace/carbon-league/eval_v1.py", line 111, in <module>
+    main()
+  File "/home/hatch/workspace/carbon-league/eval_v1.py", line 103, in main
+    for res in fut.result():
+               ^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+ModuleNotFoundError: No module named 'zerosum_env'
