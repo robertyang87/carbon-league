@@ -109,18 +109,36 @@ def make_agent(weights=None):
         cash = info["cash"]
         nworkers = len(mine[2])
         cap = _cfg(config, "workerLimit", 10)
+        n_pl = sum(1 for w in mine[2].values() if w[2] != "COLLECTOR")
         for i, (uid, k, pos) in enumerate(units):
             if k != 2:
                 continue
-            lg = logits[i, 5:8]
-            a = int(np.argmax(lg))
-            if a == 0 or pos in claimed or cash < 30 or nworkers >= cap:
+            a = recruit_choice(logits[i, 5:8], cash, nworkers, cap, n_pl, info["tree_price"],
+                               obs["step"], pos in claimed)
+            if a == 0:
                 continue
             acts[uid] = F.BASE_ACTS[a]
             cash -= 30; nworkers += 1; claimed.add(pos)
+            if a == 2:
+                n_pl += 1
         return acts
 
     return agent
+
+
+RECRUIT_UNTIL = 285   # steps; later recruits cannot pay back
+
+
+def recruit_choice(lg, cash, nworkers, cap, n_pl, tree_price, step, blocked):
+    """Rule-gated recruitment (BC argmax almost never recruits: class imbalance).
+    Recruit whenever a slot is free and cash covers the cost plus a planting
+    reserve while we field planters; the policy picks collector vs planter."""
+    if blocked or nworkers >= cap or step >= RECRUIT_UNTIL:
+        return 0
+    reserve = tree_price if n_pl > 0 else 0.0
+    if cash < 30 + min(reserve, 60.0):
+        return 0
+    return 1 if lg[1] >= lg[2] else 2
 
 
 _AGENT = None
