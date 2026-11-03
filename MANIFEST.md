@@ -891,3 +891,12 @@
 | 凭据/token/密钥类文件 | — | 0 | 源目录扫描（排除 venv）未发现任何凭据文件；GitHub 凭据由连接器托管，从不落盘进本目录 |
 
 注：`data/traces/` 本体（161 MB、1,390 个文件，单文件均 <1 MB）按体积规则（分类总计 <300 MB）进仓；案 C 语料生产新产生的留痕（tag casec_corpus）在快照时已部分写入 traces/，以本快照为准。
+
+## 批次与刷新记录
+
+- **批次合并说明**：原定两批（第一批 code/reports/README/小结果、第二批 data 大头）因全量推送一次完成，合并为一批（首个内容提交，含 code/、reports/、data/ 全部 2,262 个文件）。env_src 按原始规格整目录进仓（含 demo 媒体），未按批次方案剔除。
+- **增量刷新（2026-11-03 21:40 CST，第二个内容提交）**：20:10 快照后案 C 落了 G1 裁决（21:13）与 P1.5 结案（21:23），本次从源目录重拷全部更新过的 `casec_*` 文件，保证报告为带 §7–§8 的结案版：
+  - 更新（5）：`reports/casec_report.md`（＋§7.1–§7.9 G1 判负、§8 P1.5 判负结案）、`code/casec_policy.py`（承诺锁开关）、`code/casec_ckpt/casec_bc_weights.npz`、`data/casec_bc_train.log`、`data/traces/INDEX.md`。
+  - 新增（23）：`code/casec_g1_lock_probe.py`；`data/` 下 `casec_bc_best_eval.json`、`casec_bc_train_results.json`、`casec_g1_gate.json`、`casec_g1_lock_gate.json`、`casec_g1_lock_results.jsonl`、`casec_g1_results.jsonl`、`casec_g1_lock_off.log`、`casec_g1_lock_on.log`、`weights/casec_bc_weights.npz`、`casec_corpus/manifest.json`（语料清单，380 KB；语料本体仍未进仓）；`data/traces/` 下 G1 与 P1.5 的 12 个留痕文件（`casec_policy_*` 4＋`casec_lock_off_*` 4＋`casec_lock_on_*` 4）。
+  - README 案 C 状态行已同步改为结案口径。
+  - 刷新后合计：**2,285 个文件，约 266.3 MB**（文件数为磁盘读回；字节量级含本文件自身编辑的 ±数 KB 出入）。
