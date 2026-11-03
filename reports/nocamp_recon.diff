@@ -1,0 +1,29 @@
+--- base_v53.py	2026-11-03 01:30:59.232405627 +0000
++++ nocamp_recon.py	2026-11-03 18:23:40.406667558 +0000
+@@ -1,3 +1,8 @@
++# nocamp_recon.py -- LOCAL RECONSTRUCTION (not a site download).
++# Recipe applied to base_v53.py (= reference_claude_opus_v53.py, md5 1779b453672f5b85d6df1cf473e64ab0):
++# soft_w 1.0 -> 0.0; campers 4 -> 1; camp_from 6 -> 12. Site original
++# claude-opus-v53-nocamp (id aa758d5a42687ff7aff528cf694095c9, author cjc_de_ds)
++# could not be fetched in this run; see nocamp_recon_provenance.md.
+ """Carbon League strategy.
+ 
+ Design (derived from the environment rules, not from other agents' code):
+@@ -271,7 +276,7 @@
+ PARAMS = dict(
+     H=12, S=5, gamma=0.92,
+     rho=0.02, rho_early=0.05, mu=0.05, mu_early=0.3, term_k=1.0,
+-    tie_cost=12.0, soft_w=1.0,
++    tie_cost=12.0, soft_w=0.0,
+     kill_c=40.0, kill_p=45.0,
+     info_c=2.0, info_p=3.0,
+     open="CP", planters=1, planters_late=1, planter_from=4,
+@@ -279,7 +284,7 @@
+     seize_min=8.0, pdisc=0.85, pp_cost=10.0, pp_stand=28.0, lunge=1.0,
+     guard_w=0.5, guard_min=20.0,
+     recruit_until=40, endgame=14,
+-    campers=4, camp_from=6, camp_min=0, camp_div=99, camp_decay=80, eval_T=30, eff_hi=0.6, eff_lo=0.35, eff_rate=2.3, reprobe=0, kill_win=30, kill_n=3, lost_max=6, probe_n=0, probe_T=12, probe_kill=2, probe_win=20, camp_orbit=2, orbit_kill=3, orbit_win=12, r2_hi=0.75, r2_lo=0.45, r2_kill=0.6, siege_hold=10, siege_break=1, sb_T=20, sb_carry=1500.0, sb_off=500.0, sb_gate=1, sb_recall=1, sb_guards=2, sb_gap=25, sb_gap_p=60, retire_entrees=2, hunt=1, hunt_min=150.0, hunt_R=5, hunt_n=3, hunt_hmax=1e9, hunt_camp=0, hunt_Rc=5, hunt_targets=3, hunt_pat=8, hunt_cool=15, hunt_fw=0.5, hunt_fcap=250.0, hunt_sw=1.0, hunt_scap=600.0, hunt_fmin=0.99, rovers=0, rover_d=3, rover_from=8, hunt_ct=1, hunt_ct_d=2, hunt_ct_r=4, hunt_gate=99, hunt_ct_solo=1, hunt_tab=1, hunt_eps=0.3, hunt_vmin=0.25, hunt_tabfile=None, camp_late=60, camp_from_late=3, recruit_post=20, shadows=2, shadow_pen=3.0, shadow_minfree=2, lone=1, lone_R=5, lone_stick=10.0, camp_occ=0.0, mark=0, mark_min=40.0, mark_R=4, mark_reach=6, mark_n=4, mark_chase=0, shadow_post_d=0, shadow_swap=1, shadow_hyst=2, shadow_from=8, shadow_start=20, shadow_trees=0, shadow_end=20, run=1, run_mode=3, run_ev=1.0, run_small=120.0, run_T2=8, run_n0=6, run_b1=150.0, run_b2=300.0, run_T=30, run_k0=0.25, run_k1=0.05, run_sg=15, p_extra=0, p_extra_trees=5, orbit_tie=40.0, sb_static=1, sb_still=3, carry_ok=100.0, def_always=0, gate=1, gate_min=60.0, gate_w=0.5, gate_cap=150.0, no_p_T=60, predict=1, siege_spawn=1, siege_T=3, siege_carry=150.0, camper_max=20.0, retire_stock=2400.0, max_units=10, retire_from=85, retire_keep=0, retire_min_left=50, early_planters=2, camp_lunge=0.0, lunge_floor=0.0, camp_end=4, camp_end_from=28, camp_planters=1, displace=1, avoid1=0.5, avoid2=0.15, sweep_w=0.3, sweep_base=10.0, sweep_max=80.0, camp_tie=40.0, camp_w=30.0, camp_keep=100.0, camp_until=0, base_def=20.0,
++    campers=1, camp_from=12, camp_min=0, camp_div=99, camp_decay=80, eval_T=30, eff_hi=0.6, eff_lo=0.35, eff_rate=2.3, reprobe=0, kill_win=30, kill_n=3, lost_max=6, probe_n=0, probe_T=12, probe_kill=2, probe_win=20, camp_orbit=2, orbit_kill=3, orbit_win=12, r2_hi=0.75, r2_lo=0.45, r2_kill=0.6, siege_hold=10, siege_break=1, sb_T=20, sb_carry=1500.0, sb_off=500.0, sb_gate=1, sb_recall=1, sb_guards=2, sb_gap=25, sb_gap_p=60, retire_entrees=2, hunt=1, hunt_min=150.0, hunt_R=5, hunt_n=3, hunt_hmax=1e9, hunt_camp=0, hunt_Rc=5, hunt_targets=3, hunt_pat=8, hunt_cool=15, hunt_fw=0.5, hunt_fcap=250.0, hunt_sw=1.0, hunt_scap=600.0, hunt_fmin=0.99, rovers=0, rover_d=3, rover_from=8, hunt_ct=1, hunt_ct_d=2, hunt_ct_r=4, hunt_gate=99, hunt_ct_solo=1, hunt_tab=1, hunt_eps=0.3, hunt_vmin=0.25, hunt_tabfile=None, camp_late=60, camp_from_late=3, recruit_post=20, shadows=2, shadow_pen=3.0, shadow_minfree=2, lone=1, lone_R=5, lone_stick=10.0, camp_occ=0.0, mark=0, mark_min=40.0, mark_R=4, mark_reach=6, mark_n=4, mark_chase=0, shadow_post_d=0, shadow_swap=1, shadow_hyst=2, shadow_from=8, shadow_start=20, shadow_trees=0, shadow_end=20, run=1, run_mode=3, run_ev=1.0, run_small=120.0, run_T2=8, run_n0=6, run_b1=150.0, run_b2=300.0, run_T=30, run_k0=0.25, run_k1=0.05, run_sg=15, p_extra=0, p_extra_trees=5, orbit_tie=40.0, sb_static=1, sb_still=3, carry_ok=100.0, def_always=0, gate=1, gate_min=60.0, gate_w=0.5, gate_cap=150.0, no_p_T=60, predict=1, siege_spawn=1, siege_T=3, siege_carry=150.0, camper_max=20.0, retire_stock=2400.0, max_units=10, retire_from=85, retire_keep=0, retire_min_left=50, early_planters=2, camp_lunge=0.0, lunge_floor=0.0, camp_end=4, camp_end_from=28, camp_planters=1, displace=1, avoid1=0.5, avoid2=0.15, sweep_w=0.3, sweep_base=10.0, sweep_max=80.0, camp_tie=40.0, camp_w=30.0, camp_keep=100.0, camp_until=0, base_def=20.0,
+ )
+ 
+ 

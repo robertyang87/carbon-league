@@ -16,6 +16,9 @@
 2. **NN 旧线（已封存）**：逐工人独立 MLP + PPO 路线。冠军 = `code/caseb_rl_ckpt/policy_aux_seg2_zero.py`（权重 `aux_seg2_zero.npz`），固定探针合并 16 局 **−9,615.8**（对 base/fork 池），登记于 `code/caseb_rl_ckpt/state_champion.json`。蒸馏权重在 `code/distilled_v1_weights.npz`（652 KB）。五种机制级干预已逐一预注册证伪、方向关闭，不要重试：威胁特征入策略（消融净贡献 −1,391）、辅助头预热＋威胁列高 LR（转移路径毁生产行为）、预测器转硬盾（丢碳降幅 −7.7，未达 ≥300 判据）、教师种植代行（树收入 2.06× 但分差 −1,356，被阵型税吃掉）、停留信用价格塑形（税收先行）。全过程见 `reports/caseb_rl_report.md`（§7–§12）与 `reports/case_b_distill_report.md`。
 3. **案 C（已结案）**：换策略类——集中式分配层＋确定性路由（设计见 `reports/casec_design.md`）：信念图感知 → 每工人 ≤14 个候选意图 → 学习型评分＋匹配解算强制无冲突 → 确定性路由＋四盾 → 基地头管配比。进度（以 `reports/casec_report.md` 为准）：G0 已结案（事件真值三项：PLANT 召回 98.7%、STEAL 100%、存碳精度 100%；双路一致率项经两轮裁定退役，属标签语义差而非正确性问题，见报告 §6–§7.1）；300 局语料已产完（450 个教师 player-game、730,136 样本、可训 611,646，见 §7.7；语料本体未进仓、清单见 `data/casec_corpus/manifest.json`）；BC 权重已出（`code/casec_ckpt/`）。**G1 判负**（§7.9：对 base 迷你探针场均 −14,023，闸 ≥ −6,000，四项全灭）；有界修复 P1.5（种植承诺锁，单变量 A/B）**复验判负**（§8：锁开场均 −15,051、灭绝 4/4、种树仍 2.5/局；归因＝约束在种植员存活与现金窗口、均在分配持续性上游，「承诺缺失」假说证伪）。**案 C 到此结案、不进 P2**，证据见 `reports/casec_report.md` §7–§8。至此规则 fork 之外的两条学习路线（案 B 蒸馏、案 C 分配层）均已结案并留全套证伪记录；存量＝fork-v0.1（可提交门面）＋aux_seg2_zero（冻结研究存量），暂无在跑攻坚线。
 
+本地强对手基准已定为 nocamp_recon（对 base +3,351.7/8 局）；存档冠军对 no-camp −14,414.6、fork-v0.1 对 no-camp −3,024.3，详见 reports/nocamp_bench_report.md
+穷尽核对：仓内五份 Claude 侧 NN 对 no-camp 合计 0 胜 40 负（场均 −13.6k 至 −19.9k），+409 所指 NN 为仓外本体，详见 reports/nocamp_sweep_report.md
+
 ## 目录地图
 
 - `code/` — 全部策略与工具代码（根目录平铺，保持源目录相对引用关系）：
