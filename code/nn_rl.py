@@ -33,7 +33,11 @@ import nnfeat as F  # noqa: E402
 GAMMA, LAM = 0.99, 0.95
 GAMES_PER_ITER = int(os.environ.get("RL_GAMES", "24"))
 WORKERS = int(os.environ.get("RL_WORKERS", "4"))
-POOL = [("nocamp.py", 0.5), ("exp/spar_tf2.py", 0.15), ("exp/spar_tf3.py", 0.15), ("SELF", 0.2)]
+POOL = [("nocamp.py", 0.6), ("exp/spar_tf2.py", 0.2), ("exp/spar_tf3.py", 0.2)]
+VALUE_WARMUP = int(os.environ.get("RL_VWARM", "3"))   # iterations training the value head only
+KL_BETA = float(os.environ.get("RL_KL", "0.5"))       # KL(pi_ref || pi) penalty toward the init policy
+EVAL_EVERY = 5
+EVAL_SEEDS = (640000, 4)                              # fixed greedy eval vs nocamp: 4 seeds x 2 sides
 TEMP = float(os.environ.get("RL_TEMP", "0.5"))
 
 
@@ -103,6 +107,22 @@ def rollout(task):
             "margin": float(final), "opp": opp, "seed": seed, "side": side}
 
 
+def greedy_game(task):
+    sd, seed, side = task
+    import eval_v53
+    from fastsim import FastCarbon
+    import nn_agent as A
+    random.seed(eval_v53.rng_seed(seed, side))
+    sim = FastCarbon(eval_v53.CFG).reset(seed=seed)
+    me = A.make_agent(sd)
+    op = eval_v53.load_agent_fn(os.path.join(HERE, "nocamp.py"))
+    for step in range(1, 301):
+        a_me = me(sim.obs(side), eval_v53.CFG); a_op = op(sim.obs(1 - side), eval_v53.CFG)
+        sim.step(*((a_me, a_op) if side == 0 else (a_op, a_me)))
+    c = sim.get_state()["cash"]
+    return c[side] - c[1 - side]
+
+
 def main(init, outdir, minutes=60):
     import torch
     import torch.nn.functional as Fn
@@ -112,12 +132,28 @@ def main(init, outdir, minutes=60):
     net = TB.Net()
     w = np.load(init)
     net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"})
-    opt = torch.optim.Adam(net.parameters(), lr=float(os.environ.get("RL_LR", "1e-4")))
+    opt = torch.optim.Adam(net.parameters(), lr=float(os.environ.get("RL_LR", "2e-5")))
+    ref = TB.Net()
+    ref.load_state_dict(net.state_dict())
+    ref.eval()
+    for q in ref.parameters():
+        q.requires_grad_(False)
     log = open(os.path.join(outdir, "rl_log.jsonl"), "a")
     snaps = [{k: v.detach().numpy().copy() for k, v in net.state_dict().items()}]
     deadline = time.time() + 60 * minutes
     it = 0
     seed = int(os.environ.get("RL_SEED0", "500000"))
+    def _greedy_eval(tag_it):
+        sd_now = {k: v.detach().numpy().copy() for k, v in net.state_dict().items()}
+        et = [(sd_now, EVAL_SEEDS[0] + j, sd_) for j in range(EVAL_SEEDS[1]) for sd_ in (0, 1)]
+        with ProcessPoolExecutor(max_workers=WORKERS) as ex:
+            em = list(ex.map(greedy_game, et))
+        ev = {"it": tag_it, "greedy_vs_nocamp": round(float(np.mean(em))), "wins": int(sum(m > 0 for m in em)),
+              "n": len(em), "se": round(float(np.std(em) / len(em) ** 0.5)), "margins": [round(m) for m in em]}
+        log.write(json.dumps(ev) + "\n"); log.flush()
+        print(json.dumps(ev), flush=True)
+
+    _greedy_eval(0)
     while time.time() < deadline:
         it += 1
         sd = {k: v.detach().numpy().copy() for k, v in net.state_dict().items()}
@@ -178,21 +214,29 @@ def main(init, outdir, minutes=60):
                 vl = Fn.mse_loss(v, torch.clamp(RETt[ii], -1, 1))
                 p_all = lp_all.exp()
                 ent = -(p_all * torch.where(p_all > 0, lp_all, torch.zeros_like(lp_all))).sum(1).mean()
-                loss = pl + 0.5 * vl - 0.01 * ent
+                with torch.no_grad():
+                    rl_, _ = ref(X[ii].float() / 127.0, S[ii])
+                    lr_all = Fn.log_softmax(TB.masked_logits(rl_, K[ii]) / TEMP, dim=1)
+                    pr_all = lr_all.exp()
+                kl = (pr_all * (torch.where(pr_all > 0, lr_all, torch.zeros_like(lr_all)) - lp_all)).sum(1).mean()
+                warm = it <= VALUE_WARMUP
+                loss = (0.0 if warm else 1.0) * (pl - 0.01 * ent + KL_BETA * kl) + 0.5 * vl
                 opt.zero_grad(); loss.backward()
                 torch.nn.utils.clip_grad_norm_(net.parameters(), 1.0)
                 opt.step()
-                stats.append((pl.item(), vl.item(), ent.item(), (ratio - 1).abs().mean().item()))
+                stats.append((pl.item(), vl.item(), ent.item(), (ratio - 1).abs().mean().item(), kl.item()))
         st = np.mean(stats, axis=0)
         by = {}
         for r in res:
             by.setdefault(r["opp"], []).append(r["margin"])
         rec = {"it": it, "games": len(res), "samples": n, "roll_s": round(t_roll), "upd_s": round(time.time() - t1),
-               "pl": round(st[0], 4), "vl": round(st[1], 4), "ent": round(st[2], 3), "dratio": round(st[3], 4),
+               "pl": round(st[0], 4), "vl": round(st[1], 4), "ent": round(st[2], 3), "dratio": round(st[3], 4), "kl": round(st[4], 5),
                "margin": {k: [round(float(np.mean(v))), len(v)] for k, v in by.items()},
                "winrate": round(float(np.mean([r["margin"] > 0 for r in res])), 3)}
         log.write(json.dumps(rec) + "\n"); log.flush()
         print(json.dumps(rec), flush=True)
+        if it % EVAL_EVERY == 0:
+            _greedy_eval(it)
         if it % 5 == 0:
             snaps.append({k: v.detach().numpy().copy() for k, v in net.state_dict().items()})
             snaps = snaps[-6:]

@@ -99,6 +99,7 @@ def make_agent(weights=None):
 
 
 ENDGAME_SLACK = 1      # start the forced return when moves left <= dist + slack
+SHIELD = True          # loaded collectors avoid cells a lighter/equal enemy collector can reach
 BASE_PILE_FROM = 15    # in the last N moves own units may share an own base cell
 
 
@@ -126,6 +127,22 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
     acts, chosen = {}, []
     claimed = set()
     forced, order = [], []
+    # threat[c] = lightest enemy collector cargo that can be on cell c next step
+    thr = np.full(F.N, np.inf)
+    if SHIELD:
+        for w in obs["players"][1 - me][2].values():
+            if w[2] == "COLLECTOR":
+                for c in (w[0], *F.NB4[w[0]]):
+                    if w[1] < thr[c]:
+                        thr[c] = w[1]
+    cargo_of = {uid: (w[1] if w[2] == "COLLECTOR" else None) for uid, w in mine[2].items()}
+
+    def safe_first(uid, cand):
+        c = cargo_of.get(uid)
+        if not SHIELD or c is None or c <= 0:
+            return cand
+        pos = mine[2][uid][0]
+        return sorted(cand, key=lambda a: thr[F.nb(pos, F.MOVES[a])] <= c)   # stable: safe moves first
     for i, (uid, k, pos) in enumerate(units):
         if k == 2:
             continue
@@ -143,7 +160,7 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
     forced.sort(key=lambda t: t[0])
     for d, i, pr, b in forced:
         uid, k, pos = units[i]
-        cand = sorted(_toward(pos, b), key=lambda a: -pr[a]) + [int(a) for a in np.argsort(-pr)]
+        cand = safe_first(uid, sorted(_toward(pos, b), key=lambda a: -pr[a]) + [int(a) for a in np.argsort(-pr)])
         for a in cand:
             tgt = F.nb(pos, F.MOVES[a])
             if tgt not in claimed or (pile and tgt in my_bases):
@@ -155,7 +172,7 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
     order.sort(key=lambda t: t[0])
     for _, i, pr, a0 in order:
         uid, k, pos = units[i]
-        cand = [a0] + [int(a) for a in np.argsort(-pr) if a != a0]
+        cand = safe_first(uid, [a0] + [int(a) for a in np.argsort(-pr) if a != a0])
         for a in cand:
             tgt = F.nb(pos, F.MOVES[a])
             if tgt not in claimed or (pile and k == 0 and tgt in my_bases):
