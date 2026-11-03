@@ -19,6 +19,8 @@
 本地强对手基准已定为 nocamp_recon（对 base +3,351.7/8 局）；存档冠军对 no-camp −14,414.6、fork-v0.1 对 no-camp −3,024.3，详见 reports/nocamp_bench_report.md
 穷尽核对：仓内五份 Claude 侧 NN 对 no-camp 合计 0 胜 40 负（场均 −13.6k 至 −19.9k），+409 所指 NN 为仓外本体，详见 reports/nocamp_sweep_report.md
 
+**NN 新线（claude-opus55-cloud，2026-11-03 起，现已进仓）**：自我中心 CNN（`code/nnfeat.py` 特征、`code/nn_train_bc.py` 训练、`code/nn_agent.py` 推理＋规则层：招募闸、终局回家、己方防撞、护货盾），从公开天梯回放（rating≥2380 的教师方，280 局、125 万样本）行为克隆，权重 `data/weights/nn_bc_w48_v1_final.npz`，单文件提交 `code/submission_nn_v1.py`（621 KB）。本地对 nocamp：16 局 7 胜 −20±314（seeds 6500–6507），8 局 6 胜 +409±285（seeds 640000–640003）——即与 nocamp 同级。PPO 自博在跑（`code/nn_rl.py`）。全过程与判废记录见 `reports/nocamp_recipe_report.md`。
+
 ## 目录地图
 
 - `code/` — 全部策略与工具代码（根目录平铺，保持源目录相对引用关系）：
