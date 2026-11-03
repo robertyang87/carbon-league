@@ -133,6 +133,10 @@ def main(init, outdir, minutes=60):
     w = np.load(init)
     net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"})
     opt = torch.optim.Adam(net.parameters(), lr=float(os.environ.get("RL_LR", "2e-5")))
+    # separate value network (shared trunk let value gradients drag the policy: RL v2 failure)
+    vnet = TB.Net()
+    vnet.load_state_dict(net.state_dict())
+    vopt = torch.optim.Adam(vnet.parameters(), lr=float(os.environ.get("RL_VLR", "3e-4")))
     ref = TB.Net()
     ref.load_state_dict(net.state_dict())
     ref.eval()
@@ -169,13 +173,13 @@ def main(init, outdir, minutes=60):
         t_roll = time.time() - t0
         # value estimates per sample, team baseline per step
         Xs, Ss, Ks, As, LPs, ADV, RET = [], [], [], [], [], [], []
-        net.eval()
+        vnet.eval()
         with torch.no_grad():
             for r in res:
                 if len(r["A"]) == 0:
                     continue
                 xb = torch.from_numpy(r["X"]).float() / 127.0
-                _, v = net(xb, torch.from_numpy(r["Sc"]))
+                _, v = vnet(xb, torch.from_numpy(r["Sc"]))
                 v = v.numpy()
                 Tn = len(r["R"])
                 Vt = np.zeros(Tn + 1, np.float32)
@@ -195,7 +199,7 @@ def main(init, outdir, minutes=60):
         LP0 = torch.from_numpy(np.concatenate(LPs)); ADVt = torch.from_numpy(np.concatenate(ADV))
         RETt = torch.from_numpy(np.concatenate(RET))
         ADVt = (ADVt - ADVt.mean()) / (ADVt.std() + 1e-6)
-        net.train()
+        net.train(); vnet.train()
         n = len(A); bs = 1024
         t1 = time.time()
         stats = []
@@ -203,7 +207,9 @@ def main(init, outdir, minutes=60):
             perm = torch.randperm(n)
             for b in range(0, n, bs):
                 ii = perm[b:b + bs]
-                logits, v = net(X[ii].float() / 127.0, S[ii])
+                xb = X[ii].float() / 127.0
+                logits, _ = net(xb, S[ii])
+                _, v = vnet(xb, S[ii])
                 ml = TB.masked_logits(logits, K[ii])
                 # temperature-consistent log-probs over the kind's action subset
                 lp_all = Fn.log_softmax(ml / TEMP, dim=1)
@@ -215,15 +221,17 @@ def main(init, outdir, minutes=60):
                 p_all = lp_all.exp()
                 ent = -(p_all * torch.where(p_all > 0, lp_all, torch.zeros_like(lp_all))).sum(1).mean()
                 with torch.no_grad():
-                    rl_, _ = ref(X[ii].float() / 127.0, S[ii])
+                    rl_, _ = ref(xb, S[ii])
                     lr_all = Fn.log_softmax(TB.masked_logits(rl_, K[ii]) / TEMP, dim=1)
                     pr_all = lr_all.exp()
                 kl = (pr_all * (torch.where(pr_all > 0, lr_all, torch.zeros_like(lr_all)) - lp_all)).sum(1).mean()
                 warm = it <= VALUE_WARMUP
-                loss = (0.0 if warm else 1.0) * (pl - 0.01 * ent + KL_BETA * kl) + 0.5 * vl
-                opt.zero_grad(); loss.backward()
-                torch.nn.utils.clip_grad_norm_(net.parameters(), 1.0)
-                opt.step()
+                vopt.zero_grad(); vl.backward(); vopt.step()
+                if not warm:
+                    loss = pl - 0.01 * ent + KL_BETA * kl
+                    opt.zero_grad(); loss.backward()
+                    torch.nn.utils.clip_grad_norm_(net.parameters(), 1.0)
+                    opt.step()
                 stats.append((pl.item(), vl.item(), ent.item(), (ratio - 1).abs().mean().item(), kl.item()))
         st = np.mean(stats, axis=0)
         by = {}

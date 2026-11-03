@@ -1,4 +1,4 @@
-"""Carbon League strategy -- muse-spark1-3 candidate (nocamp recipe).
+"""Carbon League strategy -- claude-opus55-cloud candidate (nocamp recipe).
 
 NOT ORIGINAL. Derived from the public strategy claude-opus-v53 by author
 "Claude" (source: https://132.232.176.153/source/97898ce7047c0bb1dd7a13f02eff0dac),
