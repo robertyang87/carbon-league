@@ -22,31 +22,38 @@ import nnfeat as F  # noqa: E402
 SHIFTS = [(ki - 1, kj - 1) for ki in range(3) for kj in range(3)]
 
 
-def conv(x, w, b):
-    """circular 3x3 conv. x [B,C,15,15], w [O,C,3,3] -> [B,O,15,15]."""
-    B, C = x.shape[:2]
-    cols = np.empty((B, C, 9, 15, 15), dtype=np.float32)
+def _wmat(w):
+    """torch [O,C,3,3] -> [(ki*3+kj)*C + c, O] for channels-last im2col."""
+    O, C = w.shape[:2]
+    return np.ascontiguousarray(w.transpose(2, 3, 1, 0).reshape(9 * C, O))
+
+
+def conv(x, wm, b):
+    """circular 3x3 conv, channels-last. x [B,15,15,C], wm from _wmat -> [B,15,15,O]."""
+    B, H, W_, C = x.shape
+    cols = np.empty((B, H, W_, 9 * C), dtype=np.float32)
     for k, (dr, dc) in enumerate(SHIFTS):
-        cols[:, :, k] = np.roll(x, shift=(-dr, -dc), axis=(2, 3))
-    cols = cols.reshape(B, C * 9, 225)
-    wm = w.reshape(w.shape[0], C, 9).reshape(w.shape[0], C * 9)
-    out = np.einsum("ok,bkn->bon", wm, cols, optimize=True) + b[None, :, None]
-    return out.reshape(B, w.shape[0], 15, 15)
+        cols[..., k * C:(k + 1) * C] = np.roll(x, shift=(-dr, -dc), axis=(1, 2))
+    out = cols.reshape(B * H * W_, 9 * C) @ wm
+    out += b
+    return out.reshape(B, H, W_, wm.shape[1])
 
 
 class Policy:
     def __init__(self, sd):
         self.sd = {k: np.asarray(v, dtype=np.float32) for k, v in sd.items() if k != "meta"}
         self.nb = len({k.split(".")[1] for k in self.sd if k.startswith("blocks.")})
+        self.wm = {k: _wmat(v) for k, v in self.sd.items() if k.endswith(".weight") and v.ndim == 4}
 
     def forward(self, x, s):
-        p = self.sd
-        h = np.maximum(conv(x, p["stem.weight"], p["stem.bias"]), 0)
+        p = self.sd; wm = self.wm
+        x = np.ascontiguousarray(x.transpose(0, 2, 3, 1))
+        h = np.maximum(conv(x, wm["stem.weight"], p["stem.bias"]), 0)
         for i in range(self.nb):
-            t = np.maximum(conv(h, p[f"blocks.{i}.0.weight"], p[f"blocks.{i}.0.bias"]), 0)
-            h = np.maximum(h + conv(t, p[f"blocks.{i}.1.weight"], p[f"blocks.{i}.1.bias"]), 0)
-        patch = h[:, :, 6:9, 6:9].reshape(h.shape[0], -1)
-        g = h.mean(axis=(2, 3))
+            t = np.maximum(conv(h, wm[f"blocks.{i}.0.weight"], p[f"blocks.{i}.0.bias"]), 0)
+            h = np.maximum(h + conv(t, wm[f"blocks.{i}.1.weight"], p[f"blocks.{i}.1.bias"]), 0)
+        patch = h[:, 6:9, 6:9, :].transpose(0, 3, 1, 2).reshape(h.shape[0], -1)
+        g = h.mean(axis=(1, 2))
         z = np.concatenate([patch, g, s], axis=1)
         z = np.maximum(z @ p["fc.weight"].T + p["fc.bias"], 0)
         return z @ p["pi.weight"].T + p["pi.bias"]
@@ -85,45 +92,94 @@ def make_agent(weights=None):
         if not units:
             return {}
         logits = pol.forward(np.stack(xs).astype(np.float32), np.stack(ss).astype(np.float32))
-        acts = {}
-        claimed = set()
-        order = []
-        for i, (uid, k, pos) in enumerate(units):
-            if k == 2:
-                continue
-            lg = logits[i, 0:5]
-            pr = np.exp(lg - lg.max()); pr /= pr.sum()
-            order.append((-pr.max(), i, pr))
-        order.sort(key=lambda t: t[0])
-        for _, i, pr in order:
-            uid, k, pos = units[i]
-            for a in np.argsort(-pr):
-                tgt = F.nb(pos, F.MOVES[a])
-                if tgt not in claimed:
-                    claimed.add(tgt)
-                    if a != 0:
-                        acts[uid] = F.MOVES[a]
-                    break
-            else:
-                claimed.add(pos)
-        cash = info["cash"]
-        nworkers = len(mine[2])
-        cap = _cfg(config, "workerLimit", 10)
-        n_pl = sum(1 for w in mine[2].values() if w[2] != "COLLECTOR")
-        for i, (uid, k, pos) in enumerate(units):
-            if k != 2:
-                continue
-            a = recruit_choice(logits[i, 5:8], cash, nworkers, cap, n_pl, info["tree_price"],
-                               obs["step"], pos in claimed)
-            if a == 0:
-                continue
-            acts[uid] = F.BASE_ACTS[a]
-            cash -= 30; nworkers += 1; claimed.add(pos)
-            if a == 2:
-                n_pl += 1
+        acts, _ = select_actions(units, logits, obs, info, _cfg(config, "workerLimit", 10))
         return acts
 
     return agent
+
+
+ENDGAME_SLACK = 1      # start the forced return when moves left <= dist + slack
+BASE_PILE_FROM = 15    # in the last N moves own units may share an own base cell
+
+
+def _toward(pos, target):
+    """moves (indices into F.MOVES) that reduce torus distance pos->target."""
+    r, c = divmod(pos, F.S); tr_, tc = divmod(target, F.S)
+    dr = (tr_ - r) % F.S; dc = (tc - c) % F.S
+    out = []
+    if dr:
+        out.append(3 if dr <= F.S // 2 else 1)   # DOWN / UP
+    if dc:
+        out.append(2 if dc <= F.S // 2 else 4)   # RIGHT / LEFT
+    return out
+
+
+def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
+    """Shared by nn_agent (rng=None: greedy) and nn_rl (sampling).
+    units: list of (uid, kind, pos); logits [n, 8].
+    Returns (acts dict, chosen list of (unit index, move index, from_policy) for workers)."""
+    me = obs["player"]
+    mine = obs["players"][me]
+    my_bases = list(mine[1].values())
+    left = 299 - obs["step"]                       # moves still to be made
+    pile = left <= BASE_PILE_FROM
+    acts, chosen = {}, []
+    claimed = set()
+    forced, order = [], []
+    for i, (uid, k, pos) in enumerate(units):
+        if k == 2:
+            continue
+        z = logits[i, 0:5] / temp
+        pr = np.exp(z - z.max()); pr /= pr.sum()
+        cargo = mine[2][uid][1] if uid in mine[2] else 0.0
+        if k == 0 and cargo > 0 and my_bases:
+            b = min(my_bases, key=lambda q: int(F.tdist(pos, q)))
+            d = int(F.tdist(pos, b))
+            if d > 0 and left <= d + ENDGAME_SLACK:
+                forced.append((d, i, pr, b))
+                continue
+        a0 = int(rng.choice(5, p=pr)) if rng is not None else int(np.argmax(pr))
+        order.append((-pr[a0], i, pr, a0))
+    forced.sort(key=lambda t: t[0])
+    for d, i, pr, b in forced:
+        uid, k, pos = units[i]
+        cand = sorted(_toward(pos, b), key=lambda a: -pr[a]) + [int(a) for a in np.argsort(-pr)]
+        for a in cand:
+            tgt = F.nb(pos, F.MOVES[a])
+            if tgt not in claimed or (pile and tgt in my_bases):
+                claimed.add(tgt)
+                if a:
+                    acts[uid] = F.MOVES[a]
+                chosen.append((i, a, False))
+                break
+    order.sort(key=lambda t: t[0])
+    for _, i, pr, a0 in order:
+        uid, k, pos = units[i]
+        cand = [a0] + [int(a) for a in np.argsort(-pr) if a != a0]
+        for a in cand:
+            tgt = F.nb(pos, F.MOVES[a])
+            if tgt not in claimed or (pile and k == 0 and tgt in my_bases):
+                claimed.add(tgt)
+                if a:
+                    acts[uid] = F.MOVES[a]
+                chosen.append((i, a, True))
+                break
+        else:
+            claimed.add(pos)
+    cash = info["cash"]
+    nworkers = len(mine[2])
+    n_pl = sum(1 for w in mine[2].values() if w[2] != "COLLECTOR")
+    for i, (uid, k, pos) in enumerate(units):
+        if k != 2:
+            continue
+        a = recruit_choice(logits[i, 5:8], cash, nworkers, cap, n_pl, info["tree_price"],
+                           obs["step"], pos in claimed)
+        if a == 0:
+            continue
+        acts[uid] = F.BASE_ACTS[a]
+        cash -= 30; nworkers += 1; claimed.add(pos)
+        n_pl += (a == 2)
+    return acts, chosen
 
 
 RECRUIT_UNTIL = 285   # steps; later recruits cannot pay back

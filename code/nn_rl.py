@@ -19,11 +19,14 @@ import sys
 import time
 from concurrent.futures import ProcessPoolExecutor
 
-import numpy as np
+# one BLAS thread per rollout worker; must be set before NumPy loads
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
+    os.environ.setdefault(_v, "1")
+
+import numpy as np  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-os.environ.setdefault("OMP_NUM_THREADS", "1")
 
 import nnfeat as F  # noqa: E402
 
@@ -77,38 +80,15 @@ def rollout(task):
         if units:
             xa = np.stack(xs).astype(np.float32); sa = np.stack(ss).astype(np.float32)
             lg = pol.forward(xa, sa)
-            claimed = set()
-            order = []
-            for i, (uid, k, pos) in enumerate(units):
-                if k == 2:
+            # same selection as nn_agent (guard, endgame return, recruit gate), but sampled;
+            # only policy-chosen worker moves become PPO samples
+            acts, chosen = A.select_actions(units, lg, o_me, info, cap, rng=rng, temp=TEMP)
+            for i, b, from_pol in chosen:
+                if not from_pol:
                     continue
                 pr = _softmax(lg[i, 0:5] / TEMP)
-                a = int(rng.choice(5, p=pr))
-                order.append((-pr[a], i, a, pr))
-            order.sort(key=lambda t: t[0])
-            for _, i, a, pr in order:
-                uid, k, pos = units[i]
-                cand = [a] + [int(b) for b in np.argsort(-pr) if b != a]
-                for b in cand:
-                    tgt = F.nb(pos, F.MOVES[b])
-                    if tgt not in claimed:
-                        claimed.add(tgt)
-                        if b != 0:
-                            acts[uid] = F.MOVES[b]
-                        X.append(xs[i]); Sc.append(ss[i]); K.append(k); Ac.append(b)
-                        LP.append(float(np.log(max(pr[b], 1e-8)))); T_.append(t_idx)
-                        break
-            # recruitment: same rule gate as nn_agent (not trained by PPO)
-            cash = info["cash"]; nw = len(mine[2])
-            n_pl = sum(1 for w in mine[2].values() if w[2] != "COLLECTOR")
-            for i, (uid, k, pos) in enumerate(units):
-                if k != 2:
-                    continue
-                a = A.recruit_choice(lg[i, 5:8], cash, nw, cap, n_pl, info["tree_price"],
-                                     o_me["step"], pos in claimed)
-                if a != 0:
-                    acts[uid] = F.BASE_ACTS[a]; cash -= 30; nw += 1; claimed.add(pos)
-                    n_pl += (a == 2)
+                X.append(xs[i]); Sc.append(ss[i]); K.append(units[i][1]); Ac.append(b)
+                LP.append(float(np.log(max(pr[b], 1e-8)))); T_.append(t_idx)
         a_op = opp_fn(o_op, eval_v53.CFG)
         sim.step(*((acts, a_op) if side == 0 else (a_op, acts)))
         stt = sim.get_state()
