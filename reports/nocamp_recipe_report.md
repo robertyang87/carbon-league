@@ -49,3 +49,23 @@ minimax-flash-v53nc-r1 2064、claude-opus-v53-nocamp 2056），作者自述本�
 - 因此 v2 加入两个树重型陪练（均以 nocamp 为底）：`spar_tf`（全程低种树门槛、2 种植员）与 `spar_tw_nc`（switcher_treewar 的步 50–100 加码＋nocamp），
   对 nocamp 分别 +129±185、−34±225（8 局），与 nocamp 同级。
 - v1 跑 3 轮无晋升即停（单参小扰动在镜像下平坦），状态存档 `data/evo_state_v1.json`。
+
+## 更正：陪练池退化（evo2 判废）＋ 旧线 switcher_treewar 惰性
+
+- **发现**：evo2 第 1–2 轮中 `planters=2`/`early_planters=3`/`plant_min=6`/`seize_min=4` 对两个陪练的 Δ 恰为 0.0 → 逐局核对（seed 7000 side 0）：
+  `nocamp`、`spar_tf`、`spar_tw_nc` 三者对 base 终分**逐位相同**（1,038.68）。中等幅度改种树门槛不生效——种树的约束在种植员编制（`planter_from`：采集 ≥4×种植），不在门槛。
+  覆盖确实生效（`rho=0.08`、`plant_min=40/ratio=3`、`early_planters=0` 均改变终分）。
+- **后果**：evo2 陪练池实为纯镜像；此前「spar_tf +129、spar_tw_nc −34」是 RNG 噪声。evo2 已停，状态 `data/evo2_state.json` 仅作留档，不采信。
+- **旧线连带**：`switcher_treewar.py` 对 nocamp 终分与 `base_v53.py` 逐位相同（−3,565.6，种树同为 17）——旧项目「三型变速陪练」中的 treewar 型在该局是惰性的，相关历史结论需复核。
+- **修正版树重型陪练**（以 nocamp 为底，对 nocamp seed 7000 单局实测）：
+  `spar_tf2`＝planter_from 2、early_planters 3、retire_from 250、plant_min 5、plant_ratio 1.15、seize_min 4 → 种树 23（nocamp 11）；
+  `spar_tf3`＝planter_from 2、early_planters 4、retire_from 250、retire_keep 2、plant_min 3、plant_ratio 1.05、seize_min 2、planters_late 3 → 种树 29。
+  纪律补丁：今后任何陪练/变体先做「同 seed 逐位比对」确认非惰性再入池。
+
+## 天梯新形势（JUZI1/carbon-league-replays 快照 2026-11-03 14:26 UTC）
+
+- 新榜首 **claude-AlphaCarbon-Master 2,652**（41/43）；AlphaCarbon-2 跌至 2,479；前 20 几乎全是 NN/RL（NaMnSi-RL-T 系）与 Godslayer。
+- 规则线：youzahui v13 2,224（#21）；**no-camp 配方衍生版已跌到 1,952–2,014（#46–88）**。距榜首约 650 分 → 参数微调不可能弥合，必须走 BC＋自博 RL。
+- 已起 NN 管线：`code/nnfeat.py`（共享特征：信念图＋14 平面自我中心 15×15＋18 标量）、`code/nn_build_bc.py`（从回放取 rating≥2380 的教师方）、
+  `code/nn_train_bc.py`（3 残差块 48 通道循环填充 CNN，二面体增广）、`code/nn_agent.py`（NumPy 推理＋己方防撞＋合法招募）。
+  BC 数据：280 局、380 个教师方、1,254,695 样本（4 GB，未进仓，可由脚本＋回放快照再生）。
