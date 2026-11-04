@@ -11,7 +11,7 @@
   nohup python3 sni_bridge.py >/tmp/sni_bridge.log 2>&1 &
   LADDER_BASE=http://127.0.0.1:18443 python3 ladder.py ping
 """
-import os, socket, sys, threading, urllib.parse
+import os, select, socket, sys, threading, urllib.parse
 from OpenSSL import SSL
 
 TARGET = os.environ.get("BRIDGE_TARGET", "132.232.176.153")
@@ -38,49 +38,58 @@ def upstream():
     t.set_connect_state()
     s.settimeout(None)
     t.do_handshake()
+    s.setblocking(False)
     return t
 
 
-def pump_client_to_tls(c, t, lock):
-    try:
-        while True:
-            d = c.recv(65536)
-            if not d:
-                break
-            with lock:
-                t.sendall(d)
-    except OSError:
-        pass
-    finally:
-        try:
-            with lock:
-                t.shutdown()
-        except Exception:
-            pass
-
-
 def handle(c):
+    """单线程 select 循环：TLS 对象只被一个线程读写（OpenSSL 连接不支持并发读写，大上传会卡死）。"""
     try:
         t = upstream()
     except Exception as e:
         print("upstream error:", e, flush=True)
         c.close()
         return
-    lock = threading.Lock()
-    threading.Thread(target=pump_client_to_tls, args=(c, t, lock), daemon=True).start()
+    raw = t.get_socket() if hasattr(t, "get_socket") else None
+    raw = raw or t._socket
+    up_buf = b""          # 待发往服务器的明文
+    client_open = True
     try:
         while True:
-            try:
-                d = t.recv(65536)
-            except SSL.WantReadError:
-                continue
-            except (SSL.ZeroReturnError, SSL.SysCallError):
+            rl = [raw] + ([c] if client_open and len(up_buf) < (1 << 20) else [])
+            wl = [raw] if up_buf else []
+            r, w, _ = select.select(rl, wl, [], 300)
+            if not r and not w and not t.pending():
                 break
-            if not d:
-                break
-            c.sendall(d)
+            if c in r:
+                d = c.recv(65536)
+                if not d:
+                    client_open = False
+                else:
+                    up_buf += d
+            if up_buf and (raw in w or raw in r):
+                try:
+                    n = t.send(up_buf[:16384])
+                    up_buf = up_buf[n:]
+                except (SSL.WantWriteError, SSL.WantReadError):
+                    pass
+            if raw in r or t.pending():
+                while True:
+                    try:
+                        d = t.recv(65536)
+                    except (SSL.WantReadError, SSL.WantWriteError):
+                        break
+                    except (SSL.ZeroReturnError, SSL.SysCallError):
+                        return
+                    if not d:
+                        return
+                    c.sendall(d)
+                    if not t.pending():
+                        break
+            if not client_open and not up_buf:
+                pass  # 等服务器把响应发完再关
     except Exception as e:
-        print("relay error:", e, flush=True)
+        print("relay error:", repr(e), flush=True)
     finally:
         c.close()
         try:

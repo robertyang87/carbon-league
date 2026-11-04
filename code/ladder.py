@@ -17,7 +17,7 @@
   LADDER_COOKIES  会话 cookie 文件，默认 ~/.carbon_ladder_cookies（仓库外，不要提交）。
 证书：服务器是自签名证书，与旧脚本 curl -k 一致不校验。
 """
-import ast, gzip, http.cookiejar, json, os, ssl, sys, time, uuid, urllib.error, urllib.request
+import ast, gzip, json, os, ssl, sys, time, uuid, urllib.error, urllib.request
 
 BASE = os.environ.get("LADDER_BASE", "https://132.232.176.153").rstrip("/")
 HOST = os.environ.get("LADDER_HOST", "132.232.176.153" if "127.0.0.1" in BASE else "")
@@ -26,20 +26,27 @@ COOKIES = os.path.expanduser(os.environ.get("LADDER_COOKIES", "~/.carbon_ladder_
 _ctx = ssl.create_default_context()
 _ctx.check_hostname = False
 _ctx.verify_mode = ssl.CERT_NONE
-_jar = http.cookiejar.LWPCookieJar(COOKIES)
+# 手工管理 cookie：服务器 cookie 带 Secure，经本地明文桥时标准 cookiejar 不会回传。
+_cookies = {}
 if os.path.exists(COOKIES):
-    _jar.load(ignore_discard=True, ignore_expires=True)
+    try:
+        _cookies = json.load(open(COOKIES))
+    except ValueError:
+        _cookies = {}
 _opener = urllib.request.build_opener(
     urllib.request.ProxyHandler(),  # 读取 HTTPS_PROXY
     urllib.request.HTTPSHandler(context=_ctx),
-    urllib.request.HTTPCookieProcessor(_jar),
 )
 _csrf = None
 
 
-def _save():
-    _jar.save(ignore_discard=True, ignore_expires=True)
-    os.chmod(COOKIES, 0o600)
+def _absorb(hdrs):
+    for v in hdrs.get_all("Set-Cookie") or []:
+        k, _, val = v.split(";", 1)[0].partition("=")
+        _cookies[k.strip()] = val.strip()
+    fd = os.open(COOKIES, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w") as f:
+        json.dump(_cookies, f)
 
 
 def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
@@ -51,15 +58,21 @@ def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
     if isinstance(body, (dict, list)):
         body = json.dumps(body).encode()
         h["Content-Type"] = "application/json"
+    if _cookies:
+        h["Cookie"] = "; ".join(f"{k}={v}" for k, v in _cookies.items())
+    origin = "https://" + (HOST or BASE.split("://", 1)[1].split("/")[0])
+    h.setdefault("Origin", origin)
+    h.setdefault("Referer", origin + "/")
     h.update(headers or {})
     req = urllib.request.Request(BASE + path, data=body, method=method, headers=h)
     try:
         with _opener.open(req, timeout=timeout) as r:
             data = r.read()
             status = r.status
+            _absorb(r.headers)
     except urllib.error.HTTPError as e:
         data, status = e.read(), e.code
-    _save()
+        _absorb(e.headers)
     if raw:
         return status, data
     try:
