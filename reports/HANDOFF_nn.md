@@ -98,8 +98,11 @@ BC 数据（4 GB，不入仓）可再生：`python3 nn_build_bc.py ../data/repla
 | 招募编制（v4 基础上：种植员上限 3 / 2，采集员 ≥ 种植员+2） | 均为噪声或更差：对 nocamp 配对 P3 −141±230、M2 +61±242、**P2 −459±227**；对 base_v53 +169±675 / +324±724 / +8±507。天梯上「我方种植员多、采集员少」不是输局主因 | `data/evo_results.jsonl`（exp/v4_P3/M2/P2） |
 | RL v6（v4 规则层，池 nocamp/base_v53/Master 影子/自身，lr 5e-5 KL 0.2，8 轮） | 对 nocamp 配对 −193±241，对 base_v53 +541±627：噪声；第 5 轮贪心 +41（起点 +825） | `data/rl6/rl_log.jsonl`、`data/evo_results.jsonl`（exp/rl6_last） |
 | 种植员保底（v5 上 PLANTER_FLOOR=2/3） | F2 基本惰性（nocamp 23/32 局逐分相同）；F3 对 nocamp +85±158、base_v53 +107±463（噪声），**对 Godslayer 影子 −389±244**（种树收入 3560→2742）。天梯输局「种植员少、树少」是结果不是可直接硬编的原因 | `data/evo_results.jsonl`（exp/v5_F2/F3） |
+| 多系列混合 BC（alpha＋agy＋edge 各 200 局，184 万样本，从 v5 网络热启，lr 3e-4，1 轮） | 直接对 v5 16 局 6 胜、−443±398：不如 v5。单系列影子：Godslayer（1 轮）v5 12/16 胜、Codex v5 15/16 胜。**强的只有 AlphaCarbon 系列** | `data/weights/nn_mix3_v1.npz`、`nn_shadow_{agy,codex}_v1.npz` |
 
 ## 6. 坑（踩过的）
+
+- **云容器在会话空闲约 5 分钟后被回收**（后台进程不算活动；nohup 也会被杀，磁盘保留）。长任务要么在一个回合内前台分段等待（每段 ≤10 分钟），要么写成可断点续跑（`nn_train_bc.py` 已支持 `OUT.ckpt.pt`）。2026-11-04 夜里因此丢了三次训练。
 
 - `pkill -f <模式>` / `pgrep -f` 会匹配到自己所在 shell 的命令行（曾把自己的 shell 停掉、等待循环永不退出）。按 PID 管理进程。
 - 容器会被回收重启：长任务用 `nohup`，权重每 5 轮落盘（`rl_it*.npz`、`rl_last.npz`），断了从 `rl_last` 续跑（价值网重新预热）。
