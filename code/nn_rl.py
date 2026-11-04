@@ -203,7 +203,7 @@ def main(init, outdir, minutes=60):
         n = len(A); bs = 1024
         t1 = time.time()
         stats = []
-        for ep in range(2):
+        for ep in range(int(os.environ.get("RL_EPOCHS", "2"))):
             perm = torch.randperm(n)
             for b in range(0, n, bs):
                 ii = perm[b:b + bs]
