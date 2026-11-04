@@ -7,12 +7,14 @@ matches.json 来自 `ladder.py matches`；字段按回放快照 index.json 的�
 import collections, glob, gzip, json, math, os, sys
 
 
+_OURNAME = {}
+
+
 def side_of(m, sid):
-    if "strategies" not in m and "name_a" in m:  # /api/matches?compact=1&strategy= 格式
-        m["strategies"] = {"a": {"id": m.get("id_a", ""), "name": m["name_a"]},
-                           "b": {"id": m.get("id_b", ""), "name": m["name_b"]}}
-        if not m.get("id_a"):
-            m["strategies"]["a"]["id"] = sid  # 按策略查询时 a 方即本策略
+    if "strategies" not in m and "name_a" in m:  # /api/matches?compact=1&strategy= 格式：本策略可能在 a 或 b
+        me = _OURNAME.get(sid)
+        m["strategies"] = {"a": {"id": sid if m["name_a"] == me else "", "name": m["name_a"]},
+                           "b": {"id": sid if m["name_b"] == me else "", "name": m["name_b"]}}
     for s, info in (m.get("strategies") or {}).items():
         if info.get("id") == sid:
             return s
@@ -79,6 +81,10 @@ def main():
     sid, mfile = sys.argv[1], sys.argv[2]
     rdir = sys.argv[3] if len(sys.argv) > 3 else None
     ms = json.load(open(mfile))
+    import collections as _c
+    cnt = _c.Counter(n for m in ms for n in (m.get("name_a"), m.get("name_b")) if n)
+    if cnt:
+        _OURNAME[sid] = cnt.most_common(1)[0][0]   # 每局都出现的名字 = 本策略
     rows = summarize(sid, ms)
     if not (rdir and rows):
         return
