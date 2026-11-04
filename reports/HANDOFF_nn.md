@@ -89,6 +89,7 @@ BC 数据（4 GB，不入仓）可再生：`python3 nn_build_bc.py ../data/repla
 | TTA4 | +129 ± 255（噪声），最慢步 866 ms → 关 | 报告 TTA 节 |
 | 新快照重训 BC | 新快照多为中游规则系，教师样本仅 +8% | `nn_build_bc` 输出 |
 | 招募编制（v4 基础上：种植员上限 3 / 2，采集员 ≥ 种植员+2） | 均为噪声或更差：对 nocamp 配对 P3 −141±230、M2 +61±242、**P2 −459±227**；对 base_v53 +169±675 / +324±724 / +8±507。天梯上「我方种植员多、采集员少」不是输局主因 | `data/evo_results.jsonl`（exp/v4_P3/M2/P2） |
+| RL v6（v4 规则层，池 nocamp/base_v53/Master 影子/自身，lr 5e-5 KL 0.2，8 轮） | 对 nocamp 配对 −193±241，对 base_v53 +541±627：噪声；第 5 轮贪心 +41（起点 +825） | `data/rl6/rl_log.jsonl`、`data/evo_results.jsonl`（exp/rl6_last） |
 
 ## 6. 坑（踩过的）
 
