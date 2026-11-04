@@ -115,3 +115,10 @@ minimax-flash-v53nc-r1 2064、claude-opus-v53-nocamp 2056），作者自述本�
 - 训练：从 BC v1 热启动、lr 5e-4、4 轮；Master 留出局 top-1 77.7%（采集 77.2%、种植 68.5%）。权重 `data/weights/nn_shadow_master_v1.npz`。
 - 对 nocamp（seeds 640000–640003 ×2，贪心＋同一规则层）：4 胜，均差 +445 ± 518（逐局 630/1993/2144/−1201/−779/2145/−547/−827）。
   同 seeds：v1 +409、v2 +683。→ 与 v1/v2 同级、方差大、风格不同；作联赛多样性成员入池，不作「更强对手」。
+
+## RL v5：联赛对手池
+
+- RL v4 只跑完价值预热 2 轮即停（改走联赛），日志 `data/nn_rl4_log.jsonl`。
+- RL v5：从 v2（RL v3 终版）热启动，lr 5e-5、KL 0.2、每轮 32 局、更新 1 遍、价值预热 2 轮，计划 5 小时（seeds 从 900000 起）。
+  对手池（`data/nn_rl5_pool.json`）：nocamp 40%、spar_tf2/tf3 各 10%、NN v1 10%、NN v2 15%、Master 影子 15%。
+- 第 0 轮贪心基线（= v2，seeds 640000–640003×2）：6/8 胜，+683 ± 185。
