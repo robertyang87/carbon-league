@@ -2,7 +2,7 @@
 
 Usage: python3 nn_pack.py WEIGHTS.npz OUT.py ["header text"]
 The output defines agent(observation, configuration) at top level, needs only
-the standard library + NumPy, and embeds the weights (float16, zlib, base64).
+the standard library + NumPy, and embeds the weights (float32, zlib, base85).
 """
 
 import base64
@@ -28,7 +28,7 @@ def strip_module(src, drop_imports):
 
 def main(weights, out, header=""):
     d = np.load(weights, allow_pickle=False)
-    sd = {k: d[k].astype(np.float16) for k in d.files if k != "meta"}
+    sd = {k: d[k].astype(np.float32) for k in d.files if k != "meta"}
     buf = io.BytesIO()
     np.savez(buf, **sd)
     blob = base64.b85encode(zlib.compress(buf.getvalue(), 9)).decode()
