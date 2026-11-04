@@ -131,11 +131,31 @@ def main(data, out, epochs=4):
     steps_total = epochs * (len(tr_idx) // bs)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=max_lr, total_steps=steps_total)
     best = -1
-    for ep in range(epochs):
+    # 断点续跑（容器会被回收重启）：每 BC_CKPT_EVERY 批存完整状态到 OUT.ckpt.pt，启动时若存在则续跑
+    ck_path = out + ".ckpt.pt"
+    ck_every = int(os.environ.get("BC_CKPT_EVERY", "500"))
+    ep0, b0, perm0 = 0, 0, None
+    if os.path.exists(ck_path):
+        ck = torch.load(ck_path, weights_only=False)
+        net.load_state_dict(ck["net"]); opt.load_state_dict(ck["opt"]); sched.load_state_dict(ck["sched"])
+        ep0, b0, perm0, best = ck["ep"], ck["b"], ck["perm"], ck["best"]
+        np.random.set_state(ck["np_rng"]); torch.set_rng_state(ck["torch_rng"])
+        print(json.dumps({"resume": {"ep": ep0, "b": b0}}), flush=True)
+    for ep in range(ep0, epochs):
         net.train()
-        perm = np.random.permutation(tr_idx)
+        if ep == ep0 and perm0 is not None:
+            perm = perm0
+        else:
+            perm = np.random.permutation(tr_idx)
+            b0 = 0
         t0 = time.time(); tl = 0; tn = 0
-        for b in range(len(perm) // bs):
+        for b in range(b0, len(perm) // bs):
+            if b > b0 and b % ck_every == 0:
+                tmp = ck_path + ".tmp"
+                torch.save({"net": net.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(),
+                            "ep": ep, "b": b, "perm": perm, "best": best,
+                            "np_rng": np.random.get_state(), "torch_rng": torch.get_rng_state()}, tmp)
+                os.replace(tmp, ck_path)
             ii = torch.from_numpy(perm[b * bs:(b + 1) * bs])
             xb = X[ii].float() / 127.0
             yb = y[ii]
@@ -153,6 +173,12 @@ def main(data, out, epochs=4):
         if acc["all"] > best:
             best = acc["all"]
             export(net, out, {"W": W, "NB": NB, "HID": HID, "epoch": ep, "val": acc, "data": os.path.basename(data)})
+        if ep + 1 < epochs:   # 轮末也存一次（下一轮从头）
+            torch.save({"net": net.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(),
+                        "ep": ep + 1, "b": 0, "perm": None, "best": best,
+                        "np_rng": np.random.get_state(), "torch_rng": torch.get_rng_state()}, ck_path)
+    if os.path.exists(ck_path):
+        os.remove(ck_path)
     print("best", best)
 
 
