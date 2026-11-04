@@ -69,6 +69,10 @@ def main(rdir, out, min_rating=2380.0):
     lb = json.load(open(os.path.join(rdir, "leaderboard.json")))
     strat = lb["strategies"] if isinstance(lb, dict) else lb
     teachers = {r["name"]: r["rating"] for r in strat if (r.get("rating") or 0) >= min_rating}
+    extra = os.environ.get("BC_TEACHERS_EXTRA")   # json {name: rating} from an earlier snapshot
+    if extra:
+        for k, v in json.load(open(extra)).items():
+            teachers.setdefault(k, v)
     tasks, games = [], []
     for g in idx:
         order = g["order"]  # order[side] -> 'a'/'b'

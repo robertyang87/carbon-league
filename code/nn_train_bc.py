@@ -71,6 +71,23 @@ def augment(x, y):
     return x, y
 
 
+class MultiX:
+    """Index a list of uint8 tensors as one array without concatenating."""
+
+    def __init__(self, parts, offs):
+        self.parts, self.offs = parts, offs
+
+    def __getitem__(self, ii):
+        ii = ii.numpy() if hasattr(ii, "numpy") else np.asarray(ii)
+        out = torch.empty((len(ii),) + tuple(self.parts[0].shape[1:]), dtype=torch.uint8)
+        f = np.searchsorted(self.offs, ii, side="right") - 1
+        for j, part in enumerate(self.parts):
+            m = np.nonzero(f == j)[0]
+            if len(m):
+                out[torch.from_numpy(m)] = part[torch.from_numpy(ii[m] - self.offs[j])]
+        return out
+
+
 def masked_logits(logits, kind):
     mask = torch.full_like(logits, -1e9)
     worker = kind < 2
@@ -87,21 +104,32 @@ def export(net, path, meta):
 def main(data, out, epochs=4):
     torch.set_num_threads(int(os.environ.get("BC_THREADS", "4")))
     torch.manual_seed(0)
-    D = np.load(data)
-    games = json.load(open(data.replace(".npz", "_games.json")))["games"]
-    val_g = np.array([g["val"] for g in games])
-    gid = D["gid"]
-    is_val = val_g[gid]
-    X = torch.from_numpy(D["X"]); Sc = torch.from_numpy(D["Sc"].astype(np.float32))
-    y = torch.from_numpy(D["y"].astype(np.int64)); kind = torch.from_numpy(D["kind"].astype(np.int64))
-    vt = torch.from_numpy(D["vt"].astype(np.float32)) if "vt" in D else None
+    # DATA may be a comma-separated list of npz files; X stays split per file (no 2x RAM concat)
+    Xl, Scl, yl, kl, isv = [], [], [], [], []
+    for path in data.split(","):
+        D = np.load(path)
+        games = json.load(open(path.replace(".npz", "_games.json")))["games"]
+        val_g = np.array([g["val"] for g in games])
+        Xl.append(torch.from_numpy(D["X"])); Scl.append(D["Sc"].astype(np.float32))
+        yl.append(D["y"].astype(np.int64)); kl.append(D["kind"].astype(np.int64)); isv.append(val_g[D["gid"]])
+    sizes = [len(t) for t in yl]
+    offs = np.cumsum([0] + sizes)
+    X = MultiX(Xl, offs)
+    Sc = torch.from_numpy(np.concatenate(Scl)); y = torch.from_numpy(np.concatenate(yl))
+    kind = torch.from_numpy(np.concatenate(kl)); is_val = np.concatenate(isv)
+    vt = None
     tr_idx = np.nonzero(~is_val)[0]; va_idx = np.nonzero(is_val)[0]
     print(json.dumps({"train": len(tr_idx), "val": len(va_idx), "W": W, "NB": NB}), flush=True)
     net = Net()
-    opt = torch.optim.AdamW(net.parameters(), lr=2e-3, weight_decay=1e-4)
+    init = os.environ.get("BC_INIT")
+    if init:
+        w = np.load(init)
+        net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"})
+    max_lr = float(os.environ.get("BC_LR", "2e-3"))
+    opt = torch.optim.AdamW(net.parameters(), lr=max_lr, weight_decay=1e-4)
     bs = 512
     steps_total = epochs * (len(tr_idx) // bs)
-    sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=2e-3, total_steps=steps_total)
+    sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=max_lr, total_steps=steps_total)
     best = -1
     for ep in range(epochs):
         net.train()
