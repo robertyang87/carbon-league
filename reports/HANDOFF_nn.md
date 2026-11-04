@@ -97,6 +97,7 @@ BC 数据（4 GB，不入仓）可再生：`python3 nn_build_bc.py ../data/repla
 | 新快照重训 BC | 新快照多为中游规则系，教师样本仅 +8% | `nn_build_bc` 输出 |
 | 招募编制（v4 基础上：种植员上限 3 / 2，采集员 ≥ 种植员+2） | 均为噪声或更差：对 nocamp 配对 P3 −141±230、M2 +61±242、**P2 −459±227**；对 base_v53 +169±675 / +324±724 / +8±507。天梯上「我方种植员多、采集员少」不是输局主因 | `data/evo_results.jsonl`（exp/v4_P3/M2/P2） |
 | RL v6（v4 规则层，池 nocamp/base_v53/Master 影子/自身，lr 5e-5 KL 0.2，8 轮） | 对 nocamp 配对 −193±241，对 base_v53 +541±627：噪声；第 5 轮贪心 +41（起点 +825） | `data/rl6/rl_log.jsonl`、`data/evo_results.jsonl`（exp/rl6_last） |
+| 种植员保底（v5 上 PLANTER_FLOOR=2/3） | F2 基本惰性（nocamp 23/32 局逐分相同）；F3 对 nocamp +85±158、base_v53 +107±463（噪声），**对 Godslayer 影子 −389±244**（种树收入 3560→2742）。天梯输局「种植员少、树少」是结果不是可直接硬编的原因 | `data/evo_results.jsonl`（exp/v5_F2/F3） |
 
 ## 6. 坑（踩过的）
 
