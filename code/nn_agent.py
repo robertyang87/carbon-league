@@ -200,6 +200,8 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
 
 
 RECRUIT_UNTIL = 285   # steps; later recruits cannot pay back
+MIN_COLLECTORS = 2
+MAX_PLANTERS = 4
 
 
 def recruit_choice(lg, cash, nworkers, cap, n_pl, tree_price, step, blocked):
@@ -208,9 +210,16 @@ def recruit_choice(lg, cash, nworkers, cap, n_pl, tree_price, step, blocked):
     reserve while we field planters; the policy picks collector vs planter."""
     if blocked or nworkers >= cap or step >= RECRUIT_UNTIL:
         return 0
+    n_col = nworkers - n_pl
+    if n_col == 0:                      # no income without collectors: buy one at any cash >= 30
+        return 1 if cash >= 30 else 0
     reserve = tree_price if n_pl > 0 else 0.0
     if cash < 30 + min(reserve, 60.0):
         return 0
+    # collector floor / planter cap: a policy that only ever picks planters starves (seen in RL v5b,
+    # seed 640002: 0 collectors from step ~50, lost by 16.8k)
+    if n_col < max(MIN_COLLECTORS, n_pl) or n_pl >= MAX_PLANTERS:
+        return 1
     return 1 if lg[1] >= lg[2] else 2
 
 
