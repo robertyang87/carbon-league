@@ -49,6 +49,28 @@ def _absorb(hdrs):
         json.dump(_cookies, f)
 
 
+def _ensure_bridge():
+    """本地桥没起时自动拉起（容器重启 / 进程被回收后常见）。"""
+    import subprocess
+    log = open(os.path.expanduser("~/.carbon_bridge.log"), "a")
+    subprocess.Popen([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "sni_bridge.py")],
+                     stdout=log, stderr=log, start_new_session=True)
+    time.sleep(2)
+
+
+def _open_retry(req, timeout):
+    for attempt in range(3):
+        try:
+            return _opener.open(req, timeout=timeout)
+        except urllib.error.HTTPError:
+            raise
+        except urllib.error.URLError as e:
+            refused = isinstance(e.reason, ConnectionRefusedError)
+            if attempt == 2 or not (refused and "127.0.0.1" in BASE):
+                raise
+            _ensure_bridge()
+
+
 def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
     h = {"Accept": "application/json"}
     if HOST:
@@ -66,7 +88,8 @@ def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
     h.update(headers or {})
     req = urllib.request.Request(BASE + path, data=body, method=method, headers=h)
     try:
-        with _opener.open(req, timeout=timeout) as r:
+        r = _open_retry(req, timeout)
+        with r:
             data = r.read()
             status = r.status
             _absorb(r.headers)
