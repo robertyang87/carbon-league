@@ -128,6 +128,7 @@ BASE_PILE_FROM = 15    # in the last N moves own units may share an own base cel
 # and own planters idled on the base cells).
 STALL_K = 3            # loaded collector within STALL_R of a base and not getting closer for K steps
 STALL_R = 3            #   -> forced home run with SHIELD off (0 disables)
+ENDGAME_BRAVE = True   # endgame forced return ignores SHIELD (undelivered cargo scores 0)
 PLANTER_OFF_BASE = True  # planters never stay on / step onto an own base cell (before the pile window)
 _stall = {}            # (player, uid) -> (last dist, count, step)
 
@@ -202,6 +203,8 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
                     forced.append((d, i, pr, b))
                     continue
             if d > 0 and left <= d + ENDGAME_SLACK:
+                if ENDGAME_BRAVE:
+                    brave.add(uid)
                 forced.append((d, i, pr, b))
                 continue
         a0 = int(rng.choice(5, p=pr)) if rng is not None else int(np.argmax(pr))
