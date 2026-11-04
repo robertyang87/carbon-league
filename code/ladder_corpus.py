@@ -9,12 +9,45 @@
 replays/<id>-<game>.json.gz。已下载的跳过；下载限速 ≤30 次/分钟（每次 2.1 s）。
 需登录（cookie 由 ladder.py login 建立）。CORPUS_MIN_RATING=2150 只收高分版本。前缀按当前排行榜名字匹配（大小写敏感）。
 """
-import gzip, json, os, sys, time
+import gzip, json, os, sys, threading, time
+from concurrent.futures import ThreadPoolExecutor
 
 import ladder
 
 
 MIN_RATING = float(os.environ.get("CORPUS_MIN_RATING", "0"))   # 只收评分 >= 该值的前缀匹配策略
+
+
+_rl_lock = threading.Lock()
+_last = [0.0]
+
+
+def _rate_wait(gap=2.1):
+    """全局限速：两次下载起点间隔 >= gap 秒（≤30 次/分钟）。"""
+    with _rl_lock:
+        t = time.time()
+        if t < _last[0] + gap:
+            time.sleep(_last[0] + gap - t)
+        _last[0] = time.time()
+
+
+def fetch(outdir, m):
+    fn = f"replays/{m['id']}-{m['game']}.json.gz"
+    path = os.path.join(outdir, fn)
+    if not os.path.exists(path):
+        _rate_wait()
+        st, data = ladder.request(f"/data/{m['id']}/{m['game']}", raw=True, timeout=120)
+        if st != 200:
+            return m, fn, f"HTTP {st}"
+        if data[:2] != b"\x1f\x8b":
+            data = gzip.compress(data)
+        open(path + ".part", "wb").write(data)
+        os.replace(path + ".part", path)
+    try:
+        return m, fn, len(json.load(gzip.open(path))["steps"]) - 1
+    except Exception as e:
+        os.remove(path)
+        return m, fn, f"坏文件 {e}"
 
 
 def targets(keys, rows):
@@ -51,36 +84,22 @@ def sync(outdir, keys):
                 break
             off = d["next_offset"]
             time.sleep(0.7)
-        for m in ms:
-            k = (m["id"], m["game"])
-            if m.get("state") != "done" or not m.get("scores") or k in index:
-                continue
-            fn = f"replays/{m['id']}-{m['game']}.json.gz"
-            path = os.path.join(outdir, fn)
-            if not os.path.exists(path):
-                st, data = ladder.request(f"/data/{m['id']}/{m['game']}", raw=True, timeout=120)
-                time.sleep(2.1)
-                if st != 200:
-                    print(f"  {k}: HTTP {st}", flush=True)
+        todo = [m for m in ms if m.get("state") == "done" and m.get("scores") and (m["id"], m["game"]) not in index]
+        with ThreadPoolExecutor(4) as ex:
+            for m, fn, steps in ex.map(lambda m: fetch(outdir, m), todo):
+                if isinstance(steps, str):
+                    print(f"  {m['id']}-{m['game']}: {steps}", flush=True)
                     continue
-                if data[:2] != b"\x1f\x8b":
-                    data = gzip.compress(data)
-                open(path, "wb").write(data)
-            try:
-                steps = len(json.load(gzip.open(path))["steps"]) - 1
-            except Exception as e:
-                print(f"  {k}: 坏文件 {e}", flush=True)
-                os.remove(path)
-                continue
-            # 按策略查询时 a 方 = 该策略
-            index[k] = {"id": m["id"], "game": m["game"], "order": m["order"], "scores": m["scores"],
-                        "winner": m.get("winner"), "steps": steps, "file": fn, "created": m.get("created"),
-                        "strategies": {"a": {"id": sid, "name": m.get("name_a", name)},
-                                       "b": {"id": "", "name": m.get("name_b", "?")}}}
-            new += 1
-            if new % 20 == 0:
-                json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
-                print(f"  已入库 {len(index)} 局（本轮新增 {new}）", flush=True)
+                # 按策略查询时 a 方 = 该策略
+                index[(m["id"], m["game"])] = {
+                    "id": m["id"], "game": m["game"], "order": m["order"], "scores": m["scores"],
+                    "winner": m.get("winner"), "steps": steps, "file": fn, "created": m.get("created"),
+                    "strategies": {"a": {"id": sid, "name": m.get("name_a", name)},
+                                   "b": {"id": "", "name": m.get("name_b", "?")}}}
+                new += 1
+                if new % 20 == 0:
+                    json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
+                    print(f"  已入库 {len(index)} 局（本轮新增 {new}）", flush=True)
       except Exception as e:   # 单个策略失败不拖垮整轮
         print(f"  {name}: 失败 {e!r}，跳过（下轮再试）", flush=True)
         json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)

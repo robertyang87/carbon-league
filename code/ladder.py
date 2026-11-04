@@ -40,7 +40,12 @@ _opener = urllib.request.build_opener(
 _csrf = None
 
 
+import threading as _th
+_ck_lock = _th.Lock()
+
+
 def _absorb(hdrs):
+  with _ck_lock:
     for v in hdrs.get_all("Set-Cookie") or []:
         k, _, val = v.split(";", 1)[0].partition("=")
         _cookies[k.strip()] = val.strip()
