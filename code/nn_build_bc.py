@@ -69,6 +69,10 @@ def main(rdir, out, min_rating=2380.0):
     lb = json.load(open(os.path.join(rdir, "leaderboard.json")))
     strat = lb["strategies"] if isinstance(lb, dict) else lb
     teachers = {r["name"]: r["rating"] for r in strat if (r.get("rating") or 0) >= min_rating}
+    only = os.environ.get("BC_TEACHERS_ONLY")     # comma-separated names: use exactly these teachers
+    if only:
+        names = [x.strip() for x in only.split(",") if x.strip()]
+        teachers = {n: next((r["rating"] for r in strat if r["name"] == n), 0.0) for n in names}
     extra = os.environ.get("BC_TEACHERS_EXTRA")   # json {name: rating} from an earlier snapshot
     if extra:
         for k, v in json.load(open(extra)).items():

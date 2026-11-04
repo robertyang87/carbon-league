@@ -34,6 +34,8 @@ GAMMA, LAM = 0.99, 0.95
 GAMES_PER_ITER = int(os.environ.get("RL_GAMES", "24"))
 WORKERS = int(os.environ.get("RL_WORKERS", "4"))
 POOL = [("nocamp.py", 0.6), ("exp/spar_tf2.py", 0.2), ("exp/spar_tf3.py", 0.2)]
+if os.environ.get("RL_POOL"):                         # json [[name, prob], ...]; "NN:<path>" = frozen NN
+    POOL = [tuple(x) for x in json.loads(os.environ["RL_POOL"])]
 VALUE_WARMUP = int(os.environ.get("RL_VWARM", "3"))   # iterations training the value head only
 KL_BETA = float(os.environ.get("RL_KL", "0.5"))       # KL(pi_ref || pi) penalty toward the init policy
 EVAL_EVERY = 5
@@ -58,6 +60,8 @@ def rollout(task):
     sim = FastCarbon(eval_v53.CFG).reset(seed=seed)
     if opp == "SELF":
         opp_fn = A.make_agent(snap_sd)
+    elif opp.startswith("NN:"):                      # frozen NN league member (weights path)
+        opp_fn = A.make_agent(A.load_weights(opp[3:]))
     else:
         opp_fn = eval_v53.load_agent_fn(os.path.join(HERE, opp))
     tr = F.Tracker(side)
