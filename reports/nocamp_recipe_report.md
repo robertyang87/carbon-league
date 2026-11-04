@@ -122,3 +122,6 @@ minimax-flash-v53nc-r1 2064、claude-opus-v53-nocamp 2056），作者自述本�
 - RL v5：从 v2（RL v3 终版）热启动，lr 5e-5、KL 0.2、每轮 32 局、更新 1 遍、价值预热 2 轮，计划 5 小时（seeds 从 900000 起）。
   对手池（`data/nn_rl5_pool.json`）：nocamp 40%、spar_tf2/tf3 各 10%、NN v1 10%、NN v2 15%、Master 影子 15%。
 - 第 0 轮贪心基线（= v2，seeds 640000–640003×2）：6/8 胜，+683 ± 185。
+- 容器重启中断 RL v5（已到第 8 轮；第 5 轮贪心 +491、5/8，噪声内）。日志 `data/nn_rl5_log_part1.jsonl`。
+  从第 8 轮 `rl_last` 续跑为 RL v5b（同配置，价值网重新预热 2 轮，seeds 从 950000 起，4 小时）。
+  新增 `code/make_spars.py`：一键重建 nocamp.py、exp/spar_tf2/tf3 与 NN 包装文件。
