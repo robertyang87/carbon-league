@@ -8,6 +8,11 @@ import collections, glob, gzip, json, math, os, sys
 
 
 def side_of(m, sid):
+    if "strategies" not in m and "name_a" in m:  # /api/matches?compact=1&strategy= 格式
+        m["strategies"] = {"a": {"id": m.get("id_a", ""), "name": m["name_a"]},
+                           "b": {"id": m.get("id_b", ""), "name": m["name_b"]}}
+        if not m.get("id_a"):
+            m["strategies"]["a"]["id"] = sid  # 按策略查询时 a 方即本策略
     for s, info in (m.get("strategies") or {}).items():
         if info.get("id") == sid:
             return s
