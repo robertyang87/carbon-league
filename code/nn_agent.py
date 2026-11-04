@@ -20,6 +20,7 @@ sys.path.insert(0, HERE)
 import nnfeat as F  # noqa: E402
 
 SHIFTS = [(ki - 1, kj - 1) for ki in range(3) for kj in range(3)]
+TTA = 1   # test-time augmentation: 1 (off), 2 or 4 symmetric views averaged
 
 
 def _wmat(w):
@@ -46,6 +47,27 @@ class Policy:
         self.wm = {k: _wmat(v) for k, v in self.sd.items() if k.endswith(".weight") and v.ndim == 4}
 
     def forward(self, x, s):
+        """logits; with TTA > 1, average over dihedral symmetries of the torus view
+        (centre (7,7) is fixed by the flips; move logits are mapped back)."""
+        if TTA <= 1:
+            return self._forward(x, s)
+        outs = []
+        for k, (fr, fc) in enumerate(((False, False), (True, False), (False, True), (True, True))[:TTA]):
+            xt = x
+            if fr:
+                xt = xt[:, :, ::-1, :]
+            if fc:
+                xt = xt[:, :, :, ::-1]
+            lg = self._forward(np.ascontiguousarray(xt), s)
+            perm = list(range(8))
+            if fr:                      # UP<->DOWN
+                perm[1], perm[3] = perm[3], perm[1]
+            if fc:                      # RIGHT<->LEFT
+                perm[2], perm[4] = perm[4], perm[2]
+            outs.append(lg[:, perm])
+        return np.mean(outs, axis=0)
+
+    def _forward(self, x, s):
         p = self.sd; wm = self.wm
         x = np.ascontiguousarray(x.transpose(0, 2, 3, 1))
         h = np.maximum(conv(x, wm["stem.weight"], p["stem.bias"]), 0)
