@@ -59,16 +59,21 @@ def _ensure_bridge():
 
 
 def _open_retry(req, timeout):
-    for attempt in range(3):
+    """连接被拒 → 拉起本地桥；连接重置 / 断开 / 超时 → 退避重试（最多 6 次）。HTTP 错误不重试。"""
+    import http.client
+    for attempt in range(6):
         try:
             return _opener.open(req, timeout=timeout)
         except urllib.error.HTTPError:
             raise
-        except urllib.error.URLError as e:
-            refused = isinstance(e.reason, ConnectionRefusedError)
-            if attempt == 2 or not (refused and "127.0.0.1" in BASE):
+        except (urllib.error.URLError, ConnectionError, http.client.HTTPException, TimeoutError, OSError) as e:
+            if attempt == 5:
                 raise
-            _ensure_bridge()
+            reason = getattr(e, "reason", e)
+            if isinstance(reason, ConnectionRefusedError) and "127.0.0.1" in BASE:
+                _ensure_bridge()
+            else:
+                time.sleep(2 * 2 ** attempt)
 
 
 def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
@@ -87,15 +92,22 @@ def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
     h.setdefault("Referer", origin + "/")
     h.update(headers or {})
     req = urllib.request.Request(BASE + path, data=body, method=method, headers=h)
-    try:
-        r = _open_retry(req, timeout)
-        with r:
-            data = r.read()
-            status = r.status
-            _absorb(r.headers)
-    except urllib.error.HTTPError as e:
-        data, status = e.read(), e.code
-        _absorb(e.headers)
+    for attempt in range(4 if method == "GET" else 1):   # GET 幂等：读响应中途被重置也整体重试
+        try:
+            r = _open_retry(req, timeout)
+            with r:
+                data = r.read()
+                status = r.status
+                _absorb(r.headers)
+            break
+        except urllib.error.HTTPError as e:
+            data, status = e.read(), e.code
+            _absorb(e.headers)
+            break
+        except (ConnectionError, OSError) as e:
+            if method != "GET" or attempt == 3:
+                raise
+            time.sleep(5 * (attempt + 1))
     if raw:
         return status, data
     try:

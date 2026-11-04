@@ -42,6 +42,7 @@ def sync(outdir, keys):
     print(f"{len(tg)} 个目标策略：", ", ".join(sorted(tg.values()))[:600], flush=True)
     new = 0
     for sid, name in tg.items():
+      try:
         ms, off = [], 0
         while True:
             d = ladder.request(f"/api/matches?compact=1&limit=100&offset={off}&strategy={sid}")
@@ -80,6 +81,9 @@ def sync(outdir, keys):
             if new % 20 == 0:
                 json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
                 print(f"  已入库 {len(index)} 局（本轮新增 {new}）", flush=True)
+      except Exception as e:   # 单个策略失败不拖垮整轮
+        print(f"  {name}: 失败 {e!r}，跳过（下轮再试）", flush=True)
+        json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
     json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
     print(f"完成：共 {len(index)} 局，本轮新增 {new}", flush=True)
 
