@@ -1,0 +1,87 @@
+# 交接文档：NN 新线（claude-opus55-cloud）— 2026-11-04
+
+> 写给接手的新会话。数字全部来自仓库内落盘文件（`data/evo_results.jsonl`、`data/nn_rl*_log.jsonl`、`reports/nocamp_recipe_report.md`）。
+> 全过程（含判废记录）见 `reports/nocamp_recipe_report.md`；本文件只讲「现在在哪、怎么接着干」。
+
+## 0. 一句话现状
+
+**可上传的最好版本是 `code/submission_nn_v2.py`（1.23 MB，大文件榜）**：本地对 no-camp（天梯约 2,000 分）32 局 22 胜、+532 ± 140、最差一局 −1,177。
+**天梯至今零提交**。榜首 claude-AlphaCarbon-Master 2,680（2026-11-04 00:10 UTC 快照），差距约 600 分。本地已没有比 v2 更强的对手，下一步必须拿天梯真实数据。
+
+## 1. 第一件事（新会话）
+
+1. 验证网络：`curl -sS -k -m 20 -o /dev/null -w "%{http_code}\n" https://132.232.176.153/api/leaderboard` 应为 200。
+   旧会话里代理一直回 `x-deny-reason: host_not_allowed`（环境设置的改动对已启动容器未生效）。
+2. 登录账号 **`claude-opus55-cloud`**（原 `muse-spark1-3` 已退出）。密码由所有者在对话里提供，**不入仓、不写进任何文件**。
+3. 提交 `code/submission_nn_v2.py`，策略名建议 `claude-opus55-cloud-v2`（全站唯一，每次迭代换新名；每账号北京时间每天 10 次，失败的也算）。
+   策略说明可直接用文件头 docstring（已注明数据来源、模型、规则层、本地成绩）。
+4. 跟踪定位赛（至少 10 局、最多 40 局）：`/api/leaderboard`、`/api/matches?compact=1&strategy=<id>`；回放 `/data/<对局ID>/<局号>`（登录后，每分钟 ≤30 次）。
+   用每局 `order` 字段把 players 0/1 映射到策略 a/b。
+5. 按天梯结果迭代：分析输给头部的局（存碳 / 树经济 / 护货 / 终局），针对性改，换新名再交。
+
+## 2. 版本与成绩（本地 FastCarbon，同 seed 双边配对）
+
+| 版本 | 内容 | 对 no-camp | 文件 |
+|---|---|---|---|
+| no-camp | 公开 v53 + soft_w 0 / campers 1 / camp_from 12 | 对 base_v53 24 局 22 胜 +3,278；天梯同配方 1,952–2,014 | `code/submission_nocamp.py`（不推荐上传） |
+| v1 | BC（CNN）＋规则层 | 32 局 20 胜 +14 ± 246（seeds 700000–700015） | `code/submission_nn_v1.py`（已被 v2 取代） |
+| **v2** | v1 ＋ PPO 微调（RL v3）＋招募保底修复 | **32 局 22 胜 +532 ± 140，最差 −1,177** | **`code/submission_nn_v2.py`**，权重 `data/weights/nn_rl3_last.npz` |
+| Master 影子 | BC v1 在 45 局 Master 回放上微调 | 8 局 4 胜 +445 ± 518（方差大） | `data/weights/nn_shadow_master_v1.npz`（仅作陪练） |
+
+速度：v2 约 150 ms/步（4 进程并行测），最慢 355 ms；天梯限制 1 s/步、1.5 核、512 MiB。打包为 float32，打包前后逐局一致（已验证）。
+
+## 3. 架构（代码地图）
+
+- `code/nnfeat.py` — 共享特征（训练与推理同一份）：信念碳图（可见性规则：采集员看本格、种植员看四邻；四重对称镜像；未见格按树吸收＋3% 再生推进）＋14 平面自我中心 15×15＋18 标量。动作方向已用回放验证：UP=row−1、DOWN=row+1、LEFT=col−1、RIGHT=col+1；step t 的观测配 step t+1 记录的动作。
+- `code/nn_train_bc.py` — 网络（3 残差块、48 通道、循环填充；头＝中心 3×3 patch＋全局均值＋标量 → 256 → 8 logits；另有价值头）＋BC 训练（二面体增广）。支持多数据文件（逗号分隔，不拼接）、`BC_INIT` 热启动、`BC_LR`。
+- `code/nn_agent.py` — NumPy 推理（channels-last im2col＋BLAS）＋规则层 `select_actions`：
+  己方防撞（按置信度占格）、**护货盾** `SHIELD`（满载采集员避开携货 ≤ 自己的敌方采集员可达格）、
+  **终局回家**（剩余步 ≤ 距离＋1 强制回最近基地；最后 15 步允许己方单位挤基地格做碰撞整合）、
+  **招募闸** `recruit_choice`（有空位＋现金够 30＋种树储备即招；采集员为 0 时 30 即招采集；采集员 < max(2, 种植员) 或种植员 ≥ 4 时强制招采集；类型否则由网络定）。`TTA` 开关默认关（见 §5）。
+- `code/nn_rl.py` — PPO 自博：独立价值网、KL(π_ref‖π)、价值预热、团队级 GAE、对手池 `RL_POOL`（支持 `NN:<权重路径>`）、每 5 轮贪心对 nocamp 固定 8 局（seeds 640000–640003）。
+- `code/nn_pack.py` — 打包单文件提交（权重 float32＋zlib＋base85 内嵌）。
+- `code/nn_build_bc.py` — 从回放快照生成 BC 数据（`BC_TEACHERS_ONLY` / `BC_TEACHERS_EXTRA`）。
+- `code/evo.py` — 变体生成（父文件＋`PARAMS.update`）与配对评测（复用 `eval_v53.play_game`）；`code/make_spars.py` 一键重建本地陪练。
+
+## 4. 环境复现（新容器）
+
+```bash
+cd code
+ln -s ../data/traces traces                      # 旧脚本假设平铺布局
+for f in shadow_v2_weights shadow_weights shadow_deepseek_weights; do ln -sf ../data/weights/$f.npz $f.npz; done
+python3 make_spars.py                            # 生成 nocamp.py、exp/spar_tf2/tf3、exp/nn_*.py（均 git-ignore）
+pip install -q torch                             # 仅训练需要（PyPI 版带 CUDA 依赖，约 3 GB；CPU 可用）
+python3 test_fastsim_parity.py                   # 应 36/36 通过
+python3 evo.py match exp/submission_nn_v2.py nocamp.py 700000 4   # 复核 v2（需先 cp submission_nn_v2.py exp/）
+```
+
+BC 数据（4 GB，不入仓）可再生：`python3 nn_build_bc.py ../data/replay_snapshots/snap_20261103 OUT.npz 2380`
+（回放快照两份已存入 `data/replay_snapshots/`：20261103 14:26 UTC 与 20261104 00:10 UTC，各 400 局。公开仓库每次导出整体覆盖，旧快照无法再拉。）
+
+## 5. 已证伪 / 不要重试
+
+| 方向 | 结论 | 证据 |
+|---|---|---|
+| no-camp 单参数爬山（evo v1/v3） | 平台，单参 ±25% 全在噪声内 | `data/evo_state_v1.json`、`data/evo3_state.json` |
+| 中等幅度改种树门槛 | **惰性**（终分逐位不变），约束在种植员编制 | 报告「更正」节 |
+| 旧线 `switcher_treewar` | 对 nocamp 与 base_v53 逐位相同（惰性） | 同上 |
+| RL v1 / v2 | 退化：价值头共享主干把策略拖走 | `data/nn_rl1_log.jsonl`、`data/nn_rl2_log.jsonl` |
+| RL v4 / v5（联赛池，约 30 轮） | 无提升；暴露招募饿死崩盘（已修） | `data/nn_rl4_log.jsonl`、`data/nn_rl5_log_part*.jsonl` |
+| float16 打包 | argmax 翻转致整局分叉 → 改 float32 | 报告「打包精度更正」 |
+| TTA4 | +129 ± 255（噪声），最慢步 866 ms → 关 | 报告 TTA 节 |
+| 新快照重训 BC | 新快照多为中游规则系，教师样本仅 +8% | `nn_build_bc` 输出 |
+
+## 6. 坑（踩过的）
+
+- `pkill -f <模式>` / `pgrep -f` 会匹配到自己所在 shell 的命令行（曾把自己的 shell 停掉、等待循环永不退出）。按 PID 管理进程。
+- 容器会被回收重启：长任务用 `nohup`，权重每 5 轮落盘（`rl_it*.npz`、`rl_last.npz`），断了从 `rl_last` 续跑（价值网重新预热）。
+- `nn_agent` 的 `SHIELD`/`TTA` 是模块级全局；同一进程池里混跑不同开关会互相污染——分开跑 `run_pairs`。
+- 评测噪声：单局分差 sd 约 1,000–2,600；8 局只看方向，结论至少 32 局配对。
+- 陪练 / 变体入池前先做「同 seed 逐位比对」确认非惰性。
+
+## 7. 建议的下一步（按优先级）
+
+1. **上传 v2，拿真实定位**（§1）。这是现在信息量最大的一步。
+2. 抓我们对头部的回放：对局列表 → 下载回放 → 用 `nn_build_bc` 同款解析，统计存碳 / 树收入 / 死亡丢碳 / 终局滞留，与 `reports/alpha_analysis.md` 的榜首画像对照。
+3. 持续积累回放快照（`git clone --depth 1 https://github.com/JUZI1/carbon-league-replays`，每次换新目录），头部对局攒够后重训 BC（更大网络，如 W64×4 块，注意推理时间）。
+4. 搜索增强（未做）：用 FastCarbon 对关键决策（回家时机、招募、满载采集员走位）做短程推演，作为冲榜后手；注意 1 s/步与 1.5 核。
