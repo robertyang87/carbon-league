@@ -256,6 +256,7 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
 RECRUIT_UNTIL = 285   # steps; later recruits cannot pay back
 MIN_COLLECTORS = 2
 MAX_PLANTERS = 4
+PLANTER_FLOOR = 0       # recruit a planter while planters < floor (collector floor already met)
 COL_MARGIN = 0         # collector floor = max(MIN_COLLECTORS, planters + COL_MARGIN)
 
 
@@ -275,6 +276,8 @@ def recruit_choice(lg, cash, nworkers, cap, n_pl, tree_price, step, blocked):
     # seed 640002: 0 collectors from step ~50, lost by 16.8k)
     if n_col < max(MIN_COLLECTORS, n_pl + COL_MARGIN) or n_pl >= MAX_PLANTERS:
         return 1
+    if n_pl < PLANTER_FLOOR:
+        return 2
     return 1 if lg[1] >= lg[2] else 2
 
 
