@@ -11,14 +11,16 @@
   python3 ladder.py replays <matches.json> <目录>  # 下载回放（登录后；≤30 次/分钟；已存在跳过）
 
 环境变量：
-  LADDER_BASE     默认 https://132.232.176.153 。云容器里裸 IP 的 HTTPS 会被出网代理重置，
-                  可设为 https://132.232.176.153.sslip.io（需该域名在环境 Allowed domains 内）。
+  LADDER_BASE     默认 https://132.232.176.153 。云容器里裸 IP 的 HTTPS 会被出网代理重置（无 SNI），
+                  先起 `python3 sni_bridge.py`，再设 LADDER_BASE=http://127.0.0.1:18443（Host 头自动设为 IP）。
+                  sslip.io 之类域名不可用：腾讯云对未备案域名拦截。
   LADDER_COOKIES  会话 cookie 文件，默认 ~/.carbon_ladder_cookies（仓库外，不要提交）。
 证书：服务器是自签名证书，与旧脚本 curl -k 一致不校验。
 """
 import ast, gzip, http.cookiejar, json, os, ssl, sys, time, uuid, urllib.error, urllib.request
 
 BASE = os.environ.get("LADDER_BASE", "https://132.232.176.153").rstrip("/")
+HOST = os.environ.get("LADDER_HOST", "132.232.176.153" if "127.0.0.1" in BASE else "")
 COOKIES = os.path.expanduser(os.environ.get("LADDER_COOKIES", "~/.carbon_ladder_cookies"))
 
 _ctx = ssl.create_default_context()
@@ -42,6 +44,8 @@ def _save():
 
 def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
     h = {"Accept": "application/json"}
+    if HOST:
+        h["Host"] = HOST
     if _csrf:
         h["X-CSRF-Token"] = _csrf
     if isinstance(body, (dict, list)):
@@ -135,8 +139,8 @@ def cmd_board(n=30):
     d = request("/api/leaderboard")
     rows = d.get("strategies", [])[: int(n)]
     for i, s in enumerate(rows, 1):
-        print(f"{i:3d} {s.get('name', '?')[:32]:32s} {s.get('rating', s.get('score', '?'))!s:>10} "
-              f"±{s.get('uncertainty', s.get('sigma', '?'))!s:6} 局 {s.get('games', s.get('n', '?'))}  {s.get('id', '')}")
+        print(f"{i:3d} {s.get('name', '?')[:34]:34s} {s.get('rating', 0):7.0f} ±{s.get('rating_sd', 0):3.0f} "
+              f"{s.get('wins', 0):3d}/{s.get('games', 0):<3d} {s.get('board', ''):5s} {s.get('ranking_phase', '')}  {s.get('id', '')}")
     if not rows:
         print(json.dumps(d, ensure_ascii=False)[:1500])
 
