@@ -123,6 +123,13 @@ def make_agent(weights=None):
 ENDGAME_SLACK = 1      # start the forced return when moves left <= dist + slack
 SHIELD = True          # loaded collectors avoid cells a lighter/equal enemy collector can reach
 BASE_PILE_FROM = 15    # in the last N moves own units may share an own base cell
+# v3 anti-camping (ladder loss vs ds_cov18_m_v1e: 2 empty enemy collectors on the diagonals of each
+# base threatened every approach cell, SHIELD kept loaded collectors parked at d=2 for 180 steps,
+# and own planters idled on the base cells).
+STALL_K = 3            # loaded collector within STALL_R of a base and not getting closer for K steps
+STALL_R = 3            #   -> forced home run with SHIELD off (0 disables)
+PLANTER_OFF_BASE = True  # planters never stay on / step onto an own base cell (before the pile window)
+_stall = {}            # (player, uid) -> (last dist, count, step)
 
 
 def _toward(pos, target):
@@ -158,10 +165,15 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
                     if w[1] < thr[c]:
                         thr[c] = w[1]
     cargo_of = {uid: (w[1] if w[2] == "COLLECTOR" else None) for uid, w in mine[2].items()}
+    step = obs["step"]
+    if step <= 1:
+        for key in [k_ for k_ in _stall if k_[0] == me]:
+            del _stall[key]
+    brave = set()
 
     def safe_first(uid, cand):
         c = cargo_of.get(uid)
-        if not SHIELD or c is None or c <= 0:
+        if not SHIELD or c is None or c <= 0 or uid in brave:
             return cand
         pos = mine[2][uid][0]
         return sorted(cand, key=lambda a: thr[F.nb(pos, F.MOVES[a])] <= c)   # stable: safe moves first
@@ -174,6 +186,21 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
         if k == 0 and cargo > 0 and my_bases:
             b = min(my_bases, key=lambda q: int(F.tdist(pos, q)))
             d = int(F.tdist(pos, b))
+            if STALL_K:
+                key = (me, uid)
+                pd, cnt, ps = _stall.get(key, (99, 0, -9))
+                if ps == step - 1 and cnt >= STALL_K and d > 0:
+                    pass                                   # stay brave until the cargo is home
+                elif (ps == step - 1 and 0 < d <= STALL_R and d >= pd and SHIELD
+                      and any(thr[F.nb(pos, F.MOVES[a])] <= cargo for a in _toward(pos, b))):
+                    cnt += 1
+                else:
+                    cnt = 0
+                _stall[key] = (d, cnt, step)
+                if cnt >= STALL_K:
+                    brave.add(uid)
+                    forced.append((d, i, pr, b))
+                    continue
             if d > 0 and left <= d + ENDGAME_SLACK:
                 forced.append((d, i, pr, b))
                 continue
@@ -197,6 +224,8 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
         cand = safe_first(uid, [a0] + [int(a) for a in np.argsort(-pr) if a != a0])
         for a in cand:
             tgt = F.nb(pos, F.MOVES[a])
+            if PLANTER_OFF_BASE and k == 1 and not pile and tgt in my_bases:
+                continue
             if tgt not in claimed or (pile and k == 0 and tgt in my_bases):
                 claimed.add(tgt)
                 if a:
