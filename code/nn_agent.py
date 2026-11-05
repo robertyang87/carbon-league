@@ -101,6 +101,7 @@ def make_agent(weights=None):
         tr = state["tr"]
         tr.update(obs)
         G, scal, info = tr.global_planes(obs)
+        info["bel"] = tr.bel
         mine = obs["players"][me]
         units = []
         xs, ss = [], []
@@ -131,6 +132,107 @@ STALL_R = 3            #   -> forced home run with SHIELD off (0 disables)
 ENDGAME_BRAVE = True   # endgame forced return ignores SHIELD (undelivered cargo scores 0)
 PLANTER_OFF_BASE = True  # planters never stay on / step onto an own base cell (before the pile window)
 _stall = {}            # (player, uid) -> (last dist, count, step)
+# --- tree manager (rule-computed planter control; off = v8 behaviour) ---
+TREE_MGR = False
+TOLL_AVOID = False     # loaded collectors prefer cells outside enemy trees' 8-neighbourhood (10%/step toll)
+TM_RADIUS = 4          # planter target search radius (torus manhattan)
+TM_STEP_COST = 8.0     # value of one planter step
+TM_DENY = 0.7          # weight of denying an enemy tree's future income when seizing
+TM_SHARED = 0.5        # discount for neighbour cells already drained by another tree
+ABS_CELL, LIFESPAN, SEIZE_COST = 0.0375, 50, 20.0
+
+
+def _tree_value(cell, L, bel, tree_cells, shared, bases):
+    if L <= 0:
+        return 0.0
+    keep = 1.0 - (1.0 - ABS_CELL) ** L
+    v = 0.0
+    for n in F.NB4[cell]:
+        n = int(n)
+        if n in tree_cells or n in bases:
+            continue
+        x = float(bel[n])
+        if n in shared:
+            x *= TM_SHARED
+        v += x * keep
+    return v
+
+
+_tm_commit = {}        # (player, uid) -> committed target cell
+
+
+def tree_plan(obs, info, left):
+    """Return {planter uid: target cell} chosen greedily by rule-computed value.
+    Targets are committed until reached (planted/seized) or invalid; new targets only when cash covers the price."""
+    me = obs["player"]
+    if obs["step"] <= 1:
+        for k_ in [k_ for k_ in _tm_commit if k_[0] == me]:
+            del _tm_commit[k_]
+    P = obs["players"]
+    bel = info["bel"]
+    price = info["tree_price"]
+    bases = set(P[0][1].values()) | set(P[1][1].values())
+    tree_cells, my_tree_cells, en_trees = set(), set(), {}
+    for p in (0, 1):
+        for tid, tv in P[p][3].items():
+            tree_cells.add(tv[0])
+            if p == me:
+                my_tree_cells.add(tv[0])
+            else:
+                en_trees[tv[0]] = tv[1]
+    shared = set()
+    for c in tree_cells:
+        shared.update(int(n) for n in F.NB4[c])
+    planters = [(uid, w[0]) for uid, w in P[me][2].items() if w[2] != "COLLECTOR"]
+    alive = {uid for uid, _ in planters}
+    for k_ in [k_ for k_ in _tm_commit if k_[0] == me and k_[1] not in alive]:
+        del _tm_commit[k_]
+    plan, taken = {}, set()
+    for uid, pos in planters:                      # keep valid commitments
+        c = _tm_commit.get((me, uid))
+        if c is None:
+            continue
+        valid = (c in en_trees) or (c not in tree_cells and c not in bases)
+        if pos == c and c in my_tree_cells:        # done: planted / seized
+            valid = False
+        if valid:
+            plan[uid] = c; taken.add(c); taken.update(int(n) for n in F.NB4[c])
+        else:
+            del _tm_commit[(me, uid)]
+    if info["cash"] < min(price, SEIZE_COST):
+        return plan
+    cands = []
+    for uid, pos in planters:
+        if uid in plan:
+            continue
+        for c in range(F.N):
+            d = int(F.tdist(pos, c))
+            if d > TM_RADIUS or c in bases:
+                continue
+            if c in en_trees:
+                age = en_trees[c]
+                L = min(LIFESPAN - age - d, left - d)
+                v = _tree_value(c, L, bel, tree_cells, shared, bases) * (1.0 + TM_DENY) - SEIZE_COST
+            elif c in tree_cells:
+                continue
+            else:
+                L = min(LIFESPAN, left - d - 1)
+                if L < 8:
+                    continue
+                v = _tree_value(c, L, bel, tree_cells, shared, bases) - price
+            sc = v - TM_STEP_COST * d
+            if sc > 0:
+                cands.append((sc, uid, c))
+    cands.sort(reverse=True)
+    for sc, uid, c in cands:
+        if uid in plan or c in taken:
+            continue
+        plan[uid] = c
+        _tm_commit[(me, uid)] = c
+        taken.add(c)
+        taken.update(int(n) for n in F.NB4[c])     # keep new trees from sharing neighbour cells
+    return plan
+
 
 
 def _toward(pos, target):
@@ -166,6 +268,19 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
                     if w[1] < thr[c]:
                         thr[c] = w[1]
     cargo_of = {uid: (w[1] if w[2] == "COLLECTOR" else None) for uid, w in mine[2].items()}
+    toll = set()
+    if TOLL_AVOID:
+        for tv in obs["players"][1 - me][3].values():
+            r0, c0 = divmod(tv[0], F.S)
+            for dr in (-1, 0, 1):
+                for dc in (-1, 0, 1):
+                    toll.add(((r0 + dr) % F.S) * F.S + (c0 + dc) % F.S)
+    plan = tree_plan(obs, info, left) if (TREE_MGR and "bel" in info) else {}
+    en_reach = set()
+    if plan:
+        for w in obs["players"][1 - me][2].values():
+            if w[2] == "COLLECTOR":
+                en_reach.add(w[0]); en_reach.update(int(n) for n in F.NB4[w[0]])
     step = obs["step"]
     if step <= 1:
         for key in [k_ for k_ in _stall if k_[0] == me]:
@@ -177,6 +292,8 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
         if not SHIELD or c is None or c <= 0 or uid in brave:
             return cand
         pos = mine[2][uid][0]
+        if toll and c > 50:
+            return sorted(cand, key=lambda a: (thr[F.nb(pos, F.MOVES[a])] <= c, F.nb(pos, F.MOVES[a]) in toll))
         return sorted(cand, key=lambda a: thr[F.nb(pos, F.MOVES[a])] <= c)   # stable: safe moves first
     for i, (uid, k, pos) in enumerate(units):
         if k == 2:
@@ -225,6 +342,10 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
     for _, i, pr, a0 in order:
         uid, k, pos = units[i]
         cand = safe_first(uid, [a0] + [int(a) for a in np.argsort(-pr) if a != a0])
+        if k == 1 and uid in plan:
+            tc = plan[uid]
+            mv = [0] if pos == tc else sorted(_toward(pos, tc), key=lambda a: F.nb(pos, F.MOVES[a]) in en_reach)
+            cand = mv + [a for a in cand if a not in mv]
         for a in cand:
             tgt = F.nb(pos, F.MOVES[a])
             if PLANTER_OFF_BASE and k == 1 and not pile and tgt in my_bases:
