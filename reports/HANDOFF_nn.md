@@ -100,6 +100,7 @@ BC 数据（4 GB，不入仓）可再生：`python3 nn_build_bc.py ../data/repla
 | RL v6（v4 规则层，池 nocamp/base_v53/Master 影子/自身，lr 5e-5 KL 0.2，8 轮） | 对 nocamp 配对 −193±241，对 base_v53 +541±627：噪声；第 5 轮贪心 +41（起点 +825） | `data/rl6/rl_log.jsonl`、`data/evo_results.jsonl`（exp/rl6_last） |
 | 种植员保底（v5 上 PLANTER_FLOOR=2/3） | F2 基本惰性（nocamp 23/32 局逐分相同）；F3 对 nocamp +85±158、base_v53 +107±463（噪声），**对 Godslayer 影子 −389±244**（种树收入 3560→2742）。天梯输局「种植员少、树少」是结果不是可直接硬编的原因 | `data/evo_results.jsonl`（exp/v5_F2/F3） |
 | 开局采集员优先（v6 上 EARLY_COL_UNTIL=30/45） | 生效（E45 第 20 步即 7 采集、第 59 步现金 842 vs 444），但对 v6 直接对打 E45 −67±231、E30 −135±280，对 nocamp E45 +444（v6 同 seeds +1293）：更差。依据是 v5/v6 对 Godslayer 10 局：第 50 步对方 7.8 采集/交货 689 vs 我 5.3/365 | `data/evo_results.jsonl`（exp/v6_E30/E45） |
+| v6 网络续训 3 轮（lr 2e-4，同 288 局数据） | val 79.3→79.5%；直接对 v6 32 局 19 胜、+9±274：无差别。同数据上 BC 已饱和 | `data/weights/nn_alpha3_v1.npz`、`data/evo_results.jsonl` |
 | 多系列混合 BC（alpha＋agy＋edge 各 200 局，184 万样本，从 v5 网络热启，lr 3e-4，1 轮） | 直接对 v5 16 局 6 胜、−443±398：不如 v5。单系列影子：Godslayer（1 轮）v5 12/16 胜、Codex v5 15/16 胜。**强的只有 AlphaCarbon 系列** | `data/weights/nn_mix3_v1.npz`、`nn_shadow_{agy,codex}_v1.npz` |
 
 ## 6. 坑（踩过的）
