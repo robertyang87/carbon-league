@@ -128,6 +128,7 @@ BASE_PILE_FROM = 15    # in the last N moves own units may share an own base cel
 # base threatened every approach cell, SHIELD kept loaded collectors parked at d=2 for 180 steps,
 # and own planters idled on the base cells).
 STALL_K = 3            # loaded collector within STALL_R of a base and not getting closer for K steps
+STALL_OFF_LEFT = 0     # stall breaker disabled when moves left <= this (endgame: a capture gifts cargo, worse than holding)
 STALL_R = 3            #   -> forced home run with SHIELD off (0 disables)
 ENDGAME_BRAVE = True   # endgame forced return ignores SHIELD (undelivered cargo scores 0)
 PLANTER_OFF_BASE = True  # planters never stay on / step onto an own base cell (before the pile window)
@@ -304,7 +305,7 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
         if k == 0 and cargo > 0 and my_bases:
             b = min(my_bases, key=lambda q: int(F.tdist(pos, q)))
             d = int(F.tdist(pos, b))
-            if STALL_K:
+            if STALL_K and left > STALL_OFF_LEFT:
                 key = (me, uid)
                 pd, cnt, ps = _stall.get(key, (99, 0, -9))
                 if ps == step - 1 and cnt >= STALL_K and d > 0:
