@@ -40,6 +40,8 @@ RL（v6）对 v4 均为噪声。后续优先：按系列训影子 → 选最强�
 采集员死亡丢货 32（我们 162）。AlphaCarbon 系列内部风格分化（v1 偏纯采集、Master 树战），混学得到「中间路线」；
 **只学 Master 的 v8 明显强于混学的 v7**。
 
+**v8 天梯（2026-11-05 晚）**：24 局 17 胜，2268±54，**全站第 9**；对 2000–2150 档 12 胜 0 负，对 2300+ 档仍 0/6（均 −1448，v6 为 −1963）。
+
 ## 1b. 天梯提交记录
 
 | 策略名 | ID | 说明 |
@@ -108,6 +110,7 @@ BC 数据（4 GB，不入仓）可再生：`python3 nn_build_bc.py ../data/repla
 | 种植员保底（v5 上 PLANTER_FLOOR=2/3） | F2 基本惰性（nocamp 23/32 局逐分相同）；F3 对 nocamp +85±158、base_v53 +107±463（噪声），**对 Godslayer 影子 −389±244**（种树收入 3560→2742）。天梯输局「种植员少、树少」是结果不是可直接硬编的原因 | `data/evo_results.jsonl`（exp/v5_F2/F3） |
 | 开局采集员优先（v6 上 EARLY_COL_UNTIL=30/45） | 生效（E45 第 20 步即 7 采集、第 59 步现金 842 vs 444），但对 v6 直接对打 E45 −67±231、E30 −135±280，对 nocamp E45 +444（v6 同 seeds +1293）：更差。依据是 v5/v6 对 Godslayer 10 局：第 50 步对方 7.8 采集/交货 689 vs 我 5.3/365 | `data/evo_results.jsonl`（exp/v6_E30/E45） |
 | v6 网络续训 3 轮（lr 2e-4，同 288 局数据） | val 79.3→79.5%；直接对 v6 32 局 19 胜、+9±274：无差别。同数据上 BC 已饱和 | `data/weights/nn_alpha3_v1.npz`、`data/evo_results.jsonl` |
+| v8＋Master 对 2300+ 对手 39 局加权（×2）续训 2 轮 | 对 v8 64 局 34 胜 +318±366：无差别 | `data/weights/nn_mtop64.npz` |
 | 规则化「种树管理」替换 v8 种植员（TREE_MGR，按 4 邻格信念碳×剩余寿命估值、贪心分配；第 2 版加目标锁定/半径 4/现金闸） | 对 nocamp 同 2 局：v8 +1694，TM v1 −2211，TM v2 −4103：**远差于网络种植员**（目标漂移、长途送死、打乱配合）。TOLL_AVOID 单开 +1355（2 局，噪声）。结论：精确化要以网络为先验做搜索，而非规则替换 | `code/nn_agent.py`（TREE_MGR/TOLL_AVOID 默认关） |
 | 从零训练大网络（W80 NB4 / W64 NB3，混合数据预训练 1 轮） | W80 每批 3.6 s（>10 小时，弃）；W64 预训练后 AlphaCarbon 第 1 轮 val 75.9%（v6 同期 77.7%），停。**改用保函数扩宽 v6 网络（即 v7）** | `scratchpad` 日志（未入仓） |
 | 多系列混合 BC（alpha＋agy＋edge 各 200 局，184 万样本，从 v5 网络热启，lr 3e-4，1 轮） | 直接对 v5 16 局 6 胜、−443±398：不如 v5。单系列影子：Godslayer（1 轮）v5 12/16 胜、Codex v5 15/16 胜。**强的只有 AlphaCarbon 系列** | `data/weights/nn_mix3_v1.npz`、`nn_shadow_{agy,codex}_v1.npz` |
