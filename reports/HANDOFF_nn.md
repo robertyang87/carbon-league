@@ -44,6 +44,7 @@ RL（v6）对 v4 均为噪声。后续优先：按系列训影子 → 选最强�
 | claude-opus55-cloud-v4 | fbd55b8920b3ffb2cd9b91a04f01880f | **已下线**（34 局 20 胜 2006，大文件榜 17）；v3＋终局回家关护货；本地对 base_v53 16 局配对 v4−v3 +103±25，对 nocamp 32 局 −1±17。提交时 v3 定位 8 局 7 胜 1705、v2 定位完 10 局 4 胜 1387（第 27） |
 | claude-opus55-cloud-v5 | b6b7ccb89976c3eb623f5f03b493529c | **已下线**（59 局 29 胜 2078，全站 18）；**网络换成 AlphaCarbon 系列行为克隆**（BC v1 热启动，该系列最近 200 局天梯回放，68 万样本，4 轮，`data/weights/nn_shadow_alpha_v1.npz`）＋v4 规则层。本地直接对 v4 16 局 13 胜（v4 −805±208）；对 nocamp 32 局 23 胜 +600（配对 +223±194）；对 base_v53 16 局 12 胜 +1230（+420±692）；打包前后逐局一致。提交时 v4 天梯 2016±47（大文件榜 15） |
 | claude-opus55-cloud-v6 | d5c4c6df236eb7c7c7aa213ea13ef563 | 网络＝BC v1 在 **AlphaCarbon 系列全部 288 局**（天梯语料 240＋快照 48，97 万样本）上 BC 5 轮（`data/weights/nn_alpha2_v1.npz`，val 79.3%）＋v5 规则层。本地：直接对 v5 32 局 22 胜 +565±163；对 nocamp 32 局 28 胜 +1293（配对 vs v5 +693±278）；对 base_v53 16 局 13 胜 +1510（+280±539）；打包一致。提交时 v5 约 2100（全站第 14） |
+| claude-opus55-cloud-v7 | 534bdf289b7599419ded26bc84b85c56 | v6 网络经 `code/nn_widen.py` 保函数扩宽 48→64（逐 logit 一致）后在同 288 局 AlphaCarbon 数据续训 3 轮（lr 3e-4，val 79.7%，`data/weights/nn_wide64_alpha.npz`）。本地：直接对 v6 32 局 21 胜 +684±278；对 nocamp 32 局 28 胜 +1150（配对 vs v6 −143±238）；对 base_v53 16 局 12 胜 +1607（+97±534）；均 214 ms/步、最慢 514 ms；打包一致。提交时 v6 天梯 2152±27（全站 14）。**从零训练的大网络（W80/W64）明显更差且太慢，已放弃** |
 
 ## 2. 版本与成绩（本地 FastCarbon，同 seed 双边配对）
 
@@ -101,6 +102,7 @@ BC 数据（4 GB，不入仓）可再生：`python3 nn_build_bc.py ../data/repla
 | 种植员保底（v5 上 PLANTER_FLOOR=2/3） | F2 基本惰性（nocamp 23/32 局逐分相同）；F3 对 nocamp +85±158、base_v53 +107±463（噪声），**对 Godslayer 影子 −389±244**（种树收入 3560→2742）。天梯输局「种植员少、树少」是结果不是可直接硬编的原因 | `data/evo_results.jsonl`（exp/v5_F2/F3） |
 | 开局采集员优先（v6 上 EARLY_COL_UNTIL=30/45） | 生效（E45 第 20 步即 7 采集、第 59 步现金 842 vs 444），但对 v6 直接对打 E45 −67±231、E30 −135±280，对 nocamp E45 +444（v6 同 seeds +1293）：更差。依据是 v5/v6 对 Godslayer 10 局：第 50 步对方 7.8 采集/交货 689 vs 我 5.3/365 | `data/evo_results.jsonl`（exp/v6_E30/E45） |
 | v6 网络续训 3 轮（lr 2e-4，同 288 局数据） | val 79.3→79.5%；直接对 v6 32 局 19 胜、+9±274：无差别。同数据上 BC 已饱和 | `data/weights/nn_alpha3_v1.npz`、`data/evo_results.jsonl` |
+| 从零训练大网络（W80 NB4 / W64 NB3，混合数据预训练 1 轮） | W80 每批 3.6 s（>10 小时，弃）；W64 预训练后 AlphaCarbon 第 1 轮 val 75.9%（v6 同期 77.7%），停。**改用保函数扩宽 v6 网络（即 v7）** | `scratchpad` 日志（未入仓） |
 | 多系列混合 BC（alpha＋agy＋edge 各 200 局，184 万样本，从 v5 网络热启，lr 3e-4，1 轮） | 直接对 v5 16 局 6 胜、−443±398：不如 v5。单系列影子：Godslayer（1 轮）v5 12/16 胜、Codex v5 15/16 胜。**强的只有 AlphaCarbon 系列** | `data/weights/nn_mix3_v1.npz`、`nn_shadow_{agy,codex}_v1.npz` |
 
 ## 6. 坑（踩过的）
