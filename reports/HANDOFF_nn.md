@@ -111,6 +111,7 @@ BC 数据（4 GB，不入仓）可再生：`python3 nn_build_bc.py ../data/repla
 | 开局采集员优先（v6 上 EARLY_COL_UNTIL=30/45） | 生效（E45 第 20 步即 7 采集、第 59 步现金 842 vs 444），但对 v6 直接对打 E45 −67±231、E30 −135±280，对 nocamp E45 +444（v6 同 seeds +1293）：更差。依据是 v5/v6 对 Godslayer 10 局：第 50 步对方 7.8 采集/交货 689 vs 我 5.3/365 | `data/evo_results.jsonl`（exp/v6_E30/E45） |
 | v6 网络续训 3 轮（lr 2e-4，同 288 局数据） | val 79.3→79.5%；直接对 v6 32 局 19 胜、+9±274：无差别。同数据上 BC 已饱和 | `data/weights/nn_alpha3_v1.npz`、`data/evo_results.jsonl` |
 | v8＋Master 对 2300+ 对手 39 局加权（×2）续训 2 轮 | 对 v8 64 局 34 胜 +318±366：无差别 | `data/weights/nn_mtop64.npz` |
+| RL v8（自 v8，W64，池 SELF/v6/v7/nocamp/base_v53，KL 0.2，lr 3e-5，每轮 ~17 分钟） | it5：对 v8 32 局 +19±321；it10：贪心对 nocamp +2151（it0 +1091），但对 v8 32 局 20 胜、均值 −162±488（中位 +349），含 1 局崩盘（seed 860002：采集员每趟只采 7–15 就折返，第 200 步全灭，2:12827）。RL 会在个别地图上把采集行为练坏，提交前必须查最差局 | `data/rl8/rl_log.jsonl` |
 | 规则化「种树管理」替换 v8 种植员（TREE_MGR，按 4 邻格信念碳×剩余寿命估值、贪心分配；第 2 版加目标锁定/半径 4/现金闸） | 对 nocamp 同 2 局：v8 +1694，TM v1 −2211，TM v2 −4103：**远差于网络种植员**（目标漂移、长途送死、打乱配合）。TOLL_AVOID 单开 +1355（2 局，噪声）。结论：精确化要以网络为先验做搜索，而非规则替换 | `code/nn_agent.py`（TREE_MGR/TOLL_AVOID 默认关） |
 | 从零训练大网络（W80 NB4 / W64 NB3，混合数据预训练 1 轮） | W80 每批 3.6 s（>10 小时，弃）；W64 预训练后 AlphaCarbon 第 1 轮 val 75.9%（v6 同期 77.7%），停。**改用保函数扩宽 v6 网络（即 v7）** | `scratchpad` 日志（未入仓） |
 | 多系列混合 BC（alpha＋agy＋edge 各 200 局，184 万样本，从 v5 网络热启，lr 3e-4，1 轮） | 直接对 v5 16 局 6 胜、−443±398：不如 v5。单系列影子：Godslayer（1 轮）v5 12/16 胜、Codex v5 15/16 胜。**强的只有 AlphaCarbon 系列** | `data/weights/nn_mix3_v1.npz`、`nn_shadow_{agy,codex}_v1.npz` |
