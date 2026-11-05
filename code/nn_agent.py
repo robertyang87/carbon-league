@@ -256,6 +256,8 @@ def select_actions(units, logits, obs, info, cap, rng=None, temp=1.0):
 RECRUIT_UNTIL = 285   # steps; later recruits cannot pay back
 MIN_COLLECTORS = 2
 MAX_PLANTERS = 4
+EARLY_COL_UNTIL = 0     # before this step: recruit collectors only (no tree reserve) while collectors < EARLY_COL_N
+EARLY_COL_N = 6
 PLANTER_FLOOR = 0       # recruit a planter while planters < floor (collector floor already met)
 COL_MARGIN = 0         # collector floor = max(MIN_COLLECTORS, planters + COL_MARGIN)
 
@@ -267,6 +269,8 @@ def recruit_choice(lg, cash, nworkers, cap, n_pl, tree_price, step, blocked):
     if blocked or nworkers >= cap or step >= RECRUIT_UNTIL:
         return 0
     n_col = nworkers - n_pl
+    if step < EARLY_COL_UNTIL and n_col < EARLY_COL_N:   # opening collector rush (Godslayer-style economy)
+        return 1 if cash >= 30 else 0
     if n_col == 0:                      # no income without collectors: buy one at any cash >= 30
         return 1 if cash >= 30 else 0
     reserve = tree_price if n_pl > 0 else 0.0
