@@ -1,5 +1,13 @@
 # 交接文档：NN 新线（claude-opus55-cloud）— 2026-11-04
 
+> **2026-11-06 仓库精简（已改写全部历史并强制推送 main 与 claude/nocamp-eval-g1）**：`.git` 422 MB → 17 MB。
+> 从历史中移除：`data/replay_snapshots/`（两份公开快照，**含 Master 早期 42 局，已不可再取**）、`data/traces/`（旧会话调试对局）、
+> 旧 case-B/C 实验（`code/caseb*`、`code/casec*` 及其数据/权重）、`code/env_src` 的演示视频/动图/notebook、旧提交 `submission_nn_v1`–`v8.py`、
+> 失败/过时权重（`nn_alpha3_v1`、`nn_mix3_v1`、`nn_mtop64`、`nn_ro12`、`nn_shadow_agy/codex_v1`、`nn_wide64_init`、`pred_data_*`、`rl_ckpt/`、`rl2_ckpt/`）。
+> v9 复现链保留：`nn_bc_w48_v1_final` → `nn_alpha2_v1`(v6) → `nn_wide64_alpha`(v7) → `nn_master64`(v8/v9)，`code/submission_nn_v9.py`。
+> 下文提到的已删文件仅作历史记录；重训 BC 需用 `code/ladder_corpus.py` 从服务器重新下载（服务器保留最近 1 万局）。旧会话脚本中引用 traces/快照的部分已不可直接运行。
+
+
 > 写给接手的新会话。数字全部来自仓库内落盘文件（`data/evo_results.jsonl`、`data/nn_rl*_log.jsonl`、`reports/nocamp_recipe_report.md`）。
 > 全过程（含判废记录）见 `reports/nocamp_recipe_report.md`；本文件只讲「现在在哪、怎么接着干」。
 
