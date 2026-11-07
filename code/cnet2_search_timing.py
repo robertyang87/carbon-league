@@ -1,0 +1,30 @@
+"""cnet2_search_timing -- platform-style load (exec, no __file__) of a packed search submission, play N games
+vs an opponent, record per-step wall ms of our agent and sims per searched step.
+python3 cnet2_search_timing.py PACKED.py OPP.py SEED0 N"""
+import os, sys, time, json
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import numpy as np, eval_v53
+from fastsim import FastCarbon
+pk, opp, s0, n = sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4])
+W, SIMS, res = [], [], []
+for seed in range(s0, s0 + n):
+    g = {"__name__": "__main__", "__builtins__": __builtins__}
+    exec(compile(open(pk).read(), "<submission>", "exec"), g)
+    ob = eval_v53.load_agent_fn(opp); side = seed % 2
+    sim = FastCarbon(eval_v53.CFG).reset(seed=seed); prev = (0, 0)
+    for t in range(300):
+        o = [sim.obs(0), sim.obs(1)]
+        ts = time.time(); a = g["agent"](o[side], eval_v53.CFG); W.append((time.time() - ts) * 1000)
+        st = g["_AG"].stats; cur = (st.get("sims", 0), st["searched"])
+        if cur[1] > prev[1]:
+            SIMS.append(cur[0] - prev[0])
+        prev = cur
+        b = ob(o[1 - side], eval_v53.CFG)
+        sim.step(*((a, b) if side == 0 else (b, a)))
+    st = g["_AG"].stats
+    res.append({"seed": seed, "margin": round(sim.cash[side] - sim.cash[1 - side]), "errors": st["errors"], "aborted": st.get("aborted", 0)})
+    print(json.dumps(res[-1]), flush=True)
+W = np.array(W); S = np.array(SIMS)
+print(json.dumps({"steps": len(W), "wall_ms": {"mean": round(W.mean(), 1), "p50": round(np.percentile(W, 50)), "p90": round(np.percentile(W, 90)),
+      "p99": round(np.percentile(W, 99)), "max": round(W.max())}, "sims_per_searched_step": {"mean": round(S.mean(), 1), "p10": float(np.percentile(S, 10)),
+      "p50": float(np.percentile(S, 50)), "p90": float(np.percentile(S, 90)), "searched": len(S)}}))

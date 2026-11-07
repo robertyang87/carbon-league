@@ -41,6 +41,15 @@ KL_BETA = float(os.environ.get("RL_KL", "0.5"))       # KL(pi_ref || pi) penalty
 EVAL_EVERY = 5
 EVAL_SEEDS = (640000, 4)                              # fixed greedy eval vs nocamp: 4 seeds x 2 sides
 TEMP = float(os.environ.get("RL_TEMP", "0.5"))
+RL_DEVICE = os.environ.get("RL_DEVICE", "cpu")
+
+
+def _rule_consts(A):
+    """v9 rule-layer constants (module globals in nn_agent) via env."""
+    if os.environ.get("RL_ENDGAME_BRAVE") is not None:
+        A.ENDGAME_BRAVE = os.environ["RL_ENDGAME_BRAVE"] == "1"
+    if os.environ.get("RL_STALL_OFF_LEFT") is not None:
+        A.STALL_OFF_LEFT = int(os.environ["RL_STALL_OFF_LEFT"])
 
 
 def _softmax(z):
@@ -54,6 +63,7 @@ def rollout(task):
     import eval_v53
     from fastsim import FastCarbon
     import nn_agent as A
+    _rule_consts(A)
     random.seed(eval_v53.rng_seed(seed, side))
     rng = np.random.default_rng(seed * 7 + side)
     pol = A.Policy(sd)
@@ -116,6 +126,7 @@ def greedy_game(task):
     import eval_v53
     from fastsim import FastCarbon
     import nn_agent as A
+    _rule_consts(A)
     random.seed(eval_v53.rng_seed(seed, side))
     sim = FastCarbon(eval_v53.CFG).reset(seed=seed)
     me = A.make_agent(sd)
@@ -143,16 +154,18 @@ def main(init, outdir, minutes=60):
     vopt = torch.optim.Adam(vnet.parameters(), lr=float(os.environ.get("RL_VLR", "3e-4")))
     ref = TB.Net()
     ref.load_state_dict(net.state_dict())
+    DEV = torch.device(RL_DEVICE)
+    net.to(DEV); vnet.to(DEV); ref.to(DEV)
     ref.eval()
     for q in ref.parameters():
         q.requires_grad_(False)
     log = open(os.path.join(outdir, "rl_log.jsonl"), "a")
-    snaps = [{k: v.detach().numpy().copy() for k, v in net.state_dict().items()}]
+    snaps = [{k: v.detach().cpu().numpy().copy() for k, v in net.state_dict().items()}]
     deadline = time.time() + 60 * minutes
     it = 0
     seed = int(os.environ.get("RL_SEED0", "500000"))
     def _greedy_eval(tag_it):
-        sd_now = {k: v.detach().numpy().copy() for k, v in net.state_dict().items()}
+        sd_now = {k: v.detach().cpu().numpy().copy() for k, v in net.state_dict().items()}
         et = [(sd_now, EVAL_SEEDS[0] + j, sd_) for j in range(EVAL_SEEDS[1]) for sd_ in (0, 1)]
         with ProcessPoolExecutor(max_workers=WORKERS) as ex:
             em = list(ex.map(greedy_game, et))
@@ -164,7 +177,7 @@ def main(init, outdir, minutes=60):
     _greedy_eval(0)
     while time.time() < deadline:
         it += 1
-        sd = {k: v.detach().numpy().copy() for k, v in net.state_dict().items()}
+        sd = {k: v.detach().cpu().numpy().copy() for k, v in net.state_dict().items()}
         names, probs = zip(*POOL)
         tasks = []
         for g in range(GAMES_PER_ITER):
@@ -182,9 +195,9 @@ def main(init, outdir, minutes=60):
             for r in res:
                 if len(r["A"]) == 0:
                     continue
-                xb = torch.from_numpy(r["X"]).float() / 127.0
-                _, v = vnet(xb, torch.from_numpy(r["Sc"]))
-                v = v.numpy()
+                xb = (torch.from_numpy(r["X"]).float() / 127.0).to(DEV)
+                _, v = vnet(xb, torch.from_numpy(r["Sc"]).to(DEV))
+                v = v.cpu().numpy()
                 Tn = len(r["R"])
                 Vt = np.zeros(Tn + 1, np.float32)
                 cnt = np.zeros(Tn, np.float32)
@@ -203,6 +216,7 @@ def main(init, outdir, minutes=60):
         LP0 = torch.from_numpy(np.concatenate(LPs)); ADVt = torch.from_numpy(np.concatenate(ADV))
         RETt = torch.from_numpy(np.concatenate(RET))
         ADVt = (ADVt - ADVt.mean()) / (ADVt.std() + 1e-6)
+        K, A, LP0, ADVt, RETt = K.to(DEV), A.to(DEV), LP0.to(DEV), ADVt.to(DEV), RETt.to(DEV)
         net.train(); vnet.train()
         n = len(A); bs = 1024
         t1 = time.time()
@@ -210,10 +224,12 @@ def main(init, outdir, minutes=60):
         for ep in range(int(os.environ.get("RL_EPOCHS", "2"))):
             perm = torch.randperm(n)
             for b in range(0, n, bs):
-                ii = perm[b:b + bs]
-                xb = X[ii].float() / 127.0
-                logits, _ = net(xb, S[ii])
-                _, v = vnet(xb, S[ii])
+                ic = perm[b:b + bs]
+                ii = ic.to(DEV)
+                xb = (X[ic].float() / 127.0).to(DEV)
+                sb = S[ic].to(DEV)
+                logits, _ = net(xb, sb)
+                _, v = vnet(xb, sb)
                 ml = TB.masked_logits(logits, K[ii])
                 # temperature-consistent log-probs over the kind's action subset
                 lp_all = Fn.log_softmax(ml / TEMP, dim=1)
@@ -225,7 +241,7 @@ def main(init, outdir, minutes=60):
                 p_all = lp_all.exp()
                 ent = -(p_all * torch.where(p_all > 0, lp_all, torch.zeros_like(lp_all))).sum(1).mean()
                 with torch.no_grad():
-                    rl_, _ = ref(xb, S[ii])
+                    rl_, _ = ref(xb, sb)
                     lr_all = Fn.log_softmax(TB.masked_logits(rl_, K[ii]) / TEMP, dim=1)
                     pr_all = lr_all.exp()
                 kl = (pr_all * (torch.where(pr_all > 0, lr_all, torch.zeros_like(lr_all)) - lp_all)).sum(1).mean()
@@ -250,7 +266,7 @@ def main(init, outdir, minutes=60):
         if it % EVAL_EVERY == 0:
             _greedy_eval(it)
         if it % 5 == 0:
-            snaps.append({k: v.detach().numpy().copy() for k, v in net.state_dict().items()})
+            snaps.append({k: v.detach().cpu().numpy().copy() for k, v in net.state_dict().items()})
             snaps = snaps[-6:]
             TB.export(net, os.path.join(outdir, f"rl_it{it}.npz"), {"it": it})
         TB.export(net, os.path.join(outdir, "rl_last.npz"), {"it": it})

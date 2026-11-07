@@ -26,6 +26,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import nnfeat as F  # noqa: E402
 
+DEV = torch.device(os.environ.get("BC_DEVICE", "cpu"))   # "mps" on Apple silicon
 W = int(os.environ.get("BC_W", "48"))
 NB = int(os.environ.get("BC_NB", "3"))
 HID = int(os.environ.get("BC_HID", "256"))
@@ -125,6 +126,7 @@ def main(data, out, epochs=4):
     if init:
         w = np.load(init)
         net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"})
+    net.to(DEV)
     max_lr = float(os.environ.get("BC_LR", "2e-3"))
     opt = torch.optim.AdamW(net.parameters(), lr=max_lr, weight_decay=1e-4)
     bs = 512
@@ -160,8 +162,9 @@ def main(data, out, epochs=4):
             xb = X[ii].float() / 127.0
             yb = y[ii]
             xb, yb = augment(xb, yb)
-            logits, v = net(xb, Sc[ii])
-            loss = Fn.cross_entropy(masked_logits(logits, kind[ii]), yb)
+            xb, yb, kb = xb.to(DEV), yb.to(DEV), kind[ii].to(DEV)
+            logits, v = net(xb, Sc[ii].to(DEV))
+            loss = Fn.cross_entropy(masked_logits(logits, kb), yb)
             if vt is not None:
                 loss = loss + 0.25 * Fn.mse_loss(v, vt[ii])
             opt.zero_grad(); loss.backward(); opt.step(); sched.step()
@@ -188,8 +191,8 @@ def evaluate(net, X, Sc, y, kind, idx):
     ok = {0: [0, 0], 1: [0, 0], 2: [0, 0]}
     for b in range(0, len(idx), 2048):
         ii = torch.from_numpy(idx[b:b + 2048])
-        logits, _ = net(X[ii].float() / 127.0, Sc[ii])
-        pred = masked_logits(logits, kind[ii]).argmax(1)
+        logits, _ = net((X[ii].float() / 127.0).to(DEV), Sc[ii].to(DEV))
+        pred = masked_logits(logits, kind[ii].to(DEV)).argmax(1).cpu()
         for k in (0, 1, 2):
             m = kind[ii] == k
             ok[k][0] += (pred[m] == y[ii][m]).sum().item(); ok[k][1] += m.sum().item()

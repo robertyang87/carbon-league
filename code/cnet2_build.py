@@ -1,0 +1,213 @@
+"""cnet2_build -- behaviour-cloning dataset for cnet2 from top-bot replays.
+
+Scans replay dirs (index.json + replays/*.json.gz), dedups games by file name
+(id-game), keeps the sides played by the teacher strategies (cnet2_feat.TEACHERS),
+replays each game's observations in order through cnet2_feat.Feat (history +
+belief), pairs the observation at t with the action at t+1, and computes the
+autoregressive per-unit features under teacher forcing.
+
+Output dir: one .npy per field (memmap-able) + meta.json.
+Usage: python cnet2_build.py OUT_DIR REPLAY_DIR [REPLAY_DIR ...]
+"""
+
+import gzip
+import json
+import os
+import sys
+import zlib
+from concurrent.futures import ProcessPoolExecutor
+
+import numpy as np
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import cnet2_feat as F  # noqa: E402
+
+FIELDS = {  # name: (dtype, shape-per-sample)
+    "maps": (np.uint8, (F.P, F.N)), "scal": (np.float16, (F.NS,)),
+    "tok_pos": (np.int16, (F.T,)), "tok_kind": (np.int8, (F.T,)), "tok_mask": (np.bool_, (F.T,)),
+    "tok_cargo": (np.float16, (F.T,)), "hist_cell": (np.int16, (F.T, F.H)),
+    "hist_cargo": (np.float16, (F.T, F.H)), "hist_move": (np.int8, (F.T, F.H)),
+    "uf": (np.float16, (F.OWN, F.UF)), "mf": (np.float16, (F.OWN, 5, F.MF)),
+    "legal": (np.bool_, (F.OWN, 5)), "y": (np.int8, (F.OWN,)), "carbon": (np.uint8, (F.N,)),
+    "value": (np.float16, ()), "teacher": (np.int8, ()), "gid": (np.int32, ()), "step": (np.int16, ()),
+}
+
+
+def teacher_id(name):
+    return F.TEACHERS.index(name) if name in F.TEACHERS else F.TEACHERS.index("other")
+
+
+def build_game(task):
+    path, sides, gi, tids, margins, out = task
+    try:
+        d = json.load(gzip.open(path))
+    except Exception as e:
+        return gi, 0, repr(e)[:200]
+    st = d["steps"]
+    rows = {k: [] for k in FIELDS}
+    for p, tid, mg in zip(sides, tids, margins):
+        f = F.Feat(p)
+        for t in range(len(st) - 1):
+            o0 = st[t][0]["observation"]
+            obs = {"step": o0["step"], "players": o0["players"],
+                   "carbon": st[t][p]["observation"]["carbon"], "player": p}
+            if st[t][p].get("status") not in (None, "ACTIVE"):
+                break
+            x = f.observe(obs)
+            act = st[t + 1][p].get("action") or {}
+            y = f.labels(act)
+            pf = F.Prefix(x, f.aux)
+            uf = np.zeros((F.OWN, F.UF), np.float32); mf = np.zeros((F.OWN, 5, F.MF), np.float32)
+            legal = np.zeros((F.OWN, 5), bool)
+            for s in range(F.OWN):
+                if not x["tok_mask"][s]:
+                    continue
+                uf[s], mf[s], legal[s] = pf.feats(s)
+                if not legal[s, y[s]]:
+                    y[s] = 0
+                pf.advance(s, int(y[s]))
+            full = np.asarray(o0.get("full_carbon", obs["carbon"]), np.float64)
+            order = F.CANON if p else F.GRID
+            r = rows
+            r["maps"].append(x["maps"]); r["scal"].append(x["scal"])
+            r["tok_pos"].append(x["tok_pos"]); r["tok_kind"].append(x["tok_kind"])
+            r["tok_mask"].append(x["tok_mask"]); r["tok_cargo"].append(x["tok_cargo"])
+            r["hist_cell"].append(x["hist_cell"]); r["hist_cargo"].append(x["hist_cargo"])
+            r["hist_move"].append(x["hist_move"])
+            r["uf"].append(uf); r["mf"].append(mf); r["legal"].append(legal); r["y"].append(y)
+            r["carbon"].append(F.q8(full[order] / 100.0))
+            r["value"].append(np.tanh(mg / 3000.0)); r["teacher"].append(tid)
+            r["gid"].append(gi); r["step"].append(t)
+    n = len(rows["y"])
+    if n == 0:
+        return gi, 0, None
+    arr = {k: np.asarray(v).astype(FIELDS[k][0]) for k, v in rows.items()}
+    np.savez(out, **arr)
+    return gi, n, None
+
+
+OUR_NAMES = ("claude-opus55-cloud-",)
+STRONG = 2400.0
+OURS_MIN_OPP = 2350.0
+
+
+def ratings(dirs):
+    r = {}
+    for rd in dirs:
+        fp = os.path.join(rd, "leaderboard.json")
+        if not os.path.exists(fp):
+            continue
+        lb = json.load(open(fp))
+        for e in (lb["strategies"] if isinstance(lb, dict) else lb):
+            if e.get("rating") is not None:
+                r[e["name"]] = max(r.get(e["name"], 0.0), float(e["rating"]))
+    return r
+
+
+def scan(dirs, min_steps=200, weighted=False):
+    """weighted: per-side sample weight = (2 if side won) * (1.5 if both rated >= STRONG);
+    dirs whose name contains 'ours_corpus' contribute only games our bot LOST, teacher = winning opponent
+    (rated >= OURS_MIN_OPP or a listed teacher)."""
+    games, seen = [], set()
+    R = ratings(dirs) if weighted else {}
+    for rd in dirs:
+        ours = "ours_corpus" in rd
+        idx = json.load(open(os.path.join(rd, "index.json")))
+        for g in idx:
+            key = os.path.basename(g["file"])
+            if key in seen or g.get("steps", 0) < min_steps:
+                continue
+            fp = os.path.join(rd, g["file"])
+            if not os.path.exists(fp):
+                continue
+            order = g["order"]
+            names = [g["strategies"][order[s]]["name"] for s in (0, 1)]
+            scores = [g["scores"][order[s]] for s in (0, 1)]
+            if ours:
+                us = [s for s in (0, 1) if names[s].startswith(OUR_NAMES)]
+                if len(us) != 1:
+                    continue
+                o = 1 - us[0]
+                if not (scores[o] > scores[us[0]] and (names[o] in F.TEACHERS[:-1] or R.get(names[o], 0) >= OURS_MIN_OPP)):
+                    continue
+                sides = [o]
+            else:
+                sides = [s for s in (0, 1) if names[s] in F.TEACHERS[:-1]]
+            if not sides:
+                continue
+            seen.add(key)
+            g = {"file": fp, "key": key, "names": names, "scores": scores, "sides": sides,
+                 "val": zlib.crc32(key.encode()) % 10 == 0, "src": os.path.basename(rd.rstrip("/"))}
+            if weighted:
+                strong = min(R.get(names[0], 0), R.get(names[1], 0)) >= STRONG
+                g["wts"] = [(2.0 if scores[s] > scores[1 - s] else 1.0) * (1.5 if strong else 1.0) for s in sides]
+                g["ours_loss"] = ours
+            games.append(g)
+    return games
+
+
+def main(out, dirs):
+    os.makedirs(os.path.join(out, "shards"), exist_ok=True)
+    weighted = os.environ.get("CNET2_WEIGHTED") == "1"
+    games = scan(dirs, weighted=weighted)
+    fields = dict(FIELDS)
+    if weighted:
+        fields["w"] = (np.float16, ())
+    tasks = []
+    for gi, g in enumerate(games):
+        g["gi"] = gi
+        tids = [teacher_id(g["names"][s]) for s in g["sides"]]
+        mg = [g["scores"][s] - g["scores"][1 - s] for s in g["sides"]]
+        suffix = ("_s" + "".join(map(str, g["sides"]))) if weighted else ""
+        g["shard"] = os.path.join(out, "shards", g["key"].replace(".json.gz", "") + suffix + ".npz")
+        tasks.append((g["file"], g["sides"], gi, tids, mg, g["shard"]))
+    ns = {}
+    todo = []
+    for t in tasks:
+        if os.path.exists(t[5]):
+            ns[t[2]] = int(np.load(t[5])["y"].shape[0])
+        else:
+            todo.append(t)
+    tasks = todo
+    with ProcessPoolExecutor(max_workers=int(os.environ.get("BUILD_WORKERS", "8"))) as ex:
+        for gi, n, err in ex.map(build_game, tasks, chunksize=1):
+            ns[gi] = n
+            if err:
+                print("err", gi, err, flush=True)
+    total = sum(ns.values())
+    mm = {k: np.lib.format.open_memmap(os.path.join(out, k + ".npy"), mode="w+", dtype=dt,
+                                       shape=(total,) + sh) for k, (dt, sh) in fields.items()}
+    o = 0
+    for gi in range(len(games)):
+        if not ns.get(gi):
+            continue
+        D = np.load(games[gi]["shard"])
+        n = len(D["y"])
+        for k in FIELDS:
+            mm[k][o:o + n] = D[k] if k != "gid" else gi
+        if weighted:
+            # rows are side-major (each side's steps ascending): a step reset starts the next side
+            st_ = D["step"].astype(np.int64)
+            seg = np.concatenate([[0], np.cumsum(np.diff(st_) < 0)])
+            mm["w"][o:o + n] = np.asarray(games[gi]["wts"], np.float32)[seg]
+        o += n
+    for k in mm:
+        mm[k].flush()
+    for g in games:
+        g["n"] = ns.get(g["gi"], 0)
+    json.dump({"games": games, "total": total, "teachers": F.TEACHERS}, open(os.path.join(out, "meta.json"), "w"))
+    from collections import Counter
+    c = Counter(F.TEACHERS[t] for g in games for t in [teacher_id(g["names"][s]) for s in g["sides"]])
+    rep = {"games": len(games), "samples": total, "val_games": sum(g["val"] for g in games), "teacher_sides": c}
+    if weighted:
+        w = np.asarray(mm["w"], np.float32)
+        rep["ours_loss_games"] = sum(1 for g in games if g.get("ours_loss"))
+        rep["ours_loss_samples"] = int(sum(g["n"] for g in games if g.get("ours_loss")))
+        rep["weight_hist"] = {str(v): int((w == v).sum()) for v in np.unique(w)}
+        rep["weight_mean"] = round(float(w.mean()), 3)
+    print(json.dumps(rep))
+
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2:])

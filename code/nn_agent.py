@@ -382,6 +382,8 @@ EARLY_COL_UNTIL = 0     # before this step: recruit collectors only (no tree res
 EARLY_COL_N = 6
 PLANTER_FLOOR = 0       # recruit a planter while planters < floor (collector floor already met)
 COL_MARGIN = 0         # collector floor = max(MIN_COLLECTORS, planters + COL_MARGIN)
+NO_RESERVE_UNTIL = 0    # before this step (and while workers < NO_RESERVE_UNITS) recruits ignore the tree reserve
+NO_RESERVE_UNITS = 9
 
 
 def recruit_choice(lg, cash, nworkers, cap, n_pl, tree_price, step, blocked):
@@ -396,6 +398,8 @@ def recruit_choice(lg, cash, nworkers, cap, n_pl, tree_price, step, blocked):
     if n_col == 0:                      # no income without collectors: buy one at any cash >= 30
         return 1 if cash >= 30 else 0
     reserve = tree_price if n_pl > 0 else 0.0
+    if step < NO_RESERVE_UNTIL and nworkers < NO_RESERVE_UNITS:   # opening: expand first (Master/1C-Zero spend down to ~30)
+        reserve = 0.0
     if cash < 30 + min(reserve, 60.0):
         return 0
     # collector floor / planter cap: a policy that only ever picks planters starves (seen in RL v5b,

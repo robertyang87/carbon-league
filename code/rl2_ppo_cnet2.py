@@ -1,0 +1,161 @@
+"""rl2_ppo_cnet2 -- rl2_ppo adapter for the cnet2 policy (cnet2_feat / cnet2_np /
+cnet2_model, read-only imports; those files are owned by the BC line).
+
+Actor: cnet2_feat.Feat(seat).observe(obs) -> x, aux; cnet2_np.Policy.encode;
+autoregressive GRU decode over own slots 0..11 (workers 0-9, bases 10-11)
+with cnet2_feat.Prefix -- the same loop as cnet2_np.Policy.act, but sampling
+from softmax(logits / T) and recording, per slot, the prefix-dependent inputs
+(uf, mf, legal) so the torch model can teacher-force the exact joint action.
+No rule layer: legality is cnet2_feat.Prefix's mask (recruits need cash >= 30
+and a free slot; worker moves are always legal, collisions are learned).
+
+Trainer: cnet2_model.CNet2 forward(b) (teacher-forced with b["y"]) -> masked
+logits [B,12,5], value [B] (tanh; BC target tanh(margin/3000), so use
+--rscale 3.33e-4 for a calibrated value start).
+
+Env: CNET2_TEACHER (teacher-embedding id used at play; default 1 = 1C-Zero-v9).
+"""
+
+import json
+import math
+import os
+import sys
+
+import numpy as np
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+
+import cnet2_feat as F  # noqa: E402
+
+NEG = np.float32(-1e9)
+TEACHER = int(os.environ.get("CNET2_TEACHER", "1"))
+XKEYS = ("maps", "scal", "tok_pos", "tok_kind", "tok_mask", "tok_cargo", "hist_cell", "hist_cargo", "hist_move")
+
+
+class Cnet2Actor:
+    def __init__(self, weights):
+        import cnet2_np as NP
+        self.pol = NP.Policy(weights)
+
+    def new_game(self, side):
+        return {"f": F.Feat(side), "side": side}
+
+    def _decode(self, x, aux, rng, temp, greedy):
+        P = self.pol; w = P.w
+        tok, ctx = P.encode(x, TEACHER)
+        value = math.tanh(float(ctx @ w["value.weightT"][:, 0] + w["value.bias"][0]))
+        h = P.lin(ctx, "h0")
+        prev = 8
+        pf = F.Prefix(x, aux)
+        y = np.full(F.OWN, -1, np.int8)
+        UF = np.zeros((F.OWN, F.UF), np.float16)
+        MF = np.zeros((F.OWN, 5, F.MF), np.float16)
+        LG = np.zeros((F.OWN, 5), bool)
+        logp = 0.0
+        lpu = np.zeros(F.OWN, np.float32)
+        for s in range(F.OWN):
+            if not x["tok_mask"][s]:
+                continue
+            uf, mf, legal = pf.feats(s)
+            UF[s] = uf; MF[s] = mf; LG[s] = legal
+            inp = P.lin(np.concatenate([tok[s], ctx, uf, mf.reshape(-1)]), "din") + w["aemb.weight"][prev]
+            h = P.gru(inp, h)
+            base = P.lin(h, "whead") if s < 10 else np.concatenate([P.lin(h, "bhead"), np.zeros(2, np.float32)])
+            lg = base + P.lin(mf.astype(np.float32), "V") @ P.lin(h, "U")
+            z = np.where(legal, lg / temp, -np.inf)
+            z = z - z.max(); p = np.exp(z); p /= p.sum()
+            a = int(np.argmax(p)) if greedy else int(rng.choice(5, p=p))
+            lpu[s] = float(np.log(max(p[a], 1e-12)))
+            logp += float(lpu[s])
+            y[s] = a
+            pf.advance(s, a)
+            prev = a + (0 if s < 10 else 5)
+        return y, UF, MF, LG, logp, value, lpu
+
+    def act(self, states, obss, rng, temp, greedy):
+        outs = []
+        for st, obs in zip(states, obss):
+            f = st["f"]
+            x = f.observe(obs)
+            y, UF, MF, LG, logp, value, lpu = self._decode(x, f.aux, rng, temp, greedy)
+            acts = f.to_actions(y)
+            rec = {k: np.asarray(x[k]) for k in XKEYS}
+            rec.update(uf=UF, mf=MF, legal=LG, y=y, logp=logp, value=value, lpu=lpu)
+            outs.append((acts, rec))
+        return outs
+
+
+_DT = {"maps": np.uint8, "scal": np.float16, "tok_pos": np.int16, "tok_kind": np.int8, "tok_mask": bool,
+       "tok_cargo": np.float16, "hist_cell": np.int16, "hist_cargo": np.float16, "hist_move": np.int8,
+       "uf": np.float16, "mf": np.float16, "legal": bool, "y": np.int8}
+
+
+class Cnet2Buffer:
+    def __init__(self, trajs):
+        recs = [r for t in trajs for r in t]
+        self.n = len(recs)
+        self.d = {k: np.stack([np.asarray(r[k]).astype(dt) for r in recs]) for k, dt in _DT.items()}
+        self.n_ukeys = self.n * F.OWN
+        self.lp0u = np.concatenate([r["lpu"] for r in recs]).astype(np.float32)   # ukey = d*OWN + s
+        self.act = np.zeros(int((self.d["y"] >= 0).sum()))      # for unit counting in logs
+
+    def nbytes(self):
+        return sum(v.nbytes for v in self.d.values())
+
+    def batch(self, idx, device):
+        import torch
+        idx = np.asarray(idx)
+        t = {}
+        for k, v in self.d.items():
+            a = v[idx]
+            if a.dtype == np.float16:
+                a = a.astype(np.float32)
+            t[k] = torch.from_numpy(np.ascontiguousarray(a))
+        B = len(idx)
+        t["maps"] = (t["maps"].float() / 255.0).reshape(B, F.P, F.S, F.S)
+        for k in ("tok_pos", "tok_kind", "hist_cell", "hist_move", "y"):
+            t[k] = t[k].long()
+        t["teacher"] = torch.full((B,), TEACHER, dtype=torch.long)
+        t["ukey"] = torch.from_numpy((idx[:, None] * F.OWN + np.arange(F.OWN)[None, :]).astype(np.int64))
+        out = {k: v.to(device) for k, v in t.items()}
+        out["B"] = B
+        return out
+
+
+class Cnet2Adapter:
+    name = "cnet2"
+    n_act = 5
+
+    def make_actor(self, weights):
+        return Cnet2Actor(weights)
+
+    def make_model(self, weights):
+        import torch
+        from cnet2_model import CNet2
+        meta = weights.get("meta")
+        cfg = json.loads(str(meta))["cfg"] if meta is not None else {}
+        net = CNet2(**cfg)
+        net.load_state_dict({k: torch.from_numpy(np.asarray(v, np.float32)) for k, v in weights.items() if k != "meta"})
+        net._rl2_cfg = cfg
+        return net
+
+    def export(self, model):
+        sd = {k: v.detach().cpu().float().numpy() for k, v in model.state_dict().items()}
+        sd["meta"] = np.array(json.dumps({"cfg": getattr(model, "_rl2_cfg", model.cfg)}))
+        return sd
+
+    def build_buffer(self, trajs):
+        return Cnet2Buffer(trajs)
+
+    def evaluate(self, model, b, temp):
+        import torch
+        lg, v, _ = model(b)                                   # [B,12,5] masked (NEG), [B]
+        keep = b["tok_mask"][:, :F.OWN] & (b["y"] >= 0)
+        legal = b["legal"][keep]
+        z = lg[keep] / temp
+        z = torch.where(legal, z, torch.full_like(z, -1e9))
+        lp = torch.log_softmax(z, dim=1)
+        B = b["B"]
+        seg = torch.arange(B, device=lg.device)[:, None].expand(-1, F.OWN)[keep]
+        return {"lp": lp, "act": b["y"][keep], "seg": seg, "value": v, "legal": legal, "ukey": b["ukey"][keep]}
