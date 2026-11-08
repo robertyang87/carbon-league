@@ -1040,6 +1040,14 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             return cand[j]
         return acts
 
+    _inner = agent
+
+    def agent(obs, config=None):            # root fallback: any exception -> empty action, never a failed step
+        try:
+            return _inner(obs, config)
+        except Exception:
+            stats["root_errors"] = stats.get("root_errors", 0) + 1
+            return {}
     agent.stats = stats
     agent.state = st
     agent.log = log
