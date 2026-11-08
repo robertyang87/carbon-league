@@ -22,7 +22,10 @@ def main(a, b, s0, n, tag):
             if "ledger_pol" in r:
                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
-                         bk=r.get("bankrupt_steps", 0), wms=r.get("a_worst_step_ms"), ms=r.get("a_ms_per_step"))
+                         bk=r.get("bankrupt_steps", 0), lx=r.get("ledger_extra"), wms=r.get("a_worst_step_ms"), ms=r.get("a_ms_per_step"),
+                         **({"srch": r["a_stats"].get("searched"), "chg": r["a_stats"].get("changed"),
+                             "shal": r["a_stats"].get("shallow"), "ab": r["a_stats"].get("aborted", 0),
+                             "rerr": r["a_stats"].get("root_errors", 0)} if r.get("a_stats") else {}))
             lf.write(json.dumps(g) + "\n"); lf.flush()
     m = [r["margin"] for r in rows if "margin" in r]
     if len(m) < 2:
@@ -36,9 +39,13 @@ def main(a, b, s0, n, tag):
            "dep": [L("pol", "deposits"), L("opp", "deposits")], "tree": [L("pol", "tree_income"), L("opp", "tree_income")],
            "deathcargo": [L("pol", "death_cargo"), L("opp", "death_cargo")], "plants": [L("pol", "plant_count"), L("opp", "plant_count")],
            "t": time.strftime("%H:%M"),
+           "search_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched")),
+           "changed0_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched") and not r["a_stats"].get("changed")),
            "games": [[r.get("seed"), r.get("policy_side"), round(r["margin"])] for r in rows if "margin" in r]}
     open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k != "games"}), flush=True)
     # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
+    if rec["changed0_games"]:
+        print(json.dumps({"tag": tag, "WARN_SEARCH_NEVER_CHANGED": rec["changed0_games"], "of": rec["search_games"]}), file=sys.stderr, flush=True)
     if rec["err"] or rec["n"] < n:
         print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": rec["n"], "want": n, "err": rec["err"]}), file=sys.stderr, flush=True)
         sys.exit(2)

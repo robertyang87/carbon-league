@@ -125,6 +125,7 @@ def play_game(task):
     comp = {}
     t0 = time.time()
     bk_steps = 0
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0]}   # stand-in validation ledger
     for step in range(1, 301):
         pre = sim.get_state()
         acts = []
@@ -139,6 +140,14 @@ def play_game(task):
         sim.step(acts[0], acts[1])
         post = sim.get_state()
         # bankruptcy: policy side has no workers and cannot afford a collector (after the opening)
+        for p in range(2):
+            nc = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR")
+            sh["colsteps"][p] += nc
+            if step == 75:
+                sh["col75"][p] = nc
+            if step > 285:
+                sh["late15"][p] += sum(float(w["carbon"]) for wid, w in pre["workers"].items()
+                                       if w["player"] == p and wid not in post["workers"])
         if step >= 30 and post["cash"][a_side] < float(CFG["recCollectorCost"]) and \
                 not any(w["player"] == a_side for w in post["workers"].values()):
             bk_steps += 1
@@ -193,6 +202,9 @@ def play_game(task):
         "b_ms_per_step": round(1000.0 * times[1 - a_side] / 300, 2),
         "a_worst_step_ms": round(1000.0 * worst_a, 0),
         "wall_s": round(wall, 1), "bankrupt_steps": bk_steps,
+        "ledger_extra": {"pol": {k: v[a_side] for k, v in sh.items()}, "opp": {k: v[1 - a_side] for k, v in sh.items()}},
+        "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
+                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors")},
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
         "comp": {str(k): v for k, v in comp.items()},
     }
