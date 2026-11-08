@@ -125,7 +125,7 @@ def play_game(task):
     comp = {}
     t0 = time.time()
     bk_steps = 0
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "treesteps": [0, 0]}   # stand-in validation ledger
     for step in range(1, 301):
         pre = sim.get_state()
         acts = []
@@ -143,6 +143,7 @@ def play_game(task):
         for p in range(2):
             nc = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR")
             sh["colsteps"][p] += nc
+            sh["treesteps"][p] += sum(1 for t in post["trees"].values() if t["player"] == p)
             if step == 75:
                 sh["col75"][p] = nc
             if step > 285:

@@ -91,11 +91,13 @@ def main(out, conf, wp=None, wr=None):
     wp = wp or os.path.join(wd, "cnet2_b128.npz")
     wr = wr or os.path.join(wd, "cnet2_s64.npz")
     parts = {}
+    qmodes = {"1": os.environ.get("CNET2_QMODE", "int8"), "2": os.environ.get("CNET2_QMODE_ROLL", os.environ.get("CNET2_QMODE", "int8"))}
     for tag, path in (("1", wp), ("2", wr)):
         w = dict(np.load(path))
+        P.QMODE = qmodes[tag]                    # policy and rollout net can be packed differently (int8 / f16)
         meta, raw, deq = P.quantize(w)
         qp = path.replace(".npz", "_q8.npz")
-        if os.path.exists(qp):
+        if P.QMODE == "int8" and os.path.exists(qp):
             q = np.load(qp)
             assert all(np.array_equal(deq[k], q[k]) for k in deq), "dequantised != " + qp
         parts[tag] = (json.dumps(meta), str(w["meta"]), base64.b64encode(zlib.compress(raw, 9)).decode())

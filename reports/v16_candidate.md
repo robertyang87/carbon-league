@@ -56,3 +56,21 @@ Search looks at 1 key unit per step (MAX_KEY=1). Plan for v17: MAX_KEY 2-3 in th
   and cargo lost within ±15% of the real bot against the same opponent (Master2s vs v15: lost ~550).
 - Comparisons on search-enabled stand-ins only like-for-like (net vs net or search vs search): the stand-in shares
   our b128v7 base, so our opponent model predicts it unrealistically well.
+
+## Update 22:20 — packing loss found, stand-in v2 accepted
+- Cloud, fixed count, vs v13, 200 games: packed int8 **without** caps vs float search **-189 ± 78**; vs v16 net +277.
+  So int8 quantization (most likely the first-time-quantized rollout net s64v7) costs ~190 on its own.
+- vs 1C-Zero-v9 (120 games): packed no-caps vs v16 net **+202 ± 93**; with caps ~0. Caveat (Fable): v9's replays are
+  slot 1, so v9 is the foreign bot we predict best. Gradient test queued: v5 (same family, never a teacher) and the
+  无始 stand-in (other family, same architecture), 100 games each, search vs no search.
+- Mac, 4 procs, same 40 maps: no caps 820 ms/step (full search under heavy contention) vs capped 363 ms; +151 ± 174.
+  The platform's ±8% per-game spread means it is not that crowded: "most steps full, a few lose one round" stands.
+- Fix for the online build: rollout net f16 (`CNET2_QMODE_ROLL=f16`, policy stays int8; 5.7 MB) and caps
+  0.7 / 0.85 / 0.95. Tests running: all-f16 and mixed builds (no caps) vs float.
+- Master2s stand-in v2 (`exp/cnet2_m2s2stand.py`, b128v7 + all 137 games, slot 5) passes the ledger check vs v15
+  (col75 -4%, collector-steps -2%, lost +14%, last-15 +13%, deliveries +3%); v15 wins only 15/50 against it.
+  **Reading rule:** its ledger matches but its margin is ~1/3 of the real one (v15 -360 vs ~-1170), so only paired
+  differences between candidates on the same maps count; never infer "beats Master2s" from "beats the stand-in".
+  The search-enabled stand-in fails (lost +48%, last-15 +54%) and is not used.
+- 无始 stand-in targets added to `data/stand_check.py` (`--vs ws_all | ws_v15`, incl. tree-steps); it must pass
+  before it is read as a foreign opponent.
