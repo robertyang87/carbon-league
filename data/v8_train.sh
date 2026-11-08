@@ -23,7 +23,7 @@ for gm in meta['games']:
         if (o.startswith('无始') or o.startswith('AgyCarbon-P2C')) and gm['scores'][sd]>gm['scores'][1-sd]: hot[gm['gi']]=True
 m=hot[g]; w[m]=w[m]*2.0; print('counter-tree-rush samples', int(m.sum()))
 w.flush(); print('teacher counts', np.bincount(t, minlength=8).tolist())
-uw=np.load(D+'uw.npy', mmap_mode='r+'); m=(s>=40)&(s<=100); u=np.asarray(uw[m]); u[:,10:]=np.where(u[:,10:]>1, 3.0, u[:,10:]); uw[m]=u; uw.flush()
+uw=np.load(D+'uw.npy', mmap_mode='r+'); m=(s>=40)&(s<=100); u=np.asarray(uw[m]); u[:,10:]=np.where(u[:,10:]>1, 3.0, u[:,10:]); uw[m]=u; uw.flush()   # base recruit steps 40-100: SET to 3.0 (was 2.0 from the builder), not x3
 PY
 unset OMP_NUM_THREADS OPENBLAS_NUM_THREADS VECLIB_MAXIMUM_THREADS
 BC_DEVICE=mps BC_INIT=../data/weights/cnet2_b128v7.npz BC_LR=2e-4 ../.venv/bin/python cnet2_train.py ../data/cnet2_ds_v8 ../data/weights/cnet2_b128v8.npz 4 '{"C":128,"NB":8,"D":128}' > ../data/cnet2_train_b128v8.log 2>&1

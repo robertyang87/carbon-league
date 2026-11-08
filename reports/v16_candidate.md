@@ -28,6 +28,7 @@ Built with `cnet2_search_pack.py` from:
 ## Open question 1: is the shipped search truncated by its clock caps?
 | packed file, vs v13 | conditions | paired vs float search |
 |---|---|---|
+| **with caps (as shipped)** | **platform, 35 ladder games**: 370-393 ms/step per game (spread 6%), last step 435-473 ms, no game near any limit | (no paired number; direct timing evidence only) |
 | with caps (as shipped) | cloud, 60 procs (heavily contended) | -407 ± 75 (200) |
 | with caps (as shipped) | Mac, 4 procs, 363 ms/step | -286 ± 149 (40) |
 | caps removed (`submission_cnet2_v16s_nocap.py`) | cloud, fixed count | -149 ± 134 (first 60) |

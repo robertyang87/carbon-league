@@ -1,4 +1,6 @@
-"""Held-out stand-in dataset: ONLY 无始6.0 / 无始7.0 sides (teacher slot 6). python3 build_ws.py OUT DIR"""
+"""Held-out stand-in dataset: ONLY 无始6.0 / 无始7.0 sides (teacher slot 6). python3 build_ws.py OUT DIR
+Slot 6 is warm-started as-is from the base net (no BC_REINIT_TEACH): unlike the Godslayer slot in v6, the style
+vector starts from whatever slot 6 meant in the init weights and is fine-tuned from there."""
 import sys
 import cnet2_feat as F
 

@@ -19,6 +19,6 @@ for tag in args:
     m = lambda f: sum(f(r) for r in R) / n
     got = {"col75": m(lambda r: r['lx']['opp']['col75']), "colsteps": m(lambda r: r['lx']['opp']['colsteps']),
            "lost": m(lambda r: r['olost']), "late15": m(lambda r: r['lx']['opp']['late15']), "dep": m(lambda r: r['odep'])}
-    ok = all(abs(got[k] / REAL[k] - 1) <= 0.15 for k in ("col75", "colsteps", "lost"))
+    ok = all(abs(got[k] / REAL[k] - 1) <= 0.15 for k in ("col75", "colsteps", "lost", "late15"))   # late15 is what the exam tests
     print(f"{tag}: n {n} stand-in wins {sum(r['margin'] < 0 for r in R)} mean margin(us) {m(lambda r: r['margin']):+.0f} | " +
           " ".join(f"{k} {got[k]:.0f}/{REAL[k]} ({100*(got[k]/REAL[k]-1):+.0f}%)" for k in REAL) + f" | LIKE={ok}")
