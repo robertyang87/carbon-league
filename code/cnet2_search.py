@@ -466,7 +466,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         else:
             # phase style switch: TEACHER early, TEACHER_LATE from step LATE_STEP on (default off)
             TL = cfg.get("TEACHER_LATE")
-            y, lg0, _ = pol.act(x, f.aux, teacher=TL if (TL is not None and obs["step"] >= cfg.get("LATE_STEP", 999)) else T)
+            st["T_now"] = TL if (TL is not None and obs["step"] >= cfg.get("LATE_STEP", 999)) else T   # rollouts use the same slot
+            y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
         if cfg["GUARD"]:
             try:
@@ -836,7 +837,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 ts_ = time.time()
                 xs, auxs, tch = [], [], []
                 for s_, (fm, fop) in zip(sims, fs):
-                    xm = fm.observe(s_.obs(me)); xs.append(xm); auxs.append(fm.aux); tch.append(T)
+                    xm = fm.observe(s_.obs(me)); xs.append(xm); auxs.append(fm.aux); tch.append(st.get("T_now", T))
                 for (c, i), s_, (fm, fop) in zip(batch, sims, fs):
                     xq = fop.observe(s_.obs(1 - me)); xs.append(xq); auxs.append(fop.aux); tch.append(int(ks[i]))
                 nz = np.concatenate([np.zeros((nb, F.OWN)), np.stack([rnoise[i, hh - 1] for c, i in batch])])
@@ -992,7 +993,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             nw = time.time()
             xs, auxs, tch = [], [], []
             for s_, (fm, fop) in zip(sims, fs):
-                xm = fm.observe(s_.obs(me)); xs.append(xm); auxs.append(fm.aux); tch.append(T)
+                xm = fm.observe(s_.obs(me)); xs.append(xm); auxs.append(fm.aux); tch.append(st.get("T_now", T))
             for s_, (fm, fop) in zip(sims, fs):
                 xq = fop.observe(s_.obs(1 - me)); xs.append(xq); auxs.append(fop.aux); tch.append(st["ot"])
             lab = act_b(rpol, xs, auxs, tch)

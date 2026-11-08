@@ -2,7 +2,8 @@ import json,math,sys
 def load(t):
     d={}
     for tt in t.split('+'):
-        for r in map(json.loads,open(f'../data/bigeval_live/{tt}.jsonl')): d[r['seed']]=r
+        for r in map(json.loads,open(f'../data/bigeval_live/{tt}.jsonl')):
+            if r.get('margin') is not None: d[r['seed']]=r   # skip errored games
     return d
 c=load(sys.argv[1]); b=load(sys.argv[2])
 ks=[s for s in c if s in b]

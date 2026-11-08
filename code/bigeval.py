@@ -22,9 +22,12 @@ def main(a, b, s0, n, tag):
             if "ledger_pol" in r:
                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
-                         bk=r.get("bankrupt_steps", 0))
+                         bk=r.get("bankrupt_steps", 0), wms=r.get("a_worst_step_ms"), ms=r.get("a_ms_per_step"))
             lf.write(json.dumps(g) + "\n"); lf.flush()
     m = [r["margin"] for r in rows if "margin" in r]
+    if len(m) < 2:
+        print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m)}), file=sys.stderr, flush=True)
+        sys.exit(2)
     L = lambda side, k: round(st.mean([r[f"ledger_{side}"][k] for r in rows if "margin" in r]))
     se = st.stdev(m) / len(m) ** .5
     rec = {"tag": tag, "a": a, "b": b, "seed0": s0, "n": len(m), "err": sum("error" in r for r in rows),
@@ -35,5 +38,9 @@ def main(a, b, s0, n, tag):
            "t": time.strftime("%H:%M"),
            "games": [[r.get("seed"), r.get("policy_side"), round(r["margin"])] for r in rows if "margin" in r]}
     open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k != "games"}), flush=True)
+    # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
+    if rec["err"] or rec["n"] < n:
+        print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": rec["n"], "want": n, "err": rec["err"]}), file=sys.stderr, flush=True)
+        sys.exit(2)
 if __name__ == "__main__":
     a = sys.argv[1:]; main(a[0], a[1], int(a[2]), int(a[3]), a[4])

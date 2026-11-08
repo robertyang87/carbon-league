@@ -8,16 +8,17 @@ ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 $SSH 'mkdir -p ~/carbon/code ~/carbon/data/weights ~/carbon/data/rl2 ~/carbon/data/bigeval_live'
 rsync -az --delete -e "ssh -i $K" \
   --exclude '__pycache__' --exclude 'exp/opp_1cz_*' --exclude 'exp/*1cz*' --exclude 'exp/*1czero*' \
-  --exclude 'reference_*' --exclude 'exp/cnet2_m2stand.py' --exclude '*.log' \
+  --exclude 'reference_*' --exclude '*.log' \
   "$ROOT/code/" $U@$H:carbon/code/
-rsync -az -e "ssh -i $K" "$ROOT/data/weights/"{cnet2_b128.npz,cnet2_b128_q8.npz,cnet2_s64.npz,cnet2_s64_q8.npz,cnet2_b128v5.npz,cnet2_b128v3.npz} \
+rsync -az -e "ssh -i $K" "$ROOT/data/weights/"{cnet2_b128.npz,cnet2_b128_q8.npz,cnet2_s64.npz,cnet2_s64_q8.npz,cnet2_b128v5.npz,cnet2_b128v3.npz,cnet2_b128v6.npz,cnet2_b128v7.npz,cnet2_m2stand.npz,cnet2_m2sstand.npz} \
   $U@$H:carbon/data/weights/ 2>/dev/null || rsync -az -e "ssh -i $K" "$ROOT/data/weights/"cnet2_b128*.npz "$ROOT/data/weights/"cnet2_s64*.npz $U@$H:carbon/data/weights/
 $SSH 'bash -s' <<'REMOTE'
 set -e
 export DEBIAN_FRONTEND=noninteractive
 command -v rsync >/dev/null || (apt-get update -qq && apt-get install -y -qq rsync)
-dpkg -s python3.12-venv >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq python3.12-venv python3-pip); [ -x .venv/bin/pip ] || rm -rf ~/carbon/.venv
+dpkg -s python3.12-venv >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq python3.12-venv python3-pip)
 cd ~/carbon
+[ -x .venv/bin/pip ] || rm -rf .venv          # only a broken venv (no pip) is rebuilt
 [ -x .venv/bin/python ] || python3 -m venv .venv
 .venv/bin/pip -q install --upgrade pip
 .venv/bin/pip -q install "numpy==2.*" scipy

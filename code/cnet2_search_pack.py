@@ -22,7 +22,7 @@ MODS = ["cnet2_feat", "cnet2_np", "fastsim", "cnet2_search"]
 TEMPLATE = '''"""Carbon League: cnet2 b128 policy (v12) + cnet2_search test-time rollout search (pure NumPy)."""
 import os
 for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
-    os.environ.setdefault(_k, "1")
+    os.environ[_k] = "1"   # force: a multi-game platform host must not run multithreaded BLAS
 import base64, sys, types, zlib
 import numpy as np
 

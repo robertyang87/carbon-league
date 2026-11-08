@@ -9,10 +9,13 @@ while true; do
     [ $((f % E)) -eq 0 ] && [ "$f" -gt 0 ] || continue
     [ -f ../data/$RLC/eval/done_$f ] && continue
     cp ../data/$RLC/in/live/w_$f.npz ../data/$RLC/eval/w_$f.npz || continue
-    RL_W=$(pwd)/../data/$RLC/eval/w_$f.npz ../.venv/bin/python bigeval.py exp/cnet2_rlg.py exp/submission_cnet2_v13.py 992000 200 rl_${f}_v13 > /dev/null 2>&1
-    RL_W=$(pwd)/../data/$RLC/eval/w_$f.npz ../.venv/bin/python bigeval.py exp/cnet2_rlg.py exp/opp_wb532.py 995000 200 rl_${f}_wb532 > /dev/null 2>&1
-    RL_W=$(pwd)/../data/$RLC/eval/w_$f.npz ../.venv/bin/python bigeval.py exp/cnet2_rlg.py exp/cnet2_m2stand.py 994000 50 rl_${f}_m2s > /dev/null 2>&1
-    touch ../data/$RLC/eval/done_$f
+    ok=1
+    rm -f ../data/bigeval_live/rl_${f}_v13.jsonl ../data/bigeval_live/rl_${f}_wb532.jsonl ../data/bigeval_live/rl_${f}_m2s.jsonl   # retries start clean
+    RL_W=$(pwd)/../data/$RLC/eval/w_$f.npz ../.venv/bin/python bigeval.py exp/cnet2_rlg.py exp/submission_cnet2_v13.py 992000 200 rl_${f}_v13 >> ../data/$RLC/eval/evald.log 2>&1 || ok=0
+    RL_W=$(pwd)/../data/$RLC/eval/w_$f.npz ../.venv/bin/python bigeval.py exp/cnet2_rlg.py exp/opp_wb532.py 995000 200 rl_${f}_wb532 >> ../data/$RLC/eval/evald.log 2>&1 || ok=0
+    RL_W=$(pwd)/../data/$RLC/eval/w_$f.npz ../.venv/bin/python bigeval.py exp/cnet2_rlg.py exp/cnet2_m2stand.py 994000 50 rl_${f}_m2s >> ../data/$RLC/eval/evald.log 2>&1 || ok=0
+    # only a complete, error-free exam is marked done; otherwise it is retried next pass and logged
+    if [ $ok = 1 ]; then touch ../data/$RLC/eval/done_$f; else echo "$(date +%T) it=$f INCOMPLETE, will retry" >> ../data/$RLC/eval/evald.log; fi
   done
   sleep 30
 done

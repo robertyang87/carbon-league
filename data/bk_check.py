@@ -7,7 +7,7 @@ def run(t): return eval_v53.play_game(t)
 if __name__ == '__main__':
     a, b, tag = sys.argv[1:4]
     rows = [json.loads(l) for l in open(f'../data/bigeval_live/{tag}.jsonl')]
-    bad = [r for r in rows if r['margin'] < -1000]
+    bad = [r for r in rows if r.get('margin') is not None and r['margin'] < -1000]
     with ProcessPoolExecutor(4) as ex:
         res = list(ex.map(run, [(tag + '_bk', a, b, r['seed'], r['seed'] % 2) for r in bad]))
     for r0, r in zip(bad, res):
