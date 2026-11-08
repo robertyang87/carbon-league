@@ -1,0 +1,7 @@
+cd /Users/baggioustb/dev/carbon/carbon-league/code
+while pgrep -f "bigeval.py exp/submission_cnet2_v16s_f16nc_st" >/dev/null; do sleep 20; done
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BC_W=64 EVO_WORKERS=4
+for net in v8 v7; do for o in v13:submission_cnet2_v13:992000 wb532:opp_wb532:995000 m2s2:cnet2_m2s2stand:996000 ws:cnet2_wsstand:999500; do IFS=: read n f s <<< "$o"
+  ../.venv/bin/python bigeval.py exp/cnet2_${net}s57_240.py exp/$f.py $s 200 m_${net}n_$n >> ../data/v8_exam.log 2>&1
+done; done
+echo V8_EXAM_DONE

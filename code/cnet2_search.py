@@ -372,7 +372,10 @@ def key_units(obs, cfg):
             if h_[1] not in [u for _, u in out]:
                 out.append(h_); break
         return out
-    return keys[:cfg["MAX_KEY"]]
+    mk = cfg["MAX_KEY"]
+    if cfg.get("MAX_KEY_LATE") is not None and obs["step"] >= cfg.get("KEY_LATE_STEP", 999):
+        mk = cfg["MAX_KEY_LATE"]          # endgame: several loaded units run home at once -> search more of them
+    return keys[:mk]
 
 
 def hunter_acts(obs, me, acts_o, cfg):
@@ -466,7 +469,17 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         else:
             # phase style switch: TEACHER early, TEACHER_LATE from step LATE_STEP on (default off)
             TL = cfg.get("TEACHER_LATE")
-            st["T_now"] = TL if (TL is not None and obs["step"] >= cfg.get("LATE_STEP", 999)) else T   # rollouts use the same slot
+            # Master-line detection: the opponent's FIRST recruit is a collector (CC...) -> switch styles earlier
+            if obs["step"] <= 12 and "opp_first" not in st:
+                ow = [w for w in obs["players"][1 - me][2].values()]
+                if ow:
+                    st["opp_first"] = ow[0][2]
+            if obs["step"] == 0:
+                st.pop("opp_first", None)
+            ls = cfg.get("LATE_STEP", 999)
+            if cfg.get("LATE_STEP_MASTER") is not None and st.get("opp_first") == "COLLECTOR":
+                ls = cfg["LATE_STEP_MASTER"]
+            st["T_now"] = TL if (TL is not None and obs["step"] >= ls) else T   # rollouts use the same slot
             y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
         if cfg["GUARD"]:
@@ -755,6 +768,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         # ---- per-simulation-index randomness: style draw, root reply, rollout noise
         rng = np.random.default_rng(cfg["RSEED"] * 1000003 + step * 7919 + me)
         RS = cfg["ROOT_S"]
+        if cfg.get("ROOT_S_LATE") is not None and step >= cfg.get("KEY_LATE_STEP", 999):
+            RS = cfg["ROOT_S_LATE"]       # endgame: per-unit sims shrink as MAX_KEY_LATE grows (same total budget)
         S_ = np.array(list(cfg["STYLES"]) + ([XT] if xpol is not None else [])); w = st["ow"]
         ci = np.minimum(np.searchsorted(np.cumsum(w), (np.arange(RS) + rng.random(RS)) / RS * w.sum()), len(S_) - 1)
         ks = S_[ci]

@@ -22,6 +22,7 @@ def main(a, b, s0, n, tag):
             if "ledger_pol" in r:
                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
+                         tinc=round(r["ledger_pol"]["tree_income"]), otinc=round(r["ledger_opp"]["tree_income"]),
                          bk=r.get("bankrupt_steps", 0), lx=r.get("ledger_extra"), wms=r.get("a_worst_step_ms"), ms=r.get("a_ms_per_step"),
                          **({"srch": r["a_stats"].get("searched"), "chg": r["a_stats"].get("changed"),
                              "shal": r["a_stats"].get("shallow"), "ab": r["a_stats"].get("aborted", 0),

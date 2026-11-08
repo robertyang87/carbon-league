@@ -37,6 +37,10 @@ FIELDS = {  # name: (dtype, shape-per-sample)
 UW = os.environ.get("CNET2_UW") == "1"   # per-unit decision weights (dataset v6+)
 UW_DELIV, UW_SEIZED, UW_SEIZED_K, UW_MINLOAD = 1.5, 0.3, 4, 50.0
 UW_RECRUIT, UW_REC_T0, UW_REC_T1 = 2.0, 40, 100
+UW_PLANT = os.environ.get("CNET2_UW_PLANT") == "1"   # dataset v10+: planter trips
+UW_PLANT_OK, UW_SEIZE_OK, UW_PLANT_FAIL, UW_PLANT_FAIL_K = 2.0, 1.5, 0.7, 3   # planting is worth more than seizing
+UW_TREELIFE = os.environ.get("CNET2_UW_TREELIFE") == "1"     # v18+: where a planted tree survives matters
+UW_LIFE_LONG, UW_LIFE_SHORT, LIFE_LONG, LIFE_SHORT = 1.5, 0.8, 40, 15
 if UW:
     FIELDS["uw"] = (np.float16, (F.OWN,))
 
@@ -48,11 +52,15 @@ def unit_weights(st, p, slots):
     base slots (10, 11) at steps UW_REC_T0..UW_REC_T1 -> UW_RECRUIT."""
     T = len(st)
     cargo = [{} for _ in range(T)]; pos = [{} for _ in range(T)]; bases = [set() for _ in range(T)]
+    kind = {}; own_trees = [set() for _ in range(T)]; own_tree_id = [{} for _ in range(T)]; own_tree_ids = [set() for _ in range(T)]
     for t in range(T):
         pl = st[t][0]["observation"]["players"][p]
         bases[t] = set(int(b) for b in pl[1].values())
+        own_trees[t] = set(int(v[0]) for v in (pl[3] or {}).values()) if isinstance(pl[3], dict) else set()
+        own_tree_id[t] = {int(v[0]): k for k, v in (pl[3] or {}).items()} if isinstance(pl[3], dict) else {}
+        own_tree_ids[t] = set(own_tree_id[t].values())
         for u, w in pl[2].items():
-            cargo[t][u] = float(w[1]); pos[t][u] = int(w[0])
+            cargo[t][u] = float(w[1]); pos[t][u] = int(w[0]); kind[u] = w[2]
     mult = {}
     uids = set(u for c in cargo for u in c)
     for u in uids:
@@ -72,6 +80,38 @@ def unit_weights(st, p, slots):
                             mult[(k, u)] = UW_DELIV
             else:
                 t += 1
+    if UW_PLANT:
+        # planter trip = birth..last step alive. Success = the cell it stood on becomes OURS the next step
+        # (a new tree planted there, or an enemy tree there seized). Success: whole trip x UW_PLANT_OK.
+        # Failure: only the last UW_PLANT_FAIL_K decisions x UW_PLANT_FAIL (some deaths buy something: blocking, trades).
+        # planters are NOT consumed by planting: one planter can plant/seize several times. Each segment
+        # (birth or previous success .. success) is up-weighted; the tail after the last success up to death keeps
+        # weight 1 except its last UW_PLANT_FAIL_K decisions (x UW_PLANT_FAIL) when the planter died there.
+        for u in [u for u in kind if kind[u] == "PLANTER"]:
+            ts = [t for t in range(T) if u in pos[t]]
+            if not ts:
+                continue
+            t0, t1 = ts[0], ts[-1]
+            seg = t0
+            for t in ts:
+                if t + 1 < T:
+                    c = pos[t][u]
+                    if c in own_trees[t + 1] and c not in own_trees[t]:     # planted here or seized the enemy tree here
+                        tid = own_tree_id[t + 1].get(c, "")
+                        planted = tid.startswith(f"player-{p}-")   # seized trees keep the enemy id
+                        fac = UW_PLANT_OK if planted else UW_SEIZE_OK
+                        if UW_TREELIFE and tid:
+                            life = 0
+                            while t + 1 + life < T and tid in own_tree_ids[t + 1 + life]:
+                                life += 1
+                            if t + 1 + life < T:            # (trees alive at the end are not judged)
+                                fac *= UW_LIFE_LONG if life >= LIFE_LONG else (UW_LIFE_SHORT if life < LIFE_SHORT else 1.0)
+                        for k in range(seg, t + 1):
+                            mult[(k, u)] = mult.get((k, u), 1.0) * fac
+                        seg = t + 1
+            if t1 + 1 < T and u not in pos[t1 + 1]:                         # died
+                for k in range(max(seg, t1 - UW_PLANT_FAIL_K + 1), t1 + 1):
+                    mult[(k, u)] = mult.get((k, u), 1.0) * UW_PLANT_FAIL
     out = np.ones((len(slots), F.OWN), np.float32)
     for i, (t, own) in enumerate(slots):
         for s, u in enumerate(own):

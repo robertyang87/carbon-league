@@ -82,7 +82,9 @@ def agent(observation, configuration):
         _W = (w1, w2)
     if _AG is None or observation["step"] == 0:
         _AG = _S.make_search_agent(CONF, weights=_W[0], rweights=_W[1])
-    return _AG(observation, configuration)
+    a = _AG(observation, configuration)
+    agent.last_stats = _AG.stats      # local eval only (per-game search stats); harmless on the platform
+    return a
 '''
 
 

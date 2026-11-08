@@ -125,7 +125,8 @@ def play_game(task):
     comp = {}
     t0 = time.time()
     bk_steps = 0
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "treesteps": [0, 0]}   # stand-in validation ledger
+    pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0]}   # stand-in validation ledger
     for step in range(1, 301):
         pre = sim.get_state()
         acts = []
@@ -141,11 +142,37 @@ def play_game(task):
         post = sim.get_state()
         # bankruptcy: policy side has no workers and cannot afford a collector (after the opening)
         for p in range(2):
+            ps = pstat[p]
+            at = {w["pos"]: wid for wid, w in pre["workers"].items() if w["player"] == p and w["type"] == "PLANTER"}
+            for tid, tr in post["trees"].items():
+                if tr["player"] != p:
+                    continue
+                was = pre["trees"].get(tid)
+                if was is None or was["player"] != p:
+                    planted = was is None
+                    ps["planted" if planted else "seized"] += 1
+                    if planted:
+                        ps["born"][tid] = step
+                    u = at.get(tr["pos"])
+                    if u is not None:
+                        ps["succ"][u] = ps["succ"].get(u, 0) + 1
+            for tid, b in list(ps["born"].items()):
+                tr = post["trees"].get(tid)
+                if tr is None or tr["player"] != p:
+                    ps["lives"].append(step - b); del ps["born"][tid]
             nc = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR")
             sh["colsteps"][p] += nc
             sh["treesteps"][p] += sum(1 for t in post["trees"].values() if t["player"] == p)
+            sh["pla_rec"][p] += sum(1 for wid, w in post["workers"].items()
+                                    if w["player"] == p and w["type"] == "PLANTER" and wid not in pre["workers"])
             if step == 75:
                 sh["col75"][p] = nc
+            if step == 50:
+                sh["tree50"][p] = sum(1 for t in post["trees"].values() if t["player"] == p)
+            if step == 100:
+                sh["tree100"][p] = sum(1 for t in post["trees"].values() if t["player"] == p)   # replanting after the first batch
+            if step in (50, 75, 100, 150, 200, 250):
+                sh["trees"][p].append(sum(1 for t in post["trees"].values() if t["player"] == p))   # tree curve
             if step > 285:
                 sh["late15"][p] += sum(float(w["carbon"]) for wid, w in pre["workers"].items()
                                        if w["player"] == p and wid not in post["workers"])
@@ -203,7 +230,12 @@ def play_game(task):
         "b_ms_per_step": round(1000.0 * times[1 - a_side] / 300, 2),
         "a_worst_step_ms": round(1000.0 * worst_a, 0),
         "wall_s": round(wall, 1), "bankrupt_steps": bk_steps,
-        "ledger_extra": {"pol": {k: v[a_side] for k, v in sh.items()}, "opp": {k: v[1 - a_side] for k, v in sh.items()}},
+        "ledger_extra": {side: dict({k: v[q] for k, v in sh.items()}, plants=led[q]["plant_count"],
+                                    pla_ok=len(pstat[q]["succ"]), pla_succ=sum(pstat[q]["succ"].values()),
+                                    planted=pstat[q]["planted"], seized=pstat[q]["seized"],
+                                    life_sum=sum(pstat[q]["lives"]) + sum(300 - b for b in pstat[q]["born"].values()),
+                                    life_n=len(pstat[q]["lives"]) + len(pstat[q]["born"]))
+                         for side, q in (("pol", a_side), ("opp", 1 - a_side))},
         "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
                     if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors")},
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
