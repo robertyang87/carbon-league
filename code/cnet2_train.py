@@ -32,6 +32,8 @@ def load(dirn):
     D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode="r") for k in FIELDS}
     if os.path.exists(os.path.join(dirn, "w.npy")) and os.environ.get("BC_USE_W", "1") == "1":
         D["w"] = np.load(os.path.join(dirn, "w.npy"), mmap_mode="r")      # per-sample weights (dataset v4+)
+    if os.path.exists(os.path.join(dirn, "uw.npy")) and os.environ.get("BC_USE_UW", "1") == "1":
+        D["uw"] = np.load(os.path.join(dirn, "uw.npy"), mmap_mode="r")    # per-unit weights (dataset v6+)
     meta = json.load(open(os.path.join(dirn, "meta.json")))
     val_g = np.array([g["val"] for g in meta["games"]])
     is_val = val_g[np.asarray(D["gid"])]
@@ -40,7 +42,7 @@ def load(dirn):
 
 def fetch(D, ii):
     ii = np.sort(ii)
-    return {k: np.asarray(D[k][ii]) for k in LOAD + (["w"] if "w" in D else [])}
+    return {k: np.asarray(D[k][ii]) for k in LOAD + [x for x in ("w", "uw") if x in D]}
 
 
 SYM_CELL = torch.from_numpy(F.SYM_CELL)
@@ -128,6 +130,8 @@ def losses(net, b):
     if "w" in b:
         tw = tw * b["w"]
     wv = valid.float() * tw[:, None]
+    if "uw" in b:
+        wv = wv * b["uw"]
     lpi = (ce * wv).sum() / wv.sum().clamp(min=1)
     lv = Fn.mse_loss(v, b["value"])
     la = Fn.mse_loss(aux, b["carbon"]) * 10.0
@@ -174,6 +178,10 @@ def main(data, out, epochs, cfg):
     if init:
         w = np.load(init)
         net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"})
+        for r_ in [int(x) for x in os.environ.get("BC_REINIT_TEACH", "").split(",") if x]:
+            with torch.no_grad():   # fresh style row for a re-assigned slot (others keep their warm start)
+                net.teach.weight[r_].normal_(0.0, float(net.teach.weight.std()))
+            print(json.dumps({"reinit_teacher_row": r_}), flush=True)
     npar = sum(p.numel() for p in net.parameters())
     bs = int(os.environ.get("BC_BS", "512"))
     lr = float(os.environ.get("BC_LR", "1e-3"))

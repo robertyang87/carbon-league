@@ -35,7 +35,7 @@ NEG = NP.NEG
 DEFAULTS = dict(
     H=5, KEY_R=2, MAX_KEY=3, MINC=10.0, HUNT=True, MARGIN=20.0, BUDGET=0.38, MIN_DEPTH=3,
     CARGO_W=0.9, WORKER_V=30.0, TREE_V=2.0, ENDGAME_STOP=1, TEACHER=1, OPP_TEACHER=1, ROLL="s64",
-    PLANT=False, LOG=False, SEARCH=True, MAX_BR=16, LOCAL_R=0, ROBUST=0.0, OPPID=False, MODE="sweep", MIX=False, ONLINE_T=False, TEMPS=(0.7, 1.0, 1.4, 2.0), EPS=1e-3, C_PUCT=1.5, GUARD=False, LOWW=2, GUARD_NARROW=True, GUARD_CASH=40.0, RISK_TOL=None, START_DL=None, ABORT_DL=None, MIN_N=1, SE_K=0.0, VS=100.0, ROOT_S=12, RSEED=0, STYLES=(0, 1, 2, 3, 4), ID_DECAY=0.97, ID_PRIOR=3.0, ID_MIN=5, PROJ=1.3, CLOCK="wall", HARD=0.6,
+    PLANT=False, LOG=False, SEARCH=True, MAX_BR=16, LOCAL_R=0, ROBUST=0.0, OPPID=False, MODE="sweep", MIX=False, ONLINE_T=False, TEMPS=(0.7, 1.0, 1.4, 2.0), EPS=1e-3, C_PUCT=1.5, OPEN_T=0.0, OPEN_STEPS=50, OPEN_SEED=0, LEAF_Q=None, GUARD=False, LOWW=2, GUARD_NARROW=True, GUARD_CASH=40.0, RISK_TOL=None, START_DL=None, ABORT_DL=None, MIN_N=1, SE_K=0.0, VS=100.0, ROOT_S=12, RSEED=0, STYLES=(0, 1, 2, 3, 4), ID_DECAY=0.97, ID_PRIOR=3.0, ID_MIN=5, PROJ=1.3, CLOCK="wall", HARD=0.6,
 )
 
 
@@ -410,6 +410,11 @@ def make_search_agent(conf=None, weights=None, rweights=None):
     if rweights is None and cfg["ROLL"] == "s64":
         rweights = os.path.join(wdir, cfg.get("RW", "cnet2_s64.npz"))
     rpol = NP.Policy(load_weights(rweights)) if rweights is not None else pol
+    xw = cfg.get("XNET")
+    if isinstance(xw, str) and not os.path.isabs(xw):
+        xw = os.path.join(HERE, "..", xw)
+    xpol = NP.Policy(load_weights(xw)) if xw is not None else None      # extra (structurally different) mixture component
+    XT = int(cfg.get("XNET_T", 1))
     st = {"f": None, "fo": None}
     pool = []
     stats = {"steps": 0, "searched": 0, "branches": 0, "changed": 0, "branch_steps": 0, "worst_ms": 0.0,
@@ -445,14 +450,24 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         if obs["step"] == 0 or "lpost" not in st:
             st["lpost"] = np.array([cfg["ID_PRIOR"] if k == OT else 0.0 for k in cfg["STYLES"]])
             st["ot"] = OT; st["oprev"] = None; st["pw"] = None; st["ntrk"] = 0; st["lostw"] = 0; st["prevw"] = set()
-            KS, KT = len(cfg["STYLES"]), len(cfg["TEMPS"])
+            KS, KT = len(cfg["STYLES"]) + (1 if xpol is not None else 0), len(cfg["TEMPS"])
             st["L"] = np.zeros((KS, KT)); st["M"] = np.zeros(KT)
-            st["lprior"] = np.array([cfg["ID_PRIOR"] if k == OT else 0.0 for k in cfg["STYLES"]])
+            st["lprior"] = np.array([cfg["ID_PRIOR"] if k == OT else 0.0 for k in cfg["STYLES"]] + ([0.0] if xpol is not None else []))
             st["ti"] = int(np.argmin(np.abs(np.array(cfg["TEMPS"]) - 1.0))); st["t1"] = st["ti"]
             st["ow"] = np.exp(st["lprior"] - st["lprior"].max()); st["ow"] /= st["ow"].sum()
         x = f.observe(obs)
-        y, lg0, _ = pol.act(x, f.aux, teacher=T)
-        st["lg0"] = lg0
+        st["x"] = x; st["rec"] = None
+        if obs["step"] == 0 or "orng" not in st:
+            st["orng"] = np.random.default_rng(int(cfg["OPEN_SEED"]) * 7 + me)
+        st["sampled"] = bool(cfg["OPEN_T"] and obs["step"] < cfg["OPEN_STEPS"])
+        if st["sampled"]:
+            # opening diversity (data generation): sample the net's moves at temperature OPEN_T
+            y, lg0, _ = pol.act(x, f.aux, teacher=T, sample_rng=st["orng"], temp=cfg["OPEN_T"])
+        else:
+            # phase style switch: TEACHER early, TEACHER_LATE from step LATE_STEP on (default off)
+            TL = cfg.get("TEACHER_LATE")
+            y, lg0, _ = pol.act(x, f.aux, teacher=TL if (TL is not None and obs["step"] >= cfg.get("LATE_STEP", 999)) else T)
+        st["lg0"] = lg0; st["y0"] = y.copy()
         if cfg["GUARD"]:
             try:
                 y = bankrupt_guard(x, f.aux, y, lg0)
@@ -524,6 +539,13 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                     ok = [k for k in np.argsort(-lg0[s_]) if not bad[k]]
                     fz[s_] = int(ok[0]); first = s_ if first is None else first
                     stats["guard_moves"] = stats.get("guard_moves", 0) + 1
+                    if cfg.get("GUARD_LOG"):
+                        p_ = int(pos[s_]); en = [(int(F.DIST[p_, int(pos[e])]), int(kind[e]), float(cargo[e])) for e in range(12, 22) if m[e]]
+                        stats.setdefault("guard_log", []).append({
+                            "step": 299 - int(x["left"]), "nw": nw, "cash": round(float(x["cash"])), "lost": int(st.get("lostw", 0)),
+                            "uid": st["f"].own_uid[s_], "kind": "C" if kind[s_] == 0 else "P", "cargo": round(float(cargo[s_])),
+                            "dob": int(aux["dob"][p_]), "nearest_enemy": min(en) if en else None,
+                            "net_move": int(y[s_]), "chosen": int(ok[0])})
         if ncol == 0 and x["cash"] >= 30 and x["slots"] > 0 and x["left"] > 10:
             bs = [s_ for s_ in (10, 11) if m[s_]]
             if bs and not any(y[s_] == 1 for s_ in bs):
@@ -620,8 +642,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         prev = st["oprev"]
         S_ = cfg["STYLES"]; TT = np.array(cfg["TEMPS"], np.float64); K = len(S_)
         if prev is not None:
-            Xp, tokp, prep, auxp, uidp, wp = prev
-            lab = _labels_prev(obs, prev)
+            Xp, tokp, prep, auxp, uidp, wp = prev[:6]
+            lab = _labels_prev(obs, prev[:6])
             cnt = np.nonzero(lab >= 0)[0]
             if len(cnt):
                 rep = {k: np.repeat(v, K, 0) for k, v in Xp.items() if isinstance(v, np.ndarray)}
@@ -630,6 +652,11 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 LG = np.full((K, F.OWN, 5), NEG, np.float32)
                 decode_b(pol, rep, [auxp] * K, np.repeat(tokp, K, 0), ctx_b(pol, np.repeat(prep, K, 0), np.array(S_)),
                          np.repeat(lab[None], K, 0), lg_out=LG)
+                if xpol is not None:
+                    tkx, prx = prev[6]
+                    LGx = np.full((1, F.OWN, 5), NEG, np.float32)
+                    decode_b(xpol, Xp, [auxp], tkx, ctx_b(xpol, prx, np.array([XT])), lab[None], lg_out=LGx)
+                    LG = np.concatenate([LG, LGx]); K = K + 1
                 lg = LG[:, cnt].astype(np.float64)                     # [K,n,5]
                 legal = lg > NEG / 2
                 a = lab[cnt]
@@ -670,6 +697,9 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         toko, preo = trunk_b(pol, Xo)
         st["oenc"] = (Xo, toko, preo)
         st["oprev"] = (Xo, toko, preo, fo.aux, list(fo.own_uid), set(obs["players"][1 - obs["player"]][2]))
+        if xpol is not None:
+            st["xenc"] = trunk_b(xpol, Xo)
+            st["oprev"] = st["oprev"] + (st["xenc"],)
         stp = obs["step"]
         if stp in (10, 20, 50, 100, 150, 200, 299):
             stats.setdefault("id", {})[str(stp)] = [float(cfg["TEMPS"][st["ti"]]), [round(float(v), 3) for v in st["ow"]]]
@@ -724,15 +754,25 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         # ---- per-simulation-index randomness: style draw, root reply, rollout noise
         rng = np.random.default_rng(cfg["RSEED"] * 1000003 + step * 7919 + me)
         RS = cfg["ROOT_S"]
-        S_ = np.array(cfg["STYLES"]); w = st["ow"]
-        ks = S_[np.minimum(np.searchsorted(np.cumsum(w), (np.arange(RS) + rng.random(RS)) / RS * w.sum()), len(S_) - 1)]
+        S_ = np.array(list(cfg["STYLES"]) + ([XT] if xpol is not None else [])); w = st["ow"]
+        ci = np.minimum(np.searchsorted(np.cumsum(w), (np.arange(RS) + rng.random(RS)) / RS * w.sum()), len(S_) - 1)
+        ks = S_[ci]
+        isx = (ci == len(cfg["STYLES"])) if xpol is not None else np.zeros(RS, bool)
         tau = float(cfg["TEMPS"][st["ti"]])
         Xo, toko, preo = st["oenc"]
         rep = {k: np.repeat(v, RS, 0) for k, v in Xo.items() if isinstance(v, np.ndarray)}
         for k in ("cash", "slots", "left"):
             rep[k] = Xo[k] * RS
+        rn0 = rng.random((RS, F.OWN))
         yo = decode_b(pol, rep, [fo.aux] * RS, np.repeat(toko, RS, 0), ctx_b(pol, np.repeat(preo, RS, 0), ks),
-                      noise=rng.random((RS, F.OWN)), temp=np.full(RS, tau))
+                      noise=rn0, temp=np.full(RS, tau))
+        if isx.any():
+            nx = int(isx.sum()); tkx, prx = st["xenc"]
+            repx = {k: np.repeat(v, nx, 0) for k, v in Xo.items() if isinstance(v, np.ndarray)}
+            for k in ("cash", "slots", "left"):
+                repx[k] = Xo[k] * nx
+            yo[isx] = decode_b(xpol, repx, [fo.aux] * nx, np.repeat(tkx, nx, 0), ctx_b(xpol, np.repeat(prx, nx, 0), np.full(nx, XT)),
+                               noise=rn0[isx], temp=np.full(nx, tau))
         roots = [fo.to_actions(v) for v in yo]
         H = min(cfg["H"], left + 1)
         rnoise = rng.random((RS, max(H - 1, 1), F.OWN))
@@ -839,11 +879,28 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 wc = min(v for i, v in vals[c] if i in d0); w0 = min(d0[i] for i, _ in vals[c] if i in d0)
                 if wc < w0 - cfg["RISK_TOL"]:
                     continue
-            m_ = float(np.mean(pr)) - cfg["SE_K"] * (float(np.std(pr)) / max(len(pr) - 1, 1) ** 0.5 if len(pr) > 1 else 0.0)
+            if cfg["LEAF_Q"] is not None:
+                # robust leaf: lower quantile of the candidate's outcomes minus that of the default (common indices)
+                vc = [v for i, v in vals[c] if i in d0]; v0 = [d0[i] for i, _ in vals[c] if i in d0]
+                m_ = float(np.quantile(vc, cfg["LEAF_Q"]) - np.quantile(v0, cfg["LEAF_Q"]))
+            else:
+                m_ = float(np.mean(pr)) - cfg["SE_K"] * (float(np.std(pr)) / max(len(pr) - 1, 1) ** 0.5 if len(pr) > 1 else 0.0)
             if m_ > best:
                 best, bj = m_, c
         if cfg["LOG"]:
             log.append((step, cmeta, [[round(v) for _, v in vv] for vv in vals], round(best, 1) if bj else None))
+        # record for distillation: root visit counts per move of the searched unit
+        try:
+            ku = keys[0][1]; ks_ = uid2slot.get(ku)
+            if ks_ is not None and ks_ < 10:
+                vis = np.zeros(5); qv = np.full(5, np.nan)
+                for c in range(nc):
+                    m_ = y[ks_] if cmeta[c] is None else (cmeta[c][1] if cmeta[c][0] == ku else None)
+                    if m_ is not None and vals[c]:
+                        vis[int(m_)] += n[c]; qv[int(m_)] = float(np.mean([b_ for _, b_ in vals[c]]))
+                st["rec"] = {"slot": int(ks_), "visits": vis, "q": qv, "changed": bool(bj and best > cfg["MARGIN"])}
+        except Exception:
+            pass
         if bj and best > cfg["MARGIN"]:
             stats["changed"] += 1; stats["gain"] += best
             return cand[bj]
@@ -983,6 +1040,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         return acts
 
     agent.stats = stats
+    agent.state = st
     agent.log = log
     agent.cfg = cfg
     return agent

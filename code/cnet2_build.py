@@ -34,6 +34,57 @@ FIELDS = {  # name: (dtype, shape-per-sample)
 }
 
 
+UW = os.environ.get("CNET2_UW") == "1"   # per-unit decision weights (dataset v6+)
+UW_DELIV, UW_SEIZED, UW_SEIZED_K, UW_MINLOAD = 1.5, 0.3, 4, 50.0
+UW_RECRUIT, UW_REC_T0, UW_REC_T1 = 2.0, 40, 100
+if UW:
+    FIELDS["uw"] = (np.float16, (F.OWN,))
+
+
+def unit_weights(st, p, slots):
+    """slots: list over samples of (t, own_uid list). Returns [n, OWN] multipliers:
+    loaded trips (max cargo >= UW_MINLOAD) delivered safely -> UW_DELIV on that unit's decisions during the trip;
+    trips ending in the unit's death with cargo -> UW_SEIZED on its last UW_SEIZED_K decisions only (earlier steps x1);
+    base slots (10, 11) at steps UW_REC_T0..UW_REC_T1 -> UW_RECRUIT."""
+    T = len(st)
+    cargo = [{} for _ in range(T)]; pos = [{} for _ in range(T)]; bases = [set() for _ in range(T)]
+    for t in range(T):
+        pl = st[t][0]["observation"]["players"][p]
+        bases[t] = set(int(b) for b in pl[1].values())
+        for u, w in pl[2].items():
+            cargo[t][u] = float(w[1]); pos[t][u] = int(w[0])
+    mult = {}
+    uids = set(u for c in cargo for u in c)
+    for u in uids:
+        t = 0
+        while t < T:
+            if cargo[t].get(u, 0) > 0:
+                t0 = t; mx = 0.0
+                while t < T and cargo[t].get(u, 0) > 0:
+                    mx = max(mx, cargo[t][u]); t += 1
+                t1 = t - 1                     # last step holding cargo
+                if mx >= UW_MINLOAD and t < T:
+                    if u not in cargo[t]:      # died while loaded -> seized
+                        for k in range(max(t0, t1 - UW_SEIZED_K + 1), t1 + 1):
+                            mult[(k, u)] = UW_SEIZED
+                    elif pos[t].get(u) in bases[t]:
+                        for k in range(t0, t1 + 1):
+                            mult[(k, u)] = UW_DELIV
+            else:
+                t += 1
+    out = np.ones((len(slots), F.OWN), np.float32)
+    for i, (t, own) in enumerate(slots):
+        for s, u in enumerate(own):
+            if u is None:
+                continue
+            if s >= 10:
+                if UW_REC_T0 <= t <= UW_REC_T1:
+                    out[i, s] = UW_RECRUIT
+            else:
+                out[i, s] = mult.get((t, u), 1.0)
+    return out
+
+
 def teacher_id(name):
     return F.TEACHERS.index(name) if name in F.TEACHERS else F.TEACHERS.index("other")
 
@@ -48,6 +99,7 @@ def build_game(task):
     rows = {k: [] for k in FIELDS}
     for p, tid, mg in zip(sides, tids, margins):
         f = F.Feat(p)
+        slots = []
         for t in range(len(st) - 1):
             o0 = st[t][0]["observation"]
             obs = {"step": o0["step"], "players": o0["players"],
@@ -79,6 +131,10 @@ def build_game(task):
             r["carbon"].append(F.q8(full[order] / 100.0))
             r["value"].append(np.tanh(mg / 3000.0)); r["teacher"].append(tid)
             r["gid"].append(gi); r["step"].append(t)
+            if UW:
+                slots.append((t, list(f.own_uid)))
+        if UW and slots:
+            r["uw"].extend(unit_weights(st, p, slots))
     n = len(rows["y"])
     if n == 0:
         return gi, 0, None

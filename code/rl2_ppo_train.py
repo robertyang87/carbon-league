@@ -26,6 +26,8 @@ Example (small net smoke):
 """
 
 import argparse
+import pickle
+import zlib
 import json
 import math
 import multiprocessing as mp
@@ -98,6 +100,9 @@ def parse():
     a("--eval-seed0", type=int, default=980000)
     a("--seed0", type=int, default=3000000, help="training game seeds start here")
     a("--resume", default=None, help="state_last.pt to resume from")
+    a("--remote", default=None, help="split mode: consume cloud actor shards (rl2_actor.py) from this local dir")
+    a("--dec-frac", type=float, default=1.0, help="fraction of decisions used in the PPO epochs (values: all)")
+    a("--max-stale", type=int, default=2, help="split mode: drop games whose behaviour weights are older than it-K")
     return p.parse_args()
 
 
@@ -217,6 +222,8 @@ def main():
     os.makedirs(args.out, exist_ok=True)
     live = os.path.join(args.out, "live"); os.makedirs(live, exist_ok=True)
     dev = torch.device(args.device if (args.device != "mps" or torch.backends.mps.is_available()) else "cpu")
+    if dev.type == "cpu":
+        torch.set_num_threads(int(os.environ.get("LEARNER_THREADS", "8")))
     ad = AD.get_adapter(args.adapter)
     w0 = AD.load_npz(args.init)
     wref = AD.load_npz(args.ref) if args.ref else w0
@@ -239,6 +246,7 @@ def main():
             vnet.load_state_dict(stt["vnet"]); vopt.load_state_dict(stt["vopt"])
         it0 = stt["it"]; kl_coef = stt.get("kl_coef", kl_coef)
     league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
+    league.save()                         # split mode: the cloud actor needs the table before iteration 1
     for k, v in league.tab.items():      # resumed snapshots keep their files
         if v.get("snap") and not os.path.exists(k.split(":", 2)[2]):
             v["prior"] = 0.0
@@ -248,7 +256,33 @@ def main():
     rng = np.random.default_rng(int(time.time()) % 100000 + it0)
     seed = args.seed0 + it0 * args.games
 
+    cur_it = [it0]
+
+    class _Remote:
+        """split mode: newest cloud games (behaviour weights >= it - max_stale), at least args.games of them"""
+        def get(self):
+            while True:
+                fs = sorted(f for f in os.listdir(args.remote) if f.endswith(".pkl.z"))
+                keep = []
+                for f in fs:
+                    if int(f[2:8]) < cur_it[0] - args.max_stale:
+                        os.remove(os.path.join(args.remote, f))
+                    else:
+                        keep.append(f)
+                n = sum(int(f.rsplit("_", 1)[1].split(".")[0]) for f in keep)
+                if n >= args.games:
+                    games = []
+                    for f in reversed(keep):
+                        if len(games) >= args.games:
+                            break
+                        fp = os.path.join(args.remote, f)
+                        games.extend(pickle.loads(zlib.decompress(open(fp, "rb").read())))
+                        os.remove(fp)
+                    return [{"games": games, "t_pol": 0.0, "t_opp": 0.0}]
+                time.sleep(3)
+
     def publish(it):
+        cur_it[0] = it
         wk = os.path.join(live, f"w_{it}.npz")
         AD.save_npz(ad.export(net), wk, {"it": it})
         olds = sorted([f for f in os.listdir(live) if f.startswith("w_")], key=lambda s: int(s[2:-4]))
@@ -261,10 +295,12 @@ def main():
         return wk
 
     ctx = mp.get_context("spawn")
-    pool = ctx.Pool(args.workers)
+    pool = ctx.Pool(1 if args.remote else args.workers)
 
     def submit_rollouts(wk):
         nonlocal seed
+        if args.remote:
+            return _Remote(), time.time()
         specs = []
         for gi in range(args.games):
             specs.append((league.sample(rng), seed + gi // 2, gi % 2))   # same seed both sides
@@ -305,15 +341,27 @@ def main():
         vmodel.eval()
         V = np.zeros(buf.n, np.float32)
         REFLP = None
+        # --dec-frac < 1: values for every decision (GAE needs them), but the reference pass and the PPO epochs only
+        # touch a random subset -> more games per GPU-second (decisions within a game are strongly correlated)
+        SUB = (np.sort(np.random.choice(buf.n, max(1, int(buf.n * args.dec_frac)), replace=False))
+               if args.dec_frac < 1 else np.arange(buf.n))
         with torch.no_grad():
             for b0 in range(0, buf.n, args.mb):
                 idx = np.arange(b0, min(buf.n, b0 + args.mb))
                 bt = buf.batch(idx, dev)
                 V[idx] = ad.evaluate(vmodel, bt, args.temp)["value"].float().cpu().numpy()
-                orf = ad.evaluate(ref, bt, args.temp)        # reference policy cached once per iteration
-                if REFLP is None:
-                    REFLP = torch.zeros((buf.n_ukeys, orf["lp"].shape[1]), device=dev)
-                REFLP[orf["ukey"]] = orf["lp"].float()
+                if args.dec_frac >= 1:
+                    orf = ad.evaluate(ref, bt, args.temp)        # reference policy cached once per iteration
+                    if REFLP is None:
+                        REFLP = torch.zeros((buf.n_ukeys, orf["lp"].shape[1]), device=dev)
+                    REFLP[orf["ukey"]] = orf["lp"].float()
+            if args.dec_frac < 1:
+                for b0 in range(0, len(SUB), args.mb):
+                    bt = buf.batch(SUB[b0:b0 + args.mb], dev)
+                    orf = ad.evaluate(ref, bt, args.temp)
+                    if REFLP is None:
+                        REFLP = torch.zeros((buf.n_ukeys, orf["lp"].shape[1]), device=dev)
+                    REFLP[orf["ukey"]] = orf["lp"].float()
         ADV = np.zeros(buf.n, np.float32); RET = np.zeros(buf.n, np.float32)
         for gi, g in enumerate(games):
             a_, r_ = gae(game_rewards(g, args, it), V[offs[gi]:offs[gi + 1]], args.gamma, args.lam)
@@ -327,8 +375,8 @@ def main():
         warm = (it - it0) <= args.vwarm and not args.resume
         tq = lambda a: torch.from_numpy(a).to(dev)
         for ep in range(args.epochs):
-            perm = np.random.permutation(buf.n)
-            for b0 in range(0, buf.n, args.mb):
+            perm = np.random.permutation(SUB)
+            for b0 in range(0, len(perm), args.mb):
                 idx = np.sort(perm[b0:b0 + args.mb])
                 bt = buf.batch(idx, dev)
                 o = ad.evaluate(net, bt, args.temp)

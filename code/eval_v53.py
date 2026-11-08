@@ -124,6 +124,7 @@ def play_game(task):
     worst_a = 0.0
     comp = {}
     t0 = time.time()
+    bk_steps = 0
     for step in range(1, 301):
         pre = sim.get_state()
         acts = []
@@ -137,6 +138,10 @@ def play_game(task):
                 worst_a = max(worst_a, dt)
         sim.step(acts[0], acts[1])
         post = sim.get_state()
+        # bankruptcy: policy side has no workers and cannot afford a collector (after the opening)
+        if step >= 30 and post["cash"][a_side] < float(CFG["recCollectorCost"]) and \
+                not any(w["player"] == a_side for w in post["workers"].values()):
+            bk_steps += 1
         if step in (100, 200, 300):
             comp[step] = [_comp(post, 0), _comp(post, 1)]
         for p in range(2):
@@ -187,7 +192,7 @@ def play_game(task):
         "a_ms_per_step": round(1000.0 * times[a_side] / 300, 2),
         "b_ms_per_step": round(1000.0 * times[1 - a_side] / 300, 2),
         "a_worst_step_ms": round(1000.0 * worst_a, 0),
-        "wall_s": round(wall, 1),
+        "wall_s": round(wall, 1), "bankrupt_steps": bk_steps,
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
         "comp": {str(k): v for k, v in comp.items()},
     }

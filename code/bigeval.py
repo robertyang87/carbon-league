@@ -21,7 +21,8 @@ def main(a, b, s0, n, tag):
                  "err": r.get("error"), "t": time.strftime("%H:%M:%S")}
             if "ledger_pol" in r:
                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
-                         lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]))
+                         lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
+                         bk=r.get("bankrupt_steps", 0))
             lf.write(json.dumps(g) + "\n"); lf.flush()
     m = [r["margin"] for r in rows if "margin" in r]
     L = lambda side, k: round(st.mean([r[f"ledger_{side}"][k] for r in rows if "margin" in r]))
