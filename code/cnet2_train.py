@@ -198,6 +198,22 @@ def main(data, out, epochs, cfg):
             with torch.no_grad():   # fresh style row for a re-assigned slot (others keep their warm start)
                 net.teach.weight[r_].normal_(0.0, float(net.teach.weight.std()))
             print(json.dumps({"reinit_teacher_row": r_}), flush=True)
+    cp_ = os.environ.get("BC_COPY_TEACH")     # "5:2": style row 2 starts as a copy of row 5 (AWR: behaviour = slot 5)
+    if cp_:
+        a_, b_ = (int(x) for x in cp_.split(":"))
+        with torch.no_grad():
+            net.teach.weight[b_] = net.teach.weight[a_]
+        print(json.dumps({"copy_teacher_row": [a_, b_]}), flush=True)
+    tp_ = os.environ.get("BC_TRAIN_PREFIX")   # e.g. "teach,din,aemb,gru,whead,bhead,U,V,h0": decoder only, trunk frozen
+    if tp_:
+        pref = tuple(x.strip() + "." for x in tp_.split(","))
+        for n_, p_ in net.named_parameters():
+            p_.requires_grad_(n_.startswith(pref))
+        tr_rows = os.environ.get("BC_TEACH_ROWS")  # with teach in the prefix list: only these style rows move
+        if tr_rows and net.teach.weight.requires_grad:
+            keep2 = torch.zeros_like(net.teach.weight); keep2[[int(x) for x in tr_rows.split(",")]] = 1.0
+            net.teach.weight.register_hook(lambda g: g * keep2)
+        print(json.dumps({"train_prefix": tp_, "trainable": sum(p_.numel() for p_ in net.parameters() if p_.requires_grad)}), flush=True)
     only = os.environ.get("BC_ONLY_TEACH")    # frozen trunk: train ONLY these style rows (e.g. "2"); every other
     if only:                                  # parameter and every other slot stay bit-identical (no weight decay)
         rows_ = [int(x) for x in only.split(",")]
@@ -215,7 +231,8 @@ def main(data, out, epochs, cfg):
     spe = len(tr) // bs if not maxsteps else min(maxsteps, len(tr) // bs)
     print(json.dumps({"train": len(tr), "val": len(va), "params": npar, "cfg": net.cfg, "bs": bs,
                       "steps_per_epoch": spe}), flush=True)
-    opt = torch.optim.AdamW([p_ for p_ in net.parameters() if p_.requires_grad], lr=lr, weight_decay=0.0 if only else 1e-4)
+    opt = torch.optim.AdamW([p_ for p_ in net.parameters() if p_.requires_grad], lr=lr,
+                            weight_decay=0.0 if (only or os.environ.get("BC_TEACH_ROWS")) else 1e-4)
     # BC_COMPILE=1 (CUDA only): train through torch.compile(fullgraph, static shapes; every training batch is full);
     # evaluation keeps calling the eager `net` (same parameters). Training-equivalent on the GB10: per-layer
     # ||dg||/||g|| 7.7e-4 vs eager in strict fp32 (2026-11-09), far below batch-to-batch gradient variance.
@@ -223,7 +240,7 @@ def main(data, out, epochs, cfg):
         torch.backends.cuda.matmul.allow_tf32 = os.environ.get("BC_TF32", "1") == "1"
         torch.backends.cudnn.allow_tf32 = os.environ.get("BC_TF32", "1") == "1"
     tnet = net
-    if only and os.environ.get("BC_COMPILE") == "1":
+    if (only or tp_) and os.environ.get("BC_COMPILE") == "1":
         raise SystemExit("BC_ONLY_TEACH with BC_COMPILE=1 is untested (gradient hook under compile); omit BC_COMPILE")
     if only and spe == 0:
         raise SystemExit(f"BC_ONLY_TEACH={only}: zero training rows after filtering")

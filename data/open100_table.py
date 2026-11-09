@@ -22,7 +22,7 @@ print(f"  {sys.argv[2]:12s} n {len(B)}  cash margin@100 {S.mean(g['margin'] for 
 for a in sys.argv[3:]:
     A = rows(a); K = [k for k in A if k in B]
     d = lambda f: (lambda x: f"{S.mean(x):+.0f} ± {S.stdev(x)/len(x)**.5:.0f}")([f(A[k]) - f(B[k]) for k in K])
-    print(f"  {a:12s} n {len(K)}  paired: cash+cargo margin {d(lambda g: P(g,'cash100') + P(g,'cargo100') - P(g,'cash100','opp') - P(g,'cargo100','opp'))} (main), cash {d(lambda g: g['margin'])}, tree income {d(lambda g: g['tinc'])}, tree-steps {d(lambda g: P(g,'treesteps'))}, deposits {d(lambda g: g['dep'])}"
+    print(f"  {a:12s} n {len(K)}  paired: plant spend {d(lambda g: g.get('pspend', 0))} (ours {S.mean(A[k].get('pspend', 0) for k in K):.0f} vs base {S.mean(B[k].get('pspend', 0) for k in K):.0f}), cash+cargo margin {d(lambda g: P(g,'cash100') + P(g,'cargo100') - P(g,'cash100','opp') - P(g,'cargo100','opp'))} (main), cash {d(lambda g: g['margin'])}, tree income {d(lambda g: g['tinc'])}, tree-steps {d(lambda g: P(g,'treesteps'))}, deposits {d(lambda g: g['dep'])}"
           f"\n      us:  {desc(A, K)}\n      opp: {desc(A, K, 'opp')}")
 
 def verdict(R, K):

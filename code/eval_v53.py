@@ -190,9 +190,10 @@ def play_game(task):
             for wid, w in pre["workers"].items():      # planters gone this step; with no tree planted/seized = zero-yield death
                 if w["player"] == p and w["type"] == "PLANTER" and wid not in post["workers"]:
                     sh["pla_dead"][p] += 1; sh["pla_dead0"][p] += ps["succ"].get(wid, 0) == 0
-                    g_ = lcol.get(wid, (None, None, None, "?"))[3]      # who got the cell: other player / own / nobody
+                    c_ = lcol.get(wid)                                   # 5th field: player of the winning collector (None: no car won)
+                    wp_ = c_[4] if c_ is not None and len(c_) > 4 else "?"
                     mv_ = (acts[p] or {}).get(wid) in ("UP", "DOWN", "LEFT", "RIGHT")
-                    k_ = ("pd_clash_move" if mv_ else "pd_clash_stay") if g_ is None else "pd_owncar" if g_ == p else "pd_ecar" if g_ in (0, 1) else "pd_other"
+                    k_ = "pd_other" if c_ is None else ("pd_clash_move" if mv_ else "pd_clash_stay") if wp_ is None else "pd_owncar" if wp_ == p else "pd_ecar"
                     sh[k_][p] += 1
             etp = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # planter distance to nearest enemy tree
             if etp:

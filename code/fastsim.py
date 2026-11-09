@@ -535,7 +535,8 @@ class FastCarbon:
                 else:
                     carbon[pos] = min(carbon[pos] + w.carbon,
                                       cfg["maxCellCarbon"]); gets = None
-                self.last_collisions.append((w.id, w.player, float(w.carbon), gets))
+                self.last_collisions.append((w.id, w.player, float(w.carbon), gets,
+                                             winner.player if winner_is_collector else None))   # 5th: winning collector's player
                 self._kill_worker(w, cell_worker)
 
         # ---- Phase 3: base deposit (incl. enemy-base rules)
