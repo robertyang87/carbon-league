@@ -93,6 +93,16 @@ def _plant_price(pre_trees, player):
             * (CFG["plantCostInflationBase"] ** alive))
 
 
+def _tdist(a, b):                 # torus Manhattan distance on the 15x15 board
+    dr = abs(a // 15 - b // 15); dc = abs(a % 15 - b % 15)
+    return min(dr, 15 - dr) + min(dc, 15 - dc)
+
+
+def _cheb(a, b):                  # torus Chebyshev distance (1 = one of the 8 neighbours)
+    dr = abs(a // 15 - b // 15); dc = abs(a % 15 - b % 15)
+    return max(min(dr, 15 - dr), min(dc, 15 - dc))
+
+
 def new_ledger():
     return dict(deposits=0.0, tree_income=0.0,
                 recruit_spend=0.0, recruit_count=0,
@@ -126,7 +136,7 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0]}   # stand-in validation ledger
     late_deaths = [[], []]
     for step in range(1, 301):
         pre = sim.get_state()
@@ -154,6 +164,9 @@ def play_game(task):
                     ps["planted" if planted else "seized"] += 1
                     if planted:
                         ps["born"][tid] = step
+                        eb = [int(b) for _, b in post["bases"][1 - p]]   # planting site: distance to the nearest enemy base
+                        if eb:
+                            sh["pdist"][p] += min(_tdist(int(tr["pos"]), b) for b in eb); sh["pdist_n"][p] += 1
                     u = at.get(tr["pos"])
                     if u is not None:
                         ps["succ"][u] = ps["succ"].get(u, 0) + 1
@@ -164,6 +177,9 @@ def play_game(task):
             nc = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR")
             sh["colsteps"][p] += nc
             sh["treesteps"][p] += sum(1 for t in post["trees"].values() if t["player"] == p)
+            etr = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # our collectors taxed by an enemy tree:
+            sh["col_etree8"][p] += sum(1 for w in post["workers"].values()           # enemy tree within the 8-neighbourhood
+                                       if w["player"] == p and w["type"] == "COLLECTOR" and any(_cheb(int(w["pos"]), c) == 1 for c in etr))
             sh["pla_rec"][p] += sum(1 for wid, w in post["workers"].items()
                                     if w["player"] == p and w["type"] == "PLANTER" and wid not in pre["workers"])
             if step == 75:

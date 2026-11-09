@@ -19,3 +19,5 @@ P v17tb_nc "$BASE, $NC, $THREAT, $EH, 'EH_BASE_PICK': True" # + ambush-aware bas
 python3 cnet2_search_pack.py exp/submission_cnet2_v17d2_nc.py "{$BASE, $NC}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 # v18 candidate (exam twin): dg2 policy + threat-first + go-home rule
 python3 cnet2_search_pack.py exp/submission_cnet2_v18c_nc.py "{$BASE, $NC, $THREAT, $EH}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+# shipped (ladder) build of v17d2: same CONF as v17, dg2 policy
+python3 cnet2_search_pack.py exp/submission_cnet2_v17d2.py "{$BASE, $CAP}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
