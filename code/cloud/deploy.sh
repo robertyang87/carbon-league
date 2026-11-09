@@ -14,7 +14,7 @@ rsync -az -e "ssh -i $K" "$ROOT/data/weights/"{cnet2_b128.npz,cnet2_b128_q8.npz,
   $U@$H:carbon/data/weights/ 2>/dev/null || rsync -az -e "ssh -i $K" "$ROOT/data/weights/"cnet2_b128*.npz "$ROOT/data/weights/"cnet2_s64*.npz $U@$H:carbon/data/weights/
 $SSH 'bash -s' <<'REMOTE'
 set -e
-export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a NEEDRESTART_SUSPEND=1
 command -v rsync >/dev/null || (apt-get update -qq && apt-get install -y -qq rsync)
 dpkg -s python3.12-venv >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq python3.12-venv python3-pip)
 cd ~/carbon
