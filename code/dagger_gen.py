@@ -69,7 +69,7 @@ def play(task):
             uf[s], mf[s], legal[s] = pf.feats(s)
             if not legal[s, ym[s]]:
                 ym[s] = 0
-            pf.advance(s, int(ym[s]))
+            pf.advance(s, int(y[s]) if y[s] >= 0 else int(ym[s]))       # prefix = what we ACTUALLY played (the labeler was teacher-forced on it too)
         order = F.CANON if side else F.GRID
         for k in ("maps", "scal", "tok_pos", "tok_kind", "tok_mask", "tok_cargo", "hist_cell", "hist_cargo", "hist_move"):
             rows[k].append(x[k])

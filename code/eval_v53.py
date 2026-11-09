@@ -126,7 +126,7 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0]}   # stand-in validation ledger
     late_deaths = [[], []]
     for step in range(1, 301):
         pre = sim.get_state()
@@ -174,18 +174,19 @@ def play_game(task):
                 sh["tree100"][p] = sum(1 for t in post["trees"].values() if t["player"] == p)   # replanting after the first batch
             if step in (50, 75, 100, 150, 200, 250):
                 sh["trees"][p].append(sum(1 for t in post["trees"].values() if t["player"] == p))   # tree curve
-            # loaded own cars that vanished this step: ENEMY-seized if some enemy worker's cargo grew by >= 90% of it,
-            # otherwise merged into an own car / other (an own lighter car took it: not a cash loss)
-            gain = [float(w["carbon"]) - float(pre["workers"][wid]["carbon"]) for wid, w in post["workers"].items()
-                    if w["player"] != p and wid in pre["workers"]]
+            # loaded own cars that vanished this step, attributed EXACTLY from the simulator's collision log:
+            # enemy (an enemy car / tree / base got the cargo), self (an own car or own base/tree got it: not a cash
+            # loss), unknown (dropped on the cell, or died outside a collision)
+            ev = {e[0]: e for e in getattr(sim, "last_collisions", [])}
             for wid, w in pre["workers"].items():
                 if w["player"] != p or wid in post["workers"] or float(w["carbon"]) <= 0:
                     continue
-                c = float(w["carbon"]); by_enemy = any(g >= 0.9 * c for g in gain)
-                sh["lost_enemy" if by_enemy else "lost_self"][p] += c
+                c = float(w["carbon"]); g = ev[wid][3] if wid in ev else "?"
+                k = "enemy" if g == 1 - p else ("self" if g == p else "unknown")
+                sh["lost_" + k][p] += c
                 if step > 270:                  # last 30 steps
-                    sh["late30" if by_enemy else "late30_self"][p] += c
-                    if by_enemy:
+                    sh["late30" if k == "enemy" else "late30_" + k][p] += c
+                    if k == "enemy":
                         late_deaths[p].append((step, wid, c))
             if step > 285:
                 sh["late15"][p] += sum(float(w["carbon"]) for wid, w in pre["workers"].items()

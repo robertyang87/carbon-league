@@ -1102,6 +1102,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 continue
             d = min(F.DIST[pos, b] for b in bases)
             slack = cfg.get("EH_HEAVY_SLACK", 1) if cargo >= cfg.get("EH_HEAVY", 1e9) else 1
+            if cfg.get("EH_HEAVY_STEP") is not None and obs["step"] >= cfg["EH_HEAVY_STEP"] and cargo >= cfg.get("EH_HEAVY", 1e9):
+                slack = left                     # heavy car from this step on: go home as soon as it is reachable at all
             if d == 0 or not (left - slack <= d <= left):
                 continue
             stats.setdefault("eh_act", []).append((obs["step"], uid))      # car is under the go-home rule this step
@@ -1140,12 +1142,15 @@ def make_search_agent(conf=None, weights=None, rweights=None):
     def agent(obs, config=None):            # root fallback: any exception -> empty action, never a failed step
         try:
             a = _inner(obs, config)
-            if cfg.get("EH_STEP") is not None and obs["step"] >= cfg["EH_STEP"]:
-                a = endgame_home(obs, a)
-            return a
         except Exception:
             stats["root_errors"] = stats.get("root_errors", 0) + 1
             return {}
+        if cfg.get("EH_STEP") is not None and obs["step"] >= cfg["EH_STEP"]:
+            try:                                # rule layer has its own fallback: a bug here keeps the searched actions
+                a = endgame_home(obs, a)
+            except Exception:
+                stats["eh_errors"] = stats.get("eh_errors", 0) + 1
+        return a
     agent.stats = stats
     agent.state = st
     agent.log = log
