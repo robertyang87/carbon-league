@@ -136,7 +136,7 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec258": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0]}   # stand-in validation ledger
     late_deaths = [[], []]
     for step in range(1, 301):
         pre = sim.get_state()
@@ -191,8 +191,9 @@ def play_game(task):
             etr = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # our collectors taxed by an enemy tree:
             sh["col_etree8"][p] += sum(1 for w in post["workers"].values()           # enemy tree within the 8-neighbourhood
                                        if w["player"] == p and w["type"] == "COLLECTOR" and any(_cheb(int(w["pos"]), c) == 1 for c in etr))
-            if step > 258:                              # late recruits: does an "M2 endgame" style stop recruiting?
-                sh["rec258"][p] += sum(1 for wid, w in post["workers"].items() if w["player"] == p and wid not in pre["workers"])
+            if step > 258:          # late recruits: M2 recruits ~2.5/game in 259-275 and NONE from 276 on (hard cut)
+                nr = sum(1 for wid, w in post["workers"].items() if w["player"] == p and wid not in pre["workers"])
+                sh["rec259_275" if step <= 275 else "rec276"][p] += nr
             sh["pla_rec"][p] += sum(1 for wid, w in post["workers"].items()
                                     if w["player"] == p and w["type"] == "PLANTER" and wid not in pre["workers"])
             if step == 75:

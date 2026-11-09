@@ -1,6 +1,6 @@
 #!/bin/bash
 # dm2 follow-up on the Mac (pure net): dm2 epoch E with TEACHER_LATE = 2 (the M2 slot) vs dg5 epoch 5 with
-# TEACHER_LATE = 7, same 200 stand-in seeds, ledger with rec258. Prints paired margin, strand, recruits after 258,
+# TEACHER_LATE = 7, same 200 stand-in seeds, ledger with rec259_275 / rec276. Prints paired margin, strand, recruits 259-275 and from 276 (M2: ~2.5 and 0),
 # enemy-seized last 30, deposits, tree-steps.   usage: bash dm2_followup.sh E
 cd /Users/baggioustb/dev/carbon/carbon-league/code
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BC_W=64 EVO_WORKERS=4
@@ -20,7 +20,7 @@ d = lambda f: (lambda x: f"{S.mean(x):+.1f} ± {S.stdev(x)/len(x)**.5:.1f}")([f(
 m = lambda R, f: S.mean(f(R[k]) for k in K)
 print(f"dm2 ep{sys.argv[1]} (late slot 2) vs dg5 ep5 (late slot 7), n {len(K)}")
 for nm, f in [("paired margin", lambda g: g['margin']), ("strand", lambda g: g.get('strand') or 0),
-              ("recruits after step 258", lambda g: P(g, 'rec258')), ("enemy-seized last 30", lambda g: P(g, 'late30')),
+              ("recruits steps 259-275", lambda g: P(g, 'rec259_275')), ("recruits from step 276", lambda g: P(g, 'rec276')), ("enemy-seized last 30", lambda g: P(g, 'late30')),
               ("deposits", lambda g: g['dep']), ("tree-steps", lambda g: P(g, 'treesteps'))]:
     print(f"  {nm:26s} {d(f):>14s}   (dm2 {m(A, f):.1f} / dg5 {m(B, f):.1f})")
 EOF
