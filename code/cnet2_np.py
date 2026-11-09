@@ -132,7 +132,7 @@ class Policy:
         n = np.tanh(gi[2 * D:] + r * gh[2 * D:])
         return (1 - z) * n + z * h
 
-    def act(self, x, aux, teacher=0, forced=None, sample_rng=None, temp=1.0, hook=None):
+    def act(self, x, aux, teacher=0, forced=None, sample_rng=None, temp=1.0, hook=None, sample_kinds=None):
         """forced: optional labels to teacher-force (parity tests).
         hook(s, logits, prefix) -> optional action override (rule layer)."""
         w = self.w
@@ -155,8 +155,10 @@ class Policy:
             logits[s] = lg
             if forced is not None:
                 a = int(forced[s])
-            elif sample_rng is not None:
-                z = lg / temp; p = np.exp(z - z.max()); p /= p.sum()
+            elif sample_rng is not None and (sample_kinds is None
+                                             or (s >= 10 and "base" in sample_kinds)
+                                             or (s < 10 and int(x["tok_kind"][s]) == 1 and "planter" in sample_kinds)):
+                z = lg / temp; p = np.exp(z - z.max()); p /= p.sum()   # sample_kinds: only these units are sampled
                 a = int(sample_rng.choice(5, p=p))
             else:
                 a = int(lg.argmax())

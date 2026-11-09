@@ -175,6 +175,95 @@ def evaluate(net, D, idx, bs=1024):
     return r
 
 
+LIGHT = ["y", "tok_mask", "mf", "uf", "legal", "teacher", "tok_kind"]
+
+
+def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
+    """Frozen trunk: run the trunk ONCE per row (no augmentation), keep tok[:, :OWN] and the trunk summary (pre)
+    on the device in fp16, then train only the decoder + style rows from the cache (5-10x faster than full passes)."""
+    allidx = np.sort(np.concatenate([tr, va])); cpos = np.full(len(D["y"]), -1, np.int64); cpos[allidx] = np.arange(len(allidx))
+    t0 = time.time(); toks = []; pres = []
+    net.eval()
+    with torch.no_grad():
+        for a0 in range(0, len(allidx), 2048):
+            ii = allidx[a0:a0 + 2048]
+            b = to_dev({k: v for k, v in fetch(D, ii).items()}, False); b["_want_pre"] = True
+            tok, pre, _ = net.encode(b)
+            toks.append(tok[:, :F.OWN].half()); pres.append(pre.half())
+    TOK = torch.cat(toks); PRE = torch.cat(pres); del toks, pres
+    net.train()
+    print(json.dumps({"trunk_cache_rows": int(len(allidx)), "GB": round((TOK.numel() + PRE.numel()) * 2 / 1e9, 2), "s": round(time.time() - t0)}), flush=True)
+    extra = [x for x in ("w", "uw") if x in D]
+    # decoder inputs also live on the device (sliced there per batch): the CPU-side fancy indexing was the bottleneck
+    GD = {}
+    for k in LIGHT + extra:
+        parts = []
+        for a0 in range(0, len(allidx), 65536):
+            v = np.asarray(D[k][allidx[a0:a0 + 65536]])
+            t_ = torch.from_numpy(np.ascontiguousarray(v))
+            if k in ("y", "teacher", "tok_kind"):
+                t_ = t_.to(torch.int16) if k != "teacher" else t_.to(torch.int8)
+            elif t_.dtype == torch.float32:
+                t_ = t_.half()
+            parts.append(t_.to(DEV))
+        GD[k] = torch.cat(parts)
+    print(json.dumps({"light_on_device_GB": round(sum(t.numel() * t.element_size() for t in GD.values()) / 1e9, 2)}), flush=True)
+
+    def light(ii):
+        ii = np.sort(ii)
+        cp = torch.from_numpy(cpos[ii]).to(DEV)
+        b = {}
+        for k, t_ in GD.items():
+            v = t_[cp]
+            if k in ("y", "teacher", "tok_kind"):
+                v = v.long()
+            elif v.dtype == torch.float16:
+                v = v.float()
+            b[k] = v
+        return b, TOK[cp].float(), PRE[cp].float()
+
+    def batch_loss(b, tok, pre):
+        lg = net.decode(b, tok, net.ctx_from(pre, b["teacher"]))
+        y = b["y"]; valid = y >= 0
+        ce = Fn.cross_entropy(lg.reshape(-1, 5), y.clamp(min=0).reshape(-1), reduction="none").reshape(y.shape)
+        tw = b["w"] if "w" in b else torch.ones(len(y), device=DEV)
+        wv = valid.float() * tw[:, None]
+        if "uw" in b:
+            wv = wv * b["uw"]
+        return (ce * wv).sum() / wv.sum().clamp(min=1), lg
+
+    def evaluate_c():
+        net.eval(); ok = np.zeros(3); n = np.zeros(3)
+        with torch.no_grad():
+            for a0 in range(0, len(va), 4096):
+                b, tok, pre = light(va[a0:a0 + 4096]); _, lg = batch_loss(b, tok, pre)
+                pred = lg.argmax(-1); y = b["y"]; kind = b["tok_kind"][:, :F.OWN]
+                for k in range(3):
+                    m = (y >= 0) & (kind == k); ok[k] += ((pred == y) & m).sum().item(); n[k] += m.sum().item()
+        net.train()
+        r = {nm: round(ok[k] / max(n[k], 1), 4) for k, nm in enumerate(("collector", "planter", "base"))}
+        r["all"] = round(ok.sum() / max(n.sum(), 1), 4); return r
+
+    best = -1; log = open(out.replace(".npz", "_log.jsonl"), "a")
+    for ep in range(epochs):
+        t1 = time.time(); acc = 0.0; nb = 0
+        perm = np.random.permutation(tr)
+        for i in range(spe):
+            b, tok, pre = light(perm[i * bs:(i + 1) * bs])
+            lpi, _ = batch_loss(b, tok, pre)
+            opt.zero_grad(set_to_none=True); lpi.backward()
+            torch.nn.utils.clip_grad_norm_([p_ for p_ in net.parameters() if p_.requires_grad], float(os.environ.get("BC_CLIP", "2.0")))
+            opt.step(); sched.step()
+            if i % 50 == 0:
+                acc += lpi.item(); nb += 1
+        r = evaluate_c()
+        rec = {"ep": ep, "val": r, "train_pi": round(acc / max(nb, 1), 4), "s": round(time.time() - t1), "cached": True}
+        print(json.dumps(rec), flush=True); log.write(json.dumps(rec) + "\n"); log.flush()
+        if r["all"] > best:
+            best = r["all"]; export(net, out, {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar, "data": data, "cached_trunk": True})
+    print("best", best)
+
+
 def export(net, path, meta):
     sd = {k: v.detach().cpu().float().numpy() for k, v in net.state_dict().items()}
     np.savez(path, **sd, meta=np.array(json.dumps(meta)))
@@ -250,6 +339,10 @@ def main(data, out, epochs, cfg):
         tnet = torch.compile(net, fullgraph=True, dynamic=False)
         print(json.dumps({"compile": "fullgraph,static"}), flush=True)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=lr, total_steps=epochs * spe, pct_start=float(os.environ.get("BC_PCT", "0.05")))
+    if os.environ.get("BC_CACHE_TRUNK") == "1":
+        if not tp_:
+            raise SystemExit("BC_CACHE_TRUNK needs BC_TRAIN_PREFIX without trunk layers (the cache is the frozen trunk)")
+        return train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data)
     best = -1
     log = open(out.replace(".npz", "_log.jsonl"), "a")
     for ep in range(epochs):

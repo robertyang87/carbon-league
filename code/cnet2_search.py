@@ -594,7 +594,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         st["sampled"] = bool(cfg["OPEN_T"] and obs["step"] < cfg["OPEN_STEPS"])
         if st["sampled"]:
             # opening diversity (data generation): sample the net's moves at temperature OPEN_T
-            y, lg0, _ = pol.act(x, f.aux, teacher=T, sample_rng=st["orng"], temp=cfg["OPEN_T"])
+            y, lg0, _ = pol.act(x, f.aux, teacher=T, sample_rng=st["orng"], temp=cfg["OPEN_T"],
+                                sample_kinds=cfg.get("OPEN_KINDS"))     # e.g. ("planter", "base"): cars stay greedy
         else:
             # phase style switch: TEACHER early, TEACHER_LATE from step LATE_STEP on (default off)
             TL = cfg.get("TEACHER_LATE")

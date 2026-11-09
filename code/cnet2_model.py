@@ -144,8 +144,37 @@ class CNet2(nn.Module):
         mf_ = mask.float()
         tmean = tok.sum(1) / mf_.sum(1, keepdim=True).clamp(min=1)
         s = self.sc2(Fn.relu(self.sc1(b["scal"])))
-        ctx = Fn.relu(self.ctx(torch.cat([flat.mean(2), tmean, s, self.teach(b["teacher"])], -1)))
+        pre = torch.cat([flat.mean(2), tmean, s], -1)
+        if b.get("_want_pre"):
+            return tok, pre, aux
+        ctx = self.ctx_from(pre, b["teacher"])
         return tok, ctx, aux
+
+    def ctx_from(self, pre, teacher):
+        """style enters only here: trunk summary [B, C+D+64] + teach[teacher] -> ctx."""
+        return Fn.relu(self.ctx(torch.cat([pre, self.teach(teacher)], -1)))
+
+    def decode(self, b, tok, ctx):
+        """teacher-forced decoder from given trunk outputs (tok [B,>=OWN,D], ctx [B,D]) -> logits [B,OWN,5]."""
+        B = tok.shape[0]
+        h = self.h0(ctx)
+        y = b["y"].clamp(min=0)
+        prev = torch.full((B,), 8, dtype=torch.long, device=tok.device)
+        outs = []
+        mask = b["tok_mask"]
+        for s in range(F.OWN):
+            mf = b["mf"][:, s]
+            inp = self.din(torch.cat([tok[:, s], ctx, b["uf"][:, s], mf.reshape(B, -1)], -1)) + self.aemb(prev)
+            hn = self.gru(inp, h)
+            m = mask[:, s][:, None]
+            h = torch.where(m, hn, h)
+            base = self.whead(h) if s < 10 else Fn.pad(self.bhead(h), (0, 2))
+            lg = base + (self.V(mf) * self.U(h)[:, None, :]).sum(-1)
+            lg = lg.masked_fill(~b["legal"][:, s], NEG)
+            outs.append(lg)
+            a = y[:, s] + (0 if s < 10 else 5)
+            prev = torch.where(mask[:, s], a, prev)
+        return torch.stack(outs, 1)
 
     def forward_seq(self, b):
         """Same as forward (teacher-forced) but the 12-slot GRU recurrence runs as ONE packed nn.GRU call:

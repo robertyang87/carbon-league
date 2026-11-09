@@ -130,6 +130,10 @@ def wrap(inner, cfg=None):
             if cfg.get("SEIZE"):                  # M-like: profitable enemy trees within reach are targets too
                 ok_ = good | (enemy_tree & (nb >= float(cfg.get("SEIZE_MIN", 40.0))))
             cand = np.nonzero(ok_ & (d <= 3))[0]
+            if cfg.get("SEIZE_FIRST") and cfg.get("SEIZE"):   # an enemy tree in reach beats any free cell
+                sz_ = [c for c in cand if enemy_tree[c]]
+                if sz_:
+                    cand = np.array(sz_)
             cand = [c for c in cand if c not in taken]
             if not cand:
                 far = [c for c in np.nonzero(good)[0] if c not in taken]
