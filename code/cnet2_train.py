@@ -50,6 +50,9 @@ SYM_CELL = torch.from_numpy(F.SYM_CELL)
 SYM_MOVE = torch.from_numpy(F.SYM_MOVE)
 
 
+GPU_AUG = os.environ.get("BC_GPU_AUG") == "1"   # move the raw batch to the device first, augment there (CPU-bound main thread)
+
+
 def to_dev(b, aug):
     t = {}
     B = len(b["y"])
@@ -57,21 +60,25 @@ def to_dev(b, aug):
         if v.dtype == np.float16:
             v = v.astype(np.float32)
         t[k] = torch.from_numpy(np.ascontiguousarray(v))
+        if GPU_AUG:
+            t[k] = t[k].to(DEV, non_blocking=True)
+    SC, SM = (SYM_CELL.to(DEV), SYM_MOVE.to(DEV)) if GPU_AUG else (SYM_CELL, SYM_MOVE)
+    dv = DEV if GPU_AUG else None
     t["maps"] = t["maps"].float() / 255.0
     t["carbon"] = t["carbon"].float() / 255.0
     for k in ("tok_pos", "tok_kind", "hist_cell", "hist_move", "y", "teacher"):
         t[k] = t[k].long()
     if aug:
-        g = torch.randint(0, 4, (B,))
-        cm = SYM_CELL[g]                                   # [B,N]
-        mm = SYM_MOVE[g]                                   # [B,5]
+        g = torch.randint(0, 4, (B,), device=dv)
+        cm = SC[g]                                         # [B,N]
+        mm = SM[g]                                         # [B,5]
         t["maps"] = torch.gather(t["maps"], 2, cm[:, None, :].expand(-1, F.P, -1))
         t["carbon"] = torch.gather(t["carbon"], 1, cm)
         t["tok_pos"] = torch.gather(cm, 1, t["tok_pos"])
         hc = t["hist_cell"]
         hcm = torch.gather(cm, 1, hc.clamp(min=0).reshape(B, -1)).reshape(hc.shape)
         t["hist_cell"] = torch.where(hc >= 0, hcm, hc)
-        mm6 = torch.cat([mm, torch.full((B, 1), 5, dtype=torch.long)], 1)
+        mm6 = torch.cat([mm, torch.full((B, 1), 5, dtype=torch.long, device=dv)], 1)
         t["hist_move"] = torch.gather(mm6, 1, t["hist_move"].reshape(B, -1)).reshape(t["hist_move"].shape)
         mf = t["mf"]
         w = torch.gather(mf[:, :10], 2, mm[:, None, :, None].expand(-1, 10, -1, F.MF))
