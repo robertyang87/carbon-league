@@ -120,6 +120,9 @@ def _comp(st, p):
     return [c, pl, tr]
 
 
+NSTEPS = int(os.environ.get("EVAL_STEPS", "300"))   # 100 = opening exam: stop at step 100, margin = cash difference then
+
+
 def play_game(task):
     tag, a_file, b_file, seed, a_side = task
     random.seed(rng_seed(seed, a_side))
@@ -136,9 +139,9 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0]}   # stand-in validation ledger
     late_deaths = [[], []]
-    for step in range(1, 301):
+    for step in range(1, NSTEPS + 1):
         pre = sim.get_state()
         acts = []
         for p in range(2):
@@ -162,6 +165,12 @@ def play_game(task):
                 if was is None or was["player"] != p:
                     planted = was is None
                     ps["planted" if planted else "seized"] += 1
+                    cpre = pre.get("carbon")              # landing-spot quality: carbon on the 4 neighbours before the step
+                    if cpre is not None:
+                        q_ = int(tr["pos"]); r_, c_ = divmod(q_, 15)
+                        nc4 = sum(float(cpre[((r_ + dr) % 15) * 15 + (c_ + dc) % 15]) for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)))
+                        k_ = "pc4" if planted else "sc4"
+                        sh[k_ + "_sum"][p] += nc4; sh[k_ + "_n"][p] += 1
                     if planted:
                         ps["born"][tid] = step
                         eb = [int(b) for _, b in post["bases"][1 - p]]   # planting site: distance to the nearest enemy base
@@ -174,6 +183,17 @@ def play_game(task):
                 tr = post["trees"].get(tid)
                 if tr is None or tr["player"] != p:
                     ps["lives"].append(step - b); del ps["born"][tid]
+            for wid, w in pre["workers"].items():      # planters gone this step; with no tree planted/seized = zero-yield death
+                if w["player"] == p and w["type"] == "PLANTER" and wid not in post["workers"]:
+                    sh["pla_dead"][p] += 1; sh["pla_dead0"][p] += ps["succ"].get(wid, 0) == 0
+            etp = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # planter distance to nearest enemy tree
+            if etp:
+                for w in post["workers"].values():
+                    if w["player"] == p and w["type"] == "PLANTER":
+                        sh["pet_sum"][p] += min(_tdist(int(w["pos"]), c) for c in etp); sh["pet_n"][p] += 1
+            if step == 100:                            # cash + cargo on board at step 100 (opening exam score)
+                sh["cash100"][p] = float(post["cash"][p])
+                sh["cargo100"][p] = round(sum(float(w["carbon"]) for w in post["workers"].values() if w["player"] == p), 1)
             nc = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR")
             sh["colsteps"][p] += nc
             sh["treesteps"][p] += sum(1 for t in post["trees"].values() if t["player"] == p)
@@ -265,6 +285,10 @@ def play_game(task):
                 - float(sum(post["trees_dict"].get(tid, [None, 0])[1]
                             for tid, t in post["trees"].items()
                             if t["player"] == p))
+            if step == 100:         # deposit snapshots: mid-game deposits = dep240 - dep100 (style switch at 100)
+                sh["dep100"][p] = L["deposits"]
+            if step == 240:
+                sh["dep240"][p] = L["deposits"]
     wall = time.time() - t0
     st = sim.get_state()
     eh_act = set(map(tuple, (getattr(fa, "last_stats", None) or {}).get("eh_act", [])))
@@ -284,14 +308,14 @@ def play_game(task):
         "opp_cash": round(st["cash"][1 - a_side], 2),
         "margin": round(st["cash"][a_side] - st["cash"][1 - a_side], 2),
         "win": st["cash"][a_side] > st["cash"][1 - a_side],
-        "a_ms_per_step": round(1000.0 * times[a_side] / 300, 2),
-        "b_ms_per_step": round(1000.0 * times[1 - a_side] / 300, 2),
+        "a_ms_per_step": round(1000.0 * times[a_side] / NSTEPS, 2),
+        "b_ms_per_step": round(1000.0 * times[1 - a_side] / NSTEPS, 2), "nsteps": NSTEPS,
         "a_worst_step_ms": round(1000.0 * worst_a, 0),
         "wall_s": round(wall, 1), "bankrupt_steps": bk_steps,
         "ledger_extra": {side: dict({k: v[q] for k, v in sh.items()}, plants=led[q]["plant_count"],
                                     pla_ok=len(pstat[q]["succ"]), pla_succ=sum(pstat[q]["succ"].values()),
                                     planted=pstat[q]["planted"], seized=pstat[q]["seized"],
-                                    life_sum=sum(pstat[q]["lives"]) + sum(300 - b for b in pstat[q]["born"].values()),
+                                    life_sum=sum(pstat[q]["lives"]) + sum(NSTEPS - b for b in pstat[q]["born"].values()),
                                     life_n=len(pstat[q]["lives"]) + len(pstat[q]["born"]),
                                     late30_eh=late30_eh if q == a_side else None)
                          for side, q in (("pol", a_side), ("opp", 1 - a_side))},

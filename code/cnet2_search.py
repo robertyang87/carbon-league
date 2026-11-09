@@ -402,7 +402,19 @@ def key_units(obs, cfg):
     mk = cfg["MAX_KEY"]
     if cfg.get("MAX_KEY_LATE") is not None and obs["step"] >= cfg.get("KEY_LATE_STEP", 999):
         mk = cfg["MAX_KEY_LATE"]          # endgame: several loaded units run home at once -> search more of them
-    return keys[:mk]
+    keys = keys[:mk]
+    if cfg.get("PLANTER_KEY") and obs["step"] <= cfg.get("PK_STEP", 100):
+        # opening: up to PK_MAX planters join the search (on top of the collector keys) -- where to plant is decided
+        # by the leaf's carbon-based tree value. Planters within PK_R of an enemy tree (the seize temptation) first,
+        # the rest in rotation by step, so every planter gets searched now and then.
+        et = [int(pos) for pos, _ in P[1 - me][3].values()]
+        pl = sorted(uid for uid, w in P[me][2].items() if w[2] == "PLANTER")
+        if pl:
+            near = [u for u in pl if et and min(F.DIST[P[me][2][u][0], t] for t in et) <= cfg.get("PK_R", 2)]
+            k0 = obs["step"] % len(pl); rot = pl[k0:] + pl[:k0]
+            order = near + [u for u in rot if u not in near]
+            keys = keys + [(0.0, u) for u in order[:cfg.get("PK_MAX", 1)]]
+    return keys
 
 
 def hunter_acts(obs, me, acts_o, cfg):
@@ -481,9 +493,36 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                             f_ = cfg["LEAF_THREAT"]
                     v += cfg["CARGO_W"] * w.carbon * f_
             m[w.player] += v
-        if cfg["TREE_V"]:
+        if cfg.get("TREE_C") is not None:
+            # tree = expected income: TREE_C * carbon on its 4 neighbours * remaining life (0.0375 ~ the per-step
+            # share a tree draws from each neighbour). TC_ONCE: a tree that changed owner since the root counts once
+            # (for the new owner), not as +v for us and -v for them -- a seized tree is worth its own income only.
+            cb = sim.carbon; ro = st.get("root_tree_owner", {})
+            for t in sim.trees.values():
+                q_ = int(t.pos); r_, c_ = divmod(q_, 15)
+                nb = cb[((r_ - 1) % 15) * 15 + c_] + cb[((r_ + 1) % 15) * 15 + c_] + cb[r_ * 15 + (c_ - 1) % 15] + cb[r_ * 15 + (c_ + 1) % 15]
+                v_ = cfg["TREE_C"] * nb * max(0, min(50 - t.age, left))
+                m[t.player] += v_
+                if cfg.get("TC_ONCE") and ro.get(q_, t.player) != t.player:
+                    m[1 - t.player] += v_
+        elif cfg["TREE_V"]:
             for t in sim.trees.values():
                 m[t.player] += cfg["TREE_V"] * max(0, min(50 - t.age, left))
+        if cfg.get("PD_W") and left > cfg.get("PD_LEFT", 200):
+            # opening: a planter is worth more the closer it stands to a free cell with >= PG_MIN neighbour carbon
+            cb = np.asarray(sim.carbon, dtype=np.float64).reshape(15, 15)
+            nb = (np.roll(cb, 1, 0) + np.roll(cb, -1, 0) + np.roll(cb, 1, 1) + np.roll(cb, -1, 1)).ravel()
+            free = np.ones(225, bool)
+            for t in sim.trees.values():
+                free[int(t.pos)] = False
+            for p_ in (0, 1):
+                for b_ in bases[p_]:
+                    free[int(b_)] = False
+            good = np.nonzero(free & (nb >= cfg.get("PG_MIN", 100.0)))[0]
+            if len(good):
+                for w in sim.workers.values():
+                    if not w.is_collector:
+                        m[w.player] -= cfg["PD_W"] * float(F.DIST[w.pos][good].min())
         return m[me] - m[1 - me]
 
     clk = time.process_time if cfg["CLOCK"] == "cpu" else time.time
@@ -491,6 +530,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
     def agent(obs, config=None):
         t0 = clk(); tw = time.time()
         me = obs["player"]
+        if cfg.get("TC_ONCE"):      # tree owners at the root (by cell): the leaf counts a seized tree once
+            st["root_tree_owner"] = {int(pos): p_ for p_ in (0, 1) for pos, _ in obs["players"][p_][3].values()}
         if st["f"] is None or obs["step"] == 0 or st["f"].seat != me:
             st["f"] = F.Feat(me); st["fo"] = F.Feat(1 - me)
         f, fo = st["f"], st["fo"]

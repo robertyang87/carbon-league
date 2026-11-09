@@ -35,6 +35,7 @@ FIELDS = {  # name: (dtype, shape-per-sample)
 
 
 STEP_MIN = int(os.environ.get("CNET2_STEP_MIN", "0"))   # keep only rows at step >= this (endgame-only teachers)
+STEP_MAX = int(os.environ.get("CNET2_STEP_MAX", "9999"))  # ... and <= this (opening-only teachers)
 UW = os.environ.get("CNET2_UW") == "1"   # per-unit decision weights (dataset v6+)
 UW_DELIV, UW_SEIZED, UW_SEIZED_K, UW_MINLOAD = 1.5, 0.3, 4, 50.0
 UW_RECRUIT, UW_REC_T0, UW_REC_T1 = 2.0, 40, 100
@@ -160,7 +161,7 @@ def build_game(task):
                 if not legal[s, y[s]]:
                     y[s] = 0
                 pf.advance(s, int(y[s]))
-            if t < STEP_MIN:                   # features still observe every step (history), rows start at STEP_MIN
+            if t < STEP_MIN or t > STEP_MAX:   # features still observe every step (history); rows only in the window
                 continue
             full = np.asarray(o0.get("full_carbon", obs["carbon"]), np.float64)
             order = F.CANON if p else F.GRID

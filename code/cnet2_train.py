@@ -198,6 +198,16 @@ def main(data, out, epochs, cfg):
             with torch.no_grad():   # fresh style row for a re-assigned slot (others keep their warm start)
                 net.teach.weight[r_].normal_(0.0, float(net.teach.weight.std()))
             print(json.dumps({"reinit_teacher_row": r_}), flush=True)
+    only = os.environ.get("BC_ONLY_TEACH")    # frozen trunk: train ONLY these style rows (e.g. "2"); every other
+    if only:                                  # parameter and every other slot stay bit-identical (no weight decay)
+        rows_ = [int(x) for x in only.split(",")]
+        for n_, p_ in net.named_parameters():
+            p_.requires_grad_(n_ == "teach.weight")
+        keep_ = torch.zeros_like(net.teach.weight); keep_[rows_] = 1.0
+        net.teach.weight.register_hook(lambda g: g * keep_)
+        tsel = np.asarray(D["teacher"])
+        tr = tr[np.isin(tsel[tr], rows_)]; va = va[np.isin(tsel[va], rows_)]   # those slots' rows only
+        print(json.dumps({"only_teach": rows_, "train_rows": len(tr), "val_rows": len(va)}), flush=True)
     npar = sum(p.numel() for p in net.parameters())
     bs = int(os.environ.get("BC_BS", "512"))
     lr = float(os.environ.get("BC_LR", "1e-3"))
@@ -205,7 +215,7 @@ def main(data, out, epochs, cfg):
     spe = len(tr) // bs if not maxsteps else min(maxsteps, len(tr) // bs)
     print(json.dumps({"train": len(tr), "val": len(va), "params": npar, "cfg": net.cfg, "bs": bs,
                       "steps_per_epoch": spe}), flush=True)
-    opt = torch.optim.AdamW(net.parameters(), lr=lr, weight_decay=1e-4)
+    opt = torch.optim.AdamW([p_ for p_ in net.parameters() if p_.requires_grad], lr=lr, weight_decay=0.0 if only else 1e-4)
     # BC_COMPILE=1 (CUDA only): train through torch.compile(fullgraph, static shapes; every training batch is full);
     # evaluation keeps calling the eager `net` (same parameters). Training-equivalent on the GB10: per-layer
     # ||dg||/||g|| 7.7e-4 vs eager in strict fp32 (2026-11-09), far below batch-to-batch gradient variance.

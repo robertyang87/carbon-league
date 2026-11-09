@@ -33,3 +33,9 @@ python3 cnet2_search_pack.py exp/submission_cnet2_v18lr_nc.py "{$BASE, $NC, $LTR
 python3 cnet2_search_pack.py exp/submission_cnet2_v18lb_nc.py "{$BASE, $NC, $LTR, 'LT_BASE': True}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_v18lb100_nc.py "{$BASE, $NC, 'LEAF_THREAT': 0.5, 'LT_LEFT': 100, 'LT_BASE': True}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_v18lk_nc.py "{$BASE, $NC, $LTR, 'LT_BASE': True, 'KEY_LATE_HOME': True, 'KLH_STEP': 270, 'KLH_MIN': 100.0, 'KLH_SLACK': 4, 'KLH_SHARE': 1}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+# v19 opening search (2026-11-09): planters as key units in steps <= 100 + carbon-based tree leaf value
+PK="'PLANTER_KEY': True, 'PK_STEP': 100, 'PK_MAX': 1, 'PK_R': 2"; TC="'TREE_C': 0.0375, 'TC_ONCE': True"
+python3 cnet2_search_pack.py exp/submission_cnet2_v19br_nc.py "{$BASE, $NC, 'MAX_BR': 9}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz            # control: more branches only
+python3 cnet2_search_pack.py exp/submission_cnet2_v19tc_nc.py "{$BASE, $NC, $TC}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz                     # leaf only
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pk_nc.py "{$BASE, $NC, 'MAX_BR': 9, $PK, $TC}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz   # planters searched
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pd_nc.py "{$BASE, $NC, 'MAX_BR': 9, $PK, $TC, 'PD_W': 3.0, 'PG_MIN': 100.0}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz   # + distance to good cell
