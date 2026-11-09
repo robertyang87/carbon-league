@@ -65,3 +65,14 @@ python3 cnet2_search_pack.py exp/submission_cnet2_m2tB.py "{$BASE, $CAP, 'TEACHE
 python3 cnet2_search_pack.py exp/submission_cnet2_m2tBr.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3Br.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3Bq.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64m3.npz   # matched rollout (s64 on the Master2s x3 set)
+# m2t3BL: late recruits/planters searched (bases from 200, planters from 240, typed worker leaf values with <= 100 left)
+# m2t3BW: same but bases searched and workers valued by type for the WHOLE game (Master2s: over-investment in trees all game)
+LATE="'MAX_BR': 9, 'BASE_KEY': True, 'BK_STEP': 200, 'BK_MAX': 1, 'PLANTER_KEY': True, 'PK_STEP': -1, 'PK_LATE': 240, 'PK_MAX': 1, 'PK_R': 2, 'TREE_C': 1.0, 'TREE_SAT': 30, 'PK_CASH': True, 'PK_H2': True, 'WT_LEFT': 100, 'WC_RATE': 4.4, 'WC_UTIL': 0.5"
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BL.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $LATE}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+WHOLE="'MAX_BR': 9, 'BASE_KEY': True, 'BK_STEP': 0, 'BK_MAX': 1, 'PLANTER_KEY': True, 'PK_STEP': -1, 'PK_LATE': 240, 'PK_MAX': 1, 'PK_R': 2, 'TREE_C': 1.0, 'TREE_SAT': 30, 'PK_CASH': True, 'PK_H2': True, 'WT_LEFT': 300, 'WC_RATE': 4.4, 'WC_UTIL': 0.5"
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BW.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $WHOLE}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# after review of 784dc9a: car value minus a 10-step round trip, late tree survival 0.6, MAX_BR 11, base keys only with
+# < 10 workers and never for rule/guard-edited bases, bk_in/bk_cut counters; BLN = typed values only for new workers
+L2="'MAX_BR': 11, 'BASE_KEY': True, 'BK_STEP': 200, 'BK_MAX': 1, 'PLANTER_KEY': True, 'PK_STEP': -1, 'PK_LATE': 240, 'PK_MAX': 1, 'PK_R': 2, 'TREE_C': 1.0, 'TREE_SAT': 30, 'PK_CASH': True, 'PK_H2': True, 'WT_LEFT': 100, 'WC_RATE': 4.4, 'WC_UTIL': 0.5, 'WC_TRIP': 10, 'TSURV': 0.6"
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BL2.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $L2}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BLN.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $L2, 'WT_NEW_ONLY': True}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz

@@ -142,7 +142,7 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0], "life50_sum": [0, 0], "life50_n": [0, 0]}   # stand-in validation ledger
     late_deaths = [[], []]
     for step in range(1, NSTEPS + 1):
         pre = sim.get_state()
@@ -186,6 +186,8 @@ def play_game(task):
                 tr = post["trees"].get(tid)
                 if tr is None or tr["player"] != p:
                     ps["lives"].append(step - b); del ps["born"][tid]
+                    if b <= 50:                       # trees planted in steps 1-50: lifetime fully observed by step 100
+                        sh["life50_sum"][p] += step - b; sh["life50_n"][p] += 1
             lcol = {c[0]: c for c in (getattr(sim, "last_collisions", None) or [])}
             for wid, w in pre["workers"].items():      # planters gone this step; with no tree planted/seized = zero-yield death
                 if w["player"] == p and w["type"] == "PLANTER" and wid not in post["workers"]:
@@ -329,7 +331,7 @@ def play_game(task):
                                     late30_eh=late30_eh if q == a_side else None)
                          for side, q in (("pol", a_side), ("opp", 1 - a_side))},
         "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
-                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1", "pa_moves", "pa_errors", "pb_skip", "fix_dropped", "pk_in", "pk_cut", "pk_rep", "pk_rep_plant3", "pk_rep_cash", "shallow", "sims", "rounds")},
+                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1", "pa_moves", "pa_errors", "pb_skip", "fix_dropped", "pk_in", "pk_cut", "pk_rep", "pk_rep_plant3", "pk_rep_cash", "bk_in", "bk_cut", "shallow", "sims", "rounds")},
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
         "comp": {str(k): v for k, v in comp.items()},
     }

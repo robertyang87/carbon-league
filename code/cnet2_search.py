@@ -419,7 +419,7 @@ def key_units(obs, cfg):
             k0 = obs["step"] % len(pl); rot = pl[k0:] + pl[:k0]
             order = near + [u for u in rot if u not in near]
             keys = keys + [(0.0, u) for u in order[:cfg.get("PK_MAX", 1)]]
-    if cfg.get("BASE_KEY") and obs["step"] >= cfg.get("BK_STEP", 200) and float(P[me][0]) >= 30.0:
+    if cfg.get("BASE_KEY") and obs["step"] >= cfg.get("BK_STEP", 200) and float(P[me][0]) >= 30.0 and len(P[me][2]) < 10:
         # late game: recruiting is searched too (none / collector / planter); the typed leaf values decide whether a
         # new worker is still worth its 30 -- no hard cut-off
         keys = keys + [(0.0, b) for b in sorted(P[me][1])[:cfg.get("BK_MAX", 1)]]
@@ -482,10 +482,10 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             cols = {p: [(w.pos, w.carbon) for w in sim.workers.values() if w.player == p and w.is_collector] for p in (0, 1)}
         wt = cfg.get("WT_LEFT") is not None and left <= cfg["WT_LEFT"]
         if wt:     # late: a car is worth its remaining haul, a planter its best potential tree net of the plant price
-            cv = cfg.get("WC_RATE", 4.4) * cfg.get("WC_UTIL", 0.5) * left
+            cv = cfg.get("WC_RATE", 4.4) * cfg.get("WC_UTIL", 0.5) * max(0, left - cfg.get("WC_TRIP", 0))
             cbm = np.asarray(sim.carbon, dtype=np.float64).reshape(15, 15)
             nbm = (np.roll(cbm, 1, 0) + np.roll(cbm, -1, 0) + np.roll(cbm, 1, 1) + np.roll(cbm, -1, 1)).ravel()
-            tvm = nbm * (1.0 - 0.9625 ** max(0, min(left, 30)))
+            tvm = nbm * (1.0 - 0.9625 ** max(0, min(left, 30))) * cfg.get("TSURV", 1.0)
             freem = np.ones(225, bool)
             for t in sim.trees.values():
                 freem[int(t.pos)] = False
@@ -500,7 +500,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 pval[p_] = np.where(freem, tvm - price, -1e9)
         for w in sim.workers.values():
             v = wv
-            if wt:
+            if wt and (not cfg.get("WT_NEW_ONLY") or w.id not in st.get("root_wids", ())):
                 if w.is_collector:
                     v = cv
                 else:
@@ -537,6 +537,9 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 if cfg.get("TREE_SAT"):      # saturating: neighbours drained 3.75%/step, life capped at TREE_SAT (30)
                     L_ = max(0, min(50 - t.age, left, cfg["TREE_SAT"]))
                     v_ = cfg["TREE_C"] * nb * (1.0 - 0.9625 ** L_)
+                    if cfg.get("TSURV") is not None and cfg.get("WT_LEFT") is not None and left <= cfg["WT_LEFT"] \
+                            and t.id not in st.get("root_tids", ()):
+                        v_ *= cfg["TSURV"]   # late, trees planted after the root only: same survival as potential trees
                 else:
                     v_ = cfg["TREE_C"] * nb * max(0, min(50 - t.age, left))
                 m[t.player] += v_
@@ -602,6 +605,10 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                     stats["pk_rep_plant3"] = stats.get("pk_rep_plant3", 0) + 1; del st["pk_pend"][u_]
                 elif w_ is None or obs["step"] - s0 > 3:
                     del st["pk_pend"][u_]
+        if cfg.get("TSURV") is not None:   # trees standing at the root keep full value; only new late trees get TSURV
+            st["root_tids"] = {t for p_ in (0, 1) for t in obs["players"][p_][3]}
+        if cfg.get("WT_NEW_ONLY"):  # workers present at the root keep the flat leaf value; only new ones are typed
+            st["root_wids"] = {u for p_ in (0, 1) for u in obs["players"][p_][2]}
         if cfg.get("TC_ONCE"):      # tree owners at the root (by cell): the leaf counts a seized tree once
             st["root_tree_owner"] = {int(pos): p_ for p_ in (0, 1) for pos, _ in obs["players"][p_][3].values()}
         if st["f"] is None or obs["step"] == 0 or st["f"].seat != me:
@@ -643,6 +650,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
         st["base_fix"] = {}      # base slots set by a rule layer this step: every search candidate / guard re-decode keeps them
+        st["guard_base"] = set() # base slots the bankruptcy guard forced to recruit a collector this step (never searched)
         # car-curve rule (both opponent lines, BEFORE the bankruptcy guard so the guard still sees the final plan):
         # while below the Master2s collector curve (target = 2 + #{CC_STEPS <= t}, 8 after the last step, off after
         # CC_END) ONE base switches to a collector: a planter recruit -> collector (only with >= 2 planters in play),
@@ -767,7 +775,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         if ncol == 0 and x["cash"] >= 30 and x["slots"] > 0 and x["left"] > 10:
             bs = [s_ for s_ in (10, 11) if m[s_]]
             if bs and not any(y[s_] == 1 for s_ in bs):
-                fz[bs[0]] = 1; first = bs[0] if first is None else min(first, bs[0])
+                fz[bs[0]] = 1; first = bs[0] if first is None else min(first, bs[0]); st.setdefault("guard_base", set()).add(bs[0])
                 stats["guard_recruit"] = stats.get("guard_recruit", 0) + 1
         if first is None:
             return y
@@ -941,7 +949,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         pdef = 0.0
         for _, uid in keys:
             s = uid2slot.get(uid)
-            if s is None or (s >= 10 and not cfg.get("BASE_KEY")):
+            if s is None or (s >= 10 and (not cfg.get("BASE_KEY") or s in st.get("base_fix", {}) or s in st.get("guard_base", ()))):
                 continue
             z = lg0[s].astype(np.float64); pz = np.exp(z - z.max()); pz /= pz.sum()
             pdef = max(pdef, pz[y[s]])
@@ -954,6 +962,12 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                     if s_b != s:
                         fz[s_b] = v_b
                 forced.append(fz); meta.append((uid, m)); pri.append(pz[m])
+        if cfg.get("BASE_KEY"):      # base keys: got candidates / all cut by MAX_BR
+            bk_u = {u for _, u in keys if u in uid2slot and uid2slot[u] >= 10}
+            if bk_u:
+                kept_b = {u for u, _ in meta[:cfg["MAX_BR"] - 1]}
+                stats["bk_in"] = stats.get("bk_in", 0) + (1 if bk_u & kept_b else 0)
+                stats["bk_cut"] = stats.get("bk_cut", 0) + (1 if bk_u - kept_b else 0)
         if cfg.get("PLANTER_KEY"):   # did a planter key get any candidate, or did MAX_BR cut all of them?
             pk_u = {u for _, u in keys if u in uid2slot and obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER"}
             if pk_u:
@@ -1158,7 +1172,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         forced, meta = [], []
         for _, uid in keys:
             s = uid2slot.get(uid)
-            if s is None or (s >= 10 and not cfg.get("BASE_KEY")):
+            if s is None or (s >= 10 and (not cfg.get("BASE_KEY") or s in st.get("base_fix", {}) or s in st.get("guard_base", ()))):
                 continue
             for m in range(3 if s >= 10 else 5):
                 if m == y[s]:
@@ -1169,6 +1183,12 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                     if s_b != s:
                         fz[s_b] = v_b
                 forced.append(fz); meta.append((uid, m))
+        if cfg.get("BASE_KEY"):      # base keys: got candidates / all cut by MAX_BR
+            bk_u = {u for _, u in keys if u in uid2slot and uid2slot[u] >= 10}
+            if bk_u:
+                kept_b = {u for u, _ in meta[:cfg["MAX_BR"] - 1]}
+                stats["bk_in"] = stats.get("bk_in", 0) + (1 if bk_u & kept_b else 0)
+                stats["bk_cut"] = stats.get("bk_cut", 0) + (1 if bk_u - kept_b else 0)
         if cfg.get("PLANTER_KEY"):   # did a planter key get any candidate, or did MAX_BR cut all of them?
             pk_u = {u for _, u in keys if u in uid2slot and obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER"}
             if pk_u:
