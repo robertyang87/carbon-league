@@ -516,6 +516,16 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                             k = "cc_2to1" if y[s_] == 2 else "cc_0to1"
                             stats[k] = stats.get(k, 0) + 1; y[s_] = 1
                         break
+        # PLANTER_CASH: no planter recruit the base could not also pay a tree for -- cash after this step's recruits
+        # (30 each) must still cover the current planting price, else the base recruits nothing (stats pb_skip).
+        if cfg.get("PLANTER_CASH"):
+            slots = [s_ for s_ in range(10, F.OWN) if x["tok_mask"][s_] and y[s_] >= 0]
+            pp = plant_price(obs, me)
+            for s_ in slots:
+                if y[s_] == 2:
+                    spend = 30.0 * sum(1 for o_ in slots if y[o_] in (1, 2))
+                    if float(obs["players"][me][0]) - spend < pp:
+                        y[s_] = 0; stats["pb_skip"] = stats.get("pb_skip", 0) + 1
         if cfg["GUARD"]:
             try:
                 y = bankrupt_guard(x, f.aux, y, lg0)
@@ -1105,6 +1115,46 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         r, c = divmod(int(pos), F.S); dr, dc = MV[mv]
         return ((r + dr) % F.S) * F.S + (c + dc) % F.S
 
+    def plant_price(obs, me):
+        """the engine's planting price: 20 while we own <= 0 trees, else 20 + 5 * 1.235 ** (living trees, both sides)"""
+        P = obs["players"]
+        mine = len(P[me][3]) if isinstance(P[me][3], dict) else 0
+        if mine <= 0:
+            return 20.0
+        alive = sum(1 for q in (0, 1) if isinstance(P[q][3], dict) for v in P[q][3].values() if int(v[1]) < 50)
+        return 20.0 + 5.0 * (1.235 ** alive)
+
+    def planter_avoid(obs, acts):
+        """PLANTER_AVOID: a planter that stays put this step WITHOUT planting or seizing (own tree under it, or no
+        cash for the plant / seize) and has an enemy planter in its 8-neighbourhood moves to a cell with no enemy
+        planter or collector within one step (planter vs planter collisions delete both). Stays if no such cell."""
+        me = obs["player"]; P = obs["players"]; cash = float(P[me][0])
+        en = [(int(w[0]), w[2]) for w in P[1 - me][2].values()]
+        epl = [p_ for p_, k in en if k == "PLANTER"]
+        if not epl:
+            return acts
+        own_t = {int(v[0]) for v in P[me][3].values()} if isinstance(P[me][3], dict) else set()
+        opp_t = {int(v[0]) for v in P[1 - me][3].values()} if isinstance(P[1 - me][3], dict) else set()
+        ebase = {int(b) for b in P[1 - me][1].values()}
+        cheb = lambda a, b: max(min(abs(a // 15 - b // 15), 15 - abs(a // 15 - b // 15)), min(abs(a % 15 - b % 15), 15 - abs(a % 15 - b % 15)))
+        out = dict(acts); pp = plant_price(obs, me)
+        claimed = {}
+        for u2, w2 in P[me][2].items():
+            mv2 = out.get(u2); c2 = _nxt(w2[0], mv2) if mv2 in MV else int(w2[0]); claimed[c2] = claimed.get(c2, 0) + 1
+        for uid, w in P[me][2].items():
+            if w[2] != "PLANTER" or out.get(uid) in MV:
+                continue
+            pos = int(w[0])
+            busy = (pos not in own_t) and ((pos in opp_t and cash >= 20.0) or (pos not in opp_t and cash >= pp))
+            if busy or not any(cheb(pos, e) <= 1 for e in epl):
+                continue
+            safe = [mv for mv in MV if not claimed.get(_nxt(pos, mv)) and _nxt(pos, mv) not in ebase
+                    and not any(cheb(_nxt(pos, mv), e) <= 1 for e, _ in en)]
+            if safe:
+                mv = safe[0]; out[uid] = mv; claimed[pos] -= 1; claimed[_nxt(pos, mv)] = claimed.get(_nxt(pos, mv), 0) + 1
+                stats["pa_moves"] = stats.get("pa_moves", 0) + 1
+        return out
+
     def endgame_home(obs, acts):
         """t >= EH_STEP: a loaded collector that can only just reach a base in time must step toward it"""
         me = obs["player"]; left = 299 - obs["step"]; P = obs["players"]
@@ -1167,6 +1217,11 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         except Exception:
             stats["root_errors"] = stats.get("root_errors", 0) + 1
             return {}
+        if cfg.get("PLANTER_AVOID"):
+            try:
+                a = planter_avoid(obs, a)
+            except Exception:
+                stats["pa_errors"] = stats.get("pa_errors", 0) + 1
         if cfg.get("EH_STEP") is not None and obs["step"] >= cfg["EH_STEP"]:
             try:                                # rule layer has its own fallback: a bug here keeps the searched actions
                 a = endgame_home(obs, a)

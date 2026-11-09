@@ -13,6 +13,7 @@ def agent(observation, configuration):
     if _AG is None or observation["step"] == 0:
         _AG = _S.make_search_agent(CONF, weights=_WTS)
     a = _AG(observation, configuration)
+    agent.last_stats = _AG.stats      # local eval: rule counters reach the result files
     if observation["step"] == 299 and os.environ.get("CS_STATS"):
         st = dict(_AG.stats); st["tag"] = 'v6s57_240'
         open(os.environ["CS_STATS"], "a").write(json.dumps(st) + "\n")
