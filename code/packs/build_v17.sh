@@ -25,3 +25,11 @@ python3 cnet2_search_pack.py exp/submission_cnet2_v17d2.py "{$BASE, $CAP}" $W/cn
 python3 cnet2_search_pack.py exp/submission_cnet2_v18e_nc.py "{$BASE, $NC, $EH}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 # v18cc (exam twin): dg2 policy + car-curve base rule (Master2s collector curve: 3rd..8th car at steps 13/22/32/39/48/55)
 python3 cnet2_search_pack.py exp/submission_cnet2_v18cc_nc.py "{$BASE, $NC, 'CAR_CURVE': (13, 22, 32, 39, 48, 55)}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+# endgame search leaf (exam twins on the v17d2 policy). Threat = enemy collector with cargo <= ours at torus distance <= 1.
+# v18lr: road threat only, last 30 steps; v18lb: + base-mouth ambush (car <= 5 from its base); v18lb100: v18lb from step 200;
+# v18lk: v18lb + key slot shared (even steps) with loaded cars whose way home is tight. One discount (0.5), never multiplied.
+LTR="'LEAF_THREAT': 0.5, 'LT_LEFT': 30"
+python3 cnet2_search_pack.py exp/submission_cnet2_v18lr_nc.py "{$BASE, $NC, $LTR}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_v18lb_nc.py "{$BASE, $NC, $LTR, 'LT_BASE': True}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_v18lb100_nc.py "{$BASE, $NC, 'LEAF_THREAT': 0.5, 'LT_LEFT': 100, 'LT_BASE': True}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_v18lk_nc.py "{$BASE, $NC, $LTR, 'LT_BASE': True, 'KEY_LATE_HOME': True, 'KLH_STEP': 270, 'KLH_MIN': 100.0, 'KLH_SLACK': 4, 'KLH_SHARE': 1}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz

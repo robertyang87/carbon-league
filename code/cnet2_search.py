@@ -384,6 +384,21 @@ def key_units(obs, cfg):
             if h_[1] not in [u for _, u in out]:
                 out.append(h_); break
         return out
+    if cfg.get("KEY_LATE_HOME") and obs["step"] >= cfg.get("KLH_STEP", 270):
+        # endgame: the search budget goes to loaded cars whose way home is tight (left - d in [0, KLH_SLACK]);
+        # the search (with the endgame leaf) decides whether to go home -- nothing is forced
+        bases = [int(b) for b in P[me][1].values()]; left = 299 - obs["step"]; tight = []
+        for uid, w in P[me][2].items():
+            pos, cargo, kind = w
+            if kind != "COLLECTOR" or cargo < cfg.get("KLH_MIN", 100.0) or not bases:
+                continue
+            d = min(F.DIST[pos, b] for b in bases)
+            if 0 < d and 0 <= left - d <= cfg.get("KLH_SLACK", 4):
+                tight.append((cargo, uid))
+        # share the key slot with the normal selection: KLH_SHARE=1 -> tight cars on even steps only
+        if tight and (not cfg.get("KLH_SHARE") or obs["step"] % 2 == 0):
+            tight.sort(reverse=True)
+            return tight[:cfg["MAX_KEY"]]
     mk = cfg["MAX_KEY"]
     if cfg.get("MAX_KEY_LATE") is not None and obs["step"] >= cfg.get("KEY_LATE_STEP", 999):
         mk = cfg["MAX_KEY_LATE"]          # endgame: several loaded units run home at once -> search more of them
@@ -441,13 +456,30 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         m = [float(sim.cash[0]), float(sim.cash[1])]
         wv = cfg["WORKER_V"] * min(1.0, left / 100.0)
         bases = {p: [b for _, b in sim.bases[p]] for p in (0, 1)}
+        lt = cfg.get("LEAF_THREAT") is not None and left <= cfg.get("LT_LEFT", 30)
+        if lt:     # endgame leaf: cargo next to a lighter enemy collector is worth LEAF_THREAT of itself
+            cols = {p: [(w.pos, w.carbon) for w in sim.workers.values() if w.player == p and w.is_collector] for p in (0, 1)}
         for w in sim.workers.values():
             v = wv
             if w.carbon > 0:
                 bs = bases[w.player]
                 d = min(F.DIST[w.pos, b] for b in bs) if bs else 99
                 if d <= left:
-                    v += cfg["CARGO_W"] * w.carbon
+                    f_ = 1.0
+                    if lt:
+                        # threat = an enemy collector with cargo <= ours (equal cargo: no winner, all deleted -> our
+                        # cargo is lost too) at torus distance <= 1 (can collide next step). Road: next to the car.
+                        # Base mouth (LT_BASE): next to the base this car goes home to, only when that base is <= 5
+                        # steps away. Either trigger -> ONE discount, never multiplied.
+                        en_ = cols[1 - w.player]
+                        road = any(F.DIST[w.pos, ep] <= 1 and ec <= w.carbon for ep, ec in en_)
+                        mouth = False
+                        if cfg.get("LT_BASE") and not road:
+                            hb = min(bs, key=lambda b: F.DIST[w.pos, b])
+                            mouth = F.DIST[w.pos, hb] <= 5 and any(F.DIST[hb, ep] <= 1 and ec <= w.carbon for ep, ec in en_)
+                        if (road and cfg.get("LT_ROAD", True)) or mouth:
+                            f_ = cfg["LEAF_THREAT"]
+                    v += cfg["CARGO_W"] * w.carbon * f_
             m[w.player] += v
         if cfg["TREE_V"]:
             for t in sim.trees.values():
