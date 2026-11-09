@@ -6,10 +6,10 @@ cd ~/junyang/carbon/code; export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 BC_W=6
 until grep -q TRAIN_DONE ../data/cnet2_train_b128dg5.log; do sleep 60; done
 W=../data/weights
 for e in 0 1 2 3 4 5; do sed "s/dg2/dg5_ep$e/g" exp/cnet2_dg2s57_240.py > exp/cnet2_dg5e${e}s57_240.py; done
-for e in 0 1 2 3 4 5; do   # CPU probes, 3 checkpoints at a time x 6 workers
-  ../.venv/bin/python dagger_probe.py exp/cnet2_dg5e${e}s57_240.py $W/cnet2_m2v2stand.npz 5 exp/cnet2_m2s2stand.py 996000 40 6 \
+for e in 0 1 2 3 4 5; do   # CPU probes, 2 checkpoints at a time x 3 workers (DGX CPU cap 80%)
+  ../.venv/bin/python dagger_probe.py exp/cnet2_dg5e${e}s57_240.py $W/cnet2_m2v2stand.npz 5 exp/cnet2_m2s2stand.py 996000 40 3 \
     > ../data/dagger_probe_dg5_ep$e.out 2>&1 &
-  [ $((e % 3)) -eq 2 ] && wait
+  [ $((e % 2)) -eq 1 ] && wait
 done
 wait
 for e in 0 1 2 3 4 5; do

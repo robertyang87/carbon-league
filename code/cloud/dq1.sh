@@ -1,7 +1,7 @@
 #!/bin/bash
 # DGX queue (~/junyang): the tail of the cloud q6, taken from the END so the two hosts meet in the middle.
-# Same resumable run() as q5/q6; 20 workers (all cores, per the user).
-cd ~/junyang/carbon/code; export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BC_W=64 EVO_WORKERS=20
+# Same resumable run() as q5/q6; 10 workers (DGX CPU cap 80% incl. GPU training and its probes, per the user).
+cd ~/junyang/carbon/code; export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BC_W=64 EVO_WORKERS=10
 B=../.venv/bin/python; P=../data/dq.progress
 run() {  # run PACK OPP SEED N TAG
   local f=../data/bigeval_live/$5.jsonl

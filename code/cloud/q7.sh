@@ -3,7 +3,7 @@
 # REVERSE=1 runs the list bottom-up (the DGX), so the two hosts meet in the middle; sync_hosts.sh shares results.
 # usage: bash q7.sh ROOT_DIR WAIT_FILE [REVERSE]
 R=$1; W=$2; REV=${3:-0}
-cd $R/code; export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BC_W=64 EVO_WORKERS=$(( $(nproc) > 32 ? $(nproc) - 4 : $(nproc) ))
+cd $R/code; export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BC_W=64 EVO_WORKERS=${EVO_CAP:-$(( $(nproc) > 32 ? $(nproc) - 4 : $(nproc) ))}
 B=../.venv/bin/python; P=../data/q7.progress
 while [ ! -f "$W" ]; do sleep 30; done
 run() {  # run PACK OPP SEED N TAG
