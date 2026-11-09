@@ -76,3 +76,5 @@ python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BW.py "{$BASE, $CAP, 'TEAC
 L2="'MAX_BR': 11, 'BASE_KEY': True, 'BK_STEP': 200, 'BK_MAX': 1, 'PLANTER_KEY': True, 'PK_STEP': -1, 'PK_LATE': 240, 'PK_MAX': 1, 'PK_R': 2, 'TREE_C': 1.0, 'TREE_SAT': 30, 'PK_CASH': True, 'PK_H2': True, 'WT_LEFT': 100, 'WC_RATE': 4.4, 'WC_UTIL': 0.5, 'WC_TRIP': 10, 'TSURV': 0.6"
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BL2.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $L2}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BLN.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $L2, 'WT_NEW_ONLY': True}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+ST="'KEY_LATE_CARGO': True, 'KEY_LATE_STEP': 270, 'MAX_KEY_LATE': 5, 'KLC_MIN': 10.0, 'MAX_BR_LATE': 21"   # endgame short trips: loaded cars (>= 10) searched from 270, up to 5, late branch cap 21
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BL2S.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $L2, $ST}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz

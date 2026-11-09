@@ -402,6 +402,13 @@ def key_units(obs, cfg):
     mk = cfg["MAX_KEY"]
     if cfg.get("MAX_KEY_LATE") is not None and obs["step"] >= cfg.get("KEY_LATE_STEP", 999):
         mk = cfg["MAX_KEY_LATE"]          # endgame: several loaded units run home at once -> search more of them
+    if cfg.get("KEY_LATE_CARGO") and obs["step"] >= cfg.get("KEY_LATE_STEP", 999):
+        # endgame short trips: every collector carrying >= KLC_MIN joins the search, heaviest first (the leaf only
+        # counts cargo that can still reach a base, so the search itself prefers trips it can finish) -- no threat rule
+        have = {u for _, u in keys}
+        loaded = sorted(((float(w[1]), u) for u, w in P[me][2].items()
+                         if w[2] == "COLLECTOR" and float(w[1]) >= cfg.get("KLC_MIN", 10.0) and u not in have), reverse=True)
+        keys = keys + loaded
     keys = keys[:mk]
     if cfg.get("PLANTER_KEY") and (obs["step"] <= cfg.get("PK_STEP", 100) or obs["step"] >= cfg.get("PK_LATE", 999)):
         # opening: up to PK_MAX planters join the search (on top of the collector keys) -- where to plant is decided
@@ -974,7 +981,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 kept = {u for u, _ in meta[:cfg["MAX_BR"] - 1]}
                 stats["pk_in"] = stats.get("pk_in", 0) + (1 if pk_u & kept else 0)
                 stats["pk_cut"] = stats.get("pk_cut", 0) + (1 if pk_u - kept else 0)
-        forced = forced[:cfg["MAX_BR"] - 1]; meta = meta[:cfg["MAX_BR"] - 1]
+        mbr = cfg["MAX_BR"] if not (cfg.get("MAX_BR_LATE") and obs["step"] >= cfg.get("KEY_LATE_STEP", 999)) else cfg["MAX_BR_LATE"]
+        forced = forced[:mbr - 1]; meta = meta[:mbr - 1]
         if not forced:
             return acts
         B0 = len(forced)
@@ -1195,7 +1203,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 kept = {u for u, _ in meta[:cfg["MAX_BR"] - 1]}
                 stats["pk_in"] = stats.get("pk_in", 0) + (1 if pk_u & kept else 0)
                 stats["pk_cut"] = stats.get("pk_cut", 0) + (1 if pk_u - kept else 0)
-        forced = forced[:cfg["MAX_BR"] - 1]; meta = meta[:cfg["MAX_BR"] - 1]
+        mbr = cfg["MAX_BR"] if not (cfg.get("MAX_BR_LATE") and obs["step"] >= cfg.get("KEY_LATE_STEP", 999)) else cfg["MAX_BR_LATE"]
+        forced = forced[:mbr - 1]; meta = meta[:mbr - 1]
         if not forced:
             return acts
         B0 = len(forced)
