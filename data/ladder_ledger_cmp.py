@@ -87,7 +87,7 @@ def collect(name, rows, rd):
         if not os.path.exists(f) or m.get("winner") is None: continue
         d = json.load(gzip.open(f))
         order = m.get("order") or ["a", "b"]
-        names = [m["name_" + order[0]], m["name_" + order[1]]]
+        nm = {k: m.get("name_" + k, m.get(k)) for k in ("a", "b")}; names = [nm[order[0]], nm[order[1]]]
         p = names.index(name) if name in names else -1
         if p < 0: continue
         L = ledger(d, p); L["opp"] = names[1 - p]; out.append(L)
