@@ -21,3 +21,5 @@ python3 cnet2_search_pack.py exp/submission_cnet2_v17d2_nc.py "{$BASE, $NC}" $W/
 python3 cnet2_search_pack.py exp/submission_cnet2_v18c_nc.py "{$BASE, $NC, $THREAT, $EH}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 # shipped (ladder) build of v17d2: same CONF as v17, dg2 policy
 python3 cnet2_search_pack.py exp/submission_cnet2_v17d2.py "{$BASE, $CAP}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+# v18e (exam twin): dg2 policy + go-home rule only (no THREAT_FIRST: v18c showed it costs the hunting slot)
+python3 cnet2_search_pack.py exp/submission_cnet2_v18e_nc.py "{$BASE, $NC, $EH}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
