@@ -524,6 +524,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             if cfg.get("LATE_STEP_MASTER") is not None and st.get("opp_first") == "COLLECTOR":
                 ls = cfg["LATE_STEP_MASTER"]
             st["T_now"] = TL if (TL is not None and obs["step"] >= ls) else T   # rollouts use the same slot
+            if cfg.get("TEACHER_LATE2") is not None and obs["step"] >= cfg.get("LATE_STEP2", 999):
+                st["T_now"] = cfg["TEACHER_LATE2"]          # optional third phase (e.g. 7 from 240, then 2 from 280)
             y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
         st["base_fix"] = {}      # base slots set by a rule layer this step: every search candidate / guard re-decode keeps them
