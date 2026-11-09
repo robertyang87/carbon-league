@@ -531,6 +531,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         if cfg["GUARD"]:
             try:
                 y = bankrupt_guard(x, f.aux, y, lg0)
+                for s_b in [k for k, v in st.get("base_fix", {}).items() if int(y[k]) != v]:
+                    st["base_fix"].pop(s_b); stats["fix_dropped"] = stats.get("fix_dropped", 0) + 1   # guard overrode
             except Exception as e:
                 stats["errors"] += 1; stats["last_error"] = repr(e)[:300]
         # vs the Master line (opponent's first recruit was a collector): from step MNP_STEP no planter recruits
@@ -621,9 +623,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 stats["guard_recruit"] = stats.get("guard_recruit", 0) + 1
         if first is None:
             return y
-        fz[:first] = y[:first]
-        for s_b, v_b in st.get("base_fix", {}).items():
-            fz[s_b] = v_b
+        fz[:first] = y[:first]                  # the guard has priority over rule-edited bases: no base_fix here
         tok, ctx = pol.last_enc
         X1 = {k: x[k][None] for k in ("tok_pos", "tok_kind", "tok_mask", "tok_cargo")}
         X1["cash"] = [x["cash"]]; X1["slots"] = [x["slots"]]; X1["left"] = [x["left"]]

@@ -213,6 +213,8 @@ def main(data, out, epochs, cfg):
         torch.backends.cuda.matmul.allow_tf32 = os.environ.get("BC_TF32", "1") == "1"
         torch.backends.cudnn.allow_tf32 = os.environ.get("BC_TF32", "1") == "1"
     tnet = net
+    if os.environ.get("BC_COMPILE") == "1" and SEQGRU:
+        raise SystemExit("BC_COMPILE=1 with BC_SEQGRU=1 would silently train eager (forward_seq is not compiled); pick one")
     if os.environ.get("BC_COMPILE") == "1" and DEV.type == "cuda":
         tnet = torch.compile(net, fullgraph=True, dynamic=False)
         print(json.dumps({"compile": "fullgraph,static"}), flush=True)
