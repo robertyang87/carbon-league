@@ -223,6 +223,10 @@ def main(data, out, epochs, cfg):
         torch.backends.cuda.matmul.allow_tf32 = os.environ.get("BC_TF32", "1") == "1"
         torch.backends.cudnn.allow_tf32 = os.environ.get("BC_TF32", "1") == "1"
     tnet = net
+    if only and os.environ.get("BC_COMPILE") == "1":
+        raise SystemExit("BC_ONLY_TEACH with BC_COMPILE=1 is untested (gradient hook under compile); omit BC_COMPILE")
+    if only and spe == 0:
+        raise SystemExit(f"BC_ONLY_TEACH={only}: zero training rows after filtering")
     if os.environ.get("BC_COMPILE") == "1" and SEQGRU:
         raise SystemExit("BC_COMPILE=1 with BC_SEQGRU=1 would silently train eager (forward_seq is not compiled); pick one")
     if os.environ.get("BC_COMPILE") == "1" and DEV.type == "cuda":
@@ -256,6 +260,20 @@ def main(data, out, epochs, cfg):
             best = r["all"]
             export(net, out, {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar, "data": data})
     print("best", best)
+    if only and init:          # frozen trunk: prove every parameter except the trained style rows is bit-identical
+        w0 = np.load(init); w1 = np.load(out); diff = []
+        for k in w0.files:
+            if k == "meta":
+                continue
+            a0, a1 = w0[k], w1[k]
+            if k == "teach.weight":
+                m_ = np.ones(len(a0), bool); m_[[int(x) for x in only.split(",")]] = False
+                re_ = [int(x) for x in os.environ.get("BC_REINIT_TEACH", "").split(",") if x]
+                m_[re_] = False
+                a0, a1 = a0[m_], a1[m_]
+            if not np.array_equal(a0, a1):
+                diff.append(k)
+        print(json.dumps({"frozen_check": "PASS" if not diff else "FAIL", "changed": diff}), flush=True)
 
 
 if __name__ == "__main__":

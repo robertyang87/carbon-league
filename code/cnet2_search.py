@@ -501,13 +501,44 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             for t in sim.trees.values():
                 q_ = int(t.pos); r_, c_ = divmod(q_, 15)
                 nb = cb[((r_ - 1) % 15) * 15 + c_] + cb[((r_ + 1) % 15) * 15 + c_] + cb[r_ * 15 + (c_ - 1) % 15] + cb[r_ * 15 + (c_ + 1) % 15]
-                v_ = cfg["TREE_C"] * nb * max(0, min(50 - t.age, left))
+                if cfg.get("TREE_SAT"):      # saturating: neighbours drained 3.75%/step, life capped at TREE_SAT (30)
+                    L_ = max(0, min(50 - t.age, left, cfg["TREE_SAT"]))
+                    v_ = cfg["TREE_C"] * nb * (1.0 - 0.9625 ** L_)
+                else:
+                    v_ = cfg["TREE_C"] * nb * max(0, min(50 - t.age, left))
                 m[t.player] += v_
                 if cfg.get("TC_ONCE") and ro.get(q_, t.player) != t.player:
                     m[1 - t.player] += v_
         elif cfg["TREE_V"]:
             for t in sim.trees.values():
                 m[t.player] += cfg["TREE_V"] * max(0, min(50 - t.age, left))
+        if cfg.get("PD_POT") and left > cfg.get("PD_LEFT", 200):
+            # opening: a planter is worth its best "potential tree" within PD_K steps: max over free cells of
+            # (saturating tree value - current plant price) * 0.85^d -- same scale as the real trees in this leaf
+            cb = np.asarray(sim.carbon, dtype=np.float64).reshape(15, 15)
+            nb = (np.roll(cb, 1, 0) + np.roll(cb, -1, 0) + np.roll(cb, 1, 1) + np.roll(cb, -1, 1)).ravel()
+            Lp = max(0, min(left, cfg.get("TREE_SAT", 30)))
+            tv = cfg.get("TREE_C", 1.0) * nb * (1.0 - 0.9625 ** Lp)
+            free = np.ones(225, bool)
+            for t in sim.trees.values():
+                free[int(t.pos)] = False
+            for p_ in (0, 1):
+                for b_ in bases[p_]:
+                    free[int(b_)] = False
+            live = sum(1 for t in sim.trees.values() if t.age < 50)
+            K_ = cfg.get("PD_K", 3)
+            for p_ in (0, 1):
+                own = sum(1 for t in sim.trees.values() if t.player == p_)
+                price = 20.0 if own == 0 else 20.0 + 5.0 * 1.235 ** live
+                gain = np.where(free, tv - price, -1e9)
+                for w in sim.workers.values():
+                    if w.player == p_ and not w.is_collector:
+                        d_ = F.DIST[w.pos]
+                        ok_ = d_ <= K_
+                        if ok_.any():
+                            best_ = float(np.max(gain[ok_] * (0.85 ** d_[ok_])))
+                            if best_ > 0:
+                                m[p_] += best_
         if cfg.get("PD_W") and left > cfg.get("PD_LEFT", 200):
             # opening: a planter is worth more the closer it stands to a free cell with >= PG_MIN neighbour carbon
             cb = np.asarray(sim.carbon, dtype=np.float64).reshape(15, 15)
@@ -530,6 +561,14 @@ def make_search_agent(conf=None, weights=None, rweights=None):
     def agent(obs, config=None):
         t0 = clk(); tw = time.time()
         me = obs["player"]
+        if st.get("pk_pend"):       # planters whose move the search replaced: planted (our tree under it) within 3 steps?
+            P_ = obs["players"][me]; tp_ = {int(pos) for pos, _ in P_[3].values()}
+            for u_, s0 in list(st["pk_pend"].items()):
+                w_ = P_[2].get(u_)
+                if w_ is not None and int(w_[0]) in tp_:
+                    stats["pk_rep_plant3"] = stats.get("pk_rep_plant3", 0) + 1; del st["pk_pend"][u_]
+                elif w_ is None or obs["step"] - s0 > 3:
+                    del st["pk_pend"][u_]
         if cfg.get("TC_ONCE"):      # tree owners at the root (by cell): the leaf counts a seized tree once
             st["root_tree_owner"] = {int(pos): p_ for p_ in (0, 1) for pos, _ in obs["players"][p_][3].values()}
         if st["f"] is None or obs["step"] == 0 or st["f"].seat != me:
@@ -880,6 +919,12 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 for s_b, v_b in st.get("base_fix", {}).items():
                     fz[s_b] = v_b
                 forced.append(fz); meta.append((uid, m)); pri.append(pz[m])
+        if cfg.get("PLANTER_KEY"):   # did a planter key get any candidate, or did MAX_BR cut all of them?
+            pk_u = {u for _, u in keys if u in uid2slot and obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER"}
+            if pk_u:
+                kept = {u for u, _ in meta[:cfg["MAX_BR"] - 1]}
+                stats["pk_in"] = stats.get("pk_in", 0) + (1 if pk_u & kept else 0)
+                stats["pk_cut"] = stats.get("pk_cut", 0) + (1 if pk_u - kept else 0)
         forced = forced[:cfg["MAX_BR"] - 1]; meta = meta[:cfg["MAX_BR"] - 1]
         if not forced:
             return acts
@@ -1052,6 +1097,11 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             pass
         if bj and best > cfg["MARGIN"]:
             stats["changed"] += 1; stats["gain"] += best
+            if cfg.get("PLANTER_KEY") and cmeta[bj] is not None:
+                u_ = cmeta[bj][0]; w_ = obs["players"][me][2].get(u_)
+                if w_ is not None and w_[2] == "PLANTER":      # a planter's move replaced: did it plant within 3 steps?
+                    stats["pk_rep"] = stats.get("pk_rep", 0) + 1
+                    st.setdefault("pk_pend", {})[u_] = step
             return cand[bj]
         return acts
 
@@ -1078,6 +1128,12 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 for s_b, v_b in st.get("base_fix", {}).items():
                     fz[s_b] = v_b
                 forced.append(fz); meta.append((uid, m))
+        if cfg.get("PLANTER_KEY"):   # did a planter key get any candidate, or did MAX_BR cut all of them?
+            pk_u = {u for _, u in keys if u in uid2slot and obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER"}
+            if pk_u:
+                kept = {u for u, _ in meta[:cfg["MAX_BR"] - 1]}
+                stats["pk_in"] = stats.get("pk_in", 0) + (1 if pk_u & kept else 0)
+                stats["pk_cut"] = stats.get("pk_cut", 0) + (1 if pk_u - kept else 0)
         forced = forced[:cfg["MAX_BR"] - 1]; meta = meta[:cfg["MAX_BR"] - 1]
         if not forced:
             return acts

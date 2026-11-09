@@ -39,3 +39,12 @@ python3 cnet2_search_pack.py exp/submission_cnet2_v19br_nc.py "{$BASE, $NC, 'MAX
 python3 cnet2_search_pack.py exp/submission_cnet2_v19tc_nc.py "{$BASE, $NC, $TC}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz                     # leaf only
 python3 cnet2_search_pack.py exp/submission_cnet2_v19pk_nc.py "{$BASE, $NC, 'MAX_BR': 9, $PK, $TC}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz   # planters searched
 python3 cnet2_search_pack.py exp/submission_cnet2_v19pd_nc.py "{$BASE, $NC, 'MAX_BR': 9, $PK, $TC, 'PD_W': 3.0, 'PG_MIN': 100.0}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz   # + distance to good cell
+# v19 round 2 (after review): saturating tree value TREE_C 1.0 * nb4 * (1 - 0.9625^min(50-age, left, 30)), NO TC_ONCE
+TS="'TREE_C': 1.0, 'TREE_SAT': 30"
+python3 cnet2_search_pack.py exp/submission_cnet2_v19tc2_nc.py "{$BASE, $NC, $TS}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz                    # leaf only (new base)
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pk2_nc.py "{$BASE, $NC, 'MAX_BR': 9, $PK, $TS}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz  # + planters searched
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pd2_nc.py "{$BASE, $NC, 'MAX_BR': 9, $PK, $TS, 'PD_W': 3.0, 'PG_MIN': 100.0}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+# v19 round 3 (2nd review): 2 planters per step (MAX_BR 13); PD_POT = best potential tree within 3 steps, same scale as trees
+python3 cnet2_search_pack.py exp/submission_cnet2_v19p2_nc.py "{$BASE, $NC, 'MAX_BR': 13, $PK, 'PK_MAX': 2, $TS}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pp_nc.py "{$BASE, $NC, 'MAX_BR': 13, $PK, 'PK_MAX': 2, $TS, 'PD_POT': True, 'PD_K': 3}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pp.py "{$BASE, $CAP, 'MAX_BR': 13, $PK, 'PK_MAX': 2, $TS, 'PD_POT': True, 'PD_K': 3}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz   # capped (ship-candidate) twin

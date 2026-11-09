@@ -21,7 +21,7 @@ print(f"  {sys.argv[2]:12s} n {len(B)}  cash margin@100 {S.mean(g['margin'] for 
 for a in sys.argv[3:]:
     A = rows(a); K = [k for k in A if k in B]
     d = lambda f: (lambda x: f"{S.mean(x):+.0f} ± {S.stdev(x)/len(x)**.5:.0f}")([f(A[k]) - f(B[k]) for k in K])
-    print(f"  {a:12s} n {len(K)}  paired: cash margin {d(lambda g: g['margin'])}, tree income {d(lambda g: g['tinc'])}, tree-steps {d(lambda g: P(g,'treesteps'))}, deposits {d(lambda g: g['dep'])}"
+    print(f"  {a:12s} n {len(K)}  paired: cash+cargo margin {d(lambda g: P(g,'cash100') + P(g,'cargo100') - P(g,'cash100','opp') - P(g,'cargo100','opp'))} (main), cash {d(lambda g: g['margin'])}, tree income {d(lambda g: g['tinc'])}, tree-steps {d(lambda g: P(g,'treesteps'))}, deposits {d(lambda g: g['dep'])}"
           f"\n      us:  {desc(A, K)}\n      opp: {desc(A, K, 'opp')}")
 
 def verdict(R, K):
@@ -30,4 +30,6 @@ def verdict(R, K):
     ratio = sm('planted') / max(1, sm('seized')); pc = sm('pc4_sum') / max(1, sm('pc4_n'))
     return f"PASS-LINES: tree income vs opp {'ok' if ti >= oti else 'NO'} ({ti:.0f}/{oti:.0f}), planted/seized {'ok' if ratio >= 2 else 'NO'} ({ratio:.2f}), nb-carbon planted {'ok' if pc >= 75 else 'NO'} ({pc:.0f})"
 for a in sys.argv[3:]:
-    A = rows(a); print(f"  {a:12s} {verdict(A, [k for k in A if k in B])}")
+    A = rows(a); K = [k for k in A if k in B]; srch = [A[k] for k in K if A[k].get('srch')]
+    pk = f"  planter in search {sum(g.get('pk_in', 0) for g in srch) / max(1, len(srch)):.1f} steps/game, cut {sum(g.get('pk_cut', 0) for g in srch) / max(1, len(srch)):.1f}, planter share of replaced moves {sum(g.get('pk_rep', 0) for g in srch) / max(1, sum(g.get('chg') or 0 for g in srch)):.0%}, planted within 3 steps of a replacement {sum(g.get('pk_rep3', 0) for g in srch) / max(1, sum(g.get('pk_rep', 0) for g in srch)):.0%}" if srch else ""
+    print(f"  {a:12s} {verdict(A, K)}{pk}")
