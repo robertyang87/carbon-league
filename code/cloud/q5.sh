@@ -9,8 +9,10 @@ run() {  # run PACK OPP SEED N TAG
   rm -f "$f"; $B bigeval.py exp/$1.py exp/$2.py $3 $4 $5 >> ../data/q4.log 2>&1; echo "$(date +%T) $5" >> $P
 }
 run submission_cnet2_v17d2_nc cnet2_m2s2stand 996000 200 c_v17d2_m2s2
+run submission_cnet2_v18c_nc cnet2_m2s2stand 996000 200 c_v18c_m2s2       # combined candidate early: saves the post-exam hour
 run submission_cnet2_v17c_nc opp_1cz_v9 997000 200 c_v17c_v9
 run submission_cnet2_v17d2_nc opp_1cz_v9 997000 200 c_v17d2_v9
+run submission_cnet2_v18c_nc opp_1cz_v9 997000 200 c_v18c_v9
 run submission_cnet2_v17d2_nc submission_cnet2_v13 992000 100 c_v17d2_v13
 run submission_cnet2_v17d2_nc opp_wb532 995000 100 c_v17d2_wb532
 for v in v17t v17te v17tb; do run submission_cnet2_${v}_nc opp_1cz_v9 997000 200 c_${v}_v9; done

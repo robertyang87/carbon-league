@@ -17,3 +17,5 @@ P v17te_nc "$BASE, $NC, $THREAT, $EH"                      # + go-home rule
 P v17tb_nc "$BASE, $NC, $THREAT, $EH, 'EH_BASE_PICK': True" # + ambush-aware base choice
 # v17 search with the dg2 DAgger policy (pure-net exam vs Master2s stand-in: +205 +- 80 over v9)
 python3 cnet2_search_pack.py exp/submission_cnet2_v17d2_nc.py "{$BASE, $NC}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+# v18 candidate (exam twin): dg2 policy + threat-first + go-home rule
+python3 cnet2_search_pack.py exp/submission_cnet2_v18c_nc.py "{$BASE, $NC, $THREAT, $EH}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
