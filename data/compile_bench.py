@@ -1,4 +1,4 @@
-"""compile_bench DS W.npz -- training-step time and equivalence of torch.compile (default / reduce-overhead)
+"""compile_bench DS W.npz -- MEDIAN training-step time over 120 post-compile steps and equivalence of torch.compile (default / reduce-overhead)
 against eager, on real fixed-size batches (bs 512, drop-last). Equivalence: argmax agreement of the logits on legal
 moves, max |dlogit|, and the max relative gradient difference over parameters (ignoring near-zero grads)."""
 import json, os, sys, time
@@ -16,16 +16,22 @@ def fresh():
     return net
 
 
-def run(net, f, n_warm=4):
-    opt = torch.optim.AdamW(net.parameters(), lr=1e-6)
-    for i, b in enumerate(bs):
-        if i == n_warm:
-            torch.cuda.synchronize(); t = time.time()
+STEPS = int(os.environ.get("BENCH_STEPS", "120"))
+
+
+def run(net, f, n_warm=6):
+    """median per-step time over STEPS steps AFTER warm-up/compile (fixed shape: the batches are all 512)."""
+    opt = torch.optim.AdamW(net.parameters(), lr=1e-6); ts = []
+    for i in range(n_warm + STEPS):
+        b = bs[i % len(bs)]
+        torch.cuda.synchronize(); t = time.time()
         lg, v, a = f(b); y = b["y"]; m = y >= 0
         loss = torch.nn.functional.cross_entropy(lg[m].float(), y[m])
         opt.zero_grad(); loss.backward(); opt.step()
-    torch.cuda.synchronize()
-    return 1000 * (time.time() - t) / (len(bs) - n_warm)
+        torch.cuda.synchronize()
+        if i >= n_warm:
+            ts.append(1000 * (time.time() - t))
+    return float(np.median(ts))
 
 
 def grads(net, f, b):
