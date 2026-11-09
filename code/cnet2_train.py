@@ -123,13 +123,20 @@ def loader(D, idx, bs, aug, shuffle=True, nthreads=None):
 AMP = os.environ.get("BC_AMP", "bf16")
 
 
+SEQGRU = os.environ.get("BC_SEQGRU") == "1"   # one packed GRU call over the 12 slots (cnet2_model.forward_seq)
+
+
+def _fwd(net):
+    return net.forward_seq if SEQGRU else net
+
+
 def losses(net, b):
-    if AMP == "bf16" and DEV.type == "mps":
-        with torch.autocast("mps", dtype=torch.bfloat16):
-            lg, v, aux = net(b)
+    if AMP == "bf16" and (DEV.type == "mps" or (DEV.type == "cuda" and os.environ.get("BC_CUDA_BF16") == "1")):
+        with torch.autocast(DEV.type, dtype=torch.bfloat16):   # dg2 was trained like this on the Mac (mps bf16)
+            lg, v, aux = _fwd(net)(b)
         lg, v, aux = lg.float(), v.float(), aux.float()
     else:
-        lg, v, aux = net(b)
+        lg, v, aux = _fwd(net)(b)
     y = b["y"]
     valid = y >= 0
     ce = Fn.cross_entropy(lg.reshape(-1, 5), y.clamp(min=0).reshape(-1), reduction="none").reshape(y.shape)

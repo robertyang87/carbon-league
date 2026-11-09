@@ -48,7 +48,8 @@ WRAP_IDX = (_r[:, None] * F.S + _r[None, :]).reshape(-1)
 
 
 def wrap(h):
-    """circular pad by 1 via a single gather (much faster than padding_mode='circular' on MPS)."""
+    """circular pad by 1 via a single gather (much faster than padding_mode='circular' on MPS; on the GB10 the
+    native circular pad is slower too: its slice copies cost ~1.7x per training step, measured 2026-11-09)."""
     B, C = h.shape[:2]
     idx = WRAP_IDX.to(h.device)
     return h.reshape(B, C, F.N).index_select(2, idx).reshape(B, C, 17, 17)
@@ -145,6 +146,48 @@ class CNet2(nn.Module):
         s = self.sc2(Fn.relu(self.sc1(b["scal"])))
         ctx = Fn.relu(self.ctx(torch.cat([flat.mean(2), tmean, s, self.teach(b["teacher"])], -1)))
         return tok, ctx, aux
+
+    def forward_seq(self, b):
+        """Same as forward (teacher-forced) but the 12-slot GRU recurrence runs as ONE packed nn.GRU call:
+        every slot input depends only on data (the previous action is the teacher label), so no Python loop.
+        Masked slots keep the previous hidden state, exactly like the loop: valid slots are packed to the
+        front of each row, run as a variable-length sequence, then scattered back."""
+        from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
+        from torch.func import functional_call
+        tok, ctx, aux = self.encode(b)
+        B, S = tok.shape[0], F.OWN
+        dev = tok.device
+        mask = b["tok_mask"][:, :S]
+        y = b["y"].clamp(min=0)
+        off = torch.tensor([0] * 10 + [5] * (S - 10), device=dev)
+        act = y[:, :S] + off                                              # action fed to the next valid slot
+        pos = torch.arange(S, device=dev).expand(B, S)
+        lv = torch.where(mask, pos, torch.full_like(pos, -1)).cummax(1).values      # last valid slot <= s
+        lvb = torch.cat([torch.full((B, 1), -1, device=dev, dtype=lv.dtype), lv[:, :-1]], 1)  # last valid < s
+        prev = torch.where(lvb >= 0, act.gather(1, lvb.clamp(min=0)), torch.full_like(lvb, 8))
+        mf = b["mf"][:, :S]
+        inp = self.din(torch.cat([tok[:, :S], ctx[:, None].expand(-1, S, -1), b["uf"][:, :S],
+                                  mf.reshape(B, S, -1)], -1)) + self.aemb(prev)
+        h0 = self.h0(ctx)
+        n = mask.sum(1)
+        order = torch.argsort((~mask).to(torch.int64) * S + pos, dim=1)              # valid slots first, in order
+        inp_c = inp.gather(1, order[:, :, None].expand(-1, -1, inp.shape[-1]))
+        g = self.__dict__.get("_seq_gru")
+        if g is None or g.weight_ih_l0.device != dev:
+            g = nn.GRU(inp.shape[-1], h0.shape[-1], batch_first=True).to(dev)
+            self.__dict__["_seq_gru"] = g                                        # not a registered submodule
+        params = {"weight_ih_l0": self.gru.weight_ih, "weight_hh_l0": self.gru.weight_hh,
+                  "bias_ih_l0": self.gru.bias_ih, "bias_hh_l0": self.gru.bias_hh}
+        pk = pack_padded_sequence(inp_c, n.clamp(min=1).cpu(), batch_first=True, enforce_sorted=False)
+        out, _ = functional_call(g, params, (pk, h0[None].contiguous()))
+        out, _ = pad_packed_sequence(out, batch_first=True, total_length=S)
+        cnt = mask.to(torch.int64).cumsum(1)                                       # valid slots <= s
+        hs = out.gather(1, (cnt - 1).clamp(min=0)[:, :, None].expand(-1, -1, out.shape[-1]))
+        hs = torch.where((cnt > 0)[:, :, None], hs, h0[:, None].expand(-1, S, -1))
+        base = torch.cat([self.whead(hs[:, :10]), Fn.pad(self.bhead(hs[:, 10:]), (0, 2))], 1)
+        lg = base + (self.V(mf) * self.U(hs)[:, :, None, :]).sum(-1)
+        lg = lg.masked_fill(~b["legal"][:, :S], NEG)
+        return lg, torch.tanh(self.value(ctx)).squeeze(1), aux
 
     def forward(self, b):
         """teacher-forced. returns logits [B,OWN,5], value [B], aux [B,N]."""
