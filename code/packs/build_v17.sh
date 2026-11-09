@@ -53,3 +53,5 @@ PQ="'MAX_BR': 13, $PK, 'PK_MAX': 2, $TS, 'PD_POT': True, 'PD_K': 3, 'PK_CASH': T
 python3 cnet2_search_pack.py exp/submission_cnet2_v19pq_nc.py "{$BASE, $NC, $PQ}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_v19pq.py "{$BASE, $CAP, $PQ}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_v19pq7_nc.py "{$BASE, $NC, $PQ, 'PD_DISC': 0.7}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz   # potential tree discounted 0.7/step (plant-now favoured)
+# v19sd: v17d2 (capped) + stay-dodge in steps <= 100: a planter standing still with an enemy planter 1 step away moves (also when about to plant / seize)
+python3 cnet2_search_pack.py exp/submission_cnet2_v19sd.py "{$BASE, $CAP, 'PLANTER_AVOID': True, 'PA_ALL': True, 'PA_MANH': True, 'PA_STEP': 100}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz

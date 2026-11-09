@@ -1298,7 +1298,10 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 continue
             pos = int(w[0])
             busy = (pos not in own_t) and ((pos in opp_t and cash >= 20.0) or (pos not in opp_t and cash >= pp))
-            if busy or not any(cheb(pos, e) <= 1 for e in epl):
+            if cfg.get("PA_ALL"):
+                busy = False          # collisions resolve before planting: a planter about to plant / seize dies too
+            near = (lambda e: F.DIST[pos, e] <= 1) if cfg.get("PA_MANH") else (lambda e: cheb(pos, e) <= 1)
+            if busy or not any(near(e) for e in epl):
                 continue
             safe = [mv for mv in MV if not claimed.get(_nxt(pos, mv)) and _nxt(pos, mv) not in ebase
                     and not any(cheb(_nxt(pos, mv), e) <= 1 for e, _ in en)]
@@ -1369,7 +1372,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         except Exception:
             stats["root_errors"] = stats.get("root_errors", 0) + 1
             return {}
-        if cfg.get("PLANTER_AVOID"):
+        if cfg.get("PLANTER_AVOID") and obs["step"] <= cfg.get("PA_STEP", 999):
             try:
                 a = planter_avoid(obs, a)
             except Exception:

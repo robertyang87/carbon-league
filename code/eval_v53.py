@@ -127,6 +127,9 @@ def play_game(task):
     tag, a_file, b_file, seed, a_side = task
     random.seed(rng_seed(seed, a_side))
     sim = FastCarbon(CFG).reset(seed=seed)
+    ob_ = float(os.environ.get("EVAL_OPP_CASH", "0"))   # exam ruler only: extra starting cash for the OPPONENT (b side)
+    if ob_:
+        sim.cash[1 - a_side] += ob_
     fa = load_agent_fn(os.path.join(HERE, a_file))
     fb = load_agent_fn(os.path.join(HERE, b_file))
     agents = [None, None]
@@ -139,7 +142,7 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0]}   # stand-in validation ledger
     late_deaths = [[], []]
     for step in range(1, NSTEPS + 1):
         pre = sim.get_state()
@@ -183,9 +186,14 @@ def play_game(task):
                 tr = post["trees"].get(tid)
                 if tr is None or tr["player"] != p:
                     ps["lives"].append(step - b); del ps["born"][tid]
+            lcol = {c[0]: c for c in (getattr(sim, "last_collisions", None) or [])}
             for wid, w in pre["workers"].items():      # planters gone this step; with no tree planted/seized = zero-yield death
                 if w["player"] == p and w["type"] == "PLANTER" and wid not in post["workers"]:
                     sh["pla_dead"][p] += 1; sh["pla_dead0"][p] += ps["succ"].get(wid, 0) == 0
+                    g_ = lcol.get(wid, (None, None, None, "?"))[3]      # who got the cell: other player / own / nobody
+                    mv_ = (acts[p] or {}).get(wid) in ("UP", "DOWN", "LEFT", "RIGHT")
+                    k_ = ("pd_clash_move" if mv_ else "pd_clash_stay") if g_ is None else "pd_owncar" if g_ == p else "pd_ecar" if g_ in (0, 1) else "pd_other"
+                    sh[k_][p] += 1
             etp = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # planter distance to nearest enemy tree
             if etp:
                 for w in post["workers"].values():

@@ -43,8 +43,8 @@ def _target_count(step, sched):
 def wrap(inner, cfg=None):
     cfg = dict(cfg or {})
     RO = int(cfg.get("RO_STEPS", 100)); THR = float(cfg.get("THR", 100.0)); FP = int(cfg.get("FIRST_P", 8))
-    PS = [(FP, 1), (25, 3), (50, 7), (100, 11)]
-    CS = [(0, int(cfg.get("C0", 1))), (25, 4), (50, 6), (100, 8)]
+    PS = cfg.get("PS") or [(FP, 1), (25, 3), (50, 7), (100, 11)]
+    CS = cfg.get("CS") or [(0, int(cfg.get("C0", 1))), (25, 4), (50, 6), (100, 8)]
     SAFE = int(cfg.get("SAFE", 0))            # target cells at least SAFE steps from every enemy planter (0 = off)
     RESERVE = bool(cfg.get("RESERVE", False))  # recruit only if the plant price is still covered afterwards
     st = {}
@@ -67,6 +67,7 @@ def wrap(inner, cfg=None):
         for u, w in mine.items():
             st["seen"][w[2]].add(u)
         # ---- recruiting (replaces the wrapped agent's base actions)
+        net_base = {b: acts.get(b) for b in P[me][1]}
         for b in P[me][1]:
             acts.pop(b, None)
         nP, nC = len(st["seen"]["PLANTER"]), len(st["seen"]["COLLECTOR"])
@@ -76,8 +77,13 @@ def wrap(inner, cfg=None):
         for bid in P[me][1]:
             if cash < cost or (RESERVE and nP >= 1 and cash - cost < price_):
                 break
-            if nP < _target_count(step, PS):
+            if cfg.get("CARS_FIRST") and nC < _target_count(step, CS):    # economy first: cars before planters
+                acts[bid] = "RECCOLLECTOR"; cash -= cost; nC += 1
+            elif nP < _target_count(step, PS):
                 acts[bid] = "RECPLANTER"; cash -= cost; nP += 1
+            elif cfg.get("NET_CARS"):              # cars: whatever the wrapped agent recruits (its economy)
+                if net_base.get(bid) == "RECCOLLECTOR":
+                    acts[bid] = "RECCOLLECTOR"; cash -= cost; nC += 1
             elif nC < _target_count(step, CS):
                 acts[bid] = "RECCOLLECTOR"; cash -= cost; nC += 1
         # ---- planters
@@ -96,6 +102,8 @@ def wrap(inner, cfg=None):
         if SAFE and epl0:
             good &= np.min(F.DIST[:, epl0], axis=1) >= SAFE
         dbase = np.min(F.DIST[:, bases], axis=1) if bases else np.zeros(S * S)
+        if cfg.get("NB_MAX") is not None and bases:  # option A: plant only within NB_MAX steps of one of our bases
+            good &= dbase <= int(cfg["NB_MAX"])
         epl = [int(w[0]) for w in P[1 - me][2].values() if w[2] == "PLANTER"]
         taken = set()
         # ---- safety layer: where can a planter be killed next step?
@@ -110,29 +118,44 @@ def wrap(inner, cfg=None):
         ecol = [int(w[0]) for w in P[1 - me][2].values() if w[2] == "COLLECTOR"]
         chosen = set()
 
+        EPW = float(cfg.get("EPL_W", 1.0))         # weight of enemy-planter adjacency (0 = M-like: accept clashes)
+
         def danger(c):
             return (2 if c in own_next else 0) + (2 if c in chosen else 0) \
-                + sum(1 for e in ecol if F.DIST[c, e] <= 1) + sum(1 for e in epl if F.DIST[c, e] <= 1)
+                + sum(1 for e in ecol if F.DIST[c, e] <= 1) + EPW * sum(1 for e in epl if F.DIST[c, e] <= 1)
 
         for u in sorted(u for u, w in mine.items() if w[2] == "PLANTER"):
             pos = int(mine[u][0]); d = F.DIST[pos]
-            cand = np.nonzero(good & (d <= 3))[0]
+            ok_ = good
+            if cfg.get("SEIZE"):                  # M-like: profitable enemy trees within reach are targets too
+                ok_ = good | (enemy_tree & (nb >= float(cfg.get("SEIZE_MIN", 40.0))))
+            cand = np.nonzero(ok_ & (d <= 3))[0]
             cand = [c for c in cand if c not in taken]
             if not cand:
                 far = [c for c in np.nonzero(good)[0] if c not in taken]
                 tgt = min(far, key=lambda c: (d[c], -nb[c], dbase[c])) if far else None
+            elif cfg.get("NEAREST", False):     # v2 (2026-11-09): nearest acceptable cell, ties -> nearer our base
+                tgt = min(cand, key=lambda c: (d[c], dbase[c], -nb[c]))
             else:
                 tgt = max(cand, key=lambda c: (nb[c], -dbase[c], -d[c]))
             if tgt is not None:
                 taken.add(tgt)
+            if cfg.get("PRICE_CHECK") and tgt is not None and not enemy_tree[tgt]:
+                # plant only when the tree is worth its price: nb4 * (1 - 0.9625^30) - current plant price > 0;
+                # otherwise do not stand on a free cell (that would plant): wait on our nearest own tree instead
+                if nb[tgt] * (1.0 - 0.9625 ** 30) - price_ <= 0:
+                    own_t = [int(q) for q, _ in P[me][3].values()]
+                    tgt = min(own_t, key=lambda c: d[c]) if own_t else None
             # options: stay (plants on a free target) and the 4 moves; rank by (danger, progress, no-seize)
             opts = []
             for mv in [None] + list(MV):
                 nxt = pos if mv is None else _step(pos, mv)
-                if mv is None and enemy_tree[pos]:
-                    continue                      # staying on an enemy tree would seize
+                if mv is None and enemy_tree[pos] and not (cfg.get("SEIZE") and pos == tgt):
+                    continue                      # staying on an enemy tree would seize (only allowed on a seize target)
                 prog = 0 if tgt is None else (F.DIST[nxt, tgt] - d[tgt])     # -1 closer, 0 same, +1 away
                 stay_bonus = -1 if (mv is None and tgt == pos) else 0       # on target: staying = planting
+                if mv is None and cfg.get("PRICE_CHECK") and tgt != pos and not occupied[pos]:
+                    stay_bonus = 1                # off target on a free cell: staying would plant a tree not worth it
                 opts.append((danger(nxt), stay_bonus if mv is None else prog, mv, nxt))
             if not opts:
                 continue
@@ -143,9 +166,9 @@ def wrap(inner, cfg=None):
                 acts.pop(u, None)
             else:
                 acts[u] = mv
-        # never stay on an enemy tree (that would seize)
+        # never stay on an enemy tree (that would seize) unless seizing is on
         for u, w in mine.items():
-            if w[2] == "PLANTER" and enemy_tree[int(w[0])] and u not in acts:
+            if not cfg.get("SEIZE") and w[2] == "PLANTER" and enemy_tree[int(w[0])] and u not in acts:
                 for mv in MV:
                     if not enemy_tree[_step(int(w[0]), mv)]:
                         acts[u] = mv; break

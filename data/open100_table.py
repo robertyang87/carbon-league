@@ -14,6 +14,7 @@ def desc(R, K, s='pol'):
     return (f"tree income {m(ti):.0f}  tree-steps {m(lambda g: P(g,'treesteps',s)):.0f}  planted/seized {m(lambda g: P(g,'planted',s)):.1f}/{m(lambda g: P(g,'seized',s)):.1f}"
             f" (ratio {sm('planted') / max(1, sm('seized')):.2f})  zero-yield deaths {sm('pla_dead0') / max(1, sm('pla_rec')):.0%}"
             f"  nb-carbon planted/seized {sm('pc4_sum') / max(1, sm('pc4_n')):.0f}/{sm('sc4_sum') / max(1, sm('sc4_n')):.0f}"
+            f"  planter deaths clash-standing/clash-moving/enemy-car/own-car {m(lambda g: P(g,'pd_clash_stay',s)):.1f}/{m(lambda g: P(g,'pd_clash_move',s)):.1f}/{m(lambda g: P(g,'pd_ecar',s)):.1f}/{m(lambda g: P(g,'pd_owncar',s)):.1f}"
             f"  cash+cargo@100 {m(lambda g: P(g,'cash100',s) + P(g,'cargo100',s)):.0f}  planters {m(lambda g: P(g,'pla_rec',s)):.1f}  dist to enemy tree {sm('pet_sum') / max(1, sm('pet_n')):.2f}  t50 {m(lambda g: P(g,'tree50',s)):.1f}")
 B = rows(sys.argv[2])
 print(f"opponent {OPP}")
