@@ -27,12 +27,16 @@ for wp in sys.argv[2:]:
                 hit += int(((pred[:, :y.shape[1]] == y) & ok).sum()); tot += int(ok.sum())
         res[name] = round(100 * hit / max(1, tot), 2)
         if name == f"slot{SLOT}":     # base decisions are ~95% "none": recall on the recruits is what matters
-            rec = {1: [0, 0], 2: [0, 0]}
+            rec = {1: [0, 0], 2: [0, 0]}; fp = {1: 0, 2: 0}; n_none = 0
             with torch.no_grad():
                 for a in range(0, len(sel), 1024):
                     b = T.fetch(D, sel[a:a + 1024]); lg, _, _ = net(T.to_dev({k: b[k] for k in T.LOAD}, False))
                     pb = lg.argmax(-1).cpu().numpy()[:, 10:12]; yb = b["y"][:, 10:12]
                     for c in (1, 2):
                         m_ = yb == c; rec[c][0] += int((pb[m_] == c).sum()); rec[c][1] += int(m_.sum())
+                    z = yb == 0; n_none += int(z.sum())             # the teacher recruits nothing here: false recruits
+                    for c in (1, 2):
+                        fp[c] += int((pb[z] == c).sum())
             res["base recall collector"] = f"{rec[1][0]}/{rec[1][1]}"; res["base recall planter"] = f"{rec[2][0]}/{rec[2][1]}"
+            res["false recruits on teacher-none"] = f"collector {fp[1]}, planter {fp[2]} of {n_none}"
     print(os.path.basename(wp), res, flush=True)
