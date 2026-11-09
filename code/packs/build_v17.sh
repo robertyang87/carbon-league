@@ -61,3 +61,7 @@ python3 cnet2_search_pack.py exp/submission_cnet2_awr1.py "{$BASE, $CAP, 'TEACHE
 # m2tA = slot 2 all game, m2tB = slot 2 until 240 then slot 7
 python3 cnet2_search_pack.py exp/submission_cnet2_m2tA.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 999}" $W/cnet2_b128m2t.npz $W/cnet2_s64v8.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_m2tB.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t.npz $W/cnet2_s64v8.npz
+# new rollout net s64mm (Master2s slot 2 + M family slot 4, from s64v8): helps only when the policy's style matches
+python3 cnet2_search_pack.py exp/submission_cnet2_m2tBr.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3Br.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3Bq.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64m3.npz   # matched rollout (s64 on the Master2s x3 set)

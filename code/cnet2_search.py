@@ -403,7 +403,7 @@ def key_units(obs, cfg):
     if cfg.get("MAX_KEY_LATE") is not None and obs["step"] >= cfg.get("KEY_LATE_STEP", 999):
         mk = cfg["MAX_KEY_LATE"]          # endgame: several loaded units run home at once -> search more of them
     keys = keys[:mk]
-    if cfg.get("PLANTER_KEY") and obs["step"] <= cfg.get("PK_STEP", 100):
+    if cfg.get("PLANTER_KEY") and (obs["step"] <= cfg.get("PK_STEP", 100) or obs["step"] >= cfg.get("PK_LATE", 999)):
         # opening: up to PK_MAX planters join the search (on top of the collector keys) -- where to plant is decided
         # by the leaf's carbon-based tree value. Planters within PK_R of an enemy tree (the seize temptation) first,
         # the rest in rotation by step, so every planter gets searched now and then.
@@ -419,6 +419,10 @@ def key_units(obs, cfg):
             k0 = obs["step"] % len(pl); rot = pl[k0:] + pl[:k0]
             order = near + [u for u in rot if u not in near]
             keys = keys + [(0.0, u) for u in order[:cfg.get("PK_MAX", 1)]]
+    if cfg.get("BASE_KEY") and obs["step"] >= cfg.get("BK_STEP", 200) and float(P[me][0]) >= 30.0:
+        # late game: recruiting is searched too (none / collector / planter); the typed leaf values decide whether a
+        # new worker is still worth its 30 -- no hard cut-off
+        keys = keys + [(0.0, b) for b in sorted(P[me][1])[:cfg.get("BK_MAX", 1)]]
     return keys
 
 
@@ -476,8 +480,32 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         lt = cfg.get("LEAF_THREAT") is not None and left <= cfg.get("LT_LEFT", 30)
         if lt:     # endgame leaf: cargo next to a lighter enemy collector is worth LEAF_THREAT of itself
             cols = {p: [(w.pos, w.carbon) for w in sim.workers.values() if w.player == p and w.is_collector] for p in (0, 1)}
+        wt = cfg.get("WT_LEFT") is not None and left <= cfg["WT_LEFT"]
+        if wt:     # late: a car is worth its remaining haul, a planter its best potential tree net of the plant price
+            cv = cfg.get("WC_RATE", 4.4) * cfg.get("WC_UTIL", 0.5) * left
+            cbm = np.asarray(sim.carbon, dtype=np.float64).reshape(15, 15)
+            nbm = (np.roll(cbm, 1, 0) + np.roll(cbm, -1, 0) + np.roll(cbm, 1, 1) + np.roll(cbm, -1, 1)).ravel()
+            tvm = nbm * (1.0 - 0.9625 ** max(0, min(left, 30)))
+            freem = np.ones(225, bool)
+            for t in sim.trees.values():
+                freem[int(t.pos)] = False
+            for p_ in (0, 1):
+                for b_ in bases[p_]:
+                    freem[int(b_)] = False
+            livem = sum(1 for t in sim.trees.values() if t.age < 50)
+            pval = {}
+            for p_ in (0, 1):
+                own = sum(1 for t in sim.trees.values() if t.player == p_)
+                price = 20.0 if own == 0 else 20.0 + 5.0 * 1.235 ** livem
+                pval[p_] = np.where(freem, tvm - price, -1e9)
         for w in sim.workers.values():
             v = wv
+            if wt:
+                if w.is_collector:
+                    v = cv
+                else:
+                    d_ = F.DIST[w.pos]; ok_ = d_ <= 3
+                    v = max(0.0, float(np.max(pval[w.player][ok_] * (0.85 ** d_[ok_])))) if ok_.any() else 0.0
             if w.carbon > 0:
                 bs = bases[w.player]
                 d = min(F.DIST[w.pos, b] for b in bs) if bs else 99
@@ -913,17 +941,18 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         pdef = 0.0
         for _, uid in keys:
             s = uid2slot.get(uid)
-            if s is None or s >= 10:
+            if s is None or (s >= 10 and not cfg.get("BASE_KEY")):
                 continue
             z = lg0[s].astype(np.float64); pz = np.exp(z - z.max()); pz /= pz.sum()
             pdef = max(pdef, pz[y[s]])
-            for m in range(5):
+            for m in range(3 if s >= 10 else 5):
                 if m == y[s]:
                     continue
                 fz = np.full(F.OWN, -1, np.int64)
                 fz[:s] = y[:s]; fz[s] = m
                 for s_b, v_b in st.get("base_fix", {}).items():
-                    fz[s_b] = v_b
+                    if s_b != s:
+                        fz[s_b] = v_b
                 forced.append(fz); meta.append((uid, m)); pri.append(pz[m])
         if cfg.get("PLANTER_KEY"):   # did a planter key get any candidate, or did MAX_BR cut all of them?
             pk_u = {u for _, u in keys if u in uid2slot and obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER"}
@@ -1129,15 +1158,16 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         forced, meta = [], []
         for _, uid in keys:
             s = uid2slot.get(uid)
-            if s is None or s >= 10:
+            if s is None or (s >= 10 and not cfg.get("BASE_KEY")):
                 continue
-            for m in range(5):
+            for m in range(3 if s >= 10 else 5):
                 if m == y[s]:
                     continue
                 fz = np.full(F.OWN, -1, np.int64)
                 fz[:s] = y[:s]; fz[s] = m
                 for s_b, v_b in st.get("base_fix", {}).items():
-                    fz[s_b] = v_b
+                    if s_b != s:
+                        fz[s_b] = v_b
                 forced.append(fz); meta.append((uid, m))
         if cfg.get("PLANTER_KEY"):   # did a planter key get any candidate, or did MAX_BR cut all of them?
             pk_u = {u for _, u in keys if u in uid2slot and obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER"}
