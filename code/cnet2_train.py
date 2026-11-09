@@ -29,11 +29,12 @@ LOAD = [k for k in FIELDS if k not in ("gid", "step")]
 
 
 def load(dirn):
-    D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode="r") for k in FIELDS}
+    mm = None if os.environ.get("BC_RAM") == "1" else "r"     # BC_RAM=1: read the whole dataset into memory
+    D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm) for k in FIELDS}
     if os.path.exists(os.path.join(dirn, "w.npy")) and os.environ.get("BC_USE_W", "1") == "1":
-        D["w"] = np.load(os.path.join(dirn, "w.npy"), mmap_mode="r")      # per-sample weights (dataset v4+)
+        D["w"] = np.load(os.path.join(dirn, "w.npy"), mmap_mode=mm)      # per-sample weights (dataset v4+)
     if os.path.exists(os.path.join(dirn, "uw.npy")) and os.environ.get("BC_USE_UW", "1") == "1":
-        D["uw"] = np.load(os.path.join(dirn, "uw.npy"), mmap_mode="r")    # per-unit weights (dataset v6+)
+        D["uw"] = np.load(os.path.join(dirn, "uw.npy"), mmap_mode=mm)    # per-unit weights (dataset v6+)
     meta = json.load(open(os.path.join(dirn, "meta.json")))
     val_g = np.array([g["val"] for g in meta["games"]])
     is_val = val_g[np.asarray(D["gid"])]
@@ -82,7 +83,8 @@ def to_dev(b, aug):
     return {k: v.to(DEV, non_blocking=True) for k, v in t.items()}
 
 
-def loader(D, idx, bs, aug, shuffle=True, nthreads=3):
+def loader(D, idx, bs, aug, shuffle=True, nthreads=None):
+    nthreads = nthreads or int(os.environ.get("BC_THREADS", "3"))   # data-loading threads (CPU side)
     q = queue.Queue(maxsize=8)
     order = np.random.permutation(idx) if shuffle else idx
     chunks = [order[i:i + bs] for i in range(0, len(order), bs)]
@@ -212,6 +214,8 @@ def main(data, out, epochs, cfg):
         rec = {"ep": ep, "val": r, "train_pi": round(acc[0] / max(n, 1), 4), "s": round(time.time() - t0)}
         print(json.dumps(rec), flush=True); log.write(json.dumps(rec) + "\n"); log.flush()
         export(net, out.replace(".npz", "_last.npz"), {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
+        if os.environ.get("BC_SAVE_EPOCHS") == "1":       # keep every epoch for the online probes to choose from
+            export(net, out.replace(".npz", f"_ep{ep}.npz"), {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
         if r["all"] > best:
             best = r["all"]
             export(net, out, {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar, "data": data})

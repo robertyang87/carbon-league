@@ -22,6 +22,6 @@ cd ~/carbon
 [ -x .venv/bin/python ] || python3 -m venv .venv
 .venv/bin/pip -q install --upgrade pip
 .venv/bin/pip -q install "numpy==2.*" scipy
-.venv/bin/pip -q install torch --index-url https://download.pytorch.org/whl/cpu || .venv/bin/pip -q install torch
-.venv/bin/python -c 'import sys,numpy,torch,os;print("ok",sys.version.split()[0],numpy.__version__,torch.__version__,os.cpu_count(),"cpus")'
+if [ "${WITH_TORCH:-0}" = 1 ]; then .venv/bin/pip -q install torch --index-url https://download.pytorch.org/whl/cpu || .venv/bin/pip -q install torch; fi   # exams need numpy only
+.venv/bin/python -c 'import sys,numpy,os;print("ok",sys.version.split()[0],numpy.__version__,os.cpu_count(),"cpus")'
 REMOTE
