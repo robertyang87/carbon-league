@@ -23,3 +23,5 @@ python3 cnet2_search_pack.py exp/submission_cnet2_v18c_nc.py "{$BASE, $NC, $THRE
 python3 cnet2_search_pack.py exp/submission_cnet2_v17d2.py "{$BASE, $CAP}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 # v18e (exam twin): dg2 policy + go-home rule only (no THREAT_FIRST: v18c showed it costs the hunting slot)
 python3 cnet2_search_pack.py exp/submission_cnet2_v18e_nc.py "{$BASE, $NC, $EH}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+# v18cc (exam twin): dg2 policy + car-curve base rule (Master2s collector curve: 3rd..8th car at steps 13/22/32/39/48/55)
+python3 cnet2_search_pack.py exp/submission_cnet2_v18cc_nc.py "{$BASE, $NC, 'CAR_CURVE': (13, 22, 32, 39, 48, 55)}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz

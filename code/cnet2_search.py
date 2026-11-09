@@ -494,6 +494,28 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             st["T_now"] = TL if (TL is not None and obs["step"] >= ls) else T   # rollouts use the same slot
             y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
+        # car-curve rule (both opponent lines, BEFORE the bankruptcy guard so the guard still sees the final plan):
+        # while below the Master2s collector curve (target = 2 + #{CC_STEPS <= t}, 8 after the last step, off after
+        # CC_END) ONE base switches to a collector: a planter recruit -> collector (only with >= 2 planters in play),
+        # or no recruit -> collector. Cash must cover 30 on top of this step's other planned spending (other base
+        # recruits, 30 per staying planter as a plant/seize upper bound). Nothing when 10 workers are in play.
+        ccs = cfg.get("CAR_CURVE")
+        if ccs and ccs[0] <= obs["step"] <= cfg.get("CC_END", 60):
+            t_ = obs["step"]; mine = list(obs["players"][me][2].values())
+            ncol = sum(1 for w in mine if w[2] == "COLLECTOR"); npl = sum(1 for w in mine if w[2] == "PLANTER")
+            target = 2 + sum(1 for th in ccs if th <= t_)
+            slots = [s_ for s_ in range(10, F.OWN) if x["tok_mask"][s_] and y[s_] >= 0]
+            if ncol < target and len(mine) < 10 and slots:
+                stay_pl = sum(1 for s_ in range(10) if x["tok_mask"][s_] and int(x["tok_kind"][s_]) == 1 and y[s_] == 0)
+                for s_ in slots:
+                    if y[s_] == 2 and npl < 2:
+                        continue
+                    if y[s_] in (0, 2):
+                        other = 30.0 * sum(1 for o_ in slots if o_ != s_ and y[o_] in (1, 2))
+                        if float(obs["players"][me][0]) >= 30.0 + other + 30.0 * stay_pl:
+                            k = "cc_2to1" if y[s_] == 2 else "cc_0to1"
+                            stats[k] = stats.get(k, 0) + 1; y[s_] = 1
+                        break
         if cfg["GUARD"]:
             try:
                 y = bankrupt_guard(x, f.aux, y, lg0)

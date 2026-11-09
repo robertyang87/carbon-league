@@ -273,7 +273,7 @@ def play_game(task):
                                     late30_eh=late30_eh if q == a_side else None)
                          for side, q in (("pol", a_side), ("opp", 1 - a_side))},
         "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
-                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt")},
+                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1")},
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
         "comp": {str(k): v for k, v in comp.items()},
     }

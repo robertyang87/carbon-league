@@ -6,6 +6,10 @@ import numpy as np, torch
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "code"))
 import cnet2_train as T
 from cnet2_model import CNet2
+if os.environ.get("BENCH_NO_TF32") == "1":       # strict fp32 everywhere, to tell precision from logic
+    torch.backends.cudnn.allow_tf32 = False; torch.backends.cuda.matmul.allow_tf32 = False
+    torch.set_float32_matmul_precision("highest")
+EQ_ONLY = os.environ.get("BENCH_EQ_ONLY") == "1"
 w = np.load(sys.argv[2]); cfg = json.loads(str(w["meta"]))["cfg"]
 D, _, _ = T.load(sys.argv[1]); rng = np.random.default_rng(0)
 bs = [T.to_dev(T.fetch(D, np.sort(rng.integers(0, len(D["y"]), 512))), True) for _ in range(14)]
@@ -40,17 +44,21 @@ def grads(net, f, b):
     return lg.detach(), {k: p.grad.clone() for k, p in net.named_parameters() if p.grad is not None}
 
 
-ref = fresh(); print(f"eager: {run(ref, ref):.1f} ms/step", flush=True)
+ref = fresh()
+if not EQ_ONLY:
+    print(f"eager: {run(ref, ref):.1f} ms/step", flush=True)
 for mode in ("default", "reduce-overhead"):
     try:
         net = fresh(); t0 = time.time(); cf = torch.compile(net, mode=mode)
-        ms = run(net, cf, n_warm=6)
+        ms = float("nan") if EQ_ONLY else run(net, cf, n_warm=6)
         e = fresh(); c = fresh(); cc = torch.compile(c, mode=mode)
         l1, g1 = grads(e, e, bs[0]); l2, g2 = grads(c, cc, bs[0])
         ok = l1 > -1e8
         agree = float((l1.argmax(-1) == l2.argmax(-1)).float().mean())
-        rel = max(float((g1[k] - g2[k]).abs().max() / g1[k].abs().max()) for k in g1 if g1[k].abs().max() > 1e-6)
+        rr = sorted(((float((g1[k] - g2[k]).abs().max() / g1[k].abs().max()), k, float(g1[k].abs().max())) for k in g1
+                     if g1[k].abs().max() > 1e-6), reverse=True)
+        rel = rr[0][0]; worst = f"{rr[0][1]} (|g|max {rr[0][2]:.1e}); 2nd {rr[1][1]} {rr[1][0]:.1e}"
         print(f"compile {mode}: {ms:.1f} ms/step (compile+warmup {time.time() - t0:.0f}s) | argmax agree {agree:.4f} "
-              f"| max |dlogit| {float((l1 - l2)[ok].abs().max()):.2e} | max rel grad diff {rel:.2e}", flush=True)
+              f"| max |dlogit| {float((l1 - l2)[ok].abs().max()):.2e} | max rel grad diff {rel:.2e} at {worst}", flush=True)
     except Exception as ex:
         print(f"compile {mode}: FAILED {type(ex).__name__}: {str(ex)[:300]}", flush=True)
