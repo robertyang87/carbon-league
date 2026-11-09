@@ -494,6 +494,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             st["T_now"] = TL if (TL is not None and obs["step"] >= ls) else T   # rollouts use the same slot
             y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
+        st["base_fix"] = {}      # base slots set by a rule layer this step: every search candidate / guard re-decode keeps them
         # car-curve rule (both opponent lines, BEFORE the bankruptcy guard so the guard still sees the final plan):
         # while below the Master2s collector curve (target = 2 + #{CC_STEPS <= t}, 8 after the last step, off after
         # CC_END) ONE base switches to a collector: a planter recruit -> collector (only with >= 2 planters in play),
@@ -505,16 +506,17 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             ncol = sum(1 for w in mine if w[2] == "COLLECTOR"); npl = sum(1 for w in mine if w[2] == "PLANTER")
             target = 2 + sum(1 for th in ccs if th <= t_)
             slots = [s_ for s_ in range(10, F.OWN) if x["tok_mask"][s_] and y[s_] >= 0]
-            if ncol < target and len(mine) < 10 and slots:
+            planned_col = sum(1 for s_ in slots if y[s_] == 1)                 # a collector the net already recruits
+            if ncol + planned_col < target and len(mine) + sum(1 for s_ in slots if y[s_] in (1, 2)) < 10 and slots:
                 stay_pl = sum(1 for s_ in range(10) if x["tok_mask"][s_] and int(x["tok_kind"][s_]) == 1 and y[s_] == 0)
                 for s_ in slots:
                     if y[s_] == 2 and npl < 2:
                         continue
                     if y[s_] in (0, 2):
                         other = 30.0 * sum(1 for o_ in slots if o_ != s_ and y[o_] in (1, 2))
-                        if float(obs["players"][me][0]) >= 30.0 + other + 30.0 * stay_pl:
+                        if float(obs["players"][me][0]) >= 30.0 + other + plant_price(obs, me) * stay_pl:
                             k = "cc_2to1" if y[s_] == 2 else "cc_0to1"
-                            stats[k] = stats.get(k, 0) + 1; y[s_] = 1
+                            stats[k] = stats.get(k, 0) + 1; y[s_] = 1; st["base_fix"][s_] = 1
                         break
         # PLANTER_CASH: no planter recruit the base could not also pay a tree for -- cash after this step's recruits
         # (30 each) must still cover the current planting price, else the base recruits nothing (stats pb_skip).
@@ -525,7 +527,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 if y[s_] == 2:
                     spend = 30.0 * sum(1 for o_ in slots if y[o_] in (1, 2))
                     if float(obs["players"][me][0]) - spend < pp:
-                        y[s_] = 0; stats["pb_skip"] = stats.get("pb_skip", 0) + 1
+                        y[s_] = 0; stats["pb_skip"] = stats.get("pb_skip", 0) + 1; st["base_fix"][s_] = 0
         if cfg["GUARD"]:
             try:
                 y = bankrupt_guard(x, f.aux, y, lg0)
@@ -538,7 +540,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             if ncol < cfg.get("MNP_COLS", 10):
                 for s_ in range(10, F.OWN):
                     if y[s_] == 2:
-                        y[s_] = 1; stats["mnp"] = stats.get("mnp", 0) + 1
+                        y[s_] = 1; stats["mnp"] = stats.get("mnp", 0) + 1; st["base_fix"][s_] = 1
         acts = f.to_actions(y)
         stats["steps"] += 1
         try:
@@ -620,6 +622,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         if first is None:
             return y
         fz[:first] = y[:first]
+        for s_b, v_b in st.get("base_fix", {}).items():
+            fz[s_b] = v_b
         tok, ctx = pol.last_enc
         X1 = {k: x[k][None] for k in ("tok_pos", "tok_kind", "tok_mask", "tok_cargo")}
         X1["cash"] = [x["cash"]]; X1["slots"] = [x["slots"]]; X1["left"] = [x["left"]]
@@ -798,6 +802,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                     continue
                 fz = np.full(F.OWN, -1, np.int64)
                 fz[:s] = y[:s]; fz[s] = m
+                for s_b, v_b in st.get("base_fix", {}).items():
+                    fz[s_b] = v_b
                 forced.append(fz); meta.append((uid, m)); pri.append(pz[m])
         forced = forced[:cfg["MAX_BR"] - 1]; meta = meta[:cfg["MAX_BR"] - 1]
         if not forced:
@@ -994,6 +1000,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                     continue
                 fz = np.full(F.OWN, -1, np.int64)
                 fz[:s] = y[:s]; fz[s] = m
+                for s_b, v_b in st.get("base_fix", {}).items():
+                    fz[s_b] = v_b
                 forced.append(fz); meta.append((uid, m))
         forced = forced[:cfg["MAX_BR"] - 1]; meta = meta[:cfg["MAX_BR"] - 1]
         if not forced:
@@ -1128,7 +1136,10 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         """PLANTER_AVOID: a planter that stays put this step WITHOUT planting or seizing (own tree under it, or no
         cash for the plant / seize) and has an enemy planter in its 8-neighbourhood moves to a cell with no enemy
         planter or collector within one step (planter vs planter collisions delete both). Stays if no such cell."""
-        me = obs["player"]; P = obs["players"]; cash = float(P[me][0])
+        me = obs["player"]; P = obs["players"]
+        obases = {int(b) for b in P[me][1].values()}
+        cash = float(P[me][0]) + sum(float(w[1]) for u_, w in P[me][2].items()     # deposits land before planting
+                                     if w[2] == "COLLECTOR" and acts.get(u_) in MV and _nxt(w[0], acts.get(u_)) in obases)
         en = [(int(w[0]), w[2]) for w in P[1 - me][2].values()]
         epl = [p_ for p_, k in en if k == "PLANTER"]
         if not epl:
