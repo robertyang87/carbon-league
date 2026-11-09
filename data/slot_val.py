@@ -8,6 +8,11 @@ import torch, cnet2_train as TR
 from cnet2_model import CNet2
 D, is_val, meta = TR.load(sys.argv[1])
 idx = np.nonzero(is_val)[0]
+ex = os.environ.get("SV_EXCLUDE_NAME")          # e.g. 1C-Zero-v8-preview: drop rows of games that name played in
+if ex:
+    bad = np.array([ex in "".join(g.get("names", [])) for g in meta["games"]])
+    idx = idx[~bad[np.asarray(D["gid"])[idx]]]
+    print(f"excluding games with {ex}: {int(is_val.sum()) - len(idx)} val rows dropped", flush=True)
 T = np.asarray(D["teacher"])[idx]
 res = {}
 for wp in sys.argv[2:]:
