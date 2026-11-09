@@ -126,7 +126,8 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0]}   # stand-in validation ledger
+    late_deaths = [[], []]
     for step in range(1, 301):
         pre = sim.get_state()
         acts = []
@@ -173,6 +174,19 @@ def play_game(task):
                 sh["tree100"][p] = sum(1 for t in post["trees"].values() if t["player"] == p)   # replanting after the first batch
             if step in (50, 75, 100, 150, 200, 250):
                 sh["trees"][p].append(sum(1 for t in post["trees"].values() if t["player"] == p))   # tree curve
+            # loaded own cars that vanished this step: ENEMY-seized if some enemy worker's cargo grew by >= 90% of it,
+            # otherwise merged into an own car / other (an own lighter car took it: not a cash loss)
+            gain = [float(w["carbon"]) - float(pre["workers"][wid]["carbon"]) for wid, w in post["workers"].items()
+                    if w["player"] != p and wid in pre["workers"]]
+            for wid, w in pre["workers"].items():
+                if w["player"] != p or wid in post["workers"] or float(w["carbon"]) <= 0:
+                    continue
+                c = float(w["carbon"]); by_enemy = any(g >= 0.9 * c for g in gain)
+                sh["lost_enemy" if by_enemy else "lost_self"][p] += c
+                if step > 270:                  # last 30 steps
+                    sh["late30" if by_enemy else "late30_self"][p] += c
+                    if by_enemy:
+                        late_deaths[p].append((step, wid, c))
             if step > 285:
                 sh["late15"][p] += sum(float(w["carbon"]) for wid, w in pre["workers"].items()
                                        if w["player"] == p and wid not in post["workers"])
@@ -213,6 +227,10 @@ def play_game(task):
                             if t["player"] == p))
     wall = time.time() - t0
     st = sim.get_state()
+    eh_act = set(map(tuple, (getattr(fa, "last_stats", None) or {}).get("eh_act", [])))
+    # cargo lost in the last 30 steps by cars that were under the go-home rule within the 3 steps before death
+    late30_eh = round(sum(c for (d, wid, c) in late_deaths[a_side]
+                          if any((s, wid) in eh_act for s in range(d - 3, d))), 1)
     for p in range(2):
         led[p]["stranded"] = round(sum(
             w["carbon"] for w in st["workers"].values() if w["player"] == p), 1)
@@ -234,10 +252,11 @@ def play_game(task):
                                     pla_ok=len(pstat[q]["succ"]), pla_succ=sum(pstat[q]["succ"].values()),
                                     planted=pstat[q]["planted"], seized=pstat[q]["seized"],
                                     life_sum=sum(pstat[q]["lives"]) + sum(300 - b for b in pstat[q]["born"].values()),
-                                    life_n=len(pstat[q]["lives"]) + len(pstat[q]["born"]))
+                                    life_n=len(pstat[q]["lives"]) + len(pstat[q]["born"]),
+                                    late30_eh=late30_eh if q == a_side else None)
                          for side, q in (("pol", a_side), ("opp", 1 - a_side))},
         "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
-                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors")},
+                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt")},
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
         "comp": {str(k): v for k, v in comp.items()},
     }

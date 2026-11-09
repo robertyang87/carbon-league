@@ -23,10 +23,11 @@ def main(a, b, s0, n, tag):
                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
                          tinc=round(r["ledger_pol"]["tree_income"]), otinc=round(r["ledger_opp"]["tree_income"]),
+                         strand=r["ledger_pol"].get("stranded"), ostrand=r["ledger_opp"].get("stranded"),
                          bk=r.get("bankrupt_steps", 0), lx=r.get("ledger_extra"), wms=r.get("a_worst_step_ms"), ms=r.get("a_ms_per_step"),
                          **({"srch": r["a_stats"].get("searched"), "chg": r["a_stats"].get("changed"),
                              "shal": r["a_stats"].get("shallow"), "ab": r["a_stats"].get("aborted", 0),
-                             "rerr": r["a_stats"].get("root_errors", 0)} if r.get("a_stats") else {}))
+                             "rerr": r["a_stats"].get("root_errors", 0), "eh_e": r["a_stats"].get("eh_edge", 0), "eh_h": r["a_stats"].get("eh_heavy", 0)} if r.get("a_stats") else {}))
             lf.write(json.dumps(g) + "\n"); lf.flush()
     m = [r["margin"] for r in rows if "margin" in r]
     if len(m) < 2:

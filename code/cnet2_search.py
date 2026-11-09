@@ -353,6 +353,18 @@ def key_units(obs, cfg):
         if best > 0:
             keys.append((best, uid))
     keys.sort(reverse=True)
+    if cfg.get("THREAT_FIRST"):
+        # lexicographic: a threatened loaded car (certain loss) outranks every hunting chance (uncertain gain)
+        thr = []
+        for uid, w in P[me][2].items():
+            pos, cargo, kind = w
+            if kind != "COLLECTOR" or cargo < cfg.get("THREAT_MIN", 100.0):
+                continue
+            if any(F.DIST[pos, e[0]] <= cfg["KEY_R"] and e[1] <= cargo for e in en):
+                thr.append((cargo, uid))
+        if thr:
+            thr.sort(reverse=True)
+            return thr[:cfg["MAX_KEY"]]
     if cfg.get("SPLIT"):
         # one escape unit (loaded, threatened) + one hunter (lighter than a loaded enemy), each by stake
         thr, hun = [], []
@@ -487,6 +499,14 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 y = bankrupt_guard(x, f.aux, y, lg0)
             except Exception as e:
                 stats["errors"] += 1; stats["last_error"] = repr(e)[:300]
+        # vs the Master line (opponent's first recruit was a collector): from step MNP_STEP no planter recruits
+        # until we have MNP_COLS collectors -- the base recruits a collector instead (bases are decoded last)
+        if cfg.get("MASTER_NO_PLANTER") and st.get("opp_first") == "COLLECTOR" and obs["step"] >= cfg.get("MNP_STEP", 40):
+            ncol = sum(1 for w in obs["players"][me][2].values() if w[2] == "COLLECTOR")
+            if ncol < cfg.get("MNP_COLS", 10):
+                for s_ in range(10, F.OWN):
+                    if y[s_] == 2:
+                        y[s_] = 1; stats["mnp"] = stats.get("mnp", 0) + 1
         acts = f.to_actions(y)
         stats["steps"] += 1
         try:
@@ -1057,9 +1077,72 @@ def make_search_agent(conf=None, weights=None, rweights=None):
 
     _inner = agent
 
+    MV = {"UP": (-1, 0), "DOWN": (1, 0), "LEFT": (0, -1), "RIGHT": (0, 1)}
+
+    def _nxt(pos, mv):
+        r, c = divmod(int(pos), F.S); dr, dc = MV[mv]
+        return ((r + dr) % F.S) * F.S + (c + dc) % F.S
+
+    def endgame_home(obs, acts):
+        """t >= EH_STEP: a loaded collector that can only just reach a base in time must step toward it"""
+        me = obs["player"]; left = 299 - obs["step"]; P = obs["players"]
+        bases = [int(b) for b in P[me][1].values()]
+        if not bases:
+            return acts
+        en = [e for e in P[1 - me][2].values() if e[2] == "COLLECTOR"]
+        out = dict(acts)
+        # cells our other units are about to enter (or stay on): a forced car never steps into them (no self-collisions)
+        claimed = {}                                                      # cell -> how many own units plan to be there
+        for u2, w2 in P[me][2].items():
+            mv2 = out.get(u2); c2 = _nxt(w2[0], mv2) if mv2 in MV else int(w2[0])
+            claimed[c2] = claimed.get(c2, 0) + 1
+        for uid, w in sorted(P[me][2].items(), key=lambda kv: -kv[1][1]):      # heaviest car chooses first
+            pos, cargo, kind = w
+            if kind != "COLLECTOR" or cargo < cfg["MINC"]:
+                continue
+            d = min(F.DIST[pos, b] for b in bases)
+            slack = cfg.get("EH_HEAVY_SLACK", 1) if cargo >= cfg.get("EH_HEAVY", 1e9) else 1
+            if d == 0 or not (left - slack <= d <= left):
+                continue
+            stats.setdefault("eh_act", []).append((obs["step"], uid))      # car is under the go-home rule this step
+            if cfg.get("EH_SHADOW"):                                          # record only, never change a move
+                continue
+            tgt = bases; d0 = d                                              # d0: trigger distance (nearest base)
+            if cfg.get("EH_BASE_PICK") and len(bases) > 1:
+                # of the bases still reachable in time, head for the one with the fewest lighter enemy cars within 2
+                # cells of it (ambush at the base mouth); ties -> nearer. No lookahead: just a choice of target.
+                reach = [b for b in bases if F.DIST[pos, b] <= left]
+                amb = lambda b: sum(1 for e in en if F.DIST[b, e[0]] <= 2 and e[1] <= cargo)
+                bt = min(reach, key=lambda b: (amb(b), F.DIST[pos, b]))
+                if bt != min(bases, key=lambda b: F.DIST[pos, b]):
+                    stats["eh_alt"] = stats.get("eh_alt", 0) + 1
+                tgt = [bt]; d = F.DIST[pos, bt]
+            cur = out.get(uid)
+            c0 = _nxt(pos, cur) if cur in MV else int(pos)                    # its own planned cell: remove ONE claim only
+            claimed[c0] -= 1
+            if cur in MV and min(F.DIST[_nxt(pos, cur), b] for b in tgt) < d and (not claimed.get(_nxt(pos, cur)) or _nxt(pos, cur) in bases):
+                claimed[_nxt(pos, cur)] = claimed.get(_nxt(pos, cur), 0) + 1
+                k = "eh_edge_ok" if d0 >= left - 1 else "eh_heavy_ok"  # rule fired but the planned move already heads home
+                stats[k] = stats.get(k, 0) + 1; continue
+            # only directions that bring it closer; inside those prefer no lighter enemy car adjacent; never give up home
+            opts = [mv for mv in MV if min(F.DIST[_nxt(pos, mv), b] for b in tgt) < d and (not claimed.get(_nxt(pos, mv)) or _nxt(pos, mv) in bases)]
+            safe = [mv for mv in opts if not any(F.DIST[_nxt(pos, mv), e[0]] <= 1 and e[1] <= cargo for e in en)]
+            pick = (safe or opts or [None])[0]
+            if not pick:
+                claimed[c0] += 1                                              # keeps its planned cell
+            if pick:
+                out[uid] = pick; claimed[_nxt(pos, pick)] = claimed.get(_nxt(pos, pick), 0) + 1; stats["eh"] = stats.get("eh", 0) + 1
+                k = "eh_edge" if d0 >= left - 1 else "eh_heavy"       # heavy = fired only because of the wider slack
+                stats[k] = stats.get(k, 0) + 1
+                stats.setdefault("eh_list", []).append((obs["step"], uid))
+        return out
+
     def agent(obs, config=None):            # root fallback: any exception -> empty action, never a failed step
         try:
-            return _inner(obs, config)
+            a = _inner(obs, config)
+            if cfg.get("EH_STEP") is not None and obs["step"] >= cfg["EH_STEP"]:
+                a = endgame_home(obs, a)
+            return a
         except Exception:
             stats["root_errors"] = stats.get("root_errors", 0) + 1
             return {}
