@@ -48,3 +48,8 @@ python3 cnet2_search_pack.py exp/submission_cnet2_v19pd2_nc.py "{$BASE, $NC, 'MA
 python3 cnet2_search_pack.py exp/submission_cnet2_v19p2_nc.py "{$BASE, $NC, 'MAX_BR': 13, $PK, 'PK_MAX': 2, $TS}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_v19pp_nc.py "{$BASE, $NC, 'MAX_BR': 13, $PK, 'PK_MAX': 2, $TS, 'PD_POT': True, 'PD_K': 3}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_v19pp.py "{$BASE, $CAP, 'MAX_BR': 13, $PK, 'PK_MAX': 2, $TS, 'PD_POT': True, 'PD_K': 3}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz   # capped (ship-candidate) twin
+# v19pq (3rd review): pp + PK_CASH (planters searched only when cash covers planting) + PK_H2 (depth 2 on planter-only steps); _nc and capped
+PQ="'MAX_BR': 13, $PK, 'PK_MAX': 2, $TS, 'PD_POT': True, 'PD_K': 3, 'PK_CASH': True, 'PK_H2': True"
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pq_nc.py "{$BASE, $NC, $PQ}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pq.py "{$BASE, $CAP, $PQ}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_v19pq7_nc.py "{$BASE, $NC, $PQ, 'PD_DISC': 0.7}" $W/cnet2_b128dg2.npz $W/cnet2_s64v8.npz   # potential tree discounted 0.7/step (plant-now favoured)

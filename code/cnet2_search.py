@@ -409,6 +409,11 @@ def key_units(obs, cfg):
         # the rest in rotation by step, so every planter gets searched now and then.
         et = [int(pos) for pos, _ in P[1 - me][3].values()]
         pl = sorted(uid for uid, w in P[me][2].items() if w[2] == "PLANTER")
+        if cfg.get("PK_CASH"):     # no cash to plant now -> searching where to plant is idle churn: skip the planters
+            own_ = len(P[me][3]); live_ = sum(1 for q in (0, 1) for _, a_ in P[q][3].values() if a_ < 50)
+            price_ = 20.0 if own_ == 0 else 20.0 + 5.0 * 1.235 ** live_
+            if float(P[me][0]) < price_:
+                pl = []
         if pl:
             near = [u for u in pl if et and min(F.DIST[P[me][2][u][0], t] for t in et) <= cfg.get("PK_R", 2)]
             k0 = obs["step"] % len(pl); rot = pl[k0:] + pl[:k0]
@@ -536,7 +541,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                         d_ = F.DIST[w.pos]
                         ok_ = d_ <= K_
                         if ok_.any():
-                            best_ = float(np.max(gain[ok_] * (0.85 ** d_[ok_])))
+                            best_ = float(np.max(gain[ok_] * (cfg.get("PD_DISC", 0.85) ** d_[ok_])))
                             if best_ > 0:
                                 m[p_] += best_
         if cfg.get("PD_W") and left > cfg.get("PD_LEFT", 200):
@@ -969,6 +974,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                                noise=rn0[isx], temp=np.full(nx, tau))
         roots = [fo.to_actions(v) for v in yo]
         H = min(cfg["H"], left + 1)
+        if cfg.get("PK_H2") and all(obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER" for _, u in keys):
+            H = min(H, 2)          # planter-only step: the root plant shows in a depth-2 leaf; depth 3 adds little
         rnoise = rng.random((RS, max(H - 1, 1), F.OWN))
         full = {"step": step, "players": obs["players"], "trees": obs.get("trees") or {},
                 "full_carbon": [float(v) for v in f.est], "carbon": obs["carbon"], "remainingOverageTime": 60}
@@ -1101,6 +1108,9 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 u_ = cmeta[bj][0]; w_ = obs["players"][me][2].get(u_)
                 if w_ is not None and w_[2] == "PLANTER":      # a planter's move replaced: did it plant within 3 steps?
                     stats["pk_rep"] = stats.get("pk_rep", 0) + 1
+                    P_ = obs["players"][me]; own_ = len(P_[3]); live_ = sum(1 for q in (0, 1) for _, a_ in obs["players"][q][3].values() if a_ < 50)
+                    if float(P_[0]) >= (20.0 if own_ == 0 else 20.0 + 5.0 * 1.235 ** live_):
+                        stats["pk_rep_cash"] = stats.get("pk_rep_cash", 0) + 1
                     st.setdefault("pk_pend", {})[u_] = step
             return cand[bj]
         return acts
