@@ -136,7 +136,7 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0]}   # stand-in validation ledger
     late_deaths = [[], []]
     for step in range(1, 301):
         pre = sim.get_state()
@@ -177,6 +177,17 @@ def play_game(task):
             nc = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR")
             sh["colsteps"][p] += nc
             sh["treesteps"][p] += sum(1 for t in post["trees"].values() if t["player"] == p)
+            if step <= 100:                       # collection efficiency, steps 1-100: a collector that stays put on a
+                car = pre.get("carbon")              # non-base cell is collecting; cell carbon under it, and its haul
+                bases_p = {int(b) for _, b in post["bases"][p]}
+                for wid, w in pre["workers"].items():
+                    if w["player"] != p or w["type"] != "COLLECTOR" or wid not in post["workers"]:
+                        continue
+                    pos = int(w["pos"]); w2 = post["workers"][wid]
+                    if int(w2["pos"]) == pos and pos not in bases_p and car is not None:
+                        sh["cc100_sum"][p] += float(car[pos]); sh["cc100_n"][p] += 1
+                        sh["haul100"][p] += max(0.0, float(w2["carbon"]) - float(w["carbon"]))
+                    sh["colsteps100"][p] += 1
             etr = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # our collectors taxed by an enemy tree:
             sh["col_etree8"][p] += sum(1 for w in post["workers"].values()           # enemy tree within the 8-neighbourhood
                                        if w["player"] == p and w["type"] == "COLLECTOR" and any(_cheb(int(w["pos"]), c) == 1 for c in etr))
