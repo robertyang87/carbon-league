@@ -739,6 +739,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 out = _search(obs, x, y, acts, xo, left, t0, tw)
             stats["worst_ms"] = max(stats["worst_ms"], (clk() - t0) * 1000)
             stats["worst_wall_ms"] = max(stats.get("worst_wall_ms", 0.0), (time.time() - tw) * 1000)
+            stats.setdefault("ms_steps", []).append(round((time.time() - tw) * 1000))   # wall ms of every searched step
             return out
         except Exception as e:  # never let the search layer lose a game
             stats["errors"] += 1; stats["last_error"] = repr(e)[:300]
