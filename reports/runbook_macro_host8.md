@@ -4,7 +4,7 @@
 方案背景见 `reports/plan_macro_training.md`。代码分支 `cnet2-search-v12`，要求拉到 `cb5ae6a` 或更新。
 
 机器：八号机 `root@47.101.31.141`（64 物理核倚天 710，Arm，128 GiB，盘 100 GiB，抢占式、回收即释放、盘不保留）。
-训练在 DGX Spark。今晚 00:05 的探针提交照原计划，不依赖本执行单；第 3 步过线的配置才叠进探针。
+训练在 DGX Spark。今晚 00:05 的探针提交照原计划，不依赖本执行单；第 2 步过线的配置才叠进探针。
 
 ## 第 0 步：部署和防回收（开跑任何长任务之前）
 
@@ -42,7 +42,7 @@ N=$(nproc); time python3 awr_gen.py ../data/sp_bench awr_us_env.py <Master2s 替
 - 同一条命令再跑一次，应在 1 秒内结束（续跑不重复打）。
 - 回报：`nproc`、每局耗时、`du -sh ../data/sp_bench`。
 
-## 第 2 步：旋钮完整搜索（阶段 A，约 3–4 小时）
+## 第 2 步：旋钮完整搜索（阶段 A，约 4–5 小时）
 
 先写工厂文件 `code/exp/knob_us_grove1.py`（`code/exp` 不入库，各机器自己建）：
 
@@ -69,7 +69,7 @@ nohup python3 knob_search.py ks_full ../code/exp/knob_us_grove1.py \
 - 对手文件要求：模块里有 `agent(obs, config)`，或有 `make()` 返回代理。对手必须是确定性的（同种子同结果）。
 - 默认三级淘汰：120 组各 40 局 → 前 30 组各 120 局 → 前 6 组各 400 局，四个对手，共约 4.4 万局（约 4–5 小时）。
 - 被回收后换机器：把 `ks_full/` 拷回去，同一条命令续跑。
-- 跑的过程中看中期结果：`python3 knob_search.py ks_full x m2s=x m2=x grove1=x scout1=x --only-report`（`e9b1450` 之后才安全）。
+- 跑的过程中看中期结果：`python3 knob_search.py ks_full x m2s=x m2=x grove1=x scout1=x --only-report`。
 - 不要同时打开上游的 TG / RG 和这里的 `MACRO`，两套管的是同一件事。
 
 **开跑前的验证（10 分钟，必须做）**
