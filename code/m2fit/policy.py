@@ -5,6 +5,7 @@ from m2fit.feats import board, col_cands, D, NBR, DIRS, CNAMES
 from m2fit.stage import row_feats
 from mfit.extract_tgt import cand_feats, best_at
 CI = {n: k for k, n in enumerate(CNAMES)}
+TOPK = 0; TOPK_D = 1.0
 ECON = True   # economic veto: never collect next to enemy trees when the absorption exceeds the haul
 OPTS = [None] + DIRS
 
@@ -73,6 +74,9 @@ def col_target(T, b, u, step, taken, stay_p=0.5, home_p=0.5, force_home=True, tg
                 if ECON:
                     et = b["etree9"][cm]
                     p = p - 1.0 * ((et > 0) & (0.3 * Xm[:, CI["c_car"]] < 0.1 * (cargo + 0.3 * Xm[:, CI["c_car"]]) * et))
+                if TOPK and len(p) > TOPK:                 # only the TOPK best collection rates are allowed targets
+                    rr = Xm[:, CI["c_car"]] / (Xm[:, CI["c_dist"]] + TOPK_D)
+                    p = p - 10.0 * (rr < np.sort(rr)[-TOPK])
                 key = p + tgtw * gain / 20.0 + sidew * (b["dobase"][cm] - b["debase"][cm]) / 10.0 + 1e-4 * Xm[:, CI["c_rate"]] / 100 - 1e-7 * Xm[:, CI["c_dist"]]
                 if avoid:
                     key = key - 1.0 * np.isin(cm, list(avoid))
