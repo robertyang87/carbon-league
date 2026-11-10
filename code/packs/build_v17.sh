@@ -90,3 +90,15 @@ python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL260.py "{$BASE, $CAP, '
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL265.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 265}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL275.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 275}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL280.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 280}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# exam-only fixed-budget twins (CLOCK sims; FIX_SIMS = host-4 capped medians per 50-step phase, 2026-11-10); never shipped
+python3 cnet2_search_pack.py exp/fx_m2t3L240.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3L260.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 260}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3L265.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 265}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3L270.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 270}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3L275.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 275}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3L280.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 280}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_awr1.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 5, 'LATE_STEP': 100, 'TEACHER_LATE2': 7, 'LATE_STEP2': 240}" $W/cnet2_b128awr_r1.npz $W/cnet2_s64v8.npz   # Scout1 fixed-budget twin
+# camper-bust rule (exam twin) and search-budget probes (fixed 20 / 40 sims per step)
+python3 cnet2_search_pack.py exp/fx_m2t3CB.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'CB_STEP': 100}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3S20.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3S40.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (40,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz

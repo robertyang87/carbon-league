@@ -1432,6 +1432,44 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 stats.setdefault("eh_list", []).append((obs["step"], uid))
         return out
 
+    def camp_bust(obs, acts):
+        """CB_STEP..: an enemy collector parked within 1 of our base while our loaded cars wait nearby -> the nearest
+        light own collector (cargo <= CB_MAXC and <= the camper's; least cargo wins a collision, equal = both die)
+        steps toward it. Re-aimed every step, so the chase follows a camper that shifts."""
+        me = obs["player"]; P = obs["players"]
+        bases = [int(b) for b in P[me][1].values()]
+        if not bases:
+            return acts
+        own = [(u, w) for u, w in P[me][2].items() if w[2] == "COLLECTOR"]
+        out = dict(acts); used = set()
+        claimed = {}
+        for u2, w2 in P[me][2].items():
+            mv2 = out.get(u2); c2 = _nxt(w2[0], mv2) if mv2 in MV else int(w2[0])
+            claimed[c2] = claimed.get(c2, 0) + 1
+        for e in P[1 - me][2].values():
+            if e[2] != "COLLECTOR" or min(F.DIST[e[0], b] for b in bases) > 1:
+                continue
+            b0 = min(bases, key=lambda b: F.DIST[e[0], b])
+            if not any(w[1] >= cfg.get("CB_LOAD", 200.0) and F.DIST[w[0], b0] <= cfg.get("CB_R", 9) for _, w in own):
+                continue
+            stats["cb_seen"] = stats.get("cb_seen", 0) + 1
+            cands = [(F.DIST[w[0], e[0]], w[1], u, w) for u, w in own if u not in used and w[1] <= min(cfg.get("CB_MAXC", 50.0), e[1])
+                     and 0 < F.DIST[w[0], e[0]] <= cfg.get("CB_D", 6)]
+            if not cands:
+                continue
+            d, _, u, w = min(cands)
+            cur = out.get(u); c0 = _nxt(w[0], cur) if cur in MV else int(w[0])
+            opts = [mv for mv in MV if F.DIST[_nxt(w[0], mv), e[0]] < d and (_nxt(w[0], mv) == int(e[0]) or not claimed.get(_nxt(w[0], mv)))]
+            if not opts:
+                continue
+            pick = opts[0]; used.add(u)
+            if pick != cur:
+                claimed[c0] -= 1; claimed[_nxt(w[0], pick)] = claimed.get(_nxt(w[0], pick), 0) + 1
+                out[u] = pick; stats["cb"] = stats.get("cb", 0) + 1
+            else:
+                stats["cb_ok"] = stats.get("cb_ok", 0) + 1
+        return out
+
     def agent(obs, config=None):            # root fallback: any exception -> empty action, never a failed step
         try:
             a = _inner(obs, config)
@@ -1453,6 +1491,11 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 a = planter_avoid(obs, a)
             except Exception:
                 stats["pa_errors"] = stats.get("pa_errors", 0) + 1
+        if cfg.get("CB_STEP") is not None and obs["step"] >= cfg["CB_STEP"]:
+            try:
+                a = camp_bust(obs, a)
+            except Exception:
+                stats["cb_errors"] = stats.get("cb_errors", 0) + 1
         if cfg.get("EH_STEP") is not None and obs["step"] >= cfg["EH_STEP"]:
             try:                                # rule layer has its own fallback: a bug here keeps the searched actions
                 a = endgame_home(obs, a)
