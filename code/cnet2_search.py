@@ -1048,7 +1048,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             else:
                 nv = n.copy(); batch = []
                 q = np.array([np.mean([b for _, b in v]) if v else 0.0 for v in vals])
-                for _ in range(nc):
+                for _ in range(int(cfg.get("ROUND_K", 1)) * nc):     # ROUND_K: more sims per round (bigger, fewer batches)
                     sc = (q - q[0]) / cfg["VS"] + cfg["C_PUCT"] * P * np.sqrt(nv.sum()) / (1 + nv)
                     sc[nv >= RS] = -np.inf
                     c = int(np.argmax(sc))
@@ -1057,14 +1057,16 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                     batch.append((c, int(nv[c]))); nv[c] += 1
                 # the default must keep pace (paired comparison)
                 need = int(max((nv[1:]).max(), 1)) if nc > 1 else 1
-                while nv[0] < min(need, RS) and len(batch) < 2 * nc:
+                while nv[0] < min(need, RS) and len(batch) < 2 * int(cfg.get("ROUND_K", 1)) * nc:
                     batch.append((0, int(nv[0]))); nv[0] += 1
             if not batch:
                 break
             now = clk()
             if fixed:       # exam clock: a fixed simulation budget per step (by 50-step phase), no time checks,
                 if rounds > 0 and sims_done + len(batch) > fix_n:   # so paired games stay identical until they fork
-                    break
+                    if not cfg.get("FIX_TRUNC") or sims_done >= fix_n:
+                        break
+                    batch = batch[:fix_n - sims_done]       # FIX_TRUNC: use the budget exactly (fair across ROUND_K)
             elif per_sim is not None and now - t0 + cfg["PROJ"] * per_sim * len(batch) > cfg["BUDGET"]:
                 break
             elif rounds == 0 and now - t0 > 0.4 * cfg["BUDGET"]:

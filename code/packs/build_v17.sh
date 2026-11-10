@@ -114,3 +114,6 @@ python3 cnet2_search_pack.py exp/fx_m2t3S80.py "{$BASE, $CAP, 'CLOCK': 'sims', '
 # exam budget is 20 sims from 2026-11-10 (ladder re-enactment: Grove1 runs 2 rounds of 10 there)
 python3 cnet2_search_pack.py exp/fx_m2t3S30.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (30,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/fx20_m2t3O.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'OPEN_NET_STEP': 100, 'OPEN_NET_T': 2}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz $W/cnet2_b128awr_r1.npz
+python3 cnet2_search_pack.py exp/fx20_m2t3A.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 999}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz   # BrA at 20 sims
+# ROUND_K probes: 40 sims with FIX_TRUNC (budget used exactly), K sims-per-candidate per round
+for k in 1 2 3; do python3 cnet2_search_pack.py exp/fx_m2t3S40K$k.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (40,), 'FIX_TRUNC': True, 'ROUND_K': $k, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz; done

@@ -149,6 +149,8 @@ def play_game(task):
         acts = []
         for p in range(2):
             o = sim.obs(p)
+            if p == a_side and step < int(os.environ.get("EVAL_ORACLE_STEPS", "0")):
+                o = dict(o, oracle_carbon=list(sim.carbon))      # diagnostic: the tested side sees the true carbon map
             ts = time.time()
             acts.append(agents[p](o, CFG))
             dt = time.time() - ts

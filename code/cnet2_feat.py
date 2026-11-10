@@ -198,6 +198,8 @@ class Feat:
                 self.est[b] = 0.0
         for p in trees:
             self.est[p] = 0.0
+        if obs.get("oracle_carbon") is not None:      # exam diagnostic only (EVAL_ORACLE_STEPS): the true map replaces the belief
+            self.est[:] = np.asarray(obs["oracle_carbon"], np.float64)
         mirror_est = np.where(has_m, self.est[msrc], 0.0)
 
         left = 299 - step
