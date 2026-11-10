@@ -1449,6 +1449,16 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             mv2 = out.get(u2); c2 = _nxt(w2[0], mv2) if mv2 in MV else int(w2[0])
             claimed[c2] = claimed.get(c2, 0) + 1
         bset = set(bases)
+        wait = cfg.get("SE_MODE") == "wait"       # stall trigger: only a car that has sat loaded near home SE_WAIT steps
+        if wait:
+            wc = st.setdefault("se_wait", {})
+            for u_, w_ in P[me][2].items():
+                near_ = w_[2] == "COLLECTOR" and w_[1] >= cfg.get("SE_MINC", 300.0) and 1 <= min(F.DIST[w_[0], b] for b in bases) <= cfg.get("SE_R", 6)
+                wc[u_] = wc.get(u_, 0) + 1 if near_ else 0
+            # team stall: >= SE_TEAM on board in total and no own collector reached a base cell (no delivery) for SE_WAIT steps
+            tot_ = sum(w_[1] for w_ in P[me][2].values() if w_[2] == "COLLECTOR")
+            home_ = any(w_[2] == "COLLECTOR" and int(w_[0]) in bset for w_ in P[me][2].values())
+            st["se_team"] = st.get("se_team", 0) + 1 if cfg.get("SE_TEAM") and tot_ >= cfg["SE_TEAM"] and not home_ else 0
         for uid, w in sorted(P[me][2].items(), key=lambda kv: -kv[1][1]):       # heaviest first
             pos, cargo, kind = w
             if kind != "COLLECTOR" or cargo < cfg.get("SE_MINC", 150.0):
@@ -1457,7 +1467,10 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             if not (1 <= dpos <= cfg.get("SE_R", 3)):
                 continue
             th = [int(e[0]) for e in en if e[1] <= cargo and F.DIST[pos, e[0]] <= cfg.get("SE_NEAR", 4)]
-            if not th:
+            if wait:
+                if (st["se_team"] if cfg.get("SE_TEAM") else st["se_wait"].get(uid, 0)) < cfg.get("SE_WAIT", 8):
+                    continue
+            elif not th:
                 continue
             stats["se_seen"] = stats.get("se_seen", 0) + 1
             danger = {int(c) for e in th for c in F.DEST[e]}                    # enemy stays or steps one cell
