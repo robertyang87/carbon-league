@@ -176,6 +176,11 @@ class Feat:
                     vis[pos] = True
                 else:
                     vis[DEST[pos, 1:]] = True
+        rv = obs.get("reveal")                          # exam diagnostic only: extra cells seen this step {cell: true carbon}
+        if rv:
+            carbon = carbon.copy()
+            for c_, v_ in rv.items():
+                vis[int(c_)] = True; carbon[int(c_)] = float(v_)
         self.est[vis] = carbon[vis]
         self.last[vis] = carbon[vis]
         self.last_step[vis] = step

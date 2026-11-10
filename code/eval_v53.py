@@ -151,6 +151,17 @@ def play_game(task):
             o = sim.obs(p)
             if p == a_side and step < int(os.environ.get("EVAL_ORACLE_STEPS", "0")):
                 o = dict(o, oracle_carbon=list(sim.carbon))      # diagnostic: the tested side sees the true carbon map
+            if p == a_side and step < int(os.environ.get("EVAL_REVEAL_STEPS", "0")):
+                o = dict(o, reveal={c: sim.carbon[c] for c in range(225)})   # diagnostic: whole map seen (kept as seen)
+            if p == a_side and os.environ.get("EVAL_SNAKE"):        # diagnostic: one planter's snake route from step s0, k steps
+                s0, k = map(int, os.environ["EVAL_SNAKE"].split(":"))
+                if s0 <= step < s0 + k:
+                    b0 = int(sorted(sim.bases[p])[0][1]) if sim.bases[p] else 0
+                    br, bc = divmod(b0, 15); dr = 1 if br < 7 else -1; dc = 1 if bc < 7 else -1
+                    i = step - s0; leg, j = divmod(i, 5); j = j if leg % 2 == 0 else 4 - j
+                    r_, c_ = (br + dr * (1 + 3 * leg)) % 15, (bc + dc * j) % 15; q = r_ * 15 + c_
+                    cells = [((r_ - 1) % 15) * 15 + c_, ((r_ + 1) % 15) * 15 + c_, r_ * 15 + (c_ - 1) % 15, r_ * 15 + (c_ + 1) % 15]
+                    o = dict(o, reveal={c: sim.carbon[c] for c in cells})
             ts = time.time()
             acts.append(agents[p](o, CFG))
             dt = time.time() - ts
