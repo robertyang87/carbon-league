@@ -9,7 +9,8 @@ def _play(t):
     try: return eval_v53.play_game(t)
     except Exception as e: return {"error": repr(e)[:200], "seed": t[3]}
 def main(a, b, s0, n, tag):
-    tasks = [(tag, a, b, s, s % 2) for s in range(s0, s0 + n)]
+    seeds = [int(x) for x in os.environ["EVO_SEEDS"].split(",")] if os.environ.get("EVO_SEEDS") else range(s0, s0 + n)
+    tasks = [(tag, a, b, s, s % 2) for s in seeds]
     live = os.path.join(HERE, "..", "data", "bigeval_live"); os.makedirs(live, exist_ok=True)
     lf = open(os.path.join(live, tag + ".jsonl"), "a")
     rows = []
