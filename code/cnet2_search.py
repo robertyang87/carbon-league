@@ -1034,6 +1034,8 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         vals = [[] for _ in range(nc)]
         n = np.zeros(nc)
         rounds = 0; per_sim = None; sims_done = 0
+        fixed = cfg["CLOCK"] == "sims"
+        fix_n = cfg["FIX_SIMS"][min(step // 50, len(cfg["FIX_SIMS"]) - 1)] if fixed else 0
         while True:
             # ---- choose this round's (child, index) pairs
             if rounds == 0:
@@ -1055,15 +1057,18 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             if not batch:
                 break
             now = clk()
-            if per_sim is not None and now - t0 + cfg["PROJ"] * per_sim * len(batch) > cfg["BUDGET"]:
+            if fixed:       # exam clock: a fixed simulation budget per step (by 50-step phase), no time checks,
+                if rounds > 0 and sims_done + len(batch) > fix_n:   # so paired games stay identical until they fork
+                    break
+            elif per_sim is not None and now - t0 + cfg["PROJ"] * per_sim * len(batch) > cfg["BUDGET"]:
                 break
-            if rounds == 0 and now - t0 > 0.4 * cfg["BUDGET"]:
+            elif rounds == 0 and now - t0 > 0.4 * cfg["BUDGET"]:
                 break
-            if per_sim is not None and time.time() - tw + cfg["PROJ"] * per_wall * len(batch) > cfg["HARD"]:
+            elif per_sim is not None and time.time() - tw + cfg["PROJ"] * per_wall * len(batch) > cfg["HARD"]:
                 break
-            if cfg["START_DL"] is not None and time.time() - tw > cfg["START_DL"]:
+            elif cfg["START_DL"] is not None and time.time() - tw > cfg["START_DL"]:
                 break
-            if cfg["ABORT_DL"] is not None and "stepw" in st and time.time() - tw + \
+            elif cfg["ABORT_DL"] is not None and "stepw" in st and time.time() - tw + \
                     cfg["PROJ"] * (H - 1) * st["stepw"] * len(batch) > cfg["ABORT_DL"]:
                 break       # this round could not finish before the abort deadline: do not start it
             nw = time.time()
@@ -1081,7 +1086,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 sims.append(s_); fs.append((feat_copy(f), feat_copy(fo)))
             depth = 1; aborted = False
             for hh in range(1, H):
-                if cfg["ABORT_DL"] is not None:
+                if cfg["ABORT_DL"] is not None and not fixed:
                     est = st.get("stepw", 0.0) * nb
                     if time.time() - tw + cfg["PROJ"] * est > cfg["ABORT_DL"]:
                         aborted = True
@@ -1116,6 +1121,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             sims_done += nb; rounds += 1
             per_sim = (clk() - now) / nb; per_wall = (time.time() - nw) / nb
         stats["sims"] = stats.get("sims", 0) + sims_done
+        stats.setdefault("sims_steps", []).append((step, sims_done))   # per-step budget actually used (calibrates FIX_SIMS)
         stats["rounds"] = stats.get("rounds", 0) + rounds
         stats["branches"] += sims_done
         if rounds == 0:
