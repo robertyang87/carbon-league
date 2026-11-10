@@ -242,7 +242,8 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
         if REF is not None:
             car = (valid & (b["tok_kind"][:, :F.OWN] == 0))[:, :REF.shape[1]].float()
             lp = Fn.log_softmax(lg[:, :REF.shape[1]].float(), -1); lr_ = Fn.log_softmax(REF[b["_cp"]].float(), -1)
-            kl = (lr_.exp() * (lr_ - lp)).sum(-1)
+            pr_ = lr_.exp()
+            kl = torch.where(pr_ > 0, pr_ * (lr_ - lp), torch.zeros_like(pr_)).sum(-1)     # illegal moves: p = 0, no term
             loss = loss + self_kl * (kl * car).sum() / car.sum().clamp(min=1)
         return loss, lg
 
