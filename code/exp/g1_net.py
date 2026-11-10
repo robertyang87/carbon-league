@@ -6,3 +6,6 @@ import knob_us_factory as _F
 
 def make():
     return _F.make()
+
+
+agent = make()          # module-level agent too (awr_gen / eval_v53 load the module fresh per game)
