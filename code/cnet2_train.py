@@ -220,7 +220,15 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
             elif v.dtype == torch.float16:
                 v = v.float()
             b[k] = v
+        b["_cp"] = cp
         return b, TOK[cp].float(), PRE[cp].float()
+
+    # BC_SELF_KL=c: soft self-anchor. Before the first step, the logits of the INITIAL net are stored for every row; the
+    # loss gets  c * mean over car tokens of KL(initial || current).  Zero gradient at the start, and it pulls the cars
+    # back as soon as the shared decoder moves. (A hard-label anchor on the net's own moves does not do this: the policy
+    # is soft, so cross-entropy to its own argmax sharpens it and moves the decoder -- measured: cars-only hard-label
+    # training alone takes car agreement from 99.5% to 96.4%.)
+    self_kl = float(os.environ.get("BC_SELF_KL", "0")); REF = None
 
     def batch_loss(b, tok, pre):
         lg = net.decode(b, tok, net.ctx_from(pre, b["teacher"]))
@@ -230,7 +238,22 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
         wv = valid.float() * tw[:, None]
         if "uw" in b:
             wv = wv * b["uw"]
-        return (ce * wv).sum() / wv.sum().clamp(min=1), lg
+        loss = (ce * wv).sum() / wv.sum().clamp(min=1)
+        if REF is not None:
+            car = (valid & (b["tok_kind"][:, :F.OWN] == 0))[:, :REF.shape[1]].float()
+            lp = Fn.log_softmax(lg[:, :REF.shape[1]].float(), -1); lr_ = Fn.log_softmax(REF[b["_cp"]].float(), -1)
+            kl = (lr_.exp() * (lr_ - lp)).sum(-1)
+            loss = loss + self_kl * (kl * car).sum() / car.sum().clamp(min=1)
+        return loss, lg
+
+    if self_kl > 0:
+        net.eval(); refs = []
+        with torch.no_grad():
+            for a0 in range(0, len(allidx), 4096):
+                b_, tok_, pre_ = light(allidx[a0:a0 + 4096])
+                refs.append(net.decode(b_, tok_, net.ctx_from(pre_, b_["teacher"]))[:, :F.OWN].half())
+        REF = torch.cat(refs); del refs; net.train()
+        print(json.dumps({"self_kl": self_kl, "ref_logits_GB": round(REF.numel() * 2 / 1e9, 2)}), flush=True)
 
     def evaluate_c():
         net.eval(); ok = np.zeros(3); n = np.zeros(3)
