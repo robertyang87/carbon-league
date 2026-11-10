@@ -700,6 +700,56 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                     spend = 30.0 * sum(1 for o_ in slots if y[o_] in (1, 2))
                     if float(obs["players"][me][0]) - spend < pp:
                         y[s_] = 0; stats["pb_skip"] = stats.get("pb_skip", 0) + 1; st["base_fix"][s_] = 0
+        # MACRO knobs (reports/plan_macro_training.md, stage A): permission-type limits on recruiting and planting,
+        # found by data/knob_search.py. Units keep the net's moves; a knob only vetoes a planter recruit (-> collector
+        # or nothing) or a plant at a price above the limit (-> the net's best move). Phases: E < PL_T1 <= M < PL_T2 <= L.
+        #   PL_CAP_E/M/L  planters allowed in play (None = no limit); + REACT_T * max(0, enemy trees - our trees)
+        #   REC_STOP_P    no planter recruits from this step on
+        #   PRICE_M/L     plant only at a price <= limit (None = no limit); - REACT_S * our trees seized in the last 50 steps
+        mac = cfg.get("MACRO")
+        if mac:
+            try:
+                t_ = obs["step"]; Pm = obs["players"][me]; Po = obs["players"][1 - me]
+                ph = "E" if t_ < mac.get("PL_T1", 60) else ("M" if t_ < mac.get("PL_T2", 240) else "L")
+                # our trees seized recently (cell now holds an enemy tree)
+                cur = {int(pos) for pos, _ in Pm[3].values()}; ecur = {int(pos) for pos, _ in Po[3].values()}
+                if t_ == 0 or "mac_prev" not in st:
+                    st["mac_seized"] = []
+                else:
+                    st["mac_seized"] += [t_] * len((st["mac_prev"] - cur) & ecur)
+                st["mac_prev"] = cur
+                st["mac_seized"] = [s0 for s0 in st["mac_seized"] if t_ - s0 < 50]
+                npl = sum(1 for w in Pm[2].values() if w[2] == "PLANTER"); nwk = len(Pm[2])
+                slots = [s_ for s_ in range(10, F.OWN) if x["tok_mask"][s_] and y[s_] >= 0]
+                cap = mac.get("PL_CAP_" + ph)
+                if cap is not None:
+                    cap = cap + int(round(mac.get("REACT_T", 0.0) * max(0, len(Po[3]) - len(Pm[3]))))
+                stop = t_ >= mac.get("REC_STOP_P", 999)
+                for s_ in slots:
+                    if y[s_] != 2:
+                        continue
+                    planned = sum(1 for o_ in slots if y[o_] == 2)
+                    if stop:
+                        y[s_] = 0; st["base_fix"][s_] = 0; stats["mac_stop"] = stats.get("mac_stop", 0) + 1
+                    elif cap is not None and npl + planned > cap:
+                        to = 1 if mac.get("CAP_TO_CAR", True) and t_ < mac.get("CAR_STOP", 276) else 0
+                        y[s_] = to; st["base_fix"][s_] = to; stats["mac_cap"] = stats.get("mac_cap", 0) + 1
+                lim = mac.get("PRICE_" + ph)
+                if lim is not None:
+                    lim = lim - mac.get("REACT_S", 0.0) * len(st["mac_seized"])
+                    pp = plant_price(obs, me)
+                    if pp > lim and float(Pm[0]) >= pp:
+                        blocked = cur | ecur | {int(b) for q_ in (0, 1) for b in obs["players"][q_][1].values()}
+                        for s_ in range(10):
+                            if not x["tok_mask"][s_] or int(x["tok_kind"][s_]) != 1 or y[s_] != 0:
+                                continue
+                            uid = f.own_uid[s_]; w_ = Pm[2].get(uid)
+                            if w_ is None or int(w_[0]) in blocked:
+                                continue          # standing on a tree (seize / own tree) or a base: not a plant
+                            mv = 1 + int(np.argmax(lg0[s_][1:5]))
+                            y[s_] = mv; st["base_fix"][s_] = mv; stats["mac_price"] = stats.get("mac_price", 0) + 1
+            except Exception as e:
+                stats["errors"] += 1; stats["last_error"] = repr(e)[:300]
         if cfg["GUARD"]:
             try:
                 y = bankrupt_guard(x, f.aux, y, lg0)
