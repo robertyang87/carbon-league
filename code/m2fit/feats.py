@@ -39,7 +39,8 @@ def board(P, me, car):
     b["istree"] = tr
     b["tree4"] = tr[NBR].sum(1)
     et = np.zeros(N, int); et[b["etree"]] = 1
-    b["etree8"] = (CHEB[:, b["etree"]] == 1).sum(1) if b["etree"] else np.zeros(N, int)
+    b["etree8"] = (CHEB[:, b["etree"]] == 1).sum(1) if b["etree"] else np.zeros(N, int)   # fitted feature (ring only)
+    b["etree9"] = (CHEB[:, b["etree"]] <= 1).sum(1) if b["etree"] else np.zeros(N, int)   # absorption: tree cell + 8-ring
     b["ecol_pos"] = np.array([p for p, _ in b["ecol"]], int); b["ecol_c"] = np.array([c for _, c in b["ecol"]], float)
     b["decol"] = dmin(list(b["ecol_pos"]))
     b["depl"] = dmin(b["epl"])

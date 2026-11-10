@@ -54,7 +54,8 @@ def col_target(T, b, u, step, taken, stay_p=0.5, home_p=0.5, force_home=True, tg
     sp = T["c_stay"].p(rf, "True") if on_carbon else 0.0
     hp = T["c_home"].p(rf, "True")
     home = False; tg = None
-    absorb_bad = ECON and rf["here_etree8"] > 0 and 0.3 * rf["car_here"] < 0.1 * cargo * rf["here_etree8"]
+    e9 = b["etree9"][pos]
+    absorb_bad = ECON and e9 > 0 and 0.3 * rf["car_here"] < 0.1 * cargo * e9
     if on_carbon and sp >= stay_p and not absorb_bad:
         tg = pos
     else:
@@ -70,7 +71,7 @@ def col_target(T, b, u, step, taken, stay_p=0.5, home_p=0.5, force_home=True, tg
                 p = T["c_tgt"].pm(Xm, CNAMES)
                 gain = Xm[:, CI["c_car"]] * 0.657 / (Xm[:, CI["c_dist"]] + 3.0)      # 3 stays: 1-0.7^3 of the cell
                 if ECON:
-                    et = Xm[:, CI["c_etree8"]]
+                    et = b["etree9"][cm]
                     p = p - 1.0 * ((et > 0) & (0.3 * Xm[:, CI["c_car"]] < 0.1 * (cargo + 0.3 * Xm[:, CI["c_car"]]) * et))
                 key = p + tgtw * gain / 20.0 + sidew * (b["dobase"][cm] - b["debase"][cm]) / 10.0 + 1e-4 * Xm[:, CI["c_rate"]] / 100 - 1e-7 * Xm[:, CI["c_dist"]]
                 if avoid:

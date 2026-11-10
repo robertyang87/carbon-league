@@ -14,7 +14,7 @@ def metrics(states, me):
         cs = [u for u, w in W.items() if w[2] == "COLLECTOR"]; ncol.append(len(cs))
         et = [int(q) for q, _ in P1[1 - me][3].values()]
         for u in cs:
-            if u in W1 and et and (CHEB[int(W1[u][0]), et] == 1).any(): absorb[0] += 0.1 * W1[u][1] / 0.9
+            if u in W1 and et and (CHEB[int(W1[u][0]), et] <= 1).any(): absorb[0] += 0.1 * W1[u][1] / 0.9
         for u in cs:
             if u not in W1:
                 absorb[1] += W[u][1]; continue

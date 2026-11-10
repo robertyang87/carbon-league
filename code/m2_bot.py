@@ -39,13 +39,13 @@ def _bfs(src, cost):
 
 
 # chosen on host-4 bigeval vs dg5 (60 games each, 2026-11-10): v6a = -5899/game, the best of ~25 variants
-DEFAULT = dict(SAFE=10, ROUTE=1, THRC=30, ETW=2, HOME_MARGIN=8, HOME_P=0.3)
+DEFAULT = dict(SAFE=10, ROUTE=1, THRC=30, ETW=2, HOME_MARGIN=8, HOME_P=0.3, ETH=3)
 
 
 def make_agent(cfg=None):
     cfg = dict(DEFAULT, **(cfg or {}))
     T = load_trees(HERE)
-    SAFE = float(cfg.get("SAFE", 0)); ETW = float(cfg.get("ETW", 0)); ROUTE = int(cfg.get("ROUTE", 0)); HOME_MARGIN = int(cfg.get("HOME_MARGIN", 2)); THRC = float(cfg.get("THRC", 4)); FUTC = float(cfg.get("FUTC", 2)); TGTW = float(cfg.get("TGTW", 0)); SAFE2 = float(cfg.get("SAFE2", 0)); MINC = int(cfg.get("MINC", 0)); SIDEW = float(cfg.get("SIDEW", 0)); SEIZE_R = int(cfg.get("SEIZE_R", 0)); HYST = float(cfg.get("HYST", 0)); COMPW = float(cfg.get("COMPW", 0)); PLOPT = int(cfg.get("PLOPT", 1)); LOCKW = float(cfg.get("LOCKW", 0)); NOBACK = int(cfg.get("NOBACK", 0)); LOCK0 = float(cfg.get("LOCK0", 0)); PLOCKW = float(cfg.get("PLOCKW", 0)); SEIZE_AGE = int(cfg.get("SEIZE_AGE", 40)); MINC_T = int(cfg.get("MINC_T", 250)); OPT = int(cfg.get("OPT", 1)); EXCL = int(cfg.get("EXCL", 1)); FORCE_HOME = int(cfg.get("FORCE_HOME", 1))
+    SAFE = float(cfg.get("SAFE", 0)); ETW = float(cfg.get("ETW", 0)); ROUTE = int(cfg.get("ROUTE", 0)); HOME_MARGIN = int(cfg.get("HOME_MARGIN", 2)); THRC = float(cfg.get("THRC", 4)); FUTC = float(cfg.get("FUTC", 2)); TGTW = float(cfg.get("TGTW", 0)); SAFE2 = float(cfg.get("SAFE2", 0)); MINC = int(cfg.get("MINC", 0)); SIDEW = float(cfg.get("SIDEW", 0)); SEIZE_R = int(cfg.get("SEIZE_R", 0)); HYST = float(cfg.get("HYST", 0)); COMPW = float(cfg.get("COMPW", 0)); PLOPT = int(cfg.get("PLOPT", 1)); LOCKW = float(cfg.get("LOCKW", 0)); NOBACK = int(cfg.get("NOBACK", 0)); LOCK0 = float(cfg.get("LOCK0", 0)); ETH = float(cfg.get("ETH", 0)); PLOCKW = float(cfg.get("PLOCKW", 0)); SEIZE_AGE = int(cfg.get("SEIZE_AGE", 40)); MINC_T = int(cfg.get("MINC_T", 250)); OPT = int(cfg.get("OPT", 1)); EXCL = int(cfg.get("EXCL", 1)); FORCE_HOME = int(cfg.get("FORCE_HOME", 1))
     STAY_P = float(cfg.get("STAY_P", 0.5)); HOME_P = float(cfg.get("HOME_P", 0.5)); SAMPLE = int(cfg.get("SAMPLE", 1))
     import m2fit.policy as _pol
     _pol.ECON = bool(int(cfg.get("ECON", 1)))
@@ -98,6 +98,8 @@ def make_agent(cfg=None):
             if home and ROUTE:                            # shortest safe path home (BFS around threatened cells)
                 # future cells: mild cost for currently threatened ones (threats move); the immediate cell pays THRC below
                 cost = np.zeros(225) if thr_cells is None else FUTC * thr_cells.astype(float) + (0 if not SAFE2 else 2 * SAFE2 * thr2)
+                if ETH and cargo > 0:                     # enemy-tree absorption on the way home (10%/step of cargo)
+                    cost = cost + ETH * b["etree9"] * cargo / 100.0
                 for q in ebase: cost[q] = 50
                 hd = _bfs(tg, cost)
             best = None
@@ -109,10 +111,10 @@ def make_agent(cfg=None):
                 if thr_cells is not None and SAFE2:
                     pen += SAFE2 * thr2[nxt] * min(1.0, cargo / 100.0)
                 if ETW and cargo > 0:
-                    pen += ETW * b["etree8"][nxt] * cargo / 100.0
+                    pen += ETW * b["etree9"][nxt] * cargo / 100.0
                 if hd is not None:
                     c_ = hd[nxt] + (100 if nxt in chosen else 0) + (THRC if thr_cells is not None and thr_cells[nxt] else 0) + (0.5 if d is None and nxt != tg else 0) \
-                        + (2 * SAFE2 * thr2[nxt] if thr_cells is not None and SAFE2 else 0)
+                        + (2 * SAFE2 * thr2[nxt] if thr_cells is not None and SAFE2 else 0) + ETH * b["etree9"][nxt] * cargo / 100.0
                     key = (-c_, sc[k], -k)
                 else:
                     key = (sc[k] - pen, -X[k, 1], -k)

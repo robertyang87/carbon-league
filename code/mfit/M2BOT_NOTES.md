@@ -93,3 +93,19 @@ to dg5 (8 games) and m2bot v4b loses -1424 to base_v53 (8 games), so m2bot is ro
 2. Opening economy: cash at step 100 is 700 vs M2's 1600; M2 plants ~5 trees by step 50, we ~2.4 (planters hunt
    before planting, and cash is short).
 3. Tree war: our trees live 24 steps (dg5's 37); protect own trees / seize young enemy trees with a learned rule.
+
+## Follow-up 2026-11-10 (user diagnosis: loaded cars drove home through enemy trees)
+* Fix: new board array `etree9` = enemy trees within Chebyshev 1 INCLUDING the tree's own cell (fastsim phase 6
+  absorbs collectors on the tree cell and its 8-ring). Used by the ETW step penalty, the ECON veto, and the new ETH term
+  (ETH*etree9*cargo/100 in both the home Dijkstra cell cost and the per-step home key). Fitted feature etree8 unchanged.
+* vs dg5, 100 games each (host 4): etree9 only (ETH 0) -5983 (se 124); ETH 1.25 -5754 (132); ETH 2 -5732 (125);
+  ETH 3 -5711 (131) -> DEFAULT now has ETH=3. 0 wins in all.
+* vs nn_master64 (Mac, 48 games; host copy of exp/nn_master64.py has Mac paths): ETH 0 -4405 (se 279), ETH 3 -3655 (340),
+  0 wins; dep 6180 vs 8209, tree income 2079 vs 4484.
+* Seizing: the fitted planter target tree already seizes ~19 trees/game (bigeval 'seized'; M2 ~13). The extra
+  seize-first override makes it worse: SEIZE_R 3 -6170, SEIZE_R 6 -6431, SEIZE_R 6 age<=30 -6161 (vs -5711);
+  more seizes (21.9 / 25.6) but lower own tree income (1239 / 1165 vs 1332). Left off.
+* Planter ledger (m2fit/plledger.py; m2bot vs dg5 4 games / M2 vs our nets 20 replays):
+  planters/game 41.5 vs M2 37.4; planter life 13.8 vs 13.5; plants+seizes 34-40 vs 42.6; tree life 22-25 vs 30.5;
+  income per tree-step 1.5-1.9 vs 2.28 (dg5 2.2-2.6). Deaths are ~all planter-planter clashes (98%) for M2, dg5 and us;
+  zero-yield deaths ~25/game for us vs 14.4 for M2. Tree ends: ~19 withered + 12-20 seized per game for us.
