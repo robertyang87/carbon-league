@@ -85,3 +85,8 @@ python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrS.py "{$BASE, $CAP, 'TEA
 # Grove1 late-teacher tests: m2t3BrA = slot 2 the whole game; m2t3BrL = slot 2 until 270 then slot 7
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrA.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 999}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 270}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# switch-point sweep around m2t3BrL: slot 2 until N then slot 7
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL260.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 260}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL265.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 265}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL275.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 275}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL280.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 280}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
