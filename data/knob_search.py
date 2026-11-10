@@ -95,7 +95,7 @@ def main():
         p = os.path.join(out, "agents", f"us_{i}.py")
         if not os.path.exists(p):
             open(p, "w").write(US_TMPL % dict(factory=factory, mac=json.dumps(c)))
-    for name, path in opps.items():
+    for name, path in opps.items() if not only else ():      # a report must not touch the agent files of a running search
         open(os.path.join(out, "agents", f"opp_{name}.py"), "w").write(OPP_TMPL % dict(path=os.path.abspath(path)))
     gp = os.path.join(out, "games.jsonl")
     done = {}
