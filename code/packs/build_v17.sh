@@ -78,3 +78,5 @@ python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BL2.py "{$BASE, $CAP, 'TEA
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BLN.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $L2, 'WT_NEW_ONLY': True}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 ST="'KEY_LATE_CARGO': True, 'KEY_LATE_STEP': 270, 'MAX_KEY_LATE': 5, 'KLC_MIN': 10.0, 'MAX_BR_LATE': 21"   # endgame short trips: loaded cars (>= 10) searched from 270, up to 5, late branch cap 21
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BL2S.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $L2, $ST}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# measurement: m2t3Br + hard recruit cuts (no planters from 256, nothing from 276) -- upper bound of a late recruiting discipline
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BC.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'REC_CUT_PLANTER': 256, 'REC_CUT_ALL': 276}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz

@@ -1432,6 +1432,16 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         except Exception:
             stats["root_errors"] = stats.get("root_errors", 0) + 1
             return {}
+        if cfg.get("REC_CUT_ALL") is not None or cfg.get("REC_CUT_PLANTER") is not None:
+            # measurement only (upper bound of a late recruiting discipline): no planter recruits from REC_CUT_PLANTER,
+            # no recruits at all from REC_CUT_ALL; nothing else changes
+            try:
+                bids = set(obs["players"][obs["player"]][1])
+                for b_ in [k for k in list(a) if k in bids]:
+                    if obs["step"] >= cfg.get("REC_CUT_ALL", 999) or (obs["step"] >= cfg.get("REC_CUT_PLANTER", 999) and a[b_] == "RECPLANTER"):
+                        a.pop(b_); stats["rec_cut"] = stats.get("rec_cut", 0) + 1
+            except Exception:
+                stats["errors"] += 1
         if cfg.get("PLANTER_AVOID") and obs["step"] <= cfg.get("PA_STEP", 999):
             try:
                 a = planter_avoid(obs, a)
