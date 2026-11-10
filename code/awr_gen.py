@@ -13,7 +13,9 @@ Our agent module must accept env overrides AWR_TAU / AWR_SEED (see exp/awr_us.py
 Whole games (self-play rounds on cloud hosts): AWR_STEPS=300 plays to the end and the reward is the final score
 difference (cash, ours minus theirs; trees and cargo are worth nothing after the last step).
 Every finished game is appended to OUT_DIR/awr_raw.jsonl at once, and a rerun with the same arguments skips the games
-already there (spot instances get reclaimed); awr.jsonl and index.json are written when all games are done."""
+already there (spot instances get reclaimed); awr.jsonl and index.json are written when all games are done.
+AWR_TAG=<name> prefixes every game key and file name. Corpora that will be built into one dataset MUST have different
+tags (or different seed ranges): cnet2_build dedups games by file name. Existing corpora: awr_rekey.py."""
 import gzip
 import json
 import os
@@ -78,7 +80,7 @@ def play(task):
     reward = val[side] - val[1 - side]
     if STEPS >= 299:
         reward = float(st["cash"][side]) - float(st["cash"][1 - side])
-    key = f"awr_{seed}_{k}"
+    key = (os.environ["AWR_TAG"] + "_" if os.environ.get("AWR_TAG") else "") + f"awr_{seed}_{k}"
     fn = os.path.join(out, "replays", key + ".json.gz")
     with gzip.open(fn, "wt") as fh:
         json.dump({"steps": steps, "info": {"TeamNames": [AWR_NAME if p == side else "opp" for p in (0, 1)]}}, fh)

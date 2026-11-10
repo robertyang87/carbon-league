@@ -49,7 +49,7 @@ def rescore(corpus):
         # a 300-step game that ends exactly level is a perfect mirror game (our net against an identical deterministic
         # copy on the 4-fold symmetric map: both sides play the same moves, units cancel on the symmetry lines, some
         # games never develop at all). It carries no information: weight 0 and not part of the seed's baseline.
-        g["mirror"] = bool(g.get("whole") and abs(g["reward2"]) < 1e-6)
+        g["mirror"] = bool(g.get("whole") and abs(g["reward2"]) < 0.05)       # same rule as awr_signal (reward rounded to 0.1)
         if not g["mirror"]:
             by[g["seed"]].append(g)
     for g in games:
@@ -76,6 +76,12 @@ def main():
         beta *= 1.25
     wkey = {g["key"]: 0.0 if g["mirror"] else float(min(wmax, np.exp(g["adv2"] / beta))) for g in games}
     meta = json.load(open(os.path.join(ds, "meta.json"))); gid = np.load(os.path.join(ds, "gid.npy"))
+    if len(wkey) != len(games):
+        sys.exit(f"awr_weights: {len(games)} games but only {len(wkey)} distinct keys -- the corpora share game keys "
+                 f"(same seed range). Run awr_rekey.py on each corpus (a different TAG each) and rebuild the dataset.")
+    if len(meta["games"]) != len(games):
+        sys.exit(f"awr_weights: the dataset holds {len(meta['games'])} games, the corpora {len(games)} -- rebuild the dataset "
+                 f"from exactly these corpora (cnet2_build drops games whose file name it has already seen).")
     gw = np.array([wkey[g["key"].replace(".json.gz", "")] for g in meta["games"]], np.float32)
     w = gw[gid].astype(np.float32)
     kind = np.load(os.path.join(ds, "tok_kind.npy"), mmap_mode="r")

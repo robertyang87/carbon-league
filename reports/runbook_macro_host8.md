@@ -105,6 +105,10 @@ for O in m2s m2 grove1 scout1; do
 done
 ```
 
+**注意（2026-11-11 更正）**：几个目录用了同一段种子，对局文件名完全相同，而建库按文件名去重，只会建第一个目录。
+造的时候给每个目录加 `AWR_TAG=<对手名>`；已经造好的目录，建库前各跑一次 `python3 awr_rekey.py ../data/sp1_<对手名> <对手名>`。
+`awr_weights.py` 现在遇到重名或局数对不上会直接报错退出。
+
 **验证**
 - 每个目录有 `index.json` 和 `awr.jsonl`，局数 = 500 × 5 = 2500。
 - `python3 ../data/unit_ledger.py corpus ../data/sp1_m2s awr_us`：能出完整报表，"TREE BUSINESS" 的 income 不为 0。
