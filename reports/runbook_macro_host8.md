@@ -129,10 +129,15 @@ BC_DEVICE=cuda BC_RAM=1 BC_THREADS=8 BC_SAVE_EPOCHS=0 BC_INIT=<Grove1 策略网�
   ../.venv/bin/python cnet2_train.py ../data/cnet2_ds_sp1A ../data/weights/cnet2_b128sp1.npz 2 '{"C":128,"NB":8,"D":128}'
 ```
 
-**没在云端验证过的地方（第一次跑要盯）**
-- 整局的建库和训练云端没跑过，只验证了生成和账本。`build_awr.py` 若对 100 步以后的行有假设，会在这里暴露。
-- `awr_weights.py` 打印的 `ess_frac` 应不低于 0.2，`w_max` 不超过 20。
-- 这一轮是"按整局分差加权"，只对种植员和基地槽位有权重（车的权重为 0）。逐个招募、逐棵树的改标（`macro_labels.py`）还没写，等这一轮看到账动了再做。
+**云端小规模验证过（2026-11-10 深夜，120 局整局对局，CPU）**
+- `build_awr.py`（`CNET2_STEP_MAX=300`）、`awr_weights.py`、`cnet2_train.py`（只训解码器、从 Grove1 权重出发）三步都跑通：
+  120 局 → 35880 行（每局 299 行），`ess_frac` 0.33，训练 1 轮正常结束。没有混锚定集（云端没有那份数据）。
+- 数据集大小：每局约 3.2 MB（主要是 `maps.npy`）。1 万局约 32 GB、约 300 万行；主干缓存约 11 GB。
+  Spark 的 128 GiB 内存放得下，但传输和建库前先确认磁盘空间。
+- `awr_weights.py` 打印的 `ess_frac` 应不低于 0.2；`w_max` 会顶到上限 20，属正常；`mirror_dropped` 是被剔除的镜像局数
+  （Grove1 对一模一样的自己会打出分差正好为 0 的对称局，只出现在 `sp1_grove1`）。
+- 没验证的：1 万局规模下的耗时和内存，以及混入锚定集（`concat_ds.py`）这一步。
+- 这一轮是"按整局分差加权"，只对种植员和基地槽位有权重（车的权重为 0）。
 
 ## 第 5 步：验收新模型（`plan_macro_training.md` B5）
 
