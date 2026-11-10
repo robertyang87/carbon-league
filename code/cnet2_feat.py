@@ -71,10 +71,17 @@ def lc(x):
     return min(math.log1p(max(float(x), 0.0)) / LOGC, 1.5)
 
 
+_MOVE_D = [{} for _ in range(N)]                # cell -> {target cell: first move index reaching it}
+for _a in range(N):
+    for _k in range(4, -1, -1):                   # descending so the lowest index wins (as np.nonzero(...)[0][0] did)
+        _MOVE_D[_a][int(DEST[_a, _k])] = _k
+DEST1_L = [[int(x) for x in DEST[_a, 1:]] for _a in range(N)]   # 4-neighbours as Python ints (hot loops)
+NB8_L = [[int(x) for x in NB8[_a]] for _a in range(N)]
+
+
 def move_between(a, b):
     """move index taking cell a to cell b (canonical or raw, same geometry); 5 if not adjacent."""
-    hit = np.nonzero(DEST[a] == b)[0]
-    return int(hit[0]) if len(hit) else 5
+    return _MOVE_D[int(a)].get(int(b), 5)
 
 
 class Feat:
@@ -87,7 +94,8 @@ class Feat:
         self.prev_w = None
         self.prev_trees = None
         self.hist = {}          # uid -> list of (canon cell, cargo, move) newest last
-        self.infer_mirror = getattr(self, "infer_mirror", False)   # INFER_MIRROR: copy carbon inferred from any collector's
+        self.infer_mirror = getattr(self, "infer_mirror", False)
+        self.infer_tree = getattr(self, "infer_tree", False)   # INFER_MIRROR: copy carbon inferred from any collector's
         self.inf = {}           # first stationary gain to the cell's never-seen mirrors; pos -> (carbon before collection, step)
 
     def cpos(self, i):
@@ -111,12 +119,11 @@ class Feat:
         before = est.copy()
         adj_any = set()
         for p in trees:
-            adj_any.update(int(n) for n in DEST[p, 1:])
+            adj_any.update(DEST1_L[p])
         # absorption by old trees on 4-neighbours not holding a staying collector / tree
         red = np.zeros(N)
         for p in old_trees:
-            for n in DEST[p, 1:]:
-                n = int(n)
+            for n in DEST1_L[p]:
                 if n in tree_cells or n in stay_coll:
                     continue
                 red[n] += before[n] * ABS
@@ -125,7 +132,7 @@ class Feat:
         for pos, (side, c0, c1) in stay_coll.items():
             if pos in tree_cells:
                 continue
-            toll = any(int(n) in trees and trees[int(n)][0] != side for n in NB8[pos]) or \
+            toll = any(n in trees and trees[n][0] != side for n in NB8_L[pos]) or \
                 (pos in trees and trees[pos][0] != side)
             d = c1 - c0
             if not toll and d >= 0:
@@ -203,6 +210,33 @@ class Feat:
         self.est[fill] = self.est[msrc[fill]]
         unk = never & ~has_m
         self.est[unk] = min(PRIOR * REGEN ** step, CAP)
+        if getattr(self, "infer_tree", False) and self.prev_w is not None:
+            # INFER_TREE: every tree's last absorption = 3.75% of its 4 neighbours' carbon (cells holding a tree or a staying
+            # collector are skipped) + 10% of the cargo of the other side's collectors around it; the unknown neighbours
+            # share what is left, and the value goes to their never-seen mirrors (est only)
+            tinfo = obs.get("trees") or {}
+            coll_now = {pos for (p_, pos, c_, isc) in workers.values() if isc}
+            for p_ in (0, 1):
+                for tid, tv in players[p_][3].items():
+                    ab = float((tinfo.get(tid) or [None, 0])[1] or 0.0); tp = int(tv[0])
+                    if ab <= 0 or int(tv[1]) < 2:
+                        continue
+                    area = {tp} | {int(n) for n in NB8[tp]}
+                    cargo = sum(0.1 * c_ for (s_, wp, c_, isc) in self.prev_w.values() if isc and s_ != p_ and wp in area)
+                    cand = [int(n) for n in DEST[tp, 1:] if int(n) not in trees and int(n) not in coll_now]
+                    if not cand:
+                        continue
+                    total = max(ab - cargo, 0.0) / ABS
+                    known = [n for n in cand if self.last_step[MIRROR[n]].max() >= 0]
+                    unknown = [n for n in cand if n not in known]
+                    if not unknown:
+                        continue
+                    v = max(total - sum(self.est[n] for n in known), 0.0) / len(unknown)
+                    for n in unknown:
+                        for m in MIRROR[n]:
+                            m = int(m)
+                            if m not in trees and m not in bases[0] and m not in bases[1]:
+                                self.est[m] = min(v, CAP)
         if getattr(self, "infer_mirror", False) and getattr(self, "inf", None):
             near_tree = set()
             for tp in trees:
@@ -339,9 +373,9 @@ class Feat:
                 tok_pos[s] = self.cpos(pos); tok_kind[s] = kc if isc else kp
                 tok_mask[s] = True; tok_cargo[s] = cargo
                 h = self.hist[uid]
-                for r, (c_, g_, m_) in enumerate(h):
-                    rr = H - len(h) + r
-                    hc[s, rr] = c_; hg[s, rr] = g_; hm[s, rr] = m_
+                if h:
+                    k_ = H - len(h)
+                    hc[s, k_:] = [e[0] for e in h]; hg[s, k_:] = [e[1] for e in h]; hm[s, k_:] = [e[2] for e in h]
                 if start == 0:
                     own_uid[s] = uid
         for start, p, kb in ((10, me, 2), (22, en, 5)):

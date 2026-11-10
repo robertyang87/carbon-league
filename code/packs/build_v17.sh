@@ -81,7 +81,7 @@ python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BL2S.py "{$BASE, $CAP, 'TE
 # measurement: m2t3Br + hard recruit cuts (no planters from 256, nothing from 276) -- upper bound of a late recruiting discipline
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BC.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'REC_CUT_PLANTER': 256, 'REC_CUT_ALL': 276}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 # Grove1 + endgame short trips only (no late base / planter search)
-python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrS.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $ST}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrS.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'KEY_LATE_CARGO': True, 'KEY_LATE_STEP': 270, 'MAX_KEY_LATE': 5, 'KLC_MIN': 10.0, 'MAX_BR_LATE': 21}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 # Grove1 late-teacher tests: m2t3BrA = slot 2 the whole game; m2t3BrL = slot 2 until 270 then slot 7
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrA.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 999}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 270}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
@@ -133,3 +133,11 @@ python3 cnet2_search_pack.py exp/fx_m2t3OPA.py "{$BASE, $CAP, 'CLOCK': 'sims', '
 python3 cnet2_search_pack.py exp/fx_m2t3OPB.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'OPEN_PL': 'B', 'OPEN_PL_END': 15}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz   # opening planter recruit variant B
 python3 cnet2_search_pack.py exp/fx_m2t3OPAB.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'OPEN_PL': 'AB', 'OPEN_PL_END': 15}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz   # opening planter recruit variant AB
 python3 cnet2_search_pack.py exp/fx_m2t3OPB10.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'OPEN_PL': 'B', 'OPEN_PL_END': 10}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3IT.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'INFER_TREE': True}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz   # tree-absorption belief
+# phase-2 comparisons (fixed budget): rollout depth 5 at 20 sims vs depth 3 at 40 sims; short trips (ST) at 40 sims vs Grove1 at 40
+python3 cnet2_search_pack.py exp/fx_m2t3S20H5.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'H': 5}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3S40BrS.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (40,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'KEY_LATE_CARGO': True, 'KEY_LATE_STEP': 270, 'MAX_KEY_LATE': 5, 'KLC_MIN': 10.0, 'MAX_BR_LATE': 21}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# ROOT_S probes: per-candidate cap r with an unbounded budget (every candidate gets exactly r sims)
+python3 cnet2_search_pack.py exp/fx_m2t3RS6.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (999,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'ROOT_S': 6}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3RS7.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (999,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'ROOT_S': 7}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3RS8.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (999,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'ROOT_S': 8}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
