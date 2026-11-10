@@ -1,7 +1,7 @@
 # 执行单：八号机上的旋钮搜索 + 第一轮整局对局训练（2026-11-10）
 
 给本地 Mac 上的代理。按顺序做，每一步后面是它的验证；验证不过就停在那一步并回报，不要往下走。
-方案背景见 `reports/plan_macro_training.md`。代码分支 `cnet2-search-v12`，要求拉到 `e9b1450` 或更新。
+方案背景见 `reports/plan_macro_training.md`。代码分支 `cnet2-search-v12`，要求拉到 `cb5ae6a` 或更新。
 
 机器：八号机 `root@47.101.31.141`（64 物理核倚天 710，Arm，128 GiB，盘 100 GiB，抢占式、回收即释放、盘不保留）。
 训练在 DGX Spark。今晚 00:05 的探针提交照原计划，不依赖本执行单；第 3 步过线的配置才叠进探针。
@@ -18,7 +18,10 @@ python3 -c "import numpy, platform; print(platform.machine(), numpy.__version__)
 - 在 Mac 上起一个每 10 分钟的增量同步（只拉新增文件，不要反复整目录传，出向流量 ¥0.8/GB）：
   `rsync -az --ignore-existing root@47.101.31.141:carbon/data/{ks_full,sp1_*} <Mac 上的目录>/`
 
-**验证**：`git log` 显示 `e9b1450` 或更新；`platform.machine()` 是 `aarch64`；同步跑过一次且 Mac 上能看到文件。
+- 回报两个替身的现状：Master2s 替身和 M2 替身（m2s2）最近一次考试对真身的还原度（一致率或对同一批对手的分差）。
+  替身明显弱于真身的话，本地分差要打折看，以探针在天梯上的账为准。
+
+**验证**：`git log` 显示 `cb5ae6a` 或更新；`platform.machine()` 是 `aarch64`；同步跑过一次且 Mac 上能看到文件。
 
 ## 第 1 步：测速（约 2 分钟）
 
