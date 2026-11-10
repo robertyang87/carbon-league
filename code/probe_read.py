@@ -26,13 +26,24 @@ for m in keep:
                 if tid not in P(t - 1, p)[3]:
                     pl[p][1 if tid in P(t - 1, 1 - p)[3] else 0] += 1
     T = len(st) - 1
+    seg = []      # per 100-step segment: car-steps / planter-steps (ours, theirs)
+    for a0, a1 in ((1, 100), (101, 200), (201, T)):
+        cs = [0, 0]; ps = [0, 0]
+        for t in range(a0, a1 + 1):
+            for q, p in ((0, me), (1, 1 - me)):
+                for w in P(t, p)[2].values():
+                    (cs if w[2] == "COLLECTOR" else ps)[q] += 1
+        seg.append((cs, ps))
     r = dict(op=op, margin=m["scores"][who] - m["scores"]["b" if who == "a" else "a"], t50=(len(P(50, me)[3]), len(P(50, 1 - me)[3])),
              t100=(len(P(100, me)[3]), len(P(100, 1 - me)[3])), pl=(pl[me][0], pl[me][1], pl[1 - me][0], pl[1 - me][1]),
              strand=(sum(float(w[1]) for w in P(T, me)[2].values()), sum(float(w[1]) for w in P(T, 1 - me)[2].values())))
-    fam["M" if "RyanX" in op else "Master"].append(r)
+    r["seg"] = seg
+    fam["M" if "RyanX" in op else "Master2s" if op.endswith("Master2s") else "Master"].append(r)
     print(f"{op:30s} {r['margin']:+7.0f}  t50 {r['t50'][0]}/{r['t50'][1]}  t100 {r['t100'][0]}/{r['t100'][1]}  planted/seized us {r['pl'][0]}/{r['pl'][1]} them {r['pl'][2]}/{r['pl'][3]}  cargo left {r['strand'][0]:.0f}/{r['strand'][1]:.0f}")
 for k, v in fam.items():
     if v:
         mm = lambda f: S.mean(f(x) for x in v)
         print(f"== vs {k} family, {len(v)} games: wins {sum(x['margin'] > 0 for x in v)}, margin {mm(lambda x: x['margin']):+.0f}, t50 {mm(lambda x: x['t50'][0]):.1f}/{mm(lambda x: x['t50'][1]):.1f}, "
               f"t100 {mm(lambda x: x['t100'][0]):.1f}/{mm(lambda x: x['t100'][1]):.1f}, planted/seized us {mm(lambda x: x['pl'][0]):.1f}/{mm(lambda x: x['pl'][1]):.1f} them {mm(lambda x: x['pl'][2]):.1f}/{mm(lambda x: x['pl'][3]):.1f}, cargo left {mm(lambda x: x['strand'][0]):.0f}/{mm(lambda x: x['strand'][1]):.0f}")
+        print("     car-steps us/them by segment " + "  ".join(f"{mm(lambda x, i=i: x['seg'][i][0][0]):.0f}/{mm(lambda x, i=i: x['seg'][i][0][1]):.0f}" for i in range(3))
+              + " | planter-steps " + "  ".join(f"{mm(lambda x, i=i: x['seg'][i][1][0]):.0f}/{mm(lambda x, i=i: x['seg'][i][1][1]):.0f}" for i in range(3)))

@@ -3,7 +3,7 @@ import json, os, sys
 _C = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 sys.path.insert(0, _C)
 import cnet2_search as _S
-CONF = {'OPEN_T': float(os.environ.get('AWR_TAU', '0')), 'OPEN_STEPS': 100, 'OPEN_SEED': int(os.environ.get('AWR_SEED', '0')), 'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'RW': 'cnet2_s64_q8.npz', 'TEACHER': 5, 'TEACHER_LATE': 7, 'LATE_STEP': 240}
+CONF = {'OPEN_T': float(os.environ.get('AWR_TAU', '0')), 'OPEN_STEPS': 100, 'OPEN_KINDS': tuple(k for k in os.environ.get('AWR_KINDS', '').split(',') if k) or None, 'OPEN_SEED': int(os.environ.get('AWR_SEED', '0')), 'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'RW': 'cnet2_s64_q8.npz', 'TEACHER': 5, 'TEACHER_LATE': 7, 'LATE_STEP': 240}
 _WTS = os.path.join(_C, "..", "data", "weights", 'cnet2_b128dg5_ep5.npz')
 _AG = None
 
