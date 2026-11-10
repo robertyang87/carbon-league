@@ -459,7 +459,7 @@ def hunter_acts(obs, me, acts_o, cfg):
     return out
 
 
-def make_search_agent(conf=None, weights=None, rweights=None):
+def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     cfg = dict(DEFAULTS)
     cfg.update(conf or {})
     wdir = os.path.join(HERE, "..", "data", "weights")
@@ -473,6 +473,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
         xw = os.path.join(HERE, "..", xw)
     xpol = NP.Policy(load_weights(xw)) if xw is not None else None      # extra (structurally different) mixture component
     XT = int(cfg.get("XNET_T", 1))
+    opol = CachePolicy(load_weights(oweights)) if oweights is not None else None   # opening net (steps < OPEN_NET_STEP, no search)
     st = {"f": None, "fo": None}
     pool = []
     stats = {"steps": 0, "searched": 0, "branches": 0, "changed": 0, "branch_steps": 0, "worst_ms": 0.0,
@@ -654,7 +655,10 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             st["T_now"] = TL if (TL is not None and obs["step"] >= ls) else T   # rollouts use the same slot
             if cfg.get("TEACHER_LATE2") is not None and obs["step"] >= cfg.get("LATE_STEP2", 999):
                 st["T_now"] = cfg["TEACHER_LATE2"]          # optional third phase (e.g. 7 from 240, then 2 from 280)
-            y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
+            if opol is not None and obs["step"] < cfg.get("OPEN_NET_STEP", 0):
+                y, lg0, _ = opol.act(x, f.aux, teacher=cfg.get("OPEN_NET_T", 2))
+            else:
+                y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
         st["base_fix"] = {}      # base slots set by a rule layer this step: every search candidate / guard re-decode keeps them
         st["guard_base"] = set() # base slots the bankruptcy guard forced to recruit a collector this step (never searched)
@@ -727,7 +731,7 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             elif cfg["OPPID"]:
                 opp_id(obs, xo)
             left = 299 - obs["step"]
-            if not cfg["SEARCH"] or left < cfg["ENDGAME_STOP"]:
+            if not cfg["SEARCH"] or left < cfg["ENDGAME_STOP"] or (opol is not None and obs["step"] < cfg.get("OPEN_NET_STEP", 0)):
                 return acts
             if cfg["MODE"] == "mcts":
                 out = _mcts(obs, x, y, acts, xo, left, t0, tw)
