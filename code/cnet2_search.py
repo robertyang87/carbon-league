@@ -1383,6 +1383,51 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         alive = sum(1 for q in (0, 1) if isinstance(P[q][3], dict) for v in P[q][3].values() if int(v[1]) < 50)
         return 20.0 + 5.0 * (1.235 ** alive)
 
+    def tree_gate(obs, acts):
+        """TG: no planting when our price is >= TG_MAX, or (from TG_LATE_STEP) above TG_LATE_MAX. Planting happens
+        whenever a planter stays on a treeless, non-base cell with the cash, so a gated planter that planned to stay
+        there takes one step instead (toward the nearest enemy tree: seizing is unaffected; else any free cell)."""
+        me = obs["player"]; P = obs["players"]; step = obs["step"]
+        price = plant_price(obs, me)
+        if not (price >= cfg.get("TG_MAX", 1e9) or (step >= cfg.get("TG_LATE_STEP", 999) and price > cfg.get("TG_LATE_MAX", 1e9))):
+            return acts
+        tcells = {int(v[0]) for q in (0, 1) if isinstance(P[q][3], dict) for v in P[q][3].values()}
+        etrees = [int(v[0]) for v in P[1 - me][3].values()] if isinstance(P[1 - me][3], dict) else []
+        bcells = {int(b) for q in (0, 1) for b in P[q][1].values()}
+        out = dict(acts)
+        claimed = {}
+        for u2, w2 in P[me][2].items():
+            mv2 = out.get(u2); c2 = _nxt(w2[0], mv2) if mv2 in MV else int(w2[0])
+            claimed[c2] = claimed.get(c2, 0) + 1
+        for uid, w in P[me][2].items():
+            if w[2] != "PLANTER" or out.get(uid) in MV:
+                continue
+            pos = int(w[0])
+            if pos in tcells or pos in bcells:
+                continue                                  # staying here seizes / does nothing: not a plant
+            opts = [m for m in MV if not claimed.get(_nxt(pos, m)) and _nxt(pos, m) not in bcells]
+            if not opts:
+                continue
+            key = (lambda m: min(F.DIST[_nxt(pos, m), e] for e in etrees)) if etrees else (lambda m: 0)
+            pick = min(opts, key=lambda m: (key(m), m))
+            claimed[pos] -= 1; claimed[_nxt(pos, pick)] = claimed.get(_nxt(pos, pick), 0) + 1
+            out[uid] = pick; stats["tg"] = stats.get("tg", 0) + 1
+        return out
+
+    def recruit_gate(obs, acts):
+        """RG: from RG_STEP, with >= RG_PL planters in play and >= RG_W workers, a base that would recruit a planter
+        recruits a collector instead (the engine skips it if the cash is short)."""
+        me = obs["player"]; P = obs["players"]
+        mine = list(P[me][2].values())
+        if obs["step"] < cfg.get("RG_STEP", 60) or len(mine) < cfg.get("RG_W", 8) or \
+                sum(1 for w in mine if w[2] == "PLANTER") < cfg.get("RG_PL", 2):
+            return acts
+        out = dict(acts)
+        for b in P[me][1]:
+            if out.get(b) == "RECPLANTER":
+                out[b] = "RECCOLLECTOR"; stats["rg"] = stats.get("rg", 0) + 1
+        return out
+
     def planter_explore(obs, acts):
         """opening information: PX_MODE 'greedy' -- a planter that has not planted yet (step < PX_END) whose planned move
         reveals no never-seen cell (mirrors included: the start map is 4-fold symmetric) takes the move that reveals the
@@ -1664,6 +1709,16 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                             a[b] = "RECPLANTER"; rec_pl += 1; spend += 30.0; stats["opl"] = stats.get("opl", 0) + 1
             except Exception:
                 stats["opl_errors"] = stats.get("opl_errors", 0) + 1
+        if cfg.get("TG_MAX") is not None or cfg.get("TG_LATE_STEP") is not None:
+            try:
+                a = tree_gate(obs, a)
+            except Exception:
+                stats["tg_errors"] = stats.get("tg_errors", 0) + 1
+        if cfg.get("RG_STEP") is not None:
+            try:
+                a = recruit_gate(obs, a)
+            except Exception:
+                stats["rg_errors"] = stats.get("rg_errors", 0) + 1
         if cfg.get("PX_MODE") and obs["step"] < max(cfg.get("PX_END", 30), cfg.get("PX_S0", 8) + 15):
             try:
                 a = planter_explore(obs, a)
