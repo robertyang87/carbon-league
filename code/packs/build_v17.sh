@@ -111,3 +111,6 @@ python3 cnet2_search_pack.py exp/fx_m2t3SEt.py "{$BASE, $CAP, 'CLOCK': 'sims', '
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrO.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'OPEN_NET_STEP': 100, 'OPEN_NET_T': 2}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz $W/cnet2_b128awr_r1.npz
 python3 cnet2_search_pack.py exp/fx_m2t3O.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'OPEN_NET_STEP': 100, 'OPEN_NET_T': 2}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz $W/cnet2_b128awr_r1.npz
 python3 cnet2_search_pack.py exp/fx_m2t3S80.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (80,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# exam budget is 20 sims from 2026-11-10 (ladder re-enactment: Grove1 runs 2 rounds of 10 there)
+python3 cnet2_search_pack.py exp/fx_m2t3S30.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (30,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx20_m2t3O.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'OPEN_NET_STEP': 100, 'OPEN_NET_T': 2}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz $W/cnet2_b128awr_r1.npz
