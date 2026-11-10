@@ -19,7 +19,7 @@ def main(a, b, s0, n, tag):
         for f in as_completed(futs):
             r = f.result(); rows.append(r)
             g = {"seed": r.get("seed"), "side": r.get("policy_side"), "margin": round(r["margin"]) if "margin" in r else None,
-                 "err": r.get("error"), "t": time.strftime("%H:%M:%S")}
+                 "err": r.get("error"), "t": time.strftime("%H:%M:%S"), "serr": r.get("a_errors", 0)}
             if "ledger_pol" in r:
                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
@@ -49,6 +49,9 @@ def main(a, b, s0, n, tag):
            "games": [[r.get("seed"), r.get("policy_side"), round(r["margin"])] for r in rows if "margin" in r]}
     open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k != "games"}), flush=True)
     # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
+    rec["search_error_games"] = sum(1 for r in rows if r.get("a_errors"))
+    if rec["search_error_games"]:      # any exception inside the search / rule layers: the exam is not testing the intended code
+        print(json.dumps({"tag": tag, "WARN_SEARCH_ERRORS": rec["search_error_games"], "of": len(rows)}), file=sys.stderr, flush=True)
     if rec["changed0_games"]:
         print(json.dumps({"tag": tag, "WARN_SEARCH_NEVER_CHANGED": rec["changed0_games"], "of": rec["search_games"]}), file=sys.stderr, flush=True)
     if rec["err"] or rec["n"] < n:

@@ -323,13 +323,16 @@ def act_b(pol, xs, auxs, teachers, forced=None):
 
 # ---------------------------------------------------------------- helpers
 def feat_copy(f):
+    """every field of f (shallow), then private copies of the state that observe() mutates in place; a field added to
+    Feat later is carried automatically (the 2026-11-10 INFER bug was a field this function did not know)."""
     n = F.Feat.__new__(F.Feat)
-    n.seat = f.seat; n.step = f.step
+    n.__dict__.update(f.__dict__)
     n.est = f.est.copy(); n.last = f.last.copy(); n.last_step = f.last_step.copy()
-    n.prev_w = f.prev_w; n.prev_trees = f.prev_trees
     n.hist = {k: list(v) for k, v in f.hist.items()}
     n.own_uid = list(getattr(f, "own_uid", []))
-    n.aux = getattr(f, "aux", None)
+    if isinstance(getattr(f, "inf", None), dict):
+        n.inf = dict(f.inf)
+    n.infer_mirror = False; n.infer_tree = False   # branch copies never run the belief experiments
     return n
 
 
@@ -622,6 +625,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         if st["f"] is None or obs["step"] == 0 or st["f"].seat != me:
             st["f"] = F.Feat(me); st["fo"] = F.Feat(1 - me)
             st["f"].infer_mirror = bool(cfg.get("INFER_MIRROR"))
+            st["f"].infer_tree = bool(cfg.get("INFER_TREE"))
         f, fo = st["f"], st["fo"]
         if obs["step"] == 0 or "lpost" not in st:
             st["lpost"] = np.array([cfg["ID_PRIOR"] if k == OT else 0.0 for k in cfg["STYLES"]])
