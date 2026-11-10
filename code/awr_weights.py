@@ -9,7 +9,9 @@ Advantage: leave-one-out baseline over all games of the same seed (the greedy ga
   A_i = R_i - mean(R_j, j != i)   (lower variance than "minus the greedy game" alone).
 Weights: w = exp(A / beta); beta starts at std(A) and grows until the effective sample size
   (sum w)^2 / sum w^2 is at least ESS_MIN (default 20%) of the games -- otherwise a few lucky games dominate.
-uw (per unit) = 1 for planters and base slots, 0 for our collectors (cars stay the net's own)."""
+uw (per unit) = 1 for planters and base slots, 0 for our collectors (cars stay the net's own).
+AWR_CAR_ANCHOR=c (default 0): car tokens get the constant weight c regardless of the game's weight -- a self-anchor that
+keeps the cars where they are when no separate anchor dataset is mixed in (use 1)."""
 import gzip
 import json
 import os
@@ -88,12 +90,20 @@ def main():
     S = np.load(os.path.join(ds, "y.npy"), mmap_mode="r").shape[1]
     uw = np.ones((len(gid), S), np.float32)
     uw[:, :10] = (np.asarray(kind[:, :10]) != 0).astype(np.float32)
+    # Self-anchor for the cars. With weight 0 nothing holds the car outputs while the shared decoder is trained on the
+    # planter / base rows (round sp1 without an anchor set: car agreement 99.2% -> 93.0%). The cars in these games are
+    # never sampled, so their labels are the net's own moves: give every car token the constant weight AWR_CAR_ANCHOR,
+    # whatever the game's weight (the trainer multiplies w * uw, hence the division).
+    car_anchor = float(os.environ.get("AWR_CAR_ANCHOR", "0"))
+    if car_anchor > 0:
+        iscar = np.asarray(kind[:, :10]) == 0
+        uw[:, :10] = np.where(iscar, car_anchor / np.maximum(w, 1e-6)[:, None], uw[:, :10])
     np.save(os.path.join(ds, "w.npy"), w); np.save(os.path.join(ds, "uw.npy"), uw)
     r_old = np.array([g["reward"] for g in games]); r_new = np.array([g["reward2"] for g in games])
     print(json.dumps({"rows": int(len(gid)), "games": len(games), "mirror_dropped": int(nmir), "beta": round(beta, 1), "ess_frac": round(float(ess), 3),
                       "adv_sd": round(float(A.std()), 1), "reward_old_mean": round(float(r_old.mean()), 1),
                       "reward_new_mean": round(float(r_new.mean()), 1), "corr_old_new": round(float(np.corrcoef(r_old, r_new)[0, 1]), 3),
-                      "w_max": round(float(gw.max()), 2)}), flush=True)
+                      "w_max": round(float(gw.max()), 2), "car_anchor": car_anchor}), flush=True)
 
 
 if __name__ == "__main__":
