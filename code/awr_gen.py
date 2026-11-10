@@ -8,7 +8,12 @@ Advantage of a sampled game = its reward - the greedy game's reward on the same 
 Writes a corpus directory readable by cnet2_build (index.json + replays/*.json.gz, our side named AWR_NAME) and
 awr.jsonl (one line per game: file, seed, k, reward, advantage).
   usage: awr_gen.py OUT_DIR OUR_AGENT.py OPP_AGENT.py SEED0 NSEEDS K TAU [WORKERS]
-Our agent module must accept env overrides AWR_TAU / AWR_SEED (see exp/awr_us.py)."""
+Our agent module must accept env overrides AWR_TAU / AWR_SEED (see exp/awr_us.py, awr_us_env.py).
+
+Whole games (self-play rounds on cloud hosts): AWR_STEPS=300 plays to the end and the reward is the final score
+difference (cash, ours minus theirs; trees and cargo are worth nothing after the last step).
+Every finished game is appended to OUT_DIR/awr_raw.jsonl at once, and a rerun with the same arguments skips the games
+already there (spot instances get reclaimed); awr.jsonl and index.json are written when all games are done."""
 import gzip
 import json
 import os
@@ -18,7 +23,7 @@ from concurrent.futures import ProcessPoolExecutor
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 AWR_NAME = "awr_us"
-STEPS = 100
+STEPS = int(os.environ.get("AWR_STEPS", "100"))
 
 
 def _tree_value(carbon, trees):
@@ -53,10 +58,12 @@ def play(task):
             ob = {"step": o["step"], "players": o["players"], "carbon": [round(float(v), 2) for v in o["carbon"]], "player": p}
             if p == 0:
                 ob["full_carbon"] = full
+            if o.get("trees") is not None:
+                ob["trees"] = o["trees"]          # [creator, last absorption] per tree: unit_ledger's tree income
             row.append({"observation": ob, "action": acts[p] if acts else None, "status": "ACTIVE"})
         return row
     steps.append(snap(None))
-    for t in range(1, STEPS + 1):
+    for t in range(1, min(STEPS, 299) + 1):
         acts = [agents[p](sim.obs(p), E.CFG) for p in (0, 1)]
         sim.step(acts[0], acts[1])
         steps.append(snap(acts))
@@ -69,6 +76,8 @@ def play(task):
         trees = {tid: (t_["pos"], t_["age"]) for tid, t_ in st["trees"].items() if t_["player"] == p}
         val.append(cash + cargo + _tree_value(sim.carbon, trees))
     reward = val[side] - val[1 - side]
+    if STEPS >= 299:
+        reward = float(st["cash"][side]) - float(st["cash"][1 - side])
     key = f"awr_{seed}_{k}"
     fn = os.path.join(out, "replays", key + ".json.gz")
     with gzip.open(fn, "wt") as fh:
@@ -83,9 +92,15 @@ def main():
     os.makedirs(os.path.join(out, "replays"), exist_ok=True)
     tasks = [(out, us, opp, s, k, tau) for s in range(s0, s0 + ns) for k in range(K + 1)]
     res = []
-    with ProcessPoolExecutor(W) as ex:
-        for r in ex.map(play, tasks, chunksize=4):
-            res.append(r)
+    raw = os.path.join(out, "awr_raw.jsonl")
+    if os.path.exists(raw):
+        res = [json.loads(l) for l in open(raw) if l.strip()]
+        res = [r for r in res if os.path.exists(os.path.join(out, r["file"]))]
+    have = {(r["seed"], r["k"]) for r in res}
+    tasks = [t for t in tasks if (t[3], t[4]) not in have]
+    with ProcessPoolExecutor(W) as ex, open(raw, "a") as rf:
+        for r in ex.map(play, tasks, chunksize=1 if STEPS > 100 else 4):
+            res.append(r); rf.write(json.dumps(r) + "\n"); rf.flush()
     base = {r["seed"]: r["reward"] for r in res if r["k"] == 0}
     idx = []
     with open(os.path.join(out, "awr.jsonl"), "w") as fh:

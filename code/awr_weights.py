@@ -4,6 +4,7 @@ Reward (recomputed from each replay's final state at step 100, our side minus th
   cash + cargo + sum over standing trees of  4-neighbour carbon * (1 - 0.9625^min(50 - age, 30)) * p_survive,
   p_survive = 0.3 if an enemy planter stands within 1 step of the tree (it is about to be seized), else 0.8
   (2026-11-09 review: a reward taken at the step-100 instant overvalues trees planted for the opponent to take).
+Whole games (300 steps in the replay, awr_gen with AWR_STEPS=300): the reward is the final cash difference instead.
 Advantage: leave-one-out baseline over all games of the same seed (the greedy game and the K sampled ones):
   A_i = R_i - mean(R_j, j != i)   (lower variance than "minus the greedy game" alone).
 Weights: w = exp(A / beta); beta starts at std(A) and grows until the effective sample size
@@ -37,7 +38,10 @@ def rescore(corpus):
     for g in games:
         st = json.load(gzip.open(os.path.join(corpus, g["file"])))["steps"]
         o = st[-1][0]["observation"]; carbon = o.get("full_carbon") or o["carbon"]
-        g["reward2"] = side_value(o, carbon, g["side"]) - side_value(o, carbon, 1 - g["side"])
+        if len(st) >= 300 or os.environ.get("AWR_FINAL"):      # whole game: the reward is the final score difference
+            g["reward2"] = float(o["players"][g["side"]][0]) - float(o["players"][1 - g["side"]][0])
+        else:
+            g["reward2"] = side_value(o, carbon, g["side"]) - side_value(o, carbon, 1 - g["side"])
         g["corpus"] = os.path.basename(corpus.rstrip("/"))
     by = defaultdict(list)
     for g in games:
