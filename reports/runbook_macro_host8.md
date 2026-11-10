@@ -28,7 +28,7 @@ export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 export AWR_STEPS=300 AWR_OPEN_STEPS=300 AWR_KINDS=planter,base
 export AWR_US_WEIGHTS=<Grove1 策略网权重 .npz>
 export AWR_US_CONF='{"TEACHER": 2, "TEACHER_LATE": 7, "LATE_STEP": 240}'
-N=$(nproc); time python3 awr_gen.py ../data/sp_bench awr_us_env.py <1C-v9 的对手文件> 5000 $N 1 0.5 $N
+N=$(nproc); time python3 awr_gen.py ../data/sp_bench awr_us_env.py <Master2s 替身的对手文件> 5000 $N 1 0.5 $N
 ```
 
 共 2×N 局。`OMP_NUM_THREADS=1` 必须设，否则多进程抢线程会卡死。
@@ -57,14 +57,16 @@ def make(**over):
 ```bash
 cd ~/carbon/data
 nohup python3 knob_search.py ks_full ../code/exp/knob_us_grove1.py \
-  m2s=<Master2s 替身.py> 1Cv9=<1C-v9.py> grove1=<Grove1 纯网络.py> \
+  m2s=<Master2s 替身.py> m2=<M2 替身 m2s2.py> grove1=<Grove1 纯网络.py> scout1=<Scout1 或 v17d2 纯网络.py> \
   --workers $(nproc) > ks_full.log 2>&1 &
 ```
 
-- 对手文件要求：模块里有 `agent(obs, config)`，或有 `make()` 返回代理。三个对手必须是确定性的（同种子同结果）。
-- 默认三级淘汰：120 组各 40 局 → 前 30 组各 120 局 → 前 6 组各 400 局，三个对手，共约 3.3 万局。
+- 对手池（2026-11-10 改）：不用 1C-v9。它只有 2269 分，Grove1 纯网络对它的基准分差约 +1200，分不出配置好坏；
+  1C-v10 / v11 源码不公开，本地没有。四个对手：Master2s 替身、M2 替身、Grove1 自己、Scout1 或 v17d2。
+- 对手文件要求：模块里有 `agent(obs, config)`，或有 `make()` 返回代理。对手必须是确定性的（同种子同结果）。
+- 默认三级淘汰：120 组各 40 局 → 前 30 组各 120 局 → 前 6 组各 400 局，四个对手，共约 4.4 万局（约 4–5 小时）。
 - 被回收后换机器：把 `ks_full/` 拷回去，同一条命令续跑。
-- 跑的过程中看中期结果：`python3 knob_search.py ks_full x m2s=x 1Cv9=x grove1=x --only-report`（`e9b1450` 之后才安全）。
+- 跑的过程中看中期结果：`python3 knob_search.py ks_full x m2s=x m2=x grove1=x scout1=x --only-report`（`e9b1450` 之后才安全）。
 - 不要同时打开上游的 TG / RG 和这里的 `MACRO`，两套管的是同一件事。
 
 **开跑前的验证（10 分钟，必须做）**
@@ -72,11 +74,11 @@ nohup python3 knob_search.py ks_full ../code/exp/knob_us_grove1.py \
 2. 先跑一个小的：`--configs 4 --stages "8:1"` 到另一个目录，日志里没有 `!! agent errors`，`games.jsonl` 里配置 1–4 的 `mac` 计数不全为 0（旋钮真的生效了），配置 0 的 `mac` 全为 0。
 
 **结果验收（`plan_macro_training.md` A3）**
-1. 前 6 名对三个对手的配对分差都不为负，最差对手上过 2 倍标准误（日志里每个对手一列 `均值±标准误`）。
+1. 前 6 名对四个对手的配对分差都不为负，最差对手上过 2 倍标准误（日志里每个对手一列 `均值±标准误`）。
 2. 账要跟着动：`tree-biz` 为正、`planters` 为负。分差涨而账不动，判为噪声。
 3. `opp-tree-steps` 相对基准的增幅不超过 +15%。
 4. `dep`（入库）不为负。
-5. 最好的一组加上搜索，固定预算对 Grove1 头对头 200 局过 2 倍标准误，对 1C-v9 不为负。过了才叠进探针。
+5. 最好的一组加上搜索，固定预算对 Grove1 头对头 200 局过 2 倍标准误，对 Master2s 替身不为负。过了才叠进探针。
 
 **止损**：前 6 名没有一组过第 1 条，说明旋钮表达不了差距。回报结果，不叠进探针；第 3 步照做（它不依赖旋钮结果）。
 
@@ -92,16 +94,16 @@ for T in 0.3 0.5 0.8; do python3 awr_gen.py ../data/sp_tau$T awr_us_env.py <Mast
 每条最后打印一行 JSON。选温度的规则：`adv_mean` 不低于 −150，在此前提下 `adv_sd` 最大的那个。
 （云端试过 1.0：采样局比不采样局差 1371 分，太乱。三个都不满足就用 0.3。）
 
-正式跑，三个对手各约 3300 局：
+正式跑，四个对手各 2500 局：
 
 ```bash
-for O in m2s 1Cv9 grove1; do
-  python3 awr_gen.py ../data/sp1_$O awr_us_env.py <对应的对手文件> 3000000 660 4 <选定温度> $(nproc)
+for O in m2s m2 grove1 scout1; do
+  python3 awr_gen.py ../data/sp1_$O awr_us_env.py <对应的对手文件> 3000000 500 4 <选定温度> $(nproc)
 done
 ```
 
 **验证**
-- 每个目录有 `index.json` 和 `awr.jsonl`，局数 = 660 × 5 = 3300。
+- 每个目录有 `index.json` 和 `awr.jsonl`，局数 = 500 × 5 = 2500。
 - `python3 ../data/unit_ledger.py corpus ../data/sp1_m2s awr_us`：能出完整报表，"TREE BUSINESS" 的 income 不为 0。
 - 磁盘：每局约 180 KB，1 万局约 2 GB。放大到 10 万局以上之前先回报，100 GiB 的盘装不下 50 万局。
 - Mac 上的同步目录里文件数和八号机一致，再继续。
@@ -116,8 +118,8 @@ done
 
 ```bash
 cd ~/junyang/carbon/code
-CNET2_STEP_MAX=300 BUILD_WORKERS=14 ../.venv/bin/python build_awr.py ../data/cnet2_ds_sp1 ../data/sp1_m2s ../data/sp1_1Cv9 ../data/sp1_grove1
-../.venv/bin/python awr_weights.py ../data/cnet2_ds_sp1 ../data/sp1_m2s ../data/sp1_1Cv9 ../data/sp1_grove1
+CNET2_STEP_MAX=300 BUILD_WORKERS=14 ../.venv/bin/python build_awr.py ../data/cnet2_ds_sp1 ../data/sp1_m2s ../data/sp1_m2 ../data/sp1_grove1 ../data/sp1_scout1
+../.venv/bin/python awr_weights.py ../data/cnet2_ds_sp1 ../data/sp1_m2s ../data/sp1_m2 ../data/sp1_grove1 ../data/sp1_scout1
 ../.venv/bin/python concat_ds.py ../data/cnet2_ds_anchor170k ../data/cnet2_ds_sp1 ../data/cnet2_ds_sp1A 1
 BC_DEVICE=cuda BC_RAM=1 BC_THREADS=8 BC_SAVE_EPOCHS=0 BC_INIT=<Grove1 策略网权重> \
   BC_TRAIN_PREFIX=teach,din,aemb,gru,whead,bhead,U,V,h0 BC_TEACH_ROWS=2 BC_CACHE_TRUNK=1 BC_LR=1e-4 \
@@ -131,11 +133,11 @@ BC_DEVICE=cuda BC_RAM=1 BC_THREADS=8 BC_SAVE_EPOCHS=0 BC_INIT=<Grove1 策略网�
 
 ## 第 5 步：验收新模型（`plan_macro_training.md` B5）
 
-1. 纯网络对三个对手，同种子减训练前：最差对手不为负。
+1. 纯网络对四个对手，同种子减训练前：最差对手不为负。
 2. `unit_ledger.py corpus`：树的生意净值、零产出种植员比例、50 以上价格种树的占比，三项都往目标方向走。
 3. 对方树·步增幅不超过 15%；我方入库不降。
 4. 车的一致率相对训练前下降不超过 0.3 个点（防遗忘）。
-5. 加搜索，固定预算对 Grove1 头对头 400 局过 2 倍标准误；对 1C-v9 不为负。
+5. 加搜索，固定预算对 Grove1 头对头 400 局过 2 倍标准误；对 Master2s 替身不为负。
 6. 限时包量最慢一步，过了才上榜；上榜后用 `unit_ledger.py ladder` 重算对榜首三类的账。
 
 **止损**：第 1、2 条不过，不上榜，回报数据；不要靠调学习率、加轮数反复试，先看是数据（温度、局数）还是标签的问题。
