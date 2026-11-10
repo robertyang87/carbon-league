@@ -1459,6 +1459,13 @@ def make_search_agent(conf=None, weights=None, rweights=None):
             tot_ = sum(w_[1] for w_ in P[me][2].values() if w_[2] == "COLLECTOR")
             home_ = any(w_[2] == "COLLECTOR" and int(w_[0]) in bset for w_ in P[me][2].values())
             st["se_team"] = st.get("se_team", 0) + 1 if cfg.get("SE_TEAM") and tot_ >= cfg["SE_TEAM"] and not home_ else 0
+            if cfg.get("SE_TEAM"):         # latency: steps from the trigger to the first delivery (or None if the game ended first)
+                if st["se_team"] == cfg.get("SE_WAIT", 8) and st.get("se_t0") is None:
+                    st["se_t0"] = obs["step"]
+                if home_ and st.get("se_t0") is not None:
+                    stats.setdefault("se_lat", []).append(obs["step"] - st["se_t0"]); st["se_t0"] = None
+                if obs["step"] >= 298 and st.get("se_t0") is not None:
+                    stats.setdefault("se_lat", []).append(None); st["se_t0"] = None
         for uid, w in sorted(P[me][2].items(), key=lambda kv: -kv[1][1]):       # heaviest first
             pos, cargo, kind = w
             if kind != "COLLECTOR" or cargo < cfg.get("SE_MINC", 150.0):
