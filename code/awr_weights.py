@@ -38,6 +38,7 @@ def rescore(corpus):
     for g in games:
         st = json.load(gzip.open(os.path.join(corpus, g["file"])))["steps"]
         o = st[-1][0]["observation"]; carbon = o.get("full_carbon") or o["carbon"]
+        g["whole"] = len(st) >= 300 or bool(os.environ.get("AWR_FINAL"))
         if len(st) >= 300 or os.environ.get("AWR_FINAL"):      # whole game: the reward is the final score difference
             g["reward2"] = float(o["players"][g["side"]][0]) - float(o["players"][1 - g["side"]][0])
         else:
@@ -45,18 +46,26 @@ def rescore(corpus):
         g["corpus"] = os.path.basename(corpus.rstrip("/"))
     by = defaultdict(list)
     for g in games:
-        by[g["seed"]].append(g)
+        # a 300-step game that ends exactly level is a perfect mirror game (our net against an identical deterministic
+        # copy on the 4-fold symmetric map: both sides play the same moves, units cancel on the symmetry lines, some
+        # games never develop at all). It carries no information: weight 0 and not part of the seed's baseline.
+        g["mirror"] = bool(g.get("whole") and abs(g["reward2"]) < 1e-6)
+        if not g["mirror"]:
+            by[g["seed"]].append(g)
+    for g in games:
+        g["adv2"] = 0.0
     for gs in by.values():
         tot = sum(x["reward2"] for x in gs)
         for x in gs:
-            x["adv2"] = x["reward2"] - (tot - x["reward2"]) / max(1, len(gs) - 1)
+            x["adv2"] = x["reward2"] - (tot - x["reward2"]) / max(1, len(gs) - 1) if len(gs) > 1 else 0.0
     return games
 
 
 def main():
     ds, corpora = sys.argv[1], sys.argv[2:]
     games = [g for c in corpora for g in rescore(c)]
-    A = np.array([g["adv2"] for g in games])
+    nmir = sum(g["mirror"] for g in games)
+    A = np.array([g["adv2"] for g in games if not g["mirror"]])
     ess_min = float(os.environ.get("AWR_ESS_MIN", "0.2")); wmax = float(os.environ.get("AWR_WMAX", "20"))
     beta = float(A.std()) or 1.0
     for _ in range(40):
@@ -65,7 +74,7 @@ def main():
         if ess >= ess_min:
             break
         beta *= 1.25
-    wkey = {g["key"]: float(min(wmax, np.exp(g["adv2"] / beta))) for g in games}
+    wkey = {g["key"]: 0.0 if g["mirror"] else float(min(wmax, np.exp(g["adv2"] / beta))) for g in games}
     meta = json.load(open(os.path.join(ds, "meta.json"))); gid = np.load(os.path.join(ds, "gid.npy"))
     gw = np.array([wkey[g["key"].replace(".json.gz", "")] for g in meta["games"]], np.float32)
     w = gw[gid].astype(np.float32)
@@ -75,7 +84,7 @@ def main():
     uw[:, :10] = (np.asarray(kind[:, :10]) != 0).astype(np.float32)
     np.save(os.path.join(ds, "w.npy"), w); np.save(os.path.join(ds, "uw.npy"), uw)
     r_old = np.array([g["reward"] for g in games]); r_new = np.array([g["reward2"] for g in games])
-    print(json.dumps({"rows": int(len(gid)), "games": len(games), "beta": round(beta, 1), "ess_frac": round(float(ess), 3),
+    print(json.dumps({"rows": int(len(gid)), "games": len(games), "mirror_dropped": int(nmir), "beta": round(beta, 1), "ess_frac": round(float(ess), 3),
                       "adv_sd": round(float(A.std()), 1), "reward_old_mean": round(float(r_old.mean()), 1),
                       "reward_new_mean": round(float(r_new.mean()), 1), "corr_old_new": round(float(np.corrcoef(r_old, r_new)[0, 1]), 3),
                       "w_max": round(float(gw.max()), 2)}), flush=True)

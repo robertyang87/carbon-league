@@ -54,6 +54,11 @@ def main():
         rows = list(ex.map(feats, tasks, chunksize=16))
     for c in a + (["ALL"] if len(a) > 1 else []):
         R = [r for r in rows if c == "ALL" or r[0] == c]
+        nm = sum(1 for r in R if r[3] == 0.0)
+        if nm:
+            print(f"\n!! {os.path.basename(c.rstrip('/'))}: {nm} of {len(R)} games end exactly level (perfect mirror games against an identical "
+                  f"deterministic opponent); they are left out, and seeds whose greedy game is one have no baseline")
+        R = [r for r in R if r[3] != 0.0]
         base = {(r[0], r[1]): r for r in R if r[2] == 0}
         S = [r for r in R if r[2] > 0 and (r[0], r[1]) in base]
         if len(S) < len(FEATS) + 5:
