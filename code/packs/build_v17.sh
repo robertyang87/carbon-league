@@ -117,3 +117,7 @@ python3 cnet2_search_pack.py exp/fx20_m2t3O.py "{$BASE, $CAP, 'CLOCK': 'sims', '
 python3 cnet2_search_pack.py exp/fx20_m2t3A.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 999}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz   # BrA at 20 sims
 # ROUND_K probes: 40 sims with FIX_TRUNC (budget used exactly), K sims-per-candidate per round
 for k in 1 2 3; do python3 cnet2_search_pack.py exp/fx_m2t3S40K$k.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (40,), 'FIX_TRUNC': True, 'ROUND_K': $k, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz; done
+# allocation / override-rule probes at 20 sims: uniform round-robin allocation; SE_K 0.5 (BASE has 1.0)
+python3 cnet2_search_pack.py exp/fx20_UNI.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'ALLOC': 'uniform', 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx20_SEK05.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'SE_K': 0.5, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx20_UNISEK.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'ALLOC': 'uniform', 'SE_K': 0.5, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz

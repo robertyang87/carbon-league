@@ -1050,6 +1050,8 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 q = np.array([np.mean([b for _, b in v]) if v else 0.0 for v in vals])
                 for _ in range(int(cfg.get("ROUND_K", 1)) * nc):     # ROUND_K: more sims per round (bigger, fewer batches)
                     sc = (q - q[0]) / cfg["VS"] + cfg["C_PUCT"] * P * np.sqrt(nv.sum()) / (1 + nv)
+                    if cfg.get("ALLOC") == "uniform":         # round-robin: least-sampled candidate next (balanced SE)
+                        sc = -nv.astype(float) - 1e-6 * np.arange(nc)
                     sc[nv >= RS] = -np.inf
                     c = int(np.argmax(sc))
                     if not np.isfinite(sc[c]):
