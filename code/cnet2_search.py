@@ -1109,15 +1109,45 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 xs, auxs, tch = [], [], []
                 for s_, (fm, fop) in zip(sims, fs):
                     xm = fm.observe(s_.obs(me)); xs.append(xm); auxs.append(fm.aux); tch.append(st.get("T_now", T))
-                for (c, i), s_, (fm, fop) in zip(batch, sims, fs):
-                    xq = fop.observe(s_.obs(1 - me)); xs.append(xq); auxs.append(fop.aux); tch.append(int(ks[i]))
-                nz = np.concatenate([np.zeros((nb, F.OWN)), np.stack([rnoise[i, hh - 1] for c, i in batch])])
-                tp = np.concatenate([np.zeros(nb), np.full(nb, tau)])
+                # SHARE_OPP: on the first rollout step the opponent's view barely depends on which candidate we
+                # played, so its net runs once per simulation index i and every candidate with that i reuses it
+                share = bool(cfg.get("SHARE_OPP")) and hh == 1
+                orow = {}                                   # sim j -> row of its opponent label
+                no = 0; reps = []
+                order = list(range(nb))
+                if share:                                   # the default branch (c == 0) is the source of each index's reply
+                    order.sort(key=lambda j: (batch[j][0] != 0, j))
+                obs_q = {}
+                if share and int(cfg.get("SHARE_OPP")) >= 2:
+                    # level 2: the reusing branches also take the source branch's opponent features (copy, no observe)
+                    src = {}
+                    for j in order:
+                        c_, i_ = batch[j]
+                        if i_ in src:
+                            fs[j] = (fs[j][0], feat_copy(fs[src[i_]][1])); obs_q[j] = None
+                        else:
+                            obs_q[j] = fs[j][1].observe(sims[j].obs(1 - me)); src[i_] = j
+                else:
+                    for j in range(nb):
+                        obs_q[j] = fs[j][1].observe(sims[j].obs(1 - me))   # every copy still observes (later steps need it)
+                for j in order:
+                    (c, i), s_, (fm, fop) = batch[j], sims[j], fs[j]
+                    xq = obs_q[j]
+                    if share and i in orow.get("_first", {}):
+                        orow[j] = orow["_first"][i]; continue
+                    xs.append(xq); auxs.append(fop.aux); tch.append(int(ks[i])); orow[j] = nb + no; reps.append((c, i))
+                    if share:
+                        orow.setdefault("_first", {})[i] = nb + no
+                    no += 1
+                nz = np.concatenate([np.zeros((nb, F.OWN)), np.stack([rnoise[i, hh - 1] for c, i in reps])])
+                tp = np.concatenate([np.zeros(nb), np.full(no, tau)])
                 X = stack_x(xs)
                 tk, cx = encode_b(rpol, X, np.asarray(tch))
                 lab = decode_b(rpol, X, auxs, tk, cx, noise=nz, temp=tp)
+                if share:
+                    stats["share_saved"] = stats.get("share_saved", 0) + (nb - no)
                 for j, (s_, (fm, fop)) in enumerate(zip(sims, fs)):
-                    am = fm.to_actions(lab[j]); ao = fop.to_actions(lab[nb + j])
+                    am = fm.to_actions(lab[j]); ao = fop.to_actions(lab[orow[j]])
                     if me == 0:
                         s_.step(am, ao)
                     else:
