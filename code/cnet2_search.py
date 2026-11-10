@@ -621,6 +621,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             st["root_tree_owner"] = {int(pos): p_ for p_ in (0, 1) for pos, _ in obs["players"][p_][3].values()}
         if st["f"] is None or obs["step"] == 0 or st["f"].seat != me:
             st["f"] = F.Feat(me); st["fo"] = F.Feat(1 - me)
+            st["f"].infer_mirror = bool(cfg.get("INFER_MIRROR"))
         f, fo = st["f"], st["fo"]
         if obs["step"] == 0 or "lpost" not in st:
             st["lpost"] = np.array([cfg["ID_PRIOR"] if k == OT else 0.0 for k in cfg["STYLES"]])
@@ -1348,6 +1349,47 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         alive = sum(1 for q in (0, 1) if isinstance(P[q][3], dict) for v in P[q][3].values() if int(v[1]) < 50)
         return 20.0 + 5.0 * (1.235 ** alive)
 
+    def planter_explore(obs, acts):
+        """opening information: PX_MODE 'greedy' -- a planter that has not planted yet (step < PX_END) whose planned move
+        reveals no never-seen cell (mirrors included: the start map is 4-fold symmetric) takes the move that reveals the
+        most, if that is >= PX_MIN cells; a planned plant (stay) is never overridden. PX_MODE 'snake' -- the first planter
+        follows a fixed snake through its base quadrant from PX_S0 for 15 steps, then the net plays."""
+        me = obs["player"]; P = obs["players"]; f = st["f"]
+        if f is None:
+            return acts
+        seen = f.last_step >= 0
+        unseen = ~seen[F.MIRROR].any(1)                 # no copy of this cell's symmetry class seen yet
+        out = dict(acts); step = obs["step"]
+        pls = sorted((u, w) for u, w in P[me][2].items() if w[2] == "PLANTER")
+        if cfg.get("PX_MODE") == "snake":
+            s0 = cfg.get("PX_S0", 8)
+            if pls and s0 <= step < s0 + 15 and P[me][1]:
+                b0 = int(sorted(P[me][1].values())[0]); br, bc = divmod(b0, F.S); dr = 1 if br < 7 else -1; dc = 1 if bc < 7 else -1
+                i = step - s0; leg, j = divmod(i, 5); j = j if leg % 2 == 0 else 4 - j
+                tgt = ((br + dr * (1 + 3 * leg)) % F.S) * F.S + (bc + dc * j) % F.S
+                u, w = pls[0]; pos = int(w[0])
+                if pos != tgt:
+                    mv = min(MV, key=lambda m: (F.DIST[_nxt(pos, m), tgt], m))
+                    if F.DIST[_nxt(pos, mv), tgt] < F.DIST[pos, tgt]:
+                        out[u] = mv; stats["px"] = stats.get("px", 0) + 1
+            return out
+        planted = st.setdefault("px_planted", set())
+        tpos = {int(t[0]) for t in P[me][3].values()}
+        for u, w in pls:
+            pos = int(w[0])
+            if pos in tpos:
+                planted.add(u)
+            if (u in planted and not cfg.get("PX_ANY")) or step >= cfg.get("PX_END", 30):
+                continue
+            cur = out.get(u)
+            if cur not in MV:                            # staying = planting here: leave it
+                continue
+            gain = lambda m: int(unseen[F.DEST[_nxt(pos, m), 1:]].sum())
+            g0 = gain(cur); best = max(MV, key=lambda m: (gain(m), m == cur))
+            if (gain(best) - g0 >= cfg["PX_DIFF"]) if cfg.get("PX_DIFF") else (g0 == 0 and gain(best) >= cfg.get("PX_MIN", 2)):
+                out[u] = best; stats["px"] = stats.get("px", 0) + 1
+        return out
+
     def planter_avoid(obs, acts):
         """PLANTER_AVOID: a planter that stays put this step WITHOUT planting or seizing (own tree under it, or no
         cash for the plant / seize) and has an enemy planter in its 8-neighbourhood moves to a cell with no enemy
@@ -1565,6 +1607,34 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                         a.pop(b_); stats["rec_cut"] = stats.get("rec_cut", 0) + 1
             except Exception:
                 stats["errors"] += 1
+        if cfg.get("OPEN_PL") and obs["step"] <= cfg.get("OPEN_PL_END", 15):
+            try:                                 # opening sensors: A = first recruit is a planter; B = >= 2 planters by OPEN_PL_END
+                me_ = obs["player"]; P_ = obs["players"][me_]; mine = list(P_[2].values())
+                npl = sum(1 for w in mine if w[2] == "PLANTER"); bids = sorted(P_[1]); cash = float(P_[0])
+                rec_pl = sum(1 for b in bids if a.get(b) == "RECPLANTER")
+                if "A" in cfg["OPEN_PL"] and not st.get("opl_first"):
+                    recs = [b for b in bids if a.get(b) in ("RECPLANTER", "RECCOLLECTOR")]
+                    if recs:
+                        st["opl_first"] = True
+                        if not npl and not rec_pl:
+                            a[recs[0]] = "RECPLANTER"; rec_pl = 1; stats["opl"] = stats.get("opl", 0) + 1
+                if "B" in cfg["OPEN_PL"] and npl + rec_pl < 2 and len(mine) < 10:
+                    spend = 30.0 * sum(1 for b in bids if a.get(b) in ("RECPLANTER", "RECCOLLECTOR"))
+                    occ = {int(w[0]) for w in mine}
+                    for b in bids:
+                        if npl + rec_pl >= 2 or cash - spend < 30.0:
+                            break
+                        if a.get(b) == "RECCOLLECTOR":
+                            a[b] = "RECPLANTER"; rec_pl += 1; stats["opl"] = stats.get("opl", 0) + 1
+                        elif a.get(b) is None and int(P_[1][b]) not in occ:
+                            a[b] = "RECPLANTER"; rec_pl += 1; spend += 30.0; stats["opl"] = stats.get("opl", 0) + 1
+            except Exception:
+                stats["opl_errors"] = stats.get("opl_errors", 0) + 1
+        if cfg.get("PX_MODE") and obs["step"] < max(cfg.get("PX_END", 30), cfg.get("PX_S0", 8) + 15):
+            try:
+                a = planter_explore(obs, a)
+            except Exception:
+                stats["px_errors"] = stats.get("px_errors", 0) + 1
         if cfg.get("PLANTER_AVOID") and obs["step"] <= cfg.get("PA_STEP", 999):
             try:
                 a = planter_avoid(obs, a)

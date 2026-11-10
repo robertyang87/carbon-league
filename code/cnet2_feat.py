@@ -87,6 +87,8 @@ class Feat:
         self.prev_w = None
         self.prev_trees = None
         self.hist = {}          # uid -> list of (canon cell, cargo, move) newest last
+        self.infer_mirror = getattr(self, "infer_mirror", False)   # INFER_MIRROR: copy carbon inferred from any collector's
+        self.inf = {}           # first stationary gain to the cell's never-seen mirrors; pos -> (carbon before collection, step)
 
     def cpos(self, i):
         return int(CANON[i]) if self.seat else int(i)
@@ -128,6 +130,9 @@ class Feat:
             d = c1 - c0
             if not toll and d >= 0:
                 est[pos] = d / COLLECT * (1 - COLLECT)
+                inf_ = getattr(self, "inf", None)       # absent on search-branch copies (feat_copy)
+                if inf_ is not None and pos not in inf_:
+                    inf_[pos] = (d / COLLECT, self.step + 1)
             else:
                 est[pos] = before[pos] * (1 - COLLECT)
         # regen
@@ -198,6 +203,16 @@ class Feat:
         self.est[fill] = self.est[msrc[fill]]
         unk = never & ~has_m
         self.est[unk] = min(PRIOR * REGEN ** step, CAP)
+        if getattr(self, "infer_mirror", False) and getattr(self, "inf", None):
+            near_tree = set()
+            for tp in trees:
+                near_tree.update(int(n) for n in DEST[tp, 1:]); near_tree.add(tp)
+            for pos, (c0, t0) in self.inf.items():
+                for m in MIRROR[pos]:
+                    m = int(m)
+                    if m == pos or m in near_tree or self.last_step[MIRROR[m]].max() >= 0:
+                        continue          # some copy seen by us already (mirror fill has it) or symmetry broken by a tree
+                    self.est[m] = min(c0 * REGEN ** (step - t0), CAP) if c0 > 0 else 0.0
         for p in (0, 1):
             for b in bases[p]:
                 self.est[b] = 0.0
