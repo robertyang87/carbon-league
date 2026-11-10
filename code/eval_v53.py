@@ -142,7 +142,7 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0], "life50_sum": [0, 0], "life50_n": [0, 0]}   # stand-in validation ledger
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0], "life50_sum": [0, 0], "life50_n": [0, 0], "cargo240": [0.0, 0.0], "cargo270": [0.0, 0.0], "dep270": [0.0, 0.0], "lost240": [0.0, 0.0], "gain240": [0.0, 0.0], "tax240": [0.0, 0.0], "lost240_self": [0.0, 0.0]}   # stand-in validation ledger
     late_deaths = [[], []]
     for step in range(1, NSTEPS + 1):
         pre = sim.get_state()
@@ -205,6 +205,8 @@ def play_game(task):
             if step == 100:                            # cash + cargo on board at step 100 (opening exam score)
                 sh["cash100"][p] = float(post["cash"][p])
                 sh["cargo100"][p] = round(sum(float(w["carbon"]) for w in post["workers"].values() if w["player"] == p), 1)
+            if step in (240, 270):                     # cargo on board at the endgame checkpoints:
+                sh["cargo%d" % step][p] = round(sum(float(w["carbon"]) for w in post["workers"].values() if w["player"] == p), 1)
             nc = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR")
             sh["colsteps"][p] += nc
             sh["treesteps"][p] += sum(1 for t in post["trees"].values() if t["player"] == p)
@@ -213,6 +215,15 @@ def play_game(task):
                                         for wid, w2 in post["workers"].items()
                                         if w2["player"] == p and w2["type"] == "COLLECTOR" and wid in pre["workers"]
                                         and int(w2["pos"]) == int(pre["workers"][wid]["pos"]))
+                own_b = {int(x) for _, x in post["bases"][p]}       # gain240: cargo gained by moving cars (seized in a collision);
+                for wid, w2 in post["workers"].items():               # tax240: cargo a live car lost off its own base (enemy trees)
+                    if w2["player"] != p or wid not in pre["workers"]:
+                        continue
+                    dc = float(w2["carbon"]) - float(pre["workers"][wid]["carbon"]); moved = int(w2["pos"]) != int(pre["workers"][wid]["pos"])
+                    if dc > 0 and (moved or w2["type"] != "COLLECTOR"):
+                        sh["gain240"][p] += dc
+                    elif dc < 0 and int(w2["pos"]) not in own_b:
+                        sh["tax240"][p] -= dc
             if step <= 100:                       # collection efficiency, steps 1-100: a collector that stays put on a
                 car = pre.get("carbon")              # non-base cell is collecting; cell carbon under it, and its haul
                 bases_p = {int(b) for _, b in post["bases"][p]}
@@ -254,6 +265,8 @@ def play_game(task):
                 c = float(w["carbon"]); g = ev[wid][3] if wid in ev else "?"
                 k = "enemy" if g == 1 - p else ("self" if g == p else "unknown")
                 sh["lost_" + k][p] += c
+                if step > 240:                  # cargo of dead cars after 240 (self: an own car/base/tree took it)
+                    sh["lost240_self" if k == "self" else "lost240"][p] += c
                 if step > 270:                  # last 30 steps
                     sh["late30" if k == "enemy" else "late30_" + k][p] += c
                     if k == "enemy":
@@ -300,6 +313,8 @@ def play_game(task):
                 sh["dep100"][p] = L["deposits"]
             if step == 240:
                 sh["dep240"][p] = L["deposits"]
+            if step == 270:
+                sh["dep270"][p] = L["deposits"]
     wall = time.time() - t0
     st = sim.get_state()
     eh_act = set(map(tuple, (getattr(fa, "last_stats", None) or {}).get("eh_act", [])))

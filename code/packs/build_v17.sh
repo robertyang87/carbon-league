@@ -80,3 +80,8 @@ ST="'KEY_LATE_CARGO': True, 'KEY_LATE_STEP': 270, 'MAX_KEY_LATE': 5, 'KLC_MIN': 
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BL2S.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $L2, $ST}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 # measurement: m2t3Br + hard recruit cuts (no planters from 256, nothing from 276) -- upper bound of a late recruiting discipline
 python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BC.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'REC_CUT_PLANTER': 256, 'REC_CUT_ALL': 276}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# Grove1 + endgame short trips only (no late base / planter search)
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrS.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, $ST}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# Grove1 late-teacher tests: m2t3BrA = slot 2 the whole game; m2t3BrL = slot 2 until 270 then slot 7
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrA.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 999}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/submission_cnet2_m2t3BrL.py "{$BASE, $CAP, 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 270}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
