@@ -102,3 +102,6 @@ python3 cnet2_search_pack.py exp/fx_awr1.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX
 python3 cnet2_search_pack.py exp/fx_m2t3CB.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'CB_STEP': 100}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/fx_m2t3S20.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (20,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
 python3 cnet2_search_pack.py exp/fx_m2t3S40.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (40,), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+# safe-entry rule exam twins: SEv = veto only unsafe planned moves of loaded (>=150) cars within 3 of base; SEc = cars >=400 within 3 head for the nearest safe cell
+python3 cnet2_search_pack.py exp/fx_m2t3SEv.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'SE_STEP': 100, 'SE_MODE': 'veto', 'SE_MINC': 150.0}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz
+python3 cnet2_search_pack.py exp/fx_m2t3SEc.py "{$BASE, $CAP, 'CLOCK': 'sims', 'FIX_SIMS': (10, 10, 10, 10, 10, 11), 'TEACHER': 2, 'TEACHER_LATE': 7, 'LATE_STEP': 240, 'SE_STEP': 100, 'SE_MINC': 400.0}" $W/cnet2_b128m2t3.npz $W/cnet2_s64mm.npz

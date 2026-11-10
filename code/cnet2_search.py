@@ -1432,6 +1432,56 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 stats.setdefault("eh_list", []).append((obs["step"], uid))
         return out
 
+    def safe_entry(obs, acts):
+        """a loaded collector (>= SE_MINC) within SE_R of our base, with a lighter-or-equal enemy collector within
+        SE_NEAR: step only onto cells no such enemy can reach next step (our own base cells are always safe: cargo
+        delivered there is ours whatever collides), the one nearest our base; keep the planned move if it is safe
+        and no farther. Provably safe for one step; no search, no estimate."""
+        me = obs["player"]; P = obs["players"]
+        bases = [int(b) for b in P[me][1].values()]
+        if not bases:
+            return acts
+        ebases = {int(b) for b in P[1 - me][1].values()}
+        en = [e for e in P[1 - me][2].values() if e[2] == "COLLECTOR"]
+        out = dict(acts)
+        claimed = {}
+        for u2, w2 in P[me][2].items():
+            mv2 = out.get(u2); c2 = _nxt(w2[0], mv2) if mv2 in MV else int(w2[0])
+            claimed[c2] = claimed.get(c2, 0) + 1
+        bset = set(bases)
+        for uid, w in sorted(P[me][2].items(), key=lambda kv: -kv[1][1]):       # heaviest first
+            pos, cargo, kind = w
+            if kind != "COLLECTOR" or cargo < cfg.get("SE_MINC", 150.0):
+                continue
+            dpos = min(F.DIST[pos, b] for b in bases)
+            if not (1 <= dpos <= cfg.get("SE_R", 3)):
+                continue
+            th = [int(e[0]) for e in en if e[1] <= cargo and F.DIST[pos, e[0]] <= cfg.get("SE_NEAR", 4)]
+            if not th:
+                continue
+            stats["se_seen"] = stats.get("se_seen", 0) + 1
+            danger = {int(c) for e in th for c in F.DEST[e]}                    # enemy stays or steps one cell
+            cur = out.get(uid); c0 = _nxt(pos, cur) if cur in MV else int(pos)
+            claimed[c0] -= 1
+            def ok(c):
+                return (c in bset or c not in danger) and c not in ebases and (c in bset or not claimed.get(c))
+            opts = [(min(F.DIST[c, b] for b in bases), i, mv, c) for i, (mv, c) in
+                    enumerate([(None, int(pos))] + [(mv, _nxt(pos, mv)) for mv in MV]) if ok(c)]
+            if not opts:
+                claimed[c0] += 1; stats["se_none"] = stats.get("se_none", 0) + 1
+                continue
+            dbest = min(o[0] for o in opts)
+            if ok(c0) and (cfg.get("SE_MODE") == "veto" or min(F.DIST[c0, b] for b in bases) <= dbest):   # veto: a safe planned move stands
+                claimed[c0] += 1; stats["se_ok"] = stats.get("se_ok", 0) + 1
+                continue
+            _, _, mv, c = min(opts)
+            if mv is None:
+                out.pop(uid, None)
+            else:
+                out[uid] = mv
+            claimed[c] = claimed.get(c, 0) + 1; stats["se"] = stats.get("se", 0) + 1
+        return out
+
     def camp_bust(obs, acts):
         """CB_STEP..: an enemy collector parked within 1 of our base while our loaded cars wait nearby -> the nearest
         light own collector (cargo <= CB_MAXC and <= the camper's; least cargo wins a collision, equal = both die)
@@ -1491,6 +1541,11 @@ def make_search_agent(conf=None, weights=None, rweights=None):
                 a = planter_avoid(obs, a)
             except Exception:
                 stats["pa_errors"] = stats.get("pa_errors", 0) + 1
+        if cfg.get("SE_STEP") is not None and obs["step"] >= cfg["SE_STEP"]:
+            try:
+                a = safe_entry(obs, a)
+            except Exception:
+                stats["se_errors"] = stats.get("se_errors", 0) + 1
         if cfg.get("CB_STEP") is not None and obs["step"] >= cfg["CB_STEP"]:
             try:
                 a = camp_bust(obs, a)
