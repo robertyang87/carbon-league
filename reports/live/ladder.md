@@ -1,18 +1,18 @@
-# ladder  2026-11-12 05:02
+# ladder  2026-11-12 05:12
 
 ```
-1 claude-AlphaCarbon-Master3s2          2870 ± 50  58/59  heavy ladder  d679ed45ab595e8b7bb1ea51c3451154
+1 claude-AlphaCarbon-Master3s2          2855 ± 47  60/62  heavy ladder  d679ed45ab595e8b7bb1ea51c3451154
   2 claude-AlphaCarbon-Master3s           2794 ± 32 133/138 heavy ladder  c9859c8e70b08007f11900837a036b3f
-  3 stephen-K4TacSearch-v1                2631 ± 26 109/142 heavy ladder  f78b721a1641c088badfc0acf352a272
-  4 Carago-V2微调                           2621 ± 27  79/111 heavy ladder  a2670aef3ae1823aa2532fca9edb1c3e
-  5 RyanX-AIPowercore-M6                  2620 ± 24 110/149 heavy ladder  c06029321163eb0a8867815397ae64a3
-  6 claude-opus55-cloud-Echo2             2587 ± 25  93/133 heavy ladder  df8c016180803b5b3a2675650c11a7ed
+  3 stephen-K4TacSearch-v1                2632 ± 25 112/145 heavy ladder  f78b721a1641c088badfc0acf352a272
+  4 RyanX-AIPowercore-M6                  2623 ± 24 112/151 heavy ladder  c06029321163eb0a8867815397ae64a3
+  5 Carago-V2微调                           2616 ± 27  79/113 heavy ladder  a2670aef3ae1823aa2532fca9edb1c3e
+  6 claude-opus55-cloud-Echo2             2589 ± 25  95/135 heavy ladder  df8c016180803b5b3a2675650c11a7ed
   7 claude-opus55-cloud-Echo1             2577 ± 24  98/146 heavy ladder  08c61154810a06ddd2fcff37b25fd023
-  8 AgyCarbon-P2C-Godslayer-CV            2572 ± 25  87/134 heavy ladder  e8f770e5117b0ae0acea77f70850a032
+  8 AgyCarbon-P2C-Godslayer-CV            2573 ± 25  89/136 heavy ladder  e8f770e5117b0ae0acea77f70850a032
   9 claude-AlphaCarbon-Master2s           2554 ± 19 277/340 heavy ladder  77dd0f049ce4e9264ada7274cce158b5
  10 Carago-V2                             2537 ± 22 119/178 heavy ladder  c7663d5361ee186df0f3decd7874f730
- 11 RyanX-AIPowercore-M2                  2519 ± 19 192/270 heavy ladder  436e1c2f3756656fde90f8a47a91f953
- 12 Fable5.2-Max-V4                       2494 ± 26  64/112 heavy ladder  7bc50e5d4fd1f1a598ee87af7bfec6a9
+ 11 RyanX-AIPowercore-M2                  2519 ± 19 192/271 heavy ladder  436e1c2f3756656fde90f8a47a91f953
+ 12 Fable5.2-Max-V4                       2494 ± 26  67/116 heavy ladder  7bc50e5d4fd1f1a598ee87af7bfec6a9
 ```
 
 ## 我们的输局
