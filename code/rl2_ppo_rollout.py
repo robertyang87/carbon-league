@@ -177,17 +177,29 @@ def play_batch(task):
         ta = time.time()
         obs_me = [g["sim"].obs(g["side"]) for g in games]
         obs_s = [g["sim"].obs(1 - g["side"]) for g in selfg]
-        outs = actor.act([g["st"] for g in games] + [g["st2"] for g in selfg], obs_me + obs_s, rng, temp, greedy)
+        st_all = [g["st"] for g in games] + [g["st2"] for g in selfg]
+        two = hasattr(actor, "prepare")
+        # all trunk requests of this step go out before any answer is awaited (one server batch, not one per model)
+        prep = actor.prepare(st_all, obs_me + obs_s) if two else None
+        sprep = [(gs, gs[0]["sactor"].prepare([g["st2"] for g in gs], [g["sim"].obs(1 - g["side"]) for g in gs]))
+                 for gs in snaps.values()] if two else []
+        outs = actor.finish(st_all, prep, rng, temp, greedy) if two else actor.act(st_all, obs_me + obs_s, rng, temp, greedy)
         for g, o in zip(selfg, outs[len(games):]):
             g["a_op"], g["rec2"] = o
         ndec += len(outs)
         tb = time.time()
         t_pol += tb - ta
-        for gs in snaps.values():
-            so = gs[0]["sactor"].act([g["st2"] for g in gs], [g["sim"].obs(1 - g["side"]) for g in gs], rng_s,
-                                     max(snap_temp, 1e-3), snap_temp <= 0)
-            for g, o in zip(gs, so):
-                g["a_op"] = o[0]
+        if two:
+            for gs, sp in sprep:
+                so = gs[0]["sactor"].finish([g["st2"] for g in gs], sp, rng_s, max(snap_temp, 1e-3), snap_temp <= 0)
+                for g, o in zip(gs, so):
+                    g["a_op"] = o[0]
+        else:
+            for gs in snaps.values():
+                so = gs[0]["sactor"].act([g["st2"] for g in gs], [g["sim"].obs(1 - g["side"]) for g in gs], rng_s,
+                                         max(snap_temp, 1e-3), snap_temp <= 0)
+                for g, o in zip(gs, so):
+                    g["a_op"] = o[0]
         t_opp += time.time() - tb
         for g, o, (acts, rec) in zip(games, obs_me, outs):
             sim, side = g["sim"], g["side"]

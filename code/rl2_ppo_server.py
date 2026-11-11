@@ -67,10 +67,10 @@ def _serve(adapter_name, device, req_q, resp_qs, stat_q):
                 o = 0
                 for it in its:
                     k = len(it[3]["maps"])
-                    resp_qs[it[0]].put((tok[o:o + k], ctx[o:o + k])); o += k
+                    resp_qs[it[0]].put((it[4], tok[o:o + k], ctx[o:o + k])); o += k
             except Exception as e:                            # the workers must not hang on a server error
                 for it in its:
-                    resp_qs[it[0]].put(RuntimeError(f"rl2_ppo_server: {type(e).__name__}: {e}"))
+                    resp_qs[it[0]].put((it[4], RuntimeError(f"rl2_ppo_server: {type(e).__name__}: {e}"), None))
             t_fwd += time.time() - t0; n_fwd += 1; n_req += len(its); n_pos += sum(len(it[3]["maps"]) for it in its)
         if time.time() - t_last > 30 and stat_q is not None:
             try:
@@ -82,20 +82,34 @@ def _serve(adapter_name, device, req_q, resp_qs, stat_q):
 
 
 class Client:
+    """submit() returns at once, collect() waits for that answer: a worker sends the requests of all models of one step
+    first and only then waits, so they sit in the same server batch instead of one round trip after the other."""
+
     def __init__(self, wid, req_q, resp_q):
         self.wid, self.req_q, self.resp_q = wid, req_q, resp_q
+        self.rid = 0; self.got = {}
+
+    def submit(self, key, d, teacher):
+        self.rid += 1
+        self.req_q.put((self.wid, key, int(teacher), d, self.rid))
+        return self.rid
+
+    def collect(self, rid):
+        while rid not in self.got:
+            r = self.resp_q.get(timeout=float(os.environ.get("RL2_SERVER_TIMEOUT", "600")))
+            self.got[r[0]] = r[1:]
+        tok, ctx = self.got.pop(rid)
+        if isinstance(tok, Exception):
+            raise tok
+        return tok, ctx
 
     def encode(self, key, d, teacher):
-        self.req_q.put((self.wid, key, int(teacher), d))
-        r = self.resp_q.get(timeout=float(os.environ.get("RL2_SERVER_TIMEOUT", "600")))
-        if isinstance(r, Exception):
-            raise r
-        return r
+        return self.collect(self.submit(key, d, teacher))
 
 
 class Server:
-    def __init__(self, proc, req_q, stat_q, initargs):
-        self.proc, self.req_q, self.stat_q, self.initargs = proc, req_q, stat_q, initargs
+    def __init__(self, proc, req_q, stat_q, initargs, queues):
+        self.proc, self.req_q, self.stat_q, self.initargs, self.queues = proc, req_q, stat_q, initargs, queues
 
     def stats(self):
         out = None
@@ -106,10 +120,16 @@ class Server:
                 return out
 
     def stop(self):
-        self.req_q.put(None)
-        self.proc.join(timeout=10)
-        if self.proc.is_alive():
-            self.proc.terminate()
+        """terminate, do not wait: rollout workers killed by pool.terminate() can die holding the request queue's
+        write lock, and then neither a sentinel nor the queue's feeder thread ever gets through (the trainer used to
+        hang at interpreter exit in Queue._finalize_join)."""
+        for q in self.queues:
+            try:
+                q.cancel_join_thread()
+            except Exception:
+                pass
+        self.proc.terminate()
+        self.proc.join(timeout=5)
 
 
 def start(ctx, adapter_name, device, n_workers):
@@ -120,4 +140,4 @@ def start(ctx, adapter_name, device, n_workers):
         ids.put(i)
     p = ctx.Process(target=_serve, args=(adapter_name, device, req_q, resp_qs, stat_q), daemon=True)
     p.start()
-    return Server(p, req_q, stat_q, (ids, req_q, resp_qs))
+    return Server(p, req_q, stat_q, (ids, req_q, resp_qs), [req_q, stat_q, ids] + resp_qs)

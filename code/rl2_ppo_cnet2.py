@@ -79,15 +79,21 @@ class Cnet2Actor:
             prev = a + (0 if s < 10 else 5)
         return y, UF, MF, LG, logp, value, lpu
 
-    def act(self, states, obss, rng, temp, greedy):
-        """remote (rl2_ppo_server.Client, set by the rollout worker) -> the trunk of all positions runs as one batched
-        request on the inference server; the per-unit decode stays here. Without it: NumPy trunk per position."""
-        outs = []
+    def prepare(self, states, obss):
+        """features of all positions; with an inference server the trunk request is SENT here (not awaited)."""
         xs = [st["f"].observe(obs) for st, obs in zip(states, obss)]
-        encs = [None] * len(xs)
+        h = None
         rem = getattr(self, "remote", None)
         if rem is not None and xs:
-            tok, ctx = rem.encode(self.key, {k: np.stack([np.asarray(x[k]) for x in xs]) for k in XKEYS}, self.teacher)
+            h = rem.submit(self.key, {k: np.stack([np.asarray(x[k]) for x in xs]) for k in XKEYS}, self.teacher)
+        return xs, h
+
+    def finish(self, states, prep, rng, temp, greedy):
+        xs, h = prep
+        outs = []
+        encs = [None] * len(xs)
+        if h is not None:
+            tok, ctx = self.remote.collect(h)
             encs = [(tok[i], ctx[i]) for i in range(len(xs))]
         for st, x, enc in zip(states, xs, encs):
             f = st["f"]
@@ -97,6 +103,11 @@ class Cnet2Actor:
             rec.update(uf=UF, mf=MF, legal=LG, y=y, logp=logp, value=value, lpu=lpu)
             outs.append((acts, rec))
         return outs
+
+    def act(self, states, obss, rng, temp, greedy):
+        """remote (rl2_ppo_server.Client, set by the rollout worker) -> the trunk of all positions runs as one batched
+        request on the inference server; the per-unit decode stays here. Without it: NumPy trunk per position."""
+        return self.finish(states, self.prepare(states, obss), rng, temp, greedy)
 
 
 _DT = {"maps": np.uint8, "scal": np.float16, "tok_pos": np.int16, "tok_kind": np.int8, "tok_mask": bool,
