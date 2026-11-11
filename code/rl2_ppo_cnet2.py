@@ -79,6 +79,10 @@ class Cnet2Actor:
             prev = a + (0 if s < 10 else 5)
         return y, UF, MF, LG, logp, value, lpu
 
+    @staticmethod
+    def pack(recs):
+        return PackedTraj(recs)
+
     def prepare(self, states, obss):
         """features of all positions; with an inference server the trunk request is SENT here (not awaited)."""
         xs = [st["f"].observe(obs) for st, obs in zip(states, obss)]
@@ -115,12 +119,36 @@ _DT = {"maps": np.uint8, "scal": np.float16, "tok_pos": np.int16, "tok_kind": np
        "uf": np.float16, "mf": np.float16, "legal": bool, "y": np.int8}
 
 
+class PackedTraj:
+    """one recorded trajectory as stacked compact arrays (built in the rollout worker: ~8x less to pickle and to hold
+    than a list of per-step dicts, and the trainer only concatenates)."""
+    __slots__ = ("d", "n")
+
+    def __init__(self, recs):
+        self.n = len(recs)
+        self.d = {k: np.stack([np.asarray(r[k]).astype(dt) for r in recs]) for k, dt in _DT.items()}
+        self.d["lpu"] = np.stack([r["lpu"] for r in recs]).astype(np.float32)
+        self.d["logp"] = np.array([r["logp"] for r in recs], np.float32)
+
+    def __len__(self):
+        return self.n
+
+
 class Cnet2Buffer:
     def __init__(self, trajs):
+        if trajs and isinstance(trajs[0], PackedTraj):
+            self.n = sum(t.n for t in trajs)
+            self.d = {k: np.concatenate([t.d[k] for t in trajs]) for k in _DT}
+            self.lp0u = np.concatenate([t.d["lpu"] for t in trajs]).reshape(-1)
+            self.lp0 = np.concatenate([t.d["logp"] for t in trajs])
+            self.n_ukeys = self.n * F.OWN
+            self.act = np.zeros(int((self.d["y"] >= 0).sum()))
+            return
         recs = [r for t in trajs for r in t]
         self.n = len(recs)
         self.d = {k: np.stack([np.asarray(r[k]).astype(dt) for r in recs]) for k, dt in _DT.items()}
         self.n_ukeys = self.n * F.OWN
+        self.lp0 = np.array([r["logp"] for r in recs], np.float32)
         self.lp0u = np.concatenate([r["lpu"] for r in recs]).astype(np.float32)   # ukey = d*OWN + s
         self.act = np.zeros(int((self.d["y"] >= 0).sum()))      # for unit counting in logs
 

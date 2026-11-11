@@ -223,6 +223,11 @@ def play_batch(task):
                     dep2, lost2 = _own_events(pre, post, 1 - side, set(o["players"][1 - side][1].values()))
                     g["recs2"].append(g["rec2"]); g["dep2"].append(dep2); g["lost2"].append(lost2)
             g["prev"] = d
+    if record and hasattr(actor, "pack") and os.environ.get("RL2_PACK", "1") == "1":
+        for g in games:
+            g["recs"] = actor.pack(g["recs"])
+            if g["kind"] == "self":
+                g["recs2"] = actor.pack(g["recs2"])
     out = []
     for g in games:
         st = g["sim"].get_state()

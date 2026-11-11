@@ -103,6 +103,7 @@ def parse():
     a("--seed0", type=int, default=3000000, help="training game seeds start here")
     a("--amp", type=int, default=0,
       help="1: fp16 autocast for the learner's forward/backward on cuda (log-probs and losses stay fp32); watch dlogp")
+    a("--pre-mb", type=int, default=4096, help="batch of the no-grad passes before the PPO epochs (values, reference)")
     a("--server", type=int, default=0,
       help="1: one inference process on --device runs the trunk for all rollout workers (rl2_ppo_server); the workers "
            "keep only features, the per-unit decode and the simulator")
@@ -362,8 +363,13 @@ def main():
         # ---------------- values, GAE
         t1 = time.time()
         buf = ad.build_buffer(trajs)
+        t_buf = time.time() - t1
         offs = np.cumsum([0] + [len(t) for t in trajs])
-        LP0 = np.array([r["logp"] for t in trajs for r in t], np.float32)
+        LP0 = buf.lp0 if hasattr(buf, "lp0") else np.array([r["logp"] for t in trajs for r in t], np.float32)
+        for g in games:                      # the buffer holds the data now; drop the per-game copies
+            g["recs"] = None
+        trajs = None
+        pmb = max(args.mb, args.pre_mb)      # the no-grad passes (values, reference policy) take larger batches
         LP0U = torch.from_numpy(buf.lp0u).to(dev)
         vmodel = vnet if vnet is not None else net
         vmodel.eval()
@@ -374,8 +380,8 @@ def main():
         SUB = (np.sort(np.random.choice(buf.n, max(1, int(buf.n * args.dec_frac)), replace=False))
                if args.dec_frac < 1 else np.arange(buf.n))
         with torch.no_grad():
-            for b0 in range(0, buf.n, args.mb):
-                idx = np.arange(b0, min(buf.n, b0 + args.mb))
+            for b0 in range(0, buf.n, pmb):
+                idx = np.arange(b0, min(buf.n, b0 + pmb))
                 bt = buf.batch(idx, dev)
                 V[idx] = ad.evaluate(vmodel, bt, args.temp)["value"].float().cpu().numpy()
                 if args.dec_frac >= 1:
@@ -384,12 +390,13 @@ def main():
                         REFLP = torch.zeros((buf.n_ukeys, orf["lp"].shape[1]), device=dev)
                     REFLP[orf["ukey"]] = orf["lp"].float()
             if args.dec_frac < 1:
-                for b0 in range(0, len(SUB), args.mb):
-                    bt = buf.batch(SUB[b0:b0 + args.mb], dev)
+                for b0 in range(0, len(SUB), pmb):
+                    bt = buf.batch(SUB[b0:b0 + pmb], dev)
                     orf = ad.evaluate(ref, bt, args.temp)
                     if REFLP is None:
                         REFLP = torch.zeros((buf.n_ukeys, orf["lp"].shape[1]), device=dev)
                     REFLP[orf["ukey"]] = orf["lp"].float()
+        t_pre = time.time() - t1 - t_buf
         ADV = np.zeros(buf.n, np.float32); RET = np.zeros(buf.n, np.float32)
         for gi, g in enumerate(games):
             a_, r_ = gae(game_rewards(g, args, it), V[offs[gi]:offs[gi + 1]], args.gamma, args.lam)
@@ -472,7 +479,7 @@ def main():
             by.setdefault(g["opp"], []).append(g["margin"])
         srv = server.stats() if server is not None else None
         rec = {"it": it, "t": round(time.time()), "games": len(games), "srv": srv, "dec": ndec, "units": int(len(buf.act)),
-               "roll_s": round(t_roll, 1), "upd_s": round(t_upd, 1),
+               "roll_s": round(t_roll, 1), "upd_s": round(t_upd, 1), "buf_s": round(t_buf, 1), "pre_s": round(t_pre, 1),
                "games_per_min": round(60 * len(games) / max(t_roll, 1e-6), 1),
                "dec_per_s": round(ndec / max(t_roll, 1e-6), 1),
                "pol_s": round(t_pol, 1), "opp_s": round(t_opp, 1),
