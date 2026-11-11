@@ -1,10 +1,10 @@
-# status  2026-11-12 01:03
+# status  2026-11-12 01:13
 
 | 机器 | 负载 / GPU | 在跑什么 |
 |---|---|---|
-| L20 | 11.20 10.00 11.12 91 % | out ../data/rl3/snipe_b |
-| h23 | 17.03 4.27 6.44 | 200 j1ba_opp_m3echo 200 j1ba_opp_master2r 200 j1ba_opp_w3b 200 j1ca_opp_m3echo 200 j1ca_opp_master2r 200 j1ca_opp_w3b |
-| h24 | 0.00 0.00 1.18 | 空闲 |
+| L20 | 15.62 12.05 11.47 91 % | out ../data/rl3/snipe_b |
+| h23 | 28.79 33.39 24.78 | 200 ck30x_cnet2_m2so 200 ck30x_echo_e0 200 ck30x_g1_pure 200 ck30x_opp_1cz_v9 200 ck30x_opp_m3echo 600 ck_snipe_b_35_opp_master2r 600 ck_snipe_b_35_opp_w3b |
+| h24 | 40.80 11.74 4.61 | 200 j1cb_cnet2_m2so 200 j1cb_opp_m3echo 200 j1cb_opp_master2r 200 j1cb_opp_w3b 200 j1cc_cnet2_m2so 200 j1cc_opp_m3echo 200 j1cc_opp_master2r 200 j1cc_opp_w3b 200 j1cd_cnet2_m2so 200 j1cd_opp_m3echo 200 j1cd_opp_master2r 200 j1cd_opp_w3b 200 j1ce_cnet2_m2so 200 j1ce_opp_m3echo 200 j1ce_opp_master2r 2 |
 | DGX | 96 % | weights/cnet2_m6r1.npz weights/cnet2_k4r1.npz |
 
 ## 需要云端或用户定的事
