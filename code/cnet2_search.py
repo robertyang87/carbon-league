@@ -134,6 +134,17 @@ def ctx_b(pol, pre, teacher):
     return np.maximum(_lin(pol, np.concatenate([pre, w["teach.weight"][teacher]], -1), "ctx"), 0).astype(np.float32)
 
 
+def _cell_attn_b(pol, x, j):
+    """cnet2_model.CellAttn (attention over the board cells inside the trunk, cfg TA) on x [B, N, C]."""
+    n = f"tattn.{j}"; B, N_, C = x.shape; NH = pol.TNH; dh = C // NH
+    qkv = _lin(pol, _ln(pol, x, n + ".n1"), n + ".qkv").reshape(B, N_, 3, NH, dh).transpose(2, 0, 3, 1, 4)
+    sc = qkv[0] @ qkv[1].transpose(0, 1, 3, 2) / np.float32(dh ** 0.5) + pol.tbias[j]
+    sc = np.exp(sc - sc.max(-1, keepdims=True))
+    sc /= sc.sum(-1, keepdims=True)
+    x = x + _lin(pol, (sc @ qkv[2]).transpose(0, 2, 1, 3).reshape(B, N_, C), n + ".out")
+    return (x + _lin(pol, np.maximum(_lin(pol, _ln(pol, x, n + ".n2"), n + ".f1"), 0), n + ".f2")).astype(np.float32)
+
+
 def trunk_b(pol, X):
     """style-independent part of encode: -> tok [B,T,D], pre = [h.mean, tmean, scal-mlp] [B,K]."""
     w = pol.w
@@ -144,6 +155,8 @@ def trunk_b(pol, X):
         t = _gn(pol, _conv(pol, h, n + ".c1"), n + ".n1", True)
         h = h + _gn(pol, _conv(pol, t, n + ".c2"), n + ".n2")
         np.maximum(h, 0, out=h)
+        if i in pol.ta:
+            h = _cell_attn_b(pol, h, pol.ta[i])
     B = h.shape[0]
     pos = X["tok_pos"]
     tf = tok_features_b(X)
