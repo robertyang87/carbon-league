@@ -1,11 +1,11 @@
-# status  2026-11-12 06:56
+# status  2026-11-12 07:07
 
 | 机器 | 负载 / GPU | 在跑什么 |
 |---|---|---|
-| L20 | 15.66 12.55 11.95 90 % | out ../data/rl3/snipe_b |
-| h23 | 0.00 0.35 4.61 | 空闲 |
-| h24 | 0.01 0.01 0.00 | 空闲 |
-| DGX | 74 % | weights/cnet2_arch_nd.npz weights/cnet2_m6n1.npz weights/cnet2_n1r2.npz |
+| L20 | 15.96 13.26 12.25 41 % | out ../data/rl3/snipe_b |
+| h23 | 89.88 59.33 30.14 | 200 pkn1r_cnet2_m2so 200 pkn1r_echo_e0 200 pkn1r_opp_m3echo 200 pkn1r_opp_m6r 200 pkn1r_sb30 600 ck_snipe_b_75_opp_master2r 600 ck_snipe_b_75_opp_w3b 600 pkn1r_opp_master2r 600 pkn1r_opp_w3b |
+| h24 | 64.24 50.05 24.64 | 200 e0_opp_m6r 200 sb30_opp_m6r |
+| DGX | 96 % | weights/cnet2_arch_nd.npz weights/cnet2_m6n1.npz weights/cnet2_n1r2.npz |
 
 ## 需要云端或用户定的事
 - J1-a 显著为负：J2（八位老师）是否还开？建议先试"降低 Master2s 权重 / 给 Master3s 行加权"的 J1'。
@@ -30,3 +30,10 @@
 - 01:15 异常：snipe_fast 在 00:02 的重启时 GPU 显存不足（OOM）退出，此后只有 snipe_b 在跑（显存 30/44 GB，12 个模型）。不硬重启，以免把 snipe_b 一起挤掉；判定点⑤（两路比较）因此作废，snipe_b 独跑。
 - 01:31 snipe_b_30 补考完：Master2 +124 ± 43、W3best +176 ± 63、M 风格 +149 ± 72、直接对 E0 +271 ± 94（127/200），无显著为负 → 上榜候选，打了 8 位纯网络包（3.7 MB），包核对和耗时进行中；结果出来请用户拍板。
 - 01:55 snipe_b_30 8 位包核对：包减浮点 vs Master2 −4 ± 70（200 局，无报错），包原始 +877、168/200 胜；每步中位 36.5 ms，p99 37 ms，最慢 67 ms。等用户拍板上榜（Echo3）。
+- 06:55 用户定：snipe_b_30 **先不上**。
+- 06:55 对建议的回应：01:50 / 02:45 / 05:45 / 06:50 四条此前没有执行（Mac 在等用户拍板时停了，没有继续照清单做），现在照 02:45 的清单全部开工：
+  - DGX（新地址 10.211.43.155）：N-D 底座（160×10＋4 层注意力，4 轮，v19m2s3 稳定配方）、`m6n1`（M6 带注意力复刻，从 N1 底座）、`n1r2`（Master3s 全部 142 局，带注意力，从 N1 底座）三项同时在跑，GPU 96%。
+  - DGX 排队：Master3s2 回放满 100 局（现 88）由 Mac 自动送去，开 `m3s2r1`（N1 底座）和对照 `m3s2g1`（Grove1 起点）。
+  - L20：`snipe_b` 第 75 轮存完后改 RL2_SERVERS=1、RL2_SERVER_MAXB=1024、--pre-mb 2048、--max-snaps 2，对手池加 `m6r1` 0.5；随后 `snipe_n1` 冒烟（256 局×2 轮），过了就开（从 n1r，对手池 W1 1.0 / W2 0.5 / m6r1 0.5 / 自己 0.5，30 个进程）。检查点考试守护进程加了 `snipe_n1`。
+  - h23：n1r 8 位包（4.58 MB）对 Master2 真身、opp_w3b 各 600；对 M 风格、m3echo、直接对 E0、直接对 snipe_b_30、opp_m6r 各 200；E0 对 opp_w3b 补 994200 起 200 局。
+  - h24：opp_m6r 定为固定考官（m6r1 对 E0 −7 ± 62，对 Master2 +292 ± 52，各 200）；E0 和 snipe_b_30 对 opp_m6r 各 200；J1c-d 对三个对手补到 600；E0 对 m3echo 补 994200 起 400；n1r 包耗时。
