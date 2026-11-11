@@ -1713,9 +1713,13 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         return out
 
     def camp_bust(obs, acts):
-        """CB_STEP..: an enemy collector parked within 1 of our base while our loaded cars wait nearby -> the nearest
+        """CB_STEP..: an enemy collector parked within CB_ER (1) of our base while our loaded cars wait nearby -> the nearest
         light own collector (cargo <= CB_MAXC and <= the camper's; least cargo wins a collision, equal = both die)
-        steps toward it. Re-aimed every step, so the chase follows a camper that shifts."""
+        steps toward it. Re-aimed every step, so the chase follows a camper that shifts.
+        The wide setting (from step 100 / 150, CB_R 9) was examined on 2026-11-11 and is negative: 18-27 chases a game.
+        Narrow, endgame-only setting modelled on Master3s (2.3 own cars a game traded within 2 cells of its bases in the
+        last 25 steps, each followed by a loaded car going in):
+            CB_STEP 270, CB_ER 2, CB_R 4, CB_MAXC 5, CB_LOAD 100, CB_D 4"""
         me = obs["player"]; P = obs["players"]
         bases = [int(b) for b in P[me][1].values()]
         if not bases:
@@ -1727,7 +1731,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             mv2 = out.get(u2); c2 = _nxt(w2[0], mv2) if mv2 in MV else int(w2[0])
             claimed[c2] = claimed.get(c2, 0) + 1
         for e in P[1 - me][2].values():
-            if e[2] != "COLLECTOR" or min(F.DIST[e[0], b] for b in bases) > 1:
+            if e[2] != "COLLECTOR" or min(F.DIST[e[0], b] for b in bases) > cfg.get("CB_ER", 1):
                 continue
             b0 = min(bases, key=lambda b: F.DIST[e[0], b])
             if not any(w[1] >= cfg.get("CB_LOAD", 200.0) and F.DIST[w[0], b0] <= cfg.get("CB_R", 9) for _, w in own):
