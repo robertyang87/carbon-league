@@ -36,6 +36,17 @@ class Policy:
         w = self.w
         self.NB = len({k.split(".")[1] for k in w if k.startswith("blocks.")})
         self.L = len({k.split(".")[1] for k in w if k.startswith("attn.")})
+        self.TA = len({k.split(".")[1] for k in w if k.startswith("tattn.")})     # cell attention in the trunk
+        if self.TA:
+            step = max(self.NB // self.TA, 1)
+            self.ta = {min(step * (j + 1), self.NB) - 1: j for j in range(self.TA)}
+            self.TNH = w["tattn.0.rel.weight"].shape[1]
+            r_, c_ = np.arange(F.N) // F.S, np.arange(F.N) % F.S
+            self.rel_cell = ((r_[:, None] - r_[None, :]) % F.S) * F.S + (c_[:, None] - c_[None, :]) % F.S
+            self.tbias = [np.ascontiguousarray(w[f"tattn.{j}.rel.weight"][self.rel_cell].transpose(2, 0, 1))
+                          for j in range(self.TA)]
+        else:
+            self.ta = {}
         self.wm = {k[:-7]: _wmat(v) for k, v in w.items() if k.endswith(".weight") and v.ndim == 4 and v.shape[-1] == 3}
         self.C = w["stem.weight"].shape[0]
         self.G = self.cfg["G"] if self.cfg else 8
@@ -94,6 +105,8 @@ class Policy:
             n = f"blocks.{i}"
             t = np.maximum(self.gn(self.conv(h, n + ".c1"), n + ".n1"), 0)
             h = np.maximum(h + self.gn(self.conv(t, n + ".c2"), n + ".n2"), 0)
+            if i in self.ta:
+                h = self.cell_attn(h, self.ta[i])
         self.trunk = h
         pos = x["tok_pos"]
         tf = self.tok_features(x)
@@ -121,6 +134,16 @@ class Policy:
         s = self.lin(np.maximum(self.lin(x["scal"], "sc1"), 0), "sc2")
         ctx = np.maximum(self.lin(np.concatenate([h.mean(0), tmean, s, w["teach.weight"][teacher]]), "ctx"), 0)
         return tok, ctx
+
+    def cell_attn(self, x, j):
+        """cnet2_model.CellAttn on x [N, C] (channels-last)."""
+        n = f"tattn.{j}"; C = x.shape[1]; NH = self.TNH; dh = C // NH
+        qkv = self.lin(self.ln(x, n + ".n1"), n + ".qkv").reshape(F.N, 3, NH, dh).transpose(1, 2, 0, 3)
+        sc = qkv[0] @ qkv[1].transpose(0, 2, 1) / np.float32(dh ** 0.5) + self.tbias[j]
+        sc = np.exp(sc - sc.max(-1, keepdims=True))
+        sc /= sc.sum(-1, keepdims=True)
+        x = x + self.lin((sc @ qkv[2]).transpose(1, 0, 2).reshape(F.N, C), n + ".out")
+        return x + self.lin(np.maximum(self.lin(self.ln(x, n + ".n2"), n + ".f1"), 0), n + ".f2")
 
     def gru(self, x, h):
         w = self.w

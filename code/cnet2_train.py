@@ -336,7 +336,12 @@ def main(data, out, epochs, cfg):
     init = os.environ.get("BC_INIT")
     if init:
         w = np.load(init)
-        net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"})
+        mk_ = net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"}, strict=False)
+        bad_ = [k for k in mk_.missing_keys if not k.startswith("tattn.")] + list(mk_.unexpected_keys)
+        if bad_:                              # only new trunk-attention layers (cfg TA, identity at init) may be absent
+            raise SystemExit(f"BC_INIT does not fit the model: {bad_[:8]}")
+        if mk_.missing_keys:
+            print(json.dumps({"init_new_layers": len(mk_.missing_keys)}), flush=True)
         for r_ in [int(x) for x in os.environ.get("BC_REINIT_TEACH", "").split(",") if x]:
             with torch.no_grad():   # fresh style row for a re-assigned slot (others keep their warm start)
                 net.teach.weight[r_].normal_(0.0, float(net.teach.weight.std()))

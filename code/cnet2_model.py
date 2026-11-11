@@ -11,6 +11,7 @@
            logits[m] = head(h)[m] + <U h, V mf[m]>, illegal masked.
 """
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as Fn
@@ -92,6 +93,48 @@ class Attn(nn.Module):
         return x * mask[..., None].float()
 
 
+_R, _C = np.arange(F.N) // F.S, np.arange(F.N) % F.S
+REL_CELL = torch.from_numpy((((_R[:, None] - _R[None, :]) % F.S) * F.S + (_C[:, None] - _C[None, :]) % F.S).astype(np.int64))
+
+
+class CellAttn(nn.Module):
+    """attention over the 225 board cells inside the trunk (cfg TA > 0): every cell reads every other cell in one
+    layer, with a learned bias per torus offset and head. Pre-norm residual with zero-initialised output layers, so a
+    net that gains these layers starts out computing exactly what it computed without them."""
+
+    def __init__(self, C, NH):
+        super().__init__()
+        self.NH = NH
+        self.n1 = nn.LayerNorm(C)
+        self.qkv = nn.Linear(C, 3 * C)
+        self.out = nn.Linear(C, C)
+        self.rel = nn.Embedding(F.N, NH)
+        self.n2 = nn.LayerNorm(C)
+        self.f1 = nn.Linear(C, 2 * C)
+        self.f2 = nn.Linear(2 * C, C)
+        for m in (self.out, self.f2):
+            nn.init.zeros_(m.weight); nn.init.zeros_(m.bias)
+        nn.init.zeros_(self.rel.weight)
+
+    def forward(self, h):                                   # [B,C,15,15]
+        B, C = h.shape[:2]
+        x = h.reshape(B, C, F.N).transpose(1, 2)            # [B,N,C]
+        q, k, v = self.qkv(self.n1(x)).reshape(B, F.N, 3, self.NH, C // self.NH).permute(2, 0, 3, 1, 4)
+        sc = q @ k.transpose(-1, -2) / (C // self.NH) ** 0.5 + self.rel(REL_CELL.to(h.device)).permute(2, 0, 1)
+        a = (torch.softmax(sc, -1) @ v).transpose(1, 2).reshape(B, F.N, C)
+        x = x + self.out(a)
+        x = x + self.f2(Fn.relu(self.f1(self.n2(x))))
+        return x.transpose(1, 2).reshape(B, C, F.S, F.S)
+
+
+def ta_after(NB, TA):
+    """block indices after which a CellAttn layer runs: TA layers spread evenly over the NB blocks."""
+    if not TA:
+        return {}
+    step = max(NB // TA, 1)
+    return {min(step * (j + 1), NB) - 1: j for j in range(TA)}
+
+
 class CNet2(nn.Module):
     def __init__(self, **cfg):
         super().__init__()
@@ -103,6 +146,8 @@ class CNet2(nn.Module):
         if c.get("ZI"):                      # zero-init residual branch (blocks start as identity) for deep/wide stability
             for blk in self.blocks:
                 nn.init.zeros_(blk.n2.weight)
+        self.tattn = nn.ModuleList([CellAttn(C, c.get("TNH", 4)) for _ in range(c.get("TA", 0))])
+        self._ta = ta_after(c["NB"], c.get("TA", 0))
         self.aux = nn.Conv2d(C, 1, 1)
         self.tok1 = nn.Linear(TOKF, D)
         self.tok2 = nn.Linear(D, D)
@@ -126,8 +171,10 @@ class CNet2(nn.Module):
         x = b["maps"]                                   # [B,P,15,15] float
         B = x.shape[0]
         h = Fn.relu(self.stem_n(self.stem(wrap(x))))
-        for blk in self.blocks:
+        for i, blk in enumerate(self.blocks):
             h = blk(h)
+            if i in self._ta:
+                h = self.tattn[self._ta[i]](h)
         aux = self.aux(h).reshape(B, -1)
         flat = h.reshape(B, h.shape[1], -1)             # [B,C,N]
         pos = b["tok_pos"]
