@@ -1,5 +1,6 @@
 """awr_us_env: our pure net for awr_gen, everything from the environment (data generation on cloud hosts).
   AWR_US_WEIGHTS  policy weights (.npz path, or a name under data/weights)          required
+  AWR_US_RW       rollout-net weights (with a searching AWR_US_CONF: search-labelled games for distillation)
   AWR_US_CONF     JSON conf overrides, e.g. '{"TEACHER": 2, "TEACHER_LATE": 7, "LATE_STEP": 240}'
   AWR_TAU / AWR_SEED    sampling temperature / seed (set per game by awr_gen)
   AWR_OPEN_STEPS  sample while step < this (default 100; 300 = the whole game)
@@ -15,13 +16,15 @@ CONF = {'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', '
 CONF.update(json.loads(os.environ.get('AWR_US_CONF', '{}')))
 _W = os.environ['AWR_US_WEIGHTS']
 _WTS = _W if os.path.exists(_W) else os.path.join(_C, "..", "data", "weights", _W)
+_R = os.environ.get('AWR_US_RW')          # rollout-net weights, only needed when AWR_US_CONF turns the search on
+_RW = None if not _R else (_R if os.path.exists(_R) else os.path.join(_C, "..", "data", "weights", _R))
 _AG = None
 
 
 def agent(observation, configuration):
     global _AG
     if _AG is None or observation["step"] == 0:
-        _AG = _S.make_search_agent(CONF, weights=_WTS)
+        _AG = _S.make_search_agent(CONF, weights=_WTS, rweights=_RW) if _RW else _S.make_search_agent(CONF, weights=_WTS)
     a = _AG(observation, configuration)
     agent.last_stats = _AG.stats
     agent.inner = _AG                      # .state["lg0"] / .state["f"].own_uid: the net's logits per own slot (fork_gen)

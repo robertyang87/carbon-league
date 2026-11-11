@@ -114,7 +114,7 @@ def main():
                         "strategies": {"a": {"name": AWR_NAME}, "b": {"name": "opp"}},
                         "scores": {"a": 1.0, "b": 0.0}})
     json.dump(idx, open(os.path.join(out, "index.json"), "w"))
-    adv = [r["adv"] for r in res if r["k"] > 0]
+    adv = [r["adv"] for r in res if r["k"] > 0] or [0.0]        # K = 0: greedy games only (e.g. search-labelled games)
     import statistics as S
     print(json.dumps({"games": len(res), "seeds": ns, "K": K, "tau": tau, "adv_mean": round(S.mean(adv), 1),
                       "adv_sd": round(S.pstdev(adv), 1), "greedy_reward_mean": round(S.mean(base.values()), 1)}), flush=True)

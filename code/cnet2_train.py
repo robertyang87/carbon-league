@@ -229,6 +229,7 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
     # is soft, so cross-entropy to its own argmax sharpens it and moves the decoder -- measured: cars-only hard-label
     # training alone takes car agreement from 99.5% to 96.4%.)
     self_kl = float(os.environ.get("BC_SELF_KL", "0")); REF = None
+    exit_w = float(os.environ.get("BC_EXIT_W", "0"))       # needs BC_SELF_KL > 0 (the reference logits)
 
     def batch_loss(b, tok, pre):
         lg = net.decode(b, tok, net.ctx_from(pre, b["teacher"]))
@@ -240,11 +241,19 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
             wv = wv * b["uw"]
         loss = (ce * wv).sum() / wv.sum().clamp(min=1)
         if REF is not None:
-            car = (valid & (b["tok_kind"][:, :F.OWN] == 0))[:, :REF.shape[1]].float()
-            lp = Fn.log_softmax(lg[:, :REF.shape[1]].float(), -1); lr_ = Fn.log_softmax(REF[b["_cp"]].float(), -1)
+            ref = REF[b["_cp"]].float(); n_ = REF.shape[1]
+            lp = Fn.log_softmax(lg[:, :n_].float(), -1); lr_ = Fn.log_softmax(ref, -1)
             pr_ = lr_.exp()
             kl = torch.where(pr_ > 0, pr_ * (lr_ - lp), torch.zeros_like(pr_)).sum(-1)     # illegal moves: p = 0, no term
-            loss = loss + self_kl * (kl * car).sum() / car.sum().clamp(min=1)
+            if exit_w > 0:
+                # search distillation: a token whose played move differs from the initial net's own move is a search
+                # (or rule) correction -> cross-entropy to the played move, weight exit_w; every other own token is
+                # held on the initial net by the KL term. The plain weighted cross-entropy above is not used.
+                v_ = valid[:, :n_]; chg = v_ & (y[:, :n_] != ref.argmax(-1)); keep = (v_ & ~chg).float(); chg = chg.float()
+                loss = exit_w * (ce[:, :n_] * chg).sum() / chg.sum().clamp(min=1) + self_kl * (kl * keep).sum() / keep.sum().clamp(min=1)
+            else:
+                car = (valid & (b["tok_kind"][:, :F.OWN] == 0))[:, :n_].float()
+                loss = loss + self_kl * (kl * car).sum() / car.sum().clamp(min=1)
         return loss, lg
 
     if self_kl > 0:
@@ -266,7 +275,21 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
                     m = (y >= 0) & (kind == k); ok[k] += ((pred == y) & m).sum().item(); n[k] += m.sum().item()
         net.train()
         r = {nm: round(ok[k] / max(n[k], 1), 4) for k, nm in enumerate(("collector", "planter", "base"))}
-        r["all"] = round(ok.sum() / max(n.sum(), 1), 4); return r
+        r["all"] = round(ok.sum() / max(n.sum(), 1), 4)
+        if REF is not None and exit_w > 0:
+            # of the validation tokens the search changed: how many does the net now play itself (0 before training);
+            # of the unchanged ones: how many still agree with the initial net
+            c_ok = c_n = k_ok = k_n = 0
+            with torch.no_grad():
+                for a0 in range(0, len(va), 4096):
+                    b, tok, pre = light(va[a0:a0 + 4096]); _, lg = batch_loss(b, tok, pre)
+                    ref = REF[b["_cp"]].float(); n_ = REF.shape[1]; y = b["y"][:, :n_]; v_ = y >= 0
+                    pred = lg[:, :n_].argmax(-1); r0 = ref.argmax(-1); chg = v_ & (y != r0)
+                    c_ok += ((pred == y) & chg).sum().item(); c_n += chg.sum().item()
+                    k_ok += ((pred == r0) & v_ & ~chg).sum().item(); k_n += (v_ & ~chg).sum().item()
+            net.train()
+            r["changed_learned"] = round(c_ok / max(c_n, 1), 4); r["changed_n"] = int(c_n); r["unchanged_kept"] = round(k_ok / max(k_n, 1), 4)
+        return r
 
     best = -1; log = open(out.replace(".npz", "_log.jsonl"), "a")
     for ep in range(epochs):
@@ -283,7 +306,7 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
         r = evaluate_c()
         rec = {"ep": ep, "val": r, "train_pi": round(acc / max(nb, 1), 4), "s": round(time.time() - t1), "cached": True}
         print(json.dumps(rec), flush=True); log.write(json.dumps(rec) + "\n"); log.flush()
-        if r["all"] > best:
+        if r["all"] > best or exit_w > 0:        # distillation: agreement with the labels is not the goal, keep the last epoch
             best = r["all"]; export(net, out, {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar, "data": data, "cached_trunk": True})
     print("best", best)
 
