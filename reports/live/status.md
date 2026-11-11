@@ -1,10 +1,10 @@
-# status  2026-11-12 01:34
+# status  2026-11-12 01:44
 
 | 机器 | 负载 / GPU | 在跑什么 |
 |---|---|---|
-| L20 | 9.54 11.30 11.37 100 % | out ../data/rl3/snipe_b |
-| h23 | 14.95 24.92 35.88 | 200 pk30_m2r |
-| h24 | 120.23 109.00 72.03 | 200 j1cb_cnet2_m2so 200 j1cb_opp_m3echo 200 j1cb_opp_master2r 200 j1cb_opp_w3b 200 j1cc_cnet2_m2so 200 j1cc_opp_m3echo 200 j1cc_opp_master2r 200 j1cc_opp_w3b 200 j1cd_cnet2_m2so 200 j1cd_opp_m3echo 200 j1cd_opp_master2r 200 j1cd_opp_w3b 200 j1ce_cnet2_m2so 200 j1ce_opp_m3echo 200 j1ce_opp_master2r 2 |
+| L20 | 7.51 10.38 11.07 100 % | out ../data/rl3/snipe_b |
+| h23 | 0.00 3.83 19.16 | 空闲 |
+| h24 | 0.28 28.80 51.40 | 空闲 |
 | DGX | 0 % |  |
 
 ## 需要云端或用户定的事
@@ -29,3 +29,4 @@
 - 01:15 判定点②：snipe_b_30 过线（W3best +176 ± 63，Master2 +124 ± 43）→ 二十三号机补考 m3echo / M 风格 / 1C-v9 / Grove1 / 直接对 E0，各 200 局，结果出来报用户。
 - 01:15 异常：snipe_fast 在 00:02 的重启时 GPU 显存不足（OOM）退出，此后只有 snipe_b 在跑（显存 30/44 GB，12 个模型）。不硬重启，以免把 snipe_b 一起挤掉；判定点⑤（两路比较）因此作废，snipe_b 独跑。
 - 01:31 snipe_b_30 补考完：Master2 +124 ± 43、W3best +176 ± 63、M 风格 +149 ± 72、直接对 E0 +271 ± 94（127/200），无显著为负 → 上榜候选，打了 8 位纯网络包（3.7 MB），包核对和耗时进行中；结果出来请用户拍板。
+- 01:55 snipe_b_30 8 位包核对：包减浮点 vs Master2 −4 ± 70（200 局，无报错），包原始 +877、168/200 胜；每步中位 36.5 ms，p99 37 ms，最慢 67 ms。等用户拍板上榜（Echo3）。
