@@ -12,6 +12,8 @@ Opponent spec strings:
     "exp/opp_1cz_v5.py"      a bot file (module agent(), eval_v53 loader rule)
     "SNAP:<adapter>:<npz>"   frozen snapshot of a learner (greedy or sampled at
                              SNAP_TEMP), played through that adapter's actor
+    "SNAP:cnet2:<npz>#T5"    any cnet2 policy net as a cheap fixed opponent (style row 5): no rule layer, no
+                             search, trunk on the inference server -- costs what a snapshot costs
 """
 
 import os
@@ -55,9 +57,14 @@ def _actor(adapter_name, wkey, weights=None):
     k = (adapter_name, wkey)
     a = _W_CACHE.get(k)
     if a is None:
+        teacher = None
+        if isinstance(wkey, str) and "#T" in wkey:      # "path.npz#T5": play this net with style row 5 (fixed opponents)
+            wkey, t_ = wkey.rsplit("#T", 1); teacher = int(t_)
         if weights is None:
             weights = AD.load_npz(wkey)
         a = AD.get_adapter(adapter_name).make_actor(weights)
+        if teacher is not None:
+            a.teacher = teacher
         if _REMOTE[0] is not None and hasattr(a, "remote") and isinstance(wkey, str) and os.path.exists(wkey):
             a.remote = _REMOTE[0]; a.key = os.path.abspath(wkey)
         if len(_W_CACHE) > 8:

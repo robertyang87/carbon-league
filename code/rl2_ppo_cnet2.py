@@ -41,14 +41,14 @@ class Cnet2Actor:
     def __init__(self, weights):
         import cnet2_np as NP
         self.pol = NP.Policy(weights)
-        self.remote = None; self.key = None
+        self.remote = None; self.key = None; self.teacher = TEACHER
 
     def new_game(self, side):
         return {"f": F.Feat(side), "side": side}
 
     def _decode(self, x, aux, rng, temp, greedy, enc=None):
         P = self.pol; w = P.w
-        tok, ctx = P.encode(x, TEACHER) if enc is None else enc
+        tok, ctx = P.encode(x, self.teacher) if enc is None else enc
         value = math.tanh(float(ctx @ w["value.weightT"][:, 0] + w["value.bias"][0]))
         h = P.lin(ctx, "h0")
         prev = 8
@@ -87,7 +87,7 @@ class Cnet2Actor:
         encs = [None] * len(xs)
         rem = getattr(self, "remote", None)
         if rem is not None and xs:
-            tok, ctx = rem.encode(self.key, {k: np.stack([np.asarray(x[k]) for x in xs]) for k in XKEYS}, TEACHER)
+            tok, ctx = rem.encode(self.key, {k: np.stack([np.asarray(x[k]) for x in xs]) for k in XKEYS}, self.teacher)
             encs = [(tok[i], ctx[i]) for i in range(len(xs))]
         for st, x, enc in zip(states, xs, encs):
             f = st["f"]
