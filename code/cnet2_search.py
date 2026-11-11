@@ -477,6 +477,10 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     xpol = NP.Policy(load_weights(xw)) if xw is not None else None      # extra (structurally different) mixture component
     XT = int(cfg.get("XNET_T", 1))
     opol = CachePolicy(load_weights(oweights)) if oweights is not None else None   # opening net (steps < OPEN_NET_STEP, no search)
+    # ENS: extra policy weights (paths or dicts); the net's own move (before any rule / search layer) is then the mean
+    # of the members' logits (cnet2_np.Ensemble). One extra trunk per member per step; rollouts keep using `pol`.
+    ens = cfg.get("ENS")
+    epol = NP.Ensemble([pol] + [NP.Policy(load_weights(e_)) for e_ in ens]) if ens else None
     st = {"f": None, "fo": None}
     pool = []
     stats = {"steps": 0, "searched": 0, "branches": 0, "changed": 0, "branch_steps": 0, "worst_ms": 0.0,
@@ -663,7 +667,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             if opol is not None and obs["step"] < cfg.get("OPEN_NET_STEP", 0):
                 y, lg0, _ = opol.act(x, f.aux, teacher=cfg.get("OPEN_NET_T", 2))
             else:
-                y, lg0, _ = pol.act(x, f.aux, teacher=st["T_now"])
+                y, lg0, _ = (epol if epol is not None else pol).act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
         st["base_fix"] = {}      # base slots set by a rule layer this step: every search candidate / guard re-decode keeps them
         st["guard_base"] = set() # base slots the bankruptcy guard forced to recruit a collector this step (never searched)

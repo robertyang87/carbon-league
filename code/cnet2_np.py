@@ -195,6 +195,55 @@ class Policy:
         return labels, logits, value
 
 
+class Ensemble:
+    """several Policy nets as one: every unit's move logits are the mean over the members, the chosen action is fed
+    back to all of them (same autoregressive prefix). Drop-in for Policy.act; costs one trunk per member."""
+
+    def __init__(self, pols):
+        self.pols = list(pols)
+        self.w = self.pols[0].w; self.cfg = self.pols[0].cfg
+
+    def act(self, x, aux, teacher=0, forced=None, sample_rng=None, temp=1.0, hook=None, sample_kinds=None):
+        P = self.pols; K = len(P)
+        enc = [p.encode(x, teacher) for p in P]
+        value = float(np.mean([math.tanh(float(c @ p.w["value.weightT"][:, 0] + p.w["value.bias"][0])) for p, (_, c) in zip(P, enc)]))
+        hs = [p.lin(c, "h0") for p, (_, c) in zip(P, enc)]
+        prev = 8
+        pf = F.Prefix(x, aux)
+        labels = np.full(F.OWN, -1, np.int64)
+        logits = np.full((F.OWN, 5), NEG, np.float32)
+        for s in range(F.OWN):
+            if not x["tok_mask"][s]:
+                continue
+            uf, mf, legal = pf.feats(s)
+            acc = np.zeros(5, np.float32)
+            for k, p in enumerate(P):
+                tok, ctx = enc[k]
+                inp = p.lin(np.concatenate([tok[s], ctx, uf, mf.reshape(-1)]), "din") + p.w["aemb.weight"][prev]
+                hs[k] = p.gru(inp, hs[k])
+                base = p.lin(hs[k], "whead") if s < 10 else np.concatenate([p.lin(hs[k], "bhead"), np.zeros(2, np.float32)])
+                acc += base + p.lin(mf, "V") @ p.lin(hs[k], "U")
+            lg = np.where(legal, acc / K, NEG).astype(np.float32)
+            logits[s] = lg
+            if forced is not None:
+                a = int(forced[s])
+            elif sample_rng is not None and (sample_kinds is None
+                                             or (s >= 10 and "base" in sample_kinds)
+                                             or (s < 10 and int(x["tok_kind"][s]) == 1 and "planter" in sample_kinds)):
+                z = lg / temp; pr = np.exp(z - z.max()); pr /= pr.sum()
+                a = int(sample_rng.choice(5, p=pr))
+            else:
+                a = int(lg.argmax())
+            if hook is not None:
+                o = hook(s, lg, pf, a)
+                if o is not None:
+                    a = int(o)
+            labels[s] = a
+            pf.advance(s, a)
+            prev = a + (0 if s < 10 else 5)
+        return labels, logits, value
+
+
 def sym_view(x, g):
     """x in symmetry frame g (cnet2_feat.SYM_CELL/SYM_MOVE; all are involutions)."""
     cm, mm = F.SYM_CELL[g], F.SYM_MOVE[g]
