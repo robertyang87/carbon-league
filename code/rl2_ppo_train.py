@@ -10,7 +10,7 @@ Objective per decision (one game step = the joint action of all our units):
   L = -min(r A, clip(r) A) + vf * (V - G)^2 - ent * H + kl * KL(pi_ref || pi)
   r = exp(logp - logp_behaviour); H, KL summed over units (teacher-forced
   conditionals for autoregressive policies); pi_ref = frozen BC init.
-Reward per step: rscale * d(margin)  (or terminal-only margin)  + win bonus
+Reward per step: rscale * d(margin)  (or terminal-only margin, or --reward worth: d(worth margin))  + win bonus
   + anneal * (c_dep * delivered_cargo - c_lost * cargo_lost) * rscale,
   anneal = max(0, 1 - it / shape_iters). GAE(gamma, lambda) on the value head.
 League: bot files + frozen learner snapshots; opponent sampling
@@ -81,7 +81,9 @@ def parse():
     a("--gamma", type=float, default=0.995)
     a("--lam", type=float, default=0.95)
     a("--rscale", type=float, default=1 / 5000.0)
-    a("--reward", default="dense", choices=["dense", "terminal"])
+    a("--reward", default="dense", choices=["dense", "terminal", "worth"],
+      help="dense: per-step change of the cash margin; worth: per-step change of the worth margin (cash + cargo on board + "
+           "remaining tree value; sums to the same final margin, credit arrives at pick-up / planting time)")
     a("--win-bonus", type=float, default=0.1)
     a("--c-dep", type=float, default=0.0)
     a("--c-lost", type=float, default=0.0)
@@ -180,6 +182,8 @@ def game_rewards(g, args, it):
     dm = g["dmargin"].astype(np.float64)
     if args.reward == "terminal":
         r = np.zeros_like(dm); r[-1] = dm.sum()
+    elif args.reward == "worth":
+        r = g["dworth"].astype(np.float64)
     else:
         r = dm.copy()
     ann = max(0.0, 1.0 - it / max(1, args.shape_iters))

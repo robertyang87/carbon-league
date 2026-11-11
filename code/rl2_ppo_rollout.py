@@ -98,6 +98,22 @@ def _own_events(pre, post, me, my_bases):
     return dep, lost
 
 
+def _worth_margin(sim, post, side, left):
+    """(our worth - their worth): cash + cargo on board + remaining value of standing trees; at the end cash only.
+    Potential-based shaping for --reward worth: the per-step differences sum to the final margin exactly, but carbon
+    is credited when it is picked up / a tree is planted, not tens of steps later when it reaches a base."""
+    v = [float(post["cash"][0]), float(post["cash"][1])]
+    if left > 0:
+        for w in post["workers"].values():
+            v[w["player"]] += float(w["carbon"])
+        car = sim.carbon
+        for t_ in post["trees"].values():
+            r, c = divmod(int(t_["pos"]), 15)
+            nb = car[((r - 1) % 15) * 15 + c] + car[((r + 1) % 15) * 15 + c] + car[r * 15 + (c - 1) % 15] + car[r * 15 + (c + 1) % 15]
+            v[t_["player"]] += nb * (1.0 - 0.9625 ** max(0, min(50 - int(t_["age"]), left, 30))) * 0.8
+    return v[side] - v[1 - side]
+
+
 def play_batch(task):
     """task keys: adapter, wkey, weights (or None -> load wkey), games [(opp, seed, side)],
     temp, greedy, record (bool), rng_seed.
@@ -110,7 +126,7 @@ def play_batch(task):
         sim = FastCarbon(CFG).reset(seed=seed)
         g = {"opp": opp, "seed": seed, "side": side, "sim": sim,
              "op": make_opponent(opp, 1 - side, seed), "st": actor.new_game(side),
-             "recs": [], "R": [], "dep": [], "lost": [], "prev": 0.0,
+             "recs": [], "R": [], "W": [], "dep": [], "lost": [], "prev": 0.0, "prevw": 0.0,
              "my_bases": None}
         games.append(g)
     rng = np.random.default_rng(task.get("rng_seed", 0))
@@ -140,6 +156,8 @@ def play_batch(task):
                 dep, lost = _own_events(pre, post, side, set(o["players"][side][1].values()))
                 g["recs"].append(rec)
                 g["R"].append(d - g["prev"])
+                wm = _worth_margin(sim, post, side, 300 - step)
+                g["W"].append(wm - g["prevw"]); g["prevw"] = wm
                 g["dep"].append(dep); g["lost"].append(lost)
             g["prev"] = d
     out = []
@@ -150,7 +168,7 @@ def play_batch(task):
              "my": float(st["cash"][side]), "op": float(st["cash"][1 - side]),
              "margin": float(st["cash"][side] - st["cash"][1 - side])}
         if record:
-            r.update(recs=g["recs"], dmargin=np.array(g["R"], np.float32),
+            r.update(recs=g["recs"], dmargin=np.array(g["R"], np.float32), dworth=np.array(g["W"], np.float32),
                      dep=np.array(g["dep"], np.float32), lost=np.array(g["lost"], np.float32))
         out.append(r)
     return {"games": out, "wall": time.time() - t0, "t_pol": t_pol, "t_opp": t_opp,
