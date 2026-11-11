@@ -31,10 +31,12 @@ export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 export AWR_STEPS=300 AWR_OPEN_STEPS=300 AWR_KINDS=planter,base
 export AWR_US_WEIGHTS=<Grove1 策略网权重 .npz>
 export AWR_US_CONF='{"TEACHER": 2, "TEACHER_LATE": 7, "LATE_STEP": 240}'
-N=$(nproc); time python3 awr_gen.py ../data/sp_bench awr_us_env.py <Master2s 替身的对手文件> 5000 $N 1 0.5 $N
+N=$(nproc --all); time python3 awr_gen.py ../data/sp_bench awr_us_env.py <Master2s 替身的对手文件> 5000 $N 1 0.5 $N
 ```
 
 共 2×N 局。`OMP_NUM_THREADS=1` 必须设，否则多进程抢线程会卡死。
+
+**注意**：设了 `OMP_NUM_THREADS=1` 之后，`nproc` 会返回 1（它读这个变量），进程数要用 `nproc --all`。本文的命令已全部改成 `nproc --all`。
 
 **验证**
 - `real` 时间 ÷ 2 = 满载时每局耗时。云端 4 核 x86 上是 22 秒；超过 45 秒先查线程数和 numpy，再往下走。
@@ -61,7 +63,7 @@ def make(**over):
 cd ~/carbon/data
 nohup python3 knob_search.py ks_full ../code/exp/knob_us_grove1.py \
   m2s=<Master2s 替身.py> m2=<M2 替身 m2s2.py> grove1=<Grove1 纯网络.py> scout1=<Scout1 或 v17d2 纯网络.py> \
-  --workers $(nproc) > ks_full.log 2>&1 &
+  --workers $(nproc --all) > ks_full.log 2>&1 &
 ```
 
 - 对手池（2026-11-10 改）：不用 1C-v9。它只有 2269 分，Grove1 纯网络对它的基准分差约 +1200，分不出配置好坏；
@@ -91,7 +93,7 @@ nohup python3 knob_search.py ks_full ../code/exp/knob_us_grove1.py \
 
 ```bash
 cd ~/carbon/code    # 环境变量同第 1 步
-for T in 0.3 0.5 0.8; do python3 awr_gen.py ../data/sp_tau$T awr_us_env.py <Master2s 替身.py> 3100000 40 4 $T $(nproc); done
+for T in 0.3 0.5 0.8; do python3 awr_gen.py ../data/sp_tau$T awr_us_env.py <Master2s 替身.py> 3100000 40 4 $T $(nproc --all); done
 ```
 
 每条最后打印一行 JSON。选温度的规则：`adv_mean` 不低于 −150，在此前提下 `adv_sd` 最大的那个。
@@ -101,7 +103,7 @@ for T in 0.3 0.5 0.8; do python3 awr_gen.py ../data/sp_tau$T awr_us_env.py <Mast
 
 ```bash
 for O in m2s m2 grove1 scout1; do
-  python3 awr_gen.py ../data/sp1_$O awr_us_env.py <对应的对手文件> 3000000 500 4 <选定温度> $(nproc)
+  python3 awr_gen.py ../data/sp1_$O awr_us_env.py <对应的对手文件> 3000000 500 4 <选定温度> $(nproc --all)
 done
 ```
 
