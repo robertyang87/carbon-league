@@ -39,7 +39,7 @@
 |---|---|---|
 | J1 | 五位：Master3s、M6、K4TacSearch、Godslayer-CV、Master2s | 已训完，在考 |
 | J2 | 八位：J1 加 Carago-V2、RyanX-M2、Fable5.2-Max-V3 | J1 第一组考试不显著为负时 |
-| J3 起 | 当时前八名 | 每当回放总数比上一版多 300 局，或者前三名出了新选手 |
+| 单独复刻 | 前十名里每一位，各自一份（配方同 Echo1） | 新选手或新版本的回放满 100 局时；同一位老师比上次多出 100 局时重训 |
 
 ```bash
 CNET2_TOP=J2 python3 build_top.py ../data/ds_top2 <全部回放目录，含以前攒的>
