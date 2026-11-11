@@ -789,7 +789,34 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             if not cfg["SEARCH"] or left < cfg["ENDGAME_STOP"] or (opol is not None and obs["step"] < cfg.get("OPEN_NET_STEP", 0)):
                 return acts
             if cfg["MODE"] == "mcts":
+                st["seq_last"] = None
                 out = _mcts(obs, x, y, acts, xo, left, t0, tw)
+                if int(cfg.get("SEQ_KEYS") or 1) > 1:
+                    # measurement (fixed-sims clock): after the first searched car, search the next car in a capture
+                    # situation with the first result as the new default, and so on -- up to SEQ_KEYS cars per step.
+                    # The normal search changes at most ONE unit per step while ~3 cars are in such a situation.
+                    try:
+                        done_ = set(); f_ = st["f"]
+                        for _ in range(int(cfg["SEQ_KEYS"]) - 1):
+                            if st.get("seq_last") is None:
+                                break
+                            done_.add(st["seq_last"]); st["seq_skip"] = set(done_); st["seq_last"] = None
+                            y2 = y.copy()
+                            for s_, u_ in enumerate(f_.own_uid):
+                                if u_ is None:
+                                    continue
+                                a_ = out.get(u_, "NONE")
+                                if s_ < 10:
+                                    y2[s_] = next(k_ for k_ in range(5) if F.MOVES[F.CANON_MOVE[k_] if f_.seat else k_] == a_)
+                                else:
+                                    y2[s_] = F.BASE_ACTS.index(a_)
+                            c0_ = stats["changed"]
+                            out = _mcts(obs, x, y2, out, xo, left, t0, tw)
+                            stats["seq_changed"] = stats.get("seq_changed", 0) + (stats["changed"] - c0_)
+                    except Exception:
+                        stats["errors"] += 1
+                    finally:
+                        st["seq_skip"] = None
             else:
                 out = _search(obs, x, y, acts, xo, left, t0, tw)
             stats["worst_ms"] = max(stats["worst_ms"], (clk() - t0) * 1000)
@@ -1006,8 +1033,11 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         me = obs["player"]; step = obs["step"]
         f, fo = st["f"], st["fo"]
         keys = key_units(obs, cfg)
+        if st.get("seq_skip"):                   # SEQ_KEYS pass >= 2: units searched earlier this step are not searched again
+            keys = [k_ for k_ in key_units(obs, dict(cfg, MAX_KEY=10)) if k_[1] not in st["seq_skip"]][:cfg["MAX_KEY"]]
         if not keys:
             return acts
+        st["seq_last"] = keys[0][1]
         stats["searched"] += 1
         tok, ctx = pol.last_enc
         lg0 = st["lg0"]
