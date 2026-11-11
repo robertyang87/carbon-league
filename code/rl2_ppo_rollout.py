@@ -212,6 +212,12 @@ def play_batch(task):
             post = sim.get_state()
             t_sim += time.time() - tc
             d = post["cash"][side] - post["cash"][1 - side]
+            seen = g.setdefault("tseen", set())          # trees planted per side (new tree ids), for the train log
+            for tid_, t_ in post["trees"].items():
+                if tid_ not in seen:
+                    seen.add(tid_)
+                    k_ = "tp_my" if t_["player"] == side else "tp_op"
+                    g[k_] = g.get(k_, 0) + 1
             if record:
                 dep, lost = _own_events(pre, post, side, set(o["players"][side][1].values()))
                 g["recs"].append(rec)
@@ -234,7 +240,8 @@ def play_batch(task):
         side = g["side"]
         r = {"opp": g["opp"], "seed": g["seed"], "side": side,
              "my": float(st["cash"][side]), "op": float(st["cash"][1 - side]),
-             "margin": float(st["cash"][side] - st["cash"][1 - side])}
+             "margin": float(st["cash"][side] - st["cash"][1 - side]),
+             "planted": g.get("tp_my", 0), "planted_op": g.get("tp_op", 0)}
         if record:
             r.update(recs=g["recs"], dmargin=np.array(g["R"], np.float32), dworth=np.array(g["W"], np.float32),
                      dep=np.array(g["dep"], np.float32), lost=np.array(g["lost"], np.float32))
@@ -242,6 +249,7 @@ def play_batch(task):
         if record and g["kind"] == "self":          # the other side of a self-play game: every per-step margin negated
             out.append({"opp": "SELF", "seed": g["seed"], "side": 1 - side, "mirror": True,
                         "my": r["op"], "op": r["my"], "margin": -r["margin"], "recs": g["recs2"],
+                        "planted": r["planted_op"], "planted_op": r["planted"],
                         "dmargin": -r["dmargin"], "dworth": -r["dworth"],
                         "dep": np.array(g["dep2"], np.float32), "lost": np.array(g["lost2"], np.float32)})
     return {"games": out, "wall": time.time() - t0, "t_pol": t_pol, "t_opp": t_opp,

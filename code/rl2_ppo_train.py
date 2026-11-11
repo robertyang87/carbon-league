@@ -489,6 +489,9 @@ def main():
                "adv_std": round(float(ADV.std()), 4), "v_mean": round(float(V.mean()), 3),
                "margin": {k: [round(float(np.mean(v))), len(v), int(sum(x > 0 for x in v))] for k, v in by.items()},
                "winrate": round(float(np.mean([g["margin"] > 0 for g in games])), 3),
+               "planted": {k: [round(float(np.mean([g.get("planted", 0) for g in games if g["opp"] == k])), 1),
+                               round(float(np.mean([g.get("planted_op", 0) for g in games if g["opp"] == k])), 1)]
+                           for k in by},
                "buf_mb": round(buf.nbytes() / 1e6, 1), "rss_mb": round(rss_mb()), "workers_rss_mb": round(children_rss_mb())}
         tlog.write(json.dumps(rec) + "\n"); tlog.flush()
         print(json.dumps(rec), flush=True)
