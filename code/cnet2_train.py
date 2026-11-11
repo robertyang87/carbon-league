@@ -411,6 +411,19 @@ def main(data, out, epochs, cfg):
     # not real). Use it when the frozen-trunk decoder cannot learn the corrections (round ex1: 17% learned, flat in
     # data and epochs).
     ex_w = float(os.environ.get("BC_EXIT_W", "0")); ex_kl = float(os.environ.get("BC_SELF_KL", "0")); net0 = None
+    # BC_CAR_KL=c (plain imitation, whole net): the COLLECTOR tokens are additionally held on the initial net by
+    # c * KL(initial || current); planters and bases learn the teacher as usual. With set_uw.py CAR_W = 0 the cars are
+    # not taught at all, with 0 < CAR_W < 1 they are taught weakly against the anchor. Purpose (2026-11-11): Echo1 took
+    # Master3s' tree game but lost Grove1's fights for cargo (net effect on the margin vs Master2: +127 instead of +811).
+    car_kl = float(os.environ.get("BC_CAR_KL", "0")); netc = None
+    if car_kl > 0:
+        if ex_w > 0 or ex_kl > 0:
+            raise SystemExit("BC_CAR_KL is for plain imitation; do not combine with BC_EXIT_W / BC_SELF_KL")
+        import copy
+        netc = copy.deepcopy(net).eval()
+        for p_ in netc.parameters():
+            p_.requires_grad_(False)
+        print(json.dumps({"car_kl": car_kl}), flush=True)
     if ex_w > 0 or ex_kl > 0:
         import copy
         net0 = copy.deepcopy(net).eval()
@@ -495,8 +508,16 @@ def main(data, out, epochs, cfg):
                     la = l_die + l_dw                                 # logged as "aux"
                     opt_h.zero_grad(set_to_none=True)
             else:
-                lpi, lv, la, _ = losses(tnet, b)
+                lpi, lv, la, lg_ = losses(tnet, b)
                 loss = lpi + 0.2 * lv + la
+                if netc is not None:
+                    with torch.no_grad():
+                        lg0_ = _fwd(netc)(b)[0].float()
+                    car_ = ((b["y"] >= 0) & (b["tok_kind"][:, :F.OWN] == 0)).float()
+                    lp_ = Fn.log_softmax(lg_.float(), -1); lr_ = Fn.log_softmax(lg0_, -1); pr_ = lr_.exp()
+                    klc = (torch.where(pr_ > 0, pr_ * (lr_ - lp_), torch.zeros_like(pr_)).sum(-1) * car_).sum() / car_.sum().clamp(min=1)
+                    loss = loss + car_kl * klc
+                    lv = klc                                          # logged in the "v" column
             opt.zero_grad(set_to_none=True); loss.backward()
             torch.nn.utils.clip_grad_norm_(net.parameters(), float(os.environ.get("BC_CLIP", "2.0")))
             opt.step(); sched.step()
