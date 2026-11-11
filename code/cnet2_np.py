@@ -26,6 +26,13 @@ _r, _c = F.ROW, F.COL
 IM2COL = np.stack([((_r + dr) % F.S) * F.S + (_c + dc) % F.S for dr, dc in SHIFTS], 1)   # [N,9]
 
 
+
+def _tk(t, s, x):
+    """temperature for unit slot s: a scalar, or (car, planter, base) for per-kind sampling (exam diagnostics)"""
+    if not isinstance(t, (tuple, list)):
+        return t
+    return t[2] if s >= 10 else (t[1] if int(x["tok_kind"][s]) == 1 else t[0])
+
 class Policy:
     def __init__(self, w):
         meta = w.get("meta")
@@ -181,7 +188,7 @@ class Policy:
             elif sample_rng is not None and (sample_kinds is None
                                              or (s >= 10 and "base" in sample_kinds)
                                              or (s < 10 and int(x["tok_kind"][s]) == 1 and "planter" in sample_kinds)):
-                z = lg / temp; p = np.exp(z - z.max()); p /= p.sum()   # sample_kinds: only these units are sampled
+                z = lg / _tk(temp, s, x); p = np.exp(z - z.max()); p /= p.sum()   # sample_kinds: only these units are sampled
                 a = int(sample_rng.choice(5, p=p))
             else:
                 a = int(lg.argmax())
@@ -230,7 +237,7 @@ class Ensemble:
             elif sample_rng is not None and (sample_kinds is None
                                              or (s >= 10 and "base" in sample_kinds)
                                              or (s < 10 and int(x["tok_kind"][s]) == 1 and "planter" in sample_kinds)):
-                z = lg / temp; pr = np.exp(z - z.max()); pr /= pr.sum()
+                z = lg / _tk(temp, s, x); pr = np.exp(z - z.max()); pr /= pr.sum()
                 a = int(sample_rng.choice(5, p=pr))
             else:
                 a = int(lg.argmax())
