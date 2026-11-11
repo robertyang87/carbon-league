@@ -65,8 +65,12 @@ def game_tables(path, p):
 def one(task):
     path, p, steps, tok_pos, tok_mask, tok_kind = task
     import cnet2_feat as F
-    pos2uid, death, dep, wm, has_full, last = game_tables(path, p)
     n = len(steps)
+    if not path.endswith(".json.gz"):              # DAgger shard (.npz) etc.: no trajectory, masks stay False
+        z = lambda sh, dt: np.zeros(sh, dt)
+        return (z((n, 10, 3), np.uint8), z((n, 10, 3), bool), z((n, 10, 2), np.float16), z((n, 10, 2), bool),
+                z((n, 3), np.float16), z((n, 3), bool), 0, None)
+    pos2uid, death, dep, wm, has_full, last = game_tables(path, p)
     die = np.zeros((n, 10, 3), np.uint8); die_m = np.zeros((n, 10, 3), bool)
     dp = np.zeros((n, 10, 2), np.float16); dp_m = np.zeros((n, 10, 2), bool)
     dw = np.zeros((n, 3), np.float16); dw_m = np.zeros((n, 3), bool); miss = 0
@@ -117,16 +121,20 @@ def main():
     out = {"aux_die": np.zeros((N, 10, 3), np.uint8), "aux_die_m": np.zeros((N, 10, 3), bool),
            "aux_dep": np.zeros((N, 10, 2), np.float16), "aux_dep_m": np.zeros((N, 10, 2), bool),
            "aux_dw": np.zeros((N, 3), np.float16), "aux_dw_m": np.zeros((N, 3), bool)}
-    miss = 0; nofull = 0
+    miss = 0; nofull = 0; skipped = 0
     with ProcessPoolExecutor(W) as ex:
         for (a, b, _), r in zip(spans, ex.map(one, tasks, chunksize=4)):
             for nm, arr in zip(("aux_die", "aux_die_m", "aux_dep", "aux_dep_m", "aux_dw", "aux_dw_m"), r[:6]):
                 out[nm][a:b] = arr
-            miss += r[6]; nofull += 0 if r[7] else 1
+            miss += r[6]
+            if r[7] is None:
+                skipped += 1
+            elif not r[7]:
+                nofull += 1
     for nm, arr in out.items():
         np.save(os.path.join(ds, nm + ".npy"), arr)
     dm = out["aux_die_m"]; pm = out["aux_dep_m"]; wm_ = out["aux_dw_m"]
-    print(json.dumps({"rows": int(N), "blocks": len(spans), "slots_unmatched": int(miss), "games_without_full_carbon": int(nofull),
+    print(json.dumps({"rows": int(N), "blocks": len(spans), "slots_unmatched": int(miss), "games_without_full_carbon": int(nofull), "blocks_not_replay": int(skipped),
                       "die_rate": [round(float(out["aux_die"][..., j][dm[..., j]].mean()), 4) for j in range(3)],
                       "dep_mean_x100": [round(float(out["aux_dep"][..., j][pm[..., j]].astype(np.float32).mean()) * 100, 1) for j in range(2)],
                       "dw_sd_x1000": [round(float(out["aux_dw"][:, j][wm_[:, j]].astype(np.float32).std()) * 1000) for j in range(3)]}), flush=True)
