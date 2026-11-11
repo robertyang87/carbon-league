@@ -1,11 +1,11 @@
-# status  2026-11-12 01:24
+# status  2026-11-12 01:34
 
 | 机器 | 负载 / GPU | 在跑什么 |
 |---|---|---|
-| L20 | 12.74 13.16 12.02 97 % | out ../data/rl3/snipe_b |
-| h23 | 68.28 64.05 46.14 | 200 ck30x_cnet2_m2so 200 ck30x_echo_e0 200 ck30x_g1_pure 200 ck30x_opp_1cz_v9 200 ck30x_opp_m3echo 200 e0x_g1_pure 600 ck_snipe_b_35_opp_master2r 600 ck_snipe_b_35_opp_w3b  started |
-| h24 | 64.29 57.64 33.66 | 200 j1cb_cnet2_m2so 200 j1cb_opp_m3echo 200 j1cb_opp_master2r 200 j1cb_opp_w3b 200 j1cc_cnet2_m2so 200 j1cc_opp_m3echo 200 j1cc_opp_master2r 200 j1cc_opp_w3b 200 j1cd_cnet2_m2so 200 j1cd_opp_m3echo 200 j1cd_opp_master2r 200 j1cd_opp_w3b 200 j1ce_cnet2_m2so 200 j1ce_opp_m3echo 200 j1ce_opp_master2r 2 |
-| DGX | 96 % | weights/cnet2_m6r1.npz |
+| L20 | 9.54 11.30 11.37 100 % | out ../data/rl3/snipe_b |
+| h23 | 14.95 24.92 35.88 | 200 pk30_m2r |
+| h24 | 120.23 109.00 72.03 | 200 j1cb_cnet2_m2so 200 j1cb_opp_m3echo 200 j1cb_opp_master2r 200 j1cb_opp_w3b 200 j1cc_cnet2_m2so 200 j1cc_opp_m3echo 200 j1cc_opp_master2r 200 j1cc_opp_w3b 200 j1cd_cnet2_m2so 200 j1cd_opp_m3echo 200 j1cd_opp_master2r 200 j1cd_opp_w3b 200 j1ce_cnet2_m2so 200 j1ce_opp_m3echo 200 j1ce_opp_master2r 2 |
+| DGX | 0 % |  |
 
 ## 需要云端或用户定的事
 - J1-a 显著为负：J2（八位老师）是否还开？建议先试"降低 Master2s 权重 / 给 Master3s 行加权"的 J1'。
@@ -28,3 +28,4 @@
 - 01:15 判定点⑥：J1b、J1c 对 Master2 都不显著为负（+109 ± 70、+70 ± 84）→ 混训保留；J1c 四组换行在二十四号机开考（它此前从 00:20 起空着，在等 M6/K4 复刻）。
 - 01:15 判定点②：snipe_b_30 过线（W3best +176 ± 63，Master2 +124 ± 43）→ 二十三号机补考 m3echo / M 风格 / 1C-v9 / Grove1 / 直接对 E0，各 200 局，结果出来报用户。
 - 01:15 异常：snipe_fast 在 00:02 的重启时 GPU 显存不足（OOM）退出，此后只有 snipe_b 在跑（显存 30/44 GB，12 个模型）。不硬重启，以免把 snipe_b 一起挤掉；判定点⑤（两路比较）因此作废，snipe_b 独跑。
+- 01:31 snipe_b_30 补考完：Master2 +124 ± 43、W3best +176 ± 63、M 风格 +149 ± 72、直接对 E0 +271 ± 94（127/200），无显著为负 → 上榜候选，打了 8 位纯网络包（3.7 MB），包核对和耗时进行中；结果出来请用户拍板。
