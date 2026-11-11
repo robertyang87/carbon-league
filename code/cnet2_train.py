@@ -395,13 +395,60 @@ def main(data, out, epochs, cfg):
         return train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data)
     best = -1
     log = open(out.replace(".npz", "_log.jsonl"), "a")
+    # Whole-network search distillation (no trunk cache): BC_EXIT_W / BC_SELF_KL as in train_cached, but the reference
+    # is a frozen copy of the initial net run on the same (augmented) batch. Collector tokens whose played move differs
+    # from the reference's own move -> cross-entropy to the played move (x BC_EXIT_W); every other own token -> KL to the
+    # reference (x BC_SELF_KL); the value head is held on the reference too (the value labels of generated games are
+    # not real). Use it when the frozen-trunk decoder cannot learn the corrections (round ex1: 17% learned, flat in
+    # data and epochs).
+    ex_w = float(os.environ.get("BC_EXIT_W", "0")); ex_kl = float(os.environ.get("BC_SELF_KL", "0")); net0 = None
+    if ex_w > 0 or ex_kl > 0:
+        import copy
+        net0 = copy.deepcopy(net).eval()
+        for p_ in net0.parameters():
+            p_.requires_grad_(False)
+
+    def exit_terms(nt, b):
+        lg, v, aux = _fwd(nt)(b)
+        with torch.no_grad():
+            lg0, v0, _ = _fwd(net0)(b)
+        lg, lg0 = lg.float(), lg0.float()
+        y = b["y"]; v_ = y >= 0; r0 = lg0.argmax(-1)
+        chg = v_ & (b["tok_kind"][:, :F.OWN] == 0) & (y != r0); keep = (v_ & ~chg).float(); chgf = chg.float()
+        ce = Fn.cross_entropy(lg.reshape(-1, 5), y.clamp(min=0).reshape(-1), reduction="none").reshape(y.shape)
+        lp = Fn.log_softmax(lg, -1); lr_ = Fn.log_softmax(lg0, -1); pr_ = lr_.exp()
+        kl = torch.where(pr_ > 0, pr_ * (lr_ - lp), torch.zeros_like(pr_)).sum(-1)
+        l_ex = (ce * chgf).sum() / chgf.sum().clamp(min=1); l_kl = (kl * keep).sum() / keep.sum().clamp(min=1)
+        return l_ex, l_kl, Fn.mse_loss(v.float(), v0.float()), Fn.mse_loss(aux.float(), b["carbon"]) * 10.0, lg, r0, chg, v_
+
+    @torch.no_grad()
+    def evaluate_exit():
+        net.eval(); c_ok = c_n = k_ok = k_n = 0; ok = np.zeros(3); nn_ = np.zeros(3)
+        for b in loader(D, va, 1024, aug=False, shuffle=False):
+            _, _, _, _, lg, r0, chg, v_ = exit_terms(net, b)
+            pred = lg.argmax(-1); y = b["y"]; kind = b["tok_kind"][:, :F.OWN]
+            c_ok += ((pred == y) & chg).sum().item(); c_n += chg.sum().item()
+            k_ok += ((pred == r0) & v_ & ~chg).sum().item(); k_n += (v_ & ~chg).sum().item()
+            for k in range(3):
+                m = v_ & (kind == k); ok[k] += ((pred == y) & m).sum().item(); nn_[k] += m.sum().item()
+        net.train()
+        r = {nm: round(ok[k] / max(nn_[k], 1), 4) for k, nm in enumerate(("collector", "planter", "base"))}
+        r["all"] = round(ok.sum() / max(nn_.sum(), 1), 4)
+        r["changed_learned"] = round(c_ok / max(c_n, 1), 4); r["changed_n"] = int(c_n); r["unchanged_kept"] = round(k_ok / max(k_n, 1), 4)
+        return r
+
     for ep in range(epochs):
         t0 = time.time(); acc = np.zeros(3); n = 0
-        for i, b in enumerate(loader(D, tr, bs, aug=True)):
-            if i >= spe:
-                break
-            lpi, lv, la, _ = losses(tnet, b)
-            loss = lpi + 0.2 * lv + la
+        for i, b in enumerate(loader(D, tr, bs, aug=net0 is None)):    # distillation: no symmetry augmentation -- the net is not
+            if i >= spe:                                                # exactly equivariant, a mirrored view would turn its
+                break                                                   # own moves into "changed" labels
+            if net0 is not None:
+                l_ex, l_kl, l_v, la, *_ = exit_terms(tnet, b)
+                lpi, lv = l_ex, l_kl                                  # logged as "pi" (changed tokens) and "v" (KL)
+                loss = ex_w * l_ex + ex_kl * l_kl + l_v + la
+            else:
+                lpi, lv, la, _ = losses(tnet, b)
+                loss = lpi + 0.2 * lv + la
             opt.zero_grad(set_to_none=True); loss.backward()
             torch.nn.utils.clip_grad_norm_(net.parameters(), float(os.environ.get("BC_CLIP", "2.0")))
             opt.step(); sched.step()
@@ -410,8 +457,10 @@ def main(data, out, epochs, cfg):
             if i % 500 == 0:
                 print(json.dumps({"ep": ep, "i": i, "pi": round(acc[0] / n, 4), "v": round(acc[1] / n, 4),
                                   "aux": round(acc[2] / n, 4), "s": round(time.time() - t0)}), flush=True)
-        r = evaluate(net, D, va)
+        r = evaluate_exit() if net0 is not None else evaluate(net, D, va)
         rec = {"ep": ep, "val": r, "train_pi": round(acc[0] / max(n, 1), 4), "s": round(time.time() - t0)}
+        if net0 is not None:
+            rec["train_kl"] = round(acc[1] / max(n, 1), 5); best = -1          # distillation: the last epoch is the result
         print(json.dumps(rec), flush=True); log.write(json.dumps(rec) + "\n"); log.flush()
         export(net, out.replace(".npz", "_last.npz"), {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
         if os.environ.get("BC_SAVE_EPOCHS") == "1":       # keep every epoch for the online probes to choose from
