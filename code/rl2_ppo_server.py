@@ -37,19 +37,49 @@ def _serve(adapter_name, device, req_q, resp_qs, stat_q):
     amp = os.environ.get("RL2_SERVER_AMP", "0") == "1"
     models = {}
     n_req = n_pos = n_fwd = 0; t_fwd = 0.0; t_last = time.time()
+    # All workers write into ONE pipe whose buffer (64 KB) is smaller than a single request (~9 KB per position), so a
+    # request only gets through while somebody is reading. Reading only between two forwards (get_nowait) let one or
+    # two requests in per forward: with several models the batches fell to ~15 positions and the server, not the
+    # workers, set the pace (L20, 2026-11-11: 257 games/min with 4 models). A reader thread keeps the pipe drained
+    # during the forwards; the main loop takes everything that has arrived.
+    use_reader = os.environ.get("RL2_SERVER_READER", "1") == "1"
+    if use_reader:
+        import collections
+        import threading
+        inbox = collections.deque(); cv = threading.Condition()
+
+        def _reader():
+            while True:
+                it = req_q.get()
+                with cv:
+                    inbox.append(it); cv.notify()
+                if it is None:
+                    return
+        threading.Thread(target=_reader, daemon=True).start()
     while True:
-        item = req_q.get()
-        if item is None:
-            return
-        batch = [item]; n = len(item[3]["maps"])
-        while n < maxb:
-            try:
-                item = req_q.get_nowait()
-            except queue.Empty:
-                break
+        if use_reader:
+            with cv:
+                while not inbox:
+                    cv.wait()
+                batch = []; n = 0
+                while inbox and n < maxb:
+                    it = inbox.popleft()
+                    if it is None:
+                        return
+                    batch.append(it); n += len(it[3]["maps"])
+        else:
+            item = req_q.get()
             if item is None:
                 return
-            batch.append(item); n += len(item[3]["maps"])
+            batch = [item]; n = len(item[3]["maps"])
+            while n < maxb:
+                try:
+                    item = req_q.get_nowait()
+                except queue.Empty:
+                    break
+                if item is None:
+                    return
+                batch.append(item); n += len(item[3]["maps"])
         groups = {}
         for it in batch:
             groups.setdefault((it[1], it[2]), []).append(it)
