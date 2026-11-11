@@ -1,6 +1,7 @@
 """cnet2_search_pack -- single-file submission: cnet2 b128 policy (v12) + cnet2_search rollout layer.
 
 python3 cnet2_search_pack.py OUT.py "CONF_DICT_LITERAL" [POLICY.npz] [ROLLOUT.npz]
+CNET2_NO_ROLL=1 (conf with "SEARCH": False, "ROLL": "self") leaves the rollout net out -- the upload limit is 10 MB.
 CNET2_ENS=a.npz,b.npz embeds extra policy nets; the pack then plays the mean of the members' logits (cnet2_np.Ensemble).
 Embeds cnet2_feat, cnet2_np, fastsim, cnet2_search sources (exec'd into private module objects, the
 plain sys.modules names are restored afterwards) and both weight sets, int8 per-row quantised exactly
@@ -83,7 +84,9 @@ def agent(observation, configuration):
     global _W, _AG
     if _W is None:
         w1 = _dequantize(zlib.decompress(base64.b64decode(_B1)), _Q1); w1["meta"] = np.array(_M1)
-        w2 = _dequantize(zlib.decompress(base64.b64decode(_B2)), _Q2); w2["meta"] = np.array(_M2)
+        w2 = None                              # packs built with CNET2_NO_ROLL=1 (pure net, no search) carry no rollout net
+        if _B2:
+            w2 = _dequantize(zlib.decompress(base64.b64decode(_B2)), _Q2); w2["meta"] = np.array(_M2)
         w3 = None
         if _B3:
             w3 = _dequantize(zlib.decompress(base64.b64decode(_B3)), _Q3); w3["meta"] = np.array(_M3)
@@ -107,7 +110,13 @@ def main(out, conf, wp=None, wr=None, wo=None, ens=()):
     qmodes = {"1": os.environ.get("CNET2_QMODE", "int8"), "2": os.environ.get("CNET2_QMODE_ROLL", os.environ.get("CNET2_QMODE", "int8"))}
     qmodes["3"] = qmodes["1"]
     parts["3"] = ("None", "", "")                 # optional opening-phase policy (OPEN_NET_STEP)
-    for tag, path in (("1", wp), ("2", wr)) + ((("3", wo),) if wo else ()):
+    no_roll = os.environ.get("CNET2_NO_ROLL") == "1"
+    if no_roll:      # the 10 MB upload limit: a pure-net pack does not need the rollout net (~1.1 MB int8, ~2.2 MB f16)
+        c_ = eval(conf)
+        assert c_.get("SEARCH") is False and c_.get("ROLL", "s64") != "s64", \
+            'CNET2_NO_ROLL=1 needs "SEARCH": False and "ROLL": "self" in the conf (the policy net then stands in for the rollout net)'
+        parts["2"] = ("None", "", "")
+    for tag, path in (("1", wp),) + ((("2", wr),) if not no_roll else ()) + ((("3", wo),) if wo else ()):
         w = dict(np.load(path))
         P.QMODE = qmodes[tag]                    # policy and rollout net can be packed differently (int8 / f16)
         meta, raw, deq = P.quantize(w)
