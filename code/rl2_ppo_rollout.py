@@ -64,7 +64,7 @@ def _actor(adapter_name, wkey, weights=None):
             weights = AD.load_npz(wkey)
         a = AD.get_adapter(adapter_name).make_actor(weights)
         if teacher is not None:
-            a.teacher = teacher
+            a.teacher = teacher; a.sched = False
         if _REMOTE[0] is not None and hasattr(a, "remote") and isinstance(wkey, str) and os.path.exists(wkey):
             a.remote = _REMOTE[0]; a.key = os.path.abspath(wkey)
         if len(_W_CACHE) > 8:

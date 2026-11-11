@@ -34,6 +34,11 @@ TEACHER = int(os.environ.get("CNET2_TEACHER", "1"))
 # scalar --temp both when the actor samples and when the learner recomputes the log-probs (same env in both).
 _TK = os.environ.get("CNET2_TEMP_KIND")
 TEMP_KIND = [float(v) for v in _TK.split(",")] if _TK else None
+# CNET2_TEACHER_LATE / CNET2_LATE_STEP: style row from that step on (Grove1's pack plays row 2, then row 7 from step 240);
+# used by the actor (learner and snapshots; "#T" opponents keep their one row) and by the learner's forward alike.
+_TL = os.environ.get("CNET2_TEACHER_LATE")
+TEACHER_LATE = int(_TL) if _TL else None
+LATE_STEP = int(os.environ.get("CNET2_LATE_STEP", "240"))
 XKEYS = ("maps", "scal", "tok_pos", "tok_kind", "tok_mask", "tok_cargo", "hist_cell", "hist_cargo", "hist_move")
 
 
@@ -41,14 +46,19 @@ class Cnet2Actor:
     def __init__(self, weights):
         import cnet2_np as NP
         self.pol = NP.Policy(weights)
-        self.remote = None; self.key = None; self.teacher = TEACHER
+        self.remote = None; self.key = None; self.teacher = TEACHER; self.sched = True
+
+    def _t(self, x):
+        if self.sched and TEACHER_LATE is not None and int(round(float(x["scal"][1]) * 300)) >= LATE_STEP:
+            return TEACHER_LATE
+        return self.teacher
 
     def new_game(self, side):
         return {"f": F.Feat(side), "side": side}
 
     def _decode(self, x, aux, rng, temp, greedy, enc=None):
         P = self.pol; w = P.w
-        tok, ctx = P.encode(x, self.teacher) if enc is None else enc
+        tok, ctx = P.encode(x, self._t(x)) if enc is None else enc
         value = math.tanh(float(ctx @ w["value.weightT"][:, 0] + w["value.bias"][0]))
         h = P.lin(ctx, "h0")
         prev = 8
@@ -89,7 +99,11 @@ class Cnet2Actor:
         h = None
         rem = getattr(self, "remote", None)
         if rem is not None and xs:
-            h = rem.submit(self.key, {k: np.stack([np.asarray(x[k]) for x in xs]) for k in XKEYS}, self.teacher)
+            ts = [self._t(x) for x in xs]
+            h = []
+            for t in sorted(set(ts)):          # lockstep games share the step, so this is one request in practice
+                ii = [i for i, v in enumerate(ts) if v == t]
+                h.append((ii, rem.submit(self.key, {k: np.stack([np.asarray(xs[i][k]) for i in ii]) for k in XKEYS}, t)))
         return xs, h
 
     def finish(self, states, prep, rng, temp, greedy):
@@ -97,8 +111,10 @@ class Cnet2Actor:
         outs = []
         encs = [None] * len(xs)
         if h is not None:
-            tok, ctx = self.remote.collect(h)
-            encs = [(tok[i], ctx[i]) for i in range(len(xs))]
+            for ii, rid in h:
+                tok, ctx = self.remote.collect(rid)
+                for j, i in enumerate(ii):
+                    encs[i] = (tok[j], ctx[j])
         for st, x, enc in zip(states, xs, encs):
             f = st["f"]
             y, UF, MF, LG, logp, value, lpu = self._decode(x, f.aux, rng, temp, greedy, enc)
@@ -169,6 +185,9 @@ class Cnet2Buffer:
         for k in ("tok_pos", "tok_kind", "hist_cell", "hist_move", "y"):
             t[k] = t[k].long()
         t["teacher"] = torch.full((B,), TEACHER, dtype=torch.long)
+        if TEACHER_LATE is not None:
+            late = torch.round(t["scal"][:, 1].float() * 300) >= LATE_STEP
+            t["teacher"] = torch.where(late, torch.full_like(t["teacher"], TEACHER_LATE), t["teacher"])
         t["ukey"] = torch.from_numpy((idx[:, None] * F.OWN + np.arange(F.OWN)[None, :]).astype(np.int64))
         out = {k: v.to(device) for k, v in t.items()}
         out["B"] = B
