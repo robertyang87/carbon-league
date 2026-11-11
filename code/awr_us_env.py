@@ -24,4 +24,5 @@ def agent(observation, configuration):
         _AG = _S.make_search_agent(CONF, weights=_WTS)
     a = _AG(observation, configuration)
     agent.last_stats = _AG.stats
+    agent.inner = _AG                      # .state["lg0"] / .state["f"].own_uid: the net's logits per own slot (fork_gen)
     return a

@@ -11,6 +11,8 @@ step it is the final score difference.
 
 Decisions that are forked (kind):
   base slot   P>C  P>0  C>P  C>0  0>P  0>C     (recruit planter / collector / nothing; recruits only with cash >= 30)
+  collector   car>2nd      plays the net's second choice instead of its first (records p1, p2, cargo, a1, a2);
+                           needs an agent that exposes .inner (awr_us_env.py)
   planter     plant>move   it would plant here (stays on a free cell, cash >= price): move to a random neighbour instead
               move>plant   it stands on a plantable cell and moves away: stay (plant) instead
 
@@ -29,6 +31,8 @@ import os
 import random
 import sys
 
+import numpy as np
+
 for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_k, "1")
 from concurrent.futures import ProcessPoolExecutor
@@ -36,6 +40,7 @@ from concurrent.futures import ProcessPoolExecutor
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 MOVES = ("UP", "DOWN", "LEFT", "RIGHT")
+CAR_MOVES = ["NONE", "UP", "RIGHT", "DOWN", "LEFT"]          # slot order of the net's 5 logits (cnet2_feat.MOVES)
 T_END = 299
 
 
@@ -58,7 +63,7 @@ def _value(sim, p, idx):
     return v[p] - v[1 - p]
 
 
-def _alts(obs, acts, rng, kinds, limit=10):
+def _alts(obs, acts, rng, kinds, limit=10, inner=None):
     me = obs["player"]; P = obs["players"]; cash = float(P[me][0]); out = []
     room = len(P[me][2]) < limit                       # the engine ignores a recruit at the worker limit
     trees = [v for q in (0, 1) for v in (P[q][3].values() if isinstance(P[q][3], dict) else [])]
@@ -81,6 +86,27 @@ def _alts(obs, acts, rng, kinds, limit=10):
             out.append(("plant>move", u, rng.choice(MOVES)))
         else:
             out.append(("move>plant", u, None))
+    if inner is not None and (not kinds or "car>2nd" in kinds):
+        # a collector plays the net's SECOND choice instead of its first (how good is the net's ranking of car moves?)
+        try:
+            lg = np.asarray(inner.state["lg0"], dtype=np.float64); uids = list(inner.state["f"].own_uid[:10])
+            for s_, u in enumerate(uids):
+                w = P[me][2].get(u) if u is not None else None
+                if w is None or w[2] != "COLLECTOR":
+                    continue
+                played = acts.get(u, "NONE")
+                if played not in CAR_MOVES:
+                    continue
+                z = lg[s_][:5]; z = z - np.max(z[np.isfinite(z)]); pr = np.where(np.isfinite(z), np.exp(z), 0.0); pr = pr / pr.sum()
+                i0 = CAR_MOVES.index(played)
+                others = [i for i in np.argsort(-pr) if i != i0 and pr[i] > 0]
+                if others:
+                    i1 = int(others[0])
+                    out.append(("car>2nd", u, None if CAR_MOVES[i1] == "NONE" else CAR_MOVES[i1],
+                                dict(p1=round(float(pr[i0]), 4), p2=round(float(pr[i1]), 4), cargo=round(float(w[1]), 1),
+                                     a1=played, a2=CAR_MOVES[i1])))
+        except Exception:
+            pass
     if kinds:
         out = [x for x in out if x[0] in kinds]
     return out, price
@@ -102,14 +128,17 @@ def play(task):
         acts = [agents[q](obs[q], E.CFG) or {} for q in (0, 1)]
         V.append(_value(sim, side, t))
         if rng.random() < p_fork and t < T_END - min(hs):
-            cand, price = _alts(obs[side], acts[side], rng, kinds, int(E.CFG.get("workerLimit", 10)))
+            cand, price = _alts(obs[side], acts[side], rng, kinds, int(E.CFG.get("workerLimit", 10)), getattr(agents[side], "inner", None))
             if cand:
-                kind, unit, act = rng.choice(cand)
+                kk = rng.choice(sorted({c[0] for c in cand}))          # a kind first, then one decision of that kind
+                ch = rng.choice([c for c in cand if c[0] == kk])
+                kind, unit, act = ch[:3]; extra = ch[3] if len(ch) > 3 else {}
                 to_end = rng.random() < p_end
                 Pm = obs[side]["players"][side]; Po = obs[side]["players"][1 - side]
                 rec = dict(seed=seed, side=side, t=t, kind=kind, unit=unit, cash=round(float(Pm[0]), 1), price=round(price, 1),
                            n_pl=sum(1 for w in Pm[2].values() if w[2] == "PLANTER"), n_car=sum(1 for w in Pm[2].values() if w[2] == "COLLECTOR"),
                            n_tree=len(Pm[3]), e_tree=len(Po[3]), e_pl=sum(1 for w in Po[2].values() if w[2] == "PLANTER"), to_end=to_end)
+                rec.update(extra)
                 r, w = os.pipe(); pid = os.fork()
                 if pid == 0:                                   # child: the changed game
                     try:

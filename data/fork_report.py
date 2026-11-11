@@ -38,6 +38,24 @@ def main():
             if len(x) > 3:
                 m, se, sd = ms(x); row += f" | end: {m:+6.0f} +-{se:3.0f} [{sd:4.0f}] n{len(x)}"
             print(row)
+    cars = [r for r in live if r["kind"] == "car>2nd" and "p2" in r]
+    if len(cars) > 20:
+        print("\ncar>2nd by how close the net's second choice was (p2 = its probability), and by cargo on board")
+        def line(nm, g):
+            if len(g) < 8:
+                return
+            row = f"  {nm:22s} n{len(g):5d}"
+            for h in hs:
+                x = [r["d"][h] for r in g if h in r["d"]]
+                if len(x) > 1:
+                    m, se, sd = ms(x); row += f" | h{h}: {m:+6.0f} +-{se:3.0f} [{sd:4.0f}] better {sum(v > 0 for v in x) / len(x):.0%}"
+            print(row)
+        for nm, lo, hi in (("p2 >= 0.30", 0.30, 2), ("p2 0.10-0.30", 0.10, 0.30), ("p2 0.02-0.10", 0.02, 0.10), ("p2 < 0.02", -1, 0.02)):
+            line(nm, [r for r in cars if lo <= r["p2"] < hi])
+        for nm, lo, hi in (("cargo 0", -1, 0.5), ("cargo 0-100", 0.5, 100), ("cargo 100+", 100, 1e9)):
+            line(nm, [r for r in cars if lo <= r["cargo"] < hi])
+        for nm, lo, hi in PH[1:]:
+            line("step " + nm, [r for r in cars if lo <= r["t"] < hi])
     E_ = [r for r in live if r.get("to_end") and "end" in r["d"]]
     if len(E_) > 10:
         print(f"\nforks played to the end: {len(E_)}; spread of the final effect {st.stdev([r['d']['end'] for r in E_]):.0f}")
