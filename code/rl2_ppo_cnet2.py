@@ -30,6 +30,10 @@ import cnet2_feat as F  # noqa: E402
 
 NEG = np.float32(-1e9)
 TEACHER = int(os.environ.get("CNET2_TEACHER", "1"))
+# CNET2_TEMP_KIND="c,p,b": sampling temperature per unit kind (collector, planter, base) -- replaces the trainer's
+# scalar --temp both when the actor samples and when the learner recomputes the log-probs (same env in both).
+_TK = os.environ.get("CNET2_TEMP_KIND")
+TEMP_KIND = [float(v) for v in _TK.split(",")] if _TK else None
 XKEYS = ("maps", "scal", "tok_pos", "tok_kind", "tok_mask", "tok_cargo", "hist_cell", "hist_cargo", "hist_move")
 
 
@@ -64,7 +68,8 @@ class Cnet2Actor:
             h = P.gru(inp, h)
             base = P.lin(h, "whead") if s < 10 else np.concatenate([P.lin(h, "bhead"), np.zeros(2, np.float32)])
             lg = base + P.lin(mf.astype(np.float32), "V") @ P.lin(h, "U")
-            z = np.where(legal, lg / temp, -np.inf)
+            ts = temp if TEMP_KIND is None else TEMP_KIND[2 if s >= 10 else int(x["tok_kind"][s])]
+            z = np.where(legal, lg / ts, -np.inf)
             z = z - z.max(); p = np.exp(z); p /= p.sum()
             a = int(np.argmax(p)) if greedy else int(rng.choice(5, p=p))
             lpu[s] = float(np.log(max(p[a], 1e-12)))
@@ -183,7 +188,12 @@ class Cnet2Adapter:
         lg = lg.float(); v = v.float()
         keep = b["tok_mask"][:, :F.OWN] & (b["y"] >= 0)
         legal = b["legal"][keep]
-        z = lg[keep] / temp
+        if TEMP_KIND is None:
+            z = lg[keep] / temp
+        else:
+            tk = torch.tensor(TEMP_KIND, device=lg.device, dtype=lg.dtype)
+            kind = b["tok_kind"][:, :F.OWN].clamp(max=2)          # 0 collector, 1 planter, 2 own base
+            z = lg[keep] / tk[kind[keep]][:, None]
         z = torch.where(legal, z, torch.full_like(z, -1e9))
         lp = torch.log_softmax(z, dim=1)
         B = b["B"]
