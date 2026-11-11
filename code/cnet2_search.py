@@ -680,7 +680,12 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             if opol is not None and obs["step"] < cfg.get("OPEN_NET_STEP", 0):
                 y, lg0, _ = opol.act(x, f.aux, teacher=cfg.get("OPEN_NET_T", 2))
             else:
-                y, lg0, _ = (epol if epol is not None else pol).act(x, f.aux, teacher=st["T_now"])
+                if cfg.get("TTA", 1) > 1 and epol is None:
+                    # symmetry averaging: the same net on TTA of the 4 board symmetries that keep both sides' bases
+                    # (identity, rot180, transpose, anti-transpose), log-probs averaged. No extra parameters.
+                    y, lg0 = NP.act_tta(pol, x, f.aux, teacher=st["T_now"], k=int(cfg["TTA"]))
+                else:
+                    y, lg0, _ = (epol if epol is not None else pol).act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
         st["base_fix"] = {}      # base slots set by a rule layer this step: every search candidate / guard re-decode keeps them
         st["guard_base"] = set() # base slots the bankruptcy guard forced to recruit a collector this step (never searched)
