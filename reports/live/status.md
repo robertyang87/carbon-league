@@ -1,11 +1,11 @@
-# status  2026-11-11 23:50
+# status  2026-11-12 00:00
 
 | 机器 | 负载 / GPU | 在跑什么 |
 |---|---|---|
-| L20 | 25.03 23.22 18.65 99 % | out ../data/rl3/snipe_b
+| L20 | 10.07 14.04 16.45 100 % | out ../data/rl3/snipe_b
 out ../data/rl3/snipe_fast |
-| h23 | 0.00 0.49 9.56 | 空闲 |
-| h24 | 31.75 8.67 8.19 | 400 snp28_m3echo |
+| h23 | 42.43 16.63 10.95 | 600 ck_snipe_b_28_opp_master2r 600 ck_snipe_b_28_opp_w3b |
+| h24 | 0.04 7.90 11.45 | 空闲 |
 | DGX | 96 % | weights/cnet2_top_j1b.npz weights/cnet2_top_j1c.npz |
 
 ## 需要云端或用户定的事
@@ -21,3 +21,7 @@ out ../data/rl3/snipe_fast |
 - 00:20 第 28 轮检查点对 opp_m3echo 400 对（二十四号机）。
 - 00:25 起：两路每 5 轮的检查点（第 30 轮起）自动考 600 对（对 opp_w3b、对 Master2 真身），结果写进 exams.md 最上面。
 - J1 的 M6 行、K4TacSearch 行没有加进对手池（开关文件未放）。
+- 00:00 两路自我对弈：等 snipe_fast 存下第一个状态后，两路都 --resume，Grove1 和 M 风格网络的权重写 0（advice 00:35 #1），记进 pool_changes。
+- 00:00 二十三号机：snipe_b 第 28 轮检查点 600 对（对 opp_w3b、Master2 真身）。
+- 00:00 M6（136 局）、K4TacSearch（96 局）单独复刻已排在 DGX，J1b/J1c 训完就开；训完自动在二十四号机打 8 位包，对 Master2 真身和 E0 各 200 对（原始分差）。
+- 00:00 回放名单加了 Carago-V2（含"Carago-V2微调"）。
