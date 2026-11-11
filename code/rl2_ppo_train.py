@@ -101,6 +101,8 @@ def parse():
     a("--eval-opps", default="exp/opp_1cz_v5.py,exp/cand_c1z_v1.py")
     a("--eval-seed0", type=int, default=980000)
     a("--seed0", type=int, default=3000000, help="training game seeds start here")
+    a("--amp", type=int, default=0,
+      help="1: fp16 autocast for the learner's forward/backward on cuda (log-probs and losses stay fp32); watch dlogp")
     a("--server", type=int, default=0,
       help="1: one inference process on --device runs the trunk for all rollout workers (rl2_ppo_server); the workers "
            "keep only features, the per-unit decode and the simulator")
@@ -241,6 +243,13 @@ def main():
     for q in ref.parameters():
         q.requires_grad_(False)
     vnet = ad.make_model(w0).to(dev) if args.sep_value else None
+    use_amp = bool(args.amp) and dev.type == "cuda"
+    if dev.type == "cuda":
+        torch.backends.cudnn.benchmark = True
+    for m_ in (net, ref, vnet):
+        if m_ is not None:
+            m_._amp = use_amp
+    sc_p = torch.amp.GradScaler("cuda", enabled=use_amp); sc_v = torch.amp.GradScaler("cuda", enabled=use_amp)
     opt = torch.optim.Adam(net.parameters(), lr=args.lr)
     vopt = torch.optim.Adam(vnet.parameters(), lr=args.vlr) if vnet is not None else None
     # shared model: value-warmup steps touch only the value head (trunk updates would move the policy)
@@ -425,8 +434,8 @@ def main():
                 if vnet is not None:
                     vv = ad.evaluate(vnet, bt, args.temp)["value"]
                     vl = ((vv - ret.clamp(-1, 1)) ** 2).mean()
-                    vopt.zero_grad(); vl.backward()
-                    torch.nn.utils.clip_grad_norm_(vnet.parameters(), args.gclip); vopt.step()
+                    vopt.zero_grad(); sc_v.scale(vl).backward(); sc_v.unscale_(vopt)
+                    torch.nn.utils.clip_grad_norm_(vnet.parameters(), args.gclip); sc_v.step(vopt); sc_v.update()
                     loss = pl - args.ent * ent.mean() + kl_coef * kl.mean()
                 else:
                     vl = ((o["value"] - ret.clamp(-1, 1)) ** 2).mean()
@@ -438,12 +447,12 @@ def main():
                     torch.nn.utils.clip_grad_norm_(vhead, args.gclip); hopt.step()
                     gn = 0.0
                 elif not (warm and vnet is not None):
-                    opt.zero_grad(); loss.backward()
+                    opt.zero_grad(); sc_p.scale(loss).backward(); sc_p.unscale_(opt)
                     gn = torch.nn.utils.clip_grad_norm_(net.parameters(), args.gclip).item()
                 else:
                     gn = 0.0
                 if not warm:
-                    opt.step()
+                    sc_p.step(opt); sc_p.update()
                 with torch.no_grad():
                     cf = ((ratio - 1).abs() > args.clip).float().mean().item()
                 stats.append([pl.item(), vl.item(), ent.mean().item(), kl.mean().item(), cf, gn,

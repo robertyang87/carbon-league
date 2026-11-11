@@ -131,6 +131,10 @@ class Cnet2Buffer:
         return out
 
 
+def lg_dev(model):
+    return next(model.parameters()).device.type
+
+
 class Cnet2Adapter:
     name = "cnet2"
     n_act = 5
@@ -173,7 +177,10 @@ class Cnet2Adapter:
 
     def evaluate(self, model, b, temp):
         import torch
-        lg, v, _ = model(b)                                   # [B,12,5] masked (NEG), [B]
+        amp = bool(getattr(model, "_amp", False)) and lg_dev(model) == "cuda"
+        with torch.autocast("cuda", enabled=amp):
+            lg, v, _ = model(b)                               # [B,12,5] masked (NEG), [B]
+        lg = lg.float(); v = v.float()
         keep = b["tok_mask"][:, :F.OWN] & (b["y"] >= 0)
         legal = b["legal"][keep]
         z = lg[keep] / temp
