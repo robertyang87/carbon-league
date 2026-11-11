@@ -246,10 +246,13 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
             pr_ = lr_.exp()
             kl = torch.where(pr_ > 0, pr_ * (lr_ - lp), torch.zeros_like(pr_)).sum(-1)     # illegal moves: p = 0, no term
             if exit_w > 0:
-                # search distillation: a token whose played move differs from the initial net's own move is a search
-                # (or rule) correction -> cross-entropy to the played move, weight exit_w; every other own token is
-                # held on the initial net by the KL term. The plain weighted cross-entropy above is not used.
-                v_ = valid[:, :n_]; chg = v_ & (y[:, :n_] != ref.argmax(-1)); keep = (v_ & ~chg).float(); chg = chg.float()
+                # search distillation: a COLLECTOR token whose played move differs from the initial net's own move is a
+                # search correction -> cross-entropy to the played move, weight exit_w; every other own token
+                # (unchanged cars, all planters and bases) is held on the initial net by the KL term.
+                # The plain weighted cross-entropy above is not used.
+                v_ = valid[:, :n_]; iscar = b["tok_kind"][:, :n_] == 0      # the search only moves collectors: a base /
+                chg = v_ & iscar & (y[:, :n_] != ref.argmax(-1))             # planter difference is a rule layer, not a label
+                keep = (v_ & ~chg).float(); chg = chg.float()
                 loss = exit_w * (ce[:, :n_] * chg).sum() / chg.sum().clamp(min=1) + self_kl * (kl * keep).sum() / keep.sum().clamp(min=1)
             else:
                 car = (valid & (b["tok_kind"][:, :F.OWN] == 0))[:, :n_].float()
@@ -284,7 +287,7 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
                 for a0 in range(0, len(va), 4096):
                     b, tok, pre = light(va[a0:a0 + 4096]); _, lg = batch_loss(b, tok, pre)
                     ref = REF[b["_cp"]].float(); n_ = REF.shape[1]; y = b["y"][:, :n_]; v_ = y >= 0
-                    pred = lg[:, :n_].argmax(-1); r0 = ref.argmax(-1); chg = v_ & (y != r0)
+                    pred = lg[:, :n_].argmax(-1); r0 = ref.argmax(-1); chg = v_ & (y != r0) & (b["tok_kind"][:, :n_] == 0)
                     c_ok += ((pred == y) & chg).sum().item(); c_n += chg.sum().item()
                     k_ok += ((pred == r0) & v_ & ~chg).sum().item(); k_n += (v_ & ~chg).sum().item()
             net.train()
