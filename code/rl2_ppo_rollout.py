@@ -50,6 +50,8 @@ def _init_worker(ids, req_q, resp_qs):
         wid = ids.get(timeout=5)
     except queue.Empty:                 # a replacement worker: no free response queue, fall back to the NumPy trunk
         return
+    if isinstance(req_q, (list, tuple)):          # several server processes: this worker talks to one of them
+        req_q = req_q[wid % len(req_q)]
     _REMOTE[0] = SV.Client(wid, req_q, resp_qs[wid])
 
 

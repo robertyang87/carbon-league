@@ -25,7 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 
-def _serve(adapter_name, device, req_q, resp_qs, stat_q):
+def _serve(adapter_name, device, req_q, resp_qs, stat_q, sid=0):
     import torch
     import rl2_ppo_adapters as AD
     dev = torch.device(device)
@@ -104,7 +104,7 @@ def _serve(adapter_name, device, req_q, resp_qs, stat_q):
             t_fwd += time.time() - t0; n_fwd += 1; n_req += len(its); n_pos += sum(len(it[3]["maps"]) for it in its)
         if time.time() - t_last > 30 and stat_q is not None:
             try:
-                stat_q.put_nowait({"req": n_req, "pos": n_pos, "fwd": n_fwd, "t_fwd": round(t_fwd, 2),
+                stat_q.put_nowait({"sid": sid, "req": n_req, "pos": n_pos, "fwd": n_fwd, "t_fwd": round(t_fwd, 2),
                                    "pos_per_fwd": round(n_pos / max(1, n_fwd), 1), "models": len(models)})
             except queue.Full:
                 pass
@@ -138,16 +138,24 @@ class Client:
 
 
 class Server:
-    def __init__(self, proc, req_q, stat_q, initargs, queues):
-        self.proc, self.req_q, self.stat_q, self.initargs, self.queues = proc, req_q, stat_q, initargs, queues
+    def __init__(self, procs, stat_q, initargs, queues):
+        self.procs, self.stat_q, self.initargs, self.queues = procs, stat_q, initargs, queues
+        self.last = {}
 
     def stats(self):
-        out = None
+        """latest 30-second window of every server process, summed (pos_per_fwd recomputed)."""
         while True:
             try:
-                out = self.stat_q.get_nowait()
+                d = self.stat_q.get_nowait()
             except queue.Empty:
-                return out
+                break
+            self.last[d.get("sid", 0)] = d
+        if not self.last:
+            return None
+        out = {k: round(sum(d[k] for d in self.last.values()), 2) for k in ("req", "pos", "fwd", "t_fwd")}
+        out["pos_per_fwd"] = round(out["pos"] / max(1, out["fwd"]), 1)
+        out["models"] = max(d["models"] for d in self.last.values()); out["servers"] = len(self.procs)
+        return out
 
     def stop(self):
         """terminate, do not wait: rollout workers killed by pool.terminate() can die holding the request queue's
@@ -158,16 +166,24 @@ class Server:
                 q.cancel_join_thread()
             except Exception:
                 pass
-        self.proc.terminate()
-        self.proc.join(timeout=5)
+        for p in self.procs:
+            p.terminate()
+        for p in self.procs:
+            p.join(timeout=5)
 
 
 def start(ctx, adapter_name, device, n_workers):
-    req_q = ctx.Queue(); stat_q = ctx.Queue(maxsize=4)
+    """RL2_SERVERS (default 1) inference processes on the same device, workers spread over them (worker id modulo):
+    one process is limited by its Python loop (L20: ~40 ms per forward of 137 positions with the GPU far from full),
+    several run that loop in parallel."""
+    k = max(1, int(os.environ.get("RL2_SERVERS", "1")))
+    req_qs = [ctx.Queue() for _ in range(k)]; stat_q = ctx.Queue(maxsize=4 * k)
     resp_qs = [ctx.Queue() for _ in range(n_workers)]
     ids = ctx.Queue()
     for i in range(n_workers):
         ids.put(i)
-    p = ctx.Process(target=_serve, args=(adapter_name, device, req_q, resp_qs, stat_q), daemon=True)
-    p.start()
-    return Server(p, req_q, stat_q, (ids, req_q, resp_qs), [req_q, stat_q, ids] + resp_qs)
+    procs = []
+    for j in range(k):
+        p = ctx.Process(target=_serve, args=(adapter_name, device, req_qs[j], resp_qs, stat_q, j), daemon=True)
+        p.start(); procs.append(p)
+    return Server(procs, stat_q, (ids, req_qs, resp_qs), req_qs + [stat_q, ids] + resp_qs)
