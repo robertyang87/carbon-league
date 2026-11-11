@@ -26,6 +26,7 @@ from cnet2_model import CNet2  # noqa: E402
 DEV = torch.device(os.environ.get("BC_DEVICE", "mps"))
 TW = {0: 1.5, 1: 1.5, 2: 1.5}       # Master, 1C-Zero v9, v8-preview weighted up
 LOAD = [k for k in FIELDS if k not in ("gid", "step")]
+AUXK = ("aux_die", "aux_die_m", "aux_dep", "aux_dep_m", "aux_dw", "aux_dw_m")
 
 
 def load(dirn):
@@ -35,6 +36,9 @@ def load(dirn):
         D["w"] = np.load(os.path.join(dirn, "w.npy"), mmap_mode=mm)      # per-sample weights (dataset v4+)
     if os.path.exists(os.path.join(dirn, "uw.npy")) and os.environ.get("BC_USE_UW", "1") == "1":
         D["uw"] = np.load(os.path.join(dirn, "uw.npy"), mmap_mode=mm)    # per-unit weights (dataset v6+)
+    if float(os.environ.get("BC_AUX_W", "0")) > 0:                      # auxiliary targets written by aux_labels.py
+        for k in AUXK:
+            D[k] = np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm)
     meta = json.load(open(os.path.join(dirn, "meta.json")))
     val_g = np.array([g["val"] for g in meta["games"]])
     is_val = val_g[np.asarray(D["gid"])]
@@ -43,7 +47,7 @@ def load(dirn):
 
 def fetch(D, ii):
     ii = np.sort(ii)
-    return {k: np.asarray(D[k][ii]) for k in LOAD + [x for x in ("w", "uw") if x in D]}
+    return {k: np.asarray(D[k][ii]) for k in LOAD + [x for x in ("w", "uw") + AUXK if x in D]}
 
 
 SYM_CELL = torch.from_numpy(F.SYM_CELL)
@@ -408,13 +412,43 @@ def main(data, out, epochs, cfg):
         for p_ in net0.parameters():
             p_.requires_grad_(False)
 
+    # BC_AUX_W=w (with BC_SELF_KL): auxiliary heads on the trunk (stage A of reports/plan_katago.md). Per own unit: destroyed
+    # within 10 / 25 / 50 steps, deposits within 25 / 50 steps; per position: change of the worth margin over 10 / 25 / 50
+    # steps. The heads live outside the net (saved as *_auxheads.npz): the exported weights and the ladder pack are
+    # unchanged, the trunk is what learns. With BC_EXIT_W=0 every own token is held on the reference.
+    aux_w = float(os.environ.get("BC_AUX_W", "0")); heads = None; opt_h = None; last_aux = {}
+    if aux_w > 0:
+        if net0 is None:
+            raise SystemExit("BC_AUX_W needs BC_SELF_KL > 0 (whole-network mode with the frozen reference)")
+        C_, D_ = net.cfg["C"], net.cfg["D"]
+        heads = torch.nn.ModuleDict({"die": torch.nn.Linear(D_, 3), "dep": torch.nn.Linear(D_, 2),
+                                     "dw": torch.nn.Sequential(torch.nn.Linear(C_ + D_ + 64, 64), torch.nn.ReLU(), torch.nn.Linear(64, 3))}).to(DEV)
+        opt_h = torch.optim.AdamW(heads.parameters(), lr=float(os.environ.get("BC_AUX_LR", "1e-3")))
+
+    def aux_terms(b, tok, pre):
+        t10 = tok[:, :10].float()
+        dm = b["aux_die_m"].float(); pm = b["aux_dep_m"].float(); wm = b["aux_dw_m"].float()
+        l_die = (Fn.binary_cross_entropy_with_logits(heads["die"](t10), b["aux_die"].float(), reduction="none") * dm).sum() / dm.sum().clamp(min=1)
+        l_dep = (Fn.smooth_l1_loss(heads["dep"](t10), b["aux_dep"].float(), reduction="none") * pm).sum() / pm.sum().clamp(min=1)
+        l_dw = (Fn.smooth_l1_loss(heads["dw"](pre.float()), b["aux_dw"].float(), reduction="none") * wm).sum() / wm.sum().clamp(min=1)
+        return l_die, l_dep, l_dw
+
     def exit_terms(nt, b):
-        lg, v, aux = _fwd(nt)(b)
+        if heads is not None:
+            b2 = dict(b); b2["_want_pre"] = True
+            tok, pre, aux = nt.encode(b2); ctx = nt.ctx_from(pre, b["teacher"])
+            lg = nt.decode(b, tok, ctx); v = torch.tanh(nt.value(ctx)).squeeze(1)
+            last_aux["t"] = aux_terms(b, tok, pre)
+        else:
+            lg, v, aux = _fwd(nt)(b)
         with torch.no_grad():
             lg0, v0, _ = _fwd(net0)(b)
         lg, lg0 = lg.float(), lg0.float()
         y = b["y"]; v_ = y >= 0; r0 = lg0.argmax(-1)
-        chg = v_ & (b["tok_kind"][:, :F.OWN] == 0) & (y != r0); keep = (v_ & ~chg).float(); chgf = chg.float()
+        chg = v_ & (b["tok_kind"][:, :F.OWN] == 0) & (y != r0)
+        if ex_w <= 0:
+            chg = torch.zeros_like(chg)                       # no distillation labels: hold every own token
+        keep = (v_ & ~chg).float(); chgf = chg.float()
         ce = Fn.cross_entropy(lg.reshape(-1, 5), y.clamp(min=0).reshape(-1), reduction="none").reshape(y.shape)
         lp = Fn.log_softmax(lg, -1); lr_ = Fn.log_softmax(lg0, -1); pr_ = lr_.exp()
         kl = torch.where(pr_ > 0, pr_ * (lr_ - lp), torch.zeros_like(pr_)).sum(-1)
@@ -423,9 +457,11 @@ def main(data, out, epochs, cfg):
 
     @torch.no_grad()
     def evaluate_exit():
-        net.eval(); c_ok = c_n = k_ok = k_n = 0; ok = np.zeros(3); nn_ = np.zeros(3)
+        net.eval(); c_ok = c_n = k_ok = k_n = 0; ok = np.zeros(3); nn_ = np.zeros(3); ax = np.zeros(3); an = 0
         for b in loader(D, va, 1024, aug=False, shuffle=False):
             _, _, _, _, lg, r0, chg, v_ = exit_terms(net, b)
+            if heads is not None:
+                ax += [x.item() for x in last_aux["t"]]; an += 1
             pred = lg.argmax(-1); y = b["y"]; kind = b["tok_kind"][:, :F.OWN]
             c_ok += ((pred == y) & chg).sum().item(); c_n += chg.sum().item()
             k_ok += ((pred == r0) & v_ & ~chg).sum().item(); k_n += (v_ & ~chg).sum().item()
@@ -435,6 +471,8 @@ def main(data, out, epochs, cfg):
         r = {nm: round(ok[k] / max(nn_[k], 1), 4) for k, nm in enumerate(("collector", "planter", "base"))}
         r["all"] = round(ok.sum() / max(nn_.sum(), 1), 4)
         r["changed_learned"] = round(c_ok / max(c_n, 1), 4); r["changed_n"] = int(c_n); r["unchanged_kept"] = round(k_ok / max(k_n, 1), 4)
+        if heads is not None and an:
+            r["aux_die_bce"], r["aux_dep_l1"], r["aux_dw_l1"] = [round(float(x), 4) for x in ax / an]
         return r
 
     for ep in range(epochs):
@@ -443,15 +481,22 @@ def main(data, out, epochs, cfg):
             if i >= spe:                                                # exactly equivariant, a mirrored view would turn its
                 break                                                   # own moves into "changed" labels
             if net0 is not None:
-                l_ex, l_kl, l_v, la, *_ = exit_terms(tnet, b)
+                l_ex, l_kl, l_v, la, *_ = exit_terms(net if heads is not None else tnet, b)
                 lpi, lv = l_ex, l_kl                                  # logged as "pi" (changed tokens) and "v" (KL)
                 loss = ex_w * l_ex + ex_kl * l_kl + l_v + la
+                if heads is not None:
+                    l_die, l_dep, l_dw = last_aux["t"]
+                    loss = loss + aux_w * (l_die + 0.3 * l_dep + l_dw)
+                    la = l_die + l_dw                                 # logged as "aux"
+                    opt_h.zero_grad(set_to_none=True)
             else:
                 lpi, lv, la, _ = losses(tnet, b)
                 loss = lpi + 0.2 * lv + la
             opt.zero_grad(set_to_none=True); loss.backward()
             torch.nn.utils.clip_grad_norm_(net.parameters(), float(os.environ.get("BC_CLIP", "2.0")))
             opt.step(); sched.step()
+            if heads is not None:
+                opt_h.step()
             if i % 50 == 0:
                 acc += [lpi.item(), lv.item(), la.item()]; n += 1
             if i % 500 == 0:
@@ -463,6 +508,8 @@ def main(data, out, epochs, cfg):
             rec["train_kl"] = round(acc[1] / max(n, 1), 5); best = -1          # distillation: the last epoch is the result
         print(json.dumps(rec), flush=True); log.write(json.dumps(rec) + "\n"); log.flush()
         export(net, out.replace(".npz", "_last.npz"), {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
+        if heads is not None:
+            np.savez(out.replace(".npz", "_auxheads.npz"), **{k: v.detach().cpu().numpy() for k, v in heads.state_dict().items()})
         if os.environ.get("BC_SAVE_EPOCHS") == "1":       # keep every epoch for the online probes to choose from
             export(net, out.replace(".npz", f"_ep{ep}.npz"), {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
         if r["all"] > best:
