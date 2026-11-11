@@ -1,12 +1,11 @@
-# status  2026-11-12 00:11
+# status  2026-11-12 00:21
 
 | 机器 | 负载 / GPU | 在跑什么 |
 |---|---|---|
-| L20 | 17.33 21.22 19.69 100 % | out ../data/rl3/snipe_b
-out ../data/rl3/snipe_fast |
-| h23 | 2.07 20.38 19.61 | 空闲 |
-| h24 | 21.23 6.52 7.70 | 200 n0r_opp_w3b 200 n1r_opp_m3echo 200 n1r_opp_master2r 200 n1r_opp_w3b |
-| DGX | 96 % | weights/cnet2_top_j1b.npz weights/cnet2_top_j1c.npz |
+| L20 | 16.21 13.70 15.96 95 % | out ../data/rl3/snipe_b |
+| h23 | 0.06 2.56 10.04 | 空闲 |
+| h24 | 3.63 20.43 18.01 | 空闲 |
+| DGX | 94 % | weights/cnet2_top_j1b.npz weights/cnet2_top_j1c.npz |
 
 ## 需要云端或用户定的事
 - J1-a 显著为负：J2（八位老师）是否还开？建议先试"降低 Master2s 权重 / 给 Master3s 行加权"的 J1'。
