@@ -101,6 +101,11 @@ def parse():
     a("--eval-opps", default="exp/opp_1cz_v5.py,exp/cand_c1z_v1.py")
     a("--eval-seed0", type=int, default=980000)
     a("--seed0", type=int, default=3000000, help="training game seeds start here")
+    a("--server", type=int, default=0,
+      help="1: one inference process on --device runs the trunk for all rollout workers (rl2_ppo_server); the workers "
+           "keep only features, the per-unit decode and the simulator")
+    a("--self-prior", type=float, default=0.0,
+      help=">0: add opponent SELF (current weights on both sides, both sides recorded) to the league with this prior")
     a("--resume", default=None, help="state_last.pt to resume from")
     a("--remote", default=None, help="split mode: consume cloud actor shards (rl2_actor.py) from this local dir")
     a("--dec-frac", type=float, default=1.0, help="fraction of decisions used in the PPO epochs (values: all)")
@@ -250,6 +255,9 @@ def main():
             vnet.load_state_dict(stt["vnet"]); vopt.load_state_dict(stt["vopt"])
         it0 = stt["it"]; kl_coef = stt.get("kl_coef", kl_coef)
     league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
+    if args.self_prior > 0:
+        league.tab.setdefault("SELF", {"prior": args.self_prior, "n": 0, "wr": 0.5, "margin": 0.0})
+        league.tab["SELF"]["prior"] = args.self_prior
     league.save()                         # split mode: the cloud actor needs the table before iteration 1
     for k, v in league.tab.items():      # resumed snapshots keep their files
         if v.get("snap") and not os.path.exists(k.split(":", 2)[2]):
@@ -299,7 +307,14 @@ def main():
         return wk
 
     ctx = mp.get_context("spawn")
-    pool = ctx.Pool(1 if args.remote else args.workers)
+    server = None
+    if args.server and not args.remote:
+        import rl2_ppo_server as SV
+        import rl2_ppo_rollout as _RO
+        server = SV.start(ctx, args.adapter, str(dev), args.workers)
+        pool = ctx.Pool(args.workers, initializer=_RO._init_worker, initargs=server.initargs)
+    else:
+        pool = ctx.Pool(1 if args.remote else args.workers)
 
     def submit_rollouts(wk):
         nonlocal seed
@@ -446,7 +461,8 @@ def main():
         by = {}
         for g in games:
             by.setdefault(g["opp"], []).append(g["margin"])
-        rec = {"it": it, "t": round(time.time()), "games": len(games), "dec": ndec, "units": int(len(buf.act)),
+        srv = server.stats() if server is not None else None
+        rec = {"it": it, "t": round(time.time()), "games": len(games), "srv": srv, "dec": ndec, "units": int(len(buf.act)),
                "roll_s": round(t_roll, 1), "upd_s": round(t_upd, 1),
                "games_per_min": round(60 * len(games) / max(t_roll, 1e-6), 1),
                "dec_per_s": round(ndec / max(t_roll, 1e-6), 1),
@@ -498,6 +514,8 @@ def main():
         if os.path.exists(ek):
             os.remove(ek)
     pool.terminate()
+    if server is not None:
+        server.stop()
 
 
 if __name__ == "__main__":

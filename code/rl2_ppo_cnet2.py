@@ -37,13 +37,14 @@ class Cnet2Actor:
     def __init__(self, weights):
         import cnet2_np as NP
         self.pol = NP.Policy(weights)
+        self.remote = None; self.key = None
 
     def new_game(self, side):
         return {"f": F.Feat(side), "side": side}
 
-    def _decode(self, x, aux, rng, temp, greedy):
+    def _decode(self, x, aux, rng, temp, greedy, enc=None):
         P = self.pol; w = P.w
-        tok, ctx = P.encode(x, TEACHER)
+        tok, ctx = P.encode(x, TEACHER) if enc is None else enc
         value = math.tanh(float(ctx @ w["value.weightT"][:, 0] + w["value.bias"][0]))
         h = P.lin(ctx, "h0")
         prev = 8
@@ -74,11 +75,18 @@ class Cnet2Actor:
         return y, UF, MF, LG, logp, value, lpu
 
     def act(self, states, obss, rng, temp, greedy):
+        """remote (rl2_ppo_server.Client, set by the rollout worker) -> the trunk of all positions runs as one batched
+        request on the inference server; the per-unit decode stays here. Without it: NumPy trunk per position."""
         outs = []
-        for st, obs in zip(states, obss):
+        xs = [st["f"].observe(obs) for st, obs in zip(states, obss)]
+        encs = [None] * len(xs)
+        rem = getattr(self, "remote", None)
+        if rem is not None and xs:
+            tok, ctx = rem.encode(self.key, {k: np.stack([np.asarray(x[k]) for x in xs]) for k in XKEYS}, TEACHER)
+            encs = [(tok[i], ctx[i]) for i in range(len(xs))]
+        for st, x, enc in zip(states, xs, encs):
             f = st["f"]
-            x = f.observe(obs)
-            y, UF, MF, LG, logp, value, lpu = self._decode(x, f.aux, rng, temp, greedy)
+            y, UF, MF, LG, logp, value, lpu = self._decode(x, f.aux, rng, temp, greedy, enc)
             acts = f.to_actions(y)
             rec = {k: np.asarray(x[k]) for k in XKEYS}
             rec.update(uf=UF, mf=MF, legal=LG, y=y, logp=logp, value=value, lpu=lpu)
@@ -139,6 +147,21 @@ class Cnet2Adapter:
         net.load_state_dict({k: torch.from_numpy(np.asarray(v, np.float32)) for k, v in weights.items() if k != "meta"})
         net._rl2_cfg = cfg
         return net
+
+    def server_encode(self, model, d, teacher, device, amp=False):
+        """trunk of a batch of positions for the inference server: d = stacked Feat.observe outputs (XKEYS, NumPy)
+        -> tok [B,OWN,D], ctx [B,D] float32 NumPy (what cnet2_np.Policy.encode returns per position)."""
+        import torch
+        B = len(d["maps"])
+        t = {k: torch.from_numpy(np.ascontiguousarray(v)).to(device) for k, v in d.items()}
+        b = {"maps": (t["maps"].float() / 255.0).reshape(B, F.P, F.N).reshape(B, F.P, F.S, F.S),
+             "scal": t["scal"].float(), "tok_cargo": t["tok_cargo"].float(), "hist_cargo": t["hist_cargo"].float(),
+             "tok_mask": t["tok_mask"].bool(), "teacher": torch.full((B,), int(teacher), dtype=torch.long, device=device)}
+        for k in ("tok_pos", "tok_kind", "hist_cell", "hist_move"):
+            b[k] = t[k].long()
+        with torch.no_grad(), torch.autocast(device.type, enabled=bool(amp) and device.type == "cuda"):
+            tok, ctx, _ = model.encode(b)
+        return tok[:, :F.OWN].float().cpu().numpy(), ctx.float().cpu().numpy()
 
     def export(self, model):
         sd = {k: v.detach().cpu().float().numpy() for k, v in model.state_dict().items()}

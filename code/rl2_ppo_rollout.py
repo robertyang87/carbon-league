@@ -37,6 +37,20 @@ CFG = eval_v53.CFG
 _W_CACHE = {}      # (adapter, key) -> actor   (worker-local)
 
 
+_REMOTE = [None]   # rl2_ppo_server.Client of this worker (None: NumPy trunk in the worker)
+
+
+def _init_worker(ids, req_q, resp_qs):
+    """Pool initializer when the trainer runs an inference server."""
+    import queue
+    import rl2_ppo_server as SV
+    try:
+        wid = ids.get(timeout=5)
+    except queue.Empty:                 # a replacement worker: no free response queue, fall back to the NumPy trunk
+        return
+    _REMOTE[0] = SV.Client(wid, req_q, resp_qs[wid])
+
+
 def _actor(adapter_name, wkey, weights=None):
     k = (adapter_name, wkey)
     a = _W_CACHE.get(k)
@@ -44,6 +58,8 @@ def _actor(adapter_name, wkey, weights=None):
         if weights is None:
             weights = AD.load_npz(wkey)
         a = AD.get_adapter(adapter_name).make_actor(weights)
+        if _REMOTE[0] is not None and hasattr(a, "remote") and isinstance(wkey, str) and os.path.exists(wkey):
+            a.remote = _REMOTE[0]; a.key = os.path.abspath(wkey)
         if len(_W_CACHE) > 8:
             _W_CACHE.clear()
         _W_CACHE[k] = a
@@ -117,32 +133,59 @@ def _worth_margin(sim, post, side, left):
 def play_batch(task):
     """task keys: adapter, wkey, weights (or None -> load wkey), games [(opp, seed, side)],
     temp, greedy, record (bool), rng_seed.
+    Opponent "SELF": the same weights play the other side with the same temperature, and that side is recorded too
+    (returned as a second game dict with opp "SELF", the other side, mirror=True).
+    All positions that use the same model in one step go through ONE actor.act call (one server request).
     Returns list of per-game dicts (traj recs if record) + timing."""
     t0 = time.time()
     actor = _actor(task["adapter"], task["wkey"], task.get("weights"))
+    snap_temp = float(os.environ.get("RL2_SNAP_TEMP", "0"))
     games = []
     for opp, seed, side in task["games"]:
         random.seed(eval_v53.rng_seed(seed, side))
         sim = FastCarbon(CFG).reset(seed=seed)
-        g = {"opp": opp, "seed": seed, "side": side, "sim": sim,
-             "op": make_opponent(opp, 1 - side, seed), "st": actor.new_game(side),
+        g = {"opp": opp, "seed": seed, "side": side, "sim": sim, "st": actor.new_game(side),
              "recs": [], "R": [], "W": [], "dep": [], "lost": [], "prev": 0.0, "prevw": 0.0,
-             "my_bases": None}
+             "kind": "bot", "op": None}
+        if opp == "SELF":
+            g.update(kind="self", st2=actor.new_game(1 - side), recs2=[], dep2=[], lost2=[])
+        elif opp.startswith("SNAP:"):
+            _, ad_, path_ = opp.split(":", 2)
+            sa = _actor(ad_, path_)
+            g.update(kind="snap", sactor=sa, st2=sa.new_game(1 - side))
+        else:
+            g["op"] = make_opponent(opp, 1 - side, seed)
         games.append(g)
     rng = np.random.default_rng(task.get("rng_seed", 0))
+    rng_s = np.random.default_rng(task.get("rng_seed", 0) * 13 + 5)
     temp, greedy, record = task.get("temp", 1.0), task.get("greedy", False), task.get("record", True)
+    selfg = [g for g in games if g["kind"] == "self"]
+    snaps = {}
+    for g in games:
+        if g["kind"] == "snap":
+            snaps.setdefault(id(g["sactor"]), []).append(g)
     t_pol = t_opp = t_sim = 0.0
     ndec = 0
     for step in range(1, 301):
-        obs_me = [g["sim"].obs(g["side"]) for g in games]
         ta = time.time()
-        outs = actor.act([g["st"] for g in games], obs_me, rng, temp, greedy)
-        t_pol += time.time() - ta
-        ndec += len(games)
+        obs_me = [g["sim"].obs(g["side"]) for g in games]
+        obs_s = [g["sim"].obs(1 - g["side"]) for g in selfg]
+        outs = actor.act([g["st"] for g in games] + [g["st2"] for g in selfg], obs_me + obs_s, rng, temp, greedy)
+        for g, o in zip(selfg, outs[len(games):]):
+            g["a_op"], g["rec2"] = o
+        ndec += len(outs)
+        tb = time.time()
+        t_pol += tb - ta
+        for gs in snaps.values():
+            so = gs[0]["sactor"].act([g["st2"] for g in gs], [g["sim"].obs(1 - g["side"]) for g in gs], rng_s,
+                                     max(snap_temp, 1e-3), snap_temp <= 0)
+            for g, o in zip(gs, so):
+                g["a_op"] = o[0]
+        t_opp += time.time() - tb
         for g, o, (acts, rec) in zip(games, obs_me, outs):
             sim, side = g["sim"], g["side"]
             tb = time.time()
-            a_op = g["op"](sim.obs(1 - side), CFG)
+            a_op = g["op"](sim.obs(1 - side), CFG) if g["kind"] == "bot" else g["a_op"]
             tc = time.time()
             t_opp += tc - tb
             pre = sim.get_state() if record else None
@@ -151,14 +194,15 @@ def play_batch(task):
             t_sim += time.time() - tc
             d = post["cash"][side] - post["cash"][1 - side]
             if record:
-                if g["my_bases"] is None:
-                    g["my_bases"] = set(o["players"][side][1].values())
                 dep, lost = _own_events(pre, post, side, set(o["players"][side][1].values()))
                 g["recs"].append(rec)
                 g["R"].append(d - g["prev"])
                 wm = _worth_margin(sim, post, side, 300 - step)
                 g["W"].append(wm - g["prevw"]); g["prevw"] = wm
                 g["dep"].append(dep); g["lost"].append(lost)
+                if g["kind"] == "self":
+                    dep2, lost2 = _own_events(pre, post, 1 - side, set(o["players"][1 - side][1].values()))
+                    g["recs2"].append(g["rec2"]); g["dep2"].append(dep2); g["lost2"].append(lost2)
             g["prev"] = d
     out = []
     for g in games:
@@ -171,5 +215,10 @@ def play_batch(task):
             r.update(recs=g["recs"], dmargin=np.array(g["R"], np.float32), dworth=np.array(g["W"], np.float32),
                      dep=np.array(g["dep"], np.float32), lost=np.array(g["lost"], np.float32))
         out.append(r)
+        if record and g["kind"] == "self":          # the other side of a self-play game: every per-step margin negated
+            out.append({"opp": "SELF", "seed": g["seed"], "side": 1 - side, "mirror": True,
+                        "my": r["op"], "op": r["my"], "margin": -r["margin"], "recs": g["recs2"],
+                        "dmargin": -r["dmargin"], "dworth": -r["dworth"],
+                        "dep": np.array(g["dep2"], np.float32), "lost": np.array(g["lost2"], np.float32)})
     return {"games": out, "wall": time.time() - t0, "t_pol": t_pol, "t_opp": t_opp,
             "t_sim": t_sim, "ndec": ndec, "pid": os.getpid()}
