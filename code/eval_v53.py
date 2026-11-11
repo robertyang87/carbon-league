@@ -416,7 +416,7 @@ def play_game(task):
                          for side, q in (("pol", a_side), ("opp", 1 - a_side))},
         "a_errors": sum(v for k, v in (getattr(fa, "last_stats", None) or {}).items() if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float))),
         "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
-                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1", "pa_moves", "pa_errors", "mac_cap", "mac_stop", "mac_price", "seq_changed", "pb_skip", "fix_dropped", "pk_in", "pk_cut", "pk_rep", "pk_rep_plant3", "pk_rep_cash", "bk_in", "bk_cut", "shallow", "sims", "rounds", "sims_steps", "cb", "cb_seen", "cb_ok", "cb_errors", "se", "se_seen", "se_ok", "se_none", "se_errors", "se_lat", "ms_steps", "px", "px_errors", "opl", "opl_errors", "tg", "rg", "share_saved")},
+                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1", "pa_moves", "pa_errors", "mac_cap", "mac_stop", "mac_price", "mac_push", "seq_changed", "pb_skip", "fix_dropped", "pk_in", "pk_cut", "pk_rep", "pk_rep_plant3", "pk_rep_cash", "bk_in", "bk_cut", "shallow", "sims", "rounds", "sims_steps", "cb", "cb_seen", "cb_ok", "cb_errors", "se", "se_seen", "se_ok", "se_none", "se_errors", "se_lat", "ms_steps", "px", "px_errors", "opl", "opl_errors", "tg", "rg", "share_saved")},
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
         "comp": {str(k): v for k, v in comp.items()},
     }

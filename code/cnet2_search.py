@@ -706,6 +706,10 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         #   PL_CAP_E/M/L  planters allowed in play (None = no limit); + REACT_T * max(0, enemy trees - our trees)
         #   REC_STOP_P    no planter recruits from this step on
         #   PRICE_M/L     plant only at a price <= limit (None = no limit); - REACT_S * our trees seized in the last 50 steps
+        #   PL_MIN_E/M/L  (the one knob that ADDS planters; ladder 2026-11-11: Echo1 loses the games in which the
+        #                 opponent out-plants it, and M6 beat Master3s holding ~6 planters) -- while fewer planters than
+        #                 this are in play, a collector recruit the net asks for becomes a planter recruit (stats
+        #                 mac_push); + PL_MIN_REACT * max(0, enemy trees - our trees). Never adds a recruit of its own.
         mac = cfg.get("MACRO")
         if mac:
             try:
@@ -734,6 +738,12 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                     elif cap is not None and npl + planned > cap:
                         to = 1 if mac.get("CAP_TO_CAR", True) and t_ < mac.get("CAR_STOP", 276) else 0
                         y[s_] = to; st["base_fix"][s_] = to; stats["mac_cap"] = stats.get("mac_cap", 0) + 1
+                pmin = mac.get("PL_MIN_" + ph)
+                if pmin is not None and t_ < mac.get("PUSH_STOP", 250):
+                    pmin = pmin + int(round(mac.get("PL_MIN_REACT", 0.0) * max(0, len(Po[3]) - len(Pm[3]))))
+                    for s_ in slots:
+                        if y[s_] == 1 and npl + sum(1 for o_ in slots if y[o_] == 2) < pmin:
+                            y[s_] = 2; st["base_fix"][s_] = 2; stats["mac_push"] = stats.get("mac_push", 0) + 1
                 lim = mac.get("PRICE_" + ph)
                 if lim is not None:
                     lim = lim - mac.get("REACT_S", 0.0) * len(st["mac_seized"])
