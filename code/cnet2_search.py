@@ -782,6 +782,32 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                             y[s_] = mv; st["base_fix"][s_] = mv; stats["mac_price"] = stats.get("mac_price", 0) + 1
             except Exception as e:
                 stats["errors"] += 1; stats["last_error"] = repr(e)[:300]
+        # LATE_PLANT {FROM, TO, RATIO, K}: late in the game a planter that stands on a free cell plants when the tree pays:
+        # believed carbon on the 4 neighbours * (1 - 0.9625 ** steps left) * K  >=  RATIO * current price. Ladder
+        # 2026-11-11: all four games Master3s lost were lost in the last 50 steps to opponents holding 9-11 trees at step
+        # 290 while it held none (their tree income in the last third 1158-2711, its own 0-1070); with one side treeless
+        # the price is low. The net learned from Master3s to stop planting. Only the move of a planter is changed (stay =
+        # plant); no recruit is added (see MACRO PL_MIN_L / PUSH_STOP for keeping planters late). stats: lp.
+        lpc = cfg.get("LATE_PLANT")
+        if lpc and lpc.get("FROM", 220) <= obs["step"] <= lpc.get("TO", 292):
+            try:
+                Pm = obs["players"][me]; Po = obs["players"][1 - me]; left = 299 - obs["step"]
+                taken = {int(v[0]) for q_ in (Pm, Po) for v in q_[3].values()} | {int(b) for q_ in (Pm, Po) for b in q_[1].values()}
+                cash = float(Pm[0]) - 30.0 * sum(1 for s_ in range(10, F.OWN) if x["tok_mask"][s_] and y[s_] > 0)
+                price = plant_price(obs, me); ntree = len(Pm[3])
+                for s_ in range(10):
+                    if not x["tok_mask"][s_] or int(x["tok_kind"][s_]) != 1 or y[s_] == 0:
+                        continue
+                    w_ = Pm[2].get(f.own_uid[s_])
+                    if w_ is None or int(w_[0]) in taken or cash < price:
+                        continue
+                    nb = float(sum(f.est[n_] for n_ in F.DEST1_L[int(w_[0])] if n_ not in taken))
+                    if nb * (1.0 - 0.9625 ** left) * lpc.get("K", 0.7) >= lpc.get("RATIO", 1.5) * price:
+                        y[s_] = 0; stats["lp"] = stats.get("lp", 0) + 1
+                        cash -= price; taken.add(int(w_[0])); ntree += 1
+                        price = 20.0 + 5.0 * 1.235 ** (sum(1 for q_ in (Pm, Po) for v in q_[3].values() if int(v[1]) < 50) + ntree - len(Pm[3]))
+            except Exception as e:
+                stats["errors"] += 1; stats["last_error"] = repr(e)[:300]
         if cfg["GUARD"]:
             try:
                 y = bankrupt_guard(x, f.aux, y, lg0)
