@@ -1,6 +1,13 @@
 """cnet2_search_timing -- platform-style load (exec, no __file__) of a packed search submission, play N games
 vs an opponent, record per-step wall ms of our agent and sims per searched step.
-python3 cnet2_search_timing.py PACKED.py OPP.py SEED0 N"""
+python3 cnet2_search_timing.py PACKED.py OPP.py SEED0 N
+NOTE (N04): this tool is a health + function-timing SUB-TEST only. It times the
+in-process agent() call and exits nonzero solely on internal agent errors; it does
+NOT measure process start/exec/init wall time, IPC or top-level call overhead,
+slow-step counts/overage pools, whole-match wall time or peak RSS, so a slow but
+legal agent can pass it. Full platform resource certification lives in
+code/certify_pack.py -- never cite this tool alone as resource certification.
+"""
 import os, sys, time, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np, eval_v53
