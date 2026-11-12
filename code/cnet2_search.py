@@ -501,7 +501,26 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     log = []
     T, OT = cfg["TEACHER"], cfg["OPP_TEACHER"]
 
+    def _extinct(sim, p):
+        """original env (carbon.py compute_next_board): a side with no workers, no trees and
+        (no conversion centre, or cash below the cheapest recruit) is DONE and the game ends
+        on the spot. FastCarbon deliberately does not model this (see its header), so the
+        search layer must recognise the terminal itself (R02)."""
+        if any(w.player == p for w in sim.workers.values()):
+            return False
+        if any(t.player == p for t in sim.trees.values()):
+            return False
+        if not sim.bases[p]:
+            return True
+        cheapest = min(sim.config.get("recCollectorCost", 30), sim.config.get("recPlanterCost", 30))
+        return float(sim.cash[p]) < cheapest
+
+    def _terminal(sim):
+        return _extinct(sim, 0) or _extinct(sim, 1)
+
     def leaf(sim, me, left):
+        if _terminal(sim):     # R02: game already over by extinction -- the final cash IS the value
+            return float(sim.cash[me]) - float(sim.cash[1 - me])
         m = [float(sim.cash[0]), float(sim.cash[1])]
         wv = cfg["WORKER_V"] * min(1.0, left / 100.0)
         bases = {p: [b for _, b in sim.bases[p]] for p in (0, 1)}
@@ -1236,8 +1255,11 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 else:
                     s_.step(roots[i], cand[c])
                 sims.append(s_); fs.append((feat_copy(f), feat_copy(fo)))
+            term = [_terminal(s_) for s_ in sims]     # R02: sims the root step already ended by extinction stay frozen
             depth = 1; aborted = False
             for hh in range(1, H):
+                if all(term):
+                    break
                 if cfg["ABORT_DL"] is not None and not fixed:
                     est = st.get("stepw", 0.0) * nb
                     if time.time() - tw + cfg["PROJ"] * est > cfg["ABORT_DL"]:
@@ -1285,11 +1307,15 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 if share:
                     stats["share_saved"] = stats.get("share_saved", 0) + (nb - no)
                 for j, (s_, (fm, fop)) in enumerate(zip(sims, fs)):
+                    if term[j]:
+                        continue     # R02: frozen at extinction -- neither the sim nor its cash may evolve further (leaf pins the terminal value)
                     am = fm.to_actions(lab[j]); ao = fop.to_actions(lab[orow[j]])
                     if me == 0:
                         s_.step(am, ao)
                     else:
                         s_.step(ao, am)
+                    if _terminal(s_):
+                        term[j] = True; stats["term"] = stats.get("term", 0) + 1
                 stats["branch_steps"] += nb
                 depth = hh + 1
                 sw = (time.time() - ts_) / nb
@@ -1438,6 +1464,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             else:
                 s_.step(ao_, a)
             sims.append(s_); fs.append((feat_copy(f), feat_copy(fo)))
+        term = [_terminal(s_) for s_ in sims]     # R02: sims the root step already ended by extinction stay frozen
         stats["branches"] += nb
         local = None
         if cfg["LOCAL_R"]:
@@ -1447,6 +1474,8 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         H = min(cfg["H"], left)          # R01: see _mcts -- left already counts the remaining transfers
         depth = 1; last_dt = None
         for hh in range(1, H):
+            if all(term):
+                break     # R02: every branch sim already ended by extinction
             now = clk()
             if last_dt is not None and now - t0 + cfg["PROJ"] * last_dt > cfg["BUDGET"]:
                 break
@@ -1476,10 +1505,13 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                             for k_, v_ in d0.items():
                                 if k_ not in local:
                                     d_[k_] = v_
-                if me == 0:
-                    s_.step(am, ao)
-                else:
-                    s_.step(ao, am)
+                if not term[i]:     # R02: frozen at extinction -- neither the sim nor its cash may evolve further
+                    if me == 0:
+                        s_.step(am, ao)
+                    else:
+                        s_.step(ao, am)
+                    if _terminal(s_):
+                        term[i] = True; stats["term"] = stats.get("term", 0) + 1
             stats["branch_steps"] += nb
             depth = hh + 1
             last_dt = clk() - now
