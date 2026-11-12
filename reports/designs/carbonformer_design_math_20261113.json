@@ -1,0 +1,69 @@
+{
+  "status": "deterministic_formula_checks_not_match_results",
+  "utility_scale": 1000,
+  "table": [
+    {
+      "margin": -5000,
+      "utility": 0.0033464254621424277
+    },
+    {
+      "margin": -3000,
+      "utility": 0.02371293658878339
+    },
+    {
+      "margin": -100,
+      "utility": 0.23751040626053
+    },
+    {
+      "margin": 0,
+      "utility": 0.5
+    },
+    {
+      "margin": 100,
+      "utility": 0.76248959373947
+    },
+    {
+      "margin": 3000,
+      "utility": 0.9762870634112166
+    },
+    {
+      "margin": 5000,
+      "utility": 0.9966535745378576
+    }
+  ],
+  "objective_counterexample": {
+    "safe_margin": 100,
+    "safe_U": 0.76248959373947,
+    "risky_margins_equal_probability": [
+      6000,
+      -4000
+    ],
+    "risky_mean_margin": 1000,
+    "risky_expected_U": 0.5038783967013643,
+    "risky_expected_sigmoid": 0.5077567934027285,
+    "wrong_sigmoid_of_mean": 0.7310585786300049
+  },
+  "teacher_budget_example": {
+    "K": 16,
+    "scenarios": 8,
+    "horizon_joint_transitions": 2,
+    "full_leaf_scenarios_upper": 128,
+    "full_joint_transitions_upper": 256,
+    "fast_extra_leaf_scenarios": 0,
+    "full_fraction": 0.125,
+    "expected_extra_leaf_scenarios_per_learning_side_decision": 16,
+    "expected_extra_joint_transitions_per_learning_side_decision": 32,
+    "max_decisions_per_side": 299,
+    "expected_full_frames_per_side": 37.375,
+    "excludes": [
+      "candidate_generation",
+      "opponent_policy_inference",
+      "belief_and_history_construction",
+      "pure_calibration_games",
+      "model_training"
+    ],
+    "counts_are_not_wall_time_or_forward_call_counts": true
+  },
+  "action_space_upper_bound": 87890625,
+  "cell_attention_scores_per_head": 50625
+}

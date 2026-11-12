@@ -1,0 +1,148 @@
+{
+  "document": "../CARBONFORMER_KATAGO_DESIGN_20261113.md",
+  "status": "design_example_not_executable_by_current_cli",
+  "schema_version": "carbonformer_design_v1",
+  "source_review_commit": "14d53320b20d58bdb82676f7fa866b8e11a55062",
+  "incremental_review_commit": "09c872479ed95fc882df596e4b845cc9c5639174",
+  "priority": "network_first_katago_style_policy_iteration",
+  "required_before_execution": [
+    "resolve_C02_and_retest",
+    "freeze_champion_and_opponent_hashes",
+    "implement_and_validate_new_interfaces",
+    "pre_register_eval_and_total_compute_budget"
+  ],
+  "model": {
+    "arch": "carbonformer_t1_proposed",
+    "board_size": 15,
+    "map_channels": 33,
+    "scalar_features": 20,
+    "cell_tokens": 225,
+    "unit_tokens": 24,
+    "own_slots_max": 12,
+    "history_steps": 8,
+    "spatial_width": 96,
+    "spatial_layers": 2,
+    "spatial_heads": 4,
+    "ffn_expansion": 2,
+    "stem": "per_cell_linear",
+    "position": "learned_toroidal_relative_bias",
+    "output_adapter": "to_frozen_baseline_C",
+    "unit_module": "retain_baseline_architecture",
+    "decoder": "retain_joint_autoregressive_GRU",
+    "optional_history_attention": false,
+    "optional_unit_cell_cross_attention": false,
+    "optional_opponent_auxiliary": false,
+    "parameter_count": null,
+    "measured_latency_ms": null,
+    "second_size_if_justified": {
+      "spatial_width": 128,
+      "spatial_layers": 4
+    }
+  },
+  "objective": {
+    "utility_version": "utility_bt_mix_v1",
+    "normal": "0.5*WDL + 0.5*sigmoid(official_reward_margin/1000)",
+    "unilateral_execution_fault": "WDL_only",
+    "non_scored_result": "exclude_utility_loss",
+    "utility_heads": {
+      "utility_bare": "sigmoid; pure continuation terminal U only; teacher leaf",
+      "utility_mixed": "sigmoid; mixed continuation terminal U only; auxiliary"
+    },
+    "wdl_head_source": "mixed_complete_episodes",
+    "raw_margin_head_source": "mixed_normal_complete_episodes",
+    "raw_margin_scale": 1000,
+    "raw_margin_loss": "unclipped_squared_error",
+    "policy_loss": "full_joint_cross_entropy_not_candidate_normalized_student_logits",
+    "loss_weights": {
+      "joint": 1.0,
+      "utility": 1.0,
+      "wdl": 0.2,
+      "margin": 0.05,
+      "aux": 0.1
+    },
+    "utility_source_weights_if_both_present": {
+      "bare": 0.5,
+      "mixed": 0.5
+    }
+  },
+  "generation": {
+    "freeze_per_generation": true,
+    "pure_calibration_initial_games": 128,
+    "pure_calibration_is_sufficiency_guarantee": false,
+    "calibration_update": "bare_head_only_actor_and_trunk_frozen",
+    "full_probability": 0.125,
+    "fast_extra_search_evals": 0,
+    "initial_mixed_games": 128,
+    "pilot_mixed_games_upper_budget": 512,
+    "pilot_generations_max": 2,
+    "policy_batch_mixture": {
+      "teacher_full_joint": 0.75,
+      "bc_anchor": 0.25
+    },
+    "opponent_mixture": {
+      "frozen_current_selfplay": 0.5,
+      "verified_historical": 0.25,
+      "fixed_external_strong": 0.25
+    },
+    "missing_opponents": "fail_or_explicit_new_manifest",
+    "fast_behavior_temperature": 1.0,
+    "full_behavior_temperature": 1.0,
+    "logp_semantics": "conditional_on_recorded_mode_not_marginal_mixture",
+    "value_recent_generations_max": 2,
+    "bare_label_contract": "matching_actor_opponent_temperature_guard_and_feature_versions",
+    "branch_lineage": "inherit_origin_lineage_id"
+  },
+  "teacher": {
+    "kind": "fixed_budget_root_joint_candidate_soft_improvement",
+    "max_candidates": 16,
+    "scenarios_per_candidate": 8,
+    "joint_transition_horizon": 2,
+    "alpha": 0.5,
+    "q_temperature_utility_units": 0.05,
+    "root_opponent_actions": "sample_before_viewing_own_candidate",
+    "shared_random_scenarios": true,
+    "rollout_continuation": "frozen_pure_neural_policies_no_recursive_search",
+    "leaf": "utility_bare_only",
+    "exact_terminal_bypasses_min_depth": true,
+    "quality_validation": "independent_scenarios_and_selected_full_continuations",
+    "oracle_hidden_state_in_policy_inputs": false
+  },
+  "data": {
+    "publish": "atomic_READY_after_all_validations",
+    "partial_builds_accepted_for_training": false,
+    "split_unit": "origin_lineage_id",
+    "fast_teacher_fields": "null",
+    "truncated_terminal_labels": "masked",
+    "bootstrap_stored_separately": true
+  },
+  "evaluation": {
+    "primary": "paired_delta_U_of_final_policy_only_package",
+    "confidence": 0.95,
+    "resample_unit": "paired_seed_cluster_not_frames_or_mirrored_views",
+    "final_sample_size": "pre_register_from_dev_variance_and_minimum_effect",
+    "promotion": "health_and_resources_pass_and_lower_CI_delta_U_gt_0_and_predeclared_stratum_guardrails",
+    "training_seed_replication_after_success": 3,
+    "PPO_comparison": "separate_pure_rollouts_same_initial_weights_and_total_compute"
+  },
+  "deployment": {
+    "online_search": false,
+    "cpu_limit": 1.5,
+    "memory_limit_bytes": 536870912,
+    "file_max_bytes": 10000000,
+    "initialization_seconds": 20,
+    "platform_baseline_step_seconds_including_ipc": 1,
+    "provisional_internal_total_action_seconds": 0.8,
+    "quantization": "separate_ablation_int8_storage_is_not_int8_compute",
+    "complete_cgroup_benchmark_required": true
+  },
+  "unresolved_required_ids": {
+    "champion_checkpoint_sha256": null,
+    "champion_package_sha256": null,
+    "opponent_manifest_sha256": null,
+    "dataset_manifest_sha256": null,
+    "feature_schema_sha256": null,
+    "continuation_manifest_sha256": null,
+    "final_eval_seed_manifest_sha256": null,
+    "total_compute_budget": null
+  }
+}

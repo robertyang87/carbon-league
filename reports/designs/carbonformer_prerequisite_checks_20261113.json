@@ -1,0 +1,162 @@
+{
+  "reviewed_sha": "09c872479ed95fc882df596e4b845cc9c5639174",
+  "baseline": "14d53320b20d58bdb82676f7fa866b8e11a55062",
+  "scope": "Targeted regression of existing probes; not full review, strength measurement or resource certification. No training, deployment or cloud mutation.",
+  "C01": {
+    "status": "original_reproducer_passes",
+    "method": "real simulator and control flow; fixed network outputs isolate action selection; empty returned action means NONE",
+    "results": [
+      {
+        "MIN_DEPTH": 3,
+        "returned_actions": {},
+        "stats": {
+          "searched": 1,
+          "branches": 2,
+          "branch_steps": 0,
+          "depth_sum": 1,
+          "shallow": 0,
+          "changed": 1,
+          "gain": 440.0
+        },
+        "branch_results": [
+          {
+            "step": 101,
+            "extinct": [
+              true,
+              false
+            ],
+            "leaf": -220.0
+          },
+          {
+            "step": 101,
+            "extinct": [
+              false,
+              true
+            ],
+            "leaf": 220.0
+          }
+        ],
+        "log": [
+          [
+            100,
+            [
+              null,
+              [
+                "player-0-worker-0",
+                0
+              ]
+            ],
+            [
+              -220,
+              220
+            ],
+            1
+          ]
+        ]
+      },
+      {
+        "MIN_DEPTH": 1,
+        "returned_actions": {},
+        "stats": {
+          "searched": 1,
+          "branches": 2,
+          "branch_steps": 0,
+          "depth_sum": 1,
+          "shallow": 0,
+          "changed": 1,
+          "gain": 440.0
+        },
+        "branch_results": [
+          {
+            "step": 101,
+            "extinct": [
+              true,
+              false
+            ],
+            "leaf": -220.0
+          },
+          {
+            "step": 101,
+            "extinct": [
+              false,
+              true
+            ],
+            "leaf": 220.0
+          }
+        ],
+        "log": [
+          [
+            100,
+            [
+              null,
+              [
+                "player-0-worker-0",
+                0
+              ]
+            ],
+            [
+              -220,
+              220
+            ],
+            1
+          ]
+        ]
+      }
+    ]
+  },
+  "C02": {
+    "status": "source_unchanged_not_fixed",
+    "method": "git diff and source inspection; builder not rerun in this increment",
+    "prior_evidence": "../REVIEW_FIXES_20261113.md#c02--p2坏回放导致部分数据集发布成功自动链的开训前检查仍会放行"
+  },
+  "C03": {
+    "status": "original_error_gate_probes_pass",
+    "method": "historical b128 packaged with reviewed source; AST shortens only timing loop to two steps; elapsed timings intentionally omitted because not a benchmark",
+    "results": [
+      {
+        "case": "valid",
+        "steps": 2,
+        "exit_code": 0,
+        "errors": 0,
+        "root_errors": 0,
+        "a_errors": 0,
+        "error_categories": {
+          "errors": 0
+        }
+      },
+      {
+        "case": "invalid",
+        "steps": 2,
+        "exit_code": 1,
+        "errors": 0,
+        "root_errors": 2,
+        "a_errors": 2,
+        "error_categories": {
+          "errors": 0,
+          "root_errors": 2
+        }
+      },
+      {
+        "case": "rule_invalid",
+        "steps": 2,
+        "exit_code": 1,
+        "errors": 0,
+        "root_errors": 0,
+        "a_errors": 2,
+        "error_categories": {
+          "errors": 0,
+          "tg_errors": 2
+        }
+      }
+    ]
+  },
+  "source_sha256": {
+    "code/cnet2_search.py": "72719a75bab3db627b49ffa60a82e80d5d7ef99feb7f81d714c96248ea99c4d7",
+    "code/cnet2_search_timing.py": "8f9e579c38a45ecab1dc187401bbeac0481396ba2ae5093b2b44568946409bd9",
+    "code/cnet2_build.py": "d39846551570f16b35b9104e0c56868d1eef50316ee27643ed6ab58b356812ea",
+    "code/replica_chain.sh": "b2ceec62c5a2f540ab057d37268ad6a6c709b4ef9d8e1473a4e3f08a338da27a",
+    "code/bigeval.py": "0eee6563f825c1f47526f936dc26588868f6822362c0ae58e194f90a44ee291b",
+    "code/eval_v53.py": "330ddb21bb541308e55884717ffbf212e111883103256aed2429b088d953fcd1",
+    "tools/ecs_release.py": "d5fbbdd4aea362104c050f7d4517052b4c64e2b31c340d6cffa87d8013f0eedf"
+  }
+}
