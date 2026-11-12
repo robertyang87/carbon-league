@@ -404,3 +404,9 @@ n1r 考试全套已于 07:37 在 h23 完成（n1r.done=DONE）。a 均为 data/p
 ck_snipe_b_75 打包版（600 对）：对 Master2 真身 wins 520，mean +912，se 42（调整值 +134）；对 opp_w3b wins 358，mean +246，se 48（调整值 +221）。
 
 舰队状态（同轮回读）：h23/h24 考试已毕、自 07:37 起空闲；L20 snipe_b 单路在跑（it 96，GPU 94%，无 OOM），snipe_n1 冒烟失败——机上无 n1r 权重文件，唯一 n1 权重 cnet2_m3n1L.npz 含当前 CNet2 代码没有的 tattn.0.n1 键、加载报错（与 07:06 同一错误），待权重/代码口径解决；snipe_b 新参数 resume 顺延 it 100 检查点待重派。DGX：L20 已入 ZeroTier（10.211.43.94），ping DGX 10.211.43.155 通、22 端口开，但 SSH 公钥被拒（Permission denied），凭据待解。
+
+## 2026-11-12 10:56 n1r vs snipe_b_30 扩跑判定（h23，第一道门）
+- 原 200 对（seeds 994000-994199）：胜 106，mean +79，se 60，lo2se -40
+- 扩跑 400 对 pkn1r_sb30_x400（seeds 994400-994799）：胜 227，mean +126，se 36，lo2se +54，err 0
+- 合并 600 对：胜 333，mean +110，se 31，lo2se +48 —— 第一道门通过：n1r 明确强于 snipe_b_30
+- 第二道门（主科 Master2 real 校准 +191 >= 150）此前已过；n1r 全套对比表完成，提交与否待所有者决定
