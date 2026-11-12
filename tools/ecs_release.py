@@ -15,6 +15,11 @@ Flow (fail-closed):
      expiry without a conclusive poll reports UNVERIFIED and exits nonzero
      (REVIEW_20261112 R15: an error response parses to an empty instance
      list and must never be read as "instance gone").
+     Exit contract (REVIEW_FIXES_20261112 F09): exit 0 means exactly one
+     thing -- RESULT=RELEASED_VERIFIED. Every other outcome (precheck
+     failure, malformed structure, delete refused, still present at the
+     deadline = DELETE_ACCEPTED_STILL_PRESENT, unverifiable) exits 1, so
+     "delete accepted" is never confused with "release verified".
 Every API response's HTTP status / RequestId / Code is printed verbatim.
 """
 import base64, hashlib, hmac, json, os, sys, time, urllib.error, urllib.parse, urllib.request, uuid
@@ -62,22 +67,38 @@ def call(action, **params):
             return e.code, {"RawBody": raw[:800]}
 
 
+def parse_instances(r):
+    """(ok, instances): ok only when r carries a well-formed Instances
+    structure -- a dict whose "Instance" field is a list of dicts. An
+    HTTP 200 body like {} or {"Instances": {}} is MALFORMED, not an empty
+    result (F09/R15): the pre-F09 parser turned missing fields into an
+    empty list, so a malformed 200 read as "instance gone" and produced a
+    false RELEASED_VERIFIED."""
+    if not isinstance(r, dict):
+        return False, []
+    inst = r.get("Instances")
+    if not isinstance(inst, dict):
+        return False, []
+    lst = inst.get("Instance")
+    if not isinstance(lst, list) or not all(isinstance(x, dict) for x in lst):
+        return False, []
+    return True, lst
+
+
 def describe():
     code, r = call("DescribeInstances", InstanceIds=json.dumps([INST]), PageSize=10)
-    insts = []
-    if isinstance(r, dict):
-        insts = (r.get("Instances") or {}).get("Instance") or []
-    return code, r, insts
+    ok, insts = parse_instances(r)
+    return code, r, insts, ok
 
 
 def main():
     print(f"=== {MARKER} BEGIN instance={INST} region={REGION} expected_ip={EXPECTED_IP} ===", flush=True)
-    code, r, insts = describe()
+    code, r, insts, struct_ok = describe()
     print(f"PRECHECK_HTTP={code} REQUESTID={r.get('RequestId')} TOTAL={r.get('TotalCount')}", flush=True)
-    if code != 200:
+    if code != 200 or not struct_ok:
         print("PRECHECK_RESPONSE=" + json.dumps(r)[:800], flush=True)
         print(f"=== {MARKER} RESULT=PRECHECK_ERROR ===", flush=True)
-        return
+        sys.exit(1)
     match = None
     for it in insts:
         if it.get("InstanceId") == INST:
@@ -85,7 +106,7 @@ def main():
     if not match:
         print("PRECHECK_MATCH=NO (instance not returned by DescribeInstances)")
         print(f"=== {MARKER} RESULT=ABORT_NO_MATCH ===", flush=True)
-        return
+        sys.exit(1)
     ips = list((match.get("PublicIpAddress") or {}).get("IpAddress") or [])
     eip = (match.get("EipAddress") or {}).get("IpAddress")
     if eip:
@@ -94,7 +115,7 @@ def main():
     if EXPECTED_IP not in ips:
         print(f"PRECHECK_MATCH=NO (public IP mismatch: expected {EXPECTED_IP}, got {ips})")
         print(f"=== {MARKER} RESULT=ABORT_IP_MISMATCH ===", flush=True)
-        return
+        sys.exit(1)
     print("PRECHECK_MATCH=YES", flush=True)
 
     code, r = call("DeleteInstance", InstanceId=INST, Force="true")
@@ -102,7 +123,7 @@ def main():
     print("DELETE_RESPONSE=" + json.dumps(r)[:600], flush=True)
     if code != 200:
         print(f"=== {MARKER} RESULT=DELETE_ERROR ===", flush=True)
-        return
+        sys.exit(1)
 
     deadline = time.time() + 240
     last_status = None
@@ -111,14 +132,16 @@ def main():
     while True:
         time.sleep(10)
         try:
-            code, r, insts = describe()
+            code, r, insts, struct_ok = describe()
         except Exception as e:
-            code, r, insts = None, {"Exception": repr(e)}, []
+            code, r, insts, struct_ok = None, {"Exception": repr(e)}, [], False
         # REVIEW_20261112 R15: a verify poll is conclusive only on HTTP 200
         # with a valid Instances structure. An error response (503/403/...)
         # parses to an empty instance list; treating that as "absent" would
         # falsely report RELEASED_VERIFIED, so failed polls only retry.
-        query_ok = code == 200 and isinstance(r, dict) and isinstance(r.get("Instances"), dict)
+        # F09: Instances={} (no "Instance" list) is malformed, not empty:
+        # struct_ok comes from parse_instances and is required here.
+        query_ok = code == 200 and struct_ok
         if not query_ok:
             query_failures += 1
             last_query_ok = False
@@ -134,8 +157,10 @@ def main():
                 return
         if time.time() > deadline:
             if last_query_ok:
+                # The delete was ACCEPTED but the release is NOT verified:
+                # keep the two states distinct and exit nonzero (F09).
                 print(f"=== {MARKER} RESULT=DELETE_ACCEPTED_STILL_PRESENT last_status={last_status} ===", flush=True)
-                return
+                sys.exit(1)
             print(f"=== {MARKER} RESULT=UNVERIFIED_QUERY_FAILED failures={query_failures} ===", flush=True)
             sys.exit(1)
 
