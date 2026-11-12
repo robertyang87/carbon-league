@@ -47,12 +47,32 @@ def load_weights(src):
 
 
 class CachePolicy(NP.Policy):
-    """NP.Policy that keeps the last encode() output (same numerics as v12)."""
+    """NP.Policy that keeps the last encode() output (same numerics as v12).
+
+    R12: the cache also records WHAT was encoded. The consumers (bankrupt guard,
+    _mcts/_search root decodes) pair the cached (tok, ctx) with the ORIGINAL-frame
+    x/aux, but after NP.act_tta the last encode is of a symmetry VIEW, and after an
+    epol/opol decode this policy was not encoded at all (stale cache) -- in both
+    cases last_enc is the wrong frame or a previous step. enc_for() restores the
+    invariant: it returns the encoding of exactly (x, teacher), re-encoding on any
+    mismatch. On the plain act() path the signature always matches, so the common
+    case costs nothing."""
+
+    @staticmethod
+    def _sig(x, teacher):
+        return (teacher, x["maps"].tobytes(), x["tok_pos"].tobytes(),
+                x["hist_cell"].tobytes(), np.asarray(x["scal"]).tobytes())
 
     def encode(self, x, teacher):
         r = NP.Policy.encode(self, x, teacher)
         self.last_enc = r
+        self.last_sig = self._sig(x, teacher)
         return r
+
+    def enc_for(self, x, teacher):
+        if getattr(self, "last_sig", None) != self._sig(x, teacher):
+            return self.encode(x, teacher)
+        return self.last_enc
 
 
 # ---------------------------------------------------------------- batched inference
@@ -951,7 +971,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         if first is None:
             return y
         fz[:first] = y[:first]                  # the guard has priority over rule-edited bases: no base_fix here
-        tok, ctx = pol.last_enc
+        tok, ctx = pol.enc_for(x, st["T_now"])     # R12: original-frame encoding of THIS x (last_enc may be a TTA view)
         X1 = {k: x[k][None] for k in ("tok_pos", "tok_kind", "tok_mask", "tok_cargo")}
         X1["cash"] = [x["cash"]]; X1["slots"] = [x["slots"]]; X1["left"] = [x["left"]]
         y2 = decode_b(pol, X1, [aux], tok[None], ctx[None], fz[None])[0]
@@ -1116,7 +1136,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             return acts
         st["seq_last"] = keys[0][1]
         stats["searched"] += 1
-        tok, ctx = pol.last_enc
+        tok, ctx = pol.enc_for(x, st["T_now"])     # R12: original-frame encoding of THIS x (last_enc may be a TTA view)
         lg0 = st["lg0"]
         uid2slot = {u: s for s, u in enumerate(f.own_uid) if u is not None}
         forced, meta, pri = [], [], []
@@ -1388,7 +1408,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         if not keys:
             return acts
         stats["searched"] += 1
-        tok, ctx = pol.last_enc
+        tok, ctx = pol.enc_for(x, st["T_now"])     # R12: original-frame encoding of THIS x (last_enc may be a TTA view)
         uid2slot = {u: s for s, u in enumerate(f.own_uid) if u is not None}
         # ---- root candidate joint actions (b128 re-decode, prefix forced to the default)
         forced, meta = [], []
