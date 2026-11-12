@@ -1,0 +1,34 @@
+name: ladder-submit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Marker
+        run: echo "ECHO3SUBMIT-RUN1 marker"
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Verify pack bytes
+        run: |
+          ls -l code/packs/echo3_int8.py
+          test "$(stat -c %s code/packs/echo3_int8.py)" = "4576790"
+          test "$(md5sum code/packs/echo3_int8.py | cut -d' ' -f1)" = "7b7620499411a088cf4dc17c0e929bd7"
+          echo PACK-MD5-OK
+      - name: Login and submit Echo3
+        env:
+          LADDER_BASE: https://117.72.210.134
+          LADDER_PASS: ${{ secrets.LADDER_PASS }}
+          LADDER_COOKIES: /tmp/ladder_cookies.json
+        run: |
+          python3 code/ladder.py login claude-opus55-cloud
+          python3 code/ladder.py whoami
+          python3 code/ladder.py submit code/packs/echo3_int8.py Echo3
+          python3 code/ladder.py mine
