@@ -148,6 +148,10 @@ def play_batch(task):
     Returns list of per-game dicts (traj recs if record) + timing."""
     t0 = time.time()
     actor = _actor(task["adapter"], task["wkey"], task.get("weights"))
+    # R04: the task's primary actor is the learner(-side) actor -- the only one CNET2_TEMP_KIND may
+    # govern. Snapshot actors built below (and _SnapAgent's) keep temp_kind=False and play at the
+    # temperature they are handed, so the learner's per-kind temperatures no longer leak into them.
+    actor.temp_kind = True
     snap_temp = float(os.environ.get("RL2_SNAP_TEMP", "0"))
     games = []
     for opp, seed, side in task["games"]:
