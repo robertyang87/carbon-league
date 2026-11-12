@@ -30,8 +30,10 @@ import cnet2_feat as F  # noqa: E402
 
 NEG = np.float32(-1e9)
 TEACHER = int(os.environ.get("CNET2_TEACHER", "1"))
-# CNET2_TEMP_KIND="c,p,b": sampling temperature per unit kind (collector, planter, base) -- replaces the trainer's
-# scalar --temp both when the actor samples and when the learner recomputes the log-probs (same env in both).
+# CNET2_TEMP_KIND="c,p,b": sampling temperature per unit kind (collector, planter, base) for the LEARNER only --
+# it replaces the trainer's scalar --temp when the learner actor samples and when the learner recomputes the
+# log-probs (evaluate below; same env in both). R04: it must NOT leak into snapshot / opponent actors, which
+# always play at the temperature they are handed (RL2_SNAP_TEMP); Cnet2Actor.temp_kind marks the learner.
 _TK = os.environ.get("CNET2_TEMP_KIND")
 TEMP_KIND = [float(v) for v in _TK.split(",")] if _TK else None
 # CNET2_TEACHER_LATE / CNET2_LATE_STEP: style row from that step on (Grove1's pack plays row 2, then row 7 from step 240);
@@ -47,6 +49,9 @@ class Cnet2Actor:
         import cnet2_np as NP
         self.pol = NP.Policy(weights)
         self.remote = None; self.key = None; self.teacher = TEACHER; self.sched = True
+        # R04: False = snapshot/opponent actor: _decode uses the temperature it is passed.
+        # The rollout worker flags the task's primary (learner) actor True; only it may use TEMP_KIND.
+        self.temp_kind = False
 
     def _t(self, x):
         if self.sched and TEACHER_LATE is not None and int(round(float(x["scal"][1]) * 300)) >= LATE_STEP:
@@ -78,7 +83,8 @@ class Cnet2Actor:
             h = P.gru(inp, h)
             base = P.lin(h, "whead") if s < 10 else np.concatenate([P.lin(h, "bhead"), np.zeros(2, np.float32)])
             lg = base + P.lin(mf.astype(np.float32), "V") @ P.lin(h, "U")
-            ts = temp if TEMP_KIND is None else TEMP_KIND[2 if s >= 10 else int(x["tok_kind"][s])]
+            # R04: TEMP_KIND applies to the learner instance only; any other actor uses the passed temp.
+            ts = temp if (TEMP_KIND is None or not getattr(self, "temp_kind", False)) else TEMP_KIND[2 if s >= 10 else int(x["tok_kind"][s])]
             z = np.where(legal, lg / ts, -np.inf)
             z = z - z.max(); p = np.exp(z); p /= p.sum()
             a = int(np.argmax(p)) if greedy else int(rng.choice(5, p=p))
