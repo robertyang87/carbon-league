@@ -5,9 +5,9 @@ import json, os, statistics as st, sys, time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 def _play(t):
-    import eval_v53
+    import eval_v53, traceback
     try: return eval_v53.play_game(t)
-    except Exception as e: return {"error": repr(e)[:200], "seed": t[3]}
+    except Exception as e: return {"error": repr(e)[:200], "tb": traceback.format_exc()[-600:], "seed": t[3]}
 def main(a, b, s0, n, tag):
     seeds = [int(x) for x in os.environ["EVO_SEEDS"].split(",")] if os.environ.get("EVO_SEEDS") else range(s0, s0 + n)
     tasks = [(tag, a, b, s, s % 2) for s in seeds]
@@ -37,6 +37,17 @@ def main(a, b, s0, n, tag):
     if len(m) < 2:
         print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m)}), file=sys.stderr, flush=True)
         sys.exit(2)
+    # R05: internal health is computed and merged into the summary BEFORE
+    # it is saved. (Previously search_error_games was attached to rec only
+    # after the record had been written and printed, so the saved summary
+    # showed err=0 and callers marked the exam done even when the search /
+    # rule layers had thrown inside games.)
+    search_error_games = sum(1 for r in rows if r.get("a_errors"))
+    a_errors_total = sum(r.get("a_errors", 0) for r in rows)
+    root_errors_total = sum((r.get("a_stats") or {}).get("root_errors", 0) for r in rows)
+    first_error = next((r.get("tb") or r.get("error") for r in rows if r.get("error")), None)
+    first_search_error_seed = next((r.get("seed") for r in rows if r.get("a_errors")), None)
+    failed = bool(search_error_games or a_errors_total)
     L = lambda side, k: round(st.mean([r[f"ledger_{side}"][k] for r in rows if "margin" in r]))
     se = st.stdev(m) / len(m) ** .5
     rec = {"tag": tag, "a": a, "b": b, "seed0": s0, "n": len(m), "err": sum("error" in r for r in rows),
@@ -48,11 +59,14 @@ def main(a, b, s0, n, tag):
            "search_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched")),
            "changed0_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched") and not r["a_stats"].get("changed")),
            "games": [[r.get("seed"), r.get("policy_side"), round(r["margin"])] for r in rows if "margin" in r]}
+    rec.update({"search_error_games": search_error_games, "a_errors_total": a_errors_total,
+                "root_errors_total": root_errors_total, "first_error": first_error,
+                "first_search_error_seed": first_search_error_seed, "FAIL": failed})
     open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k != "games"}), flush=True)
     # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
-    rec["search_error_games"] = sum(1 for r in rows if r.get("a_errors"))
-    if rec["search_error_games"]:      # any exception inside the search / rule layers: the exam is not testing the intended code
-        print(json.dumps({"tag": tag, "WARN_SEARCH_ERRORS": rec["search_error_games"], "of": len(rows)}), file=sys.stderr, flush=True)
+    if failed:      # R05: any exception inside the search / rule layers means the exam is not testing the intended code: fail it (the saved record above already carries the FAIL marker)
+        print(json.dumps({"tag": tag, "FAIL_SEARCH_ERRORS": search_error_games, "a_errors_total": a_errors_total, "of": len(rows)}), file=sys.stderr, flush=True)
+        sys.exit(3)
     if rec["changed0_games"]:
         print(json.dumps({"tag": tag, "WARN_SEARCH_NEVER_CHANGED": rec["changed0_games"], "of": rec["search_games"]}), file=sys.stderr, flush=True)
     if rec["err"] or rec["n"] < n:
