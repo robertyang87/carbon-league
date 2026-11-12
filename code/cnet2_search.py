@@ -60,8 +60,19 @@ class CachePolicy(NP.Policy):
 
     @staticmethod
     def _sig(x, teacher):
+        # The signature must cover EVERY field encode() consumes (trunk_b /
+        # tok_features_b read all nine x fields). The old signature missed
+        # tok_kind/tok_mask/tok_cargo/hist_cargo/hist_move: two states that
+        # differed only in per-token cargo -- (1000, 800) vs (1100, 700) at
+        # equal total, maps saturated -- collided, and enc_for() returned
+        # the other state's encoding (review measurement: encode diff
+        # 0.061544). The standard-TTA part of R12 was already at 0 and is
+        # not touched by this.
         return (teacher, x["maps"].tobytes(), x["tok_pos"].tobytes(),
-                x["hist_cell"].tobytes(), np.asarray(x["scal"]).tobytes())
+                x["tok_kind"].tobytes(), x["tok_mask"].tobytes(),
+                x["tok_cargo"].tobytes(), x["hist_cell"].tobytes(),
+                x["hist_cargo"].tobytes(), x["hist_move"].tobytes(),
+                np.asarray(x["scal"]).tobytes())
 
     def encode(self, x, teacher):
         r = NP.Policy.encode(self, x, teacher)
