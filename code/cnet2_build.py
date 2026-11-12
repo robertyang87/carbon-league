@@ -17,11 +17,27 @@ zero-row game (the step window excludes every row) is NOT a failure, but it
 is not a valid game either. main() raises SystemExit(1) on failure so
 wrappers such as build_top.py propagate the failure through their own
 exit code instead of silently reporting success.
+
+N03 contract (REVIEW_FIXES_20261113_R2): an indexed replay that PASSES the
+eligibility filters (steps / teacher sides / ours-corpus rules) but whose
+file is missing is a failure like any other -- it is recorded in
+failed_games with reason="missing_replay" and follows the same default
+exit-1 / CNET2_ALLOW_PARTIAL rules. Games excluded by those filters are
+legitimate filtering, not failures; scan counts them separately
+(filtered_games, by reason) and meta.json declares those counts.
+
+P3 publish discipline: merged arrays and meta.json are written to a
+temporary directory inside the output dir first and moved into place with
+os.replace (meta.json last, as the commit marker) only after every array
+is complete. A mid-merge failure therefore cannot leave half-overwritten
+arrays behind a stale meta; the previously published product is untouched.
 """
 
+import gc
 import gzip
 import json
 import os
+import shutil
 import sys
 import zlib
 from concurrent.futures import ProcessPoolExecutor
@@ -236,38 +252,68 @@ def ratings(dirs):
     return r
 
 
-def scan(dirs, min_steps=200, weighted=False):
-    """weighted: per-side sample weight = (2 if side won) * (1.5 if both rated >= STRONG);
-    dirs whose name contains 'ours_corpus' contribute only games our bot LOST, teacher = winning opponent
-    (rated >= OURS_MIN_OPP or a listed teacher)."""
+def _scan(dirs, min_steps=200, weighted=False):
+    """Core scanner. Returns (games, missing, filtered):
+    games    -- eligible games whose replay file exists;
+    missing  -- eligible games (passed steps/teacher/ours filters) whose
+                replay file does NOT exist (N03: failures, not filtering);
+    filtered -- {reason: count} for index rows legitimately excluded
+                (duplicate / min_steps / no teacher side / ours-corpus
+                rules). Eligibility is decided from the index entry alone,
+    BEFORE the existence check, so a missing file can only be classified
+    as missing when the game would otherwise have been built."""
     games, seen = [], set()
+    missing = []
+    filtered = {}
+
+    def _filtered(reason):
+        filtered[reason] = filtered.get(reason, 0) + 1
+
     R = ratings(dirs) if weighted else {}
     for rd in dirs:
         ours = "ours_corpus" in rd
         idx = json.load(open(os.path.join(rd, "index.json")))
         for g in idx:
             key = os.path.basename(g["file"])
-            if key in seen or g.get("steps", 0) < min_steps:
+            if key in seen:
+                _filtered("duplicate")
+                continue
+            if g.get("steps", 0) < min_steps:
+                _filtered("min_steps")
                 continue
             fp = os.path.join(rd, g["file"])
-            if not os.path.exists(fp):
-                continue
             order = g["order"]
             names = [g["strategies"][order[s]]["name"] for s in (0, 1)]
             scores = [g["scores"][order[s]] for s in (0, 1)]
             if ours:
                 us = [s for s in (0, 1) if names[s].startswith(OUR_NAMES)]
                 if len(us) != 1:
+                    _filtered("ours_shape")
                     continue
                 o = 1 - us[0]
                 if not (scores[o] > scores[us[0]] and (names[o] in F.TEACHERS[:-1] or R.get(names[o], 0) >= OURS_MIN_OPP)):
+                    _filtered("ours_not_qualified")
                     continue
                 sides = [o]
             else:
                 sides = [s for s in (0, 1) if names[s] in F.TEACHERS[:-1]]
             if not sides:
+                _filtered("no_teacher_side")
                 continue
             seen.add(key)
+            if not os.path.exists(fp):
+                # N03: this game SHOULD have been built (it passed every
+                # eligibility filter) but its replay is gone. Record it as
+                # a failure -- the old code continued here silently, so the
+                # game never reached the errs contract and the build
+                # published partial=false with no trace of the lost id.
+                missing.append({"key": key, "file": fp, "names": names,
+                                "scores": scores, "sides": sides,
+                                "val": zlib.crc32(key.encode()) % 10 == 0,
+                                "src": os.path.basename(rd.rstrip("/")),
+                                "reason": "missing_replay",
+                                "error": f"missing_replay: indexed replay file not found: {fp}"})
+                continue
             g = {"file": fp, "key": key, "names": names, "scores": scores, "sides": sides,
                  "val": zlib.crc32(key.encode()) % 10 == 0, "src": os.path.basename(rd.rstrip("/"))}
             if weighted:
@@ -275,6 +321,17 @@ def scan(dirs, min_steps=200, weighted=False):
                 g["wts"] = [(2.0 if scores[s] > scores[1 - s] else 1.0) * (1.5 if strong else 1.0) for s in sides]
                 g["ours_loss"] = ours
             games.append(g)
+    return games, missing, filtered
+
+
+def scan(dirs, min_steps=200, weighted=False):
+    """weighted: per-side sample weight = (2 if side won) * (1.5 if both rated >= STRONG);
+    dirs whose name contains 'ours_corpus' contribute only games our bot LOST, teacher = winning opponent
+    (rated >= OURS_MIN_OPP or a listed teacher).
+    Back-compatible wrapper over _scan: returns only the buildable games.
+    Callers that publish data must use _scan (as main does) so missing
+    eligible replays are accounted as failures, not silently dropped."""
+    games, _missing, _filtered = _scan(dirs, min_steps=min_steps, weighted=weighted)
     return games
 
 
@@ -320,8 +377,22 @@ def _cfg_fingerprint():
 
 def main(out, dirs):
     os.makedirs(os.path.join(out, "shards"), exist_ok=True)
+    # P3: drop leftovers of a crashed publish; the temp dir is never a
+    # published product (only os.replace'd files in `out` itself are).
+    for stale in os.listdir(out):
+        if stale.startswith(".tmp_publish_"):
+            shutil.rmtree(os.path.join(out, stale), ignore_errors=True)
     weighted = os.environ.get("CNET2_WEIGHTED") == "1"
-    games = scan(dirs, weighted=weighted)
+    games, missing, filtered = _scan(dirs, weighted=weighted)
+    # N03: missing-but-eligible games join the games list as declared
+    # failures (no task is built for them; their gi is pre-seeded into
+    # errs below), exactly like a bad-gzip game: default abort, or a
+    # declared partial dataset under CNET2_ALLOW_PARTIAL=1.
+    missing_err = {m["key"]: m["error"] for m in missing}
+    for m in missing:
+        games.append({"file": m["file"], "key": m["key"], "names": m["names"],
+                      "scores": m["scores"], "sides": m["sides"],
+                      "val": m["val"], "src": m["src"], "missing_replay": True})
     fields = dict(FIELDS)
     if weighted:
         fields["w"] = (np.float16, ())
@@ -332,6 +403,8 @@ def main(out, dirs):
         mg = [g["scores"][s] - g["scores"][1 - s] for s in g["sides"]]
         suffix = ("_s" + "".join(map(str, g["sides"]))) if weighted else ""
         g["shard"] = os.path.join(out, "shards", g["key"].replace(".json.gz", "") + suffix + ".npz")
+        if g.get("missing_replay"):
+            continue
         tasks.append((g["file"], g["sides"], gi, tids, mg, g["shard"]))
     cfg_fp = _cfg_fingerprint()
     man_path = os.path.join(out, "shards", "_cfp.json")
@@ -395,6 +468,13 @@ def main(out, dirs):
             if err:
                 errs[gi] = err
                 print("err", gi, err, flush=True)
+    # N03: pre-seed the missing-but-eligible games into the same errs
+    # contract, so the failed/partial/abort logic below covers them.
+    for g in games:
+        if g.get("missing_replay"):
+            errs[g["gi"]] = missing_err[g["key"]]
+            ns[g["gi"]] = 0
+            print("err", g["gi"], missing_err[g["key"]], flush=True)
     for t in tasks:
         gi = t[2]
         base = os.path.basename(t[5])
@@ -418,7 +498,9 @@ def main(out, dirs):
     # Now: any per-game failure aborts the publish with a non-zero exit by
     # default; CNET2_ALLOW_PARTIAL=1 instead publishes a dataset whose meta
     # explicitly declares the failed game ids, reasons and valid game count.
-    failed = [{"gi": gi, "key": games[gi]["key"], "error": errs[gi]} for gi in sorted(errs)]
+    failed = [{"gi": gi, "key": games[gi]["key"], "error": errs[gi],
+               **({"reason": "missing_replay"} if games[gi].get("missing_replay") else {})}
+              for gi in sorted(errs)]
     # C02: "valid" = a game that contributed >= 1 row. A legitimate zero-row
     # game (step window excludes every row; err None) is NOT a failure -- the
     # build still succeeds -- but it contributes no training rows, so it does
@@ -442,32 +524,55 @@ def main(out, dirs):
                 pass
         sys.exit(1)
     total = sum(ns.values())
-    mm = {k: np.lib.format.open_memmap(os.path.join(out, k + ".npy"), mode="w+", dtype=dt,
-                                       shape=(total,) + sh) for k, (dt, sh) in fields.items()}
-    o = 0
-    for gi in range(len(games)):
-        if not ns.get(gi):
-            continue
-        D = np.load(games[gi]["shard"])
-        n = len(D["y"])
-        for k in FIELDS:
-            mm[k][o:o + n] = D[k] if k != "gid" else gi
-        if weighted:
-            # rows are side-major (each side's steps ascending): a step reset starts the next side
-            st_ = D["step"].astype(np.int64)
-            seg = np.concatenate([[0], np.cumsum(np.diff(st_) < 0)])
-            mm["w"][o:o + n] = np.asarray(games[gi]["wts"], np.float32)[seg]
-        o += n
-    for k in mm:
-        mm[k].flush()
     for g in games:
         g["n"] = ns.get(g["gi"], 0)
         if g["gi"] in errs:
             g["failed"] = errs[g["gi"]]
-    json.dump({"games": games, "total": total, "teachers": F.TEACHERS, "cfg_fp": cfg_fp,
-               "failed_games": failed, "partial": bool(failed),
-               "valid_games": valid},
-              open(os.path.join(out, "meta.json"), "w"))
+    meta = {"games": games, "total": total, "teachers": F.TEACHERS, "cfg_fp": cfg_fp,
+            "failed_games": failed, "partial": bool(failed),
+            "valid_games": valid, "filtered_games": filtered}
+    # P3 (REVIEW_FIXES_20261113_R2): publish transactionally. The merged
+    # arrays and meta are fully written inside a temp dir in `out` first;
+    # only then are they moved over the formal outputs with os.replace,
+    # meta.json LAST (it is the declaration consumers read, so it acts as
+    # the commit marker). Previously the merge truncated the formal .npy
+    # files in place before reading the shards, so a mid-merge failure
+    # (e.g. a cached shard missing a field) left half-overwritten arrays
+    # behind the previous meta. Now such a failure discards the temp dir
+    # and leaves the previously published product byte-identical.
+    tmp_out = os.path.join(out, f".tmp_publish_{os.getpid()}")
+    os.makedirs(tmp_out, exist_ok=True)
+    w_copy = None
+    try:
+        mm = {k: np.lib.format.open_memmap(os.path.join(tmp_out, k + ".npy"), mode="w+", dtype=dt,
+                                           shape=(total,) + sh) for k, (dt, sh) in fields.items()}
+        o = 0
+        for gi in range(len(games)):
+            if not ns.get(gi):
+                continue
+            D = np.load(games[gi]["shard"])
+            n = len(D["y"])
+            for k in FIELDS:
+                mm[k][o:o + n] = D[k] if k != "gid" else gi
+            if weighted:
+                # rows are side-major (each side's steps ascending): a step reset starts the next side
+                st_ = D["step"].astype(np.int64)
+                seg = np.concatenate([[0], np.cumsum(np.diff(st_) < 0)])
+                mm["w"][o:o + n] = np.asarray(games[gi]["wts"], np.float32)[seg]
+            o += n
+        if weighted:
+            w_copy = np.asarray(mm["w"], np.float32).copy()
+        for k in mm:
+            mm[k].flush()
+        mm = {}
+        gc.collect()  # release the memmaps so os.replace cannot race a writer
+        with open(os.path.join(tmp_out, "meta.json"), "w") as fh:
+            json.dump(meta, fh)
+        for k in fields:
+            os.replace(os.path.join(tmp_out, k + ".npy"), os.path.join(out, k + ".npy"))
+        os.replace(os.path.join(tmp_out, "meta.json"), os.path.join(out, "meta.json"))
+    finally:
+        shutil.rmtree(tmp_out, ignore_errors=True)
     from collections import Counter
     c = Counter(F.TEACHERS[t] for g in games if ns.get(g["gi"], 0) > 0
                 for t in [teacher_id(g["names"][s]) for s in g["sides"]])
@@ -477,8 +582,10 @@ def main(out, dirs):
     if failed:
         rep["failed_games"] = [f_["key"] for f_ in failed]
         rep["partial"] = True
+    if filtered:
+        rep["filtered_games"] = filtered
     if weighted:
-        w = np.asarray(mm["w"], np.float32)
+        w = w_copy
         rep["ours_loss_games"] = sum(1 for g in games if g.get("ours_loss"))
         rep["ours_loss_samples"] = int(sum(g["n"] for g in games if g.get("ours_loss")))
         rep["weight_hist"] = {str(v): int((w == v).sum()) for v in np.unique(w)}
