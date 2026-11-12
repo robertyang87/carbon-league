@@ -247,6 +247,30 @@ def scan(dirs, min_steps=200, weighted=False):
     return games
 
 
+def _cfg_fingerprint():
+    """R08: fingerprint of everything that changes shard CONTENT -- the step window,
+    the unit-weight switches, the teacher map, the field schema / feature shapes and
+    the builder+feat source itself. Cached shards are only reused under an identical
+    fingerprint (plus an unchanged source file, see main); before this, the cache key
+    was just the replay name, so a config change silently reused stale shards while
+    meta.json claimed the new config."""
+    import hashlib
+    detail = {
+        "step_min": STEP_MIN, "step_max": STEP_MAX,
+        "uw": UW, "uw_plant": UW_PLANT, "uw_treelife": UW_TREELIFE,
+        "weighted": os.environ.get("CNET2_WEIGHTED") == "1",
+        "teachers": list(F.TEACHERS),
+        "fields": {k: [str(dt), list(sh)] for k, (dt, sh) in FIELDS.items()},
+        "feat_sig": [F.P, F.N, F.NS, F.T, F.H, F.OWN, F.UF, F.MF],
+    }
+    for mod in (__file__, getattr(F, "__file__", None)):
+        try:
+            detail["src_" + os.path.basename(mod)] = hashlib.sha256(open(mod, "rb").read()).hexdigest()[:16]
+        except Exception:
+            pass
+    return hashlib.sha256(json.dumps(detail, sort_keys=True).encode()).hexdigest()[:16]
+
+
 def main(out, dirs):
     os.makedirs(os.path.join(out, "shards"), exist_ok=True)
     weighted = os.environ.get("CNET2_WEIGHTED") == "1"
@@ -262,19 +286,42 @@ def main(out, dirs):
         suffix = ("_s" + "".join(map(str, g["sides"]))) if weighted else ""
         g["shard"] = os.path.join(out, "shards", g["key"].replace(".json.gz", "") + suffix + ".npz")
         tasks.append((g["file"], g["sides"], gi, tids, mg, g["shard"]))
+    cfg_fp = _cfg_fingerprint()
+    man_path = os.path.join(out, "shards", "_cfp.json")
+    man = {}
+    if os.path.exists(man_path):
+        try:
+            man = json.load(open(man_path))
+        except Exception:
+            man = {}
+    fp_ok = man.get("cfg_fp") == cfg_fp
+    if man and not fp_ok:
+        print(f"R08: build-config fingerprint changed ({man.get('cfg_fp')} -> {cfg_fp}); "
+              "cached shards invalidated, rebuilding all", flush=True)
+    old_src = man.get("shards", {}) if fp_ok else {}
     ns = {}
     todo = []
     for t in tasks:
-        if os.path.exists(t[5]):
-            ns[t[2]] = int(np.load(t[5])["y"].shape[0])
-        else:
-            todo.append(t)
+        if fp_ok and os.path.exists(t[5]):
+            st_ = os.stat(t[0])
+            if old_src.get(os.path.basename(t[5])) == [st_.st_size, st_.st_mtime_ns]:
+                ns[t[2]] = int(np.load(t[5])["y"].shape[0])
+                continue
+        todo.append(t)
     tasks = todo
     with ProcessPoolExecutor(max_workers=int(os.environ.get("BUILD_WORKERS", "8"))) as ex:
         for gi, n, err in ex.map(build_game, tasks, chunksize=1):
             ns[gi] = n
             if err:
                 print("err", gi, err, flush=True)
+    new_src = {}
+    for g in games:
+        try:
+            st_ = os.stat(g["file"])
+            new_src[os.path.basename(g["shard"])] = [st_.st_size, st_.st_mtime_ns]
+        except Exception:
+            pass
+    json.dump({"cfg_fp": cfg_fp, "shards": new_src}, open(man_path, "w"))
     total = sum(ns.values())
     mm = {k: np.lib.format.open_memmap(os.path.join(out, k + ".npy"), mode="w+", dtype=dt,
                                        shape=(total,) + sh) for k, (dt, sh) in fields.items()}
@@ -296,10 +343,10 @@ def main(out, dirs):
         mm[k].flush()
     for g in games:
         g["n"] = ns.get(g["gi"], 0)
-    json.dump({"games": games, "total": total, "teachers": F.TEACHERS}, open(os.path.join(out, "meta.json"), "w"))
+    json.dump({"games": games, "total": total, "teachers": F.TEACHERS, "cfg_fp": cfg_fp}, open(os.path.join(out, "meta.json"), "w"))
     from collections import Counter
     c = Counter(F.TEACHERS[t] for g in games for t in [teacher_id(g["names"][s]) for s in g["sides"]])
-    rep = {"games": len(games), "samples": total, "val_games": sum(g["val"] for g in games), "teacher_sides": c}
+    rep = {"games": len(games), "samples": total, "val_games": sum(g["val"] for g in games), "teacher_sides": c, "cfg_fp": cfg_fp}
     if weighted:
         w = np.asarray(mm["w"], np.float32)
         rep["ours_loss_games"] = sum(1 for g in games if g.get("ours_loss"))
