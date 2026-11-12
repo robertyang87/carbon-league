@@ -12,7 +12,7 @@ for seed in range(s0, s0 + n):
     exec(compile(open(pk).read(), "<submission>", "exec"), g)
     ob = eval_v53.load_agent_fn(opp); side = seed % 2
     sim = FastCarbon(eval_v53.CFG).reset(seed=seed); prev = (0, 0)
-    for t in range(300):
+    for t in range(299):     # R01: a game is 299 transfers (last agent call at obs step 298), not 300
         o = [sim.obs(0), sim.obs(1)]
         ts = time.time(); a = g["agent"](o[side], eval_v53.CFG); W.append((time.time() - ts) * 1000)
         st = g["_AG"].stats; cur = (st.get("sims", 0), st["searched"])
@@ -22,9 +22,17 @@ for seed in range(s0, s0 + n):
         b = ob(o[1 - side], eval_v53.CFG)
         sim.step(*((a, b) if side == 0 else (b, a)))
     st = g["_AG"].stats
-    res.append({"seed": seed, "margin": round(sim.cash[side] - sim.cash[1 - side]), "errors": st["errors"], "aborted": st.get("aborted", 0)})
+    res.append({"seed": seed, "margin": round(sim.cash[side] - sim.cash[1 - side]), "errors": st.get("errors", 0),
+                "root_errors": st.get("root_errors", 0), "aborted": st.get("aborted", 0)})
     print(json.dumps(res[-1]), flush=True)
 W = np.array(W); S = np.array(SIMS)
-print(json.dumps({"steps": len(W), "wall_ms": {"mean": round(W.mean(), 1), "p50": round(np.percentile(W, 50)), "p90": round(np.percentile(W, 90)),
-      "p99": round(np.percentile(W, 99)), "max": round(W.max())}, "sims_per_searched_step": {"mean": round(S.mean(), 1), "p10": float(np.percentile(S, 10)),
-      "p50": float(np.percentile(S, 50)), "p90": float(np.percentile(S, 90)), "searched": len(S)}}))
+# R11: the general wall-time summary must print even when nothing was searched (SEARCH=False
+# pure-net packs): an empty SIMS used to crash the percentile summary (IndexError) and lose it.
+wall = {"mean": round(W.mean(), 1), "p50": round(np.percentile(W, 50)), "p90": round(np.percentile(W, 90)),
+        "p99": round(np.percentile(W, 99)), "max": round(W.max())} if len(W) else \
+       {"mean": None, "p50": None, "p90": None, "p99": None, "max": None}
+sims = {"mean": round(S.mean(), 1), "p10": float(np.percentile(S, 10)), "p50": float(np.percentile(S, 50)),
+        "p90": float(np.percentile(S, 90)), "searched": len(S)} if len(S) else \
+       {"mean": None, "p10": None, "p50": None, "p90": None, "searched": 0}
+print(json.dumps({"steps": len(W), "wall_ms": wall, "sims_per_searched_step": sims,
+                  "errors": sum(r["errors"] for r in res), "root_errors": sum(r["root_errors"] for r in res)}))
