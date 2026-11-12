@@ -35,7 +35,11 @@ def main(a, b, s0, n, tag):
             lf.write(json.dumps(g) + "\n"); lf.flush()
     m = [r["margin"] for r in rows if "margin" in r]
     if len(m) < 2:
-        print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m)}), file=sys.stderr, flush=True)
+        # F09: this path used to save nothing at all; an incomplete exam must
+        # still leave a machine-readable FAIL record for downstream readers.
+        bad = {"tag": tag, "FAIL": True, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m)}
+        open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(bad) + "\n")
+        print(json.dumps(bad), file=sys.stderr, flush=True)
         sys.exit(2)
     # R05: internal health is computed and merged into the summary BEFORE
     # it is saved. (Previously search_error_games was attached to rec only
@@ -45,9 +49,19 @@ def main(a, b, s0, n, tag):
     search_error_games = sum(1 for r in rows if r.get("a_errors"))
     a_errors_total = sum(r.get("a_errors", 0) for r in rows)
     root_errors_total = sum((r.get("a_stats") or {}).get("root_errors", 0) for r in rows)
-    first_error = next((r.get("tb") or r.get("error") for r in rows if r.get("error")), None)
+    # F09: rows arrive in completion order; report the FIRST failure's stack
+    # deterministically (lowest seed, traceback preferred over the repr).
+    by_seed = sorted(rows, key=lambda r: (r.get("seed") is None, r.get("seed") or 0))
+    first_error = next((r.get("tb") or r.get("error") for r in by_seed if r.get("error")), None)
     first_search_error_seed = next((r.get("seed") for r in rows if r.get("a_errors")), None)
-    failed = bool(search_error_games or a_errors_total)
+    # F09: FAIL covers every failure class -- internal search/rule errors,
+    # outer per-game exceptions and missing games. Previously it counted only
+    # the internal classes, so a 2-of-3 exam with one crashed game was saved
+    # with FAIL=false (err=1, n=2) while exiting 2.
+    outer_errors = sum(1 for r in rows if r.get("error"))
+    missing = len(tasks) - len(m)
+    internal_failed = bool(search_error_games or a_errors_total or root_errors_total)
+    failed = bool(internal_failed or outer_errors or missing)
     L = lambda side, k: round(st.mean([r[f"ledger_{side}"][k] for r in rows if "margin" in r]))
     se = st.stdev(m) / len(m) ** .5
     rec = {"tag": tag, "a": a, "b": b, "seed0": s0, "n": len(m), "err": sum("error" in r for r in rows),
@@ -64,12 +78,12 @@ def main(a, b, s0, n, tag):
                 "first_search_error_seed": first_search_error_seed, "FAIL": failed})
     open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k != "games"}), flush=True)
     # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
-    if failed:      # R05: any exception inside the search / rule layers means the exam is not testing the intended code: fail it (the saved record above already carries the FAIL marker)
+    if internal_failed:      # R05: any exception inside the search / rule layers means the exam is not testing the intended code: fail it (the saved record above already carries the FAIL marker)
         print(json.dumps({"tag": tag, "FAIL_SEARCH_ERRORS": search_error_games, "a_errors_total": a_errors_total, "of": len(rows)}), file=sys.stderr, flush=True)
         sys.exit(3)
     if rec["changed0_games"]:
         print(json.dumps({"tag": tag, "WARN_SEARCH_NEVER_CHANGED": rec["changed0_games"], "of": rec["search_games"]}), file=sys.stderr, flush=True)
-    if rec["err"] or rec["n"] < n:
+    if rec["err"] or rec["n"] < n or missing:
         print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": rec["n"], "want": n, "err": rec["err"]}), file=sys.stderr, flush=True)
         sys.exit(2)
 if __name__ == "__main__":
