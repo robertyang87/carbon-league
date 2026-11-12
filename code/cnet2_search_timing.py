@@ -34,5 +34,15 @@ wall = {"mean": round(W.mean(), 1), "p50": round(np.percentile(W, 50)), "p90": r
 sims = {"mean": round(S.mean(), 1), "p10": float(np.percentile(S, 10)), "p50": float(np.percentile(S, 50)),
         "p90": float(np.percentile(S, 90)), "searched": len(S)} if len(S) else \
        {"mean": None, "p10": None, "p50": None, "p90": None, "searched": 0}
+tot_errors = sum(r["errors"] for r in res)
+tot_root_errors = sum(r["root_errors"] for r in res)
 print(json.dumps({"steps": len(W), "wall_ms": wall, "sims_per_searched_step": sims,
-                  "errors": sum(r["errors"] for r in res), "root_errors": sum(r["root_errors"] for r in res)}))
+                  "errors": tot_errors, "root_errors": tot_root_errors}))
+# F09/R11: this tool doubles as the acceptance gate for packed submissions.
+# A pack whose agent fails at the root of every step (root_errors == steps)
+# previously printed its statistics and exited 0; any error total must exit
+# nonzero so exit-code callers cannot read it as a pass. Statistics above
+# are printed either way.
+if tot_errors or tot_root_errors:
+    print(json.dumps({"FAIL": True, "errors": tot_errors, "root_errors": tot_root_errors}), file=sys.stderr, flush=True)
+    sys.exit(1)
