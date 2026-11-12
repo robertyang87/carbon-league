@@ -74,9 +74,15 @@ m3s2r1 终局残树 6.8 vs 真身 2.1（ep10→ep19 反变差，BC 修不了）�
 
 ## 3. 混训配方（m3s2r2 草稿，单变量）
 - 合并：`merge_dagger.py ds_m3s2 <lb_out> ds_m3s2_lb`（DAGGER_W 默认 1.0）。
-  **必做修正**：merge_dagger 会按 crc 给 ~10% 的 dagger 局标 val——lb 局一律改回 train
-  （合并后对 meta.json 中 src=="dagger" 的 games 置 val=false 并读回验证），
-  保证 m3s2r2 的验证集与 m3s2r1 逐字相同、val 可比。
+  **split 口径（R06/F02，硬规）**：派生样本一律按 original_game_id 继承原局 split——
+  语料重标 shard 带 orig_id（原回放名），merge_dagger 以原局名走 builder 同款 crc 规则
+  定 val/train；自对弈新局（lb_sp/dg）无原局、按自身名定。**任何环节禁止改写 split**：
+  旧口径「lb 局一律改回 train」已废除——它把原验证局的派生样本赶进 TRAIN、原局仍留在
+  VAL，按 original_game_id 看 train/val 交集非零，即验证泄漏。r2 的 val 集在原局层面
+  与 r1 相同（同一批原局），并含原验证局的派生样本，行数不同属正确口径，不许为求
+  「与 r1 逐字相同」去动 split。合并后验收＝按 original_game_id 断言 train∩val＝0
+  （§5 第 4 步）。旧 lb_cp shard 若缺 orig_id，merge_dagger 会直接拒绝导入——
+  补 orig_id 或用现版 lb_relabel 重产，不许绕过。
 - 混比 v1：base 35,282 行不动＋重标行 ~4–4.5k（约 11%）；终局切片内重标行与原终局行
   约 1.2:1。不叠线 A 的 ×3 复制（那是线 A 的变量，叠了归因即死）——r2 与 r1 的唯一差异
   就是这批重标行。
@@ -116,5 +122,7 @@ m3s2r1 终局残树 6.8 vs 真身 2.1（ep10→ep19 反变差，BC 修不了）�
    统计 changed 槽占监督槽比；**≥2% 才放行全量**；低于 2% 立即停手回作战室复盘
    （候选处置：降 MARGIN、或状态来源改以势均力敌局为主），不许先跑完再说。
    过闸后批量：源① 全教师局＋源② 100 局，4–8 worker。
-4. 合并＋val 修正＋计数断言（总行数＝base＋shard 行数；重标行数、changed 率入回执）。
+4. 合并＋计数断言＋split 断言（总行数＝base＋shard 行数；按 original_game_id 分组
+   断言 train∩val＝0，交集非零即停手上报；禁止任何 val 覆盖/改写步骤；
+   重标行数、changed 率入回执）。
 5. 单链开训 cnet2_m3s2r2 → 定标＋行为统计 → 按 §4 裁决，结论回填 replica_gap_plan.md。
