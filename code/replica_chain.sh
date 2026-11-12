@@ -80,12 +80,37 @@ mark "COUNTS-OK replays=$RP matches=$MT index=$IX"
 echo '--- 3) BUILD + SET_UW ---'
 rm -rf "$DS"
 CNET2_TOP_TEACHERS="${TEACHER}@2" ../.venv/bin/python build_top.py "$DS" "$CORPUS" > "$LOGD/build_${PREFIX}.log" 2>&1 \
-  || { mark "FAIL build_top rc=$? (see $LOGD/build_${PREFIX}.log)"; exit 1; }
+  || { BRC=$?; grep '^C02-FAIL' "$LOGD/build_${PREFIX}.log" 2>/dev/null || true; mark "FAIL build_top rc=$BRC (see $LOGD/build_${PREFIX}.log)"; exit 1; }
+# C02 declaration gate (BEFORE set_uw): the builder's meta.json declares
+# failed_games (original game id + reason) and valid_games (games that
+# contributed >= 1 row). A declared partial dataset is refused here --
+# set_uw must never bless it as a training input -- and the count assertion
+# is on VALID games vs the index. A legitimate zero-row game is not a
+# failure, but it contributes no rows, so it does not count as valid
+# either; zero-row ids are reported separately so the failure is diagnosable.
+GATE=$(../.venv/bin/python -c "
+import json,sys
+d=json.load(open(sys.argv[1]))
+f=d.get('failed_games')
+if f is None:
+    print('NOFIELD 0 - -')
+else:
+    zero=','.join(g.get('key','?') for g in d.get('games',[]) if g.get('n',0)==0 and not g.get('failed')) or '-'
+    print('%s %d %s %s' % (d.get('valid_games',-1), len(f), ','.join(x.get('key','?') for x in f) or '-', zero))
+" "$DS/meta.json" 2>/dev/null)
+read GAMES NFAILED FAILED_IDS ZERO_IDS <<< "$GATE"
+echo "dataset valid_games=$GAMES failed_games=$NFAILED failed_ids=$FAILED_IDS zero_row_ids=$ZERO_IDS index=$IX"
+[ -n "${GAMES:-}" ] && [ "$GAMES" != "NOFIELD" ] \
+  || { mark "FAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run"; exit 1; }
+[ "$NFAILED" = 0 ] \
+  || { mark "FAIL dataset declares $NFAILED failed game(s): $FAILED_IDS -- partial dataset refused, set_uw NOT run"; exit 1; }
+[ "$GAMES" = "$IX" ] || { mark "FAIL dataset valid games=$GAMES != index=$IX (zero-row games: ${ZERO_IDS:-none})"; exit 1; }
 ../.venv/bin/python set_uw.py "$DS" 1 1 1 >> "$LOGD/build_${PREFIX}.log" 2>&1 \
   || { mark "FAIL set_uw rc=$?"; exit 1; }
-GAMES=$(../.venv/bin/python -c "import json,sys;d=json.load(open(sys.argv[1]));g=d.get('games');print(len(g) if isinstance(g,list) else g)" "$DS/meta.json" 2>/dev/null)
-echo "dataset games=$GAMES"
-[ "$GAMES" = "$IX" ] || { mark "FAIL dataset games=$GAMES != index=$IX"; exit 1; }
+# C02: set_uw only reads the merged npy files, so a non-zero rc is not the
+# only failure mode -- confirm it actually wrote the weight files.
+[ -f "$DS/w.npy" ] && [ -f "$DS/uw.npy" ] \
+  || { mark "FAIL set_uw produced no w.npy/uw.npy in $DS"; exit 1; }
 
 echo '--- 4) DUAL-ARM LAUNCH (standard recipe, 20 epochs) ---'
 export BC_DEVICE=${BC_DEVICE:-cuda} BC_RAM=1 BC_THREADS=${BC_THREADS:-5} BC_USE_W=1 BC_USE_UW=1 \
