@@ -136,6 +136,12 @@ def build_game(task):
     try:
         d = json.load(gzip.open(path))
     except Exception as e:
+        # F05: a failed task must not leave a stale shard behind for the
+        # manifest to certify as a current product.
+        try:
+            os.remove(out)
+        except OSError:
+            pass
         return gi, 0, repr(e)[:200]
     st = d["steps"]
     rows = {k: [] for k in FIELDS}
@@ -181,6 +187,14 @@ def build_game(task):
             r["uw"].extend(unit_weights(st, p, slots))
     n = len(rows["y"])
     if n == 0:
+        # F05: a zero-row outcome (e.g. the step window now excludes every
+        # row of an early-ending replay) must not leave an earlier shard on
+        # disk: the next run would otherwise resurrect it as a valid cached
+        # product under the new config.
+        try:
+            os.remove(out)
+        except OSError:
+            pass
         return gi, 0, None
     arr = {k: np.asarray(v).astype(FIELDS[k][0]) for k, v in rows.items()}
     np.savez(out, **arr)
@@ -247,6 +261,22 @@ def scan(dirs, min_steps=200, weighted=False):
     return games
 
 
+def _game_content_key(g, tids, mg):
+    """F05/R08: per-game content key -- every index-derived input that changes
+    shard CONTENT: the kept sides, their teacher ids, the margins computed
+    from index scores, and (weighted mode) the per-side sample weights. The
+    replay file itself is covered by its (size, mtime_ns) stat in the
+    manifest. Before this, the cache key was only the replay stat, so editing
+    index.json scores silently reused shards whose value labels were computed
+    from the old margins."""
+    import hashlib
+    detail = {"key": g["key"], "names": g["names"], "scores": g["scores"],
+              "sides": g["sides"], "tids": list(tids),
+              "mg": [float(x) for x in mg],
+              "wts": g.get("wts"), "ours_loss": bool(g.get("ours_loss", False))}
+    return hashlib.sha256(json.dumps(detail, sort_keys=True).encode()).hexdigest()[:16]
+
+
 def _cfg_fingerprint():
     """R08: fingerprint of everything that changes shard CONTENT -- the step window,
     the unit-weight switches, the teacher map, the field schema / feature shapes and
@@ -298,30 +328,72 @@ def main(out, dirs):
     if man and not fp_ok:
         print(f"R08: build-config fingerprint changed ({man.get('cfg_fp')} -> {cfg_fp}); "
               "cached shards invalidated, rebuilding all", flush=True)
-    old_src = man.get("shards", {}) if fp_ok else {}
+    # F05: the manifest is the cache's certificate. Each entry certifies ONE
+    # game's outcome of THIS configuration -- its row count (a certified 0 is
+    # a legitimate outcome and needs no shard file) -- under both the build
+    # config fingerprint and the per-game content key. Pre-F05 entries
+    # ([size, mtime] lists) never match the dict shape, so old caches rebuild
+    # once. A zero-row or failed task is never certified against a leftover
+    # shard file: build_game deletes the file, and failed tasks are omitted
+    # from the new manifest entirely.
+    old_man = man.get("shards", {}) if fp_ok else {}
     ns = {}
+    new_man = {}
+    ckeys = {}
     todo = []
     for t in tasks:
-        if fp_ok and os.path.exists(t[5]):
-            st_ = os.stat(t[0])
-            if old_src.get(os.path.basename(t[5])) == [st_.st_size, st_.st_mtime_ns]:
-                ns[t[2]] = int(np.load(t[5])["y"].shape[0])
-                continue
-        todo.append(t)
+        gi = t[2]
+        ck = _game_content_key(games[gi], t[3], t[4])
+        ckeys[gi] = ck
+        base = os.path.basename(t[5])
+        ent = old_man.get(base)
+        reused = False
+        if isinstance(ent, dict) and ent.get("ok") and ent.get("ckey") == ck:
+            try:
+                st_ = os.stat(t[0])
+                src_ok = ent.get("src") == [st_.st_size, st_.st_mtime_ns]
+            except Exception:
+                src_ok = False
+            n = ent.get("n")
+            if src_ok and isinstance(n, int):
+                if n == 0:
+                    ns[gi] = 0
+                    new_man[base] = ent
+                    reused = True
+                elif os.path.exists(t[5]):
+                    try:
+                        if int(np.load(t[5])["y"].shape[0]) == n:
+                            ns[gi] = n
+                            new_man[base] = ent
+                            reused = True
+                    except Exception:
+                        pass
+        if not reused:
+            todo.append(t)
     tasks = todo
+    errs = {}
     with ProcessPoolExecutor(max_workers=int(os.environ.get("BUILD_WORKERS", "8"))) as ex:
         for gi, n, err in ex.map(build_game, tasks, chunksize=1):
             ns[gi] = n
             if err:
+                errs[gi] = err
                 print("err", gi, err, flush=True)
-    new_src = {}
-    for g in games:
+    for t in tasks:
+        gi = t[2]
+        base = os.path.basename(t[5])
+        if gi in errs:
+            try:
+                os.remove(t[5])
+            except OSError:
+                pass
+            continue
         try:
-            st_ = os.stat(g["file"])
-            new_src[os.path.basename(g["shard"])] = [st_.st_size, st_.st_mtime_ns]
+            st_ = os.stat(t[0])
+            new_man[base] = {"src": [st_.st_size, st_.st_mtime_ns],
+                             "ckey": ckeys[gi], "n": int(ns.get(gi, 0)), "ok": True}
         except Exception:
             pass
-    json.dump({"cfg_fp": cfg_fp, "shards": new_src}, open(man_path, "w"))
+    json.dump({"cfg_fp": cfg_fp, "shards": new_man}, open(man_path, "w"))
     total = sum(ns.values())
     mm = {k: np.lib.format.open_memmap(os.path.join(out, k + ".npy"), mode="w+", dtype=dt,
                                        shape=(total,) + sh) for k, (dt, sh) in fields.items()}
