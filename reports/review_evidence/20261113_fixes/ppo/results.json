@@ -1,0 +1,355 @@
+{
+  "resume": [
+    {
+      "case": "explicit_all",
+      "requested": [
+        3e-05,
+        0.0008,
+        0.025
+      ],
+      "effective": [
+        3e-05,
+        0.0008,
+        0.025
+      ],
+      "passed": true
+    },
+    {
+      "case": "inherit_all",
+      "requested": [
+        null,
+        null,
+        null
+      ],
+      "effective": [
+        1e-05,
+        0.0003,
+        0.1
+      ],
+      "passed": true
+    },
+    {
+      "case": "explicit_zero_kl",
+      "requested": [
+        null,
+        null,
+        0.0
+      ],
+      "effective": [
+        1e-05,
+        0.0003,
+        0.0
+      ],
+      "passed": true
+    },
+    {
+      "case": "override_lr_only",
+      "requested": [
+        2e-05,
+        null,
+        null
+      ],
+      "effective": [
+        2e-05,
+        0.0003,
+        0.1
+      ],
+      "passed": true
+    }
+  ],
+  "rollout_lengths_and_pack": {
+    "lengths": [
+      1,
+      1,
+      299,
+      299
+    ],
+    "terminal": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "buffer_decisions": 600,
+    "batch_size": 4,
+    "last_normal_obs_step": 298,
+    "actual_decodes": 600,
+    "recorded_decisions": 600,
+    "unnecessary_terminal_decodes": 0,
+    "reward_arrays_and_GAE_lengths_pass": true
+  },
+  "elimination_reward_parity": {
+    "original_rewards": [
+      -300.0,
+      10.0
+    ],
+    "original_margin": -310.0,
+    "rollout_margin": -310.0,
+    "rollout_win": false,
+    "reward_modes": [
+      {
+        "kind": "dense",
+        "sum_reward": -310.1000061035156
+      },
+      {
+        "kind": "terminal",
+        "sum_reward": -310.1000061035156
+      },
+      {
+        "kind": "worth",
+        "sum_reward": -310.1000061035156
+      }
+    ]
+  },
+  "actor_roles": {
+    "primary_temp_kind": true,
+    "fresh_snapshot_temp_kind": false,
+    "cached_snapshot_is_primary": false,
+    "cached_snapshot_temp_kind": false
+  },
+  "role_temperature_logprobs": {
+    "learner": [
+      -1.3322676295501878e-14,
+      -1.3322676295501878e-14
+    ],
+    "fresh_snapshot": [
+      -8.244614768671e-09,
+      -0.00018159147293772548
+    ],
+    "cached_snapshot": [
+      -8.244614768671e-09,
+      -0.00018159147293772548
+    ]
+  },
+  "terminal_boundary_cases": [
+    {
+      "seed": 11,
+      "side": 0,
+      "record": true,
+      "original_rewards": [
+        -300.0,
+        10.0
+      ],
+      "rollout_margin": -310.0,
+      "ndec": 2,
+      "post_cash": [
+        20.0,
+        10.0
+      ]
+    },
+    {
+      "seed": 11,
+      "side": 0,
+      "record": false,
+      "original_rewards": [
+        -300.0,
+        10.0
+      ],
+      "rollout_margin": -310.0,
+      "ndec": 2,
+      "post_cash": [
+        20.0,
+        10.0
+      ]
+    },
+    {
+      "seed": 11,
+      "side": 1,
+      "record": true,
+      "original_rewards": [
+        -300.0,
+        10.0
+      ],
+      "rollout_margin": 310.0,
+      "ndec": 2,
+      "post_cash": [
+        10.0,
+        20.0
+      ]
+    },
+    {
+      "seed": 11,
+      "side": 1,
+      "record": false,
+      "original_rewards": [
+        -300.0,
+        10.0
+      ],
+      "rollout_margin": 310.0,
+      "ndec": 2,
+      "post_cash": [
+        10.0,
+        20.0
+      ]
+    },
+    {
+      "seed": 13,
+      "side": 0,
+      "record": true,
+      "original_rewards": [
+        -300.0,
+        -300.0
+      ],
+      "rollout_margin": 0.0,
+      "ndec": 2,
+      "post_cash": [
+        20.0,
+        20.0
+      ]
+    },
+    {
+      "seed": 13,
+      "side": 0,
+      "record": false,
+      "original_rewards": [
+        -300.0,
+        -300.0
+      ],
+      "rollout_margin": 0.0,
+      "ndec": 2,
+      "post_cash": [
+        20.0,
+        20.0
+      ]
+    },
+    {
+      "seed": 13,
+      "side": 1,
+      "record": true,
+      "original_rewards": [
+        -300.0,
+        -300.0
+      ],
+      "rollout_margin": 0.0,
+      "ndec": 2,
+      "post_cash": [
+        20.0,
+        20.0
+      ]
+    },
+    {
+      "seed": 13,
+      "side": 1,
+      "record": false,
+      "original_rewards": [
+        -300.0,
+        -300.0
+      ],
+      "rollout_margin": 0.0,
+      "ndec": 2,
+      "post_cash": [
+        20.0,
+        20.0
+      ]
+    },
+    {
+      "seed": 14,
+      "side": 0,
+      "record": true,
+      "original_rewards": [
+        10.0,
+        -300.0
+      ],
+      "rollout_margin": 310.0,
+      "ndec": 2,
+      "post_cash": [
+        110.0,
+        20.0
+      ]
+    },
+    {
+      "seed": 14,
+      "side": 0,
+      "record": false,
+      "original_rewards": [
+        10.0,
+        -300.0
+      ],
+      "rollout_margin": 310.0,
+      "ndec": 2,
+      "post_cash": [
+        110.0,
+        20.0
+      ]
+    },
+    {
+      "seed": 14,
+      "side": 1,
+      "record": true,
+      "original_rewards": [
+        10.0,
+        -300.0
+      ],
+      "rollout_margin": -310.0,
+      "ndec": 2,
+      "post_cash": [
+        20.0,
+        110.0
+      ]
+    },
+    {
+      "seed": 14,
+      "side": 1,
+      "record": false,
+      "original_rewards": [
+        10.0,
+        -300.0
+      ],
+      "rollout_margin": -310.0,
+      "ndec": 2,
+      "post_cash": [
+        20.0,
+        110.0
+      ]
+    }
+  ],
+  "mixed_snapshot_batches": [
+    {
+      "same_path": false,
+      "lengths": [
+        1,
+        299
+      ],
+      "primary_inferences": 300,
+      "snapshot_inferences": 300,
+      "separate_actor_objects": true
+    },
+    {
+      "same_path": true,
+      "lengths": [
+        1,
+        299
+      ],
+      "primary_inferences": 300,
+      "snapshot_inferences": 300,
+      "separate_actor_objects": true
+    }
+  ],
+  "legal_action_two_step_extinction": {
+    "generated_map_seed": 42,
+    "original_rewards": [
+      -299.0,
+      80.0
+    ],
+    "original_margin": -379.0,
+    "rollout_margin": -379.0,
+    "steps": 2,
+    "ndec": 2,
+    "dense_increments": [
+      -30.0,
+      -349.0
+    ],
+    "worth_increments": [
+      -30.0,
+      -349.0
+    ]
+  },
+  "reviewed_commit": "14d53320b20d58bdb82676f7fa866b8e11a55062",
+  "verdict": {
+    "F01": "PASS",
+    "F06": "PASS",
+    "S5a": "PASS",
+    "remaining_confirmed_bugs": [],
+    "scope": "Isolated CPU probes of original environment, actual rollout, actor cache/decoder, resume block, packing and GAE; no training."
+  }
+}

@@ -1,5 +1,7 @@
 # Carbon League 修复复核（main@c64bbeda）
 
+> 最新结果见[第三轮修复复核（14d53320）](REVIEW_FIXES_20261113.md)。下文保留 c64bbeda 的历史快照。
+
 日期：2026-11-12。审查对象：[robertyang87/carbon-league](https://github.com/robertyang87/carbon-league)。固定基线：**c64bbeda8a00b2f4d79ace589f201bab3cca5163**。本轮检查原报告入库提交 5f338eb 至该基线的修复，与[初次完整审查](REVIEW_20261112.md)配套阅读。
 
 入库前再次核对远端 main：1a0d8ee73dcccb95c1c987fde46cc55a83531aa5。相比被测基线只新增 5 笔回放/列表数据提交，被审查的代码与操作文档未变化；本报告的动态测试仍严格归属 c64bbeda。

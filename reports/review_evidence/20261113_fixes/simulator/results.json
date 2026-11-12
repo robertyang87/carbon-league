@@ -1,0 +1,327 @@
+{
+  "commit": "14d53320b20d58bdb82676f7fa866b8e11a55062",
+  "eval_cases": {
+    "noop_natural_horizon": {
+      "reference": {
+        "scores": [
+          80.0,
+          80.0
+        ],
+        "end_step": 299
+      },
+      "got": {
+        "scores": [
+          80.0,
+          80.0
+        ],
+        "end_step": 299
+      },
+      "pass": true
+    },
+    "unreachable_action_299": {
+      "reference": {
+        "scores": [
+          80.0,
+          80.0
+        ],
+        "end_step": 299
+      },
+      "got": {
+        "scores": [
+          80.0,
+          80.0
+        ],
+        "end_step": 299
+      },
+      "pass": true
+    },
+    "last_real_step_spend": {
+      "reference": {
+        "scores": [
+          80.0,
+          50.0
+        ],
+        "end_step": 299
+      },
+      "got": {
+        "scores": [
+          80.0,
+          50.0
+        ],
+        "end_step": 299
+      },
+      "pass": true
+    },
+    "extinction_survivor_spends": {
+      "reference": {
+        "scores": [
+          -299.0,
+          50.0
+        ],
+        "end_step": 2
+      },
+      "got": {
+        "scores": [
+          -299,
+          50.0
+        ],
+        "end_step": 2
+      },
+      "pass": true
+    },
+    "both_extinct": {
+      "reference": {
+        "scores": [
+          -299.0,
+          -299.0
+        ],
+        "end_step": 2
+      },
+      "got": {
+        "scores": [
+          -299,
+          -299
+        ],
+        "end_step": 2
+      },
+      "pass": true
+    },
+    "extinction_last_real_step": {
+      "reference": {
+        "scores": [
+          -2.0,
+          50.0
+        ],
+        "end_step": 299
+      },
+      "got": {
+        "scores": [
+          -2,
+          50.0
+        ],
+        "end_step": 299
+      },
+      "pass": true
+    },
+    "planter_same_step_death": {
+      "reference": {
+        "scores": [
+          -299.0,
+          80.0
+        ],
+        "end_step": 2
+      },
+      "got": {
+        "scores": [
+          -299,
+          80.0
+        ],
+        "end_step": 2
+      },
+      "pass": true,
+      "ledger": {
+        "deposits": 0.0,
+        "tree_income": 0.0,
+        "recruit_spend": 60.0,
+        "recruit_count": 2,
+        "plant_spend": 0.0,
+        "plant_count": 0,
+        "seize_spend": 0.0,
+        "seize_count": 0,
+        "deaths": 2,
+        "death_cargo": 0.0,
+        "stranded": 0
+      },
+      "typed": {
+        "pla_rec": 2,
+        "pla_dead": 2,
+        "pla_dead0": 2,
+        "e_prec25": 2,
+        "e_pdead30": 2,
+        "e_pdead0_30": 2,
+        "rec60_p": 2,
+        "rec60_c": 0,
+        "e_clost30": 0,
+        "pd_other": 0,
+        "pd_clash_move": 0,
+        "pd_clash_stay": 1,
+        "pd_owncar": 0,
+        "pd_ecar": 0
+      }
+    },
+    "collector_same_step_death": {
+      "reference": {
+        "scores": [
+          -299.0,
+          80.0
+        ],
+        "end_step": 2
+      },
+      "got": {
+        "scores": [
+          -299,
+          80.0
+        ],
+        "end_step": 2
+      },
+      "pass": true,
+      "ledger": {
+        "deposits": 0.0,
+        "tree_income": 0.0,
+        "recruit_spend": 60.0,
+        "recruit_count": 2,
+        "plant_spend": 0.0,
+        "plant_count": 0,
+        "seize_spend": 0.0,
+        "seize_count": 0,
+        "deaths": 2,
+        "death_cargo": 0.0,
+        "stranded": 0
+      },
+      "typed": {
+        "pla_rec": 0,
+        "pla_dead": 0,
+        "pla_dead0": 0,
+        "e_prec25": 0,
+        "e_pdead30": 0,
+        "e_pdead0_30": 0,
+        "rec60_p": 0,
+        "rec60_c": 2,
+        "e_clost30": 2,
+        "pd_other": 0,
+        "pd_clash_move": 0,
+        "pd_clash_stay": 0,
+        "pd_owncar": 0,
+        "pd_ecar": 0
+      }
+    }
+  },
+  "leaf_cases": {
+    "root_extinction_survivor_recruit": {
+      "reference_rewards": [
+        -291.0,
+        50.0
+      ],
+      "pre_cash": [
+        20,
+        50
+      ],
+      "post_cash": [
+        20,
+        20
+      ],
+      "terminal": true,
+      "got_leaf": -341.0,
+      "expected": -341.0,
+      "pass": true
+    },
+    "root_extinction_survivor_tree_income": {
+      "reference_rewards": [
+        -291.0,
+        50.0
+      ],
+      "pre_cash": [
+        20,
+        50
+      ],
+      "post_cash": [
+        20,
+        65.0
+      ],
+      "terminal": true,
+      "got_leaf": -341.0,
+      "expected": -341.0,
+      "pass": true
+    },
+    "both_extinct_unequal_cash": {
+      "reference_rewards": [
+        -291.0,
+        -291.0
+      ],
+      "pre_cash": [
+        20,
+        10
+      ],
+      "post_cash": [
+        20,
+        10
+      ],
+      "terminal": true,
+      "got_leaf": 0.0,
+      "expected": 0.0,
+      "pass": true
+    },
+    "first_transition_extinction": {
+      "reference_rewards": [
+        -300.0,
+        80.0
+      ],
+      "pre_cash": [
+        20,
+        80
+      ],
+      "post_cash": [
+        20,
+        50
+      ],
+      "terminal": true,
+      "got_leaf": -380.0,
+      "expected": -380.0,
+      "pass": true
+    },
+    "natural_horizon_survivor_spend": {
+      "reference_rewards": [
+        80.0,
+        50.0
+      ],
+      "pre_cash": [
+        80,
+        80
+      ],
+      "post_cash": [
+        80,
+        50
+      ],
+      "terminal": false,
+      "got_leaf": 30.0,
+      "expected": 30.0,
+      "pass": true
+    },
+    "extinction_on_last_transition": {
+      "reference_rewards": [
+        -2.0,
+        80.0
+      ],
+      "pre_cash": [
+        20,
+        80
+      ],
+      "post_cash": [
+        20,
+        50
+      ],
+      "terminal": true,
+      "got_leaf": -82.0,
+      "expected": -82.0,
+      "pass": true
+    }
+  },
+  "production_sites": {
+    "root_capture": [
+      1305,
+      1518
+    ],
+    "later_terminal_capture": [
+      1367,
+      1567
+    ],
+    "leaf_pass": [
+      1377,
+      1577
+    ],
+    "horizon": [
+      1240,
+      1526
+    ]
+  }
+}

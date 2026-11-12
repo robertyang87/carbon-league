@@ -1,0 +1,30 @@
+[
+  {
+    "case": "503_then_valid_empty",
+    "exit_code": 0,
+    "verified": true,
+    "last_line": "=== REVIEW RESULT=RELEASED_VERIFIED ===",
+    "verify_queries": 2
+  },
+  {
+    "case": "503_until_deadline",
+    "exit_code": 1,
+    "verified": false,
+    "last_line": "=== REVIEW RESULT=UNVERIFIED_QUERY_FAILED failures=25 ===",
+    "verify_queries": 25
+  },
+  {
+    "case": "200_still_present_until_deadline",
+    "exit_code": 1,
+    "verified": false,
+    "last_line": "=== REVIEW RESULT=DELETE_ACCEPTED_STILL_PRESENT last_status=Running ===",
+    "verify_queries": 25
+  },
+  {
+    "case": "200_malformed_empty_container",
+    "exit_code": 1,
+    "verified": false,
+    "last_line": "=== REVIEW RESULT=UNVERIFIED_QUERY_FAILED failures=25 ===",
+    "verify_queries": 25
+  }
+]

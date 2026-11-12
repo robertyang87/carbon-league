@@ -1,0 +1,38 @@
+{
+  "baseline": "14d53320b20d58bdb82676f7fa866b8e11a55062",
+  "changed_python": [
+    "code/bigeval.py",
+    "code/cnet2_build.py",
+    "code/cnet2_search.py",
+    "code/cnet2_search_timing.py",
+    "code/eval_v53.py",
+    "code/merge_dagger.py",
+    "code/rl2_ppo_rollout.py",
+    "tools/ecs_release.py"
+  ],
+  "syntax_errors": [],
+  "commits": [
+    "14d5332 docs: plan to ladder #1 -- requirements, current state, goals, action plan (war room, 2026-11-13)",
+    "0f704a9 Review S5b: CachePolicy._sig covers all nine encode inputs (was missing tok_kind/tok_mask/tok_cargo/hist_cargo/hist_move)",
+    "7f65933 F07 (R07): typed sub-ledgers consume recruit/death events, not survivor diffs",
+    "8f25657 Review S5a: play_batch infers only for unfinished games; stop when all done (1196 -> 600 decodes in the review scenario)",
+    "4a07ae4 F06 (R04): actor cache key includes role; temp_kind fixed by role at construction",
+    "66a7353 F08 (lb prep): replace stale eval hash 6d24da0e with a read-back rule -- at start of work, read back the current full MD5 of code/eval_v53.py on main and log it; never roll back fixed code to satisfy an old hash (hash was already 40f3875d... at Codex review time and has changed again since)",
+    "e6e52d6 F08 (HANDOFF): add pointer to reports/live/CURRENT.md as the single handover index (R14)",
+    "89c6d21 F08 (README): root entry now points to reports/live/CURRENT.md as the single handover index (R14); README/HANDOFF are archives",
+    "8085472 F08 (CURRENT): Echo2 artifacts are NOT in the git tree (verified) -- record true locations (exam-stack staging on spot machines / DGX staging), wrapper build params (frozen make_search_agent CONF), weights training provenance (runbook_echo2 W5 recipe); md5s marked pending re-computation on the holding machine; n1r md5 marked pending; bind re-baselined anchors to the harness MD5 read back at measurement time (eval_v53.py main = 904c2fab... after F01/F04)",
+    "baa2f09 F09 (ecs_release): validate Instances structure (HTTP 200 with Instances={} is malformed, not \"instance gone\" -- was a false RELEASED_VERIFIED after 1 query); exit contract: exit 0 only for RELEASED_VERIFIED, DELETE_ACCEPTED_STILL_PRESENT and all abort/error paths exit 1 (mock-tested only)",
+    "eb13c0f F09 (timing): nonzero exit when errors/root_errors > 0 -- a pack failing at the root of all 299 steps printed stats and exited 0; statistics still printed, FAIL line on stderr, exit 1",
+    "d4dcf6e F09 (bigeval): FAIL flag covers internal + outer + missing games (was internal-only: a 2-of-3 exam with one crashed game saved FAIL=false while exiting 2); <2-game path now saves a FAIL record; first_error is the deterministic first stack (lowest seed, traceback preferred); exit 3 stays internal-only, exit 2 outer/missing",
+    "3021ad4 F05: build cache no longer resurrects excluded rows or stale labels (R08 residual) -- zero-row/failed builds delete stale shards; manifest certifies per-game outcomes (row count incl. certified 0) under cfg fingerprint + per-game content key covering sides/teacher ids/margins/weights",
+    "6dc0228 docs: KataGo-style architecture design (self-play + candidate-arm PUCT + margin-distribution value net)",
+    "2e5ffca F03 (R12): cnet2_search OPEN_T sampled branch records st['T_now'] = T",
+    "313c129 F04 (R02): eval_v53 -- survivor of an extinction finish scores pre-step cash",
+    "c43d08b F01 (R02): original terminal scoring in rollout and search leaf",
+    "4a718c7 data: pull hakimi2 replays via ladder API into data/hakimi2_corpus",
+    "32a40cd F02: refuse lb_cp_* relabeled-corpus shards without orig_id instead of silently re-splitting by derived name (R06 leak path); genuinely new self-play shards unaffected",
+    "7b905e6 F02: remove the forced split override from the Line B prep memo -- derived samples inherit the original game's split by original_game_id; no step may rewrite split; merge acceptance asserts train^val = 0 by original_game_id",
+    "be909e6 newface-watch: hakimi2 trigger 100 games (117 endpoint)",
+    "a2ea8ad newface-watch: refresh fable matches 221->226 (117 endpoint)"
+  ]
+}
