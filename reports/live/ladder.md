@@ -44,4 +44,5 @@
 ## 09:06 接手侧盘点（Muse Spark）
 
 - 公开快照仓（JUZI1/carbon-league-replays，滚动 400 局）已收：目标家族 233 局入账（本地 ~/workspace/carbon-harvest/accumulated），其中 Master3s2 仅 47/106——快照窗口滚掉的 59 局只能走登录直下。
+- **更新（2026-11-12 09:59）**：Master3s2 已由 GitHub Actions 经天梯 API 全量拉入仓内 `data/m3s2_corpus/`，共 **112 局 / 27.0 MB**，满足 100+ 局开训线；上面 47/106 的盘点作废。后续增量重跑 workflow `ladder-replay-pull` 即可（已有文件自动跳过）。
 - 直下通道实测：`/data/<id>/<game>` 未登录返回 401。Master3s2 的 top_corpus 计数仍以 Mac 侧 06:55 的 88 为准；满 100 的判定与数据集组装要等 Mac 回线或提供登录会话后补下。
