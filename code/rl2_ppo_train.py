@@ -66,8 +66,11 @@ def parse():
     a("--overlap", type=int, default=1, help="1: collect iteration k+1 while training on k (1-iter stale behaviour policy)")
     a("--device", default="mps")
     a("--temp", type=float, default=1.0)
-    a("--lr", type=float, default=1e-5)
-    a("--vlr", type=float, default=3e-4)
+    # R03: --lr/--vlr/--kl default to None = "not given on the CLI". main() resolves the built-in
+    # defaults (1e-5 / 3e-4 / 0.1); on --resume an explicitly given value wins over the checkpoint,
+    # an unspecified one inherits it. (Previously the checkpoint silently overrode fresh CLI values.)
+    a("--lr", type=float, default=None)
+    a("--vlr", type=float, default=None)
     a("--epochs", type=int, default=2)
     a("--mb", type=int, default=256, help="decisions per minibatch")
     a("--clip", type=float, default=0.2)
@@ -75,7 +78,7 @@ def parse():
       help="joint: one PPO ratio per decision (sum of unit log-probs); unit: per-unit ratios x decision advantage")
     a("--vf", type=float, default=0.5)
     a("--ent", type=float, default=0.001)
-    a("--kl", type=float, default=0.1, help="KL(pi_ref||pi) coefficient (per decision, summed over units)")
+    a("--kl", type=float, default=None, help="KL(pi_ref||pi) coefficient (per decision, summed over units)")
     a("--kl-target", type=float, default=0.0, help=">0: adapt --kl to keep mean KL near target")
     a("--gclip", type=float, default=1.0)
     a("--gamma", type=float, default=0.995)
@@ -229,6 +232,10 @@ def summarize_eval(it, results):
 def main():
     args = parse()
     args.out = os.path.abspath(args.out)
+    # R03: resolve built-in defaults for the None-sentinel hyper-parameters (see parse()).
+    lr0 = 1e-5 if args.lr is None else args.lr
+    vlr0 = 3e-4 if args.vlr is None else args.vlr
+    kl0 = 0.1 if args.kl is None else args.kl
     import torch
     torch.manual_seed(0)
     os.makedirs(args.out, exist_ok=True)
@@ -251,19 +258,36 @@ def main():
         if m_ is not None:
             m_._amp = use_amp
     sc_p = torch.amp.GradScaler("cuda", enabled=use_amp); sc_v = torch.amp.GradScaler("cuda", enabled=use_amp)
-    opt = torch.optim.Adam(net.parameters(), lr=args.lr)
-    vopt = torch.optim.Adam(vnet.parameters(), lr=args.vlr) if vnet is not None else None
+    opt = torch.optim.Adam(net.parameters(), lr=lr0)
+    vopt = torch.optim.Adam(vnet.parameters(), lr=vlr0) if vnet is not None else None
     # shared model: value-warmup steps touch only the value head (trunk updates would move the policy)
     vhead = [q for n, q in net.named_parameters() if n.startswith(("v.", "value."))]
-    hopt = torch.optim.Adam(vhead, lr=args.vlr) if (vnet is None and vhead) else None
+    hopt = torch.optim.Adam(vhead, lr=vlr0) if (vnet is None and vhead) else None
     it0 = 0
-    kl_coef = args.kl
+    kl_coef = kl0
     if args.resume:
         stt = torch.load(args.resume, map_location="cpu")
         net.load_state_dict(stt["net"]); opt.load_state_dict(stt["opt"])
         if vnet is not None and stt.get("vnet"):
             vnet.load_state_dict(stt["vnet"]); vopt.load_state_dict(stt["vopt"])
-        it0 = stt["it"]; kl_coef = stt.get("kl_coef", kl_coef)
+        it0 = stt["it"]
+        # R03: load_state_dict restored the checkpoint's optimizer LR and the old code took the
+        # checkpoint's kl_coef unconditionally, so a fresh --lr/--vlr/--kl on the command line was
+        # silently ignored. Explicitly given values (not None) now win; unspecified ones inherit.
+        kl_coef = args.kl if args.kl is not None else stt.get("kl_coef", kl_coef)
+        if args.lr is not None:
+            for _pg in opt.param_groups:
+                _pg["lr"] = args.lr
+        if vnet is not None and args.vlr is not None:
+            for _pg in vopt.param_groups:
+                _pg["lr"] = args.vlr
+    # R03: record the hyper-parameters that actually took effect (post-resume), so any run can be
+    # audited against what was claimed on the command line (config.json keeps the raw claims).
+    _eff = {"lr": float(opt.param_groups[0]["lr"]),
+            "vlr": float(vopt.param_groups[0]["lr"]) if vopt is not None else
+                   (float(hopt.param_groups[0]["lr"]) if hopt is not None else None),
+            "kl_coef": float(kl_coef), "resumed_from": args.resume, "it0": it0}
+    json.dump(_eff, open(os.path.join(args.out, "effective_params.json"), "w"), indent=1)
     league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
     if args.self_prior > 0:
         league.tab.setdefault("SELF", {"prior": args.self_prior, "n": 0, "wr": 0.5, "margin": 0.0})
