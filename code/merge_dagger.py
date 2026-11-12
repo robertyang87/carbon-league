@@ -6,7 +6,9 @@ BASE_FRAC < 1 keeps that fraction of the base TRAIN games (crc of key; all base 
 Concatenates a weighted cnet2 dataset (w.npy + uw.npy) with dagger_gen shards into a new dataset dir that
 cnet2_train reads as one. DAgger rows get sample weight DAGGER_W (default 1.0) and keep their own unit weights
 (relabelled planter slots 3, agreeing planter slots 1, collectors/bases 0), so they only supervise the planter head. 10% of the DAgger games are
-validation (crc of the shard name), like the builder does for replay games.
+validation, like the builder does for replay games -- R06: a shard carrying orig_id (lb_relabel corpus shards) inherits its ORIGINAL
+game's split (builder crc rule on the original replay name); only genuinely new games (selfplay / legacy dagger shards) roll the crc
+on their own shard name.
 """
 import glob
 import json
@@ -58,8 +60,15 @@ def main(base, dg, out, dw=1.0, frac=1.0):
             mm[k][o:o + n] = D[k] if k != "gid" else g0 + i
         mm["uw"][o:o + n] = D["uw"]; mm["w"][o:o + n] = dw
         key = os.path.basename(s)
-        games.append({"file": s, "key": key, "names": ["dagger", "dagger"], "scores": [0, 0], "sides": [0],
-                      "val": zlib.crc32(key.encode()) % 10 == 0, "src": "dagger", "gi": g0 + i, "n": n})
+        orig = None
+        if "orig_id" in D.files:     # R06: derived shard -> inherit the original game's split
+            o_ = D["orig_id"]
+            orig = str(o_.item() if o_.shape == () else o_.flat[0]) or None
+        entry = {"file": s, "key": key, "names": ["dagger", "dagger"], "scores": [0, 0], "sides": [0],
+                 "val": zlib.crc32((orig or key).encode()) % 10 == 0, "src": "dagger", "gi": g0 + i, "n": n}
+        if orig:
+            entry["orig"] = orig
+        games.append(entry)
         o += n
     for k in mm:
         mm[k].flush()
