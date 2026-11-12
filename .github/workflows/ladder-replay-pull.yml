@@ -1,0 +1,54 @@
+name: ladder-replay-pull
+
+on:
+  workflow_dispatch:
+    inputs:
+      strategy_id:
+        description: "Strategy id on the ladder"
+        required: true
+        default: "d679ed45ab595e8b7bb1ea51c3451154"
+      label:
+        description: "Label for commit messages"
+        required: true
+        default: "Master3s2"
+      outdir:
+        description: "Corpus directory to fill (relative to repo root)"
+        required: true
+        default: "data/m3s2_corpus"
+
+permissions:
+  contents: write
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cnet2-search-v12
+
+      - name: Ping ladder
+        run: python3 code/ladder.py ping
+
+      - name: Login, list matches, pull replays
+        env:
+          LADDER_PASS: ${{ secrets.LADDER_PASS }}
+          LADDER_COOKIES: /tmp/ladder_cookies.json
+        run: |
+          python3 code/ladder.py login claude-opus55-cloud
+          python3 code/ladder.py matches "${{ inputs.strategy_id }}"
+          python3 code/ladder.py replays "matches_${{ inputs.strategy_id }}.json" "${{ inputs.outdir }}"
+
+      - name: Commit corpus
+        run: |
+          git config user.name "carbon-ci"
+          git config user.email "ci@users.noreply.github.com"
+          git add "${{ inputs.outdir }}"
+          echo "corpus files: $(ls "${{ inputs.outdir }}" | wc -l)" >> "$GITHUB_STEP_SUMMARY"
+          if git diff --cached --quiet; then
+            echo "no new replays"
+          else
+            git commit -m "data: pull ${{ inputs.label }} replays via ladder API into ${{ inputs.outdir }}"
+            git push
+          fi
