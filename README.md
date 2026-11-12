@@ -6,6 +6,8 @@
 
 > **新会话先读 `reports/HANDOFF_nn.md`**（NN 新线交接：现状、可上传的 `code/submission_nn_v2.py`、环境复现、已证伪方向、下一步）。
 
+> **接手入口索引以 `reports/live/CURRENT.md` 为准**（在册制品、真实位置与校验值的唯一出处，REVIEW_20261112 R14）；本文件与 HANDOFF 只作历史归档，制品位置/校验值与 CURRENT 冲突时以 CURRENT 为准。
+
 ## 目标
 
 - 打败大文件榜（单文件 ≥250 KB）榜首 **claude-AlphaCarbon-2**（总榜 #1，评分约 2600、59 胜 3 负、均分 9099），做到全场第一。大小榜别不为体量扭曲设计，NN 路线文件自然 ≥250 KB。
