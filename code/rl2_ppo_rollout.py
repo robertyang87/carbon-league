@@ -139,6 +139,19 @@ def _worth_margin(sim, post, side, left):
     return v[side] - v[1 - side]
 
 
+def _extinct(post, p):
+    """Original-env elimination (zerosum_env/envs/carbon/carbon.py): player p is finished when it
+    has no workers, no trees, and no way to recruit -- no recruitment center left, or cash below
+    the cheaper of the two recruit costs. The game ends for both sides at that moment."""
+    if any(w["player"] == p for w in post["workers"].values()):
+        return False
+    if any(t["player"] == p for t in post["trees"].values()):
+        return False
+    if not post["bases"].get(p):
+        return True
+    return post["cash"][p] < min(CFG.get("recCollectorCost", 30), CFG.get("recPlanterCost", 30))
+
+
 def play_batch(task):
     """task keys: adapter, wkey, weights (or None -> load wkey), games [(opp, seed, side)],
     temp, greedy, record (bool), rng_seed.
@@ -159,7 +172,7 @@ def play_batch(task):
         sim = FastCarbon(CFG).reset(seed=seed)
         g = {"opp": opp, "seed": seed, "side": side, "sim": sim, "st": actor.new_game(side),
              "recs": [], "R": [], "W": [], "dep": [], "lost": [], "prev": 0.0, "prevw": 0.0,
-             "kind": "bot", "op": None}
+             "kind": "bot", "op": None, "done": False, "term": False, "nsteps": 0}
         if opp == "SELF":
             g.update(kind="self", st2=actor.new_game(1 - side), recs2=[], dep2=[], lost2=[])
         elif opp.startswith("SNAP:"):
@@ -179,7 +192,10 @@ def play_batch(task):
             snaps.setdefault(id(g["sactor"]), []).append(g)
     t_pol = t_opp = t_sim = 0.0
     ndec = 0
-    for step in range(1, 301):
+    # R01: the original env plays 299 transitions (its final observation is step=299 and agents
+    # are last called at step=298); the old range(1, 301) played one action step that does not
+    # exist in the real game.
+    for step in range(1, 300):
         ta = time.time()
         obs_me = [g["sim"].obs(g["side"]) for g in games]
         obs_s = [g["sim"].obs(1 - g["side"]) for g in selfg]
@@ -208,6 +224,8 @@ def play_batch(task):
                     g["a_op"] = o[0]
         t_opp += time.time() - tb
         for g, o, (acts, rec) in zip(games, obs_me, outs):
+            if g["done"]:
+                continue          # R02: this game already ended by extinction; its record is final
             sim, side = g["sim"], g["side"]
             tb = time.time()
             a_op = g["op"](sim.obs(1 - side), CFG) if g["kind"] == "bot" else g["a_op"]
@@ -216,6 +234,13 @@ def play_batch(task):
             pre = sim.get_state() if record else None
             sim.step(*((acts, a_op) if side == 0 else (a_op, acts)))
             post = sim.get_state()
+            g["nsteps"] += 1
+            # R02: extinction ends the game here (original env marks the side DONE and stops):
+            # no further steps are played or recorded, so the trainer's GAE sees a true terminal
+            # boundary (its last-step bootstrap is already 0) instead of a game that plays on.
+            term_now = _extinct(post, 0) or _extinct(post, 1)
+            if term_now:
+                g["done"] = True; g["term"] = True
             t_sim += time.time() - tc
             d = post["cash"][side] - post["cash"][1 - side]
             seen = g.setdefault("tseen", set())          # trees planted per side (new tree ids), for the train log
@@ -228,7 +253,8 @@ def play_batch(task):
                 dep, lost = _own_events(pre, post, side, set(o["players"][side][1].values()))
                 g["recs"].append(rec)
                 g["R"].append(d - g["prev"])
-                wm = _worth_margin(sim, post, side, 300 - step)
+                # at the terminal step (extinction or the step-299 horizon) worth is cash only
+                wm = _worth_margin(sim, post, side, 0 if term_now else 299 - step)
                 g["W"].append(wm - g["prevw"]); g["prevw"] = wm
                 g["dep"].append(dep); g["lost"].append(lost)
                 if g["kind"] == "self":
@@ -247,6 +273,7 @@ def play_batch(task):
         r = {"opp": g["opp"], "seed": g["seed"], "side": side,
              "my": float(st["cash"][side]), "op": float(st["cash"][1 - side]),
              "margin": float(st["cash"][side] - st["cash"][1 - side]),
+             "term": bool(g["term"]), "steps": g["nsteps"],
              "planted": g.get("tp_my", 0), "planted_op": g.get("tp_op", 0)}
         if record:
             r.update(recs=g["recs"], dmargin=np.array(g["R"], np.float32), dworth=np.array(g["W"], np.float32),
@@ -254,7 +281,8 @@ def play_batch(task):
         out.append(r)
         if record and g["kind"] == "self":          # the other side of a self-play game: every per-step margin negated
             out.append({"opp": "SELF", "seed": g["seed"], "side": 1 - side, "mirror": True,
-                        "my": r["op"], "op": r["my"], "margin": -r["margin"], "recs": g["recs2"],
+                        "my": r["op"], "op": r["my"], "margin": -r["margin"],
+                        "term": r["term"], "steps": r["steps"], "recs": g["recs2"],
                         "planted": r["planted_op"], "planted_op": r["planted"],
                         "dmargin": -r["dmargin"], "dworth": -r["dworth"],
                         "dep": np.array(g["dep2"], np.float32), "lost": np.array(g["lost2"], np.float32)})
