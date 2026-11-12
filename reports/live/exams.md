@@ -1,5 +1,12 @@
 # exams  2026-11-12 19:30
 
+## 2026-11-13 04:11 新 harness 基准场重锚（spot-30，Phase C）
+
+- 部署：新 harness 八件套已落 spot-30，机上读回 md5 八件全合（DEPLOY-MD5-ALL-MATCH）；冒烟（m3s2r1 vs Master2 真身，seed 999901，n=2）：2 胜、mean +1395、err 0、worst_ms 101.0。
+- 基准场：m3s2r1 vs Master2 真身，seed 996000，200 局，满载配方（EVO_WORKERS=62＋线程钉 1）：**181 胜、mean +1182、se 62、lo2se +1057、最差单局 −926、err 0、worst_ms 138.0**。
+- 漂移判定：对旧 harness 同场 +1197 ± 63（183 胜）漂移 −15，约 0.17 合并 SE，噪声内——**新旧尺无实质漂移，旧锚体系（含 E0 +785、Echo2 +877.2）在新 harness 下继续可用**；m3s2r1 校准分按同链平移为 +397（自 +412，噪声带内，不改既有裁决）。
+- 逐局线终态全量存档：DGX ~/s30bench_snapshots/s30bench.jsonl（200 行）。
+
 ## 18:22 E0 基线复测（新锚）与校准重基
 
 - 基线场：E0 vs Master2 真身，200 局，seed 999200，h23，PID 119669，18:22 落盘：**167 胜、mean +785、se 66、lo2se +654、err 0**（live 聚合核对一致）。
