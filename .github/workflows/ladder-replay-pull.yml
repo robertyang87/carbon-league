@@ -53,5 +53,10 @@ jobs:
             echo "no new replays"
           else
             git commit -m "data: pull ${{ inputs.label }} replays via ladder API into ${{ inputs.outdir }}"
-            git push
+            ok=0
+            for i in 1 2 3; do
+              if git pull --rebase origin cnet2-search-v12 && git push; then ok=1; break; fi
+              sleep 10
+            done
+            [ "$ok" = 1 ] || { echo "push failed after 3 attempts"; exit 1; }
           fi
