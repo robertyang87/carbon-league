@@ -197,28 +197,37 @@ def play_batch(task):
     rng = np.random.default_rng(task.get("rng_seed", 0))
     rng_s = np.random.default_rng(task.get("rng_seed", 0) * 13 + 5)
     temp, greedy, record = task.get("temp", 1.0), task.get("greedy", False), task.get("record", True)
-    selfg = [g for g in games if g["kind"] == "self"]
-    snaps = {}
-    for g in games:
-        if g["kind"] == "snap":
-            snaps.setdefault(id(g["sactor"]), []).append(g)
     t_pol = t_opp = t_sim = 0.0
     ndec = 0
     # R01: the original env plays 299 transitions (its final observation is step=299 and agents
     # are last called at step=298); the old range(1, 301) played one action step that does not
     # exist in the real game.
     for step in range(1, 300):
+        # Review §5 (efficiency): infer ONLY for unfinished games. The old loop prepared and
+        # decoded every game at every step and threw the finished ones' outputs away in the
+        # step loop below -- with one of two SELF games ending at step 1 it recorded 600 valid
+        # decisions but decoded 1196 states. A finished game's record is final (R02), and once
+        # no game is left the batch is over. (RNG draws therefore shrink once a sibling game
+        # ends; multi-game tasks were never bit-reproducible anyway -- module docstring.)
+        live = [g for g in games if not g["done"]]
+        if not live:
+            break
+        lself = [g for g in live if g["kind"] == "self"]
+        lsnaps = {}
+        for g in live:
+            if g["kind"] == "snap":
+                lsnaps.setdefault(id(g["sactor"]), []).append(g)
         ta = time.time()
-        obs_me = [g["sim"].obs(g["side"]) for g in games]
-        obs_s = [g["sim"].obs(1 - g["side"]) for g in selfg]
-        st_all = [g["st"] for g in games] + [g["st2"] for g in selfg]
+        obs_me = [g["sim"].obs(g["side"]) for g in live]
+        obs_s = [g["sim"].obs(1 - g["side"]) for g in lself]
+        st_all = [g["st"] for g in live] + [g["st2"] for g in lself]
         two = hasattr(actor, "prepare")
         # all trunk requests of this step go out before any answer is awaited (one server batch, not one per model)
         prep = actor.prepare(st_all, obs_me + obs_s) if two else None
         sprep = [(gs, gs[0]["sactor"].prepare([g["st2"] for g in gs], [g["sim"].obs(1 - g["side"]) for g in gs]))
-                 for gs in snaps.values()] if two else []
+                 for gs in lsnaps.values()] if two else []
         outs = actor.finish(st_all, prep, rng, temp, greedy) if two else actor.act(st_all, obs_me + obs_s, rng, temp, greedy)
-        for g, o in zip(selfg, outs[len(games):]):
+        for g, o in zip(lself, outs[len(live):]):
             g["a_op"], g["rec2"] = o
         ndec += len(outs)
         tb = time.time()
@@ -229,15 +238,13 @@ def play_batch(task):
                 for g, o in zip(gs, so):
                     g["a_op"] = o[0]
         else:
-            for gs in snaps.values():
+            for gs in lsnaps.values():
                 so = gs[0]["sactor"].act([g["st2"] for g in gs], [g["sim"].obs(1 - g["side"]) for g in gs], rng_s,
                                          max(snap_temp, 1e-3), snap_temp <= 0)
                 for g, o in zip(gs, so):
                     g["a_op"] = o[0]
         t_opp += time.time() - tb
-        for g, o, (acts, rec) in zip(games, obs_me, outs):
-            if g["done"]:
-                continue          # R02: this game already ended by extinction; its record is final
+        for g, o, (acts, rec) in zip(live, obs_me, outs):
             sim, side = g["sim"], g["side"]
             tb = time.time()
             a_op = g["op"](sim.obs(1 - side), CFG) if g["kind"] == "bot" else g["a_op"]
