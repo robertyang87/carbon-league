@@ -49,6 +49,21 @@ CFG = {}
 for _k, _v in _spec["configuration"].items():
     CFG[_k] = _v.get("default") if isinstance(_v, dict) else _v
 
+EPISODE_STEPS = int(CFG.get("episodeSteps", 300))
+
+
+def _extinct(post, p):
+    """Original elimination rule (zerosum_env carbon.compute_next_board):
+    a player with no workers and no trees who cannot recruit (no recruit
+    centre left, or cash below the cheaper recruit cost) is DONE."""
+    if any(w["player"] == p for w in post["workers"].values()):
+        return False
+    if any(t["player"] == p for t in post["trees"].values()):
+        return False
+    min_recruit = min(float(CFG["recCollectorCost"]),
+                      float(CFG["recPlanterCost"]))
+    return not post["bases"][p] or float(post["cash"][p]) < min_recruit
+
 V53 = "reference_claude_opus_v53.py"
 GE = "reference_gloriousevolution_v53.py"
 
@@ -142,6 +157,7 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     steps_played = 0
+    extinct = [False, False]
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
     sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0], "life50_sum": [0, 0], "life50_n": [0, 0], "cargo240": [0.0, 0.0], "cargo270": [0.0, 0.0], "cash270": [0.0, 0.0], "dep270": [0.0, 0.0], "lost240": [0.0, 0.0], "gain240": [0.0, 0.0], "tax240": [0.0, 0.0], "lost240_self": [0.0, 0.0], "ts3": [[0, 0, 0], [0, 0, 0]], "pl3": [[0, 0, 0], [0, 0, 0]], "sz3": [[0, 0, 0], [0, 0, 0]], "dep200": [0.0, 0.0], "cash200": [0.0, 0.0], "cargo200": [0.0, 0.0], "camp100": [0, 0], "stall_max": [0, 0], "stall_run": [0, 0], "_dprev": [0.0, 0.0], "wait6": [0, 0], "haul_all": [0.0, 0.0], "gain_all": [0.0, 0.0], "tax_all": [0.0, 0.0], "tax_onT": [0.0, 0.0], "e_prec25": [0, 0], "e_palive25": [0, 0], "e_pdead30": [0, 0], "e_pdead0_30": [0, 0], "e_cash25": [0.0, 0.0], "e_cash40": [0.0, 0.0], "e_clost30": [0, 0], "e_first_tree": [0, 0], "e_trees50": [0, 0], "e_unseen20": [0, 0], "e_unseen30": [0, 0], "_seen": [set(), set()]}   # stand-in validation ledger
     late_deaths = [[], []]
@@ -388,8 +404,20 @@ def play_game(task):
             cg_ = sum(float(w["carbon"]) for w in post["workers"].values() if w["player"] == p)   # stall: >=1500 on board, no deposit
             sh["stall_run"][p] = sh["stall_run"][p] + 1 if cg_ >= 1500 and L["deposits"] - sh["_dprev"][p] < 1 else 0
             sh["_dprev"][p] = L["deposits"]; sh["stall_max"][p] = max(sh["stall_max"][p], sh["stall_run"][p])
+        # R02: elimination ends the game immediately (the original marks the
+        # player DONE in compute_next_board and stops once <2 players are
+        # ACTIVE). bk_steps above stays as a diagnostic counter only.
+        extinct = [_extinct(post, 0), _extinct(post, 1)]
+        if any(extinct):
+            break
     wall = time.time() - t0
     st = sim.get_state()
+    cash_fin = [float(st["cash"][0]), float(st["cash"][1])]
+    # Original reward semantics: an extinct player's score is
+    # (final step - episodeSteps - 1), not its cash; a survivor scores its
+    # cash. my_cash/opp_cash keep reporting cash; margin/win use the score.
+    score = [(steps_played - EPISODE_STEPS - 1) if extinct[p] else cash_fin[p]
+             for p in range(2)]
     eh_act = set(map(tuple, (getattr(fa, "last_stats", None) or {}).get("eh_act", [])))
     # cargo lost in the last 30 steps by cars that were under the go-home rule within the 3 steps before death
     late30_eh = round(sum(c for (d, wid, c) in late_deaths[a_side]
@@ -405,8 +433,12 @@ def play_game(task):
         "a_file": a_file, "b_file": b_file,
         "my_cash": round(st["cash"][a_side], 2),
         "opp_cash": round(st["cash"][1 - a_side], 2),
-        "margin": round(st["cash"][a_side] - st["cash"][1 - a_side], 2),
-        "win": st["cash"][a_side] > st["cash"][1 - a_side],
+        "margin": round(score[a_side] - score[1 - a_side], 2),
+        "cash_margin": round(cash_fin[a_side] - cash_fin[1 - a_side], 2),
+        "my_score": round(score[a_side], 2),
+        "opp_score": round(score[1 - a_side], 2),
+        "win": score[a_side] > score[1 - a_side],
+        "extinct": extinct, "end_step": steps_played,
         "a_ms_per_step": round(1000.0 * times[a_side] / steps_played, 2),
         "b_ms_per_step": round(1000.0 * times[1 - a_side] / steps_played, 2), "nsteps": steps_played,
         "a_worst_step_ms": round(1000.0 * worst_a, 0),
