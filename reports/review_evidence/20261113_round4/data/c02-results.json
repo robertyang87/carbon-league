@@ -1,0 +1,4363 @@
+{
+  "commit": "5463f504048bcca28868ebce0a063ac8d6c51b8e",
+  "tested_source_sha256": {
+    "code/cnet2_build.py": "98c4527b781098606f86bbfb0757bfe1b74b377218313891cf887e701dd5f364",
+    "code/build_top.py": "3c265e4edb981e0bfed69244288e8aacd2eb8ec17303db2c858ff5812327766a",
+    "code/replica_chain.sh": "3d5cfbd4d6318f625eab371499c4d9a5bb9727da0c7c60e5b710c185efc5cdb0"
+  },
+  "scope": "real builder and set_uw; extracted declaration gate only; synthetic parser/cache fixture; no training",
+  "training_was_launched": false,
+  "gate_source": "GATE=$(/workspace/carbon-review-venv/bin/python -c \"\nimport json,sys\nd=json.load(open(sys.argv[1]))\nf=d.get('failed_games')\nif f is None:\n    print('NOFIELD 0 - -')\nelse:\n    zero=','.join(g.get('key','?') for g in d.get('games',[]) if g.get('n',0)==0 and not g.get('failed')) or '-'\n    print('%s %d %s %s' % (d.get('valid_games',-1), len(f), ','.join(x.get('key','?') for x in f) or '-', zero))\n\" \"$DS/meta.json\" 2>/dev/null)\nread GAMES NFAILED FAILED_IDS ZERO_IDS <<< \"$GATE\"\necho \"dataset valid_games=$GAMES failed_games=$NFAILED failed_ids=$FAILED_IDS zero_row_ids=$ZERO_IDS index=$IX\"\n[ -n \"${GAMES:-}\" ] && [ \"$GAMES\" != \"NOFIELD\" ] \\\n  || { mark \"FAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run\"; exit 1; }\n[ \"$NFAILED\" = 0 ] \\\n  || { mark \"FAIL dataset declares $NFAILED failed game(s): $FAILED_IDS -- partial dataset refused, set_uw NOT run\"; exit 1; }\n[ \"$GAMES\" = \"$IX\" ] || { mark \"FAIL dataset valid games=$GAMES != index=$IX (zero-row games: ${ZERO_IDS:-none})\"; exit 1; }\n",
+  "healthy": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 2, \"samples\": 6, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 2}, \"cfg_fp\": \"9260e9f4117d19d4\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/original/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/original/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/original/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/original/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510351695239691
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510351696114385
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    }
+  },
+  "healthy_set_uw": {
+    "exit_code": 0,
+    "stdout": "{'rows': 6, 'planter_tokens': 0, 'car_tokens': 0, 'base_tokens': 12, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}\n",
+    "stderr": ""
+  },
+  "healthy_after_set_uw": {
+    "merged_files": [
+      "carbon.npy",
+      "gid.npy",
+      "hist_cargo.npy",
+      "hist_cell.npy",
+      "hist_move.npy",
+      "legal.npy",
+      "maps.npy",
+      "mf.npy",
+      "scal.npy",
+      "step.npy",
+      "teacher.npy",
+      "tok_cargo.npy",
+      "tok_kind.npy",
+      "tok_mask.npy",
+      "tok_pos.npy",
+      "uf.npy",
+      "uw.npy",
+      "value.npy",
+      "w.npy",
+      "y.npy"
+    ],
+    "meta_exists": true,
+    "shard_names": [
+      "demo-0.npz",
+      "demo-1.npz"
+    ],
+    "meta": {
+      "games": [
+        {
+          "file": "<TMP>/original/corpus/replays/demo-0.json.gz",
+          "key": "demo-0.json.gz",
+          "names": [
+            "review-teacher",
+            "non-teacher"
+          ],
+          "scores": [
+            100,
+            0
+          ],
+          "sides": [
+            0
+          ],
+          "val": false,
+          "src": "corpus",
+          "gi": 0,
+          "shard": "<TMP>/original/dataset/shards/demo-0.npz",
+          "n": 3
+        },
+        {
+          "file": "<TMP>/original/corpus/replays/demo-1.json.gz",
+          "key": "demo-1.json.gz",
+          "names": [
+            "review-teacher",
+            "non-teacher"
+          ],
+          "scores": [
+            100,
+            0
+          ],
+          "sides": [
+            0
+          ],
+          "val": false,
+          "src": "corpus",
+          "gi": 1,
+          "shard": "<TMP>/original/dataset/shards/demo-1.npz",
+          "n": 3
+        }
+      ],
+      "total": 6,
+      "teachers": [
+        "_slot0",
+        "_slot1",
+        "review-teacher",
+        "_slot3",
+        "_slot4",
+        "_slot5",
+        "_slot6",
+        "_slot7",
+        "other"
+      ],
+      "cfg_fp": "9260e9f4117d19d4",
+      "failed_games": [],
+      "partial": false,
+      "valid_games": 2
+    },
+    "manifest": {
+      "cfg_fp": "9260e9f4117d19d4",
+      "shards": {
+        "demo-0.npz": {
+          "src": [
+            283,
+            1794510351695239691
+          ],
+          "ckey": "8ffd0a81ae3fdda8",
+          "n": 3,
+          "ok": true
+        },
+        "demo-1.npz": {
+          "src": [
+            283,
+            1794510351696114385
+          ],
+          "ckey": "9404efb727870137",
+          "n": 3,
+          "ok": true
+        }
+      }
+    },
+    "merged_arrays": {
+      "uw": {
+        "shape": [
+          6,
+          12
+        ],
+        "sha256": "f98ab05caf82dd2a174a82bd86b1352c749c3c66099346784311402977fbcc3f"
+      },
+      "mf": {
+        "shape": [
+          6,
+          12,
+          5,
+          15
+        ],
+        "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+      },
+      "scal": {
+        "shape": [
+          6,
+          20
+        ],
+        "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+      },
+      "step": {
+        "shape": [
+          6
+        ],
+        "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+      },
+      "maps": {
+        "shape": [
+          6,
+          33,
+          225
+        ],
+        "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+      },
+      "tok_cargo": {
+        "shape": [
+          6,
+          24
+        ],
+        "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+      },
+      "tok_kind": {
+        "shape": [
+          6,
+          24
+        ],
+        "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+      },
+      "hist_cell": {
+        "shape": [
+          6,
+          24,
+          8
+        ],
+        "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+      },
+      "teacher": {
+        "shape": [
+          6
+        ],
+        "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+      },
+      "tok_mask": {
+        "shape": [
+          6,
+          24
+        ],
+        "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+      },
+      "tok_pos": {
+        "shape": [
+          6,
+          24
+        ],
+        "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+      },
+      "y": {
+        "shape": [
+          6,
+          12
+        ],
+        "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+      },
+      "value": {
+        "shape": [
+          6
+        ],
+        "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+      },
+      "hist_move": {
+        "shape": [
+          6,
+          24,
+          8
+        ],
+        "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+      },
+      "gid": {
+        "shape": [
+          6
+        ],
+        "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+      },
+      "uf": {
+        "shape": [
+          6,
+          12,
+          9
+        ],
+        "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+      },
+      "w": {
+        "shape": [
+          6
+        ],
+        "sha256": "c3d5962f5d28bcd9bd926f0ec6edd6b85da90b0c02d79cec3c35d4591b3587fc"
+      },
+      "carbon": {
+        "shape": [
+          6,
+          225
+        ],
+        "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+      },
+      "legal": {
+        "shape": [
+          6,
+          12,
+          5
+        ],
+        "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+      },
+      "hist_cargo": {
+        "shape": [
+          6,
+          24,
+          8
+        ],
+        "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+      }
+    },
+    "gids": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ]
+  },
+  "bad_gzip_default": {
+    "exit_code": 1,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\nerr 0 BadGzipFile(\"Not a gzipped file (b'no')\")\nC02-FAIL build aborted: 1 of 2 games failed to load/process; no dataset published (set CNET2_ALLOW_PARTIAL=1 to publish a declared partial dataset)\nC02-FAIL game demo-0.json.gz (gi 0): BadGzipFile(\"Not a gzipped file (b'no')\")\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "uw.npy",
+        "w.npy"
+      ],
+      "meta_exists": false,
+      "shard_names": [
+        "demo-1.npz"
+      ],
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510351696114385
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "uw": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "f98ab05caf82dd2a174a82bd86b1352c749c3c66099346784311402977fbcc3f"
+        },
+        "w": {
+          "shape": [
+            6
+          ],
+          "sha256": "c3d5962f5d28bcd9bd926f0ec6edd6b85da90b0c02d79cec3c35d4591b3587fc"
+        }
+      }
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games= failed_games= failed_ids= zero_row_ids= index=2\nFAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "bad_gzip_retry": {
+    "exit_code": 1,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\nerr 0 BadGzipFile(\"Not a gzipped file (b'no')\")\nC02-FAIL build aborted: 1 of 2 games failed to load/process; no dataset published (set CNET2_ALLOW_PARTIAL=1 to publish a declared partial dataset)\nC02-FAIL game demo-0.json.gz (gi 0): BadGzipFile(\"Not a gzipped file (b'no')\")\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "uw.npy",
+        "w.npy"
+      ],
+      "meta_exists": false,
+      "shard_names": [
+        "demo-1.npz"
+      ],
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510351696114385
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "uw": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "f98ab05caf82dd2a174a82bd86b1352c749c3c66099346784311402977fbcc3f"
+        },
+        "w": {
+          "shape": [
+            6
+          ],
+          "sha256": "c3d5962f5d28bcd9bd926f0ec6edd6b85da90b0c02d79cec3c35d4591b3587fc"
+        }
+      }
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games= failed_games= failed_ids= zero_row_ids= index=2\nFAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "bad_gzip_allow_partial": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\nerr 0 BadGzipFile(\"Not a gzipped file (b'no')\")\n{\"games\": 1, \"samples\": 3, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 1}, \"cfg_fp\": \"9260e9f4117d19d4\", \"failed_games\": [\"demo-0.json.gz\"], \"partial\": true}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "uw.npy",
+        "value.npy",
+        "w.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/original/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/original/dataset/shards/demo-0.npz",
+            "n": 0,
+            "failed": "BadGzipFile(\"Not a gzipped file (b'no')\")"
+          },
+          {
+            "file": "<TMP>/original/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/original/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 3,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [
+          {
+            "gi": 0,
+            "key": "demo-0.json.gz",
+            "error": "BadGzipFile(\"Not a gzipped file (b'no')\")"
+          }
+        ],
+        "partial": true,
+        "valid_games": 1
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510351696114385
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "uw": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "f98ab05caf82dd2a174a82bd86b1352c749c3c66099346784311402977fbcc3f"
+        },
+        "mf": {
+          "shape": [
+            3,
+            12,
+            5,
+            15
+          ],
+          "sha256": "8fe185a9782a8c438b9220f62f3f524580cfc59bf691dfb4dcbbc4becda3d721"
+        },
+        "scal": {
+          "shape": [
+            3,
+            20
+          ],
+          "sha256": "da79c527fafe6947d57d00dcfbf1b2334694a0d0e3901de1d270d68a6a78164a"
+        },
+        "step": {
+          "shape": [
+            3
+          ],
+          "sha256": "37633a565e368726938c6358b136196a97e07ff05202397c272d169c740973eb"
+        },
+        "maps": {
+          "shape": [
+            3,
+            33,
+            225
+          ],
+          "sha256": "29e2ea5148070c0aaea065feeb93aaa4271c93ce605d57f9ca095c103f1c11cf"
+        },
+        "tok_cargo": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "9824b872d51958e8d279d82c0838b15d5a982195095bbfe65c5765478b756dd7"
+        },
+        "tok_kind": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "5fda33426228e2c9985738263698ecdbf590b4884105a207123733a60fe3956d"
+        },
+        "hist_cell": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "f16802c62e357c07e21fc0bc39ef6749427e7c11ebe82b610ab8d1d047e4eabc"
+        },
+        "teacher": {
+          "shape": [
+            3
+          ],
+          "sha256": "1017f0473d1898fa33ca3c2a3d13b94cb768933b6957bce9b3c1a16daa45a30c"
+        },
+        "tok_mask": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "26cf61109febf512e1e8952111e56cfe606f206e1bb639ca8ca2aa087b1e3548"
+        },
+        "tok_pos": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "4702447d21f963eef4e8c60f6112d1228ee0b2f0fd4533bdb8bc34c6ff508608"
+        },
+        "y": {
+          "shape": [
+            3,
+            12
+          ],
+          "sha256": "cc5b28c24b33ebf53162c83833eccf2757ce301493e2ece33bddbfc949d6afd8"
+        },
+        "value": {
+          "shape": [
+            3
+          ],
+          "sha256": "929dda4e2f87015737a805996cc591af1fcd0fb831291f69e51f958ed41ebd5f"
+        },
+        "hist_move": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "fd2c30a5a6b1bd69d69e0a364ae7943449511dd9c5666803712b74934242f2a6"
+        },
+        "gid": {
+          "shape": [
+            3
+          ],
+          "sha256": "8845ca209237e35bf4fce608dadaa9d1cb9b14a766ce0cf138168e1508785ad5"
+        },
+        "uf": {
+          "shape": [
+            3,
+            12,
+            9
+          ],
+          "sha256": "177d185a1083810d9d1e743c0623c0aa2b1766039a08f41a048484051eaf5873"
+        },
+        "w": {
+          "shape": [
+            6
+          ],
+          "sha256": "c3d5962f5d28bcd9bd926f0ec6edd6b85da90b0c02d79cec3c35d4591b3587fc"
+        },
+        "carbon": {
+          "shape": [
+            3,
+            225
+          ],
+          "sha256": "9ac8796e934c30ac41411b03165b34aa44e25183dd365c341d538933daa31cee"
+        },
+        "legal": {
+          "shape": [
+            3,
+            12,
+            5
+          ],
+          "sha256": "5cb488d46e49361f9b4650288c729ca23c05128a868548684c88118041d3c0d1"
+        },
+        "hist_cargo": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "eeb7e58e35196eaf97a876f9c3656c21124d67ab744642a7685f7f66b387fe0c"
+        }
+      },
+      "gids": [
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games=1 failed_games=1 failed_ids=demo-0.json.gz zero_row_ids=- index=2\nFAIL dataset declares 1 failed game(s): demo-0.json.gz -- partial dataset refused, set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "restored_retry": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 2, \"samples\": 6, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 2}, \"cfg_fp\": \"9260e9f4117d19d4\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "uw.npy",
+        "value.npy",
+        "w.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/original/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/original/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/original/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/original/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510351696114385
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          },
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510352667250371
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "uw": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "f98ab05caf82dd2a174a82bd86b1352c749c3c66099346784311402977fbcc3f"
+        },
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+        },
+        "w": {
+          "shape": [
+            6
+          ],
+          "sha256": "c3d5962f5d28bcd9bd926f0ec6edd6b85da90b0c02d79cec3c35d4591b3587fc"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    }
+  },
+  "processing_seed": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 2, \"samples\": 6, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 2}, \"cfg_fp\": \"9260e9f4117d19d4\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/processing/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/processing/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/processing/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/processing/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510352863550998
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510352864493715
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    }
+  },
+  "processing_default": {
+    "exit_code": 1,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\nerr 0 KeyError('players')\nC02-FAIL build aborted: 1 of 2 games failed to load/process; no dataset published (set CNET2_ALLOW_PARTIAL=1 to publish a declared partial dataset)\nC02-FAIL game demo-0.json.gz (gi 0): KeyError('players')\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [],
+      "meta_exists": false,
+      "shard_names": [
+        "demo-1.npz"
+      ],
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510352864493715
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {}
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games= failed_games= failed_ids= zero_row_ids= index=2\nFAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "processing_allow_partial": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\nerr 0 KeyError('players')\n{\"games\": 1, \"samples\": 3, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 1}, \"cfg_fp\": \"9260e9f4117d19d4\", \"failed_games\": [\"demo-0.json.gz\"], \"partial\": true}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/processing/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/processing/dataset/shards/demo-0.npz",
+            "n": 0,
+            "failed": "KeyError('players')"
+          },
+          {
+            "file": "<TMP>/processing/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/processing/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 3,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [
+          {
+            "gi": 0,
+            "key": "demo-0.json.gz",
+            "error": "KeyError('players')"
+          }
+        ],
+        "partial": true,
+        "valid_games": 1
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510352864493715
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            3,
+            12,
+            5,
+            15
+          ],
+          "sha256": "8fe185a9782a8c438b9220f62f3f524580cfc59bf691dfb4dcbbc4becda3d721"
+        },
+        "scal": {
+          "shape": [
+            3,
+            20
+          ],
+          "sha256": "da79c527fafe6947d57d00dcfbf1b2334694a0d0e3901de1d270d68a6a78164a"
+        },
+        "step": {
+          "shape": [
+            3
+          ],
+          "sha256": "37633a565e368726938c6358b136196a97e07ff05202397c272d169c740973eb"
+        },
+        "maps": {
+          "shape": [
+            3,
+            33,
+            225
+          ],
+          "sha256": "29e2ea5148070c0aaea065feeb93aaa4271c93ce605d57f9ca095c103f1c11cf"
+        },
+        "tok_cargo": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "9824b872d51958e8d279d82c0838b15d5a982195095bbfe65c5765478b756dd7"
+        },
+        "tok_kind": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "5fda33426228e2c9985738263698ecdbf590b4884105a207123733a60fe3956d"
+        },
+        "hist_cell": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "f16802c62e357c07e21fc0bc39ef6749427e7c11ebe82b610ab8d1d047e4eabc"
+        },
+        "teacher": {
+          "shape": [
+            3
+          ],
+          "sha256": "1017f0473d1898fa33ca3c2a3d13b94cb768933b6957bce9b3c1a16daa45a30c"
+        },
+        "tok_mask": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "26cf61109febf512e1e8952111e56cfe606f206e1bb639ca8ca2aa087b1e3548"
+        },
+        "tok_pos": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "4702447d21f963eef4e8c60f6112d1228ee0b2f0fd4533bdb8bc34c6ff508608"
+        },
+        "y": {
+          "shape": [
+            3,
+            12
+          ],
+          "sha256": "cc5b28c24b33ebf53162c83833eccf2757ce301493e2ece33bddbfc949d6afd8"
+        },
+        "value": {
+          "shape": [
+            3
+          ],
+          "sha256": "929dda4e2f87015737a805996cc591af1fcd0fb831291f69e51f958ed41ebd5f"
+        },
+        "hist_move": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "fd2c30a5a6b1bd69d69e0a364ae7943449511dd9c5666803712b74934242f2a6"
+        },
+        "gid": {
+          "shape": [
+            3
+          ],
+          "sha256": "8845ca209237e35bf4fce608dadaa9d1cb9b14a766ce0cf138168e1508785ad5"
+        },
+        "uf": {
+          "shape": [
+            3,
+            12,
+            9
+          ],
+          "sha256": "177d185a1083810d9d1e743c0623c0aa2b1766039a08f41a048484051eaf5873"
+        },
+        "carbon": {
+          "shape": [
+            3,
+            225
+          ],
+          "sha256": "9ac8796e934c30ac41411b03165b34aa44e25183dd365c341d538933daa31cee"
+        },
+        "legal": {
+          "shape": [
+            3,
+            12,
+            5
+          ],
+          "sha256": "5cb488d46e49361f9b4650288c729ca23c05128a868548684c88118041d3c0d1"
+        },
+        "hist_cargo": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "eeb7e58e35196eaf97a876f9c3656c21124d67ab744642a7685f7f66b387fe0c"
+        }
+      },
+      "gids": [
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games=1 failed_games=1 failed_ids=demo-0.json.gz zero_row_ids=- index=2\nFAIL dataset declares 1 failed game(s): demo-0.json.gz -- partial dataset refused, set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "zero_seed": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 2, \"samples\": 6, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 2}, \"cfg_fp\": \"9260e9f4117d19d4\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/zero/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/zero/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/zero/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/zero/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510353455275437
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510353457633199
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    }
+  },
+  "zero_window_first": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\nR08: build-config fingerprint changed (9260e9f4117d19d4 -> a4be89af60eb13fe); cached shards invalidated, rebuilding all\n{\"games\": 0, \"samples\": 0, \"val_games\": 0, \"teacher_sides\": {}, \"cfg_fp\": \"a4be89af60eb13fe\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/zero/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/zero/dataset/shards/demo-0.npz",
+            "n": 0
+          },
+          {
+            "file": "<TMP>/zero/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/zero/dataset/shards/demo-1.npz",
+            "n": 0
+          }
+        ],
+        "total": 0,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "a4be89af60eb13fe",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 0
+      },
+      "manifest": {
+        "cfg_fp": "a4be89af60eb13fe",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510353455275437
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 0,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510353457633199
+            ],
+            "ckey": "9404efb727870137",
+            "n": 0,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            0,
+            12,
+            5,
+            15
+          ],
+          "sha256": "bf90604036ba355604edcad0504f17f9c4262b346a62780359f9fba998293f19"
+        },
+        "scal": {
+          "shape": [
+            0,
+            20
+          ],
+          "sha256": "2e0b6c561456c75ae1441d425aaf47a73d409fd7f8fa867d09cd8e1f51eb0a3c"
+        },
+        "step": {
+          "shape": [
+            0
+          ],
+          "sha256": "811d2e1e81aaca0efcbb5ceba500108325a628583a35f1e6c14bed15aa733c2f"
+        },
+        "maps": {
+          "shape": [
+            0,
+            33,
+            225
+          ],
+          "sha256": "a44c147d1b737536e4161268c45021649432d0f314f31181e75749d11932d1c4"
+        },
+        "tok_cargo": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "4f60cd72ab49954a04db4a4c76c2b8a6298c1f8fc1d07b8cff17e942d553ef65"
+        },
+        "tok_kind": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "f0bd2352c07be31c1db0a2622eddf7f2c3706c179b1183713e3d1a297c8c43cd"
+        },
+        "hist_cell": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "c3f3e149ccec02c43a0a088df3d497e306c1295519f45412dc7fedbdbf3bf938"
+        },
+        "teacher": {
+          "shape": [
+            0
+          ],
+          "sha256": "b44d0c5ada073af57097da3a9e0bdd1d559a17f047384dbb19a7201496f81b16"
+        },
+        "tok_mask": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "065e962b9a5ce42dcbd5d045d70f02dbb3c94b12018a737807816e782caa32ad"
+        },
+        "tok_pos": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "fa84c5216bd0077d4ad07f13ec7115023659d0db3dbdcb8238a9378e56885f81"
+        },
+        "y": {
+          "shape": [
+            0,
+            12
+          ],
+          "sha256": "55ffcb7253b1d1a49d68eb72bbb05d70f2861e08f2744d000f2502f6e88910ad"
+        },
+        "value": {
+          "shape": [
+            0
+          ],
+          "sha256": "286ff82c9a8f4b1f1741bf46ffc39072bf6cd846c18b567f863b27e7241244b7"
+        },
+        "hist_move": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "a349cd67564f08a34f083197e48c891fe146ad69b851c8b23812513ea8f5c626"
+        },
+        "gid": {
+          "shape": [
+            0
+          ],
+          "sha256": "040ce28f7590a34af85fbdb8115c90c9a0529a73b047533889c859c2f2c6e627"
+        },
+        "uf": {
+          "shape": [
+            0,
+            12,
+            9
+          ],
+          "sha256": "0dd866f0a57c7c81ef56bc8848c0e50b73a5bc7afe32a4d60c05aa61c738055b"
+        },
+        "carbon": {
+          "shape": [
+            0,
+            225
+          ],
+          "sha256": "fe145523ba0a2ecaab9415caf092df3002aa1a6fd15650ecd35d25bb2d5eb0b0"
+        },
+        "legal": {
+          "shape": [
+            0,
+            12,
+            5
+          ],
+          "sha256": "fbbe4c56ea34077f382a6c56eca6f34c4eb1a32741aec53cb1fa89f6b11475ea"
+        },
+        "hist_cargo": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "528511a30cf1126b3596b0b39ca7514822f4e64af5e768a0a97d7465046a0dd3"
+        }
+      },
+      "gids": []
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games=0 failed_games=0 failed_ids=- zero_row_ids=demo-0.json.gz,demo-1.json.gz index=2\nFAIL dataset valid games=0 != index=2 (zero-row games: demo-0.json.gz,demo-1.json.gz)\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "zero_window_cached_retry": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 0, \"samples\": 0, \"val_games\": 0, \"teacher_sides\": {}, \"cfg_fp\": \"a4be89af60eb13fe\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/zero/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/zero/dataset/shards/demo-0.npz",
+            "n": 0
+          },
+          {
+            "file": "<TMP>/zero/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/zero/dataset/shards/demo-1.npz",
+            "n": 0
+          }
+        ],
+        "total": 0,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "a4be89af60eb13fe",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 0
+      },
+      "manifest": {
+        "cfg_fp": "a4be89af60eb13fe",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510353455275437
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 0,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510353457633199
+            ],
+            "ckey": "9404efb727870137",
+            "n": 0,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            0,
+            12,
+            5,
+            15
+          ],
+          "sha256": "bf90604036ba355604edcad0504f17f9c4262b346a62780359f9fba998293f19"
+        },
+        "scal": {
+          "shape": [
+            0,
+            20
+          ],
+          "sha256": "2e0b6c561456c75ae1441d425aaf47a73d409fd7f8fa867d09cd8e1f51eb0a3c"
+        },
+        "step": {
+          "shape": [
+            0
+          ],
+          "sha256": "811d2e1e81aaca0efcbb5ceba500108325a628583a35f1e6c14bed15aa733c2f"
+        },
+        "maps": {
+          "shape": [
+            0,
+            33,
+            225
+          ],
+          "sha256": "a44c147d1b737536e4161268c45021649432d0f314f31181e75749d11932d1c4"
+        },
+        "tok_cargo": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "4f60cd72ab49954a04db4a4c76c2b8a6298c1f8fc1d07b8cff17e942d553ef65"
+        },
+        "tok_kind": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "f0bd2352c07be31c1db0a2622eddf7f2c3706c179b1183713e3d1a297c8c43cd"
+        },
+        "hist_cell": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "c3f3e149ccec02c43a0a088df3d497e306c1295519f45412dc7fedbdbf3bf938"
+        },
+        "teacher": {
+          "shape": [
+            0
+          ],
+          "sha256": "b44d0c5ada073af57097da3a9e0bdd1d559a17f047384dbb19a7201496f81b16"
+        },
+        "tok_mask": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "065e962b9a5ce42dcbd5d045d70f02dbb3c94b12018a737807816e782caa32ad"
+        },
+        "tok_pos": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "fa84c5216bd0077d4ad07f13ec7115023659d0db3dbdcb8238a9378e56885f81"
+        },
+        "y": {
+          "shape": [
+            0,
+            12
+          ],
+          "sha256": "55ffcb7253b1d1a49d68eb72bbb05d70f2861e08f2744d000f2502f6e88910ad"
+        },
+        "value": {
+          "shape": [
+            0
+          ],
+          "sha256": "286ff82c9a8f4b1f1741bf46ffc39072bf6cd846c18b567f863b27e7241244b7"
+        },
+        "hist_move": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "a349cd67564f08a34f083197e48c891fe146ad69b851c8b23812513ea8f5c626"
+        },
+        "gid": {
+          "shape": [
+            0
+          ],
+          "sha256": "040ce28f7590a34af85fbdb8115c90c9a0529a73b047533889c859c2f2c6e627"
+        },
+        "uf": {
+          "shape": [
+            0,
+            12,
+            9
+          ],
+          "sha256": "0dd866f0a57c7c81ef56bc8848c0e50b73a5bc7afe32a4d60c05aa61c738055b"
+        },
+        "carbon": {
+          "shape": [
+            0,
+            225
+          ],
+          "sha256": "fe145523ba0a2ecaab9415caf092df3002aa1a6fd15650ecd35d25bb2d5eb0b0"
+        },
+        "legal": {
+          "shape": [
+            0,
+            12,
+            5
+          ],
+          "sha256": "fbbe4c56ea34077f382a6c56eca6f34c4eb1a32741aec53cb1fa89f6b11475ea"
+        },
+        "hist_cargo": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "528511a30cf1126b3596b0b39ca7514822f4e64af5e768a0a97d7465046a0dd3"
+        }
+      },
+      "gids": []
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games=0 failed_games=0 failed_ids=- zero_row_ids=demo-0.json.gz,demo-1.json.gz index=2\nFAIL dataset valid games=0 != index=2 (zero-row games: demo-0.json.gz,demo-1.json.gz)\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "all_bad_default": {
+    "exit_code": 1,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\nerr 0 BadGzipFile(\"Not a gzipped file (b'ba')\")\nerr 1 BadGzipFile(\"Not a gzipped file (b'ba')\")\nC02-FAIL build aborted: 2 of 2 games failed to load/process; no dataset published (set CNET2_ALLOW_PARTIAL=1 to publish a declared partial dataset)\nC02-FAIL game demo-0.json.gz (gi 0): BadGzipFile(\"Not a gzipped file (b'ba')\")\nC02-FAIL game demo-1.json.gz (gi 1): BadGzipFile(\"Not a gzipped file (b'ba')\")\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [],
+      "meta_exists": false,
+      "shard_names": [],
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {}
+      },
+      "merged_arrays": {}
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games= failed_games= failed_ids= zero_row_ids= index=2\nFAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "all_bad_partial": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\nerr 0 BadGzipFile(\"Not a gzipped file (b'ba')\")\nerr 1 BadGzipFile(\"Not a gzipped file (b'ba')\")\n{\"games\": 0, \"samples\": 0, \"val_games\": 0, \"teacher_sides\": {}, \"cfg_fp\": \"9260e9f4117d19d4\", \"failed_games\": [\"demo-0.json.gz\", \"demo-1.json.gz\"], \"partial\": true}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/allbad/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/allbad/dataset/shards/demo-0.npz",
+            "n": 0,
+            "failed": "BadGzipFile(\"Not a gzipped file (b'ba')\")"
+          },
+          {
+            "file": "<TMP>/allbad/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/allbad/dataset/shards/demo-1.npz",
+            "n": 0,
+            "failed": "BadGzipFile(\"Not a gzipped file (b'ba')\")"
+          }
+        ],
+        "total": 0,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [
+          {
+            "gi": 0,
+            "key": "demo-0.json.gz",
+            "error": "BadGzipFile(\"Not a gzipped file (b'ba')\")"
+          },
+          {
+            "gi": 1,
+            "key": "demo-1.json.gz",
+            "error": "BadGzipFile(\"Not a gzipped file (b'ba')\")"
+          }
+        ],
+        "partial": true,
+        "valid_games": 0
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {}
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            0,
+            12,
+            5,
+            15
+          ],
+          "sha256": "bf90604036ba355604edcad0504f17f9c4262b346a62780359f9fba998293f19"
+        },
+        "scal": {
+          "shape": [
+            0,
+            20
+          ],
+          "sha256": "2e0b6c561456c75ae1441d425aaf47a73d409fd7f8fa867d09cd8e1f51eb0a3c"
+        },
+        "step": {
+          "shape": [
+            0
+          ],
+          "sha256": "811d2e1e81aaca0efcbb5ceba500108325a628583a35f1e6c14bed15aa733c2f"
+        },
+        "maps": {
+          "shape": [
+            0,
+            33,
+            225
+          ],
+          "sha256": "a44c147d1b737536e4161268c45021649432d0f314f31181e75749d11932d1c4"
+        },
+        "tok_cargo": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "4f60cd72ab49954a04db4a4c76c2b8a6298c1f8fc1d07b8cff17e942d553ef65"
+        },
+        "tok_kind": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "f0bd2352c07be31c1db0a2622eddf7f2c3706c179b1183713e3d1a297c8c43cd"
+        },
+        "hist_cell": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "c3f3e149ccec02c43a0a088df3d497e306c1295519f45412dc7fedbdbf3bf938"
+        },
+        "teacher": {
+          "shape": [
+            0
+          ],
+          "sha256": "b44d0c5ada073af57097da3a9e0bdd1d559a17f047384dbb19a7201496f81b16"
+        },
+        "tok_mask": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "065e962b9a5ce42dcbd5d045d70f02dbb3c94b12018a737807816e782caa32ad"
+        },
+        "tok_pos": {
+          "shape": [
+            0,
+            24
+          ],
+          "sha256": "fa84c5216bd0077d4ad07f13ec7115023659d0db3dbdcb8238a9378e56885f81"
+        },
+        "y": {
+          "shape": [
+            0,
+            12
+          ],
+          "sha256": "55ffcb7253b1d1a49d68eb72bbb05d70f2861e08f2744d000f2502f6e88910ad"
+        },
+        "value": {
+          "shape": [
+            0
+          ],
+          "sha256": "286ff82c9a8f4b1f1741bf46ffc39072bf6cd846c18b567f863b27e7241244b7"
+        },
+        "hist_move": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "a349cd67564f08a34f083197e48c891fe146ad69b851c8b23812513ea8f5c626"
+        },
+        "gid": {
+          "shape": [
+            0
+          ],
+          "sha256": "040ce28f7590a34af85fbdb8115c90c9a0529a73b047533889c859c2f2c6e627"
+        },
+        "uf": {
+          "shape": [
+            0,
+            12,
+            9
+          ],
+          "sha256": "0dd866f0a57c7c81ef56bc8848c0e50b73a5bc7afe32a4d60c05aa61c738055b"
+        },
+        "carbon": {
+          "shape": [
+            0,
+            225
+          ],
+          "sha256": "fe145523ba0a2ecaab9415caf092df3002aa1a6fd15650ecd35d25bb2d5eb0b0"
+        },
+        "legal": {
+          "shape": [
+            0,
+            12,
+            5
+          ],
+          "sha256": "fbbe4c56ea34077f382a6c56eca6f34c4eb1a32741aec53cb1fa89f6b11475ea"
+        },
+        "hist_cargo": {
+          "shape": [
+            0,
+            24,
+            8
+          ],
+          "sha256": "528511a30cf1126b3596b0b39ca7514822f4e64af5e768a0a97d7465046a0dd3"
+        }
+      },
+      "gids": []
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games=0 failed_games=2 failed_ids=demo-0.json.gz,demo-1.json.gz zero_row_ids=- index=2\nFAIL dataset declares 2 failed game(s): demo-0.json.gz,demo-1.json.gz -- partial dataset refused, set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "missing_seed": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 2, \"samples\": 6, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 2}, \"cfg_fp\": \"9260e9f4117d19d4\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/missing/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/missing/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/missing/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/missing/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510354231300121
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510354234259883
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    }
+  },
+  "missing_replay_default": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 1, \"samples\": 3, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 1}, \"cfg_fp\": \"9260e9f4117d19d4\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/missing/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/missing/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 3,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 1
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510354234259883
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            3,
+            12,
+            5,
+            15
+          ],
+          "sha256": "8fe185a9782a8c438b9220f62f3f524580cfc59bf691dfb4dcbbc4becda3d721"
+        },
+        "scal": {
+          "shape": [
+            3,
+            20
+          ],
+          "sha256": "da79c527fafe6947d57d00dcfbf1b2334694a0d0e3901de1d270d68a6a78164a"
+        },
+        "step": {
+          "shape": [
+            3
+          ],
+          "sha256": "37633a565e368726938c6358b136196a97e07ff05202397c272d169c740973eb"
+        },
+        "maps": {
+          "shape": [
+            3,
+            33,
+            225
+          ],
+          "sha256": "29e2ea5148070c0aaea065feeb93aaa4271c93ce605d57f9ca095c103f1c11cf"
+        },
+        "tok_cargo": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "9824b872d51958e8d279d82c0838b15d5a982195095bbfe65c5765478b756dd7"
+        },
+        "tok_kind": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "5fda33426228e2c9985738263698ecdbf590b4884105a207123733a60fe3956d"
+        },
+        "hist_cell": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "f16802c62e357c07e21fc0bc39ef6749427e7c11ebe82b610ab8d1d047e4eabc"
+        },
+        "teacher": {
+          "shape": [
+            3
+          ],
+          "sha256": "1017f0473d1898fa33ca3c2a3d13b94cb768933b6957bce9b3c1a16daa45a30c"
+        },
+        "tok_mask": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "26cf61109febf512e1e8952111e56cfe606f206e1bb639ca8ca2aa087b1e3548"
+        },
+        "tok_pos": {
+          "shape": [
+            3,
+            24
+          ],
+          "sha256": "4702447d21f963eef4e8c60f6112d1228ee0b2f0fd4533bdb8bc34c6ff508608"
+        },
+        "y": {
+          "shape": [
+            3,
+            12
+          ],
+          "sha256": "cc5b28c24b33ebf53162c83833eccf2757ce301493e2ece33bddbfc949d6afd8"
+        },
+        "value": {
+          "shape": [
+            3
+          ],
+          "sha256": "929dda4e2f87015737a805996cc591af1fcd0fb831291f69e51f958ed41ebd5f"
+        },
+        "hist_move": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "fd2c30a5a6b1bd69d69e0a364ae7943449511dd9c5666803712b74934242f2a6"
+        },
+        "gid": {
+          "shape": [
+            3
+          ],
+          "sha256": "1eeec9786e6f14468051d05b8e77f97b6319fc4d6e23fa4c7100381e725ad4a4"
+        },
+        "uf": {
+          "shape": [
+            3,
+            12,
+            9
+          ],
+          "sha256": "177d185a1083810d9d1e743c0623c0aa2b1766039a08f41a048484051eaf5873"
+        },
+        "carbon": {
+          "shape": [
+            3,
+            225
+          ],
+          "sha256": "9ac8796e934c30ac41411b03165b34aa44e25183dd365c341d538933daa31cee"
+        },
+        "legal": {
+          "shape": [
+            3,
+            12,
+            5
+          ],
+          "sha256": "5cb488d46e49361f9b4650288c729ca23c05128a868548684c88118041d3c0d1"
+        },
+        "hist_cargo": {
+          "shape": [
+            3,
+            24,
+            8
+          ],
+          "sha256": "eeb7e58e35196eaf97a876f9c3656c21124d67ab744642a7685f7f66b387fe0c"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0
+      ]
+    },
+    "gate": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games=1 failed_games=0 failed_ids=- zero_row_ids=- index=2\nFAIL dataset valid games=1 != index=2 (zero-row games: -)\n",
+      "stderr": "",
+      "passed": false
+    },
+    "input_index_entries": 2
+  },
+  "missing_replay_set_uw": {
+    "exit_code": 0,
+    "stdout": "{'rows': 3, 'planter_tokens': 0, 'car_tokens': 0, 'base_tokens': 6, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}\n",
+    "stderr": ""
+  },
+  "scan_error_seed": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 2, \"samples\": 6, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 2}, \"cfg_fp\": \"9260e9f4117d19d4\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/scanerror/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/scanerror/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/scanerror/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/scanerror/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510354669891120
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510354670847608
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    }
+  },
+  "scan_error_old_output": {
+    "exit_code": 1,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n",
+    "stderr": "Traceback (most recent call last):\n  File \"/workspace/carbon-league/code/build_top.py\", line 33, in <module>\n    B.main(sys.argv[1], sys.argv[2:])\n  File \"/workspace/carbon-league/code/cnet2_build.py\", line 324, in main\n    games = scan(dirs, weighted=weighted)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/carbon-league/code/cnet2_build.py\", line 247, in scan\n    idx = json.load(open(os.path.join(rd, \"index.json\")))\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py\", line 293, in load\n    return loads(fp.read(),\n           ^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py\", line 338, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py\", line 354, in raw_decode\n    obj, end = self.scan_once(s, idx)\n               ^^^^^^^^^^^^^^^^^^^^^^\njson.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/scanerror/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/scanerror/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/scanerror/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/scanerror/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510354669891120
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510354670847608
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    },
+    "old_metadata_unchanged": true,
+    "old_arrays_unchanged": true,
+    "gate_standalone_note": "The actual chain stops at nonzero build rc before this declaration gate. Passing this isolated gate is not a launch bypass."
+  },
+  "cache_merge_seed": {
+    "exit_code": 0,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n{\"games\": 2, \"samples\": 6, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 2}, \"cfg_fp\": \"9260e9f4117d19d4\"}\n",
+    "stderr": "",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/cachemerge/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/cachemerge/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/cachemerge/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/cachemerge/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510355014590632
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510355015411504
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "570a6061f052b970b98d757231896eda8334adf9bfe8a4846271b4c1a77f909e"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "aac5f4b6b9b53c2e53ca800b1084183afa82467904015cb4b02f4d07d1d12eaa"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "6212b0610362730eadebf02086ce26a1b3750a5eb38fe3eda0c2601595ace081"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "853bbae2ffd45fcaf752325bcf5540925ba313d5e3836526d3474935a4251b2d"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "69b1bf6fc5e54983ed709e272efd043bbf2c889091d107c8c1a5697e09cb7014"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "40c28d48dbfef8d28454fcbc301a0f7cad2e26c71190bb8534e64aa0bf49d0a5"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "7b6879c18e3efd46c098643da55ab38dc81d643259b2543bc9ec822ce918a4eb"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6fc40c6f909e1bc7605db38bd3e5e9963d2f8a4778f8d675373f49b284833647"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "201fa726472a1f7f775ab2853cb86c4a7117ee6af1c977cff7adafa6b13bbe01"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "734bf673c29d07952621c91ea60ab64b9f2996ce218cfd3f8f4b477fb4fd6fe7"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "236068b7f0f3e9c5c144347c4da5531649b659c57e6779a00edbc9fbca463df7"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "3a878c85bb81405e4c85dbe01d82d01fe72680fa1870066a23c918a0ef91b218"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "b1134ebc7f24ee298c4d6574b8627d47507e6b219fae3970ebda9da8f44073f3"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "8aa2cfda6b6441d5ad609697861c14d3f0b2c3df7bd868a27048188dbacb5993"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "c3bf2f84719fe6657efd9488600cf8daaa6909ccbfc3d6f2ada7ca866d883fe1"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    }
+  },
+  "cache_merge_old_output": {
+    "exit_code": 1,
+    "stdout": "{'teachers': {2: 'review-teacher'}}\n",
+    "stderr": "Traceback (most recent call last):\n  File \"/workspace/carbon-league/code/build_top.py\", line 33, in <module>\n    B.main(sys.argv[1], sys.argv[2:])\n  File \"/workspace/carbon-league/code/cnet2_build.py\", line 454, in main\n    mm[k][o:o + n] = D[k] if k != \"gid\" else gi\n                     ~^^^\n  File \"/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy/lib/npyio.py\", line 263, in __getitem__\n    raise KeyError(f\"{key} is not a file in the archive\")\nKeyError: 'maps is not a file in the archive'\n",
+    "dataset": {
+      "merged_files": [
+        "carbon.npy",
+        "gid.npy",
+        "hist_cargo.npy",
+        "hist_cell.npy",
+        "hist_move.npy",
+        "legal.npy",
+        "maps.npy",
+        "mf.npy",
+        "scal.npy",
+        "step.npy",
+        "teacher.npy",
+        "tok_cargo.npy",
+        "tok_kind.npy",
+        "tok_mask.npy",
+        "tok_pos.npy",
+        "uf.npy",
+        "value.npy",
+        "y.npy"
+      ],
+      "meta_exists": true,
+      "shard_names": [
+        "demo-0.npz",
+        "demo-1.npz"
+      ],
+      "meta": {
+        "games": [
+          {
+            "file": "<TMP>/cachemerge/corpus/replays/demo-0.json.gz",
+            "key": "demo-0.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 0,
+            "shard": "<TMP>/cachemerge/dataset/shards/demo-0.npz",
+            "n": 3
+          },
+          {
+            "file": "<TMP>/cachemerge/corpus/replays/demo-1.json.gz",
+            "key": "demo-1.json.gz",
+            "names": [
+              "review-teacher",
+              "non-teacher"
+            ],
+            "scores": [
+              100,
+              0
+            ],
+            "sides": [
+              0
+            ],
+            "val": false,
+            "src": "corpus",
+            "gi": 1,
+            "shard": "<TMP>/cachemerge/dataset/shards/demo-1.npz",
+            "n": 3
+          }
+        ],
+        "total": 6,
+        "teachers": [
+          "_slot0",
+          "_slot1",
+          "review-teacher",
+          "_slot3",
+          "_slot4",
+          "_slot5",
+          "_slot6",
+          "_slot7",
+          "other"
+        ],
+        "cfg_fp": "9260e9f4117d19d4",
+        "failed_games": [],
+        "partial": false,
+        "valid_games": 2
+      },
+      "manifest": {
+        "cfg_fp": "9260e9f4117d19d4",
+        "shards": {
+          "demo-0.npz": {
+            "src": [
+              283,
+              1794510355014590632
+            ],
+            "ckey": "8ffd0a81ae3fdda8",
+            "n": 3,
+            "ok": true
+          },
+          "demo-1.npz": {
+            "src": [
+              283,
+              1794510355015411504
+            ],
+            "ckey": "9404efb727870137",
+            "n": 3,
+            "ok": true
+          }
+        }
+      },
+      "merged_arrays": {
+        "mf": {
+          "shape": [
+            6,
+            12,
+            5,
+            15
+          ],
+          "sha256": "c888cee737be8ee886471e7110423807f559fdc816e239e7c758da5d38c3a99c"
+        },
+        "scal": {
+          "shape": [
+            6,
+            20
+          ],
+          "sha256": "27eef7f5893b9ecd4f80ea9d779c83a5c4c933ec86598b18c4368f09936a335c"
+        },
+        "step": {
+          "shape": [
+            6
+          ],
+          "sha256": "d376c6b1043a13f2837b3cead4e2b1b11596ae8247eefb88a97d68be316d4a6e"
+        },
+        "maps": {
+          "shape": [
+            6,
+            33,
+            225
+          ],
+          "sha256": "dd0ead8fad747f14a4c23a03f0c4a9b2860a95953e93f2786d4d118e4b32e32b"
+        },
+        "tok_cargo": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "6c80b1fdbc3bab50e7fbcb331a1ed2dd45e097fd3798f02c1ff23e1bce6579c3"
+        },
+        "tok_kind": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "e1f819ab21d7fe4612f24894e1cdd4daf9781c2dfcafbfed92512acab822262b"
+        },
+        "hist_cell": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "1c4913e153f788bb6724fddae07923a89a6b24d14b4edabd67c6b13eaaa75fbe"
+        },
+        "teacher": {
+          "shape": [
+            6
+          ],
+          "sha256": "38566ce5a4cc45cda9c31cf9569058bbf6fbfd120a93eb1e190481531e167ec6"
+        },
+        "tok_mask": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "d75849158a2fd3c0bde2cf29c57bce6bed199eccb47471ab0b38bd36947677a5"
+        },
+        "tok_pos": {
+          "shape": [
+            6,
+            24
+          ],
+          "sha256": "be326c7083ea1a1a7733549b9f628627077c221953a3270d73a9dd5494836d0a"
+        },
+        "y": {
+          "shape": [
+            6,
+            12
+          ],
+          "sha256": "ac597473d24a1dc1c85fe8edacecb2c74e1f16550bff473a681f644ef8fd1ad3"
+        },
+        "value": {
+          "shape": [
+            6
+          ],
+          "sha256": "8bb9a82d1f32f016ab7246604fd1a8da9c80a657001a27320b86306e5a2053a2"
+        },
+        "hist_move": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2a198d116e97215d95cec9f2ffa02c9b997c11a924d0e96104df11478db57e2f"
+        },
+        "gid": {
+          "shape": [
+            6
+          ],
+          "sha256": "cde1d14bbeaf53a6a170fbf95e380fd81c18ac054ade97099f3d1ad0624b92b4"
+        },
+        "uf": {
+          "shape": [
+            6,
+            12,
+            9
+          ],
+          "sha256": "3daee68b245ebc37d755bc4c5e5a4d95f1ae76dee31cd0b02d81daf330a4e2ec"
+        },
+        "carbon": {
+          "shape": [
+            6,
+            225
+          ],
+          "sha256": "055ca4bfd3d862fb12651cd59e4ede3977f280d0a4572b247703bc186381e051"
+        },
+        "legal": {
+          "shape": [
+            6,
+            12,
+            5
+          ],
+          "sha256": "cc31d53c00a2f042eeeed2cc4b9347213a270f0faa404071efa609fd2dfbb75c"
+        },
+        "hist_cargo": {
+          "shape": [
+            6,
+            24,
+            8
+          ],
+          "sha256": "2246167fa4bbe63539b6031f17c689f8b5c74d629c308d222b54e5ad0d3542f4"
+        }
+      },
+      "gids": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "gate": {
+      "exit_code": 0,
+      "stdout": "dataset valid_games=2 failed_games=0 failed_ids=- zero_row_ids=- index=2\nGATE_PASSED_BEFORE_SET_UW\n",
+      "stderr": "",
+      "passed": true
+    },
+    "old_metadata_unchanged": true,
+    "merged_arrays_changed": true,
+    "fixture_note": "One cached npz field was deliberately removed while y and its certified row count remained valid. No input replay was corrupted.",
+    "gate_standalone_note": "Actual chain removes DS before build and stops on nonzero build rc; this is a direct reusable builder/cache boundary, not replica-chain launch bypass."
+  },
+  "gate_contract_boundaries": {
+    "missing": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games= failed_games= failed_ids= zero_row_ids= index=2\nFAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    },
+    "legacy": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games=NOFIELD failed_games=0 failed_ids=- zero_row_ids=- index=2\nFAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    },
+    "missing_valid_count": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games=-1 failed_games=0 failed_ids=- zero_row_ids=- index=2\nFAIL dataset valid games=-1 != index=2 (zero-row games: -)\n",
+      "stderr": "",
+      "passed": false
+    },
+    "unreadable": {
+      "exit_code": 1,
+      "stdout": "dataset valid_games= failed_games= failed_ids= zero_row_ids= index=2\nFAIL meta.json missing/unreadable or predates the C02 contract (no failed_games declaration) -- set_uw NOT run\n",
+      "stderr": "",
+      "passed": false
+    }
+  },
+  "checks": {
+    "healthy": true,
+    "default_fails_and_invalidates_product": true,
+    "bad_shard_not_certified": true,
+    "good_shard_retained": true,
+    "failed_retry_stays_failed": true,
+    "partial_is_declared": true,
+    "partial_gate_refuses_before_set_uw": true,
+    "restored_retry": true,
+    "processing_failure_caught": true,
+    "processing_partial_declares_reason": true,
+    "zero_window_first": true,
+    "zero_window_cached_retry": true,
+    "all_bad_default": true,
+    "all_bad_partial": true,
+    "missing_replay_boundary_observed": true,
+    "scan_error_returns_failure": true,
+    "cache_merge_failure_returns_nonzero": true,
+    "gate_missing": true,
+    "gate_legacy": true,
+    "gate_missing_valid_count": true,
+    "gate_unreadable": true
+  },
+  "all_expected_checks_passed": true
+}

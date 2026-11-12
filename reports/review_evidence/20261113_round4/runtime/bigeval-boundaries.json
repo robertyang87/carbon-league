@@ -1,0 +1,72 @@
+[
+  {
+    "test": "zero_valid",
+    "exit_code": 2,
+    "new_records": [
+      {
+        "tag": "always_error",
+        "FAIL": true,
+        "INCOMPLETE": true,
+        "n": 0,
+        "want": 2,
+        "err": 2,
+        "search_error_games": 0,
+        "a_errors_total": 0,
+        "root_errors_total": 0,
+        "first_error": "Traceback (most recent call last):\n  File \"/workspace/carbon-league/code/bigeval.py\", line 9, in _play\n    try: return eval_v53.play_game(t)\n                ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/carbon-league/code/eval_v53.py\", line 212, in play_game\n    acts.append(agents[p](o, CFG))\n                ^^^^^^^^^^^^^^^^^\n  File \"/workspace/carbon-review-round4/runtime/always_error.py\", line 2, in agent\n    raise RuntimeError(\"controlled all-fail error\")\nRuntimeError: controlled all-fail error\n",
+        "first_search_error_seed": null
+      }
+    ],
+    "stdout": "",
+    "stderr": "{\"tag\": \"always_error\", \"FAIL\": true, \"INCOMPLETE\": true, \"n\": 0, \"want\": 2, \"err\": 2, \"search_error_games\": 0, \"a_errors_total\": 0, \"root_errors_total\": 0, \"first_error\": \"Traceback (most recent call last):\\n  File \\\"/workspace/carbon-league/code/bigeval.py\\\", line 9, in _play\\n    try: return eval_v53.play_game(t)\\n                ^^^^^^^^^^^^^^^^^^^^^\\n  File \\\"/workspace/carbon-league/code/eval_v53.py\\\", line 212, in play_game\\n    acts.append(agents[p](o, CFG))\\n                ^^^^^^^^^^^^^^^^^\\n  File \\\"/workspace/carbon-review-round4/runtime/always_error.py\\\", line 2, in agent\\n    raise RuntimeError(\\\"controlled all-fail error\\\")\\nRuntimeError: controlled all-fail error\\n\", \"first_search_error_seed\": null}\n"
+  },
+  {
+    "test": "one_valid",
+    "exit_code": 2,
+    "new_records": [
+      {
+        "tag": "conditional_error",
+        "FAIL": true,
+        "INCOMPLETE": true,
+        "n": 1,
+        "want": 2,
+        "err": 1,
+        "search_error_games": 0,
+        "a_errors_total": 0,
+        "root_errors_total": 0,
+        "first_error": "k (most recent call last):\n  File \"/workspace/carbon-league/code/bigeval.py\", line 9, in _play\n    try: return eval_v53.play_game(t)\n                ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/carbon-league/code/eval_v53.py\", line 212, in play_game\n    acts.append(agents[p](o, CFG))\n                ^^^^^^^^^^^^^^^^^\n  File \"/workspace/carbon-review-round4/runtime/conditional_error.py\", line 2, in agent\n    if observation[\"player\"] == 0: raise RuntimeError(\"controlled outer error\")\n                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: controlled outer error\n",
+        "first_search_error_seed": null
+      }
+    ],
+    "stdout": "",
+    "stderr": "{\"tag\": \"conditional_error\", \"FAIL\": true, \"INCOMPLETE\": true, \"n\": 1, \"want\": 2, \"err\": 1, \"search_error_games\": 0, \"a_errors_total\": 0, \"root_errors_total\": 0, \"first_error\": \"k (most recent call last):\\n  File \\\"/workspace/carbon-league/code/bigeval.py\\\", line 9, in _play\\n    try: return eval_v53.play_game(t)\\n                ^^^^^^^^^^^^^^^^^^^^^\\n  File \\\"/workspace/carbon-league/code/eval_v53.py\\\", line 212, in play_game\\n    acts.append(agents[p](o, CFG))\\n                ^^^^^^^^^^^^^^^^^\\n  File \\\"/workspace/carbon-review-round4/runtime/conditional_error.py\\\", line 2, in agent\\n    if observation[\\\"player\\\"] == 0: raise RuntimeError(\\\"controlled outer error\\\")\\n                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\nRuntimeError: controlled outer error\\n\", \"first_search_error_seed\": null}\n"
+  },
+  {
+    "test": "one_internal",
+    "exit_code": 2,
+    "new_records": [
+      {
+        "tag": "invalid",
+        "FAIL": true,
+        "INCOMPLETE": true,
+        "n": 1,
+        "want": 1,
+        "err": 0,
+        "search_error_games": 1,
+        "a_errors_total": 2,
+        "root_errors_total": 2,
+        "first_error": null,
+        "first_search_error_seed": 970500
+      }
+    ],
+    "stdout": "",
+    "stderr": "{\"tag\": \"invalid\", \"FAIL\": true, \"INCOMPLETE\": true, \"n\": 1, \"want\": 1, \"err\": 0, \"search_error_games\": 1, \"a_errors_total\": 2, \"root_errors_total\": 2, \"first_error\": null, \"first_search_error_seed\": 970500}\n"
+  },
+  {
+    "test": "short_seed_list",
+    "exit_code": 2,
+    "new_records": [],
+    "stdout": "",
+    "stderr": "{\"tag\": \"valid\", \"ERROR\": \"EVO_SEEDS has 2 seeds but N=3; refusing inconsistent exam size\"}\n"
+  }
+]

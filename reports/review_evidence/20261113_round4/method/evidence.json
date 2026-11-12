@@ -1,0 +1,124 @@
+{
+  "baseline_sha": "5463f504048bcca28868ebce0a063ac8d6c51b8e",
+  "evidence_scope": "Numerical counterexamples and static contracts; no training, production bug, natural-game incidence or performance claim.",
+  "files": {
+    "reports/katago_architecture_design.md": "ae8db8cf13c499c3f661b86f707cb3b2ca1d44be47c0bb9b0f5fea0c585392c3",
+    "reports/live/plan_to_first.md": "2bb7406c3aac21a001497dca0f448c844510a3112c32e5caa6ceac418548f5bb",
+    "reports/REVIEW_FIXES_20261113.md": "361a4b3795772ae55c2791acd252e5d4c2ba4025b97c3b42a0fa6633552c3df1"
+  },
+  "D02_full_joint_CE": {
+    "old_conditioned_ce_a": 0.6931471805599453,
+    "old_conditioned_ce_b": 0.6931471805599453,
+    "new_full_joint_ce_a": 0.7985076962177716,
+    "new_full_joint_ce_b": 5.298317366548036,
+    "new_formula_distinguishes_bad_mass": true
+  },
+  "D03_Huber_not_mean": {
+    "distribution": [
+      {
+        "probability": 0.9,
+        "margin": 0
+      },
+      {
+        "probability": 0.1,
+        "margin": 10000
+      }
+    ],
+    "delta": 1000.0,
+    "true_mean": 1000.0,
+    "huber_optimum": 111.11111111111111,
+    "huber_risk_at_optimum": 944444.4444444444,
+    "huber_risk_at_true_mean": 1300000.0,
+    "MAE_at_optimum": 1088.888888888889,
+    "MAE_at_true_mean": 1800.0,
+    "safe_action_margin": 500,
+    "huber_argmax": "safe",
+    "mean_argmax": "lottery"
+  },
+  "D03_mean_sign_not_winrate": {
+    "expected_margin": 910.0,
+    "p_win": 0.1,
+    "expected_platform_U": 0.3137570957410419
+  },
+  "N01_platform_objective_reversal": {
+    "safe_action": {
+      "expected_margin": 100.0,
+      "p_win": 1.0,
+      "expected_platform_U": 0.76248959373947
+    },
+    "risky_action": {
+      "expected_margin": 910.0,
+      "p_win": 0.1,
+      "expected_platform_U": 0.3137570957410419
+    },
+    "margin_argmax": "risky_action",
+    "platform_U_argmax": "safe_action"
+  },
+  "D01_strategy_fusion_test": {
+    "hidden_states": [
+      "L",
+      "R"
+    ],
+    "probabilities": [
+      0.5,
+      0.5
+    ],
+    "followup_observation_same_in_both_states": true,
+    "payoffs": {
+      "left": [
+        10,
+        0
+      ],
+      "right": [
+        0,
+        10
+      ],
+      "safe": [
+        6,
+        6
+      ]
+    },
+    "full_state_separate_max_expected_value": 10,
+    "information_set_followup_optimal_value": 5,
+    "root_safe_value": 6,
+    "correct_root_action": "safe",
+    "particle_separate_action_root_action": "defer_and_select_with_hidden_state",
+    "status": "Design ambiguity test, not demonstrated production-code leakage"
+  },
+  "D06_arithmetic": {
+    "ordinary_expected_sims": 65.0,
+    "late_expected_sims": 115.0,
+    "document_90_10_approx": 70.0,
+    "299_decisions_exact_mean": 69.84949832775919,
+    "from_step200_suffix_cost_fraction_same_search_budget": 0.37754369164472107,
+    "assumptions": "decisions t=0..298; t>=270 gets late budget; one searched player; no setup, reuse or batching cost assumed"
+  },
+  "D07_same_summary_different_utility": {
+    "policy_A": {
+      "expected_margin": 1000,
+      "p_win": 1,
+      "expected_platform_U": 0.8655292893150024
+    },
+    "policy_B": {
+      "expected_margin": 1000.0,
+      "p_win": 0.5,
+      "expected_platform_U": 0.5038783967013643
+    },
+    "same_expected_final_margin": true,
+    "other_features_assumption": "same tree counts / first-tree timings and same mean cash before terminal; illustrates aggregated diagnostic summaries do not define strength"
+  },
+  "N04_operational_vs_significance": {
+    "mean_gain": 90,
+    "SE_gain": 1,
+    "gain_div_SE": 90,
+    "operational_min_gain": 100,
+    "passes_operational_gate": false,
+    "conclusion": "Failure of an operational >=100 gate is not absence of a statistically detectable effect."
+  },
+  "deployment_int8_raw_bytes": {
+    "12M_parameters": 12000000,
+    "14M_parameters": 14000000,
+    "platform_file_limit": 10000000,
+    "status": "Raw byte accounting only; actual compressed serialized artifact must be measured."
+  }
+}
