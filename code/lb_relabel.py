@@ -32,6 +32,10 @@ ROW RULES (v1, single variable vs ds_m3s2):
 Output: OUT_DIR/shards/lb_<tag>.npz (cnet2_build.FIELDS + uw) +
 games.jsonl, mergeable into a ds clone via merge_dagger.py
 (DAGGER_W = sample weight of relabel rows, default 1.0).
+Corpus shards also carry orig_id (the original replay file name): R06 --
+merge_dagger assigns the shard its ORIGINAL game's train/val split, never a
+fresh CRC roll on the derived shard name, so relabelled validation games can
+never leak into the training split.
 """
 import gzip
 import json
@@ -39,6 +43,7 @@ import os
 import random
 import sys
 import time
+import zlib
 from concurrent.futures import ProcessPoolExecutor
 
 for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
@@ -153,7 +158,7 @@ def play_selfplay(task):
 def play_corpus(task):
     """One recorded teacher game from a corpus trace; endgame rows relabelled.
     Margin comes from the corpus index entry (traces carry no names/scores)."""
-    out, path, side, teacher_row, clone_w, key, mg = task
+    out, path, side, teacher_row, clone_w, key, mg, orig = task
     import numpy as np
     import eval_v53
     import cnet2_feat as F
@@ -192,9 +197,12 @@ def play_corpus(task):
             nchg_t += int(((rows["y"][-1] != yt) & (rows["uw"][-1] > 0)).sum())
     arr = {k: np.asarray(v).astype(FIELDS[k][0]) for k, v in rows.items() if k in FIELDS}
     arr["uw"] = np.asarray(rows["uw"], np.float16)
+    arr["orig_id"] = np.array(orig)     # R06: original replay name -- merge inherits ITS split
     fp = os.path.join(out, "shards", f"lb_cp_{key}.npz")
     np.savez(fp, **arr)
-    return {"key": key, "side": side, "margin": mg, "n": len(rows["y"]),
+    return {"key": key, "orig_id": orig,
+            "split": "val" if zlib.crc32(orig.encode()) % 10 == 0 else "train",
+            "side": side, "margin": mg, "n": len(rows["y"]),
             "supervised": nsup, "changed": nchg, "changed_vs_teacher": nchg_t,
             "ms_mean": round(1000 * sum(times) / max(1, len(times)), 1),
             "ms_max": round(1000 * max(times), 1) if times else 0.0, "shard": fp}
@@ -234,7 +242,8 @@ def main():
                 if names[s] == tname:
                     key = os.path.basename(g["file"]).replace(".json.gz", "")
                     tasks.append((out, os.path.join(corpus, g["file"]), s, row,
-                                  clone_w, key, scores[s] - scores[1 - s]))
+                                  clone_w, key, scores[s] - scores[1 - s],
+                                  os.path.basename(g["file"])))
         print(json.dumps({"corpus_games": len(tasks)}), flush=True)
         with ProcessPoolExecutor(4) as ex:
             for r in ex.map(play_corpus, tasks):
