@@ -151,6 +151,7 @@ def play_game(task):
     agents[a_side] = fa
     agents[1 - a_side] = fb
     led = [new_ledger(), new_ledger()]
+    pre = sim.get_state()   # F04: state before the latest step (the survivor's terminal scoring reads its cash)
     times = [0.0, 0.0]
     worst_a = 0.0
     comp = {}
@@ -427,10 +428,17 @@ def play_game(task):
     wall = time.time() - t0
     st = sim.get_state()
     cash_fin = [float(st["cash"][0]), float(st["cash"][1])]
-    # Original reward semantics: an extinct player's score is
-    # (final step - episodeSteps - 1), not its cash; a survivor scores its
-    # cash. my_cash/opp_cash keep reporting cash; margin/win use the score.
-    score = [(steps_played - EPISODE_STEPS - 1) if extinct[p] else cash_fin[p]
+    # Original reward semantics (carbon.py compute_next_board): an extinct
+    # player's score is (final step - episodeSteps - 1), not its cash. A
+    # survivor of an extinction finish keeps the reward it carried INTO the
+    # terminal step -- the original marks it DONE without a reward update --
+    # which is its cash in the pre-step state, NOT its post-termination cash
+    # (F04: B recruited again on the killing step, 50 -> 20, and still scores
+    # 50). Only a plain time-out finish scores the final cash.
+    # my_cash/opp_cash keep reporting cash; margin/win use the score.
+    pre_cash = [float(pre["cash"][0]), float(pre["cash"][1])]
+    score = [(steps_played - EPISODE_STEPS - 1) if extinct[p]
+             else (pre_cash[p] if any(extinct) else cash_fin[p])
              for p in range(2)]
     eh_act = set(map(tuple, (getattr(fa, "last_stats", None) or {}).get("eh_act", [])))
     # cargo lost in the last 30 steps by cars that were under the go-home rule within the 3 steps before death
