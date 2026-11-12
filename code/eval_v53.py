@@ -118,6 +118,33 @@ def _cheb(a, b):                  # torus Chebyshev distance (1 = one of the 8 n
     return max(min(dr, 15 - dr), min(dc, 15 - dc))
 
 
+def _recruit_events(sim, pre, acts, p):
+    """Accepted recruits of player p in the step just played, by type:
+    {"COLLECTOR": n, "PLANTER": n}. Replayed from the action dict with the
+    simulator's own Phase-1 acceptance rule -- bases in sim order, cash and
+    worker limit checked against the pre-step state, prices from the
+    pre-step GLOBAL worker counts (Board.next Phase 0). This is the step's
+    recruit EVENT data: the survivor diff (post - pre) misses a worker
+    recruited and killed in the same step (it is in neither state), which
+    is exactly what the totals ledger already avoids via
+    sim.worker_counters (R07). The typed sub-ledgers need the same events,
+    with types (F07)."""
+    tot_c = sum(1 for w in pre["workers"].values() if w["type"] == "COLLECTOR")
+    tot_p = len(pre["workers"]) - tot_c
+    cost = {"RECCOLLECTOR": float(CFG["recCollectorCost"]) + tot_c * float(CFG["recCollectorIncreaseCost"]),
+            "RECPLANTER": float(CFG["recPlanterCost"]) + tot_p * float(CFG["recPlanterIncreaseCost"])}
+    cash = float(pre["cash"][p])
+    n = sum(1 for w in pre["workers"].values() if w["player"] == p)
+    out = {"COLLECTOR": 0, "PLANTER": 0}
+    for bid, _bpos in sim.bases[p]:
+        a = (acts[p] or {}).get(bid)
+        if a in cost and cash >= cost[a] and n < int(CFG["workerLimit"]):
+            cash -= cost[a]
+            n += 1
+            out["COLLECTOR" if a == "RECCOLLECTOR" else "PLANTER"] += 1
+    return out
+
+
 def new_ledger():
     return dict(deposits=0.0, tree_income=0.0,
                 recruit_spend=0.0, recruit_count=0,
@@ -190,6 +217,22 @@ def play_game(task):
         sim.step(acts[0], acts[1])
         steps_played = step
         post = sim.get_state()
+        # F07: this step's recruit events (typed) and the born-and-died part
+        # of them, shared by every typed sub-ledger below so the sub-ledgers
+        # and the totals ledger consume the same event data. If the replay
+        # ever disagrees with the simulator's own recruit counter (the
+        # totals ledger's source), fall back to the survivor counts for the
+        # typed ledgers -- never invent events.
+        rec_ev, borndied = [], []
+        for p in range(2):
+            ev = _recruit_events(sim, pre, acts, p)
+            surv = {t: sum(1 for wid, w in post["workers"].items()
+                           if w["player"] == p and w["type"] == t and wid not in pre["workers"])
+                    for t in ("COLLECTOR", "PLANTER")}
+            if sum(ev.values()) != sim.worker_counters[p] - wc_pre[p]:
+                ev = surv
+            rec_ev.append(ev)
+            borndied.append({t: ev[t] - surv[t] for t in surv})
         # bankruptcy: policy side has no workers and cannot afford a collector (after the opening)
         for p in range(2):
             ps = pstat[p]
@@ -232,6 +275,11 @@ def play_game(task):
                     mv_ = (acts[p] or {}).get(wid) in ("UP", "DOWN", "LEFT", "RIGHT")
                     k_ = "pd_other" if c_ is None else ("pd_clash_move" if mv_ else "pd_clash_stay") if wp_ is None else "pd_owncar" if wp_ == p else "pd_ecar"
                     sh[k_][p] += 1
+            if borndied[p]["PLANTER"]:      # F07: planters recruited AND killed in this same step are
+                bd_ = borndied[p]["PLANTER"]   # in neither pre nor post, so the loop above cannot see
+                sh["pla_dead"][p] += bd_; sh["pla_dead0"][p] += bd_   # them; a newborn never planted
+                if step <= 30:                   # or seized (succ is keyed on pre workers), so its
+                    sh["e_pdead30"][p] += bd_; sh["e_pdead0_30"][p] += bd_   # yield is zero by construction
             etp = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # planter distance to nearest enemy tree
             if etp:
                 for w in post["workers"].values():
@@ -310,27 +358,25 @@ def play_game(task):
                     sh["e_unseen%d" % step][p] = len({min(r * 15 + c for r in (x // 15, 14 - x // 15) for c in (x % 15, 14 - x % 15)) for x in range(225)} - seen_cls)
             if step <= 50:          # opening ledger (low-tree tail diagnosis)
                 if step <= 25:
-                    sh["e_prec25"][p] += sum(1 for wid, w in post["workers"].items() if w["player"] == p and w["type"] == "PLANTER" and wid not in pre["workers"])
+                    sh["e_prec25"][p] += rec_ev[p]["PLANTER"]      # F07: recruit events, not the survivor diff
                 if step == 25:
                     sh["e_palive25"][p] = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "PLANTER")
                 if step in (25, 40):
                     sh["e_cash%d" % step][p] = float(post["cash"][p])
                 if step <= 30:
-                    sh["e_clost30"][p] += sum(1 for wid, w in pre["workers"].items() if w["player"] == p and w["type"] == "COLLECTOR" and wid not in post["workers"])
+                    sh["e_clost30"][p] += sum(1 for wid, w in pre["workers"].items() if w["player"] == p and w["type"] == "COLLECTOR" and wid not in post["workers"]) + borndied[p]["COLLECTOR"]   # F07: + collectors recruited and killed in the same step
                 ntr_ = sum(1 for t in post["trees"].values() if t["player"] == p)
                 if ntr_ and not sh["e_first_tree"][p]:
                     sh["e_first_tree"][p] = step
                 if step == 50:
                     sh["e_trees50"][p] = ntr_
             if step <= 60:          # early recruitment mix (dg6 weights base decisions in steps 30-60)
-                for wid, w in post["workers"].items():
-                    if w["player"] == p and wid not in pre["workers"]:
-                        sh["rec60_p" if w["type"] == "PLANTER" else "rec60_c"][p] += 1
+                sh["rec60_p"][p] += rec_ev[p]["PLANTER"]      # F07: recruit events -- a recruit that
+                sh["rec60_c"][p] += rec_ev[p]["COLLECTOR"]    # died in its birth step still counts
             if step > 258:          # late recruits: M2 recruits ~2.5/game in 259-275 and NONE from 276 on (hard cut)
-                nr = sum(1 for wid, w in post["workers"].items() if w["player"] == p and wid not in pre["workers"])
+                nr = sim.worker_counters[p] - wc_pre[p]      # F07: the simulator's recruit counter (the totals ledger's source), not the survivor diff
                 sh["rec259_275" if step <= 275 else "rec276"][p] += nr
-            sh["pla_rec"][p] += sum(1 for wid, w in post["workers"].items()
-                                    if w["player"] == p and w["type"] == "PLANTER" and wid not in pre["workers"])
+            sh["pla_rec"][p] += rec_ev[p]["PLANTER"]      # F07: recruit events, not the survivor diff
             if step == 75:
                 sh["col75"][p] = nc
             if step == 50:
