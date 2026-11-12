@@ -120,7 +120,7 @@ def _comp(st, p):
     return [c, pl, tr]
 
 
-NSTEPS = int(os.environ.get("EVAL_STEPS", "300"))   # 100 = opening exam: stop at step 100, margin = cash difference then
+NSTEPS = int(os.environ.get("EVAL_STEPS", "299"))   # R01: a full game is 299 transitions (the original's episodeSteps=300 counts the initial state: the last agent call sees obs step 298 and the final state is step 299). 100 = opening exam: stop at step 100, margin = cash difference then
 
 
 def play_game(task):
@@ -141,6 +141,7 @@ def play_game(task):
     comp = {}
     t0 = time.time()
     bk_steps = 0
+    steps_played = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
     sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0], "life50_sum": [0, 0], "life50_n": [0, 0], "cargo240": [0.0, 0.0], "cargo270": [0.0, 0.0], "cash270": [0.0, 0.0], "dep270": [0.0, 0.0], "lost240": [0.0, 0.0], "gain240": [0.0, 0.0], "tax240": [0.0, 0.0], "lost240_self": [0.0, 0.0], "ts3": [[0, 0, 0], [0, 0, 0]], "pl3": [[0, 0, 0], [0, 0, 0]], "sz3": [[0, 0, 0], [0, 0, 0]], "dep200": [0.0, 0.0], "cash200": [0.0, 0.0], "cargo200": [0.0, 0.0], "camp100": [0, 0], "stall_max": [0, 0], "stall_run": [0, 0], "_dprev": [0.0, 0.0], "wait6": [0, 0], "haul_all": [0.0, 0.0], "gain_all": [0.0, 0.0], "tax_all": [0.0, 0.0], "tax_onT": [0.0, 0.0], "e_prec25": [0, 0], "e_palive25": [0, 0], "e_pdead30": [0, 0], "e_pdead0_30": [0, 0], "e_cash25": [0.0, 0.0], "e_cash40": [0.0, 0.0], "e_clost30": [0, 0], "e_first_tree": [0, 0], "e_trees50": [0, 0], "e_unseen20": [0, 0], "e_unseen30": [0, 0], "_seen": [set(), set()]}   # stand-in validation ledger
     late_deaths = [[], []]
@@ -169,6 +170,7 @@ def play_game(task):
             if p == a_side:
                 worst_a = max(worst_a, dt)
         sim.step(acts[0], acts[1])
+        steps_played = step
         post = sim.get_state()
         # bankruptcy: policy side has no workers and cannot afford a collector (after the opening)
         for p in range(2):
@@ -341,7 +343,7 @@ def play_game(task):
         if step >= 30 and post["cash"][a_side] < float(CFG["recCollectorCost"]) and \
                 not any(w["player"] == a_side for w in post["workers"].values()):
             bk_steps += 1
-        if step in (100, 200, 300):
+        if step in (100, 200) or step == NSTEPS:
             comp[step] = [_comp(post, 0), _comp(post, 1)]
         for p in range(2):
             L = led[p]
@@ -405,15 +407,15 @@ def play_game(task):
         "opp_cash": round(st["cash"][1 - a_side], 2),
         "margin": round(st["cash"][a_side] - st["cash"][1 - a_side], 2),
         "win": st["cash"][a_side] > st["cash"][1 - a_side],
-        "a_ms_per_step": round(1000.0 * times[a_side] / NSTEPS, 2),
-        "b_ms_per_step": round(1000.0 * times[1 - a_side] / NSTEPS, 2), "nsteps": NSTEPS,
+        "a_ms_per_step": round(1000.0 * times[a_side] / steps_played, 2),
+        "b_ms_per_step": round(1000.0 * times[1 - a_side] / steps_played, 2), "nsteps": steps_played,
         "a_worst_step_ms": round(1000.0 * worst_a, 0),
         "wall_s": round(wall, 1), "bankrupt_steps": bk_steps,
         "ledger_extra": {side: dict({k: v[q] for k, v in sh.items() if k != "_seen"}, plants=led[q]["plant_count"],
                                     cash=round(st["cash"][q], 2), cargo=led[q]["stranded"],   # final snapshot: end-of-game cash (same source as my_cash/opp_cash) + carbon still on workers (same value as ledger stranded)
                                     pla_ok=len(pstat[q]["succ"]), pla_succ=sum(pstat[q]["succ"].values()),
                                     planted=pstat[q]["planted"], seized=pstat[q]["seized"],
-                                    life_sum=sum(pstat[q]["lives"]) + sum(NSTEPS - b for b in pstat[q]["born"].values()),
+                                    life_sum=sum(pstat[q]["lives"]) + sum(steps_played - b for b in pstat[q]["born"].values()),
                                     life_n=len(pstat[q]["lives"]) + len(pstat[q]["born"]),
                                     late30_eh=late30_eh if q == a_side else None)
                          for side, q in (("pol", a_side), ("opp", 1 - a_side))},
