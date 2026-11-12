@@ -4,7 +4,7 @@
 
 ## Mac 这边：每 10 分钟推一次（自动）
 
-把下面几个小文件覆盖写到 `reports/live/`，`git pull --rebase` 后提交、推送到 `cnet2-search-v12`。只推这些文本文件，不推权重和回放。
+把下面几个小文件覆盖写到 `reports/live/`，`git pull --rebase` 后提交、推送到 `main`（仓库只用主线 main，旧分支 `cnet2-search-v12` 已退休，勿再往它推）。只推这些文本文件，不推权重和回放。
 
 | 文件 | 内容 |
 |---|---|
