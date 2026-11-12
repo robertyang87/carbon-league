@@ -10,6 +10,11 @@ Flow (fail-closed):
   2. DeleteInstance with Force=true.
   3. Poll DescribeInstances until the instance is absent (verified release)
      or the poll budget runs out; report the last seen status.
+     A poll only counts when it returns HTTP 200 with a valid Instances
+     structure. Failed polls are retried until the budget runs out; budget
+     expiry without a conclusive poll reports UNVERIFIED and exits nonzero
+     (REVIEW_20261112 R15: an error response parses to an empty instance
+     list and must never be read as "instance gone").
 Every API response's HTTP status / RequestId / Code is printed verbatim.
 """
 import base64, hashlib, hmac, json, os, sys, time, urllib.error, urllib.parse, urllib.request, uuid
@@ -101,19 +106,38 @@ def main():
 
     deadline = time.time() + 240
     last_status = None
+    last_query_ok = False
+    query_failures = 0
     while True:
         time.sleep(10)
-        code, r, insts = describe()
-        present = any(it.get("InstanceId") == INST for it in insts)
-        if present:
-            last_status = [it.get("Status") for it in insts if it.get("InstanceId") == INST][0]
-        print(f"VERIFY_HTTP={code} PRESENT={present} STATUS={last_status}", flush=True)
-        if not present:
-            print(f"=== {MARKER} RESULT=RELEASED_VERIFIED ===", flush=True)
-            return
+        try:
+            code, r, insts = describe()
+        except Exception as e:
+            code, r, insts = None, {"Exception": repr(e)}, []
+        # REVIEW_20261112 R15: a verify poll is conclusive only on HTTP 200
+        # with a valid Instances structure. An error response (503/403/...)
+        # parses to an empty instance list; treating that as "absent" would
+        # falsely report RELEASED_VERIFIED, so failed polls only retry.
+        query_ok = code == 200 and isinstance(r, dict) and isinstance(r.get("Instances"), dict)
+        if not query_ok:
+            query_failures += 1
+            last_query_ok = False
+            print(f"VERIFY_HTTP={code} QUERY_OK=NO failures={query_failures} (retrying until deadline)", flush=True)
+        else:
+            last_query_ok = True
+            present = any(it.get("InstanceId") == INST for it in insts)
+            if present:
+                last_status = [it.get("Status") for it in insts if it.get("InstanceId") == INST][0]
+            print(f"VERIFY_HTTP={code} PRESENT={present} STATUS={last_status}", flush=True)
+            if not present:
+                print(f"=== {MARKER} RESULT=RELEASED_VERIFIED ===", flush=True)
+                return
         if time.time() > deadline:
-            print(f"=== {MARKER} RESULT=DELETE_ACCEPTED_STILL_PRESENT last_status={last_status} ===", flush=True)
-            return
+            if last_query_ok:
+                print(f"=== {MARKER} RESULT=DELETE_ACCEPTED_STILL_PRESENT last_status={last_status} ===", flush=True)
+                return
+            print(f"=== {MARKER} RESULT=UNVERIFIED_QUERY_FAILED failures={query_failures} ===", flush=True)
+            sys.exit(1)
 
 
 if __name__ == "__main__":
