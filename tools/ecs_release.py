@@ -69,11 +69,16 @@ def call(action, **params):
 
 def parse_instances(r):
     """(ok, instances): ok only when r carries a well-formed Instances
-    structure -- a dict whose "Instance" field is a list of dicts. An
-    HTTP 200 body like {} or {"Instances": {}} is MALFORMED, not an empty
-    result (F09/R15): the pre-F09 parser turned missing fields into an
-    empty list, so a malformed 200 read as "instance gone" and produced a
-    false RELEASED_VERIFIED."""
+    structure -- a dict whose "Instance" field is a list of dicts, EVERY
+    one carrying a valid (non-empty string) InstanceId. An HTTP 200 body
+    like {} or {"Instances": {}} is MALFORMED, not an empty result
+    (F09/R15): the pre-F09 parser turned missing fields into an empty
+    list, so a malformed 200 read as "instance gone" and produced a
+    false RELEASED_VERIFIED. REVIEW_FIXES_20261113 S4: an entry without
+    a valid InstanceId ([{}], [{"InstanceId": null}]) is likewise not a
+    real query result -- as a verify poll it read as "instance absent"
+    and produced RELEASED_VERIFIED/exit 0; such a response is an invalid
+    query (ok=False), which the poll loop treats as UNVERIFIED."""
     if not isinstance(r, dict):
         return False, []
     inst = r.get("Instances")
@@ -81,6 +86,8 @@ def parse_instances(r):
         return False, []
     lst = inst.get("Instance")
     if not isinstance(lst, list) or not all(isinstance(x, dict) for x in lst):
+        return False, []
+    if not all(isinstance(x.get("InstanceId"), str) and x.get("InstanceId") for x in lst):
         return False, []
     return True, lst
 
