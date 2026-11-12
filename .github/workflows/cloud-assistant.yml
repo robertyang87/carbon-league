@@ -1,0 +1,42 @@
+name: cloud-assistant
+
+on:
+  workflow_dispatch:
+    inputs:
+      instance_id:
+        description: "ECS instance id"
+        required: true
+      region:
+        description: "Region id"
+        required: true
+        default: "cn-shanghai"
+      command:
+        description: "Shell command (single line). Ignored when command_b64 is set."
+        required: false
+        default: "hostname && uptime"
+      command_b64:
+        description: "Base64-encoded shell script (for multi-line commands)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run command via Cloud Assistant API
+        env:
+          ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+          ACS_REGION: ${{ inputs.region }}
+        run: |
+          if [ -n "${{ inputs.command_b64 }}" ]; then
+            python3 tools/acs_runcommand.py "${{ inputs.instance_id }}" --b64 "${{ inputs.command_b64 }}"
+          else
+            python3 tools/acs_runcommand.py "${{ inputs.instance_id }}" "${{ inputs.command }}"
+          fi
