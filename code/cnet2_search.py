@@ -1173,7 +1173,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             yo[isx] = decode_b(xpol, repx, [fo.aux] * nx, np.repeat(tkx, nx, 0), ctx_b(xpol, np.repeat(prx, nx, 0), np.full(nx, XT)),
                                noise=rn0[isx], temp=np.full(nx, tau))
         roots = [fo.to_actions(v) for v in yo]
-        H = min(cfg["H"], left + 1)
+        H = min(cfg["H"], left)          # R01: left = 299 - step already counts the remaining transfers (root step included); left+1 simulated one step past the end of the game
         if cfg.get("PK_H2") and all(obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER" for _, u in keys):
             H = min(H, 2)          # planter-only step: the root plant shows in a depth-2 leaf; depth 3 adds little
         rnoise = rng.random((RS, max(H - 1, 1), F.OWN))
@@ -1444,7 +1444,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             kp = [obs["players"][me][2][u][0] for _, u in keys]
             local = {w_ for p in (0, 1) for w_, w in obs["players"][p][2].items()
                      if min(F.DIST[w[0], c] for c in kp) <= cfg["LOCAL_R"]}
-        H = min(cfg["H"], left + 1)
+        H = min(cfg["H"], left)          # R01: see _mcts -- left already counts the remaining transfers
         depth = 1; last_dt = None
         for hh in range(1, H):
             now = clk()
