@@ -8,6 +8,7 @@ plain sys.modules names are restored afterwards) and both weight sets, int8 per-
 like cnet2_pack (dequantised == data/weights/*_q8.npz).  No __file__ use, no file access at play time.
 """
 import base64
+import hashlib
 import json
 import os
 import sys
@@ -21,6 +22,58 @@ import cnet2_pack as P  # noqa: E402
 
 MODS = ["cnet2_feat", "cnet2_np", "fastsim", "cnet2_search"]
 
+# --- N01 build-time source-consistency gate --------------------------------
+# This packer embeds the module copies sitting next to it (HERE =
+# code/packs/). Those copies must stay byte-identical to the authoritative
+# sources in code/; drifting copies once shipped a stale pre-C01/C02 search
+# (see reports/REVIEW_FIXES_20261113_R2.md, N01). ALLOW_DIFF is the explicit
+# allowlist of module names permitted to differ from code/; it is empty by
+# default, so ANY drift aborts the build whenever the authoritative tree is
+# present. On a bare remote build machine without a code/ tree the gate
+# degrades gracefully: the embedded hashes are still computed, embedded in
+# the pack (_BUILD_HASHES) and printed in the build record, and the runbook
+# requires one --check-source run in a repo checkout before release.
+ALLOW_DIFF = ()
+
+def _md5_file(path):
+    h = hashlib.md5()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+def module_hashes(base=None):
+    base = base or HERE
+    return {m: _md5_file(os.path.join(base, m + ".py")) for m in MODS}
+
+def check_source(auth_dir=None):
+    """Compare every embedded module against its authoritative code/ source.
+
+    Returns (ok, record). The authoritative tree is auth_dir or HERE/..
+    (this packer lives in code/packs/). When that tree does not contain all
+    of MODS the check is skipped (record["checked"] is False) and ok is
+    True: hash recording still happens, comparison is deferred to a repo
+    checkout (packer --check-source, required by the runbook pre-release).
+    """
+    embedded = module_hashes()
+    record = {"embedded_hashes": embedded, "authoritative_dir": None,
+              "authoritative_hashes": {}, "checked": False,
+              "mismatches": [], "missing_authoritative": [], "ok": True}
+    auth = auth_dir or os.path.dirname(os.path.abspath(HERE))
+    if not all(os.path.exists(os.path.join(auth, m + ".py")) for m in MODS):
+        record["missing_authoritative"] = list(MODS)
+        return True, record
+    record["checked"] = True
+    record["authoritative_dir"] = auth
+    for m in MODS:
+        ah = _md5_file(os.path.join(auth, m + ".py"))
+        record["authoritative_hashes"][m] = ah
+        if ah != embedded[m] and m not in ALLOW_DIFF:
+            record["mismatches"].append(m)
+    record["ok"] = not record["mismatches"]
+    return record["ok"], record
+
+
 TEMPLATE = '''"""Carbon League: cnet2 b128 policy (v12) + cnet2_search test-time rollout search (pure NumPy)."""
 import os
 for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
@@ -30,6 +83,7 @@ import numpy as np
 
 _SRC = %(src)r
 _MODS = %(mods)r
+_BUILD_HASHES = %(hashes)r  # N01 build record: md5 of each embedded module source, written by cnet2_search_pack at build time
 _saved = {k: sys.modules.get(k) for k in _MODS}
 _P = {}
 try:
@@ -103,7 +157,10 @@ def agent(observation, configuration):
 
 
 def main(out, conf, wp=None, wr=None, wo=None, ens=()):
-    wd = os.path.join(HERE, "..", "data", "weights")
+    # P3: this packer lives in code/packs/; the weights live in the repo-root
+    # data/weights/ (cnet2_b128.npz / cnet2_s64.npz), two levels up. The old
+    # HERE/../data/weights pointed at the nonexistent code/data/weights.
+    wd = os.path.join(HERE, "..", "..", "data", "weights")
     wp = wp or os.path.join(wd, "cnet2_b128.npz")
     wr = wr or os.path.join(wd, "cnet2_s64.npz")
     parts = {}
@@ -132,13 +189,30 @@ def main(out, conf, wp=None, wr=None, wo=None, ens=()):
         ens_parts.append((meta, str(w["meta"]), base64.b64encode(zlib.compress(raw, 9)).decode()))
     assert "ENS" not in eval(conf), "pass ensemble members with CNET2_ENS, not in the conf (paths do not exist on the ladder)"
     eval(conf)  # must be a valid literal
+    hashes, check = module_hashes(), check_source()[1]
+    if check["checked"] and not check["ok"]:
+        print(json.dumps({"error": "N01 source-consistency gate: embedded modules differ from authoritative code/ sources",
+                          "mismatches": check["mismatches"]}), file=sys.stderr)
+        raise SystemExit(2)
+    if not check["checked"]:
+        print("WARNING: authoritative code/ sources not found next to packs/; embedding module "
+              "hashes without comparison -- run 'cnet2_search_pack.py --check-source' in a repo "
+              "checkout before release (runbook requirement)", file=sys.stderr)
     src = {m: open(os.path.join(HERE, m + ".py")).read() for m in MODS}
-    code = TEMPLATE % dict(src=src, mods=MODS, conf=conf, q1=parts["1"][0], m1=parts["1"][1], b1=parts["1"][2],
+    code = TEMPLATE % dict(src=src, mods=MODS, hashes=hashes, conf=conf, q1=parts["1"][0], m1=parts["1"][1], b1=parts["1"][2],
                            q2=parts["2"][0], m2=parts["2"][1], b2=parts["2"][2],
                            q3=parts["3"][0], m3=parts["3"][1], b3=parts["3"][2], ens=repr(ens_parts))
     open(out, "w").write(code)
-    print(json.dumps({"out": out, "bytes": len(code)}))
+    print(json.dumps({"out": out, "bytes": len(code), "module_hashes": hashes, "source_check": check}))
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "--check-source":
+        # Repo-checkout consistency check (runbook pre-release requirement):
+        #   python3 cnet2_search_pack.py --check-source [AUTHORITATIVE_CODE_DIR]
+        # Exit 0 = every embedded module matches code/ (or is allowlisted);
+        # exit 1 = drift found (or no authoritative tree to compare against).
+        _ok, _rec = check_source(sys.argv[2] if len(sys.argv) > 2 else None)
+        print(json.dumps(_rec, indent=1, sort_keys=True))
+        sys.exit(0 if (_ok and _rec["checked"]) else 1)
     main(*sys.argv[1:], ens=[e for e in os.environ.get("CNET2_ENS", "").split(",") if e])
