@@ -29,10 +29,13 @@ jobs:
           ref: cnet2-search-v12
 
       - name: Ping ladder
+        env:
+          LADDER_BASE: https://117.72.210.134
         run: python3 code/ladder.py ping
 
       - name: Login, list matches, pull replays
         env:
+          LADDER_BASE: https://117.72.210.134
           LADDER_PASS: ${{ secrets.LADDER_PASS }}
           LADDER_COOKIES: /tmp/ladder_cookies.json
         run: |
