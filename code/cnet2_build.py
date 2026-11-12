@@ -8,6 +8,15 @@ autoregressive per-unit features under teacher forcing.
 
 Output dir: one .npy per field (memmap-able) + meta.json.
 Usage: python cnet2_build.py OUT_DIR REPLAY_DIR [REPLAY_DIR ...]
+
+C02 contract: a per-game load/process failure fails the whole build (exit 1)
+and publishes nothing, unless CNET2_ALLOW_PARTIAL=1, which publishes a
+dataset whose meta.json declares failed_games (original game id + reason),
+partial=true and valid_games (games contributing >= 1 row). A legitimate
+zero-row game (the step window excludes every row) is NOT a failure, but it
+is not a valid game either. main() raises SystemExit(1) on failure so
+wrappers such as build_top.py propagate the failure through their own
+exit code instead of silently reporting success.
 """
 
 import gzip
@@ -43,6 +52,7 @@ UW_PLANT = os.environ.get("CNET2_UW_PLANT") == "1"   # dataset v10+: planter tri
 UW_PLANT_OK, UW_SEIZE_OK, UW_PLANT_FAIL, UW_PLANT_FAIL_K = 2.0, 1.5, 0.7, 3   # planting is worth more than seizing
 UW_TREELIFE = os.environ.get("CNET2_UW_TREELIFE") == "1"     # v18+: where a planted tree survives matters
 UW_LIFE_LONG, UW_LIFE_SHORT, LIFE_LONG, LIFE_SHORT = 1.5, 0.8, 40, 15
+ALLOW_PARTIAL = os.environ.get("CNET2_ALLOW_PARTIAL") == "1"   # C02: publish a DECLARED partial dataset despite per-game failures (default: any failure fails the build)
 if UW:
     FIELDS["uw"] = (np.float16, (F.OWN,))
 
@@ -132,17 +142,24 @@ def teacher_id(name):
 
 
 def build_game(task):
-    path, sides, gi, tids, margins, out = task
     try:
-        d = json.load(gzip.open(path))
+        return _build_game(task)
     except Exception as e:
-        # F05: a failed task must not leave a stale shard behind for the
-        # manifest to certify as a current product.
+        # C02: a load OR processing failure is a recorded FAILURE (game id +
+        # reason), never a silent zero-row result -- a legitimate zero-row
+        # game returns err=None from _build_game. F05: a failed task must
+        # not leave a stale shard behind for the manifest to certify as a
+        # current product.
         try:
-            os.remove(out)
+            os.remove(task[5])
         except OSError:
             pass
-        return gi, 0, repr(e)[:200]
+        return task[2], 0, repr(e)[:200]
+
+
+def _build_game(task):
+    path, sides, gi, tids, margins, out = task
+    d = json.load(gzip.open(path))
     st = d["steps"]
     rows = {k: [] for k in FIELDS}
     for p, tid, mg in zip(sides, tids, margins):
@@ -394,6 +411,36 @@ def main(out, dirs):
         except Exception:
             pass
     json.dump({"cfg_fp": cfg_fp, "shards": new_man}, open(man_path, "w"))
+    # C02: errs used to be print-only -- the build then published the partial
+    # dataset as if complete (failed games sat in meta.games with n=0 and
+    # the games/teacher_sides summaries still counted them) and exited 0,
+    # so downstream return-code + count gates passed it into training.
+    # Now: any per-game failure aborts the publish with a non-zero exit by
+    # default; CNET2_ALLOW_PARTIAL=1 instead publishes a dataset whose meta
+    # explicitly declares the failed game ids, reasons and valid game count.
+    failed = [{"gi": gi, "key": games[gi]["key"], "error": errs[gi]} for gi in sorted(errs)]
+    # C02: "valid" = a game that contributed >= 1 row. A legitimate zero-row
+    # game (step window excludes every row; err None) is NOT a failure -- the
+    # build still succeeds -- but it contributes no training rows, so it does
+    # not count as valid either: a launch chain must see valid == index.
+    valid = sum(1 for g in games if ns.get(g["gi"], 0) > 0)
+    if failed and not ALLOW_PARTIAL:
+        print(f"C02-FAIL build aborted: {len(failed)} of {len(games)} games failed to load/process; "
+              "no dataset published (set CNET2_ALLOW_PARTIAL=1 to publish a declared partial dataset)",
+              flush=True)
+        for f_ in failed:
+            print(f"C02-FAIL game {f_['key']} (gi {f_['gi']}): {f_['error']}", flush=True)
+        # Do not leave a stale complete-looking product behind: a previous
+        # successful run's meta.json / merged npy files in this out dir
+        # would otherwise be mistaken for this run's output. Shards and the
+        # manifest are kept (they certify only good games) so a retry after
+        # fixing the bad replay reuses them.
+        for name in ["meta.json"] + [k + ".npy" for k in fields]:
+            try:
+                os.remove(os.path.join(out, name))
+            except OSError:
+                pass
+        sys.exit(1)
     total = sum(ns.values())
     mm = {k: np.lib.format.open_memmap(os.path.join(out, k + ".npy"), mode="w+", dtype=dt,
                                        shape=(total,) + sh) for k, (dt, sh) in fields.items()}
@@ -415,10 +462,21 @@ def main(out, dirs):
         mm[k].flush()
     for g in games:
         g["n"] = ns.get(g["gi"], 0)
-    json.dump({"games": games, "total": total, "teachers": F.TEACHERS, "cfg_fp": cfg_fp}, open(os.path.join(out, "meta.json"), "w"))
+        if g["gi"] in errs:
+            g["failed"] = errs[g["gi"]]
+    json.dump({"games": games, "total": total, "teachers": F.TEACHERS, "cfg_fp": cfg_fp,
+               "failed_games": failed, "partial": bool(failed),
+               "valid_games": valid},
+              open(os.path.join(out, "meta.json"), "w"))
     from collections import Counter
-    c = Counter(F.TEACHERS[t] for g in games for t in [teacher_id(g["names"][s]) for s in g["sides"]])
-    rep = {"games": len(games), "samples": total, "val_games": sum(g["val"] for g in games), "teacher_sides": c, "cfg_fp": cfg_fp}
+    c = Counter(F.TEACHERS[t] for g in games if ns.get(g["gi"], 0) > 0
+                for t in [teacher_id(g["names"][s]) for s in g["sides"]])
+    rep = {"games": valid, "samples": total,
+           "val_games": sum(g["val"] for g in games if ns.get(g["gi"], 0) > 0),
+           "teacher_sides": c, "cfg_fp": cfg_fp}
+    if failed:
+        rep["failed_games"] = [f_["key"] for f_ in failed]
+        rep["partial"] = True
     if weighted:
         w = np.asarray(mm["w"], np.float32)
         rep["ours_loss_games"] = sum(1 for g in games if g.get("ours_loss"))
