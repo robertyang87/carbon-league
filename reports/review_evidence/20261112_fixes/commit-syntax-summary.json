@@ -1,0 +1,29 @@
+{
+  "sha": "c64bbeda8a00b2f4d79ace589f201bab3cca5163",
+  "repair_commits": [
+    "d87b8ee fix(R01/R02): rollout plays 299 transitions like the original env; extinction terminates the game (terminal GAE boundary, cash-only final worth)",
+    "24957e1 fix(R04): mark the task primary (learner) actor temp_kind=True in play_batch",
+    "ddc39a5 fix(R04): TEMP_KIND governs the learner actor only; snapshot/opponent actors use their passed temperature",
+    "6facdfe fix(R03): resume no longer overrides explicit --lr/--vlr/--kl; write effective_params.json manifest",
+    "5e5f29c fix(timing) R11+R01: play 299 transfers not 300; summary no longer crashes on empty SIMS (SEARCH=False pure-net packs) -- wall stats always print, sims percentiles are null with searched=0; per-game and total errors/root_errors are aggregated into the summary",
+    "6b3861a fix(build) R08: shard cache keyed by build-config fingerprint + source stat -- _cfg_fingerprint covers step window, UW switches, teacher map, field schema/feature shapes and builder+feat source hashes; shards/_cfp.json records it plus per-source (size, mtime_ns); mismatch invalidates the cache loudly instead of silently reusing stale shards under new metadata; meta.json stamps cfg_fp",
+    "4159247 fix(merge) R06: shards with orig_id inherit the ORIGINAL game split (builder crc rule on the original replay name) and record orig in meta; only genuinely new games roll crc on their own shard name -- stops relabelled validation games leaking into train",
+    "ba4f40c fix(lb) R06: corpus shards carry orig_id (original replay name) + games.jsonl records the original split; derived samples must inherit the original game train/val split, never re-roll it on the shard name",
+    "ae0d399 fix(bigeval): R05 merge internal health (search/root errors, first stack) into the summary before saving; FAIL marker + exit 3 on internal errors",
+    "e3c8dd2 fix(search) R12: CachePolicy records an encode signature (teacher + maps/tok_pos/hist_cell/scal) and consumers use enc_for(x, T_now) -- after act_tta last_enc held the last symmetry view (0.587 measured encode divergence), and after epol/opol decodes it was stale; guard/_mcts/_search now always decode against the original-frame encoding of the current x",
+    "039e004 fix(eval): R07 ledger recruit/death counts from the simulator event counter (same-step recruit deaths were dropped, deposits went negative)",
+    "3aa20d1 fix(search) R02: recognise extinction terminals -- _extinct/_terminal mirror carbon.py compute_next_board (no workers, no trees, no base or cash < cheapest recruit); leaf() returns the final cash margin on terminal sims; _mcts/_search freeze terminal sims instead of expanding past the end of the game",
+    "3f1122d fix(eval): R02 elimination termination and original score semantics (was: bankrupt counted, game played on)",
+    "d84f8dc fix(search) R01: horizon H = min(H, left) not left+1 -- left=299-step already counts the remaining transfers, left+1 simulated one step past the end of the game (_mcts and _search)",
+    "9f129ed fix(eval): R01 align game horizon to the original 299 transitions (was 300)",
+    "3a3b2c9 docs(live): add CURRENT.md as single handover entry index (REVIEW_20261112 R14)",
+    "e36b490 docs(live): demote residual-tree gate to diagnostic in lb prep, margin sole main metric (REVIEW_20261112 R09)",
+    "3143dc4 docs(live): demote residual-tree gate to diagnostic, margin is sole main metric (REVIEW_20261112 R09)",
+    "8b54d70 docs(live): README push target cnet2-search-v12 -> main (REVIEW_20261112 R13)",
+    "e9e7e14 fix(tools): ecs_release verify fails closed on query errors (REVIEW_20261112 R15)",
+    "0c2eb3c docs(lb): correct endgame-curve target +2093 -> +702 (REVIEW R10)",
+    "d8b5921 ci: ladder-replay-pull checkout/push to main (retire cnet2-search-v12 refs)"
+  ],
+  "python_files_checked": 11,
+  "syntax_errors": []
+}

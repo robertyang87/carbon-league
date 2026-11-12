@@ -1,0 +1,222 @@
+{
+  "commit": "c64bbeda8a00b2f4d79ace589f201bab3cca5163",
+  "R01_horizon": {
+    "original": {
+      "rewards": [
+        80.0,
+        80.0
+      ],
+      "step": 299,
+      "cash": [
+        80.0,
+        80.0
+      ]
+    },
+    "local": {
+      "my_cash": 80,
+      "opp_cash": 80,
+      "my_score": 80.0,
+      "opp_score": 80.0,
+      "margin": 0.0,
+      "win": false,
+      "nsteps": 299,
+      "extinct": [
+        false,
+        false
+      ],
+      "ledger_pol": {
+        "deposits": 0.0,
+        "tree_income": 0.0,
+        "recruit_spend": 0.0,
+        "recruit_count": 0,
+        "plant_spend": 0.0,
+        "plant_count": 0,
+        "seize_spend": 0.0,
+        "seize_count": 0,
+        "deaths": 0,
+        "death_cargo": 0.0,
+        "stranded": 0
+      },
+      "diagnostic_recruit_fields": {
+        "rec60_c": 0,
+        "rec60_p": 0,
+        "pla_rec": 0,
+        "pla_dead": 0,
+        "e_prec25": 0,
+        "e_clost30": 0
+      }
+    }
+  },
+  "R02_single_extinction": {
+    "original": {
+      "rewards": [
+        -299.0,
+        50.0
+      ],
+      "step": 2,
+      "cash": [
+        20.0,
+        20.0
+      ]
+    },
+    "local": {
+      "my_cash": 20,
+      "opp_cash": 20,
+      "my_score": -299,
+      "opp_score": 20.0,
+      "margin": -319.0,
+      "win": false,
+      "nsteps": 2,
+      "extinct": [
+        true,
+        false
+      ],
+      "ledger_pol": {
+        "deposits": 0.0,
+        "tree_income": 0.0,
+        "recruit_spend": 60.0,
+        "recruit_count": 2,
+        "plant_spend": 0.0,
+        "plant_count": 0,
+        "seize_spend": 0.0,
+        "seize_count": 0,
+        "deaths": 2,
+        "death_cargo": 0.0,
+        "stranded": 0
+      },
+      "diagnostic_recruit_fields": {
+        "rec60_c": 1,
+        "rec60_p": 0,
+        "pla_rec": 0,
+        "pla_dead": 0,
+        "e_prec25": 0,
+        "e_clost30": 1
+      }
+    }
+  },
+  "R02_both_extinction": {
+    "original": {
+      "rewards": [
+        -299.0,
+        -299.0
+      ],
+      "step": 2,
+      "cash": [
+        20.0,
+        20.0
+      ]
+    },
+    "local": {
+      "my_cash": 20,
+      "opp_cash": 20,
+      "my_score": -299,
+      "opp_score": -299,
+      "margin": 0,
+      "win": false,
+      "nsteps": 2,
+      "extinct": [
+        true,
+        true
+      ],
+      "ledger_pol": {
+        "deposits": 0.0,
+        "tree_income": 0.0,
+        "recruit_spend": 60.0,
+        "recruit_count": 2,
+        "plant_spend": 0.0,
+        "plant_count": 0,
+        "seize_spend": 0.0,
+        "seize_count": 0,
+        "deaths": 2,
+        "death_cargo": 0.0,
+        "stranded": 0
+      },
+      "diagnostic_recruit_fields": {
+        "rec60_c": 1,
+        "rec60_p": 0,
+        "pla_rec": 0,
+        "pla_dead": 0,
+        "e_prec25": 0,
+        "e_clost30": 1
+      }
+    }
+  },
+  "R07_same_step_death": {
+    "original": {
+      "rewards": [
+        -299.0,
+        80.0
+      ],
+      "step": 2,
+      "cash": [
+        20.0,
+        80.0
+      ]
+    },
+    "local": {
+      "my_cash": 20,
+      "opp_cash": 80,
+      "my_score": -299,
+      "opp_score": 80.0,
+      "margin": -379.0,
+      "win": false,
+      "nsteps": 2,
+      "extinct": [
+        true,
+        false
+      ],
+      "ledger_pol": {
+        "deposits": 0.0,
+        "tree_income": 0.0,
+        "recruit_spend": 60.0,
+        "recruit_count": 2,
+        "plant_spend": 0.0,
+        "plant_count": 0,
+        "seize_spend": 0.0,
+        "seize_count": 0,
+        "deaths": 2,
+        "death_cargo": 0.0,
+        "stranded": 0
+      },
+      "diagnostic_recruit_fields": {
+        "rec60_c": 1,
+        "rec60_p": 0,
+        "pla_rec": 0,
+        "pla_dead": 0,
+        "e_prec25": 0,
+        "e_clost30": 1
+      }
+    }
+  },
+  "R02_search_leaf_single": {
+    "terminal": true,
+    "leaf_side_0": 10.0,
+    "cash": [
+      20,
+      10
+    ],
+    "expected_original_rewards": [
+      -291,
+      10
+    ],
+    "expected_reward_margin": -301
+  },
+  "R02_search_leaf_both": {
+    "terminal": true,
+    "leaf_side_0": 10.0,
+    "cash": [
+      20,
+      10
+    ],
+    "expected_original_rewards": [
+      -291,
+      -291
+    ],
+    "expected_reward_margin": 0
+  },
+  "search_horizon_expressions": [
+    "H = min(cfg['H'], left)",
+    "H = min(cfg['H'], left)",
+    "H = min(H, 2)"
+  ]
+}

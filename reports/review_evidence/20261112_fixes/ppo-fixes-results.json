@@ -1,0 +1,124 @@
+{
+  "resume": [
+    {
+      "case": "explicit_all",
+      "requested": [
+        3e-05,
+        0.0008,
+        0.025
+      ],
+      "effective": [
+        3e-05,
+        0.0008,
+        0.025
+      ],
+      "passed": true
+    },
+    {
+      "case": "inherit_all",
+      "requested": [
+        null,
+        null,
+        null
+      ],
+      "effective": [
+        1e-05,
+        0.0003,
+        0.1
+      ],
+      "passed": true
+    },
+    {
+      "case": "explicit_zero_kl",
+      "requested": [
+        null,
+        null,
+        0.0
+      ],
+      "effective": [
+        1e-05,
+        0.0003,
+        0.0
+      ],
+      "passed": true
+    },
+    {
+      "case": "override_lr_only",
+      "requested": [
+        2e-05,
+        null,
+        null
+      ],
+      "effective": [
+        2e-05,
+        0.0003,
+        0.1
+      ],
+      "passed": true
+    }
+  ],
+  "rollout_lengths_and_pack": {
+    "lengths": [
+      1,
+      1,
+      299,
+      299
+    ],
+    "terminal": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "buffer_decisions": 600,
+    "batch_size": 4,
+    "last_normal_obs_step": 298,
+    "actual_decodes": 1196,
+    "recorded_decisions": 600,
+    "unnecessary_terminal_decodes": 596,
+    "reward_arrays_and_GAE_lengths_pass": true
+  },
+  "elimination_reward_mismatch": {
+    "original_rewards": [
+      -300.0,
+      10.0
+    ],
+    "original_margin": -310.0,
+    "rollout_margin": 10.0,
+    "rollout_win": true,
+    "reward_modes": [
+      {
+        "kind": "dense",
+        "sum_reward": 10.100000381469727
+      },
+      {
+        "kind": "terminal",
+        "sum_reward": 10.100000381469727
+      },
+      {
+        "kind": "worth",
+        "sum_reward": 10.100000381469727
+      }
+    ]
+  },
+  "actor_roles": {
+    "primary_temp_kind": true,
+    "fresh_snapshot_temp_kind": false,
+    "cached_snapshot_is_primary": true,
+    "cached_snapshot_temp_kind": true
+  },
+  "role_temperature_logprobs": {
+    "learner": [
+      -1.3322676295501878e-14,
+      -1.3322676295501878e-14
+    ],
+    "fresh_snapshot": [
+      -8.244614768671e-09,
+      -0.00018159147293772548
+    ],
+    "cached_snapshot": [
+      -1.3322676295501878e-14,
+      -1.3322676295501878e-14
+    ]
+  }
+}
