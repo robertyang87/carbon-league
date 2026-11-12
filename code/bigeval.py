@@ -10,6 +10,18 @@ def _play(t):
     except Exception as e: return {"error": repr(e)[:200], "tb": traceback.format_exc()[-600:], "seed": t[3]}
 def main(a, b, s0, n, tag):
     seeds = [int(x) for x in os.environ["EVO_SEEDS"].split(",")] if os.environ.get("EVO_SEEDS") else range(s0, s0 + n)
+    # REVIEW_FIXES_20261113 S4 (P2): the expected game count had two
+    # definitions -- missing games were counted against len(tasks) while the
+    # failure gate compared against the parameter n. With EVO_SEEDS set the
+    # two diverge (n=3, two seeds): two clean games were saved FAIL=false
+    # yet the process exited 2. n is the caller's declared exam size, so
+    # refuse the inconsistency up front (nonzero exit, explicit error)
+    # instead of silently redefining the exam to len(tasks) -- a shrunken
+    # exam must never pass gates sized for n. After this check,
+    # n == len(tasks) by construction and both counts agree everywhere.
+    if os.environ.get("EVO_SEEDS") and len(seeds) != n:
+        print(json.dumps({"tag": tag, "ERROR": f"EVO_SEEDS has {len(seeds)} seeds but N={n}; refusing inconsistent exam size"}), file=sys.stderr, flush=True)
+        sys.exit(2)
     tasks = [(tag, a, b, s, s % 2) for s in seeds]
     live = os.path.join(HERE, "..", "data", "bigeval_live"); os.makedirs(live, exist_ok=True)
     lf = open(os.path.join(live, tag + ".jsonl"), "a")
@@ -34,13 +46,11 @@ def main(a, b, s0, n, tag):
                              "cc21": r["a_stats"].get("cc_2to1", 0), "cc01": r["a_stats"].get("cc_0to1", 0), "pa": r["a_stats"].get("pa_moves", 0), "paerr": r["a_stats"].get("pa_errors", 0), "pb": r["a_stats"].get("pb_skip", 0), "mnp": r["a_stats"].get("mnp", 0), "eh_alt": r["a_stats"].get("eh_alt", 0), "fixdrop": r["a_stats"].get("fix_dropped", 0), "pk_in": r["a_stats"].get("pk_in", 0), "pk_cut": r["a_stats"].get("pk_cut", 0), "sims": r["a_stats"].get("sims", 0), "pk_rep": r["a_stats"].get("pk_rep", 0), "pk_rep3": r["a_stats"].get("pk_rep_plant3", 0), "pk_repc": r["a_stats"].get("pk_rep_cash", 0), "bk_in": r["a_stats"].get("bk_in", 0), "bk_cut": r["a_stats"].get("bk_cut", 0), "simsl": r["a_stats"].get("sims_steps"), "cb": [r["a_stats"].get(k, 0) for k in ("cb_seen", "cb", "cb_ok", "cb_errors")], "se": [r["a_stats"].get(k, 0) for k in ("se_seen", "se", "se_ok", "se_none", "se_errors")], "se_lat": r["a_stats"].get("se_lat"), "msl": r["a_stats"].get("ms_steps"), "px": [r["a_stats"].get("px", 0), r["a_stats"].get("px_errors", 0)], "opl": [r["a_stats"].get("opl", 0), r["a_stats"].get("opl_errors", 0)], "tg": r["a_stats"].get("tg", 0), "rg": r["a_stats"].get("rg", 0), "seqc": r["a_stats"].get("seq_changed", 0)} if r.get("a_stats") else {}))
             lf.write(json.dumps(g) + "\n"); lf.flush()
     m = [r["margin"] for r in rows if "margin" in r]
-    if len(m) < 2:
-        # F09: this path used to save nothing at all; an incomplete exam must
-        # still leave a machine-readable FAIL record for downstream readers.
-        bad = {"tag": tag, "FAIL": True, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m)}
-        open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(bad) + "\n")
-        print(json.dumps(bad), file=sys.stderr, flush=True)
-        sys.exit(2)
+    # REVIEW_FIXES_20261113 S4 (P3): the run's health is computed ONCE, here,
+    # before any exit decision, and every record below carries it. Previously
+    # the <2-valid-games path exited before this block ran, so its FAIL
+    # record had no first_error and no internal error counts -- the failure
+    # gate worked, but the saved record could not say WHY the exam failed.
     # R05: internal health is computed and merged into the summary BEFORE
     # it is saved. (Previously search_error_games was attached to rec only
     # after the record had been written and printed, so the saved summary
@@ -62,6 +72,17 @@ def main(a, b, s0, n, tag):
     missing = len(tasks) - len(m)
     internal_failed = bool(search_error_games or a_errors_total or root_errors_total)
     failed = bool(internal_failed or outer_errors or missing)
+    if len(m) < 2:
+        # F09: this path used to save nothing at all; an incomplete exam must
+        # still leave a machine-readable FAIL record for downstream readers.
+        # It now carries the same health fields as the full summary.
+        bad = {"tag": tag, "FAIL": True, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m),
+               "search_error_games": search_error_games, "a_errors_total": a_errors_total,
+               "root_errors_total": root_errors_total, "first_error": first_error,
+               "first_search_error_seed": first_search_error_seed}
+        open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(bad) + "\n")
+        print(json.dumps(bad), file=sys.stderr, flush=True)
+        sys.exit(2)
     L = lambda side, k: round(st.mean([r[f"ledger_{side}"][k] for r in rows if "margin" in r]))
     se = st.stdev(m) / len(m) ** .5
     rec = {"tag": tag, "a": a, "b": b, "seed0": s0, "n": len(m), "err": sum("error" in r for r in rows),
