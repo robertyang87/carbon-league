@@ -47,12 +47,43 @@ def load_weights(src):
 
 
 class CachePolicy(NP.Policy):
-    """NP.Policy that keeps the last encode() output (same numerics as v12)."""
+    """NP.Policy that keeps the last encode() output (same numerics as v12).
+
+    R12: the cache also records WHAT was encoded. The consumers (bankrupt guard,
+    _mcts/_search root decodes) pair the cached (tok, ctx) with the ORIGINAL-frame
+    x/aux, but after NP.act_tta the last encode is of a symmetry VIEW, and after an
+    epol/opol decode this policy was not encoded at all (stale cache) -- in both
+    cases last_enc is the wrong frame or a previous step. enc_for() restores the
+    invariant: it returns the encoding of exactly (x, teacher), re-encoding on any
+    mismatch. On the plain act() path the signature always matches, so the common
+    case costs nothing."""
+
+    @staticmethod
+    def _sig(x, teacher):
+        # The signature must cover EVERY field encode() consumes (trunk_b /
+        # tok_features_b read all nine x fields). The old signature missed
+        # tok_kind/tok_mask/tok_cargo/hist_cargo/hist_move: two states that
+        # differed only in per-token cargo -- (1000, 800) vs (1100, 700) at
+        # equal total, maps saturated -- collided, and enc_for() returned
+        # the other state's encoding (review measurement: encode diff
+        # 0.061544). The standard-TTA part of R12 was already at 0 and is
+        # not touched by this.
+        return (teacher, x["maps"].tobytes(), x["tok_pos"].tobytes(),
+                x["tok_kind"].tobytes(), x["tok_mask"].tobytes(),
+                x["tok_cargo"].tobytes(), x["hist_cell"].tobytes(),
+                x["hist_cargo"].tobytes(), x["hist_move"].tobytes(),
+                np.asarray(x["scal"]).tobytes())
 
     def encode(self, x, teacher):
         r = NP.Policy.encode(self, x, teacher)
         self.last_enc = r
+        self.last_sig = self._sig(x, teacher)
         return r
+
+    def enc_for(self, x, teacher):
+        if getattr(self, "last_sig", None) != self._sig(x, teacher):
+            return self.encode(x, teacher)
+        return self.last_enc
 
 
 # ---------------------------------------------------------------- batched inference
@@ -501,7 +532,35 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     log = []
     T, OT = cfg["TEACHER"], cfg["OPP_TEACHER"]
 
-    def leaf(sim, me, left):
+    def _extinct(sim, p):
+        """original env (carbon.py compute_next_board): a side with no workers, no trees and
+        (no conversion centre, or cash below the cheapest recruit) is DONE and the game ends
+        on the spot. FastCarbon deliberately does not model this (see its header), so the
+        search layer must recognise the terminal itself (R02)."""
+        if any(w.player == p for w in sim.workers.values()):
+            return False
+        if any(t.player == p for t in sim.trees.values()):
+            return False
+        if not sim.bases[p]:
+            return True
+        cheapest = min(sim.config.get("recCollectorCost", 30), sim.config.get("recPlanterCost", 30))
+        return float(sim.cash[p]) < cheapest
+
+    def _terminal(sim):
+        return _extinct(sim, 0) or _extinct(sim, 1)
+
+    def leaf(sim, me, left, prev_cash=None):
+        if _terminal(sim):
+            # F01: original terminal scoring (carbon.py compute_next_board), NOT the cash
+            # difference: an extinct side scores (step - episodeSteps - 1); a survivor keeps
+            # the reward it carried INTO the terminal step -- its cash in the pre-step state --
+            # because the original marks it DONE without a reward update. Callers that saw
+            # the terminal transition pass prev_cash; for a state that was already terminal
+            # when handed over, its own cash is the only value the state carries.
+            pen = float(sim.step_count) - float(sim.config.get("episodeSteps", 300)) - 1.0
+            pc = prev_cash if prev_cash is not None else sim.cash
+            rew = [pen if _extinct(sim, p) else float(pc[p]) for p in (0, 1)]
+            return rew[me] - rew[1 - me]
         m = [float(sim.cash[0]), float(sim.cash[1])]
         wv = cfg["WORKER_V"] * min(1.0, left / 100.0)
         bases = {p: [b for _, b in sim.bases[p]] for p in (0, 1)}
@@ -658,6 +717,11 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             st["orng"] = np.random.default_rng(int(cfg["OPEN_SEED"]) * 7 + me)
         st["sampled"] = bool(cfg["OPEN_T"] and obs["step"] < cfg["OPEN_STEPS"])
         if st["sampled"]:
+            # F03: this branch decodes with teacher T -- record it as this step's teacher,
+            # like the greedy branch does below. The enc_for consumers (bankruptcy guard,
+            # search roots) read st["T_now"]; leaving it unset made the guard raise
+            # KeyError('T_now'), fall back and change the sampled opening's actions.
+            st["T_now"] = T
             # opening diversity (data generation): sample the net's moves at temperature OPEN_T
             y, lg0, _ = pol.act(x, f.aux, teacher=T, sample_rng=st["orng"], temp=cfg["OPEN_T"],
                                 sample_kinds=cfg.get("OPEN_KINDS"))     # e.g. ("planter", "base"): cars stay greedy
@@ -932,7 +996,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         if first is None:
             return y
         fz[:first] = y[:first]                  # the guard has priority over rule-edited bases: no base_fix here
-        tok, ctx = pol.last_enc
+        tok, ctx = pol.enc_for(x, st["T_now"])     # R12: original-frame encoding of THIS x (last_enc may be a TTA view)
         X1 = {k: x[k][None] for k in ("tok_pos", "tok_kind", "tok_mask", "tok_cargo")}
         X1["cash"] = [x["cash"]]; X1["slots"] = [x["slots"]]; X1["left"] = [x["left"]]
         y2 = decode_b(pol, X1, [aux], tok[None], ctx[None], fz[None])[0]
@@ -1097,7 +1161,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             return acts
         st["seq_last"] = keys[0][1]
         stats["searched"] += 1
-        tok, ctx = pol.last_enc
+        tok, ctx = pol.enc_for(x, st["T_now"])     # R12: original-frame encoding of THIS x (last_enc may be a TTA view)
         lg0 = st["lg0"]
         uid2slot = {u: s for s, u in enumerate(f.own_uid) if u is not None}
         forced, meta, pri = [], [], []
@@ -1173,7 +1237,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             yo[isx] = decode_b(xpol, repx, [fo.aux] * nx, np.repeat(tkx, nx, 0), ctx_b(xpol, np.repeat(prx, nx, 0), np.full(nx, XT)),
                                noise=rn0[isx], temp=np.full(nx, tau))
         roots = [fo.to_actions(v) for v in yo]
-        H = min(cfg["H"], left + 1)
+        H = min(cfg["H"], left)          # R01: left = 299 - step already counts the remaining transfers (root step included); left+1 simulated one step past the end of the game
         if cfg.get("PK_H2") and all(obs["players"][me][2].get(u, (0, 0, ""))[2] == "PLANTER" for _, u in keys):
             H = min(H, 2)          # planter-only step: the root plant shows in a depth-2 leaf; depth 3 adds little
         rnoise = rng.random((RS, max(H - 1, 1), F.OWN))
@@ -1228,16 +1292,22 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             while len(pool) < nb:
                 pool.append(FastCarbon())
             sims, fs = [], []
+            term_cash = []
             for j, (c, i) in enumerate(batch):
                 s_ = pool[j]; s_.load_observation(full)
                 s_._tid_counter = [cc + 500 for cc in s_._tid_counter]
+                pc_ = list(s_.cash)     # F01: cash carried into the root step (survivor scoring if it ends the game)
                 if me == 0:
                     s_.step(cand[c], roots[i])
                 else:
                     s_.step(roots[i], cand[c])
                 sims.append(s_); fs.append((feat_copy(f), feat_copy(fo)))
+                term_cash.append(pc_)
+            term = [_terminal(s_) for s_ in sims]     # R02: sims the root step already ended by extinction stay frozen
             depth = 1; aborted = False
             for hh in range(1, H):
+                if all(term):
+                    break
                 if cfg["ABORT_DL"] is not None and not fixed:
                     est = st.get("stepw", 0.0) * nb
                     if time.time() - tw + cfg["PROJ"] * est > cfg["ABORT_DL"]:
@@ -1285,11 +1355,16 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 if share:
                     stats["share_saved"] = stats.get("share_saved", 0) + (nb - no)
                 for j, (s_, (fm, fop)) in enumerate(zip(sims, fs)):
+                    if term[j]:
+                        continue     # R02: frozen at extinction -- neither the sim nor its cash may evolve further (leaf pins the terminal value)
                     am = fm.to_actions(lab[j]); ao = fop.to_actions(lab[orow[j]])
+                    pc_ = list(s_.cash)     # F01: cash carried into this step (survivor scoring if it ends the game)
                     if me == 0:
                         s_.step(am, ao)
                     else:
                         s_.step(ao, am)
+                    if _terminal(s_):
+                        term[j] = True; term_cash[j] = pc_; stats["term"] = stats.get("term", 0) + 1
                 stats["branch_steps"] += nb
                 depth = hh + 1
                 sw = (time.time() - ts_) / nb
@@ -1298,8 +1373,8 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 stats["aborted"] = stats.get("aborted", 0) + 1
                 break
             lft = max(0, left - depth)
-            for (c, i), s_ in zip(batch, sims):
-                vals[c].append((i, leaf(s_, me, lft))); n[c] += 1
+            for j, ((c, i), s_) in enumerate(zip(batch, sims)):
+                vals[c].append((i, leaf(s_, me, lft, term_cash[j]))); n[c] += 1
             sims_done += nb; rounds += 1
             per_sim = (clk() - now) / nb; per_wall = (time.time() - nw) / nb
         stats["sims"] = stats.get("sims", 0) + sims_done
@@ -1362,7 +1437,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         if not keys:
             return acts
         stats["searched"] += 1
-        tok, ctx = pol.last_enc
+        tok, ctx = pol.enc_for(x, st["T_now"])     # R12: original-frame encoding of THIS x (last_enc may be a TTA view)
         uid2slot = {u: s for s, u in enumerate(f.own_uid) if u is not None}
         # ---- root candidate joint actions (b128 re-decode, prefix forced to the default)
         forced, meta = [], []
@@ -1429,24 +1504,30 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         while len(pool) < nb:
             pool.append(FastCarbon())
         sims, fs = [], []
+        term_cash = []
         for i, (mi, ci) in enumerate(bl):
             a = cand[ci]; ao_ = models[mi]
             s_ = pool[i]; s_.load_observation(full)
             s_._tid_counter = [c + 500 for c in s_._tid_counter]
+            pc_ = list(s_.cash)     # F01: cash carried into the root step (survivor scoring if it ends the game)
             if me == 0:
                 s_.step(a, ao_)
             else:
                 s_.step(ao_, a)
             sims.append(s_); fs.append((feat_copy(f), feat_copy(fo)))
+            term_cash.append(pc_)
+        term = [_terminal(s_) for s_ in sims]     # R02: sims the root step already ended by extinction stay frozen
         stats["branches"] += nb
         local = None
         if cfg["LOCAL_R"]:
             kp = [obs["players"][me][2][u][0] for _, u in keys]
             local = {w_ for p in (0, 1) for w_, w in obs["players"][p][2].items()
                      if min(F.DIST[w[0], c] for c in kp) <= cfg["LOCAL_R"]}
-        H = min(cfg["H"], left + 1)
+        H = min(cfg["H"], left)          # R01: see _mcts -- left already counts the remaining transfers
         depth = 1; last_dt = None
         for hh in range(1, H):
+            if all(term):
+                break     # R02: every branch sim already ended by extinction
             now = clk()
             if last_dt is not None and now - t0 + cfg["PROJ"] * last_dt > cfg["BUDGET"]:
                 break
@@ -1476,20 +1557,29 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                             for k_, v_ in d0.items():
                                 if k_ not in local:
                                     d_[k_] = v_
-                if me == 0:
-                    s_.step(am, ao)
-                else:
-                    s_.step(ao, am)
+                if not term[i]:     # R02: frozen at extinction -- neither the sim nor its cash may evolve further
+                    pc_ = list(s_.cash)     # F01: cash carried into this step (survivor scoring if it ends the game)
+                    if me == 0:
+                        s_.step(am, ao)
+                    else:
+                        s_.step(ao, am)
+                    if _terminal(s_):
+                        term[i] = True; term_cash[i] = pc_; stats["term"] = stats.get("term", 0) + 1
             stats["branch_steps"] += nb
             depth = hh + 1
             last_dt = clk() - now
             last_wall = time.time() - nw
         stats["depth_sum"] += depth
-        if depth < min(cfg["MIN_DEPTH"], H):
+        if depth < min(cfg["MIN_DEPTH"], H) and not all(term):
+            # C01: the MIN_DEPTH guard distrusts shallow HEURISTIC leaves. When every branch
+            # sim has reached an exact terminal (all(term)), the leaf values below are the true
+            # terminal scores under F01 semantics, not estimates -- the guard must not discard
+            # them and fall back to the default action. Any unresolved branch keeps the guard,
+            # including an expansion cut short by the budget checks above.
             stats["shallow"] += 1
             return acts
         lft = max(0, left - depth)
-        sc = np.array([leaf(s_, me, lft) for s_ in sims]).reshape(len(models), nc)
+        sc = np.array([leaf(s_, me, lft, term_cash[i]) for i, s_ in enumerate(sims)]).reshape(len(models), nc)
         if len(models) > 1:
             w_ = cfg["ROBUST"]
             sc = (1 - w_) * sc[0] + w_ * sc.min(0)
