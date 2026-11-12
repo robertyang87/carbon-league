@@ -1570,7 +1570,12 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             last_dt = clk() - now
             last_wall = time.time() - nw
         stats["depth_sum"] += depth
-        if depth < min(cfg["MIN_DEPTH"], H):
+        if depth < min(cfg["MIN_DEPTH"], H) and not all(term):
+            # C01: the MIN_DEPTH guard distrusts shallow HEURISTIC leaves. When every branch
+            # sim has reached an exact terminal (all(term)), the leaf values below are the true
+            # terminal scores under F01 semantics, not estimates -- the guard must not discard
+            # them and fall back to the default action. Any unresolved branch keeps the guard,
+            # including an expansion cut short by the budget checks above.
             stats["shallow"] += 1
             return acts
         lft = max(0, left - depth)
