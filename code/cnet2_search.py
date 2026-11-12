@@ -706,6 +706,11 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             st["orng"] = np.random.default_rng(int(cfg["OPEN_SEED"]) * 7 + me)
         st["sampled"] = bool(cfg["OPEN_T"] and obs["step"] < cfg["OPEN_STEPS"])
         if st["sampled"]:
+            # F03: this branch decodes with teacher T -- record it as this step's teacher,
+            # like the greedy branch does below. The enc_for consumers (bankruptcy guard,
+            # search roots) read st["T_now"]; leaving it unset made the guard raise
+            # KeyError('T_now'), fall back and change the sampled opening's actions.
+            st["T_now"] = T
             # opening diversity (data generation): sample the net's moves at temperature OPEN_T
             y, lg0, _ = pol.act(x, f.aux, teacher=T, sample_rng=st["orng"], temp=cfg["OPEN_T"],
                                 sample_kinds=cfg.get("OPEN_KINDS"))     # e.g. ("planter", "base"): cars stay greedy
