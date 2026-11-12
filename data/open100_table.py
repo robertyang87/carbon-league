@@ -30,7 +30,9 @@ def verdict(R, K):
     ti, oti = S.mean(R[k]['tinc'] for k in K), S.mean(R[k]['otinc'] for k in K)
     ratio = sm('planted') / max(1, sm('seized')); pc = sm('pc4_sum') / max(1, sm('pc4_n'))
     gap = pc - sm('pc4_sum', 'opp') / max(1, sm('pc4_n', 'opp'))   # landing-spot gap: the only placement reading that matters when land is contested
-    return f"PASS-LINES: tree income vs opp {'ok' if ti >= oti else 'NO'} ({ti:.0f}/{oti:.0f}), planted/seized {'ok' if ratio >= 2 else 'NO'} ({ratio:.2f}), nb-carbon planted {'ok' if pc >= 75 else 'NO'} ({pc:.0f}), nb-carbon gap us - opp {gap:+.0f}"
+    life = sm('life50_sum') / max(1, sm('life50_n')); lost = S.mean(P(R[k], 'seized', 'opp') for k in K); t100 = S.mean(P(R[k], 'tree100') for k in K)
+    ladder = f" | LADDER-GAP LINES: planted-tree life {'ok' if life >= 24 else 'NO'} ({life:.1f}, >= 24), seized from us {'ok' if lost <= 4 else 'NO'} ({lost:.1f}, <= 4), trees standing at 100 {'ok' if t100 >= 4 else 'NO'} ({t100:.1f}, >= 4)"
+    return ladder + f" | PASS-LINES: tree income vs opp {'ok' if ti >= oti else 'NO'} ({ti:.0f}/{oti:.0f}), planted/seized {'ok' if ratio >= 2 else 'NO'} ({ratio:.2f}), nb-carbon planted {'ok' if pc >= 75 else 'NO'} ({pc:.0f}), nb-carbon gap us - opp {gap:+.0f}"
 for a in sys.argv[3:]:
     A = rows(a); K = [k for k in A if k in B]; srch = [A[k] for k in K if A[k].get('srch')]
     pk = f"  planter in search {sum(g.get('pk_in', 0) for g in srch) / max(1, len(srch)):.1f} steps/game, cut {sum(g.get('pk_cut', 0) for g in srch) / max(1, len(srch)):.1f}, planter share of replaced moves {sum(g.get('pk_rep', 0) for g in srch) / max(1, sum(g.get('chg') or 0 for g in srch)):.0%}, planted within 3 steps of a replacement {sum(g.get('pk_rep3', 0) for g in srch) / max(1, sum(g.get('pk_rep', 0) for g in srch)):.0%}, cash covered planting at the replacement {sum(g.get('pk_repc', 0) for g in srch) / max(1, sum(g.get('pk_rep', 0) for g in srch)):.0%}, searched {S.mean(g.get('srch') or 0 for g in srch):.0f} / shallow {S.mean(g.get('shal') or 0 for g in srch):.0f} steps/game, worst step {max(g.get('wms') or 0 for g in srch):.0f} ms" if srch else ""
