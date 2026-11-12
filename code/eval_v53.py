@@ -163,6 +163,7 @@ def play_game(task):
     late_deaths = [[], []]
     for step in range(1, NSTEPS + 1):
         pre = sim.get_state()
+        wc_pre = list(sim.worker_counters)   # R07: accepted-recruit event counter, pre-step snapshot
         acts = []
         for p in range(2):
             o = sim.obs(p)
@@ -378,10 +379,23 @@ def play_game(task):
                     L["seize_count"] += 1
                     sh["sz3"][p][min(step // 100, 2)] += 1
                     ss += float(CFG["seizeCost"])
-            for wid, w in post["workers"].items():
-                if w["player"] == p and wid not in pre["workers"]:
-                    L["recruit_count"] += 1
-                    rs += float(CFG["recCollectorCost"])
+            # R07: count recruits from the simulator's explicit event
+            # counter (accepted recruits this step), not from post-state
+            # survivors. A worker recruited and killed in the same step
+            # (collision on its own base cell) is in neither pre nor post:
+            # the survivor diff dropped both its cost and its death, and
+            # the deposit identity then booked the missing spend as
+            # negative deposits.
+            n_surv = sum(1 for wid, w in post["workers"].items()
+                         if w["player"] == p and wid not in pre["workers"])
+            n_rec = sim.worker_counters[p] - wc_pre[p]
+            L["recruit_count"] += n_rec
+            rs += n_rec * float(CFG["recCollectorCost"])   # carbon.json prices both recruit kinds identically (30; both increase costs are 0), so the per-event charge is exact
+            if n_rec > n_surv:   # recruited and died within this same step
+                L["deaths"] += n_rec - n_surv
+                L["death_cargo"] += sum(
+                    float(e[2]) for e in (getattr(sim, "last_collisions", None) or [])
+                    if e[1] == p and e[0] not in pre["workers"])
             for wid, w in pre["workers"].items():
                 if w["player"] == p and wid not in post["workers"]:
                     L["deaths"] += 1
