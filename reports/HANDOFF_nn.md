@@ -1,5 +1,7 @@
 # 交接文档：NN 新线（claude-opus55-cloud）— 2026-11-04
 
+> **接手入口索引见 `reports/live/CURRENT.md`**（在册制品、真实位置与校验值的唯一出处，REVIEW_20261112 R14）；本文件为 2026-11-04 历史交接，只作归档，制品信息与 CURRENT 冲突时以 CURRENT 为准。
+
 > **2026-11-06 仓库精简（已改写全部历史并强制推送 main 与 claude/nocamp-eval-g1）**：`.git` 422 MB → 17 MB。
 > 从历史中移除：`data/replay_snapshots/`（两份公开快照，**含 Master 早期 42 局，已不可再取**）、`data/traces/`（旧会话调试对局）、
 > 旧 case-B/C 实验（`code/caseb*`、`code/casec*` 及其数据/权重）、`code/env_src` 的演示视频/动图/notebook、旧提交 `submission_nn_v1`–`v8.py`、
