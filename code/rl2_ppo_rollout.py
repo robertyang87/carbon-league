@@ -55,8 +55,17 @@ def _init_worker(ids, req_q, resp_qs):
     _REMOTE[0] = SV.Client(wid, req_q, resp_qs[wid])
 
 
-def _actor(adapter_name, wkey, weights=None):
-    k = (adapter_name, wkey)
+def _actor(adapter_name, wkey, weights=None, role="snap"):
+    # F06: the role is part of the cache identity. The old key was only
+    # (adapter, wkey), so an actor first built as a task's primary -- on
+    # which play_batch set temp_kind=True -- was handed back for a SNAP of
+    # the same weights, and the snapshot silently played at the learner's
+    # per-kind temperatures instead of the temperature it was handed
+    # (review measurement: cached_snapshot_is_primary=True; temps 0.5/1.0
+    # produced identical logprobs). temp_kind is now fixed by role at
+    # construction: only the "learner" actor may be governed by
+    # CNET2_TEMP_KIND; snapshot actors keep temp_kind=False.
+    k = (adapter_name, wkey, role)
     a = _W_CACHE.get(k)
     if a is None:
         teacher = None
@@ -65,6 +74,7 @@ def _actor(adapter_name, wkey, weights=None):
         if weights is None:
             weights = AD.load_npz(wkey)
         a = AD.get_adapter(adapter_name).make_actor(weights)
+        a.temp_kind = role == "learner"
         if teacher is not None:
             a.teacher = teacher; a.sched = False
         if _REMOTE[0] is not None and hasattr(a, "remote") and isinstance(wkey, str) and os.path.exists(wkey):
@@ -91,7 +101,7 @@ def load_bot(path):
 
 class _SnapAgent:
     def __init__(self, adapter_name, path, side, temp, seed):
-        self.actor = _actor(adapter_name, path)
+        self.actor = _actor(adapter_name, path, role="snap")
         self.st = self.actor.new_game(side)
         self.temp = temp
         self.rng = np.random.default_rng(seed)
@@ -160,11 +170,12 @@ def play_batch(task):
     All positions that use the same model in one step go through ONE actor.act call (one server request).
     Returns list of per-game dicts (traj recs if record) + timing."""
     t0 = time.time()
-    actor = _actor(task["adapter"], task["wkey"], task.get("weights"))
-    # R04: the task's primary actor is the learner(-side) actor -- the only one CNET2_TEMP_KIND may
-    # govern. Snapshot actors built below (and _SnapAgent's) keep temp_kind=False and play at the
-    # temperature they are handed, so the learner's per-kind temperatures no longer leak into them.
-    actor.temp_kind = True
+    actor = _actor(task["adapter"], task["wkey"], task.get("weights"), role="learner")
+    # R04/F06: the task's primary actor is the learner(-side) actor -- the only one
+    # CNET2_TEMP_KIND may govern. It is built with role="learner" (temp_kind=True);
+    # snapshot actors built below (and _SnapAgent's) are separate cached objects
+    # with temp_kind=False and play at the temperature they are handed, so the
+    # learner's per-kind temperatures no longer leak into them.
     snap_temp = float(os.environ.get("RL2_SNAP_TEMP", "0"))
     games = []
     for opp, seed, side in task["games"]:
@@ -178,7 +189,7 @@ def play_batch(task):
             g.update(kind="self", st2=actor.new_game(1 - side), recs2=[], dep2=[], lost2=[])
         elif opp.startswith("SNAP:"):
             _, ad_, path_ = opp.split(":", 2)
-            sa = _actor(ad_, path_)
+            sa = _actor(ad_, path_, role="snap")
             g.update(kind="snap", sactor=sa, st2=sa.new_game(1 - side))
         else:
             g["op"] = make_opponent(opp, 1 - side, seed)
