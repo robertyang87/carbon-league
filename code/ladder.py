@@ -181,6 +181,19 @@ def cmd_submit(path, name, desc_path=None):
     cmd_whoami()
 
 
+def cmd_retire(sid, confirm=""):
+    """Take a strategy OFF the ladder (the site's delete: stops its matches, irreversible; games / replays stay; the name
+    cannot be reused). Only for finished PROBES (user's standing instruction, 2026-11-10). Needs the literal 'yes'."""
+    mine = {s["id"]: s for s in request("/api/mine").get("strategies", [])}
+    s = mine.get(sid)
+    if not s:
+        sys.exit(f"not one of ours: {sid}")
+    print(f"retire {s['name']} ({sid}): {s.get('games')} games, rating {round(s.get('rating', 0))}")
+    if confirm != "yes":
+        sys.exit("add 'yes' to really retire it")
+    print(json.dumps(request(f"/api/strategies/{sid}/delete", "POST", {}), ensure_ascii=False))
+
+
 def cmd_mine():
     session()
     for s in request("/api/mine").get("strategies", []):
@@ -244,7 +257,7 @@ def cmd_replays(mfile, outdir):
 if __name__ == "__main__":
     a = sys.argv[1:]
     cmds = {"ping": cmd_ping, "login": cmd_login, "whoami": cmd_whoami, "submit": cmd_submit,
-            "mine": cmd_mine, "board": cmd_board, "matches": cmd_matches, "replays": cmd_replays}
+            "retire": cmd_retire, "mine": cmd_mine, "board": cmd_board, "matches": cmd_matches, "replays": cmd_replays}
     if not a or a[0] not in cmds:
         sys.exit(__doc__)
     cmds[a[0]](*a[1:])

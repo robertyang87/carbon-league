@@ -30,6 +30,15 @@ import cnet2_feat as F  # noqa: E402
 
 NEG = np.float32(-1e9)
 TEACHER = int(os.environ.get("CNET2_TEACHER", "1"))
+# CNET2_TEMP_KIND="c,p,b": sampling temperature per unit kind (collector, planter, base) -- replaces the trainer's
+# scalar --temp both when the actor samples and when the learner recomputes the log-probs (same env in both).
+_TK = os.environ.get("CNET2_TEMP_KIND")
+TEMP_KIND = [float(v) for v in _TK.split(",")] if _TK else None
+# CNET2_TEACHER_LATE / CNET2_LATE_STEP: style row from that step on (Grove1's pack plays row 2, then row 7 from step 240);
+# used by the actor (learner and snapshots; "#T" opponents keep their one row) and by the learner's forward alike.
+_TL = os.environ.get("CNET2_TEACHER_LATE")
+TEACHER_LATE = int(_TL) if _TL else None
+LATE_STEP = int(os.environ.get("CNET2_LATE_STEP", "240"))
 XKEYS = ("maps", "scal", "tok_pos", "tok_kind", "tok_mask", "tok_cargo", "hist_cell", "hist_cargo", "hist_move")
 
 
@@ -37,13 +46,19 @@ class Cnet2Actor:
     def __init__(self, weights):
         import cnet2_np as NP
         self.pol = NP.Policy(weights)
+        self.remote = None; self.key = None; self.teacher = TEACHER; self.sched = True
+
+    def _t(self, x):
+        if self.sched and TEACHER_LATE is not None and int(round(float(x["scal"][1]) * 300)) >= LATE_STEP:
+            return TEACHER_LATE
+        return self.teacher
 
     def new_game(self, side):
         return {"f": F.Feat(side), "side": side}
 
-    def _decode(self, x, aux, rng, temp, greedy):
+    def _decode(self, x, aux, rng, temp, greedy, enc=None):
         P = self.pol; w = P.w
-        tok, ctx = P.encode(x, TEACHER)
+        tok, ctx = P.encode(x, self._t(x)) if enc is None else enc
         value = math.tanh(float(ctx @ w["value.weightT"][:, 0] + w["value.bias"][0]))
         h = P.lin(ctx, "h0")
         prev = 8
@@ -63,7 +78,8 @@ class Cnet2Actor:
             h = P.gru(inp, h)
             base = P.lin(h, "whead") if s < 10 else np.concatenate([P.lin(h, "bhead"), np.zeros(2, np.float32)])
             lg = base + P.lin(mf.astype(np.float32), "V") @ P.lin(h, "U")
-            z = np.where(legal, lg / temp, -np.inf)
+            ts = temp if TEMP_KIND is None else TEMP_KIND[2 if s >= 10 else int(x["tok_kind"][s])]
+            z = np.where(legal, lg / ts, -np.inf)
             z = z - z.max(); p = np.exp(z); p /= p.sum()
             a = int(np.argmax(p)) if greedy else int(rng.choice(5, p=p))
             lpu[s] = float(np.log(max(p[a], 1e-12)))
@@ -73,17 +89,45 @@ class Cnet2Actor:
             prev = a + (0 if s < 10 else 5)
         return y, UF, MF, LG, logp, value, lpu
 
-    def act(self, states, obss, rng, temp, greedy):
+    @staticmethod
+    def pack(recs):
+        return PackedTraj(recs)
+
+    def prepare(self, states, obss):
+        """features of all positions; with an inference server the trunk request is SENT here (not awaited)."""
+        xs = [st["f"].observe(obs) for st, obs in zip(states, obss)]
+        h = None
+        rem = getattr(self, "remote", None)
+        if rem is not None and xs:
+            ts = [self._t(x) for x in xs]
+            h = []
+            for t in sorted(set(ts)):          # lockstep games share the step, so this is one request in practice
+                ii = [i for i, v in enumerate(ts) if v == t]
+                h.append((ii, rem.submit(self.key, {k: np.stack([np.asarray(xs[i][k]) for i in ii]) for k in XKEYS}, t)))
+        return xs, h
+
+    def finish(self, states, prep, rng, temp, greedy):
+        xs, h = prep
         outs = []
-        for st, obs in zip(states, obss):
+        encs = [None] * len(xs)
+        if h is not None:
+            for ii, rid in h:
+                tok, ctx = self.remote.collect(rid)
+                for j, i in enumerate(ii):
+                    encs[i] = (tok[j], ctx[j])
+        for st, x, enc in zip(states, xs, encs):
             f = st["f"]
-            x = f.observe(obs)
-            y, UF, MF, LG, logp, value, lpu = self._decode(x, f.aux, rng, temp, greedy)
+            y, UF, MF, LG, logp, value, lpu = self._decode(x, f.aux, rng, temp, greedy, enc)
             acts = f.to_actions(y)
             rec = {k: np.asarray(x[k]) for k in XKEYS}
             rec.update(uf=UF, mf=MF, legal=LG, y=y, logp=logp, value=value, lpu=lpu)
             outs.append((acts, rec))
         return outs
+
+    def act(self, states, obss, rng, temp, greedy):
+        """remote (rl2_ppo_server.Client, set by the rollout worker) -> the trunk of all positions runs as one batched
+        request on the inference server; the per-unit decode stays here. Without it: NumPy trunk per position."""
+        return self.finish(states, self.prepare(states, obss), rng, temp, greedy)
 
 
 _DT = {"maps": np.uint8, "scal": np.float16, "tok_pos": np.int16, "tok_kind": np.int8, "tok_mask": bool,
@@ -91,12 +135,36 @@ _DT = {"maps": np.uint8, "scal": np.float16, "tok_pos": np.int16, "tok_kind": np
        "uf": np.float16, "mf": np.float16, "legal": bool, "y": np.int8}
 
 
+class PackedTraj:
+    """one recorded trajectory as stacked compact arrays (built in the rollout worker: ~8x less to pickle and to hold
+    than a list of per-step dicts, and the trainer only concatenates)."""
+    __slots__ = ("d", "n")
+
+    def __init__(self, recs):
+        self.n = len(recs)
+        self.d = {k: np.stack([np.asarray(r[k]).astype(dt) for r in recs]) for k, dt in _DT.items()}
+        self.d["lpu"] = np.stack([r["lpu"] for r in recs]).astype(np.float32)
+        self.d["logp"] = np.array([r["logp"] for r in recs], np.float32)
+
+    def __len__(self):
+        return self.n
+
+
 class Cnet2Buffer:
     def __init__(self, trajs):
+        if trajs and isinstance(trajs[0], PackedTraj):
+            self.n = sum(t.n for t in trajs)
+            self.d = {k: np.concatenate([t.d[k] for t in trajs]) for k in _DT}
+            self.lp0u = np.concatenate([t.d["lpu"] for t in trajs]).reshape(-1)
+            self.lp0 = np.concatenate([t.d["logp"] for t in trajs])
+            self.n_ukeys = self.n * F.OWN
+            self.act = np.zeros(int((self.d["y"] >= 0).sum()))
+            return
         recs = [r for t in trajs for r in t]
         self.n = len(recs)
         self.d = {k: np.stack([np.asarray(r[k]).astype(dt) for r in recs]) for k, dt in _DT.items()}
         self.n_ukeys = self.n * F.OWN
+        self.lp0 = np.array([r["logp"] for r in recs], np.float32)
         self.lp0u = np.concatenate([r["lpu"] for r in recs]).astype(np.float32)   # ukey = d*OWN + s
         self.act = np.zeros(int((self.d["y"] >= 0).sum()))      # for unit counting in logs
 
@@ -117,10 +185,17 @@ class Cnet2Buffer:
         for k in ("tok_pos", "tok_kind", "hist_cell", "hist_move", "y"):
             t[k] = t[k].long()
         t["teacher"] = torch.full((B,), TEACHER, dtype=torch.long)
+        if TEACHER_LATE is not None:
+            late = torch.round(t["scal"][:, 1].float() * 300) >= LATE_STEP
+            t["teacher"] = torch.where(late, torch.full_like(t["teacher"], TEACHER_LATE), t["teacher"])
         t["ukey"] = torch.from_numpy((idx[:, None] * F.OWN + np.arange(F.OWN)[None, :]).astype(np.int64))
         out = {k: v.to(device) for k, v in t.items()}
         out["B"] = B
         return out
+
+
+def lg_dev(model):
+    return next(model.parameters()).device.type
 
 
 class Cnet2Adapter:
@@ -140,6 +215,21 @@ class Cnet2Adapter:
         net._rl2_cfg = cfg
         return net
 
+    def server_encode(self, model, d, teacher, device, amp=False):
+        """trunk of a batch of positions for the inference server: d = stacked Feat.observe outputs (XKEYS, NumPy)
+        -> tok [B,OWN,D], ctx [B,D] float32 NumPy (what cnet2_np.Policy.encode returns per position)."""
+        import torch
+        B = len(d["maps"])
+        t = {k: torch.from_numpy(np.ascontiguousarray(v)).to(device) for k, v in d.items()}
+        b = {"maps": (t["maps"].float() / 255.0).reshape(B, F.P, F.N).reshape(B, F.P, F.S, F.S),
+             "scal": t["scal"].float(), "tok_cargo": t["tok_cargo"].float(), "hist_cargo": t["hist_cargo"].float(),
+             "tok_mask": t["tok_mask"].bool(), "teacher": torch.full((B,), int(teacher), dtype=torch.long, device=device)}
+        for k in ("tok_pos", "tok_kind", "hist_cell", "hist_move"):
+            b[k] = t[k].long()
+        with torch.no_grad(), torch.autocast(device.type, enabled=bool(amp) and device.type == "cuda"):
+            tok, ctx, _ = model.encode(b)
+        return tok[:, :F.OWN].float().cpu().numpy(), ctx.float().cpu().numpy()
+
     def export(self, model):
         sd = {k: v.detach().cpu().float().numpy() for k, v in model.state_dict().items()}
         sd["meta"] = np.array(json.dumps({"cfg": getattr(model, "_rl2_cfg", model.cfg)}))
@@ -150,10 +240,18 @@ class Cnet2Adapter:
 
     def evaluate(self, model, b, temp):
         import torch
-        lg, v, _ = model(b)                                   # [B,12,5] masked (NEG), [B]
+        amp = bool(getattr(model, "_amp", False)) and lg_dev(model) == "cuda"
+        with torch.autocast("cuda", enabled=amp):
+            lg, v, _ = model(b)                               # [B,12,5] masked (NEG), [B]
+        lg = lg.float(); v = v.float()
         keep = b["tok_mask"][:, :F.OWN] & (b["y"] >= 0)
         legal = b["legal"][keep]
-        z = lg[keep] / temp
+        if TEMP_KIND is None:
+            z = lg[keep] / temp
+        else:
+            tk = torch.tensor(TEMP_KIND, device=lg.device, dtype=lg.dtype)
+            kind = b["tok_kind"][:, :F.OWN].clamp(max=2)          # 0 collector, 1 planter, 2 own base
+            z = lg[keep] / tk[kind[keep]][:, None]
         z = torch.where(legal, z, torch.full_like(z, -1e9))
         lp = torch.log_softmax(z, dim=1)
         B = b["B"]

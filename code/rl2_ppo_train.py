@@ -10,7 +10,7 @@ Objective per decision (one game step = the joint action of all our units):
   L = -min(r A, clip(r) A) + vf * (V - G)^2 - ent * H + kl * KL(pi_ref || pi)
   r = exp(logp - logp_behaviour); H, KL summed over units (teacher-forced
   conditionals for autoregressive policies); pi_ref = frozen BC init.
-Reward per step: rscale * d(margin)  (or terminal-only margin)  + win bonus
+Reward per step: rscale * d(margin)  (or terminal-only margin, or --reward worth: d(worth margin))  + win bonus
   + anneal * (c_dep * delivered_cargo - c_lost * cargo_lost) * rscale,
   anneal = max(0, 1 - it / shape_iters). GAE(gamma, lambda) on the value head.
 League: bot files + frozen learner snapshots; opponent sampling
@@ -81,7 +81,9 @@ def parse():
     a("--gamma", type=float, default=0.995)
     a("--lam", type=float, default=0.95)
     a("--rscale", type=float, default=1 / 5000.0)
-    a("--reward", default="dense", choices=["dense", "terminal"])
+    a("--reward", default="dense", choices=["dense", "terminal", "worth"],
+      help="dense: per-step change of the cash margin; worth: per-step change of the worth margin (cash + cargo on board + "
+           "remaining tree value; sums to the same final margin, credit arrives at pick-up / planting time)")
     a("--win-bonus", type=float, default=0.1)
     a("--c-dep", type=float, default=0.0)
     a("--c-lost", type=float, default=0.0)
@@ -99,6 +101,14 @@ def parse():
     a("--eval-opps", default="exp/opp_1cz_v5.py,exp/cand_c1z_v1.py")
     a("--eval-seed0", type=int, default=980000)
     a("--seed0", type=int, default=3000000, help="training game seeds start here")
+    a("--amp", type=int, default=0,
+      help="1: fp16 autocast for the learner's forward/backward on cuda (log-probs and losses stay fp32); watch dlogp")
+    a("--pre-mb", type=int, default=4096, help="batch of the no-grad passes before the PPO epochs (values, reference)")
+    a("--server", type=int, default=0,
+      help="1: one inference process on --device runs the trunk for all rollout workers (rl2_ppo_server); the workers "
+           "keep only features, the per-unit decode and the simulator")
+    a("--self-prior", type=float, default=0.0,
+      help=">0: add opponent SELF (current weights on both sides, both sides recorded) to the league with this prior")
     a("--resume", default=None, help="state_last.pt to resume from")
     a("--remote", default=None, help="split mode: consume cloud actor shards (rl2_actor.py) from this local dir")
     a("--dec-frac", type=float, default=1.0, help="fraction of decisions used in the PPO epochs (values: all)")
@@ -180,6 +190,8 @@ def game_rewards(g, args, it):
     dm = g["dmargin"].astype(np.float64)
     if args.reward == "terminal":
         r = np.zeros_like(dm); r[-1] = dm.sum()
+    elif args.reward == "worth":
+        r = g["dworth"].astype(np.float64)
     else:
         r = dm.copy()
     ann = max(0.0, 1.0 - it / max(1, args.shape_iters))
@@ -232,6 +244,13 @@ def main():
     for q in ref.parameters():
         q.requires_grad_(False)
     vnet = ad.make_model(w0).to(dev) if args.sep_value else None
+    use_amp = bool(args.amp) and dev.type == "cuda"
+    if dev.type == "cuda":
+        torch.backends.cudnn.benchmark = True
+    for m_ in (net, ref, vnet):
+        if m_ is not None:
+            m_._amp = use_amp
+    sc_p = torch.amp.GradScaler("cuda", enabled=use_amp); sc_v = torch.amp.GradScaler("cuda", enabled=use_amp)
     opt = torch.optim.Adam(net.parameters(), lr=args.lr)
     vopt = torch.optim.Adam(vnet.parameters(), lr=args.vlr) if vnet is not None else None
     # shared model: value-warmup steps touch only the value head (trunk updates would move the policy)
@@ -246,6 +265,9 @@ def main():
             vnet.load_state_dict(stt["vnet"]); vopt.load_state_dict(stt["vopt"])
         it0 = stt["it"]; kl_coef = stt.get("kl_coef", kl_coef)
     league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
+    if args.self_prior > 0:
+        league.tab.setdefault("SELF", {"prior": args.self_prior, "n": 0, "wr": 0.5, "margin": 0.0})
+        league.tab["SELF"]["prior"] = args.self_prior
     league.save()                         # split mode: the cloud actor needs the table before iteration 1
     for k, v in league.tab.items():      # resumed snapshots keep their files
         if v.get("snap") and not os.path.exists(k.split(":", 2)[2]):
@@ -295,7 +317,14 @@ def main():
         return wk
 
     ctx = mp.get_context("spawn")
-    pool = ctx.Pool(1 if args.remote else args.workers)
+    server = None
+    if args.server and not args.remote:
+        import rl2_ppo_server as SV
+        import rl2_ppo_rollout as _RO
+        server = SV.start(ctx, args.adapter, str(dev), args.workers)
+        pool = ctx.Pool(args.workers, initializer=_RO._init_worker, initargs=server.initargs)
+    else:
+        pool = ctx.Pool(1 if args.remote else args.workers)
 
     def submit_rollouts(wk):
         nonlocal seed
@@ -334,8 +363,13 @@ def main():
         # ---------------- values, GAE
         t1 = time.time()
         buf = ad.build_buffer(trajs)
+        t_buf = time.time() - t1
         offs = np.cumsum([0] + [len(t) for t in trajs])
-        LP0 = np.array([r["logp"] for t in trajs for r in t], np.float32)
+        LP0 = buf.lp0 if hasattr(buf, "lp0") else np.array([r["logp"] for t in trajs for r in t], np.float32)
+        for g in games:                      # the buffer holds the data now; drop the per-game copies
+            g["recs"] = None
+        trajs = None
+        pmb = max(args.mb, args.pre_mb)      # the no-grad passes (values, reference policy) take larger batches
         LP0U = torch.from_numpy(buf.lp0u).to(dev)
         vmodel = vnet if vnet is not None else net
         vmodel.eval()
@@ -346,8 +380,8 @@ def main():
         SUB = (np.sort(np.random.choice(buf.n, max(1, int(buf.n * args.dec_frac)), replace=False))
                if args.dec_frac < 1 else np.arange(buf.n))
         with torch.no_grad():
-            for b0 in range(0, buf.n, args.mb):
-                idx = np.arange(b0, min(buf.n, b0 + args.mb))
+            for b0 in range(0, buf.n, pmb):
+                idx = np.arange(b0, min(buf.n, b0 + pmb))
                 bt = buf.batch(idx, dev)
                 V[idx] = ad.evaluate(vmodel, bt, args.temp)["value"].float().cpu().numpy()
                 if args.dec_frac >= 1:
@@ -356,12 +390,13 @@ def main():
                         REFLP = torch.zeros((buf.n_ukeys, orf["lp"].shape[1]), device=dev)
                     REFLP[orf["ukey"]] = orf["lp"].float()
             if args.dec_frac < 1:
-                for b0 in range(0, len(SUB), args.mb):
-                    bt = buf.batch(SUB[b0:b0 + args.mb], dev)
+                for b0 in range(0, len(SUB), pmb):
+                    bt = buf.batch(SUB[b0:b0 + pmb], dev)
                     orf = ad.evaluate(ref, bt, args.temp)
                     if REFLP is None:
                         REFLP = torch.zeros((buf.n_ukeys, orf["lp"].shape[1]), device=dev)
                     REFLP[orf["ukey"]] = orf["lp"].float()
+        t_pre = time.time() - t1 - t_buf
         ADV = np.zeros(buf.n, np.float32); RET = np.zeros(buf.n, np.float32)
         for gi, g in enumerate(games):
             a_, r_ = gae(game_rewards(g, args, it), V[offs[gi]:offs[gi + 1]], args.gamma, args.lam)
@@ -406,8 +441,8 @@ def main():
                 if vnet is not None:
                     vv = ad.evaluate(vnet, bt, args.temp)["value"]
                     vl = ((vv - ret.clamp(-1, 1)) ** 2).mean()
-                    vopt.zero_grad(); vl.backward()
-                    torch.nn.utils.clip_grad_norm_(vnet.parameters(), args.gclip); vopt.step()
+                    vopt.zero_grad(); sc_v.scale(vl).backward(); sc_v.unscale_(vopt)
+                    torch.nn.utils.clip_grad_norm_(vnet.parameters(), args.gclip); sc_v.step(vopt); sc_v.update()
                     loss = pl - args.ent * ent.mean() + kl_coef * kl.mean()
                 else:
                     vl = ((o["value"] - ret.clamp(-1, 1)) ** 2).mean()
@@ -419,12 +454,12 @@ def main():
                     torch.nn.utils.clip_grad_norm_(vhead, args.gclip); hopt.step()
                     gn = 0.0
                 elif not (warm and vnet is not None):
-                    opt.zero_grad(); loss.backward()
+                    opt.zero_grad(); sc_p.scale(loss).backward(); sc_p.unscale_(opt)
                     gn = torch.nn.utils.clip_grad_norm_(net.parameters(), args.gclip).item()
                 else:
                     gn = 0.0
                 if not warm:
-                    opt.step()
+                    sc_p.step(opt); sc_p.update()
                 with torch.no_grad():
                     cf = ((ratio - 1).abs() > args.clip).float().mean().item()
                 stats.append([pl.item(), vl.item(), ent.mean().item(), kl.mean().item(), cf, gn,
@@ -442,8 +477,9 @@ def main():
         by = {}
         for g in games:
             by.setdefault(g["opp"], []).append(g["margin"])
-        rec = {"it": it, "t": round(time.time()), "games": len(games), "dec": ndec, "units": int(len(buf.act)),
-               "roll_s": round(t_roll, 1), "upd_s": round(t_upd, 1),
+        srv = server.stats() if server is not None else None
+        rec = {"it": it, "t": round(time.time()), "games": len(games), "srv": srv, "dec": ndec, "units": int(len(buf.act)),
+               "roll_s": round(t_roll, 1), "upd_s": round(t_upd, 1), "buf_s": round(t_buf, 1), "pre_s": round(t_pre, 1),
                "games_per_min": round(60 * len(games) / max(t_roll, 1e-6), 1),
                "dec_per_s": round(ndec / max(t_roll, 1e-6), 1),
                "pol_s": round(t_pol, 1), "opp_s": round(t_opp, 1),
@@ -453,6 +489,9 @@ def main():
                "adv_std": round(float(ADV.std()), 4), "v_mean": round(float(V.mean()), 3),
                "margin": {k: [round(float(np.mean(v))), len(v), int(sum(x > 0 for x in v))] for k, v in by.items()},
                "winrate": round(float(np.mean([g["margin"] > 0 for g in games])), 3),
+               "planted": {k: [round(float(np.mean([g.get("planted", 0) for g in games if g["opp"] == k])), 1),
+                               round(float(np.mean([g.get("planted_op", 0) for g in games if g["opp"] == k])), 1)]
+                           for k in by},
                "buf_mb": round(buf.nbytes() / 1e6, 1), "rss_mb": round(rss_mb()), "workers_rss_mb": round(children_rss_mb())}
         tlog.write(json.dumps(rec) + "\n"); tlog.flush()
         print(json.dumps(rec), flush=True)
@@ -494,6 +533,8 @@ def main():
         if os.path.exists(ek):
             os.remove(ek)
     pool.terminate()
+    if server is not None:
+        server.stop()
 
 
 if __name__ == "__main__":

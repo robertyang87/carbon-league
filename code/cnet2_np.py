@@ -26,6 +26,13 @@ _r, _c = F.ROW, F.COL
 IM2COL = np.stack([((_r + dr) % F.S) * F.S + (_c + dc) % F.S for dr, dc in SHIFTS], 1)   # [N,9]
 
 
+
+def _tk(t, s, x):
+    """temperature for unit slot s: a scalar, or (car, planter, base) for per-kind sampling (exam diagnostics)"""
+    if not isinstance(t, (tuple, list)):
+        return t
+    return t[2] if s >= 10 else (t[1] if int(x["tok_kind"][s]) == 1 else t[0])
+
 class Policy:
     def __init__(self, w):
         meta = w.get("meta")
@@ -36,6 +43,17 @@ class Policy:
         w = self.w
         self.NB = len({k.split(".")[1] for k in w if k.startswith("blocks.")})
         self.L = len({k.split(".")[1] for k in w if k.startswith("attn.")})
+        self.TA = len({k.split(".")[1] for k in w if k.startswith("tattn.")})     # cell attention in the trunk
+        if self.TA:
+            step = max(self.NB // self.TA, 1)
+            self.ta = {min(step * (j + 1), self.NB) - 1: j for j in range(self.TA)}
+            self.TNH = w["tattn.0.rel.weight"].shape[1]
+            r_, c_ = np.arange(F.N) // F.S, np.arange(F.N) % F.S
+            self.rel_cell = ((r_[:, None] - r_[None, :]) % F.S) * F.S + (c_[:, None] - c_[None, :]) % F.S
+            self.tbias = [np.ascontiguousarray(w[f"tattn.{j}.rel.weight"][self.rel_cell].transpose(2, 0, 1))
+                          for j in range(self.TA)]
+        else:
+            self.ta = {}
         self.wm = {k[:-7]: _wmat(v) for k, v in w.items() if k.endswith(".weight") and v.ndim == 4 and v.shape[-1] == 3}
         self.C = w["stem.weight"].shape[0]
         self.G = self.cfg["G"] if self.cfg else 8
@@ -94,6 +112,8 @@ class Policy:
             n = f"blocks.{i}"
             t = np.maximum(self.gn(self.conv(h, n + ".c1"), n + ".n1"), 0)
             h = np.maximum(h + self.gn(self.conv(t, n + ".c2"), n + ".n2"), 0)
+            if i in self.ta:
+                h = self.cell_attn(h, self.ta[i])
         self.trunk = h
         pos = x["tok_pos"]
         tf = self.tok_features(x)
@@ -122,6 +142,16 @@ class Policy:
         ctx = np.maximum(self.lin(np.concatenate([h.mean(0), tmean, s, w["teach.weight"][teacher]]), "ctx"), 0)
         return tok, ctx
 
+    def cell_attn(self, x, j):
+        """cnet2_model.CellAttn on x [N, C] (channels-last)."""
+        n = f"tattn.{j}"; C = x.shape[1]; NH = self.TNH; dh = C // NH
+        qkv = self.lin(self.ln(x, n + ".n1"), n + ".qkv").reshape(F.N, 3, NH, dh).transpose(1, 2, 0, 3)
+        sc = qkv[0] @ qkv[1].transpose(0, 2, 1) / np.float32(dh ** 0.5) + self.tbias[j]
+        sc = np.exp(sc - sc.max(-1, keepdims=True))
+        sc /= sc.sum(-1, keepdims=True)
+        x = x + self.lin((sc @ qkv[2]).transpose(1, 0, 2).reshape(F.N, C), n + ".out")
+        return x + self.lin(np.maximum(self.lin(self.ln(x, n + ".n2"), n + ".f1"), 0), n + ".f2")
+
     def gru(self, x, h):
         w = self.w
         gi = x @ self.gih + w["gru.bias_ih"]
@@ -132,7 +162,7 @@ class Policy:
         n = np.tanh(gi[2 * D:] + r * gh[2 * D:])
         return (1 - z) * n + z * h
 
-    def act(self, x, aux, teacher=0, forced=None, sample_rng=None, temp=1.0, hook=None):
+    def act(self, x, aux, teacher=0, forced=None, sample_rng=None, temp=1.0, hook=None, sample_kinds=None):
         """forced: optional labels to teacher-force (parity tests).
         hook(s, logits, prefix) -> optional action override (rule layer)."""
         w = self.w
@@ -155,9 +185,60 @@ class Policy:
             logits[s] = lg
             if forced is not None:
                 a = int(forced[s])
-            elif sample_rng is not None:
-                z = lg / temp; p = np.exp(z - z.max()); p /= p.sum()
+            elif sample_rng is not None and (sample_kinds is None
+                                             or (s >= 10 and "base" in sample_kinds)
+                                             or (s < 10 and int(x["tok_kind"][s]) == 1 and "planter" in sample_kinds)):
+                z = lg / _tk(temp, s, x); p = np.exp(z - z.max()); p /= p.sum()   # sample_kinds: only these units are sampled
                 a = int(sample_rng.choice(5, p=p))
+            else:
+                a = int(lg.argmax())
+            if hook is not None:
+                o = hook(s, lg, pf, a)
+                if o is not None:
+                    a = int(o)
+            labels[s] = a
+            pf.advance(s, a)
+            prev = a + (0 if s < 10 else 5)
+        return labels, logits, value
+
+
+class Ensemble:
+    """several Policy nets as one: every unit's move logits are the mean over the members, the chosen action is fed
+    back to all of them (same autoregressive prefix). Drop-in for Policy.act; costs one trunk per member."""
+
+    def __init__(self, pols):
+        self.pols = list(pols)
+        self.w = self.pols[0].w; self.cfg = self.pols[0].cfg
+
+    def act(self, x, aux, teacher=0, forced=None, sample_rng=None, temp=1.0, hook=None, sample_kinds=None):
+        P = self.pols; K = len(P)
+        enc = [p.encode(x, teacher) for p in P]
+        value = float(np.mean([math.tanh(float(c @ p.w["value.weightT"][:, 0] + p.w["value.bias"][0])) for p, (_, c) in zip(P, enc)]))
+        hs = [p.lin(c, "h0") for p, (_, c) in zip(P, enc)]
+        prev = 8
+        pf = F.Prefix(x, aux)
+        labels = np.full(F.OWN, -1, np.int64)
+        logits = np.full((F.OWN, 5), NEG, np.float32)
+        for s in range(F.OWN):
+            if not x["tok_mask"][s]:
+                continue
+            uf, mf, legal = pf.feats(s)
+            acc = np.zeros(5, np.float32)
+            for k, p in enumerate(P):
+                tok, ctx = enc[k]
+                inp = p.lin(np.concatenate([tok[s], ctx, uf, mf.reshape(-1)]), "din") + p.w["aemb.weight"][prev]
+                hs[k] = p.gru(inp, hs[k])
+                base = p.lin(hs[k], "whead") if s < 10 else np.concatenate([p.lin(hs[k], "bhead"), np.zeros(2, np.float32)])
+                acc += base + p.lin(mf, "V") @ p.lin(hs[k], "U")
+            lg = np.where(legal, acc / K, NEG).astype(np.float32)
+            logits[s] = lg
+            if forced is not None:
+                a = int(forced[s])
+            elif sample_rng is not None and (sample_kinds is None
+                                             or (s >= 10 and "base" in sample_kinds)
+                                             or (s < 10 and int(x["tok_kind"][s]) == 1 and "planter" in sample_kinds)):
+                z = lg / _tk(temp, s, x); pr = np.exp(z - z.max()); pr /= pr.sum()
+                a = int(sample_rng.choice(5, p=pr))
             else:
                 a = int(lg.argmax())
             if hook is not None:

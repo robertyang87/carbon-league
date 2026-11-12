@@ -14,7 +14,7 @@ rsync -az -e "ssh -i $K" "$ROOT/data/weights/"{cnet2_b128.npz,cnet2_b128_q8.npz,
   $U@$H:carbon/data/weights/ 2>/dev/null || rsync -az -e "ssh -i $K" "$ROOT/data/weights/"cnet2_b128*.npz "$ROOT/data/weights/"cnet2_s64*.npz $U@$H:carbon/data/weights/
 $SSH 'bash -s' <<'REMOTE'
 set -e
-export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a NEEDRESTART_SUSPEND=1
 command -v rsync >/dev/null || (apt-get update -qq && apt-get install -y -qq rsync)
 dpkg -s python3.12-venv >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq python3.12-venv python3-pip)
 cd ~/carbon
@@ -22,6 +22,6 @@ cd ~/carbon
 [ -x .venv/bin/python ] || python3 -m venv .venv
 .venv/bin/pip -q install --upgrade pip
 .venv/bin/pip -q install "numpy==2.*" scipy
-.venv/bin/pip -q install torch --index-url https://download.pytorch.org/whl/cpu || .venv/bin/pip -q install torch
-.venv/bin/python -c 'import sys,numpy,torch,os;print("ok",sys.version.split()[0],numpy.__version__,torch.__version__,os.cpu_count(),"cpus")'
+if [ "${WITH_TORCH:-0}" = 1 ]; then .venv/bin/pip -q install torch --index-url https://download.pytorch.org/whl/cpu || .venv/bin/pip -q install torch; fi   # exams need numpy only
+.venv/bin/python -c 'import sys,numpy,os;print("ok",sys.version.split()[0],numpy.__version__,os.cpu_count(),"cpus")'
 REMOTE

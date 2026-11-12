@@ -1,6 +1,8 @@
 """cnet2_search_pack -- single-file submission: cnet2 b128 policy (v12) + cnet2_search rollout layer.
 
 python3 cnet2_search_pack.py OUT.py "CONF_DICT_LITERAL" [POLICY.npz] [ROLLOUT.npz]
+CNET2_NO_ROLL=1 (conf with "SEARCH": False, "ROLL": "self") leaves the rollout net out -- the upload limit is 10 MB.
+CNET2_ENS=a.npz,b.npz embeds extra policy nets; the pack then plays the mean of the members' logits (cnet2_np.Ensemble).
 Embeds cnet2_feat, cnet2_np, fastsim, cnet2_search sources (exec'd into private module objects, the
 plain sys.modules names are restored afterwards) and both weight sets, int8 per-row quantised exactly
 like cnet2_pack (dequantised == data/weights/*_q8.npz).  No __file__ use, no file access at play time.
@@ -52,6 +54,10 @@ _B1 = %(b1)r
 _Q2 = %(q2)s
 _M2 = %(m2)r
 _B2 = %(b2)r
+_Q3 = %(q3)s
+_M3 = %(m3)r
+_B3 = %(b3)r
+_ENS = %(ens)s
 
 
 def _dequantize(raw, meta):
@@ -78,23 +84,39 @@ def agent(observation, configuration):
     global _W, _AG
     if _W is None:
         w1 = _dequantize(zlib.decompress(base64.b64decode(_B1)), _Q1); w1["meta"] = np.array(_M1)
-        w2 = _dequantize(zlib.decompress(base64.b64decode(_B2)), _Q2); w2["meta"] = np.array(_M2)
-        _W = (w1, w2)
+        w2 = None                              # packs built with CNET2_NO_ROLL=1 (pure net, no search) carry no rollout net
+        if _B2:
+            w2 = _dequantize(zlib.decompress(base64.b64decode(_B2)), _Q2); w2["meta"] = np.array(_M2)
+        w3 = None
+        if _B3:
+            w3 = _dequantize(zlib.decompress(base64.b64decode(_B3)), _Q3); w3["meta"] = np.array(_M3)
+        we = []
+        for _q, _m, _b in _ENS:                 # extra ensemble members (conf key ENS is filled in here)
+            _e = _dequantize(zlib.decompress(base64.b64decode(_b)), _q); _e["meta"] = np.array(_m); we.append(_e)
+        _W = (w1, w2, w3, we)
     if _AG is None or observation["step"] == 0:
-        _AG = _S.make_search_agent(CONF, weights=_W[0], rweights=_W[1])
+        _AG = _S.make_search_agent(dict(CONF, ENS=_W[3]) if _W[3] else CONF, weights=_W[0], rweights=_W[1], oweights=_W[2])
     a = _AG(observation, configuration)
     agent.last_stats = _AG.stats      # local eval only (per-game search stats); harmless on the platform
     return a
 '''
 
 
-def main(out, conf, wp=None, wr=None):
+def main(out, conf, wp=None, wr=None, wo=None, ens=()):
     wd = os.path.join(HERE, "..", "data", "weights")
     wp = wp or os.path.join(wd, "cnet2_b128.npz")
     wr = wr or os.path.join(wd, "cnet2_s64.npz")
     parts = {}
     qmodes = {"1": os.environ.get("CNET2_QMODE", "int8"), "2": os.environ.get("CNET2_QMODE_ROLL", os.environ.get("CNET2_QMODE", "int8"))}
-    for tag, path in (("1", wp), ("2", wr)):
+    qmodes["3"] = qmodes["1"]
+    parts["3"] = ("None", "", "")                 # optional opening-phase policy (OPEN_NET_STEP)
+    no_roll = os.environ.get("CNET2_NO_ROLL") == "1"
+    if no_roll:      # the 10 MB upload limit: a pure-net pack does not need the rollout net (~1.1 MB int8, ~2.2 MB f16)
+        c_ = eval(conf)
+        assert c_.get("SEARCH") is False and c_.get("ROLL", "s64") != "s64", \
+            'CNET2_NO_ROLL=1 needs "SEARCH": False and "ROLL": "self" in the conf (the policy net then stands in for the rollout net)'
+        parts["2"] = ("None", "", "")
+    for tag, path in (("1", wp),) + ((("2", wr),) if not no_roll else ()) + ((("3", wo),) if wo else ()):
         w = dict(np.load(path))
         P.QMODE = qmodes[tag]                    # policy and rollout net can be packed differently (int8 / f16)
         meta, raw, deq = P.quantize(w)
@@ -103,13 +125,20 @@ def main(out, conf, wp=None, wr=None):
             q = np.load(qp)
             assert all(np.array_equal(deq[k], q[k]) for k in deq), "dequantised != " + qp
         parts[tag] = (json.dumps(meta), str(w["meta"]), base64.b64encode(zlib.compress(raw, 9)).decode())
+    ens_parts = []
+    for path in ens:                             # CNET2_ENS=a.npz,b.npz : extra policy nets averaged with the main one
+        w = dict(np.load(path)); P.QMODE = qmodes["1"]
+        meta, raw, deq = P.quantize(w)
+        ens_parts.append((meta, str(w["meta"]), base64.b64encode(zlib.compress(raw, 9)).decode()))
+    assert "ENS" not in eval(conf), "pass ensemble members with CNET2_ENS, not in the conf (paths do not exist on the ladder)"
     eval(conf)  # must be a valid literal
     src = {m: open(os.path.join(HERE, m + ".py")).read() for m in MODS}
     code = TEMPLATE % dict(src=src, mods=MODS, conf=conf, q1=parts["1"][0], m1=parts["1"][1], b1=parts["1"][2],
-                           q2=parts["2"][0], m2=parts["2"][1], b2=parts["2"][2])
+                           q2=parts["2"][0], m2=parts["2"][1], b2=parts["2"][2],
+                           q3=parts["3"][0], m3=parts["3"][1], b3=parts["3"][2], ens=repr(ens_parts))
     open(out, "w").write(code)
     print(json.dumps({"out": out, "bytes": len(code)}))
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    main(*sys.argv[1:], ens=[e for e in os.environ.get("CNET2_ENS", "").split(",") if e])

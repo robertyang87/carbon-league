@@ -500,6 +500,7 @@ class FastCarbon:
                     t.age += 1
 
         # ---- Phase 2: collisions
+        self.last_collisions = []           # read-only log: (worker id, player, carbon, who got the carbon: player or None)
         cell_worker = {}
         collisions_flag = set()
         groups = {}
@@ -526,14 +527,16 @@ class FastCarbon:
             winner_is_collector = winner is not None and winner.is_collector
             for w in deleted:
                 if winner_is_collector:
-                    winner.carbon += w.carbon
+                    winner.carbon += w.carbon; gets = winner.player
                 elif pos in tree_at:
-                    self.cash[tree_at[pos].player] += w.carbon
+                    self.cash[tree_at[pos].player] += w.carbon; gets = tree_at[pos].player
                 elif pos in self.base_at:
-                    self.cash[self.base_at[pos][0]] += w.carbon
+                    self.cash[self.base_at[pos][0]] += w.carbon; gets = self.base_at[pos][0]
                 else:
                     carbon[pos] = min(carbon[pos] + w.carbon,
-                                      cfg["maxCellCarbon"])
+                                      cfg["maxCellCarbon"]); gets = None
+                self.last_collisions.append((w.id, w.player, float(w.carbon), gets,
+                                             winner.player if winner_is_collector else None))   # 5th: winning collector's player
                 self._kill_worker(w, cell_worker)
 
         # ---- Phase 3: base deposit (incl. enemy-base rules)

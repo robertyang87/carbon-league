@@ -9,7 +9,8 @@ def _play(t):
     try: return eval_v53.play_game(t)
     except Exception as e: return {"error": repr(e)[:200], "seed": t[3]}
 def main(a, b, s0, n, tag):
-    tasks = [(tag, a, b, s, s % 2) for s in range(s0, s0 + n)]
+    seeds = [int(x) for x in os.environ["EVO_SEEDS"].split(",")] if os.environ.get("EVO_SEEDS") else range(s0, s0 + n)
+    tasks = [(tag, a, b, s, s % 2) for s in seeds]
     live = os.path.join(HERE, "..", "data", "bigeval_live"); os.makedirs(live, exist_ok=True)
     lf = open(os.path.join(live, tag + ".jsonl"), "a")
     rows = []
@@ -18,15 +19,19 @@ def main(a, b, s0, n, tag):
         for f in as_completed(futs):
             r = f.result(); rows.append(r)
             g = {"seed": r.get("seed"), "side": r.get("policy_side"), "margin": round(r["margin"]) if "margin" in r else None,
-                 "err": r.get("error"), "t": time.strftime("%H:%M:%S")}
+                 "err": r.get("error"), "t": time.strftime("%H:%M:%S"), "serr": r.get("a_errors", 0)}
             if "ledger_pol" in r:
                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
                          tinc=round(r["ledger_pol"]["tree_income"]), otinc=round(r["ledger_opp"]["tree_income"]),
+                         pspend=round(r["ledger_pol"].get("plant_spend", 0)), opspend=round(r["ledger_opp"].get("plant_spend", 0)),
+                         sspend=round(r["ledger_pol"].get("seize_spend", 0)), osspend=round(r["ledger_opp"].get("seize_spend", 0)),
+                         strand=r["ledger_pol"].get("stranded"), ostrand=r["ledger_opp"].get("stranded"),
                          bk=r.get("bankrupt_steps", 0), lx=r.get("ledger_extra"), wms=r.get("a_worst_step_ms"), ms=r.get("a_ms_per_step"),
                          **({"srch": r["a_stats"].get("searched"), "chg": r["a_stats"].get("changed"),
                              "shal": r["a_stats"].get("shallow"), "ab": r["a_stats"].get("aborted", 0),
-                             "rerr": r["a_stats"].get("root_errors", 0)} if r.get("a_stats") else {}))
+                             "rerr": r["a_stats"].get("root_errors", 0), "eh_e": r["a_stats"].get("eh_edge", 0), "eh_h": r["a_stats"].get("eh_heavy", 0),
+                             "cc21": r["a_stats"].get("cc_2to1", 0), "cc01": r["a_stats"].get("cc_0to1", 0), "pa": r["a_stats"].get("pa_moves", 0), "paerr": r["a_stats"].get("pa_errors", 0), "pb": r["a_stats"].get("pb_skip", 0), "mnp": r["a_stats"].get("mnp", 0), "eh_alt": r["a_stats"].get("eh_alt", 0), "fixdrop": r["a_stats"].get("fix_dropped", 0), "pk_in": r["a_stats"].get("pk_in", 0), "pk_cut": r["a_stats"].get("pk_cut", 0), "sims": r["a_stats"].get("sims", 0), "pk_rep": r["a_stats"].get("pk_rep", 0), "pk_rep3": r["a_stats"].get("pk_rep_plant3", 0), "pk_repc": r["a_stats"].get("pk_rep_cash", 0), "bk_in": r["a_stats"].get("bk_in", 0), "bk_cut": r["a_stats"].get("bk_cut", 0), "simsl": r["a_stats"].get("sims_steps"), "cb": [r["a_stats"].get(k, 0) for k in ("cb_seen", "cb", "cb_ok", "cb_errors")], "se": [r["a_stats"].get(k, 0) for k in ("se_seen", "se", "se_ok", "se_none", "se_errors")], "se_lat": r["a_stats"].get("se_lat"), "msl": r["a_stats"].get("ms_steps"), "px": [r["a_stats"].get("px", 0), r["a_stats"].get("px_errors", 0)], "opl": [r["a_stats"].get("opl", 0), r["a_stats"].get("opl_errors", 0)], "tg": r["a_stats"].get("tg", 0), "rg": r["a_stats"].get("rg", 0), "seqc": r["a_stats"].get("seq_changed", 0)} if r.get("a_stats") else {}))
             lf.write(json.dumps(g) + "\n"); lf.flush()
     m = [r["margin"] for r in rows if "margin" in r]
     if len(m) < 2:
@@ -45,6 +50,9 @@ def main(a, b, s0, n, tag):
            "games": [[r.get("seed"), r.get("policy_side"), round(r["margin"])] for r in rows if "margin" in r]}
     open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k != "games"}), flush=True)
     # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
+    rec["search_error_games"] = sum(1 for r in rows if r.get("a_errors"))
+    if rec["search_error_games"]:      # any exception inside the search / rule layers: the exam is not testing the intended code
+        print(json.dumps({"tag": tag, "WARN_SEARCH_ERRORS": rec["search_error_games"], "of": len(rows)}), file=sys.stderr, flush=True)
     if rec["changed0_games"]:
         print(json.dumps({"tag": tag, "WARN_SEARCH_NEVER_CHANGED": rec["changed0_games"], "of": rec["search_games"]}), file=sys.stderr, flush=True)
     if rec["err"] or rec["n"] < n:

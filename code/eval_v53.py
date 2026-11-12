@@ -93,6 +93,16 @@ def _plant_price(pre_trees, player):
             * (CFG["plantCostInflationBase"] ** alive))
 
 
+def _tdist(a, b):                 # torus Manhattan distance on the 15x15 board
+    dr = abs(a // 15 - b // 15); dc = abs(a % 15 - b % 15)
+    return min(dr, 15 - dr) + min(dc, 15 - dc)
+
+
+def _cheb(a, b):                  # torus Chebyshev distance (1 = one of the 8 neighbours)
+    dr = abs(a // 15 - b // 15); dc = abs(a % 15 - b % 15)
+    return max(min(dr, 15 - dr), min(dc, 15 - dc))
+
+
 def new_ledger():
     return dict(deposits=0.0, tree_income=0.0,
                 recruit_spend=0.0, recruit_count=0,
@@ -110,10 +120,16 @@ def _comp(st, p):
     return [c, pl, tr]
 
 
+NSTEPS = int(os.environ.get("EVAL_STEPS", "300"))   # 100 = opening exam: stop at step 100, margin = cash difference then
+
+
 def play_game(task):
     tag, a_file, b_file, seed, a_side = task
     random.seed(rng_seed(seed, a_side))
     sim = FastCarbon(CFG).reset(seed=seed)
+    ob_ = float(os.environ.get("EVAL_OPP_CASH", "0"))   # exam ruler only: extra starting cash for the OPPONENT (b side)
+    if ob_:
+        sim.cash[1 - a_side] += ob_
     fa = load_agent_fn(os.path.join(HERE, a_file))
     fb = load_agent_fn(os.path.join(HERE, b_file))
     agents = [None, None]
@@ -126,12 +142,26 @@ def play_game(task):
     t0 = time.time()
     bk_steps = 0
     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
-    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0]}   # stand-in validation ledger
-    for step in range(1, 301):
+    sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0], "life50_sum": [0, 0], "life50_n": [0, 0], "cargo240": [0.0, 0.0], "cargo270": [0.0, 0.0], "cash270": [0.0, 0.0], "dep270": [0.0, 0.0], "lost240": [0.0, 0.0], "gain240": [0.0, 0.0], "tax240": [0.0, 0.0], "lost240_self": [0.0, 0.0], "ts3": [[0, 0, 0], [0, 0, 0]], "pl3": [[0, 0, 0], [0, 0, 0]], "sz3": [[0, 0, 0], [0, 0, 0]], "dep200": [0.0, 0.0], "cash200": [0.0, 0.0], "cargo200": [0.0, 0.0], "camp100": [0, 0], "stall_max": [0, 0], "stall_run": [0, 0], "_dprev": [0.0, 0.0], "wait6": [0, 0], "haul_all": [0.0, 0.0], "gain_all": [0.0, 0.0], "tax_all": [0.0, 0.0], "tax_onT": [0.0, 0.0], "e_prec25": [0, 0], "e_palive25": [0, 0], "e_pdead30": [0, 0], "e_pdead0_30": [0, 0], "e_cash25": [0.0, 0.0], "e_cash40": [0.0, 0.0], "e_clost30": [0, 0], "e_first_tree": [0, 0], "e_trees50": [0, 0], "e_unseen20": [0, 0], "e_unseen30": [0, 0], "_seen": [set(), set()]}   # stand-in validation ledger
+    late_deaths = [[], []]
+    for step in range(1, NSTEPS + 1):
         pre = sim.get_state()
         acts = []
         for p in range(2):
             o = sim.obs(p)
+            if p == a_side and step < int(os.environ.get("EVAL_ORACLE_STEPS", "0")):
+                o = dict(o, oracle_carbon=list(sim.carbon))      # diagnostic: the tested side sees the true carbon map
+            if p == a_side and step < int(os.environ.get("EVAL_REVEAL_STEPS", "0")):
+                o = dict(o, reveal={c: sim.carbon[c] for c in range(225)})   # diagnostic: whole map seen (kept as seen)
+            if p == a_side and os.environ.get("EVAL_SNAKE"):        # diagnostic: one planter's snake route from step s0, k steps
+                s0, k = map(int, os.environ["EVAL_SNAKE"].split(":"))
+                if s0 <= step < s0 + k:
+                    b0 = int(sorted(sim.bases[p])[0][1]) if sim.bases[p] else 0
+                    br, bc = divmod(b0, 15); dr = 1 if br < 7 else -1; dc = 1 if bc < 7 else -1
+                    i = step - s0; leg, j = divmod(i, 5); j = j if leg % 2 == 0 else 4 - j
+                    r_, c_ = (br + dr * (1 + 3 * leg)) % 15, (bc + dc * j) % 15; q = r_ * 15 + c_
+                    cells = [((r_ - 1) % 15) * 15 + c_, ((r_ + 1) % 15) * 15 + c_, r_ * 15 + (c_ - 1) % 15, r_ * 15 + (c_ + 1) % 15]
+                    o = dict(o, reveal={c: sim.carbon[c] for c in cells})
             ts = time.time()
             acts.append(agents[p](o, CFG))
             dt = time.time() - ts
@@ -151,8 +181,17 @@ def play_game(task):
                 if was is None or was["player"] != p:
                     planted = was is None
                     ps["planted" if planted else "seized"] += 1
+                    cpre = pre.get("carbon")              # landing-spot quality: carbon on the 4 neighbours before the step
+                    if cpre is not None:
+                        q_ = int(tr["pos"]); r_, c_ = divmod(q_, 15)
+                        nc4 = sum(float(cpre[((r_ + dr) % 15) * 15 + (c_ + dc) % 15]) for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)))
+                        k_ = "pc4" if planted else "sc4"
+                        sh[k_ + "_sum"][p] += nc4; sh[k_ + "_n"][p] += 1
                     if planted:
                         ps["born"][tid] = step
+                        eb = [int(b) for _, b in post["bases"][1 - p]]   # planting site: distance to the nearest enemy base
+                        if eb:
+                            sh["pdist"][p] += min(_tdist(int(tr["pos"]), b) for b in eb); sh["pdist_n"][p] += 1
                     u = at.get(tr["pos"])
                     if u is not None:
                         ps["succ"][u] = ps["succ"].get(u, 0) + 1
@@ -160,9 +199,116 @@ def play_game(task):
                 tr = post["trees"].get(tid)
                 if tr is None or tr["player"] != p:
                     ps["lives"].append(step - b); del ps["born"][tid]
+                    if b <= 50:                       # trees planted in steps 1-50: lifetime fully observed by step 100
+                        sh["life50_sum"][p] += step - b; sh["life50_n"][p] += 1
+            lcol = {c[0]: c for c in (getattr(sim, "last_collisions", None) or [])}
+            for wid, w in pre["workers"].items():      # planters gone this step; with no tree planted/seized = zero-yield death
+                if w["player"] == p and w["type"] == "PLANTER" and wid not in post["workers"]:
+                    sh["pla_dead"][p] += 1; sh["pla_dead0"][p] += ps["succ"].get(wid, 0) == 0
+                    if step <= 30:
+                        sh["e_pdead30"][p] += 1; sh["e_pdead0_30"][p] += ps["succ"].get(wid, 0) == 0
+                    c_ = lcol.get(wid)                                   # 5th field: player of the winning collector (None: no car won)
+                    wp_ = c_[4] if c_ is not None and len(c_) > 4 else "?"
+                    mv_ = (acts[p] or {}).get(wid) in ("UP", "DOWN", "LEFT", "RIGHT")
+                    k_ = "pd_other" if c_ is None else ("pd_clash_move" if mv_ else "pd_clash_stay") if wp_ is None else "pd_owncar" if wp_ == p else "pd_ecar"
+                    sh[k_][p] += 1
+            etp = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # planter distance to nearest enemy tree
+            if etp:
+                for w in post["workers"].values():
+                    if w["player"] == p and w["type"] == "PLANTER":
+                        sh["pet_sum"][p] += min(_tdist(int(w["pos"]), c) for c in etp); sh["pet_n"][p] += 1
+            if step == 100:                            # cash + cargo on board at step 100 (opening exam score)
+                sh["cash100"][p] = float(post["cash"][p])
+                sh["cargo100"][p] = round(sum(float(w["carbon"]) for w in post["workers"].values() if w["player"] == p), 1)
+            ob6 = [int(x) for _, x in post["bases"][p]]   # loaded waiting: car-steps with >= 200 on board 1-6 cells from our base
+            if ob6:
+                sh["wait6"][p] += sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR"
+                                      and float(w["carbon"]) >= 200 and 1 <= min(_tdist(int(w["pos"]), b) for b in ob6) <= 6)
+            if step > 100:                             # base camping: an enemy collector within 1 of one of our bases
+                ob_ = [int(x) for _, x in post["bases"][p]]
+                if ob_ and any(w["player"] != p and w["type"] == "COLLECTOR" and min(_tdist(int(w["pos"]), b) for b in ob_) <= 1
+                               for w in post["workers"].values()):
+                    sh["camp100"][p] += 1
+            if step == 200:                            # cash + cargo at the end of the middle segment
+                sh["cash200"][p] = float(post["cash"][p])
+                sh["cargo200"][p] = round(sum(float(w["carbon"]) for w in post["workers"].values() if w["player"] == p), 1)
+            if step == 270:                            # cash at the endgame checkpoint: completes the step-270 score snapshot (dep270/cargo270 already tracked) for the last-30-steps score curve
+                sh["cash270"][p] = float(post["cash"][p])
+            if step in (240, 270):                     # cargo on board at the endgame checkpoints:
+                sh["cargo%d" % step][p] = round(sum(float(w["carbon"]) for w in post["workers"].values() if w["player"] == p), 1)
             nc = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "COLLECTOR")
             sh["colsteps"][p] += nc
             sh["treesteps"][p] += sum(1 for t in post["trees"].values() if t["player"] == p)
+            sh["ts3"][p][min(step // 100, 2)] += sum(1 for t in post["trees"].values() if t["player"] == p)   # tree-steps by segment
+            own_ba = {int(x) for _, x in post["bases"][p]}           # whole-game car ledger: dep = haul + gain - tax - lost - strand
+            etc_ = {int(t["pos"]) for t in post["trees"].values() if t["player"] != p}
+            for wid, w2 in post["workers"].items():
+                if w2["player"] != p or w2["type"] != "COLLECTOR" or wid not in pre["workers"]:
+                    continue
+                w1 = pre["workers"][wid]; dc = float(w2["carbon"]) - float(w1["carbon"]); stay = int(w2["pos"]) == int(w1["pos"])
+                if dc > 0:
+                    sh["haul_all" if stay else "gain_all"][p] += dc
+                elif dc < 0 and int(w2["pos"]) not in own_ba:
+                    sh["tax_all"][p] -= dc
+                    if int(w2["pos"]) in etc_:
+                        sh["tax_onT"][p] -= dc               # absorbed while standing ON an enemy tree cell
+            if step > 240:                        # collection after step 240 (does an early "wind-down" collect less?)
+                sh["haul240"][p] += sum(max(0.0, float(w2["carbon"]) - float(pre["workers"][wid]["carbon"]))
+                                        for wid, w2 in post["workers"].items()
+                                        if w2["player"] == p and w2["type"] == "COLLECTOR" and wid in pre["workers"]
+                                        and int(w2["pos"]) == int(pre["workers"][wid]["pos"]))
+                own_b = {int(x) for _, x in post["bases"][p]}       # gain240: cargo gained by moving cars (seized in a collision);
+                for wid, w2 in post["workers"].items():               # tax240: cargo a live car lost off its own base (enemy trees)
+                    if w2["player"] != p or wid not in pre["workers"]:
+                        continue
+                    dc = float(w2["carbon"]) - float(pre["workers"][wid]["carbon"]); moved = int(w2["pos"]) != int(pre["workers"][wid]["pos"])
+                    if dc > 0 and (moved or w2["type"] != "COLLECTOR"):
+                        sh["gain240"][p] += dc
+                    elif dc < 0 and int(w2["pos"]) not in own_b:
+                        sh["tax240"][p] -= dc
+            if step <= 100:                       # collection efficiency, steps 1-100: a collector that stays put on a
+                car = pre.get("carbon")              # non-base cell is collecting; cell carbon under it, and its haul
+                bases_p = {int(b) for _, b in post["bases"][p]}
+                for wid, w in pre["workers"].items():
+                    if w["player"] != p or w["type"] != "COLLECTOR" or wid not in post["workers"]:
+                        continue
+                    pos = int(w["pos"]); w2 = post["workers"][wid]
+                    if int(w2["pos"]) == pos and pos not in bases_p and car is not None:
+                        sh["cc100_sum"][p] += float(car[pos]); sh["cc100_n"][p] += 1
+                        sh["haul100"][p] += max(0.0, float(w2["carbon"]) - float(w["carbon"]))
+                    sh["colsteps100"][p] += 1
+            etr = [int(t["pos"]) for t in post["trees"].values() if t["player"] != p]   # our collectors taxed by an enemy tree:
+            sh["col_etree8"][p] += sum(1 for w in post["workers"].values()           # enemy tree within the 8-neighbourhood
+                                       if w["player"] == p and w["type"] == "COLLECTOR" and any(_cheb(int(w["pos"]), c) == 1 for c in etr))
+            if step <= 30:          # symmetry classes (4 mirror cells) never seen by our units (collector cell, planter 4-nbrs)
+                for w in post["workers"].values():
+                    if w["player"] == p:
+                        q_ = int(w["pos"])
+                        sh["_seen"][p].update([q_] if w["type"] == "COLLECTOR" else [((q_ // 15 - 1) % 15) * 15 + q_ % 15, ((q_ // 15 + 1) % 15) * 15 + q_ % 15, (q_ // 15) * 15 + (q_ % 15 - 1) % 15, (q_ // 15) * 15 + (q_ % 15 + 1) % 15])
+                if step in (20, 30):
+                    seen_cls = {min(r * 15 + c for r in (x // 15, 14 - x // 15) for c in (x % 15, 14 - x % 15)) for x in sh["_seen"][p]}
+                    sh["e_unseen%d" % step][p] = len({min(r * 15 + c for r in (x // 15, 14 - x // 15) for c in (x % 15, 14 - x % 15)) for x in range(225)} - seen_cls)
+            if step <= 50:          # opening ledger (low-tree tail diagnosis)
+                if step <= 25:
+                    sh["e_prec25"][p] += sum(1 for wid, w in post["workers"].items() if w["player"] == p and w["type"] == "PLANTER" and wid not in pre["workers"])
+                if step == 25:
+                    sh["e_palive25"][p] = sum(1 for w in post["workers"].values() if w["player"] == p and w["type"] == "PLANTER")
+                if step in (25, 40):
+                    sh["e_cash%d" % step][p] = float(post["cash"][p])
+                if step <= 30:
+                    sh["e_clost30"][p] += sum(1 for wid, w in pre["workers"].items() if w["player"] == p and w["type"] == "COLLECTOR" and wid not in post["workers"])
+                ntr_ = sum(1 for t in post["trees"].values() if t["player"] == p)
+                if ntr_ and not sh["e_first_tree"][p]:
+                    sh["e_first_tree"][p] = step
+                if step == 50:
+                    sh["e_trees50"][p] = ntr_
+            if step <= 60:          # early recruitment mix (dg6 weights base decisions in steps 30-60)
+                for wid, w in post["workers"].items():
+                    if w["player"] == p and wid not in pre["workers"]:
+                        sh["rec60_p" if w["type"] == "PLANTER" else "rec60_c"][p] += 1
+            if step > 258:          # late recruits: M2 recruits ~2.5/game in 259-275 and NONE from 276 on (hard cut)
+                nr = sum(1 for wid, w in post["workers"].items() if w["player"] == p and wid not in pre["workers"])
+                sh["rec259_275" if step <= 275 else "rec276"][p] += nr
             sh["pla_rec"][p] += sum(1 for wid, w in post["workers"].items()
                                     if w["player"] == p and w["type"] == "PLANTER" and wid not in pre["workers"])
             if step == 75:
@@ -173,6 +319,22 @@ def play_game(task):
                 sh["tree100"][p] = sum(1 for t in post["trees"].values() if t["player"] == p)   # replanting after the first batch
             if step in (50, 75, 100, 150, 200, 250):
                 sh["trees"][p].append(sum(1 for t in post["trees"].values() if t["player"] == p))   # tree curve
+            # loaded own cars that vanished this step, attributed EXACTLY from the simulator's collision log:
+            # enemy (an enemy car / tree / base got the cargo), self (an own car or own base/tree got it: not a cash
+            # loss), unknown (dropped on the cell, or died outside a collision)
+            ev = {e[0]: e for e in getattr(sim, "last_collisions", [])}
+            for wid, w in pre["workers"].items():
+                if w["player"] != p or wid in post["workers"] or float(w["carbon"]) <= 0:
+                    continue
+                c = float(w["carbon"]); g = ev[wid][3] if wid in ev else "?"
+                k = "enemy" if g == 1 - p else ("self" if g == p else "unknown")
+                sh["lost_" + k][p] += c
+                if step > 240:                  # cargo of dead cars after 240 (self: an own car/base/tree took it)
+                    sh["lost240_self" if k == "self" else "lost240"][p] += c
+                if step > 270:                  # last 30 steps
+                    sh["late30" if k == "enemy" else "late30_" + k][p] += c
+                    if k == "enemy":
+                        late_deaths[p].append((step, wid, c))
             if step > 285:
                 sh["late15"][p] += sum(float(w["carbon"]) for wid, w in pre["workers"].items()
                                        if w["player"] == p and wid not in post["workers"])
@@ -192,9 +354,11 @@ def play_game(task):
                     post["trees_dict"].get(tid, [None, 0])[1])
                 if tid not in pre["trees"]:
                     L["plant_count"] += 1
+                    sh["pl3"][p][min(step // 100, 2)] += 1
                     ps += price
                 elif pre["trees"][tid]["player"] != p:
                     L["seize_count"] += 1
+                    sh["sz3"][p][min(step // 100, 2)] += 1
                     ss += float(CFG["seizeCost"])
             for wid, w in post["workers"].items():
                 if w["player"] == p and wid not in pre["workers"]:
@@ -211,8 +375,23 @@ def play_game(task):
                 - float(sum(post["trees_dict"].get(tid, [None, 0])[1]
                             for tid, t in post["trees"].items()
                             if t["player"] == p))
+            if step == 100:         # deposit snapshots: mid-game deposits = dep240 - dep100 (style switch at 100)
+                sh["dep100"][p] = L["deposits"]
+            if step == 200:
+                sh["dep200"][p] = L["deposits"]
+            if step == 240:
+                sh["dep240"][p] = L["deposits"]
+            if step == 270:
+                sh["dep270"][p] = L["deposits"]
+            cg_ = sum(float(w["carbon"]) for w in post["workers"].values() if w["player"] == p)   # stall: >=1500 on board, no deposit
+            sh["stall_run"][p] = sh["stall_run"][p] + 1 if cg_ >= 1500 and L["deposits"] - sh["_dprev"][p] < 1 else 0
+            sh["_dprev"][p] = L["deposits"]; sh["stall_max"][p] = max(sh["stall_max"][p], sh["stall_run"][p])
     wall = time.time() - t0
     st = sim.get_state()
+    eh_act = set(map(tuple, (getattr(fa, "last_stats", None) or {}).get("eh_act", [])))
+    # cargo lost in the last 30 steps by cars that were under the go-home rule within the 3 steps before death
+    late30_eh = round(sum(c for (d, wid, c) in late_deaths[a_side]
+                          if any((s, wid) in eh_act for s in range(d - 3, d))), 1)
     for p in range(2):
         led[p]["stranded"] = round(sum(
             w["carbon"] for w in st["workers"].values() if w["player"] == p), 1)
@@ -226,18 +405,21 @@ def play_game(task):
         "opp_cash": round(st["cash"][1 - a_side], 2),
         "margin": round(st["cash"][a_side] - st["cash"][1 - a_side], 2),
         "win": st["cash"][a_side] > st["cash"][1 - a_side],
-        "a_ms_per_step": round(1000.0 * times[a_side] / 300, 2),
-        "b_ms_per_step": round(1000.0 * times[1 - a_side] / 300, 2),
+        "a_ms_per_step": round(1000.0 * times[a_side] / NSTEPS, 2),
+        "b_ms_per_step": round(1000.0 * times[1 - a_side] / NSTEPS, 2), "nsteps": NSTEPS,
         "a_worst_step_ms": round(1000.0 * worst_a, 0),
         "wall_s": round(wall, 1), "bankrupt_steps": bk_steps,
-        "ledger_extra": {side: dict({k: v[q] for k, v in sh.items()}, plants=led[q]["plant_count"],
+        "ledger_extra": {side: dict({k: v[q] for k, v in sh.items() if k != "_seen"}, plants=led[q]["plant_count"],
+                                    cash=round(st["cash"][q], 2), cargo=led[q]["stranded"],   # final snapshot: end-of-game cash (same source as my_cash/opp_cash) + carbon still on workers (same value as ledger stranded)
                                     pla_ok=len(pstat[q]["succ"]), pla_succ=sum(pstat[q]["succ"].values()),
                                     planted=pstat[q]["planted"], seized=pstat[q]["seized"],
-                                    life_sum=sum(pstat[q]["lives"]) + sum(300 - b for b in pstat[q]["born"].values()),
-                                    life_n=len(pstat[q]["lives"]) + len(pstat[q]["born"]))
+                                    life_sum=sum(pstat[q]["lives"]) + sum(NSTEPS - b for b in pstat[q]["born"].values()),
+                                    life_n=len(pstat[q]["lives"]) + len(pstat[q]["born"]),
+                                    late30_eh=late30_eh if q == a_side else None)
                          for side, q in (("pol", a_side), ("opp", 1 - a_side))},
+        "a_errors": sum(v for k, v in (getattr(fa, "last_stats", None) or {}).items() if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float))),
         "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
-                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors")},
+                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1", "pa_moves", "pa_errors", "mac_cap", "mac_stop", "mac_price", "mac_push", "lp", "seq_changed", "pb_skip", "fix_dropped", "pk_in", "pk_cut", "pk_rep", "pk_rep_plant3", "pk_rep_cash", "bk_in", "bk_cut", "shallow", "sims", "rounds", "sims_steps", "cb", "cb_seen", "cb_ok", "cb_errors", "se", "se_seen", "se_ok", "se_none", "se_errors", "se_lat", "ms_steps", "px", "px_errors", "opl", "opl_errors", "tg", "rg", "share_saved")},
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
         "comp": {str(k): v for k, v in comp.items()},
     }
