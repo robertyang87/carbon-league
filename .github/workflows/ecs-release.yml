@@ -1,0 +1,36 @@
+name: ecs-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      instance_id:
+        description: "ECS instance id to release"
+        required: true
+      region:
+        description: "Region id"
+        required: true
+        default: "cn-shanghai"
+      expected_ip:
+        description: "Expected public IP (pre-check must match or nothing is deleted)"
+        required: true
+      marker:
+        description: "Unique marker printed in the run output"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Release ECS instance via ECS API
+        env:
+          ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+          ACS_REGION: ${{ inputs.region }}
+        run: |
+          python3 tools/ecs_release.py "${{ inputs.instance_id }}" "${{ inputs.expected_ip }}" "${{ inputs.marker }}"
