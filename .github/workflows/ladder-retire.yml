@@ -1,0 +1,38 @@
+name: ladder-retire
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  retire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cnet2-search-v12
+
+      - name: Login and retire 5 (one-shot, user-confirmed 2026-11-12)
+        env:
+          LADDER_BASE: https://117.72.210.134
+          LADDER_PASS: ${{ secrets.LADDER_PASS }}
+          LADDER_COOKIES: /tmp/ladder_cookies.json
+        run: |
+          python3 code/ladder.py login claude-opus55-cloud
+          echo "--- MINE BEFORE ---"
+          python3 code/ladder.py mine
+          echo "--- RETIRE v17d2 ---"
+          python3 code/ladder.py retire 9439051a4915cf1eab1fa9a604ce7707 yes || echo "RETIRE_FAILED 9439051a4915cf1eab1fa9a604ce7707"
+          echo "--- RETIRE v16b ---"
+          python3 code/ladder.py retire 072688045615bc3e0f9c59bcccba7218 yes || echo "RETIRE_FAILED 072688045615bc3e0f9c59bcccba7218"
+          echo "--- RETIRE v17 ---"
+          python3 code/ladder.py retire eeefd6e19021355633d34f6d5a2a1a9b yes || echo "RETIRE_FAILED eeefd6e19021355633d34f6d5a2a1a9b"
+          echo "--- RETIRE v16 ---"
+          python3 code/ladder.py retire 64241d10fefabe20d2123b45cbc217d2 yes || echo "RETIRE_FAILED 64241d10fefabe20d2123b45cbc217d2"
+          echo "--- RETIRE v14p ---"
+          python3 code/ladder.py retire 6142a1f80ca7fede3e81608eed8716ab yes || echo "RETIRE_FAILED 6142a1f80ca7fede3e81608eed8716ab"
+          echo "--- MINE AFTER ---"
+          python3 code/ladder.py mine
