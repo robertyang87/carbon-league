@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: cnet2-search-v12
+          ref: main
 
       - name: Ping ladder
         env:
@@ -55,7 +55,7 @@ jobs:
             git commit -m "data: pull ${{ inputs.label }} replays via ladder API into ${{ inputs.outdir }}"
             ok=0
             for i in 1 2 3; do
-              if git pull --rebase origin cnet2-search-v12 && git push; then ok=1; break; fi
+              if git pull --rebase origin main && git push; then ok=1; break; fi
               sleep 10
             done
             [ "$ok" = 1 ] || { echo "push failed after 3 attempts"; exit 1; }
