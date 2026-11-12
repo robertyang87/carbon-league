@@ -172,6 +172,7 @@ def play_batch(task):
         sim = FastCarbon(CFG).reset(seed=seed)
         g = {"opp": opp, "seed": seed, "side": side, "sim": sim, "st": actor.new_game(side),
              "recs": [], "R": [], "W": [], "dep": [], "lost": [], "prev": 0.0, "prevw": 0.0,
+             "prevcash": [float(sim.cash[0]), float(sim.cash[1])], "term_margin": 0.0,
              "kind": "bot", "op": None, "done": False, "term": False, "nsteps": 0}
         if opp == "SELF":
             g.update(kind="self", st2=actor.new_game(1 - side), recs2=[], dep2=[], lost2=[])
@@ -238,9 +239,19 @@ def play_batch(task):
             # R02: extinction ends the game here (original env marks the side DONE and stops):
             # no further steps are played or recorded, so the trainer's GAE sees a true terminal
             # boundary (its last-step bootstrap is already 0) instead of a game that plays on.
-            term_now = _extinct(post, 0) or _extinct(post, 1)
+            ext_now = [_extinct(post, 0), _extinct(post, 1)]
+            term_now = any(ext_now)
             if term_now:
                 g["done"] = True; g["term"] = True
+                # F01: original terminal scoring (carbon.py compute_next_board), NOT the
+                # post-step cash difference: an extinct side scores (step - episodeSteps - 1);
+                # a survivor keeps the reward it carried INTO this step -- its cash in the
+                # pre-step state (g["prevcash"]) -- because the original marks it DONE
+                # without a reward update. The dense/worth increments below and the final
+                # margin all land on this value; the SELF mirror negates it as before.
+                pen = float(step - eval_v53.EPISODE_STEPS - 1)
+                rew = [pen if ext_now[p] else g["prevcash"][p] for p in (0, 1)]
+                g["term_margin"] = rew[side] - rew[1 - side]
             t_sim += time.time() - tc
             d = post["cash"][side] - post["cash"][1 - side]
             seen = g.setdefault("tseen", set())          # trees planted per side (new tree ids), for the train log
@@ -252,15 +263,19 @@ def play_batch(task):
             if record:
                 dep, lost = _own_events(pre, post, side, set(o["players"][side][1].values()))
                 g["recs"].append(rec)
-                g["R"].append(d - g["prev"])
-                # at the terminal step (extinction or the step-299 horizon) worth is cash only
-                wm = _worth_margin(sim, post, side, 0 if term_now else 299 - step)
+                # F01: at an extinction finish the last increment lands on the original
+                # terminal margin, not on the post-step cash difference
+                g["R"].append((g["term_margin"] if term_now else d) - g["prev"])
+                # at the terminal step (extinction or the step-299 horizon) worth is cash only;
+                # at an extinction finish that means the original terminal rewards above
+                wm = g["term_margin"] if term_now else _worth_margin(sim, post, side, 299 - step)
                 g["W"].append(wm - g["prevw"]); g["prevw"] = wm
                 g["dep"].append(dep); g["lost"].append(lost)
                 if g["kind"] == "self":
                     dep2, lost2 = _own_events(pre, post, 1 - side, set(o["players"][1 - side][1].values()))
                     g["recs2"].append(g["rec2"]); g["dep2"].append(dep2); g["lost2"].append(lost2)
             g["prev"] = d
+            g["prevcash"] = [float(post["cash"][0]), float(post["cash"][1])]
     if record and hasattr(actor, "pack") and os.environ.get("RL2_PACK", "1") == "1":
         for g in games:
             g["recs"] = actor.pack(g["recs"])
@@ -272,7 +287,7 @@ def play_batch(task):
         side = g["side"]
         r = {"opp": g["opp"], "seed": g["seed"], "side": side,
              "my": float(st["cash"][side]), "op": float(st["cash"][1 - side]),
-             "margin": float(st["cash"][side] - st["cash"][1 - side]),
+             "margin": float(g["term_margin"]) if g["term"] else float(st["cash"][side] - st["cash"][1 - side]),
              "term": bool(g["term"]), "steps": g["nsteps"],
              "planted": g.get("tp_my", 0), "planted_op": g.get("tp_op", 0)}
         if record:

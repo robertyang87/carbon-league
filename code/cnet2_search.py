@@ -538,9 +538,18 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     def _terminal(sim):
         return _extinct(sim, 0) or _extinct(sim, 1)
 
-    def leaf(sim, me, left):
-        if _terminal(sim):     # R02: game already over by extinction -- the final cash IS the value
-            return float(sim.cash[me]) - float(sim.cash[1 - me])
+    def leaf(sim, me, left, prev_cash=None):
+        if _terminal(sim):
+            # F01: original terminal scoring (carbon.py compute_next_board), NOT the cash
+            # difference: an extinct side scores (step - episodeSteps - 1); a survivor keeps
+            # the reward it carried INTO the terminal step -- its cash in the pre-step state --
+            # because the original marks it DONE without a reward update. Callers that saw
+            # the terminal transition pass prev_cash; for a state that was already terminal
+            # when handed over, its own cash is the only value the state carries.
+            pen = float(sim.step_count) - float(sim.config.get("episodeSteps", 300)) - 1.0
+            pc = prev_cash if prev_cash is not None else sim.cash
+            rew = [pen if _extinct(sim, p) else float(pc[p]) for p in (0, 1)]
+            return rew[me] - rew[1 - me]
         m = [float(sim.cash[0]), float(sim.cash[1])]
         wv = cfg["WORKER_V"] * min(1.0, left / 100.0)
         bases = {p: [b for _, b in sim.bases[p]] for p in (0, 1)}
@@ -1267,14 +1276,17 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             while len(pool) < nb:
                 pool.append(FastCarbon())
             sims, fs = [], []
+            term_cash = []
             for j, (c, i) in enumerate(batch):
                 s_ = pool[j]; s_.load_observation(full)
                 s_._tid_counter = [cc + 500 for cc in s_._tid_counter]
+                pc_ = list(s_.cash)     # F01: cash carried into the root step (survivor scoring if it ends the game)
                 if me == 0:
                     s_.step(cand[c], roots[i])
                 else:
                     s_.step(roots[i], cand[c])
                 sims.append(s_); fs.append((feat_copy(f), feat_copy(fo)))
+                term_cash.append(pc_)
             term = [_terminal(s_) for s_ in sims]     # R02: sims the root step already ended by extinction stay frozen
             depth = 1; aborted = False
             for hh in range(1, H):
@@ -1330,12 +1342,13 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                     if term[j]:
                         continue     # R02: frozen at extinction -- neither the sim nor its cash may evolve further (leaf pins the terminal value)
                     am = fm.to_actions(lab[j]); ao = fop.to_actions(lab[orow[j]])
+                    pc_ = list(s_.cash)     # F01: cash carried into this step (survivor scoring if it ends the game)
                     if me == 0:
                         s_.step(am, ao)
                     else:
                         s_.step(ao, am)
                     if _terminal(s_):
-                        term[j] = True; stats["term"] = stats.get("term", 0) + 1
+                        term[j] = True; term_cash[j] = pc_; stats["term"] = stats.get("term", 0) + 1
                 stats["branch_steps"] += nb
                 depth = hh + 1
                 sw = (time.time() - ts_) / nb
@@ -1344,8 +1357,8 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 stats["aborted"] = stats.get("aborted", 0) + 1
                 break
             lft = max(0, left - depth)
-            for (c, i), s_ in zip(batch, sims):
-                vals[c].append((i, leaf(s_, me, lft))); n[c] += 1
+            for j, ((c, i), s_) in enumerate(zip(batch, sims)):
+                vals[c].append((i, leaf(s_, me, lft, term_cash[j]))); n[c] += 1
             sims_done += nb; rounds += 1
             per_sim = (clk() - now) / nb; per_wall = (time.time() - nw) / nb
         stats["sims"] = stats.get("sims", 0) + sims_done
@@ -1475,15 +1488,18 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         while len(pool) < nb:
             pool.append(FastCarbon())
         sims, fs = [], []
+        term_cash = []
         for i, (mi, ci) in enumerate(bl):
             a = cand[ci]; ao_ = models[mi]
             s_ = pool[i]; s_.load_observation(full)
             s_._tid_counter = [c + 500 for c in s_._tid_counter]
+            pc_ = list(s_.cash)     # F01: cash carried into the root step (survivor scoring if it ends the game)
             if me == 0:
                 s_.step(a, ao_)
             else:
                 s_.step(ao_, a)
             sims.append(s_); fs.append((feat_copy(f), feat_copy(fo)))
+            term_cash.append(pc_)
         term = [_terminal(s_) for s_ in sims]     # R02: sims the root step already ended by extinction stay frozen
         stats["branches"] += nb
         local = None
@@ -1526,12 +1542,13 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                                 if k_ not in local:
                                     d_[k_] = v_
                 if not term[i]:     # R02: frozen at extinction -- neither the sim nor its cash may evolve further
+                    pc_ = list(s_.cash)     # F01: cash carried into this step (survivor scoring if it ends the game)
                     if me == 0:
                         s_.step(am, ao)
                     else:
                         s_.step(ao, am)
                     if _terminal(s_):
-                        term[i] = True; stats["term"] = stats.get("term", 0) + 1
+                        term[i] = True; term_cash[i] = pc_; stats["term"] = stats.get("term", 0) + 1
             stats["branch_steps"] += nb
             depth = hh + 1
             last_dt = clk() - now
@@ -1541,7 +1558,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             stats["shallow"] += 1
             return acts
         lft = max(0, left - depth)
-        sc = np.array([leaf(s_, me, lft) for s_ in sims]).reshape(len(models), nc)
+        sc = np.array([leaf(s_, me, lft, term_cash[i]) for i, s_ in enumerate(sims)]).reshape(len(models), nc)
         if len(models) > 1:
             w_ = cfg["ROBUST"]
             sc = (1 - w_) * sc[0] + w_ * sc.min(0)
