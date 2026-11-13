@@ -39,6 +39,24 @@ CFG = eval_v53.CFG
 _W_CACHE = {}      # (adapter, key) -> actor   (worker-local)
 
 
+def _snap_temp():
+    """The snapshot evaluation temperature (RL2_SNAP_TEMP; 0 = greedy),
+    validated in code: a typo'd environment value (negative, huge, NaN)
+    must fail loudly instead of silently changing what an evaluation
+    measures. Valid range [0, 2] -- operational values are 0 and 0.5,
+    and 2 is already near-uniform for these logit scales."""
+    raw = os.environ.get("RL2_SNAP_TEMP", "0")
+    t = float(raw)
+    if not (0.0 <= t <= 2.0):
+        raise ValueError(
+            f"RL2_SNAP_TEMP={raw!r} outside the valid range [0, 2] "
+            "(0 = greedy); refusing to play snapshots at an unvalidated temperature")
+    return t
+
+
+_snap_temp()   # fail fast at import when the launch environment is invalid
+
+
 _REMOTE = [None]   # rl2_ppo_server.Client of this worker (None: NumPy trunk in the worker)
 
 
@@ -114,7 +132,7 @@ class _SnapAgent:
 def make_opponent(spec, side, seed):
     if spec.startswith("SNAP:"):
         _, ad, path = spec.split(":", 2)
-        return _SnapAgent(ad, path, side, float(os.environ.get("RL2_SNAP_TEMP", "0")), seed * 13 + 5)
+        return _SnapAgent(ad, path, side, _snap_temp(), seed * 13 + 5)
     return load_bot(spec)
 
 
@@ -176,7 +194,7 @@ def play_batch(task):
     # snapshot actors built below (and _SnapAgent's) are separate cached objects
     # with temp_kind=False and play at the temperature they are handed, so the
     # learner's per-kind temperatures no longer leak into them.
-    snap_temp = float(os.environ.get("RL2_SNAP_TEMP", "0"))
+    snap_temp = _snap_temp()
     games = []
     for opp, seed, side in task["games"]:
         random.seed(eval_v53.rng_seed(seed, side))
