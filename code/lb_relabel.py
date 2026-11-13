@@ -29,6 +29,11 @@ ROW RULES (v1, single variable vs ds_m3s2):
   teacher  = TEACHER_ROW (2 for the Master3s family; the row the
              stand-in wrapper plays at inference)
   value    = tanh(final margin / 3000) of the recorded/driven game
+             (selfplay: margin is the SCORE margin under the canonical
+             terminal contract -- extinction ends the game at once, the
+             extinct player scores steps-EPISODE_STEPS-1 and the survivor
+             keeps its pre-terminal-step cash, mirroring eval_v53; the
+             corpus branch keeps its recorded index scores, unchanged)
 Output: OUT_DIR/shards/lb_<tag>.npz (cnet2_build.FIELDS + uw) +
 games.jsonl, mergeable into a ds clone via merge_dagger.py
 (DAGGER_W = sample weight of relabel rows, default 1.0).
@@ -100,6 +105,24 @@ def _emit(F, rows, x, feat, y, a_default, carbon_full, side, value, teacher, ste
     return int(((yy != yd) & (uw > 0)).sum()), int((uw > 0).sum())
 
 
+def _game_result(sim, side, steps_played, pre_cash):
+    """Canonical terminal contract (F02) -- mirrors eval_v53's scoring block.
+    Returns (margin, terminal, scores) from `side`'s perspective: extinction
+    scores per eval_v53 (extinct = steps_played - EPISODE_STEPS - 1, survivor
+    keeps pre_cash, the cash carried INTO the terminal step); a time-out
+    finish scores final cash. dagger_gen and awr_gen carry the same helper;
+    keep the three in sync."""
+    import eval_v53
+    post = sim.get_state()
+    extinct = [eval_v53._extinct(post, p) for p in (0, 1)]
+    if any(extinct):
+        scores = [float(steps_played - eval_v53.EPISODE_STEPS - 1) if extinct[p]
+                  else float(pre_cash[p]) for p in (0, 1)]
+        return float(scores[side] - scores[1 - side]), "extinction", scores
+    scores = [float(post["cash"][p]) for p in (0, 1)]
+    return float(scores[side] - scores[1 - side]), "timeout", scores
+
+
 def play_selfplay(task):
     """One clone-driven game; returns per-game diagnostics (+shard path unless dry)."""
     out, clone_w, row, seed, dry = task
@@ -120,7 +143,8 @@ def play_selfplay(task):
     feat = F.Feat(side)
     rows = {k: [] for k in FIELDS}; rows["uw"] = []
     nchg = nsup = 0; times = []
-    for step in range(300):
+    steps_played = 0; pre_cash = [float(sim.get_state()["cash"][p]) for p in (0, 1)]
+    for step in range(299):
         o_me = sim.obs(side); o_op = sim.obs(1 - side)
         x = feat.observe(o_me)
         a_me = clone(o_me, eval_v53.CFG)
@@ -138,9 +162,14 @@ def play_selfplay(task):
             c, s_ = _emit(F, rows, x, feat, feat.labels(a_lab), a_me,
                           full, side, mg_now, row, step)
             nchg += c; nsup += s_
+        pre_cash = [float(sim.get_state()["cash"][p]) for p in (0, 1)]
         sim.step(*((a_me, a_op) if side == 0 else (a_op, a_me)))
-    st = sim.get_state(); mg = float(st["cash"][side] - st["cash"][1 - side])
+        steps_played = step + 1
+        if any(eval_v53._extinct(sim.get_state(), p) for p in (0, 1)):
+            break       # F02: extinction ends the game immediately -- no post-terminal rows
+    mg, terminal, scores = _game_result(sim, side, steps_played, pre_cash)
     res = {"seed": seed, "opp": opp_path, "side": side, "margin": mg,
+           "terminal": terminal, "end_step": steps_played, "scores": scores,
            "n": len(rows["y"]), "supervised": nsup, "changed": nchg,
            "ms_mean": round(1000 * sum(times) / max(1, len(times)), 1),
            "ms_max": round(1000 * max(times), 1) if times else 0.0,
