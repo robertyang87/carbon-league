@@ -1,0 +1,10 @@
+CTRL strict load of pre-heads weights fails as before: Error(s) in loading state_dict for CNet2:
+	Missing key(s) in state_dict: "utilit
+PASS adapter make_model pre-heads npz loads; params: 159875
+PASS adapter make_model new-format npz loads
+[resume] net: pre-heads checkpoint migrated; carried 67 params, cold-started 6 head params, steps preserved [5.0]
+PASS _resume_sd pre-heads: migrated, exp_avg bitwise, step=5, lr=3e-3, weights == donor
+PASS _resume_sd new-format: strict path
+PASS _resume_sd corrupt checkpoint raises: Error(s) in loading state_dict for CNet2:
+	Unexpected key(s) in state_
+ALL PPO WIRING CHECKS PASS
