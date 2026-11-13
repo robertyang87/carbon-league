@@ -185,7 +185,7 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     q = wq / wq.sum()
     ent = float(-(q * np.log(np.maximum(q, 1e-12))).sum())
     return {
-        "n_arms": len(arms), "priors": priors, "Q_mean": q_mean, "Q_std": Q.std(axis=1),
+        "arms": arms, "n_arms": len(arms), "priors": priors, "Q_mean": q_mean, "Q_std": Q.std(axis=1),
         "q": q, "entropy": ent, "agree_greedy": bool(int(np.argmax(q)) == 0),
         "greedy_q_rank": int((q > q[0]).sum()),
         "n_act_calls": counter[0],
