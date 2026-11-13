@@ -19,6 +19,14 @@ driver ran guards off on both arms; that posture is retired -- it measured
 a guard-off delta that production never sees.) Opponents are the
 exam-stack agents (Master2 real / Echo2 search-agent CONF), unchanged.
 
+Style and guard history (S04 fix, Codex review 2026-11-13): both arms act
+with teacher style 2, the production producer value (CONF TEACHER=2). The
+guided arm passes its own seat's LIVE guard snapshot (evolved with every
+executed move) into evaluate_root -- a fresh root guard cannot know
+GUARD_NARROW's lostw history. The teacher's model of the opponent still
+starts fresh inside the root: the exam agent's internal guard history is
+not observable from here.
+
 Usage (from code/):
   python3 stage0_guided_match.py --weights <npz> --opponent master2|echo2
       --mode guided|greedy --seed0 994000 --n 200 --workers 18
@@ -125,21 +133,28 @@ def play_one(task):
                     copy.deepcopy(st_me["f"].aux),
                     copy.deepcopy(x_opp), copy.deepcopy(st_opp["f"].aux),
                     _ns(me, st_me["f"].own_uid), _ns(opp, st_opp["f"].own_uid),
-                    teacher=1, K=16, M=8, H=2,
-                    seed_base=7000 + (seed % 1000) * 1000 + step)
+                    teacher=2, K=16, M=8, H=2,
+                    seed_base=7000 + (seed % 1000) * 1000 + step,
+                    guard_snaps=(guard_me.snapshot(), None))
                 t_ms.append(r["wall_ms"])
                 t_ent.append(r["entropy"])
                 t_calls += 1
                 if r["agree_greedy"]:
                     t_agree += 1
-                arm = r["arms"][int(np.argmax(r["q"]))]
-                a_me = st_me["f"].to_actions(np.asarray(arm, dtype=np.int64))
+                arm = np.asarray(r["arms"][int(np.argmax(r["q"]))], dtype=np.int64)
+                a_me = st_me["f"].to_actions(arm)
+                # Evolve the live guard history with the executed arm
+                # (state only; the arm was guard-processed in the teacher).
+                guard_me.reset_step()
+                guard_me.apply(x_me, st_me["f"].aux, arm,
+                               np.zeros((12, 5), dtype=np.float32), pol,
+                               st_me["f"].own_uid, 2, {})
             else:
-                y, lg0, _ = pol.act(x_me, st_me["f"].aux, teacher=1)
+                y, lg0, _ = pol.act(x_me, st_me["f"].aux, teacher=2)
                 guard_me.reset_step()
                 y = guard_me.apply(x_me, st_me["f"].aux,
                                    np.asarray(y, dtype=np.int64), lg0, pol,
-                                   st_me["f"].own_uid, 1, {})
+                                   st_me["f"].own_uid, 2, {})
                 a_me = st_me["f"].to_actions(np.asarray(y, dtype=np.int64))
             # --- opponent side (exam-stack agent) ---
             try:
