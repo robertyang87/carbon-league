@@ -38,21 +38,32 @@ jobs:
           LADDER_BASE: https://117.72.210.134
           LADDER_PASS: ${{ secrets.LADDER_PASS }}
           LADDER_COOKIES: /tmp/ladder_cookies.json
+          # P2-5 fix (Codex review 20261114): inputs go through env, never
+          # interpolated into the shell script itself -- direct interpolation
+          # lets anyone with dispatch permission inject extra shell commands
+          # through a crafted input value (same pattern as the
+          # cloud-assistant P3 fix).
+          LADDER_STRATEGY_ID: ${{ inputs.strategy_id }}
+          LADDER_OUTDIR: ${{ inputs.outdir }}
         run: |
           python3 code/ladder.py login claude-opus55-cloud
-          python3 code/ladder.py matches "${{ inputs.strategy_id }}"
-          python3 code/ladder.py replays "matches_${{ inputs.strategy_id }}.json" "${{ inputs.outdir }}"
+          python3 code/ladder.py matches "$LADDER_STRATEGY_ID"
+          python3 code/ladder.py replays "matches_${LADDER_STRATEGY_ID}.json" "$LADDER_OUTDIR"
 
       - name: Commit corpus
+        env:
+          # P2-5 fix (Codex review 20261114): inputs via env, as above.
+          LADDER_LABEL: ${{ inputs.label }}
+          LADDER_OUTDIR: ${{ inputs.outdir }}
         run: |
           git config user.name "carbon-ci"
           git config user.email "ci@users.noreply.github.com"
-          git add "${{ inputs.outdir }}"
-          echo "corpus files: $(ls "${{ inputs.outdir }}" | wc -l)" >> "$GITHUB_STEP_SUMMARY"
+          git add "$LADDER_OUTDIR"
+          echo "corpus files: $(ls "$LADDER_OUTDIR" | wc -l)" >> "$GITHUB_STEP_SUMMARY"
           if git diff --cached --quiet; then
             echo "no new replays"
           else
-            git commit -m "data: pull ${{ inputs.label }} replays via ladder API into ${{ inputs.outdir }}"
+            git commit -m "data: pull ${LADDER_LABEL} replays via ladder API into ${LADDER_OUTDIR}"
             ok=0
             for i in 1 2 3; do
               if git pull --rebase origin main && git push; then ok=1; break; fi
