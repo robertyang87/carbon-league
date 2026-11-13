@@ -84,14 +84,22 @@ def _serve(adapter_name, device, req_q, resp_qs, stat_q, sid=0):
         for it in batch:
             groups.setdefault((it[1], it[2]), []).append(it)
         for (key, teacher), its in groups.items():
-            m = models.pop(key, None)
-            if m is None:
-                m = ad.make_model(AD.load_npz(key)).to(dev).eval()
-            models[key] = m                                   # most recently used last
-            while len(models) > keep:
-                models.pop(next(iter(models)))
             t0 = time.time()
             try:
+                # Model loading and cache update are inside the per-group try
+                # (REVIEW_FULL_20261113 P3): a missing/corrupt weights file
+                # used to kill _serve before any response was queued, leaving
+                # every worker of the group waiting for the full client
+                # timeout. Now each rid of the group gets the error response
+                # below, with the original exception type and message, and the
+                # failed model is not cached (it is only inserted after a
+                # successful load).
+                m = models.pop(key, None)
+                if m is None:
+                    m = ad.make_model(AD.load_npz(key)).to(dev).eval()
+                models[key] = m                               # most recently used last
+                while len(models) > keep:
+                    models.pop(next(iter(models)))
                 d = {k: np.concatenate([it[3][k] for it in its]) for k in its[0][3]}
                 tok, ctx = ad.server_encode(m, d, teacher, dev, amp)
                 o = 0
