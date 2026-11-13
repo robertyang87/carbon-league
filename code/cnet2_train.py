@@ -29,6 +29,28 @@ LOAD = [k for k in FIELDS if k not in ("gid", "step")]
 AUXK = ("aux_die", "aux_die_m", "aux_dep", "aux_dep_m", "aux_dw", "aux_dw_m")
 
 
+def _check_finite_weights(D, dirn):
+    """F06 hard gate: loss weights must be finite BEFORE any training. A single inf/NaN in w/uw
+    silently poisons every weighted batch (batch_loss = NaN); refuse the dataset and name it."""
+    for k in ("w", "uw"):
+        if k not in D:
+            continue
+        a = np.asarray(D[k])
+        if not np.issubdtype(a.dtype, np.floating):
+            continue
+        flat = a.reshape(-1)
+        bad = 0; first = -1
+        for a0 in range(0, flat.size, 1 << 22):
+            blk = np.isfinite(flat[a0:a0 + (1 << 22)])
+            if not blk.all():
+                bad += int((~blk).sum())
+                if first < 0:
+                    first = a0 + int(np.argmax(~blk))
+        if bad:
+            raise SystemExit(f"F06: non-finite loss weights in dataset {dirn!r} field {k!r}: "
+                             f"{bad} NaN/Inf entries (first at flat index {first}); refusing to train")
+
+
 def load(dirn):
     mm = None if os.environ.get("BC_RAM") == "1" else "r"     # BC_RAM=1: read the whole dataset into memory
     D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm) for k in FIELDS}
@@ -36,6 +58,7 @@ def load(dirn):
         D["w"] = np.load(os.path.join(dirn, "w.npy"), mmap_mode=mm)      # per-sample weights (dataset v4+)
     if os.path.exists(os.path.join(dirn, "uw.npy")) and os.environ.get("BC_USE_UW", "1") == "1":
         D["uw"] = np.load(os.path.join(dirn, "uw.npy"), mmap_mode=mm)    # per-unit weights (dataset v6+)
+    _check_finite_weights(D, dirn)
     if float(os.environ.get("BC_AUX_W", "0")) > 0:                      # auxiliary targets written by aux_labels.py
         for k in AUXK:
             D[k] = np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm)
@@ -207,10 +230,15 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
             t_ = torch.from_numpy(np.ascontiguousarray(v))
             if k in ("y", "teacher", "tok_kind"):
                 t_ = t_.to(torch.int16) if k != "teacher" else t_.to(torch.int8)
-            elif t_.dtype == torch.float32:
+            elif t_.dtype == torch.float32 and k not in ("w", "uw"):
                 t_ = t_.half()
+            # F06: loss weights (w/uw) stay float32 -- fp16 overflows real AWR uw (max ~428293.7 -> inf,
+            # batch_loss NaN) and underflows small w. Model activations stay half; only the multipliers are f32.
             parts.append(t_.to(DEV))
         GD[k] = torch.cat(parts)
+        if k in ("w", "uw") and not bool(torch.isfinite(GD[k]).all()):
+            raise SystemExit(f"F06: non-finite loss weights reached the cached trainer (field {k!r}, "
+                             f"dataset {data!r}); refusing to train")
     print(json.dumps({"light_on_device_GB": round(sum(t.numel() * t.element_size() for t in GD.values()) / 1e9, 2)}), flush=True)
 
     def light(ii):
