@@ -212,6 +212,17 @@ def extract_scene(spec):
             "x_me": x_me, "aux_me": fm.aux, "x_opp": x_opp, "aux_opp": fo.aux}
 
 
+def _expect_teacher(r, belief):
+    """Formal consumers bind the teacher identity: a result produced by a
+    different teacher version than the header declares is a hard error."""
+    want = "v2" if belief != "oracle" else "v1+c1"
+    if r.get("teacher_version") != want or r.get("belief") != belief:
+        raise RuntimeError(f"teacher identity mismatch: got version "
+                           f"{r.get('teacher_version')!r} belief {r.get('belief')!r}, "
+                           f"header declares {want!r} / {belief!r}")
+    return r
+
+
 def _ns(feat):
     return types.SimpleNamespace(seat=feat.seat, own_uid=list(feat.own_uid))
 
@@ -260,7 +271,10 @@ def continue_game(pol, scene, first_labels, cont_seed, teacher=1, guided_KMH=Non
                     copy.deepcopy(xs[other]), copy.deepcopy(feats[other].aux),
                     _ns(feats[me]), _ns(feats[other]), teacher=teacher,
                     K=guided_KMH["K"], M=guided_KMH["M"], H=guided_KMH["H"],
-                    seed_base=cont_seed + step_no, guard_snaps=snaps)
+                    seed_base=cont_seed + step_no, guard_snaps=snaps,
+                    feats=(feats[me], feats[other]),
+                    belief=guided_KMH.get("belief", "sample"))
+                _expect_teacher(r, guided_KMH.get("belief", "sample"))
                 stats["teacher_calls"] = stats.get("teacher_calls", 0) + 1
                 stats["teacher_ms"] = stats.get("teacher_ms", 0.0) + r["wall_ms"]
                 acts[seat] = np.asarray(r["arms"][int(np.argmax(r["q"]))], dtype=np.int64)
@@ -386,7 +400,10 @@ def _q_scene(task):
                         _ns(scene["fm"]), _ns(scene["fo"]),
                         teacher=cfg.get("teacher_style", 2),
                         K=cfg["K"], M=cfg["M"], H=cfg["H"],
-                        seed_base=cfg["seed_teacher"] + spec["step"])
+                        seed_base=cfg["seed_teacher"] + spec["step"],
+                        feats=(scene["fm"], scene["fo"]),
+                        belief=cfg.get("belief", "sample"))
+    _expect_teacher(r, cfg.get("belief", "sample"))
     q = np.asarray(r["q"])
     Q = np.asarray(r["Q_mean"])
     best = int(np.argmax(q))
@@ -410,7 +427,13 @@ def _q_scene(task):
             "soft_gain_train": _tempered_gain(cfg.get("train_temp", 1.0)),
             "entropy": float(r["entropy"]), "agree": bool(r["agree_greedy"]),
             "best_arm": [int(v) for v in r["arms"][best]],
-            "wall_ms": r["wall_ms"], "guard": r["guard"]}
+            "wall_ms": r["wall_ms"], "guard": r["guard"],
+            # spec SS14: per-arm Q noise (standard error of the scenario
+            # mean, Q_std / sqrt(M)) as a measured report item, plus how
+            # many cells the belief sampler had to draw (teacher v2).
+            "q_se_mean": float(np.mean(r["Q_std"]) / math.sqrt(cfg["M"])),
+            "q_se_max": float(np.max(r["Q_std"]) / math.sqrt(cfg["M"])),
+            "n_unknown_cells": r.get("n_unknown_cells")}
 
 
 def _fresh_sim(scene):
@@ -433,7 +456,10 @@ def _anchor_task(task):
                         scene["x_me"], scene["aux_me"], scene["x_opp"], scene["aux_opp"],
                         _ns(scene["fm"]), _ns(scene["fo"]), teacher=style,
                         K=cfg["K"], M=cfg["M"], H=cfg["H"],
-                        seed_base=cfg["seed_teacher"] + spec["step"])
+                        seed_base=cfg["seed_teacher"] + spec["step"],
+                        feats=(scene["fm"], scene["fo"]),
+                        belief=cfg.get("belief", "sample"))
+    _expect_teacher(r, cfg.get("belief", "sample"))
     q = np.asarray(r["q"], dtype=np.float64)
     # R23: the anchor's soft arm weights follow the DECLARED TRAINING target
     # distribution (q ** train_temp normalised), not a generation-time
@@ -528,7 +554,8 @@ def _verify_pilot_artifact(path, header, formal_games, ds_ids=None,
         return False, 0, "weights differ from pilot"
     if art.get("code_md5") != header["code_md5"]:
         return False, 0, "code differs from pilot"
-    for k in ("K", "M", "H", "teacher_style", "behavior_temp", "train_temp"):
+    for k in ("K", "M", "H", "teacher_style", "behavior_temp", "train_temp",
+              "belief", "teacher_version"):
         if art.get(k) != header.get(k):
             return False, 0, f"config field {k} differs from pilot"
     pg = set(art.get("pilot_games", []))
@@ -582,6 +609,12 @@ def main():
     ap.add_argument("--pilot-artifact", default=None,
                     help="du formal: Stage A artifact JSON written by a --pilot run")
     ap.add_argument("--n-required", type=int, default=150)
+    ap.add_argument("--belief", default="sample", choices=list(T.BELIEF_MODES),
+                    help="teacher v2 branch world (spec SS15): 'sample' = clones "
+                         "from the acting seat's belief, unknown cells sampled per "
+                         "scenario (canonical); 'mean' = belief point estimate; "
+                         "'oracle' = v1 true-carbon clones (baseline comparison "
+                         "only, never formal)")
     ap.add_argument("--teacher-style", type=int, default=2,
                     help="policy style slot; production producer uses 2")
     ap.add_argument("--train-data-version", default=None,
@@ -638,12 +671,14 @@ def main():
     if a.max_scenes and len(specs) > a.max_scenes:
         specs = specs[:a.max_scenes]
         capped = True
-    canonical = (a.K, a.M, a.H) == (CANON["K"], CANON["M"], CANON["H"]) and not capped
+    canonical = ((a.K, a.M, a.H) == (CANON["K"], CANON["M"], CANON["H"])
+                 and not capped and a.belief == "sample")
+    teacher_version = "v2" if a.belief != "oracle" else "v1+c1"
     train_temp = a.train_temp if a.train_temp is not None else 1.0
     cfg = {"K": a.K, "M": a.M, "H": a.H, "seed_teacher": a.seed_teacher,
            "seed_cont": a.seed_cont, "behavior_temp": a.behavior_temp,
            "train_temp": train_temp,
-           "teacher_style": a.teacher_style}
+           "teacher_style": a.teacher_style, "belief": a.belief}
     code_md5 = {fn: md5_of(os.path.join(HERE, fn)) for fn in
                 ("stage0_teacher.py", "cnet2_np.py", "cnet2_search.py",
                  "stage1_teacher_gate.py")}
@@ -661,11 +696,14 @@ def main():
         "guard_cfg": T.TEACHER_GUARD_CFG, "K": a.K, "M": a.M, "H": a.H,
         "behavior_temp": a.behavior_temp, "teacher_style": a.teacher_style,
         "train_temp": train_temp,
+        "belief": a.belief, "teacher_version": teacher_version,
         "certified_target": "q ** train_temp, normalised (R23)",
         "q_select_source": "teacher Q (stage0_teacher.evaluate_root)",
         "q_eval_source": "real terminal continuations (anchor / paired arms)",
         "root_feat_history": "prefix-replayed Feat belief (guided-aligned); "
-                             "continuations remain fresh-Feat (spec SS11/SS12)",
+                             "teacher branches inherit the root Feats and are "
+                             "cloned from the acting seat's belief unless "
+                             "belief=oracle (teacher v2, spec SS15)",
         "seeds": {"scene": a.seed_scene, "teacher": a.seed_teacher,
                   "cont": a.seed_cont, "anchor": a.seed_anchor},
         "games": games, "n_scenes": len(specs), "ds_overlap_check": ds_check,
@@ -690,6 +728,8 @@ def main():
                "behavior_temp": a.behavior_temp,
                "strict_improve_rate": rate,
                "entropy_mean": float(np.mean([r["entropy"] for r in rows])),
+               "q_noise_se_mean": float(np.mean([r["q_se_mean"] for r in rows])),
+               "q_noise_se_max": float(np.max([r["q_se_max"] for r in rows])),
                "agree_rate": float(np.mean([r["agree"] for r in rows]))}
         rng = np.random.default_rng(a.seed_anchor)
         idx = rng.choice(len(specs), size=min(a.n_anchor, len(specs)), replace=False)
@@ -786,6 +826,7 @@ def main():
                    "weights_md5": header["weights_md5"], "code_md5": code_md5,
                    "guard_cfg": T.TEACHER_GUARD_CFG,
                    "K": a.K, "M": a.M, "H": a.H,
+                   "belief": a.belief, "teacher_version": teacher_version,
                    "teacher_style": a.teacher_style,
                    "behavior_temp": a.behavior_temp,
                    "train_temp": train_temp,

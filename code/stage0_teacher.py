@@ -27,6 +27,33 @@ v1 simplifications (documented, cost-identical; full treatment is Stage 1):
     guard snapshot -- never a shared global guard across branches.
 
 Q is in U units: U = 0.5*W + 0.5*sigmoid(M/1000), W in {0, 0.5, 1}.
+
+Teacher v2 (spec SS15 item 3, 2026-11-13) -- supersedes the two v1
+simplifications above about scenarios and branch Feats:
+  (c1) Feat inheritance: when the caller passes the live root Feat objects
+       (feats=(feat_me, feat_opp)), every branch continues from private
+       copies of them (cnet2_search.feat_copy) and observes each branch
+       step exactly once, so continuation moves and the leaf value are
+       computed with the belief + 8-step history a live game would hold
+       -- not from a fresh Feat reset to the uninformed prior.
+  (c2) Belief-sampled clones: branch simulators are built from the
+       acting seat's LEGAL view -- public units/trees/cash from
+       sim.obs(me), carbon from that seat's belief (Feat.est), with
+       never-seen cells sampled per scenario from the map generator's
+       marginal. The teacher never reads sim.carbon in this mode, so two
+       worlds that differ only in cells the acting seat has no knowledge
+       of yield identical Q (acceptance: automation/acceptance_s1/
+       test_teacher_v2_twoworld.py). Scenario m = (opponent root action
+       sample m, carbon sample m), shared by all arms (common random
+       numbers).
+  belief="oracle" keeps the v1 true-carbon clone (explicitly labelled;
+  baseline comparisons only). A call without feats (legacy callers, the
+  archived v1 regression probes) is the exact v1 teacher and is labelled
+  teacher_version "v1" in the result; "sample"/"mean" without feats is
+  refused.
+  Residual, NOT closed by v2: the opponent model is whatever x_opp /
+  feat_opp the caller supplies; gate and producer pass the opponent's
+  real Feat, i.e. the opponent's own private belief.
 """
 
 import math
@@ -35,10 +62,80 @@ import time
 import numpy as np
 
 import cnet2_feat as F
-from cnet2_search import BankruptcyGuard, CachePolicy
+from cnet2_search import BankruptcyGuard, CachePolicy, feat_copy
 from fastsim import FastCarbon
 
 NEG = -1e9
+
+TEACHER_VERSION = 2
+BELIEF_MODES = ("sample", "mean", "oracle")
+_ORBIT = F.MIRROR.min(axis=1)          # mirror-orbit representative of every cell
+
+
+def unknown_cells(feat, players):
+    """Cells the seat has NO knowledge of: never seen directly, no mirror
+    cell ever seen, and not holding a tree or a base (those are known to
+    be 0). For exactly these cells Feat.est is the flat uninformed prior
+    (cnet2_feat.observe: est[never & ~has_m] = PRIOR * REGEN**step)."""
+    unk = feat.last_step[F.MIRROR].max(axis=1) < 0
+    for p in (0, 1):
+        for pos in players[p][1].values():
+            unk[int(pos)] = False
+        for tv in players[p][3].values():
+            unk[int(tv[0])] = False
+    return unk
+
+
+def belief_carbon(feat, players, config, rng=None, mode="sample"):
+    """Full carbon map (raw frame, list of N floats) consistent with the
+    seat's belief. Known cells take Feat.est (visible cells are exact).
+    mode "mean": unknown cells keep est (the prior mean) -- what
+    cnet2_search feeds its branches. mode "sample": each unknown mirror
+    orbit draws ONE initial value from the map generator's marginal
+    (fastsim._generate_map: n_carbon_cells of the half*half quarter cells
+    are non-zero, value int(U(1, 2*carbon_mean)) capped at
+    startingCellCarbon), grown by the regen rate for `step` steps and
+    capped at maxCellCarbon. Zero cells stay zero (regen is
+    multiplicative). Harvest/absorption of unseen cells is not modelled.
+    Returns (carbon, n_unknown_cells)."""
+    est = np.asarray(feat.est, dtype=np.float64).copy()
+    unk = unknown_cells(feat, players)
+    n_unk = int(unk.sum())
+    if mode == "sample" and n_unk:
+        size = int(config["size"])
+        half = math.ceil(size / 2)
+        n_cc = max(int(math.ceil(half * half * config["carbonCoverage"] / 100)),
+                   int(math.ceil(config["startingCarbon"] / config["startingCellCarbon"] / 4)))
+        cmean = min(config["startingCarbon"] / 4 / n_cc, config["startingCellCarbon"])
+        p_nz = n_cc / float(half * half)
+        grow = (1.0 + config["regenRate"]) ** max(int(feat.step), 0)
+        cap = float(config["maxCellCarbon"])
+        for rep in sorted({int(_ORBIT[c]) for c in np.nonzero(unk)[0]}):
+            # two draws per orbit, always consumed: the stream position of
+            # an orbit does not depend on other orbits' outcomes
+            nz = rng.random() < p_nz
+            v0 = min(int(rng.uniform(1.0, 2.0 * cmean)), int(config["startingCellCarbon"]))
+            val = min(v0 * grow, cap) if nz else 0.0
+            for c in set(int(v) for v in F.MIRROR[rep]):
+                if unk[c]:
+                    est[c] = val
+    return [float(v) for v in est], n_unk
+
+
+def _legal_root(sim, me, carbon):
+    """Branch-root dict built from seat `me`'s legal observation: public
+    units / trees / cash / step from sim.obs(me), the given carbon map,
+    and the id counters (every recruit and planting is public, so the
+    counters are derivable by an observer; carrying them keeps new ids
+    from reusing a dead entity's id inside the branch). sim.carbon is
+    never read here."""
+    o = sim.obs(me)
+    st = sim.get_state()
+    return {"carbon": list(carbon), "players": o["players"], "player": 0,
+            "step": o["step"], "trees": o["trees"],
+            "remainingOverageTime": o.get("remainingOverageTime", 60),
+            "tid_counter": list(st["tid_counter"]),
+            "wid_counter": list(st["wid_counter"])}
 
 # A3: production guard config, frozen (same as producer selfplay CONF and
 # the exam CONF): guard on, narrow bankruptcy-risk trigger, cash floor 40.
@@ -72,10 +169,13 @@ def _extinct_state(st, p):
     return st["cash"][p] < 30
 
 
-def _leaf_u(sim, me, pol, teacher, counter):
+def _leaf_u(sim, me, pol, teacher, counter, feat=None):
     """Bare-net leaf value at the current sim state, from `me`'s seat, in U
-    (Stage 0 utility head, E[U] in [0,1])."""
-    feat = F.Feat(me)
+    (Stage 0 utility head, E[U] in [0,1]). feat: the branch's inherited
+    Feat for seat `me` (v2, c1) -- it observes the leaf state once; None =
+    fresh Feat (v1)."""
+    if feat is None:
+        feat = F.Feat(me)
     x = feat.observe(sim.obs(me))
     counter[0] += 1
     _, _, _, u = pol.act(x, feat.aux, teacher=teacher, want_u=True)
@@ -189,7 +289,7 @@ def _is_terminal(sim):
 
 def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
                   teacher=1, K=16, M=8, H=2, seed_base=7000, guard="on",
-                  guard_snaps=None):
+                  guard_snaps=None, feats=None, belief=None):
     """Root-candidate teacher evaluation at one position.
 
     sim: FastCarbon at the root position (not mutated). feat_me / feat_opp are
@@ -205,6 +305,16 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     continuation whenever a unit was lost earlier). Either entry may be
     None (fresh for that seat). Branch guards restore from the root
     snapshots, so branches never mutate the caller's history.
+    feats: (feat_me, feat_opp) LIVE cnet2_feat.Feat objects that have
+    observed the root step (v2, c1). Not mutated: branches work on private
+    copies. Required for belief "sample" / "mean".
+    belief: "sample" (v2: clones from seat `me`'s belief, unknown cells
+    sampled per scenario), "mean" (belief point estimate, one map for all
+    scenarios) or "oracle" (v1: true carbon). None (default) resolves to
+    "sample" when feats are given and to "oracle" otherwise -- a legacy
+    call without feats is exactly the v1 teacher, and says so: the result
+    carries teacher_version ("v2" / "v1+c1" / "v1"), which formal consumers
+    must check (stage1_teacher_gate does) instead of trusting the call.
     Depth: the root step plus H continuation steps (H=2 -> 3 plies total).
     Raises ValueError on an already-terminal root position.
     Returns dict with arms, priors P_A, Q (mean U over scenarios), target q,
@@ -219,6 +329,20 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     if _is_terminal(sim):
         raise ValueError("evaluate_root called on an already-terminal root "
                          "position (extinct, or step limit reached)")
+    if belief is None:
+        belief = "sample" if feats is not None else "oracle"
+    if belief not in BELIEF_MODES:
+        raise ValueError(f"belief must be one of {BELIEF_MODES}, got {belief!r}")
+    if feats is None and belief != "oracle":
+        raise ValueError("teacher v2 needs the live root Feats (feats=(feat_me, "
+                         "feat_opp)); only belief='oracle' (the v1 teacher) may "
+                         "run without them")
+    if feats is not None:
+        for _f, _seat in ((feats[0], me), (feats[1], 1 - me)):
+            if _f.seat != _seat or int(_f.step) != int(sim.step_count):
+                raise ValueError(
+                    f"feats must be (seat {me}, seat {1 - me}) Feats that observed "
+                    f"root step {sim.step_count}; got seat {_f.seat} at step {_f.step}")
     if not isinstance(pol, CachePolicy):
         _cfg = pol.cfg
         pol = CachePolicy(pol.w)
@@ -265,12 +389,28 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     me_snap = g_me_root.snapshot() if g_me_root is not None else None
     opp_snap = g_opp_root.snapshot() if g_opp_root is not None else None
     Q = np.zeros((len(arms), M))
-    root_full = sim.full_observation(0)
+    # ---- branch roots: one per scenario, shared by every arm (CRN) ----
+    n_unk = None
+    if belief == "oracle":
+        roots = [sim.full_observation(0)] * M
+    else:
+        _players = sim.obs(me)["players"]
+        roots = []
+        for m in range(M):
+            carbon_m, n_unk = belief_carbon(
+                feats[0], _players, sim.config,
+                rng=np.random.default_rng([int(seed_base) + m, 0xC0]), mode=belief)
+            roots.append(_legal_root(sim, me, carbon_m))
     for ci, arm in enumerate(arms):
         a_me = F.Feat.to_actions(feat_me, arm)
         for m in range(M):
             clone = FastCarbon(CFG)
-            clone.load_observation(root_full)
+            clone.load_observation(roots[m])
+            fb = None
+            if feats is not None:
+                fb = [None, None]
+                fb[me] = feat_copy(feats[0])
+                fb[1 - me] = feat_copy(feats[1])
             a_opp = opp_actions[m]
             pre = clone.get_state()  # state before the root step (survivor scoring)
             clone.step(*((a_me, a_opp) if me == 0 else (a_opp, a_me)))
@@ -290,8 +430,8 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
             for _ in range(H):
                 if done:
                     break
-                f0 = F.Feat(0)
-                f1 = F.Feat(1)
+                f0 = fb[0] if fb is not None else F.Feat(0)
+                f1 = fb[1] if fb is not None else F.Feat(1)
                 x0 = f0.observe(clone.obs(0))
                 x1 = f1.observe(clone.obs(1))
                 l0, lg0, _ = act(x0, f0.aux)
@@ -319,7 +459,8 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
             if done:
                 Q[ci, m] = _terminal_u(clone, me, pre, episode_steps=ep_steps)
             else:
-                Q[ci, m] = _leaf_u(clone, me, pol, teacher, counter)
+                Q[ci, m] = _leaf_u(clone, me, pol, teacher, counter,
+                                   feat=fb[me] if fb is not None else None)
     q_mean = Q.mean(axis=1)
     wq = np.exp((q_mean - q_mean.max()) / 0.05) * np.sqrt(np.maximum(priors, 1e-12))
     q = wq / wq.sum()
@@ -331,4 +472,10 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
         "n_act_calls": counter[0],
         "wall_ms": round((time.time() - t0) * 1000, 1),
         "guard": dict(gtot),
+        # "v2" = c1 + c2; "v1" = the original teacher (true carbon, fresh
+        # branch Feats); "v1+c1" = true carbon with inherited Feats.
+        "teacher_version": ("v2" if (feats is not None and belief != "oracle")
+                            else ("v1+c1" if feats is not None else "v1")),
+        "belief": belief, "feat_inherit": feats is not None,
+        "n_unknown_cells": n_unk,
     }

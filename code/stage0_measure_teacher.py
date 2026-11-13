@@ -26,6 +26,7 @@ from rl2_ppo_cnet2 import Cnet2Actor  # noqa: E402
 import rl2_ppo_adapters as AD  # noqa: E402
 import cnet2_np as NP  # noqa: E402
 import stage0_teacher as T  # noqa: E402
+from cnet2_search import feat_copy  # noqa: E402
 
 SAMPLE_STEPS = (40, 80, 120, 160, 200, 240)
 
@@ -69,7 +70,10 @@ def main():
                 uid_o = list(st1["f"].own_uid if me == 0 else st0["f"].own_uid)
                 positions.append({"full": sim.full_observation(0), "step": step, "me": me,
                                   "x_me": xm, "aux_me": auxm, "x_opp": xo, "aux_opp": auxo,
-                                  "uid_me": uid_m, "uid_opp": uid_o})
+                                  "uid_me": uid_m, "uid_opp": uid_o,
+                                  # teacher v2: private copies of both live Feats at the root
+                                  "f_me": feat_copy(st0["f"] if me == 0 else st1["f"]),
+                                  "f_opp": feat_copy(st1["f"] if me == 0 else st0["f"])})
             sim.step(a0, a1)
             stt = sim.get_state()
             if T._extinct_state(stt, 0) or T._extinct_state(stt, 1):
@@ -82,7 +86,8 @@ def main():
         sim.load_observation(p["full"])
         r = T.evaluate_root(sim, p["me"], pol, p["x_me"], p["aux_me"], p["x_opp"], p["aux_opp"],
                             _ns(p["me"], p["uid_me"]), _ns(1 - p["me"], p["uid_opp"]),
-                            teacher=1, K=16, M=8, H=2, seed_base=7000)
+                            teacher=1, K=16, M=8, H=2, seed_base=7000,
+                            feats=(p["f_me"], p["f_opp"]), belief="sample")
         ms_list.append(r["wall_ms"])
         print(json.dumps({"pos": i, "step": p["step"], "me": p["me"],
                           "ms": r["wall_ms"], "n_arms": r["n_arms"],

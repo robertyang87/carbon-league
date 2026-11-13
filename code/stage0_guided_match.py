@@ -135,7 +135,10 @@ def play_one(task):
                     _ns(me, st_me["f"].own_uid), _ns(opp, st_opp["f"].own_uid),
                     teacher=2, K=16, M=8, H=2,
                     seed_base=7000 + (seed % 1000) * 1000 + step,
-                    guard_snaps=(guard_me.snapshot(), None))
+                    guard_snaps=(guard_me.snapshot(), None),
+                    # teacher v2 (spec SS15): branches inherit both live
+                    # Feats and are cloned from this seat's belief
+                    feats=(st_me["f"], st_opp["f"]), belief="sample")
                 t_ms.append(r["wall_ms"])
                 t_ent.append(r["entropy"])
                 t_calls += 1
