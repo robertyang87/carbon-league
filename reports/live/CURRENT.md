@@ -38,9 +38,11 @@
 
 ## 待提交候选：n1r
 
-- 打包文件：L20 `/root/carbon/data/packs/n1r_int8.py`，
-  md5 `ba7f84c3652ea2cd14a2243f2b1eace2`（完整制品只存于该路径，仓内无副本；
-  md5 据 L20 回执，本次未复算、**待核**）。
+- 打包文件：**已入仓** `code/packs/n1r_int8_reference.py`，4,579,266 字节，
+  md5 `ba7f84c3652ea2cd14a2243f2b1eace2`，可直接复算（台账见
+  `reports/live/packs_ledger.md`）；L20 `/root/carbon/data/packs/n1r_int8.py`
+  为同制品的机上副本。原始训练权重的文件名/MD5 身份仍为**未核**
+  （不能据解量化后的包反推原文件身份，台账已如实记「未核」）。
 - 状态：已过全部上榜闸（对 Master2 真身校准达标＋头对头胜 snipe_b_30＋
   1.5 核/512MiB 约束下计时全项达标）；**未提交**，上榜与否等所有者拍板。
 
