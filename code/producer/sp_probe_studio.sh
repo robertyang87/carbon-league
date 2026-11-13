@@ -11,7 +11,7 @@
 # cc84bdc243214a017cfaddde511b31c3), which could not be read back for review
 # and is VOID -- do not run it. This version carries NO encoded blocks: the
 # producer is a separate plain-text file in the same repo directory
-# (code/producer/selfplay_gen.py, md5 b275e952da14d644e6fab41e4ce941c8),
+# (code/producer/selfplay_gen.py, md5 95d2e29fbec8cfcebee57bf9bf0d25ed),
 # asserted below before running.
 #
 # Run contract (Studio execution agent):
@@ -51,7 +51,7 @@ fi
 echo "WEIGHTS $WTS $(md5 -q "$WTS")"
 if [ "$(md5 -q "$WTS")" != "b6db08c9b076257c54817377bb93130d" ]; then die weights-md5-mismatch; fi
 # --- producer: plain-text file, md5-asserted. No encoded blocks anywhere. ---
-GEN_MD5=b275e952da14d644e6fab41e4ce941c8
+GEN_MD5=95d2e29fbec8cfcebee57bf9bf0d25ed
 GEN_DST="$CODE/selfplay_gen.py"
 if [ -f "$GEN_DST" ]; then
   echo "PRODUCER present $GEN_DST"
