@@ -185,3 +185,12 @@
 **如实说明**：复现工件留于工程组本地（~/workspace/r5fix-w2/，含上轮 r5fix-w/），未入仓——与 §8 工件一并待所有者裁是否归档 automation/acceptance_r5/。
 
 修复后 md5：code/cnet2_train.py `4140d3986d2f7e3a1884e7a4cda9b48d`（55,274 B）；code/set_uw.py `0d0fbf103ddb11c1269e556ecad8c9eb`（6,363 B）。HEAD `b7e1db92fc0e4650ef1e1ad953ec43b2a3e286dc`。
+
+## §10 归档补记（所有者 2026-11-13 15:34 裁定：两批复现工件归档）
+
+§8、§9 两批权重链复现工件已按原件逐字节归档入仓（补齐结案证据，不重开已关闭的 P1/P2），各批附清单 `MANIFEST.md`（文件清单含逐个实算的字节与 SHA256、运行命令、环境依赖、修前/修后源码身份、结果映射；未留存项在清单内如实注明）：
+
+- 批次一（第二轮 P1-A/P1-B）：`automation/acceptance_r5/r5fix-w/` — 原件 1,646 个文件、94,536,217 字节（子目录含清单共 1,647 个文件、94,731,920 字节）。原件分块提交 34 笔：4fbbc34f、f0ea470f、9382fadd、047830d3、9cdd1845、2ec2ad02、c3ef0609、c317896d、897d4621、944031b2、af21c239、cc29dcce、d54da943、159d8c05、6e14e3a7、89c30a46、de4eee06、cc46f074、4bf2f016、c62bb126、317715fd、7975bc3a、a99fcfe1、fa6b217f、c3821af5、392c2d43、bf2cec90、c768f5c0、d1b0a51a、ea318c86、7e171ec0、582a01e4、108f1093、602caec7；清单提交 `b3cdc46f67e6feed30fc49db8e7f27d4323b26f0`。
+- 批次二（第三轮 P1/P2，含第二轮套件副本与 fa_code/ 叠加树）：`automation/acceptance_r5/r5fix-w2/` — 原件 1,392 个文件、76,856,050 字节（子目录含清单共 1,393 个文件、77,015,697 字节）。原件分块提交 28 笔：debf47bf、60aa4441、a101a4fc、c8751093、7c89e314、578b5a10、b04fd8ae、132af585、bb64366e、de91014e、4c3efc9c、a6f3671f、720a162c、f9788e18、4d2210d7、6dafd4a7、d29367cf、d7c06d14、01c38408、4a94fbdc、0ce9d481、6dfc4963、5782b90a、d2bebadb、43fcbd9c、5aab4db6、4ea7c090、b54f226d；清单提交 `28767f2c494eb6d11dc68fc2e3a62b5ff063c6e2`。
+
+归档后已逐文件比对仓库 tree 的 blob SHA 与本地实算值：两批均零缺失、零多余、零不一致；MANIFEST.md 与主复现脚本经 Contents API 读回逐字节一致。
