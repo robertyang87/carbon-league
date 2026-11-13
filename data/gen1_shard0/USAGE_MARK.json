@@ -1,0 +1,17 @@
+{
+  "artifact": [
+    "gen1_shard0 (selfplay_gen corpus, 200 games, seeds 992000-992199)",
+    "ds_gen1 (built dataset, 119600 rows)"
+  ],
+  "usage_restriction": "QUARANTINED: value labels are ~0 (mirror games); FORBIDDEN as any supervision source (no training, no evaluation, no teacher labelling roots); retained only as a pipeline-rehearsal artifact and a negative example.",
+  "usage_restriction_zh": "隔离：价值标签≈0（镜像局）；禁止用作任何监督源（训练/评估/教师标注均禁）；仅作流水线演练件与反面样本保留。",
+  "ruling_source": "Strategy-group disposition 2026-11-13 (producer degeneration closeout), dispatched via Carbon war room; audit by DGX line 2026-11-13 21:1x CST.",
+  "evidence": {
+    "generation_config": "selfplay_gen (rehearsal build): single weights cnet2_m3s2r1L.npz on BOTH seats, CONF SEARCH=false (fully greedy), OPEN_T default 0.0 (no opening sampling)",
+    "mirror_signature": "199/200 games with exactly equal seat scores and U == (0.5, 0.5); remaining game margin 0.01 (4807.78 vs 4807.77)",
+    "value_labels": "ds_gen1 value.npy has exactly 3 distinct values: 0 and +/-3.34e-06",
+    "build_gate_backtest": "cnet2_build mirror gate: score_tie_frac 0.995, reward_eq_frac 0.995 -> REFUSED"
+  },
+  "retention": "DO NOT DELETE: the 119600 rows stay on disk as a negative example and pipeline regression fixture. No line may feed them to training or evaluation.",
+  "gen1_budget_note": "All budget figures derived from the 119600 positions are VOID (strategy-group disposition item 4); recompute from the rebuilt corpus after the producer fix is unfrozen."
+}
