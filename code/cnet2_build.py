@@ -438,6 +438,98 @@ def ratings(dirs):
     return r
 
 
+def _producer_provenance(entry, path, run_identity=None):
+    """Validate the single-weights selfplay_gen contract, independently of names.
+
+    Only producer records are opened here; ordinary ladder replays keep the
+    existing scan path. Old selfplay records remain identifiable by id/file,
+    but missing diversity provenance is not silently upgraded to production.
+    The explicit CNET2_ALLOW_MIRROR rehearsal override is handled by main().
+    """
+    generated = (entry.get("id") == "selfplay"
+                 or os.path.basename(path).startswith("selfplay-")
+                 or any(k in entry for k in ("identity", "mirror_signature", "open_seed"))
+                 or run_identity is not None)
+    if not generated:
+        return {"kind": "ladder", "same_policy": False}
+
+    def fail(why):
+        raise ValueError(f"producer provenance {os.path.basename(path)}: {why}")
+
+    with gzip.open(path, "rt", encoding="utf-8") as f:
+        replay = json.load(f)
+    result = replay.get("result") or {}
+    ident = entry.get("identity")
+    if replay.get("identity") != ident or result.get("identity") != ident:
+        fail("index/replay identity mismatch")
+    if run_identity is not None and ident != run_identity:
+        fail("corpus/index identity mismatch")
+    scores = [float(entry["scores"][k]) for k in entry["order"]]
+    equal = scores[0] == scores[1]
+    if result.get("scores") is not None and result["scores"] != scores:
+        fail("index/replay scores mismatch")
+    for src in (entry, result):
+        if "mirror_signature" in src and (type(src["mirror_signature"]) is not bool
+                                           or src["mirror_signature"] != equal):
+            fail("mirror_signature contradicts final scores")
+    out = {"kind": "selfplay", "same_policy": True,
+           "identity": ident, "mirror_signature": equal,
+           "status": "legacy", "rehearsal": False}
+    if ident is None:
+        return out
+    if not isinstance(ident, dict):
+        fail("identity is not an object")
+
+    def digest(value, n):
+        return isinstance(value, str) and len(value) == n and all(c in "0123456789abcdef" for c in value)
+
+    # This producer supplies ONE weights file and ONE config to both seats.
+    # A list/dict of per-seat hashes is a different, unsupported schema.
+    if not digest(ident.get("weights_md5"), 32):
+        fail("missing or unsupported single-weights hash")
+    cfg = ident.get("config")
+    if not isinstance(cfg, dict) or ident.get("config_hash") != hashlib.sha256(
+            json.dumps(cfg, sort_keys=True, default=str).encode()).hexdigest():
+        fail("config_hash mismatch")
+    hashes = ident.get("code_md5")
+    required_code = {"eval_v53.py", "fastsim.py", "cnet2_search.py", "selfplay_gen.py"}
+    if (not isinstance(hashes, dict) or not required_code <= set(hashes)
+            or not all(digest(v, 32) for v in hashes.values())):
+        fail("missing or invalid code hashes")
+    if ident.get("names") != [entry["strategies"][k]["name"] for k in ("a", "b")]:
+        fail("display names do not match producer identity")
+    diversity = ident.get("diversity")
+    if diversity is None:  # pre-diversity producer: explicit legacy, never formal
+        return out
+    if not isinstance(diversity, dict):
+        fail("diversity is not an object")
+    try:
+        open_t = float(cfg.get("OPEN_T") or 0.0)
+        open_steps = int(cfg.get("OPEN_STEPS", 50) or 0)
+        base = int(cfg.get("OPEN_SEED", 0) or 0)
+        sampled = open_t > 0 and open_steps > 0
+        expected = {"mode": "open-sampling" if sampled else "greedy-mirror",
+                    "open_t": open_t, "open_steps": open_steps,
+                    "open_kinds": cfg.get("OPEN_KINDS"), "open_seed_base": base,
+                    "open_seed_rule": "(open_seed_base * 1000003 + game_seed) mod 2^31"}
+        consistent = (np.isfinite(open_t) and all(diversity.get(k) == v for k, v in expected.items())
+                      and type(diversity.get("allow_mirror")) is bool)
+    except (TypeError, ValueError, OverflowError):
+        consistent = False
+    if not consistent:
+        fail("diversity does not match generation config")
+    if entry.get("mirror_signature") is None or result.get("mirror_signature") is None:
+        fail("current producer record lacks mirror_signature")
+    try:
+        seed = (base * 1000003 + int(entry["game"])) % (1 << 31)
+    except (KeyError, TypeError, ValueError):
+        fail("missing game seed")
+    if entry.get("open_seed") != seed or result.get("open_seed") != seed:
+        fail("per-game opening seed mismatch")
+    out.update(status="verified", rehearsal=diversity["allow_mirror"] or not sampled)
+    return out
+
+
 def _scan(dirs, min_steps=200, weighted=False):
     """Core scanner. Returns (games, missing, filtered):
     games    -- eligible games whose replay file exists;
@@ -459,7 +551,16 @@ def _scan(dirs, min_steps=200, weighted=False):
     R = ratings(dirs) if weighted else {}
     for rd in dirs:
         ours = "ours_corpus" in rd
-        idx = json.load(open(os.path.join(rd, "index.json")))
+        with open(os.path.join(rd, "index.json")) as f:
+            idx = json.load(f)
+        run_identity = None
+        identity_path = os.path.join(rd, "identity.json")
+        if os.path.exists(identity_path):
+            with open(identity_path) as f:
+                declaration = json.load(f)
+            run_identity = declaration.get("identity") if isinstance(declaration, dict) else None
+            if not isinstance(run_identity, dict):
+                raise ValueError(f"producer provenance {rd}: invalid identity.json")
         for g in idx:
             key = os.path.basename(g["file"])
             if key in seen:
@@ -531,10 +632,12 @@ def _scan(dirs, min_steps=200, weighted=False):
                 # outcome depend on which copy came first).
                 missing.remove(missing_by_key.pop(key))
             seen.add(key)
+            provenance = _producer_provenance(g, fp, run_identity)
             g = {"file": fp, "key": key, "names": names, "scores": scores, "sides": sides,
                  "val": zlib.crc32(key.encode()) % 10 == 0, "src": os.path.basename(rd.rstrip("/")),
                  "terminal": terminal, "end_reason": g.get("end_reason"),
                  "raw_margin": raw_mg, "raw_u": raw_u, "outcome": oclass,
+                 "producer_provenance": provenance,
                  "label_inputs": _label_inputs(g),
                  "steps": g.get("steps", 0),
                  "short_terminal": bool(terminal and g.get("steps", 0) < min_steps)}
@@ -635,6 +738,7 @@ def _game_label_digest(g):
                         else [float(x) for x in g["raw_u"]]),
               "outcome": g.get("outcome", "normal"),
               "label_inputs": g.get("label_inputs"),
+              "producer_provenance": g.get("producer_provenance"),
               "wts": g.get("wts")}
     return hashlib.sha256(json.dumps(detail, sort_keys=True).encode()).hexdigest()[:16]
 
@@ -880,21 +984,19 @@ MIRROR_GATE_SHARE = 0.5
 
 
 def mirror_signature(games):
-    """Mirror-degeneracy signature of same-policy self-play (spec SS14).
+    """Equal-score diagnostic for producer-attested same-policy games.
 
-    A game is SAME-POLICY SELF-PLAY when both sides are kept as teacher
-    sides under one strategy name (never true of a ladder game). The map
-    is 4-fold symmetric and the features are seat-canonical, so a greedy
-    net against itself plays an exact mirror game: both seats finish on
-    the identical score to the cent, every value label is 0 (U = 0.5) and
-    the two seats' rows are byte-identical duplicates. The signature read
-    here is the cheap index-level one: equal final scores. Returns
-    {"selfplay_games", "mirrored_games", "share"}."""
-    sp = [g for g in games if len(g.get("sides", ())) == 2
-          and g["names"][0] == g["names"][1] and not g.get("missing_replay")]
+    Identity comes from the producer's weights/config contract, not display
+    names or which teacher sides were retained. Equal scores are a cheap
+    degeneracy signature, not proof of duplicate observations/actions.
+    """
+    sp = [g for g in games if g.get("producer_provenance", {}).get("same_policy")
+          and not g.get("missing_replay")]
     mir = [g for g in sp if float(g["scores"][0]) == float(g["scores"][1])]
     return {"selfplay_games": len(sp), "mirrored_games": len(mir),
-            "share": (len(mir) / len(sp)) if sp else 0.0}
+            "share": (len(mir) / len(sp)) if sp else 0.0,
+            "legacy_games": sum(g["producer_provenance"]["status"] == "legacy" for g in sp),
+            "rehearsal_games": sum(g["producer_provenance"]["rehearsal"] for g in sp)}
 
 
 def main(out, dirs):
@@ -919,6 +1021,11 @@ def main(out, dirs):
     # the counts are declared in meta.json either way.
     mirror = mirror_signature(games)
     mirror["allowed"] = os.environ.get("CNET2_ALLOW_MIRROR") == "1"
+    if (mirror["legacy_games"] or mirror["rehearsal_games"]) and not mirror["allowed"]:
+        raise SystemExit(
+            f"mirror gate: {mirror['legacy_games']} legacy/unverified producer games and "
+            f"{mirror['rehearsal_games']} declared rehearsal games; refusing production build. "
+            "CNET2_ALLOW_MIRROR=1 permits an explicitly declared rehearsal only")
     if mirror["share"] > MIRROR_GATE_SHARE and not mirror["allowed"]:
         print(json.dumps({"MIRROR-GATE": "FAIL", **mirror}), flush=True)
         raise SystemExit(
@@ -1139,6 +1246,7 @@ def main(out, dirs):
     # complete generation; resolve_dataset() consumers never see a mix.
     gen_key = {"cfg_fp": cfg_fp, "weighted": weighted, "total": total,
                "valid": valid, "partial": bool(failed),
+               "mirror_gate": mirror,
                "failed": [f_["key"] for f_ in failed],
                "filtered": filtered,
                "labels": label_cov,

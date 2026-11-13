@@ -1,0 +1,24 @@
+PASS init without heads + matching U checkpoint accepted
+PASS legacy checkpoint cannot silently override calibrated init
+PASS legacy source declaration accepts checkpoint and records uncertainty
+PASS automatic resume rejects changed reward
+PASS automatic resume rejects changed value_head
+PASS automatic resume rejects changed gamma
+PASS automatic resume rejects changed rscale
+PASS automatic resume rejects changed sep_value
+PASS missing effective critic head refused even when init carries heads
+PASS both sources missing heads refused
+PASS non-finite checkpoint utility refused
+PASS explicit init reset cannot overwrite shared policy
+PASS utility source flag cannot silently affect legacy tanh mode
+PASS checkpoint source preserves parameters, moments, lr and steps exactly
+PASS explicit init resets complete critic and moments while preserving actor
+PASS actual main resume/warmup, separate=1
+PASS warmup preserves policy and policy optimizer, separate=1
+PASS warmup actually trains utility, separate=1
+PASS effective/checkpoint provenance and contract persist, separate=1
+PASS actual main resume/warmup, separate=0
+PASS warmup preserves policy and policy optimizer, separate=0
+PASS warmup actually trains utility, separate=0
+PASS effective/checkpoint provenance and contract persist, separate=0
+==== 23/23 checks passed ====

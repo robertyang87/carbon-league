@@ -24,9 +24,11 @@ S1 wiring commit. A1/A2/A3 PASS (see reports/STAGE1_TEACHER_GATES_20261113.md §
 
 ## Spec SS15 three-fix acceptance (2026-11-13 night)
 
-These two run from a repo checkout with no machine-side fixtures.
+These two run from a repo checkout with no machine-side fixtures beyond the
+policy weights described below. Teacher `sample` / `mean` now use v3
+(acting-seat information only); the historical test filename is retained.
 
-- `test_teacher_v2_twoworld.py [WEIGHTS.npz] [--canon]` — teacher v2
+- `test_teacher_v2_twoworld.py [WEIGHTS.npz] [--canon]` — teacher v3
   (belief-sampled clones + inherited branch Feats). The two-world
   experiment: worlds that differ only in cells the acting seat has no
   view of must give identical Q (v2 never reads the true carbon map, so
@@ -49,3 +51,25 @@ non-mirror games reproducible from (weights, config, seed);
 `cnet2_build` refuses the mirror corpus (exit 1, nothing published) and
 builds it only under `CNET2_ALLOW_MIRROR=1` with the counts declared in
 `meta.json`.
+
+## Resume, information-set and producer-identity regressions
+
+- `test_ppo_u_resume.py` — effective utility source after resume, legacy
+  explicit source declaration, intact policy/optimizer restoration, complete
+  separate-critic reset and critic-only resume warmup through the trainer.
+- `test_teacher_information_set.py [WEIGHTS.npz]` — reachable two-world
+  cases for both seats: identical acting-seat observation histories but
+  different opponent observations. Tests actual opponent feature reconstruction
+  and rejects dependence on caller-supplied private opponent inputs. The
+  opponent model starts fresh in each sampled world; it does not reconstruct
+  the opponent's real private history.
+- `test_teacher_gate_identity.py` — real gate/pilot control flow with
+  deterministic continuation workers: current teacher identity round-trip,
+  old-v2 artifact rejection, and diagnostic-only oracle/mean modes.
+- `test_mirror_identity.py` — producer identity survives scanning and
+  controls the build gate, including different display names, swapped seats,
+  legacy rehearsals and conflicting provenance.
+
+These are correctness checks, not evidence that a teacher or PPO candidate
+improves U. Formal model-quality gates still need the canonical trained
+weights, isolated games and independent terminal continuations.

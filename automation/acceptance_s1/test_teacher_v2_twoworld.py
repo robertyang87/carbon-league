@@ -1,4 +1,4 @@
-"""Teacher v2 acceptance (spec SS15 item 3): the two-world experiment.
+"""Belief-teacher acceptance (v3 opponent privacy) (spec SS15 item 3): the two-world experiment.
 
 Standard: when two worlds differ ONLY in carbon cells the acting seat has
 no view of, the teacher's Q must not change (beyond sampling noise -- v2
@@ -13,9 +13,9 @@ calibrated). --canon runs K=16, M=8, H=2 (about 20 s per evaluation on one
 core); the default K=8, M=4, H=2 exercises the same code paths faster.
 
 Checks per root position (three positions, steps 60 / 120 / 200):
-  A. v2 (belief="sample"), worlds differing in cells invisible to BOTH seats
+  A. belief teacher (belief="sample"), worlds differing in cells invisible to BOTH seats
      (the review's construction): max|dQ| == 0, same arms, same q.
-  B. v2, worlds differing in every cell not visible to the acting seat
+  B. belief teacher, worlds differing in every cell not visible to the acting seat
      (same root inputs): max|dQ| == 0.
   C. control, belief="oracle" on construction A: max|dQ| > 0 -- proves the
      experiment has the power to detect a dependence.
@@ -150,14 +150,14 @@ def main():
         same = lambda r1, r2: len(r1["arms"]) == len(r2["arms"]) and all(
             np.array_equal(a, b) for a, b in zip(r1["arms"], r2["arms"]))
         dq = lambda r1, r2: float(np.abs(r1["Q_mean"] - r2["Q_mean"]).max()) if same(r1, r2) else float("inf")
-        check(f"{tag} A. v2: Q unchanged when cells invisible to both seats differ",
+        check(f"{tag} A. v3: Q unchanged when cells invisible to both seats differ",
               dq(rA, rB) == 0.0 and np.array_equal(rA["q"], rB["q"]),
               f"max|dQ|={dq(rA, rB):.3e} arms={rA['n_arms']} unknown_cells={rA['n_unknown_cells']}")
-        check(f"{tag} B. v2: Q unchanged when every cell outside the acting seat's view differs",
+        check(f"{tag} B. v3: Q unchanged when every cell outside the acting seat's view differs",
               dq(rA, rC) == 0.0, f"max|dQ|={dq(rA, rC):.3e}")
-        check(f"{tag} D. v2 deterministic", dq(rA, rA2) == 0.0, f"max|dQ|={dq(rA, rA2):.3e}")
+        check(f"{tag} D. v3 deterministic", dq(rA, rA2) == 0.0, f"max|dQ|={dq(rA, rA2):.3e}")
         check(f"{tag} E. root Feats not mutated", sig0 == (feat_sig(fs[0]), feat_sig(fs[1])))
-        check(f"{tag} result labels", rA["teacher_version"] == "v2" and rA["belief"] == "sample" and rA["feat_inherit"])
+        check(f"{tag} result labels", rA["teacher_version"] == f"v{T.TEACHER_VERSION}" and rA["belief"] == "sample" and rA["feat_inherit"])
         oA = run(wA, "oracle"); oB = run(wB, "oracle")
         check(f"{tag} C. control: oracle clones DO depend on the hidden cells",
               dq(oA, oB) > 0.0, f"max|dQ|={dq(oA, oB):.4f} (label {oA['teacher_version']})")
@@ -180,7 +180,7 @@ def main():
             v1r = run(wA, None, feats=False)
             check("legacy call (no feats, default belief) is the v1 teacher and is labelled so",
                   v1r["teacher_version"] == "v1" and v1r["belief"] == "oracle" and np.isfinite(v1r["Q_mean"]).all())
-            check("default belief with feats resolves to v2 sample", run(wA, None)["teacher_version"] == "v2")
+            check("default belief with feats resolves to current belief-teacher sample", run(wA, None)["teacher_version"] == f"v{T.TEACHER_VERSION}")
 
 
     # belief_carbon unit checks on an EARLY position (most orbits still unknown;

@@ -13,7 +13,9 @@ No fixtures: a tiny random CNet2 is built in memory; nothing is trained.
      value in [-1, 1], gradient reaches utility.* and not value.*).
   4. u_mode_check flags gamma/rscale/shaping/value-head mismatches and is
      silent for the canonical launch.
-  5. --value-head utility refuses init weights without a utility head.
+  5. A fresh --value-head utility run refuses init weights without a utility head.
+     Resume provenance and actual critic-only warmup are additionally covered
+     by test_ppo_u_resume.py (including init without heads + checkpoint with heads).
 Exit 0 iff everything passes.
 """
 import math

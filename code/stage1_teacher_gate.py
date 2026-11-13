@@ -15,12 +15,13 @@ the training corpus too -- the driver refuses to run otherwise. Without
 Modes:
   q   -- per scene, evaluate_root (new U leaf, production guard) and score
          the HARD gain Q(argmax q) - Q(greedy) and the SOFT gain
-         E_q[Q] - Q(greedy) under the behaviour distribution q**tau
-         (tau = --behavior-temp). Independent anchor on a seeded subset:
+         E_q[Q] - Q(greedy) under the training distribution q**tau
+         (tau = --train-temp; behaviour temperature is descriptive only).
+         Independent anchor on a seeded subset:
          EVERY candidate arm is continued to a real terminal (frozen
          continuation, common seeds), giving both the hard anchor
          (argmax arm vs greedy arm) and the soft anchor
-         (behaviour-weighted mean U vs greedy arm). Prereg verdict
+         (training-target-weighted mean U vs greedy arm). Prereg verdict
          (formal runs only, see below): PASS iff hard gain >= +0.01 U,
          strict-improvement rate >= 25%, soft gain > 0, and BOTH
          anchors' clustered bootstrap CI lower bounds > 0 -- the
@@ -55,9 +56,12 @@ hash recorded), duplicate-free split manifests, unique roots, and (du)
 a valid pilot artifact. Anything missing degrades to DIAGNOSTIC ONLY.
 Exit code: 1 iff the verdict is FAIL, else 0; --out is written
 atomically. Teacher style defaults to the production value 2
-(producer CONF TEACHER=2), recorded in the header. Root Feat objects
-are fresh (isolated-root scope): guard history enters continuations
-through guard snapshots evolved inside the continuation (S04).
+(producer CONF TEACHER=2), recorded in the header. Real continuations
+start with prefix-replayed Feats. The v3 teacher inherits only the acting
+seat's real Feat; its opponent model starts at each hypothetical root and
+then evolves within that scenario, without access to real opponent-private
+features or guard state. Own guard snapshots evolve inside the real
+continuation (S04).
 
 Guard posture everywhere (candidate generation, continuations, both arms,
 opponent): production config GUARD=True, GUARD_NARROW=True, GUARD_CASH=40.0,
@@ -183,9 +187,9 @@ def sample_scene_specs(game_paths, layers, seed, opening_share=None):
 
 
 def extract_scene(spec):
-    """Replay to spec['step']; return a scene with the sim snapshot and live
-    Feat objects for both seats (fresh Feats observing the root obs, the same
-    history simplification the teacher itself uses for branch Feats)."""
+    """Replay to the root, preserving both seats' real Feat histories for
+    actual continuations. The belief teacher may inherit only its own seat;
+    the real opponent Feat must never enter its hypothetical decisions."""
     with gzip.open(spec["path"]) as fh:
         d = json.load(fh)
     st = d["steps"]
@@ -199,8 +203,8 @@ def extract_scene(spec):
     # Replay the prefix observations so the root features carry the same
     # belief a live Feat would hold at this point of a real game. Exactly
     # one observe per step value (a repeat observe at the same step would
-    # reset the Feat). Continuation steps inside the teacher/anchor stay
-    # fresh-Feat -- that is the separately-versioned item (c), not this fix.
+    # reset the Feat). Actual continuations inherit both real histories;
+    # the v3 teacher replaces the opponent's history with its scenario model.
     x_me = fm.observe(sim.obs(me))
     x_opp = fo.observe(sim.obs(1 - me))
     for t in range(spec["step"]):
@@ -215,7 +219,7 @@ def extract_scene(spec):
 def _expect_teacher(r, belief):
     """Formal consumers bind the teacher identity: a result produced by a
     different teacher version than the header declares is a hard error."""
-    want = "v2" if belief != "oracle" else "v1+c1"
+    want = f"v{T.TEACHER_VERSION}" if belief != "oracle" else "v1+c1"
     if r.get("teacher_version") != want or r.get("belief") != belief:
         raise RuntimeError(f"teacher identity mismatch: got version "
                            f"{r.get('teacher_version')!r} belief {r.get('belief')!r}, "
@@ -430,7 +434,7 @@ def _q_scene(task):
             "wall_ms": r["wall_ms"], "guard": r["guard"],
             # spec SS14: per-arm Q noise (standard error of the scenario
             # mean, Q_std / sqrt(M)) as a measured report item, plus how
-            # many cells the belief sampler had to draw (teacher v2).
+            # many cells the belief sampler had to draw.
             "q_se_mean": float(np.mean(r["Q_std"]) / math.sqrt(cfg["M"])),
             "q_se_max": float(np.max(r["Q_std"]) / math.sqrt(cfg["M"])),
             "n_unknown_cells": r.get("n_unknown_cells")}
@@ -610,7 +614,7 @@ def main():
                     help="du formal: Stage A artifact JSON written by a --pilot run")
     ap.add_argument("--n-required", type=int, default=150)
     ap.add_argument("--belief", default="sample", choices=list(T.BELIEF_MODES),
-                    help="teacher v2 branch world (spec SS15): 'sample' = clones "
+                    help="belief-teacher branch world: 'sample' = clones "
                          "from the acting seat's belief, unknown cells sampled per "
                          "scenario (canonical); 'mean' = belief point estimate; "
                          "'oracle' = v1 true-carbon clones (baseline comparison "
@@ -673,7 +677,7 @@ def main():
         capped = True
     canonical = ((a.K, a.M, a.H) == (CANON["K"], CANON["M"], CANON["H"])
                  and not capped and a.belief == "sample")
-    teacher_version = "v2" if a.belief != "oracle" else "v1+c1"
+    teacher_version = f"v{T.TEACHER_VERSION}" if a.belief != "oracle" else "v1+c1"
     train_temp = a.train_temp if a.train_temp is not None else 1.0
     cfg = {"K": a.K, "M": a.M, "H": a.H, "seed_teacher": a.seed_teacher,
            "seed_cont": a.seed_cont, "behavior_temp": a.behavior_temp,
@@ -700,10 +704,11 @@ def main():
         "certified_target": "q ** train_temp, normalised (R23)",
         "q_select_source": "teacher Q (stage0_teacher.evaluate_root)",
         "q_eval_source": "real terminal continuations (anchor / paired arms)",
-        "root_feat_history": "prefix-replayed Feat belief (guided-aligned); "
-                             "teacher branches inherit the root Feats and are "
-                             "cloned from the acting seat's belief unless "
-                             "belief=oracle (teacher v2, spec SS15)",
+        "root_feat_history": "actual continuations use both prefix-replayed Feats; "
+                             "v3 teacher inherits own real history only, initializes "
+                             "opponent Feat/guard at each belief-scenario root, then "
+                             "evolves that model in the branch; oracle diagnostics "
+                             "retain privileged opponent inputs",
         "seeds": {"scene": a.seed_scene, "teacher": a.seed_teacher,
                   "cont": a.seed_cont, "anchor": a.seed_anchor},
         "games": games, "n_scenes": len(specs), "ds_overlap_check": ds_check,

@@ -1,0 +1,40 @@
+NOTE weights teacher_v2_b128.npz have no utility head: seeded random head added in memory
+CONFIG weights=/workspace/teacher_v2_b128.npz K=8 M=4 H=2 teacher_version=3
+PASS seed21/step60 construction: both seats' observations identical in A and B -- 168 hidden cells changed
+PASS seed21/step60 construction: acting seat's observation identical in A and C -- 176 cells changed
+PASS seed21/step60 A. v3: Q unchanged when cells invisible to both seats differ -- max|dQ|=0.000e+00 arms=8 unknown_cells=0
+PASS seed21/step60 B. v3: Q unchanged when every cell outside the acting seat's view differs -- max|dQ|=0.000e+00
+PASS seed21/step60 D. v3 deterministic -- max|dQ|=0.000e+00
+PASS seed21/step60 E. root Feats not mutated
+PASS seed21/step60 result labels
+PASS seed21/step60 C. control: oracle clones DO depend on the hidden cells -- max|dQ|=0.0106 (label v1+c1)
+PASS guard: feats=None with belief='sample' refused
+PASS guard: Feat that did not observe the root step refused
+PASS legacy call (no feats, default belief) is the v1 teacher and is labelled so
+PASS default belief with feats resolves to current belief-teacher sample
+PASS seed22/step120 construction: both seats' observations identical in A and B -- 180 hidden cells changed
+PASS seed22/step120 construction: acting seat's observation identical in A and C -- 188 cells changed
+PASS seed22/step120 A. v3: Q unchanged when cells invisible to both seats differ -- max|dQ|=0.000e+00 arms=8 unknown_cells=0
+PASS seed22/step120 B. v3: Q unchanged when every cell outside the acting seat's view differs -- max|dQ|=0.000e+00
+PASS seed22/step120 D. v3 deterministic -- max|dQ|=0.000e+00
+PASS seed22/step120 E. root Feats not mutated
+PASS seed22/step120 result labels
+PASS seed22/step120 C. control: oracle clones DO depend on the hidden cells -- max|dQ|=0.0284 (label v1+c1)
+PASS seed23/step200 construction: both seats' observations identical in A and B -- 180 hidden cells changed
+PASS seed23/step200 construction: acting seat's observation identical in A and C -- 190 cells changed
+PASS seed23/step200 A. v3: Q unchanged when cells invisible to both seats differ -- max|dQ|=0.000e+00 arms=8 unknown_cells=1
+PASS seed23/step200 B. v3: Q unchanged when every cell outside the acting seat's view differs -- max|dQ|=0.000e+00
+PASS seed23/step200 D. v3 deterministic -- max|dQ|=0.000e+00
+PASS seed23/step200 E. root Feats not mutated
+PASS seed23/step200 result labels
+PASS seed23/step200 C. control: oracle clones DO depend on the hidden cells -- max|dQ|=0.0058 (label v1+c1)
+PASS belief_carbon: early position has unknown cells -- unknown=166
+PASS belief_carbon: known cells equal the belief
+PASS belief_carbon: visible cells exact
+PASS belief_carbon: mean mode is the belief itself
+PASS belief_carbon: unknown mirror orbits share one sampled value
+PASS belief_carbon: same seed reproduces, scenario seeds differ
+PASS belief_carbon: sampled values within [0, maxCellCarbon]
+PASS belief_carbon: sampled non-zero share near the generator's (29/64) -- share=0.37
+PASS early position (sampled unknown cells in play): Q unchanged when all unknown cells differ -- unknown_cells=166 Q_std over scenarios max=0.0089
+==== 37/37 checks passed ====

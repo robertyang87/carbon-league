@@ -1,0 +1,19 @@
+PASS reward u, margin -13320: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=-1.0000 U=0.0000
+PASS reward u, margin -500: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=-0.6225 U=0.1888
+PASS reward u, margin -1: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=-0.5002 U=0.2499
+PASS reward u, margin +0: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=+0.0000 U=0.5000
+PASS reward u, margin +1: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=+0.5002 U=0.7501
+PASS reward u, margin +500: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=+0.6225 U=0.8112
+PASS reward u, margin +9000: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=+0.9999 U=0.9999
+PASS gamma=1: every step's return equals the terminal reward -- ret=+0.6900
+PASS gamma=0.995: the first decision sees 0.995**298 of it -- share=0.2245
+PASS utility readout: value == 2*u-1 from forward_heads, within [-1, 1] -- n=24 range=[-0.051, -0.027]
+PASS utility readout: log-probs identical to the tanh path
+PASS tanh path unchanged: value is the legacy tanh head
+PASS utility readout: critic gradient reaches utility.*, not value.*
+PASS u_mode_check: canonical launch is silent
+PASS u_mode_check: default gamma / rscale / shaping are all flagged -- gamma=0.995; rscale=0.0002; c_dep/c_lost are ignored in u mode
+PASS u_mode_check: utility head without --reward u is flagged
+PASS u_mode_check: legacy modes are not touched
+PASS --value-head utility refuses init weights without a utility head -- rc=1
+==== 18/18 checks passed ====

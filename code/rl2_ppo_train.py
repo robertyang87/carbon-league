@@ -30,6 +30,7 @@ import pickle
 import zlib
 import json
 import math
+import hashlib
 import multiprocessing as mp
 import os
 import random
@@ -90,13 +91,19 @@ def parse():
     a("--value-head", default="tanh", choices=["tanh", "utility"],
       help="critic readout. tanh: the legacy value head (default, unchanged). utility: the Stage 0 utility head "
            "(E[U]) mapped to 2*(U-0.5) -- the Terminal-U critic; requires --reward u and the cnet2 adapter, and the "
-           "init weights must carry the utility head")
+           "effective critic weights must carry the utility head (see --utility-source)")
+    a("--utility-source", default="auto", choices=["auto", "checkpoint", "init"],
+      help="utility critic source: auto uses init for a fresh run, or a checkpoint declaring U/utility training; "
+           "checkpoint explicitly accepts a legacy checkpoint's critic provenance; init explicitly resets the "
+           "complete separate critic and its optimizer after resume (never just a head on a different trunk)")
     a("--win-bonus", type=float, default=0.1)
     a("--c-dep", type=float, default=0.0)
     a("--c-lost", type=float, default=0.0)
     a("--shape-iters", type=int, default=200)
     a("--sep-value", type=int, default=1, help="1: separate value network (copy of init)")
     a("--vwarm", type=int, default=2, help="iterations training only the value function")
+    a("--resume-vwarm", type=int, default=0,
+      help="explicit critic-only warmup iterations after resume, e.g. when changing reward/readout; policy is frozen")
     a("--pool", default=json.dumps(DEFAULT_POOL), help="json [[bot_file, prior], ...]")
     a("--snap-every", type=int, default=10)
     a("--snap-prior", type=float, default=0.5)
@@ -311,6 +318,93 @@ def _resume_sd(model, sd, opt, opt_sd, tag):
     return "migrated"
 
 
+def training_contract(args):
+    """Persist the target/readout actually used, not merely the head key set."""
+    return {k: getattr(args, k) for k in ("reward", "value_head", "gamma", "rscale", "sep_value")}
+
+
+def utility_source_plan(args, init_weights, checkpoint):
+    """Resolve the effective critic before loading it. Key presence establishes
+    shape/availability only, never calibration. Legacy checkpoints need an
+    explicit source declaration; a conflicting init is never silently used as
+    evidence about the critic subsequently restored from a checkpoint.
+    """
+    source = args.utility_source
+    if args.value_head != "utility":
+        if source != "auto":
+            raise SystemExit("--utility-source is only valid with --value-head utility")
+        return None
+    if args.adapter != "cnet2":
+        raise SystemExit("--value-head utility needs --adapter cnet2")
+    if checkpoint is None:
+        if source == "checkpoint":
+            raise SystemExit("--utility-source checkpoint needs --resume")
+        source = "init"
+    elif source == "auto":
+        declared = checkpoint.get("training", {})
+        fields = ("reward", "value_head", "gamma", "rscale", "sep_value")
+        if any(declared.get(k) != getattr(args, k) for k in fields):
+            raise SystemExit(
+                "utility resume: checkpoint training target/readout is unknown or differs from this run; "
+                "use --utility-source checkpoint to explicitly accept its critic, or --utility-source init "
+                "to reset a separate critic; consider --resume-vwarm for a target switch")
+        source = "checkpoint"
+    if source == "init" and checkpoint is not None and not args.sep_value:
+        raise SystemExit("--utility-source init after resume requires --sep-value 1: resetting a shared "
+                         "critic's trunk would overwrite the restored policy")
+    tag = "vnet" if args.sep_value else "net"
+    sd = init_weights if source == "init" else checkpoint.get(tag)
+    if not isinstance(sd, dict) or not all(k in sd for k in ("utility.weight", "utility.bias")):
+        label = "init weights" if source == "init" else f"checkpoint {tag} weights"
+        raise SystemExit(f"--value-head utility: {label} carry no utility head (weight and bias required); "
+                         "refusing to start from a random critic")
+    h = hashlib.sha256()
+    arrays = []
+    for k in ("utility.weight", "utility.bias"):
+        v = sd[k]
+        v = v.detach().cpu().numpy() if hasattr(v, "detach") else np.asarray(v)
+        if not np.isfinite(v).all():
+            raise SystemExit(f"utility source {source}: non-finite {k}")
+        arrays.append(v)
+        h.update(k.encode()); h.update(str(v.dtype).encode()); h.update(str(v.shape).encode())
+        h.update(v.tobytes())
+    if arrays[0].ndim != 2 or arrays[0].shape[0] != 1 or arrays[1].shape != (1,):
+        raise SystemExit(f"utility source {source}: invalid weight/bias shapes")
+    return {"source": source, "checkpoint_model": tag if source == "checkpoint" else None,
+            "path": os.path.abspath(args.resume if source == "checkpoint" else args.init),
+            "initial_head_sha256": h.hexdigest(),
+            "declaration": ("explicit-checkpoint" if args.utility_source == "checkpoint" else
+                            "matching-checkpoint-contract" if source == "checkpoint" else "init-file"),
+            "previous_training": checkpoint.get("training") if checkpoint is not None else None,
+            "reset_critic_optimizer": source == "init" and checkpoint is not None,
+            "calibration_verified": False}
+
+
+def apply_utility_source(plan, ad, init_weights, net, vnet, vopt):
+    """Called AFTER checkpoint restore; an explicit init reset copies the whole
+    separate critic and clears its stale moments. Actor weights remain intact.
+    """
+    if plan is None:
+        return
+    if plan["reset_critic_optimizer"]:
+        fresh = ad.make_model(init_weights)
+        vnet.load_state_dict(fresh.state_dict())
+        vopt.state.clear()
+    for model in (net, vnet):
+        if model is not None:
+            model._value_head = "utility"
+    # A head hash alone cannot identify the estimator: the same head on a
+    # different trunk is a different critic. Hash the complete effective
+    # initial critic AFTER all restore/reset operations.
+    h = hashlib.sha256()
+    model = vnet if vnet is not None else net
+    for k, value in sorted(model.state_dict().items()):
+        value = value.detach().cpu().numpy()
+        h.update(k.encode()); h.update(str(value.dtype).encode()); h.update(str(value.shape).encode())
+        h.update(value.tobytes())
+    plan["initial_critic_sha256"] = h.hexdigest()
+
+
 def main():
     args = parse()
     args.out = os.path.abspath(args.out)
@@ -327,6 +421,12 @@ def main():
         torch.set_num_threads(int(os.environ.get("LEARNER_THREADS", "8")))
     ad = AD.get_adapter(args.adapter)
     w0 = AD.load_npz(args.init)
+    stt = torch.load(args.resume, map_location="cpu") if args.resume else None
+    if args.resume_vwarm < 0 or args.vwarm < 0:
+        raise SystemExit("value warmup iteration counts must be non-negative")
+    if args.resume_vwarm and not args.resume:
+        raise SystemExit("--resume-vwarm needs --resume (use --vwarm for a fresh run)")
+    utility_plan = utility_source_plan(args, w0, stt)
     wref = AD.load_npz(args.ref) if args.ref else w0
     net = ad.make_model(w0).to(dev)
     ref = ad.make_model(wref).to(dev).eval()
@@ -339,15 +439,6 @@ def main():
     for m_ in (net, ref, vnet):
         if m_ is not None:
             m_._amp = use_amp
-    if args.value_head == "utility":
-        if args.adapter != "cnet2":
-            raise SystemExit("--value-head utility needs --adapter cnet2")
-        if "utility.weight" not in w0:
-            raise SystemExit(f"--value-head utility: init weights {args.init} carry no utility head "
-                             f"(train it first: stage0_train_heads.py); refusing to start from a random critic")
-        for m_ in (net, vnet):
-            if m_ is not None:
-                m_._value_head = "utility"
     sc_p = torch.amp.GradScaler("cuda", enabled=use_amp); sc_v = torch.amp.GradScaler("cuda", enabled=use_amp)
     opt = torch.optim.Adam(net.parameters(), lr=lr0)
     vopt = torch.optim.Adam(vnet.parameters(), lr=vlr0) if vnet is not None else None
@@ -358,7 +449,6 @@ def main():
     it0 = 0
     kl_coef = kl0
     if args.resume:
-        stt = torch.load(args.resume, map_location="cpu")
         _resume_sd(net, stt["net"], opt, stt["opt"], "net")
         if vnet is not None and stt.get("vnet"):
             _resume_sd(vnet, stt["vnet"], vopt, stt["vopt"], "vnet")
@@ -373,6 +463,14 @@ def main():
         if vnet is not None and args.vlr is not None:
             for _pg in vopt.param_groups:
                 _pg["lr"] = args.vlr
+    apply_utility_source(utility_plan, ad, w0, net, vnet, vopt)
+    if utility_plan is not None:
+        h = hashlib.sha256()
+        with open(utility_plan["path"], "rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 20), b""):
+                h.update(chunk)
+        utility_plan["source_file_sha256"] = h.hexdigest()
+    warm_iters = args.resume_vwarm if args.resume else args.vwarm
     # R03: record the hyper-parameters that actually took effect (post-resume), so any run can be
     # audited against what was claimed on the command line (config.json keeps the raw claims).
     _eff = {"lr": float(opt.param_groups[0]["lr"]),
@@ -380,7 +478,8 @@ def main():
                    (float(hopt.param_groups[0]["lr"]) if hopt is not None else None),
             "kl_coef": float(kl_coef), "resumed_from": args.resume, "it0": it0,
             "reward": args.reward, "gamma": args.gamma, "rscale": args.rscale,
-            "value_head": args.value_head, "u_mode_problems": u_mode_check(args)}
+            "value_head": args.value_head, "u_mode_problems": u_mode_check(args),
+            "utility_provenance": utility_plan, "critic_warmup_iters": warm_iters}
     for _p in _eff["u_mode_problems"]:
         print(f"[u-mode] WARNING: {_p}", flush=True)
     json.dump(_eff, open(os.path.join(args.out, "effective_params.json"), "w"), indent=1)
@@ -527,7 +626,7 @@ def main():
         if vnet is not None:
             vnet.train()
         stats = []
-        warm = (it - it0) <= args.vwarm and not args.resume
+        warm = (it - it0) <= warm_iters
         tq = lambda a: torch.from_numpy(a).to(dev)
         for ep in range(args.epochs):
             perm = np.random.permutation(SUB)
@@ -627,7 +726,8 @@ def main():
         torch.save({"net": net.state_dict(), "opt": opt.state_dict(),
                     "vnet": vnet.state_dict() if vnet is not None else None,
                     "vopt": vopt.state_dict() if vopt is not None else None,
-                    "it": it, "kl_coef": kl_coef}, os.path.join(args.out, "state_last.pt"))
+                    "it": it, "kl_coef": kl_coef, "training": training_contract(args),
+                    "utility_provenance": utility_plan}, os.path.join(args.out, "state_last.pt"))
         if args.eval_every > 0 and it % args.eval_every == 0:
             ek = os.path.join(args.out, f"eval_w_{it}.npz")
             AD.save_npz(ad.export(net), ek, {"it": it})

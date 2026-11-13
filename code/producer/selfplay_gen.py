@@ -546,6 +546,7 @@ def _entry_from_replay(outdir, fname, name_a, name_b):
             "terminal": True, "end_reason": end_reason,
             "outcome": res.get("outcome", "normal"),
             "identity": d.get("identity") or res.get("identity"),
+            **{k: res[k] for k in ("open_seed", "mirror_signature") if k in res},
             "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw),
             "adopted": True,
             "created": datetime.datetime.fromtimestamp(

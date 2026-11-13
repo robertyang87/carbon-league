@@ -51,9 +51,15 @@ simplifications above about scenarios and branch Feats:
   archived v1 regression probes) is the exact v1 teacher and is labelled
   teacher_version "v1" in the result; "sample"/"mean" without feats is
   refused.
-  Residual, NOT closed by v2: the opponent model is whatever x_opp /
-  feat_opp the caller supplies; gate and producer pass the opponent's
-  real Feat, i.e. the opponent's own private belief.
+Teacher v3 closes the opponent-input channel left by v2. In sample/mean
+mode, the caller's x_opp, aux_opp, feat_opp, feats[1] and opponent guard
+snapshot are ignored. Each hypothetical world instead initializes its
+own opponent Feat from that world's opponent observation, samples the
+opponent root move BEFORE candidates, and carries that model's Feat and
+guard through the branch. Only our own live history is inherited.
+This is an explicit opponent-history approximation: it neither recovers
+nor assumes access to the opponent's real private history. Oracle modes
+retain the old privileged opponent inputs for diagnostic comparisons.
 """
 
 import math
@@ -67,7 +73,7 @@ from fastsim import FastCarbon
 
 NEG = -1e9
 
-TEACHER_VERSION = 2
+TEACHER_VERSION = 3
 BELIEF_MODES = ("sample", "mean", "oracle")
 _ORBIT = F.MIRROR.min(axis=1)          # mirror-orbit representative of every cell
 
@@ -299,21 +305,24 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     re-decode path needs enc_for; numerics are unchanged).
     guard: "on" (default, production config TEACHER_GUARD_CFG), None/False
     (guard-off, legacy path), or a cfg dict merged over TEACHER_GUARD_CFG.
-    guard_snaps: optional (snap_me, snap_opp) BankruptcyGuard snapshots
-    carrying each seat's REAL guard history up to the root (S04: GUARD_NARROW
+    guard_snaps: optional (snap_me, snap_opp) BankruptcyGuard snapshots.
+    sample/mean uses only snap_me; the opponent model starts a fresh guard
+    in its hypothetical world. Oracle modes carry both real histories.
+    Our own REAL guard history is required for faithful continuation (S04: GUARD_NARROW
     depends on lostw, so a fresh guard at the root misstates the production
     continuation whenever a unit was lost earlier). Either entry may be
     None (fresh for that seat). Branch guards restore from the root
     snapshots, so branches never mutate the caller's history.
-    feats: (feat_me, feat_opp) LIVE cnet2_feat.Feat objects that have
-    observed the root step (v2, c1). Not mutated: branches work on private
-    copies. Required for belief "sample" / "mean".
-    belief: "sample" (v2: clones from seat `me`'s belief, unknown cells
+    feats: (feat_me, feat_opp) LIVE cnet2_feat.Feat objects. sample/mean
+    requires only feat_me, which must have observed the root step; the
+    second entry and all other supplied opponent inputs are ignored.
+    Oracle with feats still validates and inherits both. No input is mutated.
+    belief: "sample" (v3: clones from seat `me`'s belief, unknown cells
     sampled per scenario), "mean" (belief point estimate, one map for all
     scenarios) or "oracle" (v1: true carbon). None (default) resolves to
     "sample" when feats are given and to "oracle" otherwise -- a legacy
     call without feats is exactly the v1 teacher, and says so: the result
-    carries teacher_version ("v2" / "v1+c1" / "v1"), which formal consumers
+    carries teacher_version ("v3" / "v1+c1" / "v1"), which formal consumers
     must check (stage1_teacher_gate does) instead of trusting the call.
     Depth: the root step plus H continuation steps (H=2 -> 3 plies total).
     Raises ValueError on an already-terminal root position.
@@ -334,11 +343,14 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     if belief not in BELIEF_MODES:
         raise ValueError(f"belief must be one of {BELIEF_MODES}, got {belief!r}")
     if feats is None and belief != "oracle":
-        raise ValueError("teacher v2 needs the live root Feats (feats=(feat_me, "
+        raise ValueError("belief teacher needs the live root Feat (feats=(feat_me, "
                          "feat_opp)); only belief='oracle' (the v1 teacher) may "
                          "run without them")
     if feats is not None:
-        for _f, _seat in ((feats[0], me), (feats[1], 1 - me)):
+        checked_feats = ((feats[0], me),)
+        if belief == "oracle":
+            checked_feats += ((feats[1], 1 - me),)
+        for _f, _seat in checked_feats:
             if _f.seat != _seat or int(_f.step) != int(sim.step_count):
                 raise ValueError(
                     f"feats must be (seat {me}, seat {1 - me}) Feats that observed "
@@ -364,7 +376,7 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
         _sm, _so = guard_snaps
         if _sm is not None:
             g_me_root.restore(_sm)
-        if _so is not None:
+        if _so is not None and belief == "oracle":
             g_opp_root.restore(_so)
     gtot = {"guard_moves": 0, "guard_recruit": 0}
 
@@ -372,24 +384,10 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
         counter[0] += 1
         return pol.act(px, paux, teacher=teacher, **kw)
 
-    # ---- opponent root actions FIRST (one per scenario; before candidates) ----
-    opp_actions = []
-    for m in range(M):
-        rng_m = np.random.default_rng(seed_base + m)
-        lab, lg, _ = act(x_opp, aux_opp, sample_rng=rng_m, temp=1.0)
-        if g_opp_root is not None:
-            g_opp_root.reset_step()
-            lab = g_opp_root.apply(x_opp, aux_opp, np.asarray(lab, dtype=np.int64), lg,
-                                   pol, feat_opp.own_uid, teacher, gtot)
-        opp_actions.append(F.Feat.to_actions(feat_opp, np.asarray(lab, dtype=np.int64)))
-
-    # ---- candidate arms ----
-    arms, priors = gen_candidates(pol, x_me, aux_me, teacher, K=K, counter=counter,
-                                  guard=g_me_root, own_uid=feat_me.own_uid)
-    me_snap = g_me_root.snapshot() if g_me_root is not None else None
-    opp_snap = g_opp_root.snapshot() if g_opp_root is not None else None
-    Q = np.zeros((len(arms), M))
     # ---- branch roots: one per scenario, shared by every arm (CRN) ----
+    # Construct opponent inputs from these worlds, never from the real
+    # opponent's private observations. Our input history determines all
+    # randomness here; no chosen candidate can affect a root opponent move.
     n_unk = None
     if belief == "oracle":
         roots = [sim.full_observation(0)] * M
@@ -401,6 +399,38 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
                 feats[0], _players, sim.config,
                 rng=np.random.default_rng([int(seed_base) + m, 0xC0]), mode=belief)
             roots.append(_legal_root(sim, me, carbon_m))
+
+    # ---- opponent root actions FIRST (one per scenario; before candidates) ----
+    opp_actions = []
+    opp_feats = []
+    opp_snaps = []
+    for m in range(M):
+        rng_m = np.random.default_rng(seed_base + m)
+        if belief == "oracle":
+            model_opp, model_x, model_aux = feat_opp, x_opp, aux_opp
+            model_guard = g_opp_root
+        else:
+            hypothetical = FastCarbon(CFG)
+            hypothetical.load_observation(roots[m])
+            model_opp = F.Feat(1 - me)
+            model_x = model_opp.observe(hypothetical.obs(1 - me))
+            model_aux = model_opp.aux
+            model_guard = BankruptcyGuard(gcfg) if gcfg is not None else None
+        lab, lg, _ = act(model_x, model_aux, sample_rng=rng_m, temp=1.0)
+        if model_guard is not None:
+            model_guard.reset_step()
+            lab = model_guard.apply(model_x, model_aux, np.asarray(lab, dtype=np.int64), lg,
+                                    pol, model_opp.own_uid, teacher, gtot)
+        opp_actions.append(F.Feat.to_actions(model_opp, np.asarray(lab, dtype=np.int64)))
+        opp_feats.append(model_opp if belief != "oracle" else None)
+        opp_snaps.append(model_guard.snapshot() if model_guard is not None else None)
+
+    # ---- candidate arms ----
+    arms, priors = gen_candidates(pol, x_me, aux_me, teacher, K=K, counter=counter,
+                                  guard=g_me_root, own_uid=feat_me.own_uid)
+    me_snap = g_me_root.snapshot() if g_me_root is not None else None
+    opp_snap = g_opp_root.snapshot() if g_opp_root is not None else None
+    Q = np.zeros((len(arms), M))
     for ci, arm in enumerate(arms):
         a_me = F.Feat.to_actions(feat_me, arm)
         for m in range(M):
@@ -410,7 +440,7 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
             if feats is not None:
                 fb = [None, None]
                 fb[me] = feat_copy(feats[0])
-                fb[1 - me] = feat_copy(feats[1])
+                fb[1 - me] = feat_copy(feats[1] if belief == "oracle" else opp_feats[m])
             a_opp = opp_actions[m]
             pre = clone.get_state()  # state before the root step (survivor scoring)
             clone.step(*((a_me, a_opp) if me == 0 else (a_opp, a_me)))
@@ -419,7 +449,7 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
             if g_me is not None:
                 g_me.restore(me_snap)
             if g_opp is not None:
-                g_opp.restore(opp_snap)
+                g_opp.restore(opp_snap if belief == "oracle" else opp_snaps[m])
             # S01 (Codex review 2026-11-13): terminal status is checked after
             # EVERY step, including the root step and the last continuation
             # step. The old loop only checked at the top of the next
@@ -472,10 +502,11 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
         "n_act_calls": counter[0],
         "wall_ms": round((time.time() - t0) * 1000, 1),
         "guard": dict(gtot),
-        # "v2" = c1 + c2; "v1" = the original teacher (true carbon, fresh
-        # branch Feats); "v1+c1" = true carbon with inherited Feats.
-        "teacher_version": ("v2" if (feats is not None and belief != "oracle")
+        # v3 models the opponent within our belief worlds; oracle modes
+        # deliberately retain the old privileged input behavior.
+        "teacher_version": (f"v{TEACHER_VERSION}" if (feats is not None and belief != "oracle")
                             else ("v1+c1" if feats is not None else "v1")),
+        "opponent_model": ("scenario-root-history" if belief != "oracle" else "privileged"),
         "belief": belief, "feat_inherit": feats is not None,
         "n_unknown_cells": n_unk,
     }
