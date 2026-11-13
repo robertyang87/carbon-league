@@ -12,21 +12,27 @@ Method / measurement scope (koujing):
   * The pack is loaded in a CHILD process (one per game), platform-style:
     exec of the file bytes with no __file__ semantics relied upon.
   * init_wall_s: parent wall clock from child spawn until the child reports
-    READY, i.e. interpreter start + pack exec + lazy agent construction
-    (the child performs one warmup agent() call on the initial observation
-    before READY; that call is timed separately as first_call_ms and is not
-    counted as a game step). Gate: <= --init-limit-s (default 20).
+    READY, i.e. interpreter start + pack exec (compile / import / top-level
+    load) + harness setup ONLY. The platform contract counts nothing else
+    in the 20s init budget: anything the agent loads lazily inside agent()
+    is charged to the first step, never to init. Gate: <= --init-limit-s
+    (default 20). There is NO warmup call (F04 fix): the first agent() call
+    IS step 0 of the measured game -- timed under the normal per-step gates
+    and advanced into the game like every other step.
   * step_wall_ms: per-step wall clock measured by the PARENT around the
     request/response round trip to the child (so it includes IPC and the
     top-level agent() call), minus the child's reported previous sim-advance
     time, clamped below by the child's own wall around the top-level
     agent() call (child_agent_ms, also reported). Gates: every step
-    <= --step-hard-ms (default 3000); slow steps (> --step-soft-ms,
-    default 1000) <= --slow-max (default 3); overage pool
-    sum(max(0, step - soft)) <= --overage-limit-s (default 5).
-  * game_wall_s: parent wall clock from child spawn to the last step reply
-    of that game (whole-match task scope, NOT just summed agent time).
-    Gate: <= --game-limit-s (default 1500).
+    <= --step-hard-ms (default 3000); PER GAME (F04 fix): slow steps
+    (> --step-soft-ms, default 1000) <= --slow-max (default 3) and overage
+    pool sum(max(0, step - soft)) <= --overage-limit-s (default 5) -- the
+    platform grants these budgets per game, so counts are never summed
+    across games.
+  * game_wall_s: parent wall clock from child spawn until the child's final
+    SUMMARY is received, i.e. it covers the LAST sim advance as well (F04
+    fix: previously truncated at the last step reply, before the final
+    advance completed). Gate per game: <= --game-limit-s (default 1500).
   * peak_rss_mib: child's own resource.getrusage(RUSAGE_SELF).ru_maxrss at
     game end (Linux: KiB, converted to MiB) -- the peak RSS of the pack
     process itself. The parent's RUSAGE_CHILDREN ru_maxrss (max over all
@@ -37,6 +43,14 @@ Method / measurement scope (koujing):
   * a_errors: unified internal-error total with the C03 rule (the "errors"
     key plus every numeric *_errors category in the search agent stats),
     plus any exception raised by a top-level agent() call. Gate: == 0.
+  * Explicit opponent / dependency load failure is FATAL (F04 fix): if
+    --opp names a file, a missing file or any exception while loading it
+    aborts the certification with a nonzero exit -- the harness never
+    silently substitutes an empty-action opponent.
+  * The certificate carries an identity block: candidate pack md5/bytes,
+    opponent md5/bytes (or null), the harness identity (this file's md5
+    plus the fastsim / eval_v53 module md5s the child actually imported)
+    and the full parameter set, so a PASS is bound to exact artifacts.
   * p95 / p50 / mean / max of step_wall_ms are reported; p95 itself is a
     reported metric, not a gate (the binding per-step rules are the hard
     limit, slow count and overage pool above).
@@ -59,6 +73,11 @@ import sys
 import time
 
 PREFIX = "CERT1 "
+
+
+def _md5_bytes(b):
+    import hashlib
+    return hashlib.md5(b).hexdigest()
 
 
 def _pct(vals, q):
@@ -96,24 +115,49 @@ def child_main(argv):
     code_dir = os.path.dirname(os.path.abspath(__file__))
     if code_dir not in sys.path:
         sys.path.insert(0, code_dir)
-    cfg, sim, side, opp_fn, harness = None, None, seed % 2, None, False
+
+    def setup_fail(stage, exc):
+        _send({"type": "setup_error", "stage": stage,
+               "error": f"{type(exc).__name__}: {exc}"})
+        return 3
+
+    # Harness + dependencies. Any failure here is a certification failure,
+    # never a silent downgrade (F04: an explicit opponent that fails to
+    # load must not be replaced by an empty-action opponent, and a missing
+    # simulator must not turn the run into a synthetic-obs pass).
     try:
         import eval_v53
         from fastsim import FastCarbon
         cfg = eval_v53.CFG
-        if opp:
-            opp_fn = eval_v53.load_agent_fn(opp)
-        sim = FastCarbon(cfg).reset(seed=seed)
-        harness = True
-    except Exception:
+    except Exception as e:
+        return setup_fail("harness_import", e)
+    harness_mods = {}
+    for _m in (eval_v53, FastCarbon.__module__ and sys.modules.get("fastsim")):
         try:
-            from fastsim import FastCarbon, DEFAULT_CONFIG
-            cfg = dict(DEFAULT_CONFIG)
-            sim = FastCarbon(cfg).reset(seed=seed)
-            harness = True
+            if _m is not None and getattr(_m, "__file__", None):
+                with open(_m.__file__, "rb") as _f:
+                    harness_mods[os.path.basename(_m.__file__)] = _md5_bytes(_f.read())
         except Exception:
-            cfg = {"episodeSteps": steps}
-            harness = False
+            pass
+    opp_fn = None
+    opp_id = None
+    if opp:
+        if not os.path.exists(opp):
+            return setup_fail("opponent_missing",
+                              FileNotFoundError(f"opponent file not found: {opp}"))
+        try:
+            opp_fn = eval_v53.load_agent_fn(opp)
+        except Exception as e:
+            return setup_fail("opponent_load", e)
+        with open(opp, "rb") as _f:
+            _ob = _f.read()
+        opp_id = {"md5": _md5_bytes(_ob), "bytes": len(_ob)}
+    try:
+        sim = FastCarbon(cfg).reset(seed=seed)
+    except Exception as e:
+        return setup_fail("sim_reset", e)
+    side = seed % 2
+    harness = True
 
     call_errors = 0
 
@@ -125,24 +169,17 @@ def child_main(argv):
             call_errors += 1
             return {}, f"{type(e).__name__}: {e}"
 
-    # Init phase: one warmup call so lazy construction (weight dequant etc.)
-    # lands inside init_wall, then a fresh sim for the measured game.
-    if harness:
-        o = [sim.obs(0), sim.obs(1)]
-        t1 = time.perf_counter()
-        _, werr = call_agent(o[side])
-        first_call_ms = (time.perf_counter() - t1) * 1000.0
-        from fastsim import FastCarbon
-        sim = FastCarbon(cfg).reset(seed=seed)
-    else:
-        t1 = time.perf_counter()
-        _, werr = call_agent({"step": 0, "remainingOverageTime": 60.0})
-        first_call_ms = (time.perf_counter() - t1) * 1000.0
-    _send({"type": "ready", "exec_ms": round(exec_ms, 1),
-           "first_call_ms": round(first_call_ms, 1), "harness": harness,
-           "warmup_error": werr})
+    # NO warmup (F04): the first agent() call is step 0 of the measured
+    # game. init_wall therefore covers only spawn + exec + harness setup;
+    # lazy construction inside agent() is charged to step 0 like the
+    # platform charges it to the first move.
+    _send({"type": "ready", "exec_ms": round(exec_ms, 1), "harness": harness,
+           "harness_mods": harness_mods, "opp_loaded": opp_fn is not None,
+           "opp_id": opp_id})
 
     prev_advance_ms = 0.0
+    final_advance_ms = 0.0
+    n_steps_done = 0
     for line in sys.stdin:
         try:
             cmd = json.loads(line)
@@ -150,26 +187,27 @@ def child_main(argv):
             continue
         if cmd.get("cmd") == "step":
             i = cmd["i"]
-            if harness:
-                o = [sim.obs(0), sim.obs(1)]
-                obs = o[side]
-            else:
-                obs = {"step": i, "remainingOverageTime": 60.0}
+            o = [sim.obs(0), sim.obs(1)]
+            obs = o[side]
             t2 = time.perf_counter()
             a, err = call_agent(obs)
             child_ms = (time.perf_counter() - t2) * 1000.0
             _send({"type": "step", "i": i, "child_ms": round(child_ms, 1),
                    "advance_ms": round(prev_advance_ms, 1), "error": err})
-            if harness:  # advance AFTER replying; timed into advance_ms
-                t3 = time.perf_counter()
-                try:
-                    b = opp_fn(o[1 - side], cfg) if opp_fn else {}
-                    sim.step(*((a, b) if side == 0 else (b, a)))
-                except Exception as e:
-                    call_errors += 1
-                    _send({"type": "advance_error",
-                           "error": f"{type(e).__name__}: {e}"})
-                prev_advance_ms = (time.perf_counter() - t3) * 1000.0
+            n_steps_done += 1
+            # advance AFTER replying; timed into advance_ms. The final
+            # advance runs before the "end" command is read, so the
+            # parent-side game wall (spawn -> SUMMARY) covers it.
+            t3 = time.perf_counter()
+            try:
+                b = opp_fn(o[1 - side], cfg) if opp_fn else {}
+                sim.step(*((a, b) if side == 0 else (b, a)))
+            except Exception as e:
+                call_errors += 1
+                _send({"type": "advance_error",
+                       "error": f"{type(e).__name__}: {e}"})
+            prev_advance_ms = (time.perf_counter() - t3) * 1000.0
+            final_advance_ms = prev_advance_ms
         elif cmd.get("cmd") == "end":
             break
 
@@ -183,7 +221,10 @@ def child_main(argv):
     peak_mib = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0
     _send({"type": "summary", "a_errors": sum(err_by_cat.values()) + call_errors,
            "err_by_cat": err_by_cat, "call_errors": call_errors,
-           "peak_rss_mib": round(peak_mib, 1)})
+           "peak_rss_mib": round(peak_mib, 1),
+           "final_advance_ms": round(final_advance_ms, 1),
+           "steps_done": n_steps_done,
+           "first_call_ms": None})
     return 0
 
 
@@ -229,6 +270,9 @@ def run_game(args, seed):
             break
         if line.startswith(PREFIX):
             msg = json.loads(line[len(PREFIX):])
+            if msg.get("type") == "setup_error":
+                game["fatal"] = f"setup_error[{msg.get('stage')}]: {msg.get('error')}"
+                break
             if msg.get("type") == "ready":
                 ready = msg
                 break
@@ -239,10 +283,12 @@ def run_game(args, seed):
         return game
     game["init_wall_s"] = time.perf_counter() - t_spawn
     game["exec_ms"] = ready["exec_ms"]
-    game["first_call_ms"] = ready["first_call_ms"]
     game["harness"] = ready["harness"]
-    if ready.get("warmup_error"):
-        game["fatal"] = f"warmup error: {ready['warmup_error']}"
+    game["harness_mods"] = ready.get("harness_mods")
+    game["opp_loaded"] = ready.get("opp_loaded", False)
+    game["opp_id"] = ready.get("opp_id")
+    if args.opp and not ready.get("opp_loaded"):
+        game["fatal"] = "explicit opponent requested but child did not load it"
 
     advance_errors = 0
     for i in range(args.steps_per_game):
@@ -269,9 +315,12 @@ def run_game(args, seed):
         step_wall = max(msg["child_ms"], raw_ms - msg["advance_ms"])
         game["steps_ms"].append(round(step_wall, 1))
         game["child_ms"].append(msg["child_ms"])
+        if i == 0:
+            # No warmup: the first agent() call IS step 0; its latency is
+            # reported for visibility but it is gated as a normal step.
+            game["first_call_ms"] = msg["child_ms"]
         if msg.get("error"):
             game.setdefault("step_errors", []).append({"i": i, "error": msg["error"]})
-    game["game_wall_s"] = time.perf_counter() - t_spawn
     summary = None
     if game["fatal"] is None:
         proc.stdin.write(b'{"cmd": "end"}\n')
@@ -288,6 +337,10 @@ def run_game(args, seed):
                 if m.get("type") == "summary":
                     summary = m
                     break
+    # Game wall is stamped only now: the child finished the final sim
+    # advance before answering "end", so spawn -> SUMMARY covers the
+    # complete match task including the last advance (F04 fix).
+    game["game_wall_s"] = time.perf_counter() - t_spawn
     try:
         proc.stdin.close()
     except Exception:
@@ -299,6 +352,7 @@ def run_game(args, seed):
         proc.wait()
     game["rc"] = proc.returncode
     if summary:
+        game["final_advance_ms"] = summary.get("final_advance_ms")
         game["a_errors"] = summary["a_errors"] + advance_errors
         game["err_by_cat"] = summary["err_by_cat"]
         game["call_errors"] = summary["call_errors"] + advance_errors
@@ -328,10 +382,29 @@ def main():
     ap.add_argument("--out", default="")
     args = ap.parse_args()
 
+    # An explicitly named opponent that does not exist fails the whole
+    # certification before any game starts (F04: no silent fallback).
+    if args.opp and not os.path.exists(args.opp):
+        print(json.dumps({"tool": "certify_pack", "overall": "FAIL",
+                          "fatal": f"explicit opponent not found: {args.opp}"}, indent=1))
+        sys.exit(2)
+    if not os.path.exists(args.pack):
+        print(json.dumps({"tool": "certify_pack", "overall": "FAIL",
+                          "fatal": f"pack not found: {args.pack}"}, indent=1))
+        sys.exit(2)
+
     games = [run_game(args, args.seed0 + k) for k in range(args.games)]
     all_steps = [ms for g in games for ms in g["steps_ms"]]
+    # Slow-step budget and overage pool are PER GAME on the platform
+    # (F04 fix): judge each game on its own counts, never the cross-game
+    # sum. Aggregate totals below are report-only.
+    per_game_slow = [sum(1 for ms in g["steps_ms"] if ms > args.step_soft_ms) for g in games]
+    per_game_over = [sum(max(0.0, ms - args.step_soft_ms) for ms in g["steps_ms"]) / 1000.0
+                     for g in games]
     slow = [ms for ms in all_steps if ms > args.step_soft_ms]
     overage_s = sum(max(0.0, ms - args.step_soft_ms) for ms in all_steps) / 1000.0
+    max_slow = max(per_game_slow, default=0)
+    max_over = max(per_game_over, default=0.0)
     max_init = max((g.get("init_wall_s", float("inf")) for g in games), default=float("inf"))
     max_game = max((g.get("game_wall_s", float("inf")) for g in games), default=float("inf"))
     peak_rss = max((g.get("peak_rss_mib") or 0.0 for g in games), default=0.0)
@@ -346,10 +419,12 @@ def main():
         "step_hard_le_limit": {"value_ms": max(all_steps) if all_steps else None,
                                "limit_ms": args.step_hard_ms,
                                "pass": bool(all_steps) and max(all_steps) <= args.step_hard_ms},
-        "slow_count_le_limit": {"value": len(slow), "limit": args.slow_max,
-                                "pass": len(slow) <= args.slow_max},
-        "overage_pool_le_limit": {"value_s": round(overage_s, 3), "limit_s": args.overage_limit_s,
-                                  "pass": overage_s <= args.overage_limit_s},
+        "slow_count_le_limit": {"value": max_slow, "limit": args.slow_max,
+                                "per_game": per_game_slow, "scope": "per game",
+                                "pass": all(v <= args.slow_max for v in per_game_slow) and bool(games)},
+        "overage_pool_le_limit": {"value_s": round(max_over, 3), "limit_s": args.overage_limit_s,
+                                  "per_game_s": [round(v, 3) for v in per_game_over], "scope": "per game",
+                                  "pass": all(v <= args.overage_limit_s for v in per_game_over) and bool(games)},
         "game_wall_le_limit": {"value_s": round(max_game, 3), "limit_s": args.game_limit_s,
                                "pass": max_game <= args.game_limit_s},
         "internal_errors_zero": {"value": tot_errors, "limit": 0,
@@ -363,8 +438,27 @@ def main():
                             "pass": None, "note": "reported metric, not a gate"},
     }
     overall = all(c["pass"] for c in checks.values() if c["pass"] is not None)
+    with open(args.pack, "rb") as _f:
+        _pb = _f.read()
+    _opp_id = None
+    if args.opp:
+        with open(args.opp, "rb") as _f:
+            _ob = _f.read()
+        _opp_id = {"path": args.opp, "md5": _md5_bytes(_ob), "bytes": len(_ob)}
     result = {
         "tool": "certify_pack", "pack": args.pack, "opp": args.opp or None,
+        "identity": {
+            "pack": {"md5": _md5_bytes(_pb), "bytes": len(_pb)},
+            "opp": _opp_id,
+            "harness": {"certify_pack_md5": _md5_bytes(open(os.path.abspath(__file__), "rb").read()),
+                        "modules": games[0].get("harness_mods") if games else None},
+            "params": {"seed0": args.seed0, "games": args.games,
+                       "steps_per_game": args.steps_per_game,
+                       "init_limit_s": args.init_limit_s, "step_soft_ms": args.step_soft_ms,
+                       "step_hard_ms": args.step_hard_ms, "slow_max": args.slow_max,
+                       "overage_limit_s": args.overage_limit_s,
+                       "game_limit_s": args.game_limit_s, "mem_limit_mib": args.mem_limit_mib},
+        },
         "games": [{k: v for k, v in g.items() if k not in ("steps_ms", "child_ms")} | {
             "steps": len(g["steps_ms"]),
             "step_wall_ms": {"mean": round(sum(g["steps_ms"]) / len(g["steps_ms"]), 1) if g["steps_ms"] else None,
