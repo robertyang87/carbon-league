@@ -22,10 +22,14 @@ Modes:
          (argmax arm vs greedy arm) and the soft anchor
          (behaviour-weighted mean U vs greedy arm). Prereg verdict
          (formal runs only, see below): PASS iff hard gain >= +0.01 U,
-         strict-improvement rate >= 25%, hard anchor > 0, soft gain > 0
-         and soft anchor > 0. FAIL iff hard gain <= 0, rate < 10%,
-         soft gain <= 0, or the soft anchor's clustered CI upper bound
-         < 0. Else INDETERMINATE (one seeded doubling allowed by the
+         strict-improvement rate >= 25%, soft gain > 0, and BOTH
+         anchors' clustered bootstrap CI lower bounds > 0 -- the
+         Q-based conditions are consistency checks on the teacher's own
+         table (selection-biased by construction), so the independent
+         anchor evidence must clear a confidence bound, not a point
+         estimate (external review 2026-11-13). FAIL iff hard
+         gain <= 0, rate < 10%, soft gain <= 0, or either anchor's
+         clustered CI upper bound < 0. Else INDETERMINATE (one seeded doubling allowed by the
          spec, never silent re-runs). Q_select (teacher Q, used to pick
          arms) and Q_eval (real terminal U, anchor) are recorded
          separately in the header -- the gate never certifies the soft
@@ -109,7 +113,7 @@ DU_OPENING_SHARE = 0.10  # opening layer share of ΔU-gate scenes (spec (c))
 Q_PASS = {"gain": 0.01, "rate": 0.25}
 Q_FAIL = {"gain": 0.0, "rate": 0.10}
 DU_PASS = 0.02
-ANCHOR_N = 30
+ANCHOR_N = 60
 
 
 def md5_of(path):
@@ -694,6 +698,8 @@ def main():
         hard_c = cluster_stats(arows, "du")
         soft_c = cluster_stats(arows, "du_soft")
         res["anchor"] = {"n": len(arows), "hard": hard_c, "soft": soft_c,
+                         "hard_ci95_boot_cluster": list(
+                             cluster_bootstrap_ci(arows, a.seed_anchor, "du")),
                          "soft_ci95_boot_cluster": list(
                              cluster_bootstrap_ci(arows, a.seed_anchor, "du_soft"))}
         # R21: the verdict reads the SAME game-level statistics the report
@@ -715,16 +721,19 @@ def main():
         res["q_soft_gain_train_root_mean"] = float(np.mean(
             [r["soft_gain_train"] for r in rows]))
         soft_train = res["q_soft_gain_train_mean"]
-        soft_hi = res["anchor"]["soft_ci95_boot_cluster"][1]
+        hard_lo, hard_hi = res["anchor"]["hard_ci95_boot_cluster"]
+        soft_lo, soft_hi = res["anchor"]["soft_ci95_boot_cluster"]
         if formal and len(rows) >= 150 and a.n_anchor >= ANCHOR_N:
             if (gain_c["game_mean"] <= Q_FAIL["gain"] or rate_game < Q_FAIL["rate"]
                     or soft_train <= 0
-                    or (soft_hi is not None and soft_hi < 0)):
+                    or (soft_hi is not None and soft_hi < 0)
+                    or (hard_hi is not None and hard_hi < 0)):
                 verdict = "FAIL"
             elif (gain_c["game_mean"] >= Q_PASS["gain"]
                     and rate_game >= Q_PASS["rate"]
-                    and hard_c["game_mean"] > 0 and soft_train > 0
-                    and soft_c["game_mean"] > 0):
+                    and soft_train > 0
+                    and hard_lo is not None and hard_lo > 0
+                    and soft_lo is not None and soft_lo > 0):
                 verdict = "PASS"
             else:
                 verdict = "INDETERMINATE"
