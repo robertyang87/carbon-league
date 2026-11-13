@@ -272,23 +272,20 @@ def _resolve_load_source(dirn):
     legacy mirror is refused by name instead of read.
     Returns (source_dir, manifest_or_None)."""
     if os.path.exists(os.path.join(dirn, "current.json")):
-        try:
-            gen_dir, man = load_generation(dirn, verify=True)
-            return gen_dir, man
-        except FileNotFoundError:
-            # The pointer names a generation whose field files are not
-            # all present in its directory: that dataset was never a
-            # sealed builder product (hand-made / foreign layout), so
-            # there is no certified generation to resolve to. Fall back
-            # to the flat view, loudly -- load() applies the legacy row
-            # cross-checks, and _validate_derived_layer still binds any
-            # derived weights to the pointer's generation. A hash
-            # MISMATCH (ValueError from load_generation) is corruption
-            # of a sealed generation and stays a hard refusal above.
-            print(json.dumps({"load_source": "WARNING: generation pointer present but the "
-                              "generation's files are incomplete; falling back to the flat "
-                              "view with row cross-checks", "data": dirn}), flush=True)
-            return dirn, None
+        # POLICY CHANGE (owner review of 73ebd4af, P1-3): a pointer in
+        # force is a certificate, not a hint. An earlier deliberate
+        # design fell back to the flat view when the pointed generation
+        # was incomplete (to accommodate hand-made manifest fixtures);
+        # that fallback is REMOVED. Row-count agreement in the flat
+        # mirror cannot substitute for the generation manifest's hash
+        # verification: with a pointer present, a missing generation
+        # file (FileNotFoundError) or a hash mismatch (ValueError) is a
+        # hard refusal, and no flat bytes are read for fields. Fixtures
+        # shaped as "pointer present but generation incomplete" must be
+        # fixed to a complete sealed generation (or drop the pointer
+        # and be legacy), not accommodated here.
+        gen_dir, man = load_generation(dirn, verify=True)
+        return gen_dir, man
     man_p = os.path.join(dirn, "manifest.json")
     if os.path.exists(man_p):
         man = json.load(open(man_p))
