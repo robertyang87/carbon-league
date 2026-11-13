@@ -143,6 +143,7 @@ os.environ.setdefault("BC_W", "64")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.dirname(HERE))   # code/: eval_v53/fastsim/cnet2_search live beside producer/, not in it -- bare CLI must resolve them without PYTHONPATH
 import eval_v53  # noqa: E402
 import fastsim as _fastsim_mod  # noqa: E402
 from fastsim import FastCarbon  # noqa: E402
