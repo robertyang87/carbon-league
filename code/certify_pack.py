@@ -51,6 +51,16 @@ Method / measurement scope (koujing):
     opponent md5/bytes (or null), the harness identity (this file's md5
     plus the fastsim / eval_v53 module md5s the child actually imported)
     and the full parameter set, so a PASS is bound to exact artifacts.
+    Identity is bound THREE-WAY (F5 fix): the parent hashes the pack, the
+    opponent and this file BEFORE any game runs (pre), each child reports
+    the md5 of the exact bytes it loaded / exec'd plus its self-computed
+    opponent id, and the parent re-hashes after the last game (post). The
+    certificate's identity fields carry the PRE hashes -- the bytes that
+    were actually certified -- and a dedicated gate requires
+    pre == child == post for every artifact; any mismatch FAILs the
+    certification naming the artifact and the game. Previously all
+    identity hashes were read only after the run, so overwriting the pack
+    mid-window issued a PASS for bytes that were never executed.
   * p95 / p50 / mean / max of step_wall_ms are reported; p95 itself is a
     reported metric, not a gate (the binding per-step rules are the hard
     limit, slow count and overage pool above).
@@ -107,9 +117,19 @@ def child_main(argv):
     pack, seed, steps, opp = argv[0], int(argv[1]), int(argv[2]), argv[3]
     g = {"__name__": "__main__", "__builtins__": __builtins__}
     t0 = time.perf_counter()
-    with open(pack) as f:
-        src = f.read()
-    exec(compile(src, "<submission>", "exec"), g)
+    # F5: hash the exact bytes this child is about to exec and report them
+    # in READY, so the parent can bind the certificate to the executed
+    # bytes (pre == child-loaded == post) instead of trusting a post-run
+    # read of whatever the path points to by then.
+    with open(pack, "rb") as f:
+        pack_raw = f.read()
+    pack_id = {"md5": _md5_bytes(pack_raw), "bytes": len(pack_raw)}
+    try:
+        with open(os.path.abspath(__file__), "rb") as f:
+            self_md5 = _md5_bytes(f.read())
+    except Exception:
+        self_md5 = None
+    exec(compile(pack_raw, "<submission>", "exec"), g)
     exec_ms = (time.perf_counter() - t0) * 1000.0
 
     code_dir = os.path.dirname(os.path.abspath(__file__))
@@ -175,7 +195,7 @@ def child_main(argv):
     # platform charges it to the first move.
     _send({"type": "ready", "exec_ms": round(exec_ms, 1), "harness": harness,
            "harness_mods": harness_mods, "opp_loaded": opp_fn is not None,
-           "opp_id": opp_id})
+           "opp_id": opp_id, "pack_id": pack_id, "self_md5": self_md5})
 
     prev_advance_ms = 0.0
     final_advance_ms = 0.0
@@ -287,6 +307,11 @@ def run_game(args, seed):
     game["harness_mods"] = ready.get("harness_mods")
     game["opp_loaded"] = ready.get("opp_loaded", False)
     game["opp_id"] = ready.get("opp_id")
+    # F5: the child's own report of the bytes it loaded (pack) and of this
+    # harness file, cross-checked against the parent's pre/post hashes in
+    # main() -- the child-computed opp_id above is verified the same way.
+    game["child_pack_id"] = ready.get("pack_id")
+    game["child_self_md5"] = ready.get("self_md5")
     if args.opp and not ready.get("opp_loaded"):
         game["fatal"] = "explicit opponent requested but child did not load it"
 
@@ -393,6 +418,21 @@ def main():
                           "fatal": f"pack not found: {args.pack}"}, indent=1))
         sys.exit(2)
 
+    # F5: PRE-RUN identity. Hash the pack, the opponent and this harness
+    # file BEFORE any game runs. The certificate binds these pre hashes
+    # (the bytes about to be certified); each child's self-reported loaded
+    # bytes and a post-run re-hash must agree with them (see the
+    # identity_three_way gate below).
+    def _hash_file(p):
+        with open(p, "rb") as f:
+            b = f.read()
+        return {"md5": _md5_bytes(b), "bytes": len(b)}
+
+    self_path = os.path.abspath(__file__)
+    pack_pre = _hash_file(args.pack)
+    opp_pre = _hash_file(args.opp) if args.opp else None
+    self_pre = _hash_file(self_path)
+
     games = [run_game(args, args.seed0 + k) for k in range(args.games)]
     all_steps = [ms for g in games for ms in g["steps_ms"]]
     # Slow-step budget and overage pool are PER GAME on the platform
@@ -413,6 +453,50 @@ def main():
     bad_rc = [g["rc"] for g in games if g.get("rc") != 0]
     parent_peak = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss / 1024.0
 
+    # F5: POST-RUN re-hash + three-way identity verification. Every child
+    # must report having loaded exactly the pre-hashed pack bytes; the
+    # child's self-computed opponent id must equal the parent's pre hash
+    # of the opponent file; and the post-run bytes at every path (pack,
+    # opponent, this harness file) must still equal the pre hashes. Any
+    # divergence means the certified bytes are not the executed bytes.
+    pack_post = _hash_file(args.pack)
+    opp_post = _hash_file(args.opp) if args.opp else None
+    self_post = _hash_file(self_path)
+    id_mismatch = []
+    for gi, g in enumerate(games):
+        cp = g.get("child_pack_id")
+        if not cp:
+            id_mismatch.append(f"pack game {gi}: child reported no pack identity")
+        elif cp.get("md5") != pack_pre["md5"]:
+            id_mismatch.append(
+                f"pack game {gi}: child-loaded md5 {cp.get('md5')} != pre-run md5 {pack_pre['md5']}")
+        if args.opp:
+            co = g.get("opp_id")
+            if not co:
+                id_mismatch.append(f"opp game {gi}: child reported no opp identity")
+            elif co.get("md5") != opp_pre["md5"]:
+                id_mismatch.append(
+                    f"opp game {gi}: child-loaded md5 {co.get('md5')} != pre-run md5 {opp_pre['md5']}")
+        cs = g.get("child_self_md5")
+        if cs is not None and cs != self_pre["md5"]:
+            id_mismatch.append(
+                f"harness game {gi}: child certify_pack md5 {cs} != pre-run md5 {self_pre['md5']}")
+    if pack_post["md5"] != pack_pre["md5"]:
+        id_mismatch.append(
+            f"pack: post-run md5 {pack_post['md5']} != pre-run md5 {pack_pre['md5']} "
+            "(pack file changed during the certification window)")
+    if args.opp and opp_post["md5"] != opp_pre["md5"]:
+        id_mismatch.append(
+            f"opp: post-run md5 {opp_post['md5']} != pre-run md5 {opp_pre['md5']} "
+            "(opponent file changed during the certification window)")
+    if self_post["md5"] != self_pre["md5"]:
+        id_mismatch.append(
+            f"harness: post-run certify_pack md5 {self_post['md5']} != pre-run md5 {self_pre['md5']} "
+            "(harness file changed during the certification window)")
+    pack_child_md5s = [(g.get("child_pack_id") or {}).get("md5") for g in games]
+    opp_child_md5s = [(g.get("opp_id") or {}).get("md5") for g in games]
+    self_child_md5s = [g.get("child_self_md5") for g in games]
+
     checks = {
         "init_le_limit": {"value_s": round(max_init, 3), "limit_s": args.init_limit_s,
                           "pass": max_init <= args.init_limit_s},
@@ -429,6 +513,10 @@ def main():
                                "pass": max_game <= args.game_limit_s},
         "internal_errors_zero": {"value": tot_errors, "limit": 0,
                                  "pass": tot_errors == 0 and not fatals},
+        "identity_three_way": {"pass": not id_mismatch, "mismatches": id_mismatch,
+                               "note": "pre-run hash == child-loaded hash == post-run hash for pack, "
+                                       "opponent and this harness file; certificate identity binds "
+                                       "the PRE-run (actually executed) bytes"},
         "child_exit_clean": {"value": bad_rc, "limit": [],
                              "pass": not bad_rc and not fatals},
         "peak_rss": {"value_mib": round(peak_rss, 1), "limit_mib": args.mem_limit_mib,
@@ -438,19 +526,23 @@ def main():
                             "pass": None, "note": "reported metric, not a gate"},
     }
     overall = all(c["pass"] for c in checks.values() if c["pass"] is not None)
-    with open(args.pack, "rb") as _f:
-        _pb = _f.read()
-    _opp_id = None
-    if args.opp:
-        with open(args.opp, "rb") as _f:
-            _ob = _f.read()
-        _opp_id = {"path": args.opp, "md5": _md5_bytes(_ob), "bytes": len(_ob)}
+    # F5: identity binds the PRE-run hashes (the bytes actually certified),
+    # with the child-reported and post-run hashes recorded alongside so any
+    # divergence is visible in the certificate itself.
     result = {
         "tool": "certify_pack", "pack": args.pack, "opp": args.opp or None,
         "identity": {
-            "pack": {"md5": _md5_bytes(_pb), "bytes": len(_pb)},
-            "opp": _opp_id,
-            "harness": {"certify_pack_md5": _md5_bytes(open(os.path.abspath(__file__), "rb").read()),
+            "pack": {"md5": pack_pre["md5"], "bytes": pack_pre["bytes"],
+                     "child_md5s": pack_child_md5s, "post_md5": pack_post["md5"],
+                     "three_way_match": not any(m.startswith("pack") for m in id_mismatch)},
+            "opp": ({"path": args.opp, "md5": opp_pre["md5"], "bytes": opp_pre["bytes"],
+                     "child_md5s": opp_child_md5s, "post_md5": opp_post["md5"],
+                     "three_way_match": not any(m.startswith("opp") for m in id_mismatch)}
+                    if args.opp else None),
+            "harness": {"certify_pack_md5": self_pre["md5"], "certify_pack_bytes": self_pre["bytes"],
+                        "certify_pack_child_md5s": self_child_md5s,
+                        "certify_pack_post_md5": self_post["md5"],
+                        "three_way_match": not any(m.startswith("harness") for m in id_mismatch),
                         "modules": games[0].get("harness_mods") if games else None},
             "params": {"seed0": args.seed0, "games": args.games,
                        "steps_per_game": args.steps_per_game,
