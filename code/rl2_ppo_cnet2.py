@@ -213,11 +213,18 @@ class Cnet2Adapter:
 
     def make_model(self, weights):
         import torch
-        from cnet2_model import CNet2
+        from cnet2_model import CNet2, migrate_state_dict
         meta = weights.get("meta")
         cfg = json.loads(str(meta))["cfg"] if meta is not None else {}
         net = CNet2(**cfg)
-        net.load_state_dict({k: torch.from_numpy(np.asarray(v, np.float32)) for k, v in weights.items() if k != "meta"})
+        # F01 (final acceptance): pre-heads weights (98-era npz) lack the 6
+        # Stage 0 head keys; a bare strict load made every old PPO init /
+        # resume through this adapter fail. Route through the shared
+        # migration -- it tolerates ONLY the head keys and raises on any
+        # other missing/unexpected key, so new-format weights load exactly
+        # as before.
+        migrate_state_dict(net, {k: torch.from_numpy(np.asarray(v, np.float32)) for k, v in weights.items() if k != "meta"},
+                           source="rl2 Cnet2Adapter.make_model")
         net._rl2_cfg = cfg
         return net
 
