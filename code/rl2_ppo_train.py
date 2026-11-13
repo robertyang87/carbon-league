@@ -87,6 +87,10 @@ def parse():
     a("--reward", default="dense", choices=["dense", "terminal", "worth", "u"],
       help="dense: per-step change of the cash margin; worth: per-step change of the worth margin (cash + cargo on board + "
            "remaining tree value; sums to the same final margin, credit arrives at pick-up / planting time)")
+    a("--value-head", default="tanh", choices=["tanh", "utility"],
+      help="critic readout. tanh: the legacy value head (default, unchanged). utility: the Stage 0 utility head "
+           "(E[U]) mapped to 2*(U-0.5) -- the Terminal-U critic; requires --reward u and the cnet2 adapter, and the "
+           "init weights must carry the utility head")
     a("--win-bonus", type=float, default=0.1)
     a("--c-dep", type=float, default=0.0)
     a("--c-lost", type=float, default=0.0)
@@ -204,6 +208,30 @@ def terminal_u(margin):
     return 0.5 * w + 0.5 / (1.0 + math.exp(-margin / 1000.0))
 
 
+def u_mode_check(args):
+    """Terminal-U launch contract (spec SS15). --reward u pays 2*(U-0.5) at
+    the terminal step only, so the return equals the objective exactly iff
+    gamma == 1 and rscale == 1: with the defaults (gamma 0.995, rscale
+    1/5000) a 299-step game discounts the terminal reward to 0.995**298 =
+    0.22 of its value at the first decision and scales it by 2e-4 -- the
+    critic would then be fitting something that is not U. Returns a list of
+    problems (empty = consistent); main() prints them loudly and records
+    them in effective_params.json. Not a refusal: a staged switch may pass
+    through intermediate values deliberately."""
+    probs = []
+    if args.reward == "u":
+        if abs(args.gamma - 1.0) > 1e-12:
+            probs.append(f"gamma={args.gamma} (Terminal-U needs 1.0: the terminal reward reaches step 1 "
+                         f"scaled by {args.gamma ** 298:.3f})")
+        if abs(args.rscale - 1.0) > 1e-12:
+            probs.append(f"rscale={args.rscale} (Terminal-U needs 1.0: the reward is already in [-1, 1])")
+        if args.c_dep or args.c_lost:
+            probs.append("c_dep/c_lost are ignored in u mode (no shaping terms)")
+    if args.value_head == "utility" and args.reward != "u":
+        probs.append("--value-head utility without --reward u: the utility head is an E[U] readout")
+    return probs
+
+
 def game_rewards(g, args, it):
     dm = g["dmargin"].astype(np.float64)
     if args.reward == "u":
@@ -311,11 +339,21 @@ def main():
     for m_ in (net, ref, vnet):
         if m_ is not None:
             m_._amp = use_amp
+    if args.value_head == "utility":
+        if args.adapter != "cnet2":
+            raise SystemExit("--value-head utility needs --adapter cnet2")
+        if "utility.weight" not in w0:
+            raise SystemExit(f"--value-head utility: init weights {args.init} carry no utility head "
+                             f"(train it first: stage0_train_heads.py); refusing to start from a random critic")
+        for m_ in (net, vnet):
+            if m_ is not None:
+                m_._value_head = "utility"
     sc_p = torch.amp.GradScaler("cuda", enabled=use_amp); sc_v = torch.amp.GradScaler("cuda", enabled=use_amp)
     opt = torch.optim.Adam(net.parameters(), lr=lr0)
     vopt = torch.optim.Adam(vnet.parameters(), lr=vlr0) if vnet is not None else None
     # shared model: value-warmup steps touch only the value head (trunk updates would move the policy)
-    vhead = [q for n, q in net.named_parameters() if n.startswith(("v.", "value."))]
+    vhead = [q for n, q in net.named_parameters()
+             if n.startswith(("utility.",) if args.value_head == "utility" else ("v.", "value."))]
     hopt = torch.optim.Adam(vhead, lr=vlr0) if (vnet is None and vhead) else None
     it0 = 0
     kl_coef = kl0
@@ -340,7 +378,11 @@ def main():
     _eff = {"lr": float(opt.param_groups[0]["lr"]),
             "vlr": float(vopt.param_groups[0]["lr"]) if vopt is not None else
                    (float(hopt.param_groups[0]["lr"]) if hopt is not None else None),
-            "kl_coef": float(kl_coef), "resumed_from": args.resume, "it0": it0}
+            "kl_coef": float(kl_coef), "resumed_from": args.resume, "it0": it0,
+            "reward": args.reward, "gamma": args.gamma, "rscale": args.rscale,
+            "value_head": args.value_head, "u_mode_problems": u_mode_check(args)}
+    for _p in _eff["u_mode_problems"]:
+        print(f"[u-mode] WARNING: {_p}", flush=True)
     json.dump(_eff, open(os.path.join(args.out, "effective_params.json"), "w"), indent=1)
     league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
     if args.self_prior > 0:

@@ -255,7 +255,15 @@ class Cnet2Adapter:
         import torch
         amp = bool(getattr(model, "_amp", False)) and lg_dev(model) == "cuda"
         with torch.autocast("cuda", enabled=amp):
-            lg, v, _ = model(b)                               # [B,12,5] masked (NEG), [B]
+            if getattr(model, "_value_head", "tanh") == "utility":
+                # Terminal-U critic (spec SS15): read the Stage 0 utility head
+                # (E[U] in [0,1], the head the teacher leaf and the gates use)
+                # and map it to the reward scale of --reward u, 2*(U-0.5) in
+                # [-1,1]. Same trunk, same decode; only the value readout differs.
+                lg, _, _, u, _, _ = model.forward_heads(b)
+                v = 2.0 * u.float() - 1.0
+            else:
+                lg, v, _ = model(b)                           # [B,12,5] masked (NEG), [B]
         lg = lg.float(); v = v.float()
         keep = b["tok_mask"][:, :F.OWN] & (b["y"] >= 0)
         legal = b["legal"][keep]
