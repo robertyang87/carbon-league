@@ -151,6 +151,111 @@ def migrate_optimizer_checked(optimizer, old_opt_sd, old_sd, model, source="chec
     return rep
 
 
+def _sha256_path(path):
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for blk in iter(lambda: fh.read(1 << 22), b""):
+            h.update(blk)
+    return h.hexdigest()
+
+
+def _validate_derived_layer(D, dirn, meta):
+    """Derived-layer consumer gate (owner pt.4, final acceptance): w/uw in
+    the dataset root are post-processing products (set_uw), NOT generation
+    fields. Before any of them enters a loss, verify identity against the
+    sidecar (derived.json, format "cnet2-derived/1", mirrored into the
+    flat meta.json under "derived_layer"): for every weight actually
+    consumed -- its field must not be a generation-manifest field, its
+    base_generation must equal the generation current.json points at,
+    its rows must equal that generation's total, and its dtype/shape/
+    sha256 must match the file on disk. A sidecar/meta mirror mismatch
+    also refuses. A dataset with a generation pointer but UNDECLARED
+    non-generation weights refuses outright (the F05 stale-weight hazard:
+    bytes left behind by another build must never be consumed silently).
+    Only a pre-generation legacy dataset (no pointer, no sidecar) may
+    consume w/uw unverified, and then only with a loud warning.
+    Returns a summary dict recorded into meta["derived_layer_check"]."""
+    used = [k for k in ("w", "uw") if k in D]
+    if not used:
+        return None
+    side = None
+    sp = os.path.join(dirn, "derived.json")
+    if os.path.exists(sp):
+        try:
+            side = json.load(open(sp))
+        except Exception as e:
+            raise SystemExit(f"derived layer: unreadable sidecar {sp}: {e}; refusing to train")
+    mirror = meta.get("derived_layer") if isinstance(meta, dict) else None
+    if side is not None and mirror is not None and side != mirror:
+        raise SystemExit(f"derived layer: derived.json and meta.json 'derived_layer' mirror "
+                         f"disagree in dataset {dirn!r}; refusing to train")
+    decl = side if side is not None else mirror
+    gen_id = None; gen_fields = set(); gen_total = None
+    ptr = os.path.join(dirn, "current.json")
+    if os.path.exists(ptr):
+        ptrj = json.load(open(ptr))
+        gen_id = ptrj["generation"]
+        man = json.load(open(os.path.join(dirn, ptrj["dir"], "manifest.json")))
+        if man.get("generation") != gen_id:
+            raise SystemExit(f"derived layer: generation pointer/manifest mismatch in "
+                             f"dataset {dirn!r}; refusing to train")
+        gen_fields = set(man.get("fields", {}))
+        gen_total = int(man["total"])
+    if decl is None:
+        if gen_id is None:
+            print(json.dumps({"derived_layer_check": "WARNING: derived identity unverified "
+                              "(legacy dataset: no generation pointer, no derived.json); "
+                              "w/uw consumed on file presence only", "data": dirn}), flush=True)
+            return {"mode": "legacy-unverified", "used": used}
+        bad = [k for k in used if k not in gen_fields]
+        if bad:
+            raise SystemExit(f"derived layer: weights {bad} in dataset {dirn!r} are neither "
+                             f"fields of generation {gen_id} nor declared in a derived.json "
+                             f"sidecar (stale or foreign weights); refusing to train")
+        return {"mode": "generation-owned", "generation": gen_id, "used": used}
+    if gen_id is None:
+        raise SystemExit(f"derived layer: dataset {dirn!r} declares a derived.json sidecar "
+                         f"but has no generation pointer; identity cannot be verified; "
+                         f"refusing to train")
+    entries = decl.get("files", {}) if isinstance(decl, dict) else {}
+    checked = []
+    for k in used:
+        if k in gen_fields:
+            if (k + ".npy") in entries:
+                raise SystemExit(f"derived layer: {k}.npy in dataset {dirn!r} is BOTH a field "
+                                 f"of generation {gen_id} and a declared derived file; "
+                                 f"refusing to train")
+            continue
+        name = k + ".npy"
+        e = entries.get(name)
+        if e is None:
+            raise SystemExit(f"derived layer: {name} in dataset {dirn!r} is consumed but not "
+                             f"declared in the derived.json sidecar; refusing to train")
+        arr = np.asarray(D[k])
+        probs = []
+        if e.get("field") != k:
+            probs.append(f"sidecar field {e.get('field')!r} != {k!r}")
+        if e.get("base_generation") != gen_id:
+            probs.append(f"base_generation {e.get('base_generation')!r} != current {gen_id!r} "
+                         f"(derived rows belong to another build; regenerate them)")
+        if int(e.get("rows", -1)) != gen_total:
+            probs.append(f"sidecar rows {e.get('rows')} != generation total {gen_total}")
+        if int(arr.shape[0]) != gen_total:
+            probs.append(f"file rows {int(arr.shape[0])} != generation total {gen_total}")
+        if e.get("dtype") != str(arr.dtype):
+            probs.append(f"dtype {e.get('dtype')!r} != file {str(arr.dtype)!r}")
+        if [int(x) for x in arr.shape] != [int(x) for x in e.get("shape", [])]:
+            probs.append(f"shape {e.get('shape')} != file {list(arr.shape)}")
+        if _sha256_path(os.path.join(dirn, name)) != e.get("sha256"):
+            probs.append("sha256 mismatch (file bytes changed after registration)")
+        if probs:
+            raise SystemExit(f"derived layer: {name} in dataset {dirn!r} failed identity "
+                             f"checks: " + "; ".join(probs) + "; refusing to train")
+        checked.append(name)
+    return {"mode": "verified", "generation": gen_id, "files": checked}
+
+
 def load(dirn):
     mm = None if os.environ.get("BC_RAM") == "1" else "r"     # BC_RAM=1: read the whole dataset into memory
     D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm) for k in FIELDS}
@@ -167,6 +272,10 @@ def load(dirn):
     meta = json.load(open(os.path.join(dirn, "meta.json")))
     if wgate:
         meta["weight_gate"] = wgate
+    dchk = _validate_derived_layer(D, dirn, meta)
+    if dchk:
+        meta["derived_layer_check"] = dchk
+        print(json.dumps({"derived_layer_check": dchk, "data": dirn}), flush=True)
     val_g = np.array([g["val"] for g in meta["games"]])
     is_val = val_g[np.asarray(D["gid"])]
     return D, is_val, meta
