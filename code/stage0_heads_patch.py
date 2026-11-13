@@ -5,9 +5,12 @@ allow-list in code/cnet2_train.py, then verifies by import + weight load.
 
 - utility: E[U] main value head, sigmoid -> [0,1], target U = 0.5*W + 0.5*sigmoid(M/1000)
 - wdl: win/draw/loss auxiliary head (3 logits)
-- margin: raw-margin expectation auxiliary head, predicts M/1000 (Huber)
-Existing value head (tanh(M/3000)) is untouched; old weights load with
-strict=False and only the 3 new heads report as missing keys.
+- margin: raw-margin expectation auxiliary head, predicts M/1000
+  (trained with MSE -- an expectation head must not use Huber/smooth_l1,
+  whose optimum is not the mean; F10, REVIEW_FULL_20261113)
+Existing value head (tanh(M/3000)) is untouched; old weights load through
+cnet2_model.migrate_state_dict (only the 3 new heads may be missing keys);
+the BC_INIT call site in cnet2_train.py already routes through it.
 Labels are derived from the dataset's stored value field v = tanh(M/3000)
 (see stage0_smoke_heads.py); v1 caveat: atanh saturates for |M| > ~11400.
 
