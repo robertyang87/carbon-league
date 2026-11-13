@@ -571,3 +571,46 @@ v2 范围注记，不拦 pilot 重跑；分支内对手 Feat 是否随分支观�
 推理成立，读码复核一处即可。(e) 采样仅早期起作用（步约 60 后
 未知格归零、分支走信念点估计）——游戏物理使然，终局段（≥200）
 全观测下不变性平凡成立，非缺陷。
+
+### §16 验收结论（2026-11-13 23:10，策略组独立复核）
+
+三提交已入仓（rebase 后实值 SHA：教师 v2 4fafef13、镜像闸
+e1155fa4、PPO a4dd8329；实现方报告的旧 SHA 为 rebase 前本地值）。
+新 md5：teacher 2c2541c6、gate dd921e57（代 v1.6 ac307c9d）、
+cnet2_build a3f16063、selfplay_gen 15d24544、rl2_ppo_train
+1f1430b4、rl2_ppo_cnet2 62a9adc7、guided_match ed43fda8、
+measure_teacher d0de8a12。验收逐项结论：
+
+1. **教师 v2 通过**。diff 审读与 §15 (c1)(c2) 逐项对齐（分支
+Feat 私有拷贝＋逐步 observe、_legal_root 只读 obs 永不读
+sim.carbon、belief_carbon 按轨道从生成器边缘采样且双抽恒耗、
+feats 缺失/过期硬拒、结果带 teacher_version 标签、旧调用
+精确 v1）。Studio 独立复跑（heads v2 正典权重 06a03d9c，
+非实现方的 b128＋随机头）：小跑（K8/M4）37/37 EXIT=0；
+**--canon（K16/M8）37/37 EXIT=0**——步 8/60/120/200 双世界
+Q 差严格为 0、oracle 对照组有差（检出成立）。正典噪声标度：
+步 8 局面 Q_std 跨场景最大 0.0765（M=8 → SE 约 0.027）。
+2. **PPO 通过**：test_ppo_u_mode 18/18 EXIT=0（Studio 复跑）。
+--value-head utility 与教师叶/闸门同头、缺头硬拒、u_mode_check
+警告＋effective_params.json 落盘（γ/rscale 回执验收口径按
+§16 预处置 (c) 执行）。建在 L20 草稿 c7be9291 之上，L20 在
+迭代边界对齐 main 版（其在跑文件 92e97652 即本提交基线）。
+3. **镜像闸通过，与 DGX 冻结版对账完毕**：Claude 版覆盖 DGX
+版全部要点且多两件（producer 跑后 >50% 镜像签名自检、逐条目
+mirror_signature 记录），DGX 两文件（dcaa2d89…/07769df8…）
+存档不入仓。建集闸函数级回测（main 原函数对 ds_gen1 实测
+签名复刻记录：199/200 逐字平局）share=0.995 → REFUSE；
+采样语料 0.0、天梯语料不计入，均符合预期。真实语料回测留
+DGX 刷盘后一趟（见下）。
+4. **遗留项按 §16 预处置生效**：对手真实 Feat 定性建模保真
+度（非泄漏）记 v2 范围注记；sep-value 导出缺评论家头记部署
+注记；采样仅早期起作用为游戏物理，非缺陷。
+
+后续令（已发作战室）：(i) 全队刷盘到 a4dd8329 代码集；
+(ii) Studio 在教师 v2 上重跑 pilot（同一 34 局隔离池、
+--belief sample、新 gate dd921e57），σ̂ 与 du_mean 重测后
+策略组确认 Stage B N → 正式 q 闸（v2）→ DGX 正式切分；
+(iii) DGX 刷盘后以 main 版 cnet2_build 对 ds_gen1 真实语料
+回测，REFUSED 回执到即自动解冻 gen-1 重造（固定 producer），
+不另等令；(iv) L20 rl2_ppo* 在迭代边界对齐，U 制正式跑回执
+附 effective_params.json。
