@@ -1,4 +1,24 @@
-# exams  2026-11-12 19:30
+# exams  2026-11-13 20:05
+
+## 2026-11-13 19:41 snap_70 定标双场裁决 GO（Terminal-U 门）
+
+- Master2 场（C1，spot-29，seed 996000）：200 局，**183 胜、mean +1065、se 58、lo2se 949**、worst −1681、worst_ms 121、err 0。冒烟 n=2 全胜（mean +1604）。逐局线 sync/h29（commit ad2af2ac），摘要 synced/h29/summaries/snap_70_m2.json；作战室独立重算 183 胜/1064.8±58.1，种子 996000–996199 全覆盖。
+- Echo2 场（C2，spot-31，seed 999000）：200 局，**121 胜、mean +237.0、se 52.0、lo2se 133.0**、worst −2938、worst_ms 118.0、err 0。逐局线 sync/h31（commit c8d3c1d7），摘要 synced/h31/summaries/snap_70_echo2.md；作战室独立重算 121 胜/237.0±52.0，种子 999000–999199 全覆盖。
+- 裁决：校准分 1065 − 785 ＝ **+280，过 +150 闸**（超闸 130 分）→ **定标 GO**。已 relay L20：switch 看守 gate ① 点亮，下个训练边界切 Terminal-U（须先等 it73 边界换池完成——换池与切换分属两次停机——并受 EVAL 看守约束；切前备 fork 快照 state_pre_termU_it<N>.pt；argv 只改 --reward u / --rscale 1.0 / --gamma 1.0）。GO 旗 /root/carbon/data/rl3/termU_GO 19:41 落机。
+
+## 2026-11-13 19:19 it570 双臂定标收口（均不过闸）
+
+- r1（C1，spot-29）：vs Master2 真身 200 局，146 胜、mean **+378**、se 55、lo2se 267、worst_ms 124、err 0 → 校准 **−407**；vs Echo2 111 胜、mean +85、se 58、lo2se −31。桥差 −1679.4 ＝ 5.11 合并 SE，不合格。
+- g1（C2，spot-31）：vs Master2 真身 200 局，173 胜、mean **+880.9**、se 61.0 → 校准 **+95.9**；vs Echo2 158 胜、mean +678.9、se 58.8。桥差 13.76 SE，不合格。
+- 裁决：双臂均不过 +150 闸，**不入池、不重考，本轮收口**。训练链全程验过（val 在族内区间、计数/包/考试全 clean），失败非训练问题：BC 无终局价值信号（终局行约占样本 9.7%）、终局清算是多步计算决策；四老师×三配方复刻残树收敛 4.87–7.13，本尊约 2；it570 是最难老师（最强、最一边倒 87–2、+1655、局数最少 89）。出路：Terminal-U PPO 与 S1。
+- 来源：sync/h29 8c758fdf、sync/h31 29f585a5；包 main 9ef9c031。
+
+## 2026-11-13 15:34/15:40 Lite-V7 双臂定标收口（均不通过）
+
+- r1（C1，spot-29）：vs Master2 真身 200 局，102 胜（摘要口径；逐局线取整重算 101 胜——种子 996074 原始 margin 为 0–0.5 间小正数，取整为 0，摘要口径为准）、mean **+2**、se 59、lo2se −116、worst_ms 122；vs Echo2 101 胜、mean −27、se 65。校准 **−783**。
+- g1（C2，spot-31）：vs Master2 真身 200 局，92 胜、mean **−124**、se 59、lo2se −242、worst_ms 80；vs Echo2 75 胜、mean −143、se 100。校准 **−909**。
+- 裁决：双臂全部不入池、不重考，本轮收口。来源：sync/h29、sync/h31，摘要入 synced/h29/summaries/。
+
 
 ## 2026-11-13 04:11 新 harness 基准场重锚（spot-30，Phase C）
 
