@@ -75,10 +75,46 @@ NOTES -- record format, grounded in the repo (2026-11-13):
   the first non-ACTIVE status, so padding is inert.
 * SPGEN_STUB=1 is a LOCAL-ONLY validation path (empty actions, no net):
   it exercises recording/indexing only. Never used on fleet machines.
+
+F11 data-contract fixes (REVIEW_FULL_20261113, 2026-11-13):
+* full_carbon (SUPERVISION ONLY): every recorded observation also carries
+  "full_carbon" -- the simulator's complete carbon map at that step, in the
+  field cnet2_build already reads for its carbon TARGET
+  (observation["full_carbon"]). It is a training label, never an actor
+  input: the agent / cnet2_feat read only the visible "carbon" field, and
+  the pack runtime never sees replay files. Before this, replays carried
+  only the per-player visible map, so the builder's carbon target fell
+  back to the visible map (seed 0 step 0: target all-zero while the true
+  map has 103 non-zero cells) while the trainer scores the full map.
+* Terminal typing: every index entry (and the replay "result") carries
+  "terminal": true and "end_reason": "extinction" | "horizon". A game
+  only gets an entry after it actually ended, so terminal=true is a
+  producer attestation; cnet2_build accepts terminal-marked games below
+  its min_steps default (counted separately) instead of filtering real
+  short extinction games as if truncated. Truncated/corrupt games never
+  receive an entry -- they surface as errors.
+* Atomic commit + recovery: a replay is written to a temp file, verified
+  (gzip re-open + JSON parse), then os.replace'd into place, and the
+  index is rewritten atomically after every completed chunk. Startup
+  reconciliation verifies every indexed replay (existence + recorded
+  sha256 + parse); a missing/corrupt indexed replay is an ERROR (dropped
+  and regenerated when its seed is in range, reported as a failure
+  otherwise) -- never a silent skip. Orphan replay files (no index
+  entry) are verified and adopted by reconstructing the entry from the
+  replay's own result block (marked "adopted": true), or removed when
+  corrupt -- never a permanent "exists" deadlock.
+* Policy-error accounting: the search agent swallows its own failures
+  into agent.stats counters (*_errors / errors; the root fallback
+  returns an empty action instead of raising). play() snapshots those
+  counters before and after the game; any increase marks the game as
+  contaminated: it is rejected (no replay written) and reported as an
+  error with the counter delta, instead of being written as a normal
+  replay with err=None.
 """
 import argparse
 import datetime
 import gzip
+import hashlib
 import json
 import math
 import os
@@ -129,6 +165,37 @@ def _u_of_margin(m):
     return 0.5 * w + 0.5 / (1.0 + math.exp(-float(m) / 1000.0))
 
 
+def _obs_full(sim, p):
+    """sim.obs(p) plus the SUPERVISION-ONLY full carbon map (see module
+    docstring): the complete simulator carbon at this step, stored under
+    the key cnet2_build reads for its carbon target. The agent never
+    receives this dict variant beyond its usual fields -- Feat/search
+    read only the visible "carbon" list from the same dict."""
+    o = sim.obs(p)
+    o["full_carbon"] = [float(v) for v in sim.carbon]
+    return o
+
+
+def _agent_error_counters(agents):
+    """Sum the swallowed-error counters the search agent keeps on
+    agent.stats (keys "errors" and "*_errors", e.g. root_errors). Stub
+    agents have no stats -> {} (no-op)."""
+    tot = {}
+    for ag in agents:
+        st = getattr(ag, "stats", None)
+        if not isinstance(st, dict):
+            continue
+        for k, v in st.items():
+            if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float)):
+                tot[k] = tot.get(k, 0) + int(v)
+    return tot
+
+
+def _counter_delta(before, after):
+    return {k: after.get(k, 0) - before.get(k, 0)
+            for k in set(before) | set(after) if after.get(k, 0) - before.get(k, 0) > 0}
+
+
 class _Gen:
     """One worker process: two cached agent instances (one per side)."""
 
@@ -164,11 +231,13 @@ class _Gen:
             return None, 0, 0.0, "exists"
         entries = []
         cash0 = [float(sim.cash[0]), float(sim.cash[1])]
-        entries.append([{"observation": sim.obs(p), "action": {}, "reward": cash0[p],
+        entries.append([{"observation": _obs_full(sim, p), "action": {}, "reward": cash0[p],
                          "status": "ACTIVE", "info": {}} for p in (0, 1)])
         scores = None
         nsteps = 0
         err = None
+        err_before = _agent_error_counters(agents)
+        ended_extinct = False
         try:
             for step in range(1, 300):
                 obs_pre = [sim.obs(0), sim.obs(1)]
@@ -183,12 +252,13 @@ class _Gen:
                     rew = [pen if ext[p] else pre_cash[p] for p in (0, 1)]
                 else:
                     rew = [float(sim.cash[0]), float(sim.cash[1])]
-                entries.append([{"observation": sim.obs(p), "action": acts[p],
+                entries.append([{"observation": _obs_full(sim, p), "action": acts[p],
                                  "reward": rew[p],
                                  "status": "DONE" if (term or step == 299) else "ACTIVE",
                                  "info": {}} for p in (0, 1)])
                 if term:
                     scores = rew
+                    ended_extinct = True
                     break
             if scores is None:
                 scores = [float(sim.cash[0]), float(sim.cash[1])]
@@ -202,17 +272,44 @@ class _Gen:
             entries.append([{"observation": last[p]["observation"], "action": {},
                              "reward": last[p]["reward"], "status": "DONE", "info": {}}
                             for p in (0, 1)])
+        # F11: swallowed policy errors contaminate the game. The search
+        # root fallback turns exceptions into empty actions + a stats
+        # counter instead of raising, so the outer try alone would write
+        # this game as a normal replay with err=None (round-5 repro:
+        # root_errors=2, replay written). Reject it as an error instead.
+        delta = _counter_delta(err_before, _agent_error_counters(agents))
+        if delta:
+            return None, nsteps, 0.0, f"policy_errors: {delta}"
+        end_reason = "extinction" if ended_extinct else "horizon"
         # raw margin + U per PLAYER side (foundation 定版, see docstring).
         mg_side = [float(scores[0] - scores[1]), float(scores[1] - scores[0])]
         u_side = [_u_of_margin(mg_side[0]), _u_of_margin(mg_side[1])]
+        sha = None
+        nbytes = None
         if record:
-            with gzip.open(fpath, "wt", encoding="utf-8") as f:
-                json.dump({"id": "selfplay", "steps": entries,
-                           "result": {"scores": [float(scores[0]), float(scores[1])],
-                                      "margin": mg_side, "u": u_side,
-                                      "winner_side": 0 if scores[0] > scores[1] else
-                                      (1 if scores[1] > scores[0] else None),
-                                      "a_side": a_side}}, f, default=_jdefault)
+            payload = {"id": "selfplay", "steps": entries,
+                       "result": {"scores": [float(scores[0]), float(scores[1])],
+                                  "margin": mg_side, "u": u_side,
+                                  "winner_side": 0 if scores[0] > scores[1] else
+                                  (1 if scores[1] > scores[0] else None),
+                                  "a_side": a_side,
+                                  "terminal": True, "end_reason": end_reason}}
+            # F11: atomic commit -- temp file in the same dir, verified by
+            # a full re-read, then os.replace. A crash can leave a temp
+            # file (cleaned at startup) but never a torn final replay.
+            tmp = os.path.join(repdir, f".{fname}.tmp-{os.getpid()}")
+            with gzip.open(tmp, "wt", encoding="utf-8") as f:
+                json.dump(payload, f, default=_jdefault)
+            with gzip.open(tmp, "rt", encoding="utf-8") as f:
+                chk = json.load(f)
+            if len(chk.get("steps", [])) != 300 or "result" not in chk:
+                os.remove(tmp)
+                return None, nsteps, 0.0, "replay_verify_failed"
+            os.replace(tmp, fpath)
+            with open(fpath, "rb") as f:
+                raw = f.read()
+            sha = hashlib.sha256(raw).hexdigest()
+            nbytes = len(raw)
         # strategy "a" plays side a_side; order maps player index -> key.
         order = ["a", "b"] if a_side == 0 else ["b", "a"]
         sa = scores[a_side]
@@ -223,6 +320,8 @@ class _Gen:
                  "u": {"a": _u_of_margin(sa - sb), "b": _u_of_margin(sb - sa)},
                  "winner": "a" if sa > sb else ("b" if sb > sa else None),
                  "steps": nsteps, "file": f"replays/{fname}",
+                 "terminal": True, "end_reason": end_reason,
+                 "sha256": sha, "bytes": nbytes,
                  "created": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                  "strategies": {"a": {"id": "", "name": self.name_a},
                                 "b": {"id": "", "name": self.name_b}}}
@@ -246,6 +345,127 @@ def _task(job):
     return {"seed": seed, "entry": entry, "steps": nsteps, "margin": margin,
             "err": err, "wall": time.time() - t0,
             "cpu": (cpu.user + cpu.system) - (_CPU0[0].user + _CPU0[0].system)}
+
+
+def _verify_replay_file(fpath, entry=None):
+    """Integrity + identity check for one committed replay. Returns
+    (ok, reason). Checks existence, the recorded sha256 when the index
+    entry carries one, and that the gzip parses with steps + result."""
+    if not os.path.exists(fpath):
+        return False, "missing_replay"
+    try:
+        with open(fpath, "rb") as f:
+            raw = f.read()
+        if entry is not None and entry.get("sha256"):
+            if hashlib.sha256(raw).hexdigest() != entry["sha256"]:
+                return False, "sha256_mismatch"
+        d = json.loads(gzip.decompress(raw).decode("utf-8"))
+    except Exception as e:  # noqa: BLE001
+        return False, f"unparseable: {repr(e)[:120]}"
+    if len(d.get("steps", [])) != 300 or not isinstance(d.get("result"), dict):
+        return False, "bad_replay_shape"
+    return True, ""
+
+
+def _entry_from_replay(outdir, fname, name_a, name_b):
+    """Reconstruct an index entry for an orphan replay from the replay's
+    own result block. nsteps/end_reason come from the first DONE entry
+    (padding is DONE, real entries before it are ACTIVE). Names fall back
+    to this run's --name values; adopted entries are marked as such."""
+    fpath = os.path.join(outdir, "replays", fname)
+    with gzip.open(fpath, "rt", encoding="utf-8") as f:
+        d = json.load(f)
+    res = d["result"]
+    steps = d["steps"]
+    first_done = next((i for i, e in enumerate(steps)
+                       if any(s.get("status") == "DONE" for s in e)), 299)
+    nsteps = first_done if first_done >= 1 else 299
+    end_reason = res.get("end_reason") or ("extinction" if nsteps < 299 else "horizon")
+    a_side = int(res.get("a_side", 0))
+    order = ["a", "b"] if a_side == 0 else ["b", "a"]
+    sa, sb = float(res["scores"][a_side]), float(res["scores"][1 - a_side])
+    with open(fpath, "rb") as f:
+        raw = f.read()
+    seed = int(fname[len("selfplay-"):-len(".json.gz")])
+    return {"id": "selfplay", "game": seed, "order": order,
+            "scores": {"a": sa, "b": sb},
+            "margin": {"a": float(sa - sb), "b": float(sb - sa)},
+            "u": {"a": _u_of_margin(sa - sb), "b": _u_of_margin(sb - sa)},
+            "winner": "a" if sa > sb else ("b" if sb > sa else None),
+            "steps": nsteps, "file": f"replays/{fname}",
+            "terminal": True, "end_reason": end_reason,
+            "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw),
+            "adopted": True,
+            "created": datetime.datetime.fromtimestamp(
+                os.path.getmtime(fpath), datetime.timezone.utc).isoformat(),
+            "strategies": {"a": {"id": "", "name": name_a},
+                           "b": {"id": "", "name": name_b}}}
+
+
+def _reconcile(outdir, name_a, name_b):
+    """Startup reconciliation (F11). Returns (entries, dropped, adopted):
+    entries -- indexed games whose replay verified intact;
+    dropped -- [{seed, err}] indexed entries whose replay is missing or
+               corrupt (an ERROR condition, never a silent skip: the
+               caller regenerates in-range seeds and fails on the rest);
+    adopted -- count of orphan replays re-registered into the index.
+    Corrupt orphans and stale temp files are removed."""
+    repdir = os.path.join(outdir, "replays")
+    os.makedirs(repdir, exist_ok=True)
+    for fn in os.listdir(repdir):
+        if ".tmp-" in fn:
+            try:
+                os.remove(os.path.join(repdir, fn))
+            except OSError:
+                pass
+    idx_path = os.path.join(outdir, "index.json")
+    raw_entries = []
+    if os.path.exists(idx_path):
+        try:
+            raw_entries = json.load(open(idx_path))
+        except Exception:
+            raw_entries = []  # corrupt index: rebuild from replays below
+    entries, dropped = [], []
+    indexed_files = set()
+    for e in raw_entries:
+        fpath = os.path.join(outdir, e.get("file", ""))
+        ok, reason = _verify_replay_file(fpath, e)
+        if ok:
+            entries.append(e)
+            indexed_files.add(os.path.basename(e["file"]))
+        else:
+            dropped.append({"seed": e.get("game"), "err": f"indexed_replay_{reason}"})
+    adopted = 0
+    for fn in sorted(os.listdir(repdir)):
+        if not (fn.startswith("selfplay-") and fn.endswith(".json.gz")):
+            continue
+        if fn in indexed_files:
+            continue
+        fpath = os.path.join(repdir, fn)
+        ok, _reason = _verify_replay_file(fpath)
+        if ok:
+            try:
+                entries.append(_entry_from_replay(outdir, fn, name_a, name_b))
+                adopted += 1
+                continue
+            except Exception:  # noqa: BLE001
+                pass
+        try:
+            os.remove(fpath)  # corrupt orphan: clear it, seed regenerates
+        except OSError:
+            pass
+    entries.sort(key=lambda e: e.get("game", 0))
+    return entries, dropped, adopted
+
+
+def _write_index(outdir, entries):
+    """Atomic index rewrite (temp + os.replace): a crash leaves either
+    the previous complete index or the new one, never a torn file."""
+    idx_path = os.path.join(outdir, "index.json")
+    tmp = idx_path + f".tmp-{os.getpid()}"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(entries, f, ensure_ascii=False)
+    os.replace(tmp, idx_path)
 
 
 def main():
@@ -279,13 +499,17 @@ def main():
         return 1
     from concurrent.futures import ProcessPoolExecutor, as_completed
     os.makedirs(os.path.join(a.out, "replays"), exist_ok=True)
-    idx_path = os.path.join(a.out, "index.json")
-    done_entries = []
-    if os.path.exists(idx_path):
-        try:
-            done_entries = json.load(open(idx_path))
-        except Exception:
-            done_entries = []
+    # F11: verify what a previous (possibly crashed) run actually
+    # committed before scheduling anything. Indexed-but-missing/corrupt
+    # replays are dropped loudly (regenerated below when in range);
+    # orphan replays are adopted, not deadlocked on "exists".
+    done_entries, dropped, adopted = _reconcile(a.out, name_a, name_b)
+    if dropped:
+        for d_ in dropped:
+            print(f"RECONCILE-DROP seed={d_['seed']} {d_['err']}", flush=True)
+    if adopted:
+        print(f"RECONCILE-ADOPT orphans={adopted}", flush=True)
+    _write_index(a.out, done_entries)
     have = {e["game"] for e in done_entries}
     seeds = [s for s in range(a.seed0, a.seed1) if s not in have]
     t_start = time.time()
@@ -313,12 +537,34 @@ def main():
                     errors.append({"seed": r["seed"], "err": r["err"]})
                     print(f"GAME-ERROR seed={r['seed']} {r['err']}", flush=True)
                     continue
-                if r["entry"] is None:  # exists
+                if r["entry"] is None:
+                    # "exists": the replay was committed by a crashed run
+                    # after reconciliation (a race), or is a leftover.
+                    # Adopt it if it verifies; never deadlock, never
+                    # silently skip a corrupt file.
+                    fpath = os.path.join(a.out, "replays", f"selfplay-{r['seed']}.json.gz")
+                    ok, reason = _verify_replay_file(fpath)
+                    if ok:
+                        done_entries.append(_entry_from_replay(
+                            a.out, f"selfplay-{r['seed']}.json.gz", name_a, name_b))
+                        games += 1
+                        adopted += 1
+                    else:
+                        try:
+                            os.remove(fpath)
+                        except OSError:
+                            pass
+                        errors.append({"seed": r["seed"], "err": f"exists_but_{reason}"})
+                        print(f"GAME-ERROR seed={r['seed']} exists_but_{reason}", flush=True)
                     continue
                 done_entries.append(r["entry"])
                 games += 1
                 steps_tot += r["steps"]
                 margins.append(r["margin"])
+            # F11: incremental index transaction -- a crash after this
+            # chunk loses nothing that was already committed.
+            done_entries.sort(key=lambda e: e.get("game", 0))
+            _write_index(a.out, done_entries)
             if errors:
                 break
     wall = time.time() - t0
@@ -327,7 +573,15 @@ def main():
         budget = "games"
     elif (time.time() - t0) >= a.max_seconds:
         budget = "seconds"
-    json.dump(done_entries, open(idx_path, "w"), ensure_ascii=False)
+    _write_index(a.out, done_entries)
+    # F11: an indexed replay that was missing/corrupt and whose seed is
+    # OUTSIDE this run's range could not be repaired here; it stays an
+    # error (in-range drops were regenerated above and are only failures
+    # if their regeneration also failed, which already landed in errors).
+    have = {e["game"] for e in done_entries}
+    for d_ in dropped:
+        if d_["seed"] not in have and not (a.seed0 <= (d_["seed"] or -1) < a.seed1):
+            errors.append({"seed": d_["seed"], "err": d_["err"] + " (out of repair range)"})
     import statistics as st
     res = {"games": games, "wall_s": round(wall, 1), "total_wall_s": round(total_wall, 1),
            "games_per_min": round(games / (wall / 60.0), 2) if wall > 0 else 0,
@@ -337,6 +591,8 @@ def main():
            "workers": a.workers, "cpu_seconds": round(cpu_tot, 1),
            "eff_cores": round(cpu_tot / wall, 2) if wall > 0 else 0,
            "errors": errors, "budget_hit": budget, "stub": STUB,
+           "adopted": adopted,
+           "repaired_drops": sum(1 for d_ in dropped if d_["seed"] in have),
            "weights": a.weights, "conf": {k: conf[k] for k in sorted(conf)},
            "out": a.out}
     print(f"{MARK} {json.dumps(res, ensure_ascii=False)}", flush=True)
