@@ -551,7 +551,11 @@ class BankruptcyGuard:
     def restore(self, snap):
         self.lostw = snap["lostw"]
         self.prevw = set(snap["prevw"])
-        self.guard_base = set(snap["guard_base"])
+        # In-place refill, NOT rebinding: the search agent aliases
+        # st["guard_base"] to this set object, and rebinding would silently
+        # cut that alias (Codex review 2026-11-13, P3).
+        self.guard_base.clear()
+        self.guard_base.update(snap["guard_base"])
 
     def copy(self):
         g = BankruptcyGuard(self.cfg)
