@@ -1,0 +1,826 @@
+{
+  "commit": "6d24581b68f33d44eded5b67299c17dc0847659e",
+  "source_sha256": "4be84f8c130a6b5ad608bff20b25f2cd8248a8aa9dc18857418feb6e24100c12",
+  "source_md5": "f7dbb47eb5f23eca69d5fddd45af1769",
+  "training_was_launched": false,
+  "checks": {
+    "terminal_exact": true,
+    "utility_correct": true,
+    "default_builder_drops_early_terminal": false,
+    "missing_full_carbon_mislabels_aux": false,
+    "no_postterminal_rows_if_admitted": true,
+    "fallback_errors_not_rejected": true,
+    "natural_horizon": true,
+    "orphan_is_unrecoverable": false,
+    "indexed_missing_returns_success": false,
+    "batch_budget_overshoot": true,
+    "direct_import_failure": true
+  },
+  "terminal": {
+    "entry": {
+      "id": "selfplay",
+      "game": 0,
+      "order": [
+        "a",
+        "b"
+      ],
+      "scores": {
+        "a": -299.0,
+        "b": 50.0
+      },
+      "margin": {
+        "a": -349.0,
+        "b": 349.0
+      },
+      "u": {
+        "a": 0.2068124697319188,
+        "b": 0.7931875302680812
+      },
+      "winner": "b",
+      "steps": 2,
+      "file": "replays/selfplay-0.json.gz",
+      "terminal": true,
+      "end_reason": "extinction",
+      "outcome": "normal",
+      "identity": null,
+      "sha256": "d92abb13b55b7b37f534d8a410629bd5d7e9c20ca05b754d527e1841c40f4f8c",
+      "bytes": 9303,
+      "created": "2026-11-13T05:04:57.198711+00:00",
+      "strategies": {
+        "a": {
+          "id": "",
+          "name": "review-teacher"
+        },
+        "b": {
+          "id": "",
+          "name": "review-teacher"
+        }
+      }
+    },
+    "nsteps": 2,
+    "margin_a": -349.0,
+    "error": null,
+    "result": {
+      "scores": [
+        -299.0,
+        50.0
+      ],
+      "margin": [
+        -349.0,
+        349.0
+      ],
+      "u": [
+        0.2068124697319188,
+        0.7931875302680812
+      ],
+      "winner_side": 1,
+      "a_side": 0,
+      "outcome": "normal",
+      "identity": null,
+      "terminal": true,
+      "end_reason": "extinction"
+    },
+    "frames": 300,
+    "first_done": 2,
+    "first_action_is_empty": true,
+    "last_obs_step": 2
+  },
+  "builder_default_early_terminal": {
+    "stdout": "{\"games\": 1, \"samples\": 4, \"val_games\": 0, \"teacher_sides\": {\"review-teacher\": 2}, \"cfg_fp\": \"386c467be780ead5\", \"terminal_games\": 1, \"terminal_short_games\": 1, \"labels\": {\"raw_games\": 1, \"games\": 1, \"exact_rows\": 4, \"approx_rows\": 0, \"unusable_rows\": 0, \"rows\": 4}, \"generation\": \"gen-ddbb776c97416b45\"}\n",
+    "meta": {
+      "games": [
+        {
+          "file": "<TMP>/terminal/replays/selfplay-0.json.gz",
+          "key": "selfplay-0.json.gz",
+          "names": [
+            "review-teacher",
+            "review-teacher"
+          ],
+          "scores": [
+            -299.0,
+            50.0
+          ],
+          "sides": [
+            0,
+            1
+          ],
+          "val": false,
+          "src": "terminal",
+          "terminal": true,
+          "end_reason": "extinction",
+          "raw_margin": [
+            -349.0,
+            349.0
+          ],
+          "raw_u": [
+            0.2068124697319188,
+            0.7931875302680812
+          ],
+          "outcome": "normal",
+          "steps": 2,
+          "short_terminal": true,
+          "gi": 0,
+          "shard": "<TMP>/built/shards/selfplay-0.npz",
+          "raw_payload": {
+            "mg": [
+              -349.0,
+              349.0
+            ],
+            "u": [
+              0.2068124697319188,
+              0.7931875302680812
+            ],
+            "outcome": 0
+          },
+          "n": 4
+        }
+      ],
+      "total": 4,
+      "teachers": [
+        "review-teacher",
+        "_slot1",
+        "_slot2",
+        "_slot3",
+        "_slot4",
+        "_slot5",
+        "_slot6",
+        "_slot7",
+        "other"
+      ],
+      "cfg_fp": "386c467be780ead5",
+      "failed_games": [],
+      "partial": false,
+      "valid_games": 1,
+      "filtered_games": {},
+      "labels": {
+        "raw_games": 1,
+        "games": 1,
+        "exact_rows": 4,
+        "approx_rows": 0,
+        "unusable_rows": 0,
+        "rows": 4
+      },
+      "terminal_games": 1,
+      "terminal_short_games": 1
+    }
+  },
+  "direct_builder": {
+    "rows": 4,
+    "error": null,
+    "steps": [
+      0,
+      1,
+      0,
+      1
+    ],
+    "values": [
+      -0.11578369140625,
+      -0.11578369140625,
+      0.11578369140625,
+      0.11578369140625
+    ],
+    "labels": [
+      [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        1,
+        0
+      ],
+      [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        1,
+        0
+      ],
+      [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        1,
+        0
+      ],
+      [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0,
+        1
+      ]
+    ]
+  },
+  "auxiliary_carbon": {
+    "record_has_full_carbon": true,
+    "builder_step0_nonzero_cells": 103,
+    "true_step0_nonzero_cells": 103,
+    "mismatched_cells": 0
+  },
+  "hidden_errors": {
+    "generator_error": null,
+    "wrapper_stats": {
+      "root_errors": 2
+    },
+    "replay_written": true,
+    "nsteps": 2,
+    "scores": [
+      80.0,
+      -299.0
+    ]
+  },
+  "natural": {
+    "nsteps": 299,
+    "frames": 300,
+    "final_statuses": [
+      "DONE",
+      "DONE"
+    ],
+    "margin": 0.0
+  },
+  "orphan_replay_retry": {
+    "exit_code": 0,
+    "stdout": "RECONCILE-MISMATCH seed=2 identity_mismatch: orphan replay\nSPGEN-RESULT {\"games\": 1, \"wall_s\": 0.4, \"total_wall_s\": 0.4, \"games_per_min\": 164.75, \"mean_steps\": 299.0, \"mean_margin\": 0.0, \"mean_u\": 0.5, \"workers\": 1, \"cpu_seconds\": 0.3, \"eff_cores\": 0.93, \"errors\": [], \"budget_hit\": \"games\", \"stub\": true, \"adopted\": 0, \"identity_mismatches\": 1, \"identity\": {\"weights_md5\": \"absent\", \"config_hash\": \"f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f\", \"config\": {\"ABORT_DL\": 0.95, \"BUDGET\": 0.7, \"GUARD\": true, \"GUARD_NARROW\": true, \"HARD\": 0.85, \"LATE_STEP\": 240, \"MIX\": false, \"MODE\": \"sweep\", \"ROLL\": \"self\", \"SEARCH\": false, \"START_DL\": null, \"TEACHER\": 2, \"TEACHER_LATE\": 2}, \"names\": [\"review-teacher\", \"review-teacher\"], \"code_md5\": {\"eval_v53.py\": \"aa4c5bb63c879caffeb33b0b25c498d7\", \"fastsim.py\": \"aefe6c83826efae4de83bef8c643c80b\", \"cnet2_search.py\": \"14230fa124e0a9b90d59d6df03c6765a\", \"selfplay_gen.py\": \"f7dbb47eb5f23eca69d5fddd45af1769\"}}, \"repaired_drops\": 0, \"weights\": \"stub.npz\", \"conf\": {\"ABORT_DL\": 0.95, \"BUDGET\": 0.7, \"GUARD\": true, \"GUARD_NARROW\": true, \"HARD\": 0.85, \"LATE_STEP\": 240, \"MIX\": false, \"MODE\": \"sweep\", \"ROLL\": \"self\", \"SEARCH\": false, \"START_DL\": null, \"TEACHER\": 2, \"TEACHER_LATE\": 2}, \"out\": \"<TMP>/natural\"}\n",
+    "stderr": "",
+    "index": [
+      {
+        "id": "selfplay",
+        "game": 2,
+        "order": [
+          "a",
+          "b"
+        ],
+        "scores": {
+          "a": 80.0,
+          "b": 80.0
+        },
+        "margin": {
+          "a": 0.0,
+          "b": 0.0
+        },
+        "u": {
+          "a": 0.5,
+          "b": 0.5
+        },
+        "winner": null,
+        "steps": 299,
+        "file": "replays/selfplay-2.json.gz",
+        "terminal": true,
+        "end_reason": "horizon",
+        "outcome": "normal",
+        "identity": {
+          "weights_md5": "absent",
+          "config_hash": "f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f",
+          "config": {
+            "ABORT_DL": 0.95,
+            "BUDGET": 0.7,
+            "GUARD": true,
+            "GUARD_NARROW": true,
+            "HARD": 0.85,
+            "LATE_STEP": 240,
+            "MIX": false,
+            "MODE": "sweep",
+            "ROLL": "self",
+            "SEARCH": false,
+            "START_DL": null,
+            "TEACHER": 2,
+            "TEACHER_LATE": 2
+          },
+          "names": [
+            "review-teacher",
+            "review-teacher"
+          ],
+          "code_md5": {
+            "eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7",
+            "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+            "cnet2_search.py": "14230fa124e0a9b90d59d6df03c6765a",
+            "selfplay_gen.py": "f7dbb47eb5f23eca69d5fddd45af1769"
+          }
+        },
+        "sha256": "9e51ba3ec5346f2c8dda39510abc1b1c3d24811f2a4d6127284b1a81680dabcb",
+        "bytes": 21708,
+        "created": "2026-11-13T05:04:58.967996+00:00",
+        "strategies": {
+          "a": {
+            "id": "",
+            "name": "review-teacher"
+          },
+          "b": {
+            "id": "",
+            "name": "review-teacher"
+          }
+        }
+      }
+    ],
+    "summary": {
+      "games": 1,
+      "wall_s": 0.4,
+      "total_wall_s": 0.4,
+      "games_per_min": 164.75,
+      "mean_steps": 299.0,
+      "mean_margin": 0.0,
+      "mean_u": 0.5,
+      "workers": 1,
+      "cpu_seconds": 0.3,
+      "eff_cores": 0.93,
+      "errors": [],
+      "budget_hit": "games",
+      "stub": true,
+      "adopted": 0,
+      "identity_mismatches": 1,
+      "identity": {
+        "weights_md5": "absent",
+        "config_hash": "f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f",
+        "config": {
+          "ABORT_DL": 0.95,
+          "BUDGET": 0.7,
+          "GUARD": true,
+          "GUARD_NARROW": true,
+          "HARD": 0.85,
+          "LATE_STEP": 240,
+          "MIX": false,
+          "MODE": "sweep",
+          "ROLL": "self",
+          "SEARCH": false,
+          "START_DL": null,
+          "TEACHER": 2,
+          "TEACHER_LATE": 2
+        },
+        "names": [
+          "review-teacher",
+          "review-teacher"
+        ],
+        "code_md5": {
+          "eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7",
+          "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+          "cnet2_search.py": "14230fa124e0a9b90d59d6df03c6765a",
+          "selfplay_gen.py": "f7dbb47eb5f23eca69d5fddd45af1769"
+        }
+      },
+      "repaired_drops": 0,
+      "weights": "stub.npz",
+      "conf": {
+        "ABORT_DL": 0.95,
+        "BUDGET": 0.7,
+        "GUARD": true,
+        "GUARD_NARROW": true,
+        "HARD": 0.85,
+        "LATE_STEP": 240,
+        "MIX": false,
+        "MODE": "sweep",
+        "ROLL": "self",
+        "SEARCH": false,
+        "START_DL": null,
+        "TEACHER": 2,
+        "TEACHER_LATE": 2
+      },
+      "out": "<TMP>/natural"
+    }
+  },
+  "indexed_missing_replay": {
+    "exit_code": 0,
+    "stdout": "RECONCILE-DROP seed=2 indexed_replay_missing_replay\nSPGEN-RESULT {\"games\": 1, \"wall_s\": 0.4, \"total_wall_s\": 0.4, \"games_per_min\": 157.57, \"mean_steps\": 299.0, \"mean_margin\": 0.0, \"mean_u\": 0.5, \"workers\": 1, \"cpu_seconds\": 0.3, \"eff_cores\": 0.89, \"errors\": [], \"budget_hit\": \"games\", \"stub\": true, \"adopted\": 0, \"identity_mismatches\": 0, \"identity\": {\"weights_md5\": \"absent\", \"config_hash\": \"f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f\", \"config\": {\"ABORT_DL\": 0.95, \"BUDGET\": 0.7, \"GUARD\": true, \"GUARD_NARROW\": true, \"HARD\": 0.85, \"LATE_STEP\": 240, \"MIX\": false, \"MODE\": \"sweep\", \"ROLL\": \"self\", \"SEARCH\": false, \"START_DL\": null, \"TEACHER\": 2, \"TEACHER_LATE\": 2}, \"names\": [\"review-teacher\", \"review-teacher\"], \"code_md5\": {\"eval_v53.py\": \"aa4c5bb63c879caffeb33b0b25c498d7\", \"fastsim.py\": \"aefe6c83826efae4de83bef8c643c80b\", \"cnet2_search.py\": \"14230fa124e0a9b90d59d6df03c6765a\", \"selfplay_gen.py\": \"f7dbb47eb5f23eca69d5fddd45af1769\"}}, \"repaired_drops\": 1, \"weights\": \"stub.npz\", \"conf\": {\"ABORT_DL\": 0.95, \"BUDGET\": 0.7, \"GUARD\": true, \"GUARD_NARROW\": true, \"HARD\": 0.85, \"LATE_STEP\": 240, \"MIX\": false, \"MODE\": \"sweep\", \"ROLL\": \"self\", \"SEARCH\": false, \"START_DL\": null, \"TEACHER\": 2, \"TEACHER_LATE\": 2}, \"out\": \"<TMP>/natural\"}\n",
+    "stderr": "",
+    "index": [
+      {
+        "id": "selfplay",
+        "game": 2,
+        "order": [
+          "a",
+          "b"
+        ],
+        "scores": {
+          "a": 80.0,
+          "b": 80.0
+        },
+        "margin": {
+          "a": 0.0,
+          "b": 0.0
+        },
+        "u": {
+          "a": 0.5,
+          "b": 0.5
+        },
+        "winner": null,
+        "steps": 299,
+        "file": "replays/selfplay-2.json.gz",
+        "terminal": true,
+        "end_reason": "horizon",
+        "outcome": "normal",
+        "identity": {
+          "weights_md5": "absent",
+          "config_hash": "f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f",
+          "config": {
+            "ABORT_DL": 0.95,
+            "BUDGET": 0.7,
+            "GUARD": true,
+            "GUARD_NARROW": true,
+            "HARD": 0.85,
+            "LATE_STEP": 240,
+            "MIX": false,
+            "MODE": "sweep",
+            "ROLL": "self",
+            "SEARCH": false,
+            "START_DL": null,
+            "TEACHER": 2,
+            "TEACHER_LATE": 2
+          },
+          "names": [
+            "review-teacher",
+            "review-teacher"
+          ],
+          "code_md5": {
+            "eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7",
+            "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+            "cnet2_search.py": "14230fa124e0a9b90d59d6df03c6765a",
+            "selfplay_gen.py": "f7dbb47eb5f23eca69d5fddd45af1769"
+          }
+        },
+        "sha256": "7e53df2b51bea78cec0cdcd19c2a09c0836979bc7a70bad645be680f97cd180a",
+        "bytes": 21708,
+        "created": "2026-11-13T05:04:59.562805+00:00",
+        "strategies": {
+          "a": {
+            "id": "",
+            "name": "review-teacher"
+          },
+          "b": {
+            "id": "",
+            "name": "review-teacher"
+          }
+        }
+      }
+    ],
+    "summary": {
+      "games": 1,
+      "wall_s": 0.4,
+      "total_wall_s": 0.4,
+      "games_per_min": 157.57,
+      "mean_steps": 299.0,
+      "mean_margin": 0.0,
+      "mean_u": 0.5,
+      "workers": 1,
+      "cpu_seconds": 0.3,
+      "eff_cores": 0.89,
+      "errors": [],
+      "budget_hit": "games",
+      "stub": true,
+      "adopted": 0,
+      "identity_mismatches": 0,
+      "identity": {
+        "weights_md5": "absent",
+        "config_hash": "f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f",
+        "config": {
+          "ABORT_DL": 0.95,
+          "BUDGET": 0.7,
+          "GUARD": true,
+          "GUARD_NARROW": true,
+          "HARD": 0.85,
+          "LATE_STEP": 240,
+          "MIX": false,
+          "MODE": "sweep",
+          "ROLL": "self",
+          "SEARCH": false,
+          "START_DL": null,
+          "TEACHER": 2,
+          "TEACHER_LATE": 2
+        },
+        "names": [
+          "review-teacher",
+          "review-teacher"
+        ],
+        "code_md5": {
+          "eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7",
+          "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+          "cnet2_search.py": "14230fa124e0a9b90d59d6df03c6765a",
+          "selfplay_gen.py": "f7dbb47eb5f23eca69d5fddd45af1769"
+        }
+      },
+      "repaired_drops": 1,
+      "weights": "stub.npz",
+      "conf": {
+        "ABORT_DL": 0.95,
+        "BUDGET": 0.7,
+        "GUARD": true,
+        "GUARD_NARROW": true,
+        "HARD": 0.85,
+        "LATE_STEP": 240,
+        "MIX": false,
+        "MODE": "sweep",
+        "ROLL": "self",
+        "SEARCH": false,
+        "START_DL": null,
+        "TEACHER": 2,
+        "TEACHER_LATE": 2
+      },
+      "out": "<TMP>/natural"
+    }
+  },
+  "max_games_overshoot": {
+    "exit_code": 0,
+    "stdout": "SPGEN-RESULT {\"games\": 3, \"wall_s\": 0.9, \"total_wall_s\": 0.9, \"games_per_min\": 210.61, \"mean_steps\": 299.0, \"mean_margin\": 0.0, \"mean_u\": 0.5, \"workers\": 3, \"cpu_seconds\": 1.1, \"eff_cores\": 1.24, \"errors\": [], \"budget_hit\": \"games\", \"stub\": true, \"adopted\": 0, \"identity_mismatches\": 0, \"identity\": {\"weights_md5\": \"absent\", \"config_hash\": \"f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f\", \"config\": {\"ABORT_DL\": 0.95, \"BUDGET\": 0.7, \"GUARD\": true, \"GUARD_NARROW\": true, \"HARD\": 0.85, \"LATE_STEP\": 240, \"MIX\": false, \"MODE\": \"sweep\", \"ROLL\": \"self\", \"SEARCH\": false, \"START_DL\": null, \"TEACHER\": 2, \"TEACHER_LATE\": 2}, \"names\": [\"review-teacher\", \"review-teacher\"], \"code_md5\": {\"eval_v53.py\": \"aa4c5bb63c879caffeb33b0b25c498d7\", \"fastsim.py\": \"aefe6c83826efae4de83bef8c643c80b\", \"cnet2_search.py\": \"14230fa124e0a9b90d59d6df03c6765a\", \"selfplay_gen.py\": \"f7dbb47eb5f23eca69d5fddd45af1769\"}}, \"repaired_drops\": 0, \"weights\": \"stub.npz\", \"conf\": {\"ABORT_DL\": 0.95, \"BUDGET\": 0.7, \"GUARD\": true, \"GUARD_NARROW\": true, \"HARD\": 0.85, \"LATE_STEP\": 240, \"MIX\": false, \"MODE\": \"sweep\", \"ROLL\": \"self\", \"SEARCH\": false, \"START_DL\": null, \"TEACHER\": 2, \"TEACHER_LATE\": 2}, \"out\": \"<TMP>/batch\"}\n",
+    "stderr": "",
+    "index": [
+      {
+        "id": "selfplay",
+        "game": 10,
+        "order": [
+          "a",
+          "b"
+        ],
+        "scores": {
+          "a": 80.0,
+          "b": 80.0
+        },
+        "margin": {
+          "a": 0.0,
+          "b": 0.0
+        },
+        "u": {
+          "a": 0.5,
+          "b": 0.5
+        },
+        "winner": null,
+        "steps": 299,
+        "file": "replays/selfplay-10.json.gz",
+        "terminal": true,
+        "end_reason": "horizon",
+        "outcome": "normal",
+        "identity": {
+          "weights_md5": "absent",
+          "config_hash": "f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f",
+          "config": {
+            "ABORT_DL": 0.95,
+            "BUDGET": 0.7,
+            "GUARD": true,
+            "GUARD_NARROW": true,
+            "HARD": 0.85,
+            "LATE_STEP": 240,
+            "MIX": false,
+            "MODE": "sweep",
+            "ROLL": "self",
+            "SEARCH": false,
+            "START_DL": null,
+            "TEACHER": 2,
+            "TEACHER_LATE": 2
+          },
+          "names": [
+            "review-teacher",
+            "review-teacher"
+          ],
+          "code_md5": {
+            "eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7",
+            "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+            "cnet2_search.py": "14230fa124e0a9b90d59d6df03c6765a",
+            "selfplay_gen.py": "f7dbb47eb5f23eca69d5fddd45af1769"
+          }
+        },
+        "sha256": "d17d5c72f27deae5fd1100e904f441afbf06f37e0b8c09b7b060e2228805b963",
+        "bytes": 24533,
+        "created": "2026-11-13T05:05:00.575232+00:00",
+        "strategies": {
+          "a": {
+            "id": "",
+            "name": "review-teacher"
+          },
+          "b": {
+            "id": "",
+            "name": "review-teacher"
+          }
+        }
+      },
+      {
+        "id": "selfplay",
+        "game": 11,
+        "order": [
+          "b",
+          "a"
+        ],
+        "scores": {
+          "a": 80.0,
+          "b": 80.0
+        },
+        "margin": {
+          "a": 0.0,
+          "b": 0.0
+        },
+        "u": {
+          "a": 0.5,
+          "b": 0.5
+        },
+        "winner": null,
+        "steps": 299,
+        "file": "replays/selfplay-11.json.gz",
+        "terminal": true,
+        "end_reason": "horizon",
+        "outcome": "normal",
+        "identity": {
+          "weights_md5": "absent",
+          "config_hash": "f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f",
+          "config": {
+            "ABORT_DL": 0.95,
+            "BUDGET": 0.7,
+            "GUARD": true,
+            "GUARD_NARROW": true,
+            "HARD": 0.85,
+            "LATE_STEP": 240,
+            "MIX": false,
+            "MODE": "sweep",
+            "ROLL": "self",
+            "SEARCH": false,
+            "START_DL": null,
+            "TEACHER": 2,
+            "TEACHER_LATE": 2
+          },
+          "names": [
+            "review-teacher",
+            "review-teacher"
+          ],
+          "code_md5": {
+            "eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7",
+            "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+            "cnet2_search.py": "14230fa124e0a9b90d59d6df03c6765a",
+            "selfplay_gen.py": "f7dbb47eb5f23eca69d5fddd45af1769"
+          }
+        },
+        "sha256": "a98d4523b676e367a5b85aca5522c8de298bb8a7a6d3fe96f550bd526603d989",
+        "bytes": 22778,
+        "created": "2026-11-13T05:05:00.519316+00:00",
+        "strategies": {
+          "a": {
+            "id": "",
+            "name": "review-teacher"
+          },
+          "b": {
+            "id": "",
+            "name": "review-teacher"
+          }
+        }
+      },
+      {
+        "id": "selfplay",
+        "game": 12,
+        "order": [
+          "a",
+          "b"
+        ],
+        "scores": {
+          "a": 80.0,
+          "b": 80.0
+        },
+        "margin": {
+          "a": 0.0,
+          "b": 0.0
+        },
+        "u": {
+          "a": 0.5,
+          "b": 0.5
+        },
+        "winner": null,
+        "steps": 299,
+        "file": "replays/selfplay-12.json.gz",
+        "terminal": true,
+        "end_reason": "horizon",
+        "outcome": "normal",
+        "identity": {
+          "weights_md5": "absent",
+          "config_hash": "f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f",
+          "config": {
+            "ABORT_DL": 0.95,
+            "BUDGET": 0.7,
+            "GUARD": true,
+            "GUARD_NARROW": true,
+            "HARD": 0.85,
+            "LATE_STEP": 240,
+            "MIX": false,
+            "MODE": "sweep",
+            "ROLL": "self",
+            "SEARCH": false,
+            "START_DL": null,
+            "TEACHER": 2,
+            "TEACHER_LATE": 2
+          },
+          "names": [
+            "review-teacher",
+            "review-teacher"
+          ],
+          "code_md5": {
+            "eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7",
+            "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+            "cnet2_search.py": "14230fa124e0a9b90d59d6df03c6765a",
+            "selfplay_gen.py": "f7dbb47eb5f23eca69d5fddd45af1769"
+          }
+        },
+        "sha256": "23ec1cf7e069a06f00f5c94b69782f412fbb513ca236d732da25c2d217cc55df",
+        "bytes": 24866,
+        "created": "2026-11-13T05:05:00.597657+00:00",
+        "strategies": {
+          "a": {
+            "id": "",
+            "name": "review-teacher"
+          },
+          "b": {
+            "id": "",
+            "name": "review-teacher"
+          }
+        }
+      }
+    ],
+    "summary": {
+      "games": 3,
+      "wall_s": 0.9,
+      "total_wall_s": 0.9,
+      "games_per_min": 210.61,
+      "mean_steps": 299.0,
+      "mean_margin": 0.0,
+      "mean_u": 0.5,
+      "workers": 3,
+      "cpu_seconds": 1.1,
+      "eff_cores": 1.24,
+      "errors": [],
+      "budget_hit": "games",
+      "stub": true,
+      "adopted": 0,
+      "identity_mismatches": 0,
+      "identity": {
+        "weights_md5": "absent",
+        "config_hash": "f872ee1c3c13eef5dd6d4ac1ef54a4266a6219d5ce4d20ba133b3a60aca32d0f",
+        "config": {
+          "ABORT_DL": 0.95,
+          "BUDGET": 0.7,
+          "GUARD": true,
+          "GUARD_NARROW": true,
+          "HARD": 0.85,
+          "LATE_STEP": 240,
+          "MIX": false,
+          "MODE": "sweep",
+          "ROLL": "self",
+          "SEARCH": false,
+          "START_DL": null,
+          "TEACHER": 2,
+          "TEACHER_LATE": 2
+        },
+        "names": [
+          "review-teacher",
+          "review-teacher"
+        ],
+        "code_md5": {
+          "eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7",
+          "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+          "cnet2_search.py": "14230fa124e0a9b90d59d6df03c6765a",
+          "selfplay_gen.py": "f7dbb47eb5f23eca69d5fddd45af1769"
+        }
+      },
+      "repaired_drops": 0,
+      "weights": "stub.npz",
+      "conf": {
+        "ABORT_DL": 0.95,
+        "BUDGET": 0.7,
+        "GUARD": true,
+        "GUARD_NARROW": true,
+        "HARD": 0.85,
+        "LATE_STEP": 240,
+        "MIX": false,
+        "MODE": "sweep",
+        "ROLL": "self",
+        "SEARCH": false,
+        "START_DL": null,
+        "TEACHER": 2,
+        "TEACHER_LATE": 2
+      },
+      "out": "<TMP>/batch"
+    }
+  },
+  "direct_cli_import": {
+    "exit_code": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"/home/hatch/workspace/final-accept/code/producer/selfplay_gen.py\", line 146, in <module>\n    import eval_v53  # noqa: E402\n    ^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'eval_v53'\n"
+  },
+  "all_expected_checks_passed": false
+}
