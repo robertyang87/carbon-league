@@ -11,7 +11,17 @@ Weights: w = exp(A / beta); beta starts at std(A) and grows until the effective 
   (sum w)^2 / sum w^2 is at least ESS_MIN (default 20%) of the games -- otherwise a few lucky games dominate.
 uw (per unit) = 1 for planters and base slots, 0 for our collectors (cars stay the net's own).
 AWR_CAR_ANCHOR=c (default 0): car tokens get the constant weight c regardless of the game's weight -- a self-anchor that
-keeps the cars where they are when no separate anchor dataset is mixed in (use 1)."""
+keeps the cars where they are when no separate anchor dataset is mixed in (use 1).
+
+F02: rescore follows the canonical terminal contract (eval_v53): a replay that finished by extinction scores
+(extinct: steps - EPISODE_STEPS - 1; survivor: cash carried into the terminal step), taken from the generator's
+info.scores when present, else reconstructed from the first non-ACTIVE state; an extinction finish is never a
+mirror game.
+F06: the weight chain stays float32 end to end. ESS / w_max give no positive lower bound, and the collector
+anchor's mean(w)/w inversion turns a tiny positive w into an uw that overflows float16 downstream (inf -> NaN
+loss), so positive game weights are floored at AWR_WMIN (default 1e-3; mirror games keep w = 0 exactly). Every
+floored game is counted and named in the output JSON -- never silent. w / uw are hard-gated for finiteness
+before anything is saved: a non-finite entry aborts with the offending game keys, it is not published."""
 import gzip
 import json
 import os
@@ -35,15 +45,45 @@ def side_value(obs, carbon, p):
     return cash + cargo + v
 
 
+def _replay_result(st, info, side):
+    """Canonical terminal contract (F02) for a stored replay; returns
+    (reward, whole, extinct) or None when the replay is not a finished game.
+    Prefers the generator-recorded info.scores; else reconstructs from the
+    first non-ACTIVE state: the extinct player is the one with no workers,
+    no trees and (no base or cash below the recruit price -- carbon.json
+    prices both recruits at 30, the fact eval_v53._extinct relies on); its
+    score is i - EPISODE_STEPS - 1 for terminal state index i, and the
+    survivor keeps its cash from the state BEFORE the terminal transition.
+    A both-DONE time-out finish scores the final cash difference."""
+    if info.get("scores"):
+        sc = info["scores"]
+        return float(sc[side]) - float(sc[1 - side]), True, info.get("terminal") == "extinction"
+    for i, row in enumerate(st):
+        if any(e.get("status") not in (None, "ACTIVE") for e in row):
+            players = row[0]["observation"]["players"]
+            extinct = [not P[2] and not P[3] and (not P[1] or float(P[0]) < 30.0) for P in players]
+            if sum(extinct) == 1:
+                pre = st[i - 1][0]["observation"]["players"] if i >= 1 else players
+                scores = [float(i - 301) if extinct[p] else float(pre[p][0]) for p in (0, 1)]
+                return float(scores[side] - scores[1 - side]), True, True
+            return float(players[side][0]) - float(players[1 - side][0]), True, False
+    return None
+
+
 def rescore(corpus):
     games = [json.loads(l) for l in open(os.path.join(corpus, "awr.jsonl"))]
     for g in games:
-        st = json.load(gzip.open(os.path.join(corpus, g["file"])))["steps"]
+        d = json.load(gzip.open(os.path.join(corpus, g["file"])))
+        st = d["steps"]; info = d.get("info") or {}
         o = st[-1][0]["observation"]; carbon = o.get("full_carbon") or o["carbon"]
-        g["whole"] = len(st) >= 300 or bool(os.environ.get("AWR_FINAL"))
-        if len(st) >= 300 or os.environ.get("AWR_FINAL"):      # whole game: the reward is the final score difference
+        rr = _replay_result(st, info, g["side"])
+        if rr is not None:
+            g["reward2"], g["whole"], g["extinct"] = rr
+        elif len(st) >= 300 or os.environ.get("AWR_FINAL"):      # whole game: the reward is the final score difference
+            g["whole"] = True; g["extinct"] = False
             g["reward2"] = float(o["players"][g["side"]][0]) - float(o["players"][1 - g["side"]][0])
         else:
+            g["whole"] = False; g["extinct"] = False
             g["reward2"] = side_value(o, carbon, g["side"]) - side_value(o, carbon, 1 - g["side"])
         g["corpus"] = os.path.basename(corpus.rstrip("/"))
     by = defaultdict(list)
@@ -51,7 +91,7 @@ def rescore(corpus):
         # a 300-step game that ends exactly level is a perfect mirror game (our net against an identical deterministic
         # copy on the 4-fold symmetric map: both sides play the same moves, units cancel on the symmetry lines, some
         # games never develop at all). It carries no information: weight 0 and not part of the seed's baseline.
-        g["mirror"] = bool(g.get("whole") and abs(g["reward2"]) < 0.05)       # same rule as awr_signal (reward rounded to 0.1)
+        g["mirror"] = bool(g.get("whole") and not g.get("extinct") and abs(g["reward2"]) < 0.05)       # same rule as awr_signal (reward rounded to 0.1); F02: an extinction finish is never a mirror game
         if not g["mirror"]:
             by[g["seed"]].append(g)
     for g in games:
@@ -68,6 +108,11 @@ def main():
     games = [g for c in corpora for g in rescore(c)]
     nmir = sum(g["mirror"] for g in games)
     A = np.array([g["adv2"] for g in games if not g["mirror"]])
+    # F06 hard gate 0: a non-finite advantage (NaN reward upstream) is rejected by name here --
+    # downstream, Python's min(wmax, nan) would silently turn it into wmax and publish it.
+    if not np.isfinite(A).all():
+        bad = [g["key"] for g in games if not g["mirror"] and not np.isfinite(g["adv2"])][:10]
+        sys.exit(f"awr_weights: non-finite advantage for {bad} -- fix the corpus/rewards; not publishing")
     ess_min = float(os.environ.get("AWR_ESS_MIN", "0.2")); wmax = float(os.environ.get("AWR_WMAX", "20"))
     beta = float(A.std()) or 1.0
     for _ in range(40):
@@ -76,7 +121,7 @@ def main():
         if ess >= ess_min:
             break
         beta *= 1.25
-    wkey = {g["key"]: 0.0 if g["mirror"] else float(min(wmax, np.exp(g["adv2"] / beta))) for g in games}
+    wkey = {g["key"]: 0.0 if g["mirror"] else float(np.minimum(wmax, np.exp(g["adv2"] / beta))) for g in games}     # np.minimum (not min) so a NaN would propagate to gate 1 instead of becoming wmax
     meta = json.load(open(os.path.join(ds, "meta.json"))); gid = np.load(os.path.join(ds, "gid.npy"))
     if len(wkey) != len(games):
         sys.exit(f"awr_weights: {len(games)} games but only {len(wkey)} distinct keys -- the corpora share game keys "
@@ -85,7 +130,18 @@ def main():
         sys.exit(f"awr_weights: the dataset holds {len(meta['games'])} games, the corpora {len(games)} -- rebuild the dataset "
                  f"from exactly these corpora (cnet2_build drops games whose file name it has already seen).")
     gw = np.array([wkey[g["key"].replace(".json.gz", "")] for g in meta["games"]], np.float32)
+    # F06 hard gate 1: a non-finite game weight (NaN advantage upstream) is rejected by name, never published.
+    if not np.isfinite(gw).all():
+        bad = [meta["games"][i]["key"] for i in np.where(~np.isfinite(gw))[0][:10]]
+        sys.exit(f"awr_weights: non-finite game weight for {bad} (ds={ds}) -- fix the corpus/advantages; not publishing")
+    # F06 floor: positive weights are floored at AWR_WMIN (mirror games keep w = 0 exactly and stay excluded).
+    # Floored games are counted and named in the output JSON below -- never silent.
+    w_floor = float(os.environ.get("AWR_WMIN", "1e-3"))
+    fl = (gw > 0) & (gw < w_floor)
+    floored_keys = [meta["games"][i]["key"] for i in np.where(fl)[0]]
+    gw[fl] = np.float32(w_floor)
     w = gw[gid].astype(np.float32)
+    floored_rows = int(fl[gid].sum())
     kind = np.load(os.path.join(ds, "tok_kind.npy"), mmap_mode="r")
     S = np.load(os.path.join(ds, "y.npy"), mmap_mode="r").shape[1]
     uw = np.ones((len(gid), S), np.float32)
@@ -97,13 +153,21 @@ def main():
     car_anchor = float(os.environ.get("AWR_CAR_ANCHOR", "0"))
     if car_anchor > 0:
         iscar = np.asarray(kind[:, :10]) == 0
-        uw[:, :10] = np.where(iscar, car_anchor / np.maximum(w, 1e-6)[:, None], uw[:, :10])
+        uw[:, :10] = np.where(iscar, car_anchor / np.maximum(w, w_floor)[:, None], uw[:, :10])     # F06: inversion denominator is the floored weight, so uw stays bounded
+    # F06 hard gate 2: nothing non-finite is saved -- abort naming the games whose rows carry it.
+    if not (np.isfinite(w).all() and np.isfinite(uw).all()):
+        rows_bad = np.unique(np.concatenate([np.where(~np.isfinite(w))[0],
+                                             np.where(~np.isfinite(uw).any(axis=1))[0]]))[:10]
+        keys_bad = [meta["games"][int(gid[i])]["key"] for i in rows_bad]
+        sys.exit(f"awr_weights: non-finite w/uw in rows of games {keys_bad} (ds={ds}) -- not publishing")
     np.save(os.path.join(ds, "w.npy"), w); np.save(os.path.join(ds, "uw.npy"), uw)
     r_old = np.array([g["reward"] for g in games]); r_new = np.array([g["reward2"] for g in games])
     print(json.dumps({"rows": int(len(gid)), "games": len(games), "mirror_dropped": int(nmir), "beta": round(beta, 1), "ess_frac": round(float(ess), 3),
                       "adv_sd": round(float(A.std()), 1), "reward_old_mean": round(float(r_old.mean()), 1),
                       "reward_new_mean": round(float(r_new.mean()), 1), "corr_old_new": round(float(np.corrcoef(r_old, r_new)[0, 1]), 3),
-                      "w_max": round(float(gw.max()), 2), "car_anchor": car_anchor}), flush=True)
+                      "w_max": round(float(gw.max()), 2), "car_anchor": car_anchor,
+                      "w_floor": w_floor, "floored_games": len(floored_keys), "floored_keys": floored_keys[:20],
+                      "floored_rows": floored_rows}), flush=True)
 
 
 if __name__ == "__main__":
