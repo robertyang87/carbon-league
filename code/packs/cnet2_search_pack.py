@@ -6,6 +6,16 @@ CNET2_ENS=a.npz,b.npz embeds extra policy nets; the pack then plays the mean of 
 Embeds cnet2_feat, cnet2_np, fastsim, cnet2_search sources (exec'd into private module objects, the
 plain sys.modules names are restored afterwards) and both weight sets, int8 per-row quantised exactly
 like cnet2_pack (dequantised == data/weights/*_q8.npz).  No __file__ use, no file access at play time.
+
+Post-build pack verification (F08):
+  python3 cnet2_search_pack.py --verify-pack CANDIDATE.py [--expect-commit SHA] [--auth-dir DIR] [--record OUT.json]
+  A standalone build (no authoritative code/ tree next to packs/) only records the embedded
+  hashes with a warning; that does NOT verify the artifact. Before any pack built standalone
+  is released, --verify-pack must pass against the authoritative sources: it extracts the
+  candidate's embedded module sources, recomputes their md5s, cross-checks the pack's own
+  _BUILD_HASHES record against them, compares every module against the authoritative tree
+  (or the tree at --expect-commit, via git show) and reports the candidate file's own
+  md5/sha256/bytes as its release identity. Exit 0 only if everything matches.
 """
 import base64
 import hashlib
@@ -71,6 +81,109 @@ def check_source(auth_dir=None):
         if ah != embedded[m] and m not in ALLOW_DIFF:
             record["mismatches"].append(m)
     record["ok"] = not record["mismatches"]
+    return record["ok"], record
+
+
+# --- F08 post-build pack verification ---------------------------------------
+# --check-source compares the packer's neighbouring sources with code/; it
+# never looks at a built artifact. A pack built standalone (old frozen
+# search, only a warning) therefore sailed through a later clean-tree
+# --check-source. --verify-pack closes that gap on the artifact itself.
+
+def _extract_literal(text, name):
+    """Pull a top-level `name = <literal>` assignment out of a pack file."""
+    import ast as _ast
+    for node in _ast.parse(text).body:
+        if isinstance(node, _ast.Assign) and any(
+                isinstance(t, _ast.Name) and t.id == name for t in node.targets):
+            return _ast.literal_eval(node.value)
+    return None
+
+
+def _auth_hashes_for(auth_dir=None, expect_commit=None):
+    """Authoritative module md5s + where they came from.
+
+    Order: explicit --auth-dir; then `git show <expect_commit>:code/<m>.py`
+    from the repo containing this packer; then the checkout tree next to
+    packs/ (only without --expect-commit). Returns (hashes, source_desc);
+    hashes is None when no authoritative source is available.
+    """
+    if auth_dir:
+        if all(os.path.exists(os.path.join(auth_dir, m + ".py")) for m in MODS):
+            return {m: _md5_file(os.path.join(auth_dir, m + ".py")) for m in MODS}, f"dir:{auth_dir}"
+        return None, f"dir:{auth_dir} (incomplete)"
+    if expect_commit:
+        import subprocess
+        repo = os.path.abspath(os.path.join(HERE, "..", ".."))
+        out = {}
+        try:
+            for m in MODS:
+                r = subprocess.run(["git", "-C", repo, "show", f"{expect_commit}:code/{m}.py"],
+                                   capture_output=True, timeout=30)
+                if r.returncode != 0:
+                    return None, f"git:{expect_commit} (failed for {m})"
+                out[m] = hashlib.md5(r.stdout).hexdigest()
+            return out, f"git:{expect_commit}"
+        except Exception as e:
+            return None, f"git:{expect_commit} (error: {e})"
+    auth = os.path.dirname(os.path.abspath(HERE))
+    if all(os.path.exists(os.path.join(auth, m + ".py")) for m in MODS):
+        return {m: _md5_file(os.path.join(auth, m + ".py")) for m in MODS}, f"dir:{auth}"
+    return None, "unavailable"
+
+
+def verify_pack(pack_path, auth_dir=None, expect_commit=None):
+    """Verify a BUILT candidate pack against the authoritative sources.
+
+    Returns (ok, record). ok is True only when: the pack embeds every MODS
+    source; the md5 recomputed from the embedded sources matches the pack's
+    own _BUILD_HASHES record (when present -- a missing record on a legacy
+    pack is reported, not fatal, because the embedded sources themselves
+    are what gets compared); and every embedded md5 equals the
+    authoritative md5 (modules in ALLOW_DIFF exempted). The record also
+    carries the pack file's own md5/sha256/bytes as its release identity.
+    """
+    raw = open(pack_path, "rb").read()
+    record = {"pack": pack_path, "pack_bytes": len(raw),
+              "pack_md5": hashlib.md5(raw).hexdigest(),
+              "pack_sha256": hashlib.sha256(raw).hexdigest(),
+              "expect_commit": expect_commit,
+              "embedded_hashes": {}, "build_hashes_record": None,
+              "record_consistent": None, "authoritative_source": None,
+              "authoritative_hashes": {}, "mismatches": [],
+              "missing_embedded": [], "ok": False}
+    try:
+        text = raw.decode("utf-8")
+        srcs = _extract_literal(text, "_SRC")
+        hashes_rec = _extract_literal(text, "_BUILD_HASHES")
+    except Exception as e:
+        record["error"] = f"cannot parse pack: {type(e).__name__}: {e}"
+        return False, record
+    if not isinstance(srcs, dict):
+        record["error"] = "pack has no _SRC literal (not a cnet2_search_pack artifact)"
+        return False, record
+    for m in MODS:
+        if m in srcs:
+            record["embedded_hashes"][m] = hashlib.md5(srcs[m].encode("utf-8")).hexdigest()
+        else:
+            record["missing_embedded"].append(m)
+    record["build_hashes_record"] = hashes_rec
+    if isinstance(hashes_rec, dict):
+        record["record_consistent"] = all(
+            hashes_rec.get(m) == record["embedded_hashes"].get(m) for m in MODS)
+    auth, desc = _auth_hashes_for(auth_dir, expect_commit)
+    record["authoritative_source"] = desc
+    if auth is None:
+        record["error"] = "no authoritative source available (pass --auth-dir or --expect-commit in a git checkout)"
+        return False, record
+    record["authoritative_hashes"] = auth
+    for m in MODS:
+        if m in record["missing_embedded"]:
+            record["mismatches"].append(m)
+        elif record["embedded_hashes"].get(m) != auth[m] and m not in ALLOW_DIFF:
+            record["mismatches"].append(m)
+    record["ok"] = (not record["mismatches"]
+                    and record["record_consistent"] is not False)
     return record["ok"], record
 
 
@@ -207,6 +320,39 @@ def main(out, conf, wp=None, wr=None, wo=None, ens=()):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in ("--help", "-h"):
+        print(__doc__)
+        print("Modes: build (default) | --check-source [CODE_DIR] | "
+              "--verify-pack PACK [--expect-commit SHA] [--auth-dir DIR] [--record OUT.json]")
+        sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1] == "--verify-pack":
+        # Post-build artifact verification (F08). A pack built standalone
+        # MUST pass this against the authoritative sources before release;
+        # --check-source alone never inspects the artifact.
+        _rest = sys.argv[2:]
+        if not _rest:
+            print("usage: cnet2_search_pack.py --verify-pack PACK [--expect-commit SHA] [--auth-dir DIR] [--record OUT.json]", file=sys.stderr)
+            sys.exit(2)
+        _pack = _rest[0]
+        _kw = {}
+        _record_out = None
+        _i = 1
+        while _i < len(_rest):
+            if _rest[_i] == "--expect-commit":
+                _kw["expect_commit"] = _rest[_i + 1]; _i += 2
+            elif _rest[_i] == "--auth-dir":
+                _kw["auth_dir"] = _rest[_i + 1]; _i += 2
+            elif _rest[_i] == "--record":
+                _record_out = _rest[_i + 1]; _i += 2
+            else:
+                print(f"unknown --verify-pack argument: {_rest[_i]}", file=sys.stderr)
+                sys.exit(2)
+        _ok, _rec = verify_pack(_pack, **_kw)
+        print(json.dumps(_rec, indent=1, sort_keys=True))
+        if _record_out:
+            with open(_record_out, "w") as _f:
+                json.dump(_rec, _f, indent=1, sort_keys=True)
+        sys.exit(0 if _ok else 1)
     if len(sys.argv) > 1 and sys.argv[1] == "--check-source":
         # Repo-checkout consistency check (runbook pre-release requirement):
         #   python3 cnet2_search_pack.py --check-source [AUTHORITATIVE_CODE_DIR]
