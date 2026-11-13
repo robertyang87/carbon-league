@@ -1,50 +1,60 @@
-# 打包 → 上天梯标准流程（runbook）
+# 打包 → 上天梯标准流程（runbook）v2
 
-立规：2026-11-13，所有者点名 Echo3 打包链「上下游对接不上」「坚决不要再发生」后由作战室制定。
+立规：v1 2026-11-13（Echo3 打包链复盘后作战室制定）；**v2 同日由所有者令作战室梳理定版：DGX 为打包枢纽**。本版取代 v1 的角色表，其余技术口径沿用并补齐新断点。
 适用：任何把权重打成单文件 pack、经验证后提交天梯的全过程。台账：`reports/live/packs_ledger.md`。
 
-## Echo3 暴露的四个断点（本流程逐条堵死）
+## 断点清单（本流程逐条堵死）
 
-1. **参数无存档**：参照 pack 的 CONF（13 键）只存在于所有者个人 Mac，舰队各机、仓库都没有，抄回耗尽四台机器才发现源头不在舰队。
-2. **打包器用错**：第一版用 `cnet2_pack.py`（裸 agent 打包器，装不下 cnet2_search 的 13 键 CONF、无 bankrupt_guard 等价物），整包作废重打。
-3. **交付定义缺失**：pack 落 DGX 暂存区就被报「交付完成」，但没人负责送到考试机，考试机空等、回执堵在通道里，各线各说一套进度。
-4. **执行人漂移**：验证中途换线、另一条线又要在同一台考试机上自开一场，险些同机双考毁掉计时口径。
+v1 四断点（Echo3）：① 参数无存档（CONF 只在所有者个人 Mac）；② 打包器用错（cnet2_pack.py 废包）；③ 交付定义缺失（暂存区落盘冒充交付）；④ 执行人漂移（同机双考险情）。
+v2 新断点（2026-11-13 下午 it320／Lite-V7／哈基米三轮实证）：⑤ **角色漂移**——runbook 写 L20 建包，实际三轮都由工程组临时建包、作战室逐件验包，文档与现实脱节；⑥ **快照环部署丢可执行位**（it320 首趟 Permission denied）；⑦ **VM 替换吃掉 /root/.ssh/known_hosts**（临时根盘，C1 环被杀后 ssh 假报对方换钥）；⑧ **Contents API 对 >1MB 文件不返内容**，验包必须走 git blob API（全 40 位 blob sha）或 raw 字节；⑨ **DGX 的 GitHub key 是只读 deploy key**，DGX 产出无法直推，入仓必须走作战室 API 通道——流程必须按此设计，不许按「DGX 直推」设计。
 
 ## 角色（每步唯一执行人，禁止双执行）
 
 | 步骤 | 执行人 | 备注 |
 |---|---|---|
-| 发打包单 | 作战室 | 缺项不开打 |
-| 打包 | L20 线 | 只此一家生产 pack |
-| 送达落机 | 打包方（L20） | 负责追到消费方回执为止 |
-| 验证（等价性＋计时） | 作战室任务书指定的考试线 | 一机一执行人，任务书里写明 |
-| 入仓 | L20 线 | 验证全过后 |
+| 发打包单 | 作战室 | 缺项不开工 |
+| 权重归集 | DGX | 权重先落 DGX、两跳 md5 验讫才算备料完成 |
+| 建包＋验包 | DGX | **唯一建包方**；DGX 可调度其他线供料，每步仍只许一个执行人 |
+| 入仓 | DGX 备字节、作战室 API 提交 | DGX key 只读（断点⑨）；入仓完成＝作战室从 main 读回 md5 一致 |
+| 备考送达 | DGX | 追到考试机落盘＋执行人读回 md5 为止 |
+| 考试（等价性／计时／定标） | 打包单点名的考试线 | 一机一执行人；计时须空载 |
+| 裁决 | 作战室 | 考试线只报数，不裁决 |
 | 提交天梯 | 作战室 | 唯一提交人；提交闸归所有者逐次开口 |
+| 台账维护 | DGX | 每过一关更新一行，经同一 API 通道入仓 |
+
+## 飞行前检查（一台凑齐全套，缺一不开工）
+
+1. 源权重已在 DGX 落盘，文件名＋完整 md5 已核；
+2. 打包器与 CONF 模板以 main HEAD 的 `code/packs/` 为准（不用任何机器上的旧拷贝／工作目录副本）；
+3. 考试机与执行人已在打包单点名；
+4. 入仓通道确认（作战室 API 可用、目标路径无冲突）；
+5. 提交路线已注明（ladder-submit 工作流＋所有者开口），本单是否走到提交先写明。
+另：新考试机接手先验出站密钥对（v1 条款沿用：spot-31 首拉三件 Permission denied 的教训）。
 
 ## 步骤与验收口径
 
 **0. 打包单（作战室发出）**：源权重文件名＋md5、目标 pack 名、打包器、CONF 出处、预期字节带、验证任务书（考试机、执行人、基线、种子）。缺一不开打。
 
-**1. 打包**：打包器只认 main 的 `code/packs/cnet2_search_pack.py`（n1r 先例固化入仓，不再依赖退役分支或个人电脑）；CONF 只认 `code/packs/PACK_CONF_TEMPLATE.txt` 的 13 键逐字（SEARCH=False、ROLL="self"、GUARD=True、GUARD_NARROW=True、MODE="sweep"、MIX=False、TEACHER=2、TEACHER_LATE=2、LATE_STEP=240、BUDGET=0.7、HARD=0.85、ABORT_DL=0.95、START_DL=None），只许换权重，不许改键值；确需改键先报所有者。（N01 修复，2026-11-13）`code/packs/cnet2_search.py` 已与权威源 `code/cnet2_search.py` 逐字节同步，此后改 search 必须两处同改、改后跑一致性检查；旧 v12 副本冻结在 `code/packs/historical/cnet2_search_v12_frozen.py`，只许用于复现 n1r/Echo3 历史字节，禁止用于新生产打包；已入仓的历史产物（`n1r_int8_reference.py`、`echo3_int8.py` 等）只读，永不改写／重打包。packer 构建时计算每个内嵌模块（cnet2_feat／cnet2_np／fastsim／cnet2_search）的 md5，写入包内 `_BUILD_HASHES` 与构建输出 JSON，并与 `code/` 权威源逐一比对：不一致且不在显式允许差异清单 `ALLOW_DIFF`（默认空）内即报错退出（exit 2）；远端机器没有 `code/` 树时降级为只记录 hash 并打警告，此时发版前必须在仓库环境跑一次 `python3 code/packs/cnet2_search_pack.py --check-source` 并通过（exit 0）才许交付。（F08 修复，2026-11-13）`--check-source` 只验源码树、不验制品，不能替代验包：standalone 构建的包发布前必须在干净 checkout 中通过 `python3 code/packs/cnet2_search_pack.py --verify-pack <候选包> --expect-commit <权威提交 SHA>`（exit 0），并把输出的 pack_md5／pack_bytes 记入台账作为发布身份；以冻结旧 search 构建的包即属此例（内嵌 hash 与权威不一致会被 verify-pack 拦下，但 `--check-source` 仍会 exit 0）。环境 `CNET2_NO_ROLL=1`。生成前复验源权重 md5；生成后报 pack md5＋实测字节数；字节偏离先例带（n1r 4,579,266／Echo3 4,576,790）超 1% 先停手查因。1 局对 Master2 冒烟 err 为空（只验通路，不作裁决）。
+**1. 建包（DGX）**：打包器只认 main 的 `code/packs/cnet2_search_pack.py`；CONF 只认 `code/packs/PACK_CONF_TEMPLATE.txt` 的 13 键逐字（SEARCH=False、ROLL="self"、GUARD=True、GUARD_NARROW=True、MODE="sweep"、MIX=False、TEACHER=2、TEACHER_LATE=2、LATE_STEP=240、BUDGET=0.7、HARD=0.85、ABORT_DL=0.95、START_DL=None），只许换权重，不许改键值；确需改键先报所有者。（N01）`code/packs/cnet2_search.py` 与权威源 `code/cnet2_search.py` 逐字节同步，改 search 必须两处同改并跑一致性检查；旧 v12 副本冻结在 `code/packs/historical/cnet2_search_v12_frozen.py`，只许复现 n1r/Echo3 历史字节，禁止新生产；已入仓历史产物只读，永不改写／重打包。packer 构建时把内嵌模块（cnet2_feat／cnet2_np／fastsim／cnet2_search）的 md5 写进包内 `_BUILD_HASHES` 与构建 JSON 并与 `code/` 权威源逐一比对，不一致且不在 `ALLOW_DIFF`（默认空）内即 exit 2；无 `code/` 树的机器降级为只记录 hash＋警告，此时交付前必须在仓库环境跑 `--check-source`（exit 0）。`--check-source` 只验源码、不验制品：standalone 包发布前必须在干净 checkout 通过 `--verify-pack <包> --expect-commit <权威 SHA>`（exit 0），输出的 pack_md5／pack_bytes 记入台账为发布身份。环境 `CNET2_NO_ROLL=1`。生成前复验源权重 md5；生成后报 pack md5＋实测字节；字节偏离先例带（n1r 4,579,266／Echo3 4,576,790）超 1% 先停手查因。1 局对 Master2 冒烟 err 为空（只验通路）。**注**：pack 自含内嵌代码，内嵌版本可与考试机上的代码副本不同（如哈基米包内嵌 cnet2_search b81be6fe、机上副本 10a0674e）——以包内 `_BUILD_HASHES` 为准，不追机上副本。
 
-**2. 送达（定义改死）**：**pack 在考试机上落盘、且验证执行人回执 md5 一致，才算交付完成。** 暂存区（DGX s26stage 等）只是中转，不是交付。路线写进打包单：DGX→考试机走公网直连 rsync；源在 L20 的走 Studio 中转（L20 公网→Studio→局域网→DGX/考试机）。文件永不走 ZeroTier（ZT 只做设备在线心跳）。送达方主动追回执，10 分钟无回执即升级作战室，不许干等、不许默认对方已收到。
+**2. 入仓（DGX 备字节 → 作战室提交 → 读回）**：pack 提交 main 的 `code/exp/<名>.py`（考试用）或 `code/packs/<名>_int8.py`（提交天梯用），台账同步补行。>1MB 文件读回走 git blob API 全文算 md5（断点⑧），不许只看提交回执。读回一致才算入仓完成，DGX 收到作战室读回数后才可进入送达。
 
-**新机接手先验出站密钥对（2026-11-13 spot-31 实测）**：新考试机接手后、拉文件之前，先验机上 `/root/.ssh` 有无出站私钥（spot-31 盘上只有 `authorized_keys`、无密钥对，首拉三件全报 Permission denied）。缺失即在机上现生 ed25519 密钥对，把公钥追加进上游机（本例 DGX arm 的 `authorized_keys`）再拉；追加后核对有效密钥行数（本例误写的一行已清掉、现恰 1 行）。此验为接手机器清单固定项，免得下台机再栽一次。
+**3. 送达（定义改死）**：**pack 在考试机上落盘、且验证执行人回执 md5 一致，才算交付完成。** 暂存区只是中转，不是交付。路线：DGX→考试机走 tailnet／公网直连；跨机传权重走 DGX→Studio 局域网→目标机中转。**文件永不走 ZeroTier**（ZT 只做心跳）。送达方主动追回执，10 分钟无回执即升级作战室。
 
-**3. 验证（同一执行人连做，中间不停手换人）**：
+**4. 考试（点名执行人连做，中间不停手换人）**：
 - md5 闸：机上 pack 的 md5／字节与打包单不符直接拒收；台账标 VOID 的包永不进考场。
-- 等价性：pack 对 Master2 真身 200 局、seed 996000、SEARCH 关（按冻结的 exp 加载口径）；对照基线写进任务书，落在合并噪声带内算通过，明显掉带立即停手报告，不许带病提交。
-- 计时／资源认证（N04 修复，2026-11-13）：完整平台资源认证只认 main 的 `code/certify_pack.py`（子进程外层测量，不用机上旧拷贝）：在 cgroup v2 1.5 核／512MiB 下跑，测进程启动＋exec＋首次调用的 init 墙钟、逐步墙钟（含 IPC 与顶层调用开销）、p95、慢步计数与超额池、整局墙钟（≤1500s 按整场比赛任务口径）、子进程峰值 RSS（ru_maxrss 口径，输出中注明）、内部错误数（C03 统一 *_errors 口径）；硬闸：init ≤20s、单步软 1s／硬 3s、慢步（>1s）≤3 次且额外耗时合计 ≤5s、整局 ≤1500s、内部错误为 0——任一闸不过 exit 非零并输出逐项 PASS/FAIL 的 JSON 汇总，停手报实测值。`code/cnet2_search_timing.py` 只是健康与函数耗时子测试（仅测进程内 agent() 耗时、exit 只由内部错误触发，慢而合法的动作也能 exit 0），可作冒烟参考，不能单独作为资源认证结论。（F04 修复，2026-11-13）certify 口径已对齐平台契约：不设预热调用，首个 agent() 调用即 step0 并推进对局，agent 内延迟加载计入首步而非 init；整局墙钟覆盖到最后一次对手推进与 summary 完成；慢步计数与超额池按局独立判定、跨局不累加；显式对手或 harness 依赖加载失败直接判 FAIL／非零退出，不再静默替换为空对手或合成观测——因此 certify 必须在完整的 `code/` 树下运行，证书内含包／对手／harness 的 hash 与完整参数集。
-- 计时期间考试机必须空载：同机不得并行任何考试或训练，否则计时作废重测。
-- 开考起逐局线按 2 分钟规则全量快照到机外（抢占机回收损失上限约 2 分钟局数）。
+- 快照环：脚本部署必须带可执行位（断点⑥），开考前验活（有一次成功落盘＋行数增长回执），开考后每 2 分钟全量快照到机外；ssh 的 known_hosts 一律指持久化路径 `/home/hatch/.ssh/known_hosts`（断点⑦）。
+- 等价性：pack 对 Master2 真身 200 局、seed 996000、SEARCH 关；对照基线写进任务书，落在合并噪声带内算通过，明显掉带立即停手报告。
+- 计时／资源认证（N04／F04）：只认 main 的 `code/certify_pack.py`（子进程外层测量）：cgroup v2 1.5 核／512MiB 下测 init 墙钟、逐步墙钟（含 IPC）、p95、慢步计数与超额池、整局墙钟、子进程峰值 RSS、内部错误数；硬闸：init ≤20s、单步软 1s／硬 3s、慢步（>1s）≤3 次且额外耗时合计 ≤5s、整局 ≤1500s、内部错误 0——任一不过 exit 非零并输出逐项 PASS/FAIL 的 JSON。`code/cnet2_search_timing.py` 只是子测试，可作冒烟，不能单独作认证结论。certify 必须在完整 `code/` 树下运行。
+- 定标（裸网包）：对 Master2 真身（seed 996000）＋Echo2（seed 999000）各 200 局，校准分＝对 Master2 均分 −785；闸口径由打包单写明（现行 +150）。
+- 计时与定标期间考试机必须空载：同机不得并行任何考试或训练，否则计时作废重测。
+- 结果双路核验：launcher JSON 与独立重算（逐局线）一致才算数；裁决由作战室出。
 
-**4. 入仓**：pack 提交 main 的 `code/packs/<名>_int8.py`，同时在 `reports/live/packs_ledger.md` 补一行（源权重 md5、打包器、CONF 出处、pack md5＋字节、等价性结论、计时结论、提交状态）；API 读回验证一致才算入仓完成。
+**5. 提交天梯（作战室）**：提交前逐项核——入仓读回 ✓、等价性 ✓、计时 ✓、所有者已对本次提交开口 ✓、当日同作者提交数 <2（站点每日只留 Top 2）✓。只走 ladder-submit 工作流（secrets 登录），不走其他通道。提交后当场从榜单读回确认（名次／局数），立即报所有者，并回填台账。
 
-**5. 提交天梯（作战室）**：提交前逐项核——入仓读回 ✓、等价性 ✓、计时 ✓、所有者已对本次提交开口 ✓、当日同作者提交数 <2（站点每日只留 Top 2）✓。提交后当场确认上榜（榜单名次／局数），立即报所有者。
-
-**6. 异常纪律**：任何一步失败＝停手＋报 exact 卡点（run 号／错误行／rc／实测值），不许换路线自行重试；需要重试由作战室重新派单。作废包在台账标 VOID 并注明 md5，各线见之拒收。回执以消费方直读为准，生产方自报不算数。
+**6. 异常纪律**：任何一步失败＝停手＋报 exact 卡点（run 号／错误行／rc／实测值），不许换路线自行重试；重试由作战室重新派单。一个 pack 任务在任何时刻只有一个推进者；交接以消费方直读回执为准，生产方自报不算数。作废包台账标 VOID 并注明 md5，各线见之拒收。
 
 ## 附则
 
-- 推栈／推包脚本里的 md5 期望值一律写完整 32 位：s30push-0205 趟的 `ECHOE0-MISMATCH`、`M3S2G1-PREFIX-MISMATCH` 两处假警报即模板期望值截断（29 位）与 grep 多空格所致，文件本身全对；s28／s29 模板带同款 latent bug，下次推栈前先修模板。
+- 一切 md5 期望值写完整 32 位（s30push-0205 假警报教训：29 位截断＋grep 多空格）。
 - 本流程的变更经所有者或作战室写入本文件并提交 main，口头改动不算数。
