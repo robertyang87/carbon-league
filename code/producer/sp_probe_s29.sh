@@ -10,7 +10,7 @@
 # on the C1 line and is VOID -- do not run it. This version carries NO
 # encoded blocks: the producer is a separate plain-text file in the same
 # repo directory (code/producer/selfplay_gen.py, md5
-# b275e952da14d644e6fab41e4ce941c8), asserted below before running.
+# 95d2e29fbec8cfcebee57bf9bf0d25ed), asserted below before running.
 #
 # Run contract (C1):
 #   1. Fetch BOTH files from carbon-league main:
@@ -38,7 +38,7 @@ echo "WEIGHTS $WTS $(md5sum "$WTS" | awk '{print $1}')"
 if [ "$(md5sum "$WTS" | awk '{print $1}')" != "b6db08c9b076257c54817377bb93130d" ]; then echo "$MARK FAIL weights-md5-mismatch"; echo "$MARK END"; exit 1; fi
 if [ ! -d "$CODE/env_src/carbon_challenge-master/zerosum_env/envs/carbon" ]; then echo "$MARK FAIL env_src-missing (eval_v53 needs carbon.json)"; echo "$MARK END"; exit 1; fi
 # --- producer: plain-text file, md5-asserted. No encoded blocks anywhere. ---
-GEN_MD5=b275e952da14d644e6fab41e4ce941c8
+GEN_MD5=95d2e29fbec8cfcebee57bf9bf0d25ed
 GEN_DST="$CODE/selfplay_gen.py"
 if [ -f "$GEN_DST" ]; then
   echo "PRODUCER present $GEN_DST"
