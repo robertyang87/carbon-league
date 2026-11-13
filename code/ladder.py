@@ -17,7 +17,7 @@
   LADDER_COOKIES  会话 cookie 文件，默认 ~/.carbon_ladder_cookies（仓库外，不要提交）。
 证书：服务器是自签名证书，与旧脚本 curl -k 一致不校验。
 """
-import ast, gzip, json, os, ssl, sys, time, uuid, urllib.error, urllib.request
+import ast, gzip, http.client, json, os, ssl, sys, time, uuid, urllib.error, urllib.request
 
 BASE = os.environ.get("LADDER_BASE", "https://132.232.176.153").rstrip("/")
 HOST = os.environ.get("LADDER_HOST", "132.232.176.153" if "127.0.0.1" in BASE else "")
@@ -63,9 +63,56 @@ def _ensure_bridge():
     time.sleep(2)
 
 
+class AmbiguousRequestError(RuntimeError):
+    """A non-GET request whose outcome is UNKNOWN: the transport failed
+    after the request may have reached the server (F08). Blindly retrying
+    can double-apply it (duplicate submission / quota burn), so callers
+    must first check server state via GET (see _recover_post).
+    possibly_sent=False marks failures where the connection was provably
+    never established (e.g. the local bridge refused it), so one retry is
+    safe."""
+
+    def __init__(self, msg, possibly_sent=True):
+        super().__init__(msg)
+        self.possibly_sent = possibly_sent
+
+
+def _is_refused(e):
+    seen = set()
+    while e is not None and id(e) not in seen:
+        seen.add(id(e))
+        if isinstance(e, ConnectionRefusedError):
+            return True
+        e = getattr(e, "reason", None) or getattr(e, "__cause__", None)
+    return False
+
+
 def _open_retry(req, timeout):
-    """连接被拒 → 拉起本地桥；连接重置 / 断开 / 超时 → 退避重试（最多 6 次）。HTTP 错误不重试。"""
-    import http.client
+    """GET: idempotent -- connection refused starts the local bridge;
+    reset/disconnect/timeout retry with backoff (max 6 attempts). HTTP
+    errors never retry.
+    Non-GET: NEVER blind-retried (F08). Exactly one attempt; a transport
+    failure raises AmbiguousRequestError so the caller can verify server
+    state before any explicit recovery resend."""
+    method = req.get_method()
+    if method != "GET":
+        try:
+            return _opener.open(req, timeout=timeout)
+        except urllib.error.HTTPError:
+            raise  # definitive server answer: not ambiguous
+        except (urllib.error.URLError, ConnectionError, http.client.HTTPException,
+                TimeoutError, OSError) as e:
+            if _is_refused(e) and "127.0.0.1" in BASE:
+                _ensure_bridge()  # connection never established: nothing was sent
+                raise AmbiguousRequestError(
+                    f"{method} {req.full_url}: local bridge was down (started); "
+                    "request provably not sent, one retry is safe",
+                    possibly_sent=False) from e
+            raise AmbiguousRequestError(
+                f"{method} {req.full_url}: transport failed after the request "
+                f"may have been sent ({type(e).__name__}: {e}); outcome unknown, "
+                "do NOT blind-retry -- verify state via GET first",
+                possibly_sent=True) from e
     for attempt in range(6):
         try:
             return _opener.open(req, timeout=timeout)
@@ -79,6 +126,39 @@ def _open_retry(req, timeout):
                 _ensure_bridge()
             else:
                 time.sleep(2 * 2 ** attempt)
+
+
+def _recover_post(desc, do_post, check_applied):
+    """Run a non-idempotent POST under the F08 ambiguous-outcome protocol.
+
+    do_post() performs the request once and returns its parsed result.
+    check_applied() queries fresh server state via GET and returns True
+    (the first attempt landed), False (it provably did not), or None
+    (state cannot be determined). Returns do_post()'s result, or the
+    string "confirmed-applied" when a state check proves the first (or
+    the recovery) attempt landed. Raises AmbiguousRequestError when the
+    outcome stays unknown -- never loops, never blind-retries."""
+    try:
+        return do_post()
+    except AmbiguousRequestError as e:
+        if not e.possibly_sent:
+            return do_post()  # provably unsent: one safe retry
+        applied = check_applied()
+        if applied is True:
+            return "confirmed-applied"
+        if applied is None:
+            raise AmbiguousRequestError(
+                f"{desc}: 结果不确定 (state check failed) -- stopped; "
+                "verify manually before any resend", possibly_sent=True)
+        # Provably not applied: exactly ONE explicit recovery resend.
+        try:
+            return do_post()
+        except AmbiguousRequestError:
+            if check_applied() is True:
+                return "confirmed-applied"
+            raise AmbiguousRequestError(
+                f"{desc}: 结果不确定 (recovery resend outcome unconfirmed) -- "
+                "stopped; verify manually before any resend", possibly_sent=True)
 
 
 def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
@@ -109,8 +189,15 @@ def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
             data, status = e.read(), e.code
             _absorb(e.headers)
             break
-        except (ConnectionError, OSError) as e:
-            if method != "GET" or attempt == 3:
+        except AmbiguousRequestError:
+            raise
+        except (ConnectionError, http.client.HTTPException, OSError) as e:
+            if method != "GET":
+                raise AmbiguousRequestError(
+                    f"{method} {path}: response stream failed after send "
+                    f"({type(e).__name__}: {e}); outcome unknown -- verify "
+                    "state via GET before any resend", possibly_sent=True) from e
+            if attempt == 3:
                 raise
             time.sleep(5 * (attempt + 1))
     if raw:
@@ -143,7 +230,18 @@ def cmd_login(user):
         import getpass
         pw = getpass.getpass(f"{user} 的密码: ")
     session()
-    request("/api/login", "POST", {"username": user, "password": pw})
+
+    def _login_applied():
+        try:
+            return session().get("user") is not None
+        except Exception:
+            return None
+
+    r = _recover_post("login",
+                      lambda: request("/api/login", "POST", {"username": user, "password": pw}),
+                      _login_applied)
+    if r == "confirmed-applied":
+        print("登录请求曾断连，但状态核对确认会话已建立")
     cmd_whoami()
 
 
@@ -168,16 +266,32 @@ def cmd_submit(path, name, desc_path=None):
     if not s.get("user"):
         sys.exit("未登录：先 python3 ladder.py login <用户名>")
     print(f"提交 {path} ({len(src):,} B) 为「{name}」，今日剩余 {s.get('remaining')} 次")
-    b = uuid.uuid4().hex
-    parts = []
-    for k, v in (("name", name), ("description", desc)):
-        parts.append(f'--{b}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode())
-    parts.append(f'--{b}\r\nContent-Disposition: form-data; name="file"; filename="submission.py"\r\n'
-                 f'Content-Type: text/x-python; charset=utf-8\r\n\r\n'.encode() + src + b"\r\n")
-    parts.append(f"--{b}--\r\n".encode())
-    r = request("/api/submit", "POST", b"".join(parts),
-                {"Content-Type": f"multipart/form-data; boundary={b}"}, timeout=300)
-    print(json.dumps(r, ensure_ascii=False, indent=1)[:2000])
+
+    def _submit_once():
+        b = uuid.uuid4().hex
+        parts = []
+        for k, v in (("name", name), ("description", desc)):
+            parts.append(f'--{b}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode())
+        parts.append(f'--{b}\r\nContent-Disposition: form-data; name="file"; filename="submission.py"\r\n'
+                     f'Content-Type: text/x-python; charset=utf-8\r\n\r\n'.encode() + src + b"\r\n")
+        parts.append(f"--{b}--\r\n".encode())
+        return request("/api/submit", "POST", b"".join(parts),
+                       {"Content-Type": f"multipart/form-data; boundary={b}"}, timeout=300)
+
+    def _submit_applied():
+        try:
+            return any(x.get("name") == name
+                       for x in request("/api/mine").get("strategies", []))
+        except Exception:
+            return None
+
+    r = _recover_post(f"submit '{name}'", _submit_once, _submit_applied)
+    if r == "confirmed-applied":
+        print(f"提交请求曾断连，但状态核对确认「{name}」已在我的策略中（未重发）")
+        mine = {x["name"]: x for x in request("/api/mine").get("strategies", [])}
+        print(json.dumps(mine.get(name, {}), ensure_ascii=False, indent=1)[:2000])
+    else:
+        print(json.dumps(r, ensure_ascii=False, indent=1)[:2000])
     cmd_whoami()
 
 
@@ -191,7 +305,19 @@ def cmd_retire(sid, confirm=""):
     print(f"retire {s['name']} ({sid}): {s.get('games')} games, rating {round(s.get('rating', 0))}")
     if confirm != "yes":
         sys.exit("add 'yes' to really retire it")
-    print(json.dumps(request(f"/api/strategies/{sid}/delete", "POST", {}), ensure_ascii=False))
+    def _retire_applied():
+        try:
+            return sid not in {x["id"] for x in request("/api/mine").get("strategies", [])}
+        except Exception:
+            return None
+
+    r = _recover_post(f"retire {sid}",
+                      lambda: request(f"/api/strategies/{sid}/delete", "POST", {}),
+                      _retire_applied)
+    if r == "confirmed-applied":
+        print(f"下架请求曾断连，但状态核对确认 {sid} 已不在我的策略中（未重发）")
+    else:
+        print(json.dumps(r, ensure_ascii=False))
 
 
 def cmd_mine():
