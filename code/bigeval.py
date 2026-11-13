@@ -1,9 +1,27 @@
 """bigeval -- independent-sample evaluation: one game per seed (seat alternates by seed parity), since the
 two seats of a seed are exact mirrors in this harness.
-  python3 bigeval.py A.py B.py SEED0 N TAG     -> appends summary to ../data/bigeval.jsonl"""
-import json, os, statistics as st, sys, time
+  python3 bigeval.py A.py B.py SEED0 N TAG     -> appends summary to ../data/bigeval.jsonl
+EXAM_ARCHIVE_20261114: per-game archive records (live rows and the summary's
+games/games_full) carry the RAW margin, both raw scores and U computed from
+the raw margin, plus md5 identity of both policy files and of this harness.
+Rounding is display-only (summary statistics); it never enters a per-game
+record, so an archived exam can be re-derived exactly (wins and U)."""
+import hashlib, json, math, os, statistics as st, sys, time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
+def _md5_of(path):
+    try:
+        with open(path, "rb") as fh: return hashlib.md5(fh.read()).hexdigest()
+    except OSError: return None
+def _resolve(p):    # mirror eval_v53's loading: policy paths are relative to HERE
+    q = os.path.join(HERE, p)
+    return q if os.path.exists(q) else p
+def _u_of(margin):
+    # U = 0.5*W + 0.5*sigmoid(margin/1000), W = 1 / 0.5 / 0 for win/draw/loss
+    # from the RAW margin's sign (eval_v53 returns margin at the sim's native
+    # cent precision, so this is exact, not an approximation).
+    w = 1.0 if margin > 0 else (0.5 if margin == 0 else 0.0)
+    return 0.5 * w + 0.5 / (1.0 + math.exp(-margin / 1000.0))
 def _play(t):
     import eval_v53, traceback
     try: return eval_v53.play_game(t)
@@ -30,6 +48,14 @@ def main(a, b, s0, n, tag):
         print(json.dumps({"tag": tag, "ERROR": "EVO_SEEDS contains duplicate seeds; refusing non-independent exam sample"}), file=sys.stderr, flush=True)
         sys.exit(2)
     tasks = [(tag, a, b, s, s % 2) for s in seeds]
+    # EXAM_ARCHIVE_20261114: stamp the exam's identity on a start line
+    # (stderr), on every live row (ah/bh/hh) and on the summary record, so
+    # any archived line can be attributed to exact policy + harness bytes.
+    harness_md5 = _md5_of(os.path.abspath(__file__))
+    a_md5 = _md5_of(_resolve(a)); b_md5 = _md5_of(_resolve(b))
+    print(json.dumps({"tag": tag, "start": True, "harness_md5": harness_md5,
+                      "a": a, "a_md5": a_md5, "b": b, "b_md5": b_md5, "n": n}),
+          file=sys.stderr, flush=True)
     live = os.path.join(HERE, "..", "data", "bigeval_live"); os.makedirs(live, exist_ok=True)
     lf = open(os.path.join(live, tag + ".jsonl"), "a")
     rows = []
@@ -37,8 +63,11 @@ def main(a, b, s0, n, tag):
         futs = [ex.submit(_play, t) for t in tasks]
         for f in as_completed(futs):
             r = f.result(); rows.append(r)
-            g = {"seed": r.get("seed"), "side": r.get("policy_side"), "margin": round(r["margin"]) if "margin" in r else None,
-                 "err": r.get("error"), "t": time.strftime("%H:%M:%S"), "serr": r.get("a_errors", 0)}
+            g = {"seed": r.get("seed"), "side": r.get("policy_side"), "margin": r["margin"] if "margin" in r else None,
+                 "err": r.get("error"), "t": time.strftime("%H:%M:%S"), "serr": r.get("a_errors", 0),
+                 "ah": a_md5, "bh": b_md5, "hh": harness_md5}
+            if "margin" in r:
+                g.update(sa=r.get("my_score"), sb=r.get("opp_score"), win=r.get("win"), u=_u_of(r["margin"]))
             if "ledger_pol" in r:
                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
@@ -86,7 +115,8 @@ def main(a, b, s0, n, tag):
         bad = {"tag": tag, "FAIL": True, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m),
                "search_error_games": search_error_games, "a_errors_total": a_errors_total,
                "root_errors_total": root_errors_total, "first_error": first_error,
-               "first_search_error_seed": first_search_error_seed}
+               "first_search_error_seed": first_search_error_seed,
+               "a_md5": a_md5, "b_md5": b_md5, "harness_md5": harness_md5}
         open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(bad) + "\n")
         print(json.dumps(bad), file=sys.stderr, flush=True)
         sys.exit(2)
@@ -100,11 +130,13 @@ def main(a, b, s0, n, tag):
            "t": time.strftime("%H:%M"),
            "search_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched")),
            "changed0_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched") and not r["a_stats"].get("changed")),
-           "games": [[r.get("seed"), r.get("policy_side"), round(r["margin"])] for r in rows if "margin" in r]}
+           "games": [[r.get("seed"), r.get("policy_side"), r["margin"]] for r in rows if "margin" in r],
+           "games_full": [[r.get("seed"), r.get("policy_side"), r["margin"], r.get("my_score"), r.get("opp_score"), _u_of(r["margin"])] for r in rows if "margin" in r],
+           "a_md5": a_md5, "b_md5": b_md5, "harness_md5": harness_md5}
     rec.update({"search_error_games": search_error_games, "a_errors_total": a_errors_total,
                 "root_errors_total": root_errors_total, "first_error": first_error,
                 "first_search_error_seed": first_search_error_seed, "FAIL": failed})
-    open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k != "games"}), flush=True)
+    open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k not in ("games", "games_full")}), flush=True)
     # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
     if internal_failed:      # R05: any exception inside the search / rule layers means the exam is not testing the intended code: fail it (the saved record above already carries the FAIL marker)
         print(json.dumps({"tag": tag, "FAIL_SEARCH_ERRORS": search_error_games, "a_errors_total": a_errors_total, "of": len(rows)}), file=sys.stderr, flush=True)
