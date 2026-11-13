@@ -30,7 +30,16 @@ cnet2_build.register_derived with the pinned base passed as expected_base; a loa
 identity self-check must then pass, else the tool exits non-zero. (The previous code np.save'd straight
 into the dataset root with no registration: on a sealed dataset it exited 0 while cnet2_train's strict
 loader refused the very weights it had just written.) Only a dataset with NO generation pointer at all
-keeps the legacy path: root reads, root write, weights left UNREGISTERED with a loud warning."""
+keeps the legacy path: root reads, root write, weights left UNREGISTERED with a loud warning.
+R2 (Codex re-review 20261114): a WEIGHTED build owns w itself -- the generation manifest declares
+"w" as a generation field, baked from the build's own per-side weights. The first P2-3 fix still
+registered AWR's w as a derived file on such a dataset and its self-check passed, but the loader
+then refused the dataset outright ("w.npy is BOTH a field of generation ... and a declared derived
+file"): derived registration over a generation-owned field is an ownership conflict, not a
+registration variant. AWR now refuses BEFORE writing any byte when a file it would register
+(w / uw) is already a field of the pinned generation, and the post-registration self-check carries
+the same BOTH condition the loader applies, so this tool can never exit 0 over a conflict its own
+consumer rejects."""
 import gzip
 import hashlib
 import json
@@ -125,13 +134,17 @@ def _sha256_file(path):
     return h.hexdigest()
 
 
-def _derived_layer_problems(ds_abs, base_gen, gen_total):
+def _derived_layer_problems(ds_abs, base_gen, gen_total, gen_fields=()):
     """Post-registration self-check (P2-3): the loader-equivalent identity
     gate -- mirrors, for the two weight files this tool just registered,
     the checks cnet2_train._validate_derived_layer applies before any
     weight enters a loss (sidecar present and mirrored into the flat
     meta; per file: field, base_generation == the pinned generation,
     rows == generation total, dtype/shape, sha256 of the file bytes).
+    R2: the loader's ownership condition is mirrored too -- a file that
+    is BOTH a field of the generation and a declared derived file is a
+    refusal there, so it is a problem here (main() refuses such datasets
+    before writing; this is the same check on the post-write state).
     Returns a list of problems; empty means the training loader accepts
     the derived layer as verified."""
     probs = []
@@ -153,6 +166,11 @@ def _derived_layer_problems(ds_abs, base_gen, gen_total):
         e = entries.get(name)
         if e is None:
             probs.append(f"{name} is not declared in the derived.json sidecar")
+            continue
+        if name[:-4] in gen_fields:
+            probs.append(f"{name} is BOTH a field of generation {base_gen} and a "
+                         f"declared derived file (ownership conflict -- the loader "
+                         f"refuses this dataset)")
             continue
         arr = np.load(os.path.join(ds_abs, name), mmap_mode="r")
         if e.get("field") != name[:-4]:
@@ -199,12 +217,30 @@ def main():
                      f"refusing to derive weights (no legacy fallback while a "
                      f"pointer is in force)")
         base_gen = _man["generation"]; gen_total = int(_man["total"])
+        gen_fields = set(_man.get("fields", {}))
         feat_dir = gen_dir          # derivation inputs: certified generation ONLY
+        # R2 ownership gate (Codex re-review 20261114): a weighted build
+        # OWNS w -- the manifest declares it a generation field, and the
+        # loader refuses any dataset whose derived sidecar also claims
+        # it ("BOTH a field of generation ... and a declared derived
+        # file"). Registering AWR's weights over a generation-owned
+        # field is an ownership conflict, not a registration variant:
+        # refuse here, BEFORE any byte is written, naming the conflict.
+        # The generation's own weights stay authoritative; deriving AWR
+        # weights requires a dataset whose generation does not own them.
+        _owned = [f"{k}.npy" for k in ("w", "uw") if k in gen_fields]
+        if _owned:
+            sys.exit("awr_weights: " + "; ".join(
+                f"{n} is owned by generation {base_gen} as a field; "
+                f"AWR derived registration refused" for n in _owned) +
+                f" (dataset {ds_abs}: the generation's own weights are "
+                f"authoritative -- rebuild without the weighted field "
+                f"before deriving AWR weights)")
     else:
         # Pre-generation legacy dataset: no pointer exists, the flat root
         # is the only source there is (registration stays impossible and
         # the consumer will flag the weights unverified, as before).
-        gen_dir = None; base_gen = None; gen_total = None; feat_dir = ds_abs
+        gen_dir = None; base_gen = None; gen_total = None; gen_fields = set(); feat_dir = ds_abs
     games = [g for c in corpora for g in rescore(c)]
     nmir = sum(g["mirror"] for g in games)
     A = np.array([g["adv2"] for g in games if not g["mirror"]])
@@ -305,7 +341,7 @@ def main():
             sys.exit(f"awr_weights: generation pointer moved during registration "
                      f"({base_gen} -> {_now}); the derived registration was "
                      f"rolled back -- rerun awr_weights")
-        _probs = _derived_layer_problems(ds_abs, base_gen, gen_total)
+        _probs = _derived_layer_problems(ds_abs, base_gen, gen_total, gen_fields)
         if _probs:
             _rollback_sidecar()
             sys.exit(f"awr_weights: derived layer failed the loader-equivalent "
