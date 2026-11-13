@@ -6,12 +6,15 @@ env: BC_DEVICE (mps), BC_BS (512), BC_LR (1e-3), BC_INIT (npz to start from),
 Augmentation: the 4 symmetries of the canonical frame that keep the base sets.
 """
 
+import hashlib
 import json
+import math
 import os
 import queue
 import sys
 import threading
 import time
+import traceback
 
 import numpy as np
 import torch
@@ -81,6 +84,52 @@ def _check_finite_weights(D, dirn):
             summ["prod_mean"] = psum / max(pcnt, 1)
             summ["prod_n"] = pcnt
     return summ
+
+
+def _scan_finite_array(a):
+    """F1 chunked finite scan: None when every entry of the floating
+    array `a` is finite, else (bad_count, first_flat_index). Integer and
+    bool arrays are always finite. Blocks are widened to float64 so a
+    float16/float32 value can neither overflow nor underflow the check."""
+    a = np.asarray(a)
+    if not np.issubdtype(a.dtype, np.floating):
+        return None
+    flat = a.reshape(-1)
+    bad = 0; first = -1
+    for a0 in range(0, flat.size, 1 << 22):
+        blk = flat[a0:a0 + (1 << 22)].astype(np.float64)
+        fin = np.isfinite(blk)
+        if not fin.all():
+            bad += int((~fin).sum())
+            if first < 0:
+                first = a0 + int(np.argmax(~fin))
+    return (bad, first) if bad else None
+
+
+def _check_finite_arrays(mapping, source):
+    """F1 hard gate: refuse (SystemExit naming the array) when any
+    floating array in `mapping` carries a NaN/Inf. Guards the BC_INIT
+    backbone at load (F1a) and every export payload before it is
+    written (F1c) -- a poisoned run must fail loudly at the gate, not
+    ship weights that only misbehave downstream."""
+    for k, a in mapping.items():
+        hit = _scan_finite_array(a)
+        if hit is not None:
+            bad, first = hit
+            raise SystemExit(f"F1: non-finite entries in {source} array {k!r}: "
+                             f"{bad} NaN/Inf (first at flat index {first}); refusing")
+
+
+def _fuse_finite(loss, gnorm, where):
+    """F1(b) training fuse, checked EVERY step in both training loops:
+    a non-finite loss or gradient norm aborts the run (SystemExit ->
+    nonzero exit) BEFORE opt.step() and before any export of the epoch,
+    so a poisoned step is never stepped on and never saved."""
+    lv = float(loss.detach()) if torch.is_tensor(loss) else float(loss)
+    gv = float(gnorm.detach()) if torch.is_tensor(gnorm) else float(gnorm)
+    if not (math.isfinite(lv) and math.isfinite(gv)):
+        raise SystemExit(f"F1: non-finite training signal at {where}: loss={lv!r} "
+                         f"grad_norm={gv!r}; aborting without stepping or exporting")
 
 
 def old_param_names_checked(old_sd, model, source="checkpoint"):
@@ -158,6 +207,33 @@ def _sha256_path(path):
         for blk in iter(lambda: fh.read(1 << 22), b""):
             h.update(blk)
     return h.hexdigest()
+
+
+_BC_ENV_DEFAULTS = {"BC_AUX_W": "0", "BC_SELF_KL": "0", "BC_EXIT_W": "0",
+                    "BC_ONLY_TEACH": None, "BC_TEACH_ROWS": None,
+                    "BC_LR": "1e-3", "BC_BS": "512", "BC_MAXSTEPS": "0",
+                    "BC_AMP": "bf16", "BC_SEQGRU": "0", "BC_SUBSET": "0"}
+_BC_ENV_REC = None
+
+
+def _bc_env_record():
+    """F7: the BC_* switches steer training from the environment and
+    used to leave no trace in any artifact -- two runs differing only in
+    env were indistinguishable from their products. Record the EFFECTIVE
+    value of the behaviour switches (env value, or the code default when
+    unset), every other BC_* variable actually present, and for BC_INIT
+    the file's sha256 (a bare path string does not identify weights)."""
+    rec = {k: os.environ.get(k, d) for k, d in _BC_ENV_DEFAULTS.items()}
+    init = os.environ.get("BC_INIT")
+    if init:
+        rec["BC_INIT"] = {"path": init,
+                          "sha256": _sha256_path(init) if os.path.exists(init) else None}
+    else:
+        rec["BC_INIT"] = None
+    for k in sorted(os.environ):
+        if k.startswith("BC_") and k not in rec:
+            rec[k] = os.environ[k]
+    return rec
 
 
 def _validate_derived_layer(D, dirn, meta, sources=None, gen_ctx=None):
@@ -362,6 +438,134 @@ def _resolve_load_source(dirn):
     return dirn, None
 
 
+AUX_SIDECAR = "k0_aux.json"
+AUX_FORMAT = "cnet2-k0-aux/1"
+
+
+def _load_aux_bound(dirn, src, man, meta, mm):
+    """F2 (Codex round 3, K0-blocking): BC_AUX_W's six label arrays were
+    mmap'd straight from the dataset root by filename -- no identity
+    check at all, so a stale bundle written for an older build could be
+    paired with newer samples and train silently (and its future
+    windows could straddle padding past the real terminal step). The
+    only sanctioned source is now the sealed bundle produced by
+    k0_aux_labels.py: sidecar k0_aux.json (format "cnet2-k0-aux/1" --
+    the same contract k0_train.check_aux_sidecar validates) in the
+    dataset root, verified against the generation load() pinned:
+      * the dataset must resolve to a certified generation (a legacy
+        flat dataset has no generation to bind to -> refuse);
+      * sidecar present and readable, format exact;
+      * base_generation == the pinned generation (labels written for
+        another generation refuse even when the row count matches);
+      * sidecar rows == manifest total == rows in memory;
+      * the row_key fingerprint recomputed from the pinned generation's
+        gid/step files matches (labels bound to this exact row order);
+      * lineage == manifest cfg_fp;
+      * per-game lineage (game set, file, replay sha256) matches the
+        certified meta;
+      * all six label files exist, are declared in the sidecar with a
+        sha256 equal to the bytes on disk, and carry exactly the
+        dataset row count (plus sidecar shape/dtype when declared).
+    No sidecar / no generation -> BC_AUX_W > 0 refuses; there is NO
+    bare-file fallback. Returns ({AUXK: array}, summary-for-meta)."""
+    if man is None:
+        raise SystemExit(
+            f"BC_AUX_W: dataset {dirn!r} has no certified generation (legacy flat view); "
+            f"aux labels cannot be bound to a generation -- refusing to train. "
+            f"Seal a generation and label it with k0_aux_labels.py (sidecar {AUX_SIDECAR}, "
+            f"format {AUX_FORMAT})")
+    gen_id = man.get("generation")
+    n_rows = int(man["total"])
+    sp = os.path.join(dirn, AUX_SIDECAR)
+    if not os.path.exists(sp):
+        raise SystemExit(
+            f"BC_AUX_W: aux sidecar missing: {sp}; refusing to train. Bare aux_*.npy files "
+            f"in the dataset root are not a binding source -- produce the sealed bundle "
+            f"with k0_aux_labels.py (format {AUX_FORMAT})")
+    try:
+        sc = json.load(open(sp))
+    except Exception as e:
+        raise SystemExit(f"BC_AUX_W: aux sidecar unreadable: {sp}: {e}; refusing to train")
+    if sc.get("format") != AUX_FORMAT:
+        raise SystemExit(f"BC_AUX_W: aux sidecar format {sc.get('format')!r} != "
+                         f"{AUX_FORMAT!r}; refusing to train")
+    if sc.get("base_generation") != gen_id:
+        raise SystemExit(
+            f"BC_AUX_W: aux labels are bound to generation {sc.get('base_generation')!r} "
+            f"but the dataset pinned generation {gen_id!r} (old labels on a new "
+            f"generation); refusing to train")
+    if int(sc.get("rows", -1)) != n_rows:
+        raise SystemExit(f"BC_AUX_W: aux sidecar rows {sc.get('rows')} != generation "
+                         f"total {n_rows}; refusing to train")
+    fields = man.get("fields", {})
+    parts = []
+    for _nm in ("gid", "step"):
+        _info = fields.get(_nm)
+        if _info is None:
+            raise SystemExit(f"BC_AUX_W: generation manifest lacks field {_nm!r}; cannot "
+                             f"verify the aux row-order binding; refusing to train")
+        parts.append(_sha256_path(os.path.join(src, _info["file"])))
+    _rk = hashlib.sha256("|".join(parts).encode()).hexdigest()
+    if (sc.get("row_key") or {}).get("sha256") != _rk:
+        raise SystemExit("BC_AUX_W: aux row_key fingerprint mismatch -- the labels were "
+                         "computed for a different row order (gid/step) than the pinned "
+                         "generation; refusing to train")
+    if sc.get("lineage") != man.get("cfg_fp"):
+        raise SystemExit(f"BC_AUX_W: aux lineage {sc.get('lineage')!r} != manifest cfg_fp "
+                         f"{man.get('cfg_fp')!r}; refusing to train")
+    meta_games = {g["gi"]: g for g in meta["games"]}
+    lin = {e.get("gi"): e for e in sc.get("games") or []}
+    if set(lin) != set(meta_games):
+        raise SystemExit(f"BC_AUX_W: aux lineage game set {sorted(lin)} != generation "
+                         f"meta games {sorted(meta_games)}; refusing to train")
+    for gi, ent in sorted(lin.items()):
+        gm = meta_games[gi]
+        if ent.get("file") != gm["file"]:
+            raise SystemExit(f"BC_AUX_W: game {gi}: lineage file {ent.get('file')!r} != "
+                             f"meta file {gm['file']!r}; refusing to train")
+        want = ent.get("replay_sha256")
+        if want is not None:
+            if not os.path.exists(gm["file"]):
+                raise SystemExit(f"BC_AUX_W: game {gi}: replay file missing: "
+                                 f"{gm['file']}; refusing to train")
+            if _sha256_path(gm["file"]) != want:
+                raise SystemExit(f"BC_AUX_W: game {gi}: replay hash mismatch (replay "
+                                 f"replaced since labelling); refusing to train")
+        elif gm["file"].endswith(".json.gz"):
+            raise SystemExit(f"BC_AUX_W: game {gi}: sidecar lineage carries no "
+                             f"replay_sha256 for {gm['file']!r}; labels are not bound "
+                             f"to the replay bytes; refusing to train")
+    out = {}
+    files_decl = sc.get("files") or {}
+    for k in AUXK:
+        name = k + ".npy"
+        p = os.path.join(dirn, name)
+        ent = files_decl.get(name)
+        if not os.path.exists(p):
+            raise SystemExit(f"BC_AUX_W: aux label file missing: {p}; refusing to train")
+        if not isinstance(ent, dict) or ent.get("sha256") is None:
+            raise SystemExit(f"BC_AUX_W: aux sidecar declares no sha256 for {name}; "
+                             f"refusing to train")
+        if _sha256_path(p) != ent["sha256"]:
+            raise SystemExit(f"BC_AUX_W: aux label file {name} sha256 mismatch vs sidecar "
+                             f"(contents changed since labelling); refusing to train")
+        arr = np.load(p, mmap_mode=mm)
+        if int(arr.shape[0]) != n_rows:
+            raise SystemExit(f"BC_AUX_W: aux label file {name} has {int(arr.shape[0])} "
+                             f"rows != dataset rows {n_rows}; refusing to train")
+        if ent.get("shape") is not None and                 [int(x) for x in arr.shape] != [int(x) for x in ent["shape"]]:
+            raise SystemExit(f"BC_AUX_W: aux label file {name} shape {list(arr.shape)} "
+                             f"!= sidecar {ent['shape']}; refusing to train")
+        if ent.get("dtype") is not None and str(arr.dtype) != ent["dtype"]:
+            raise SystemExit(f"BC_AUX_W: aux label file {name} dtype {arr.dtype} != "
+                             f"sidecar {ent['dtype']}; refusing to train")
+        out[k] = arr
+    summ = {"format": AUX_FORMAT, "generation": gen_id, "rows": n_rows,
+            "files": sorted(k + ".npy" for k in AUXK)}
+    print(json.dumps({"aux_binding": summ, "data": dirn}), flush=True)
+    return out, summ
+
+
 def load(dirn):
     mm = None if os.environ.get("BC_RAM") == "1" else "r"     # BC_RAM=1: read the whole dataset into memory
     src, man = _resolve_load_source(dirn)
@@ -374,6 +578,21 @@ def load(dirn):
                 f"have the manifest row count {man['total']}; refusing to train")
         print(json.dumps({"load_source": "generation", "generation": man.get("generation"),
                           "rows": int(man["total"]), "data": dirn}), flush=True)
+    # F1(a): feature finite gate. The float FEATURE fields are scanned
+    # before anything trains on them: one Inf/NaN in scal/mf/uf silently
+    # poisons every batch it enters. Label fields are NOT scanned here --
+    # the label contract (H) gives NaN a meaning (unusable) in the raw
+    # label columns, and the float label "value" keeps its own semantics;
+    # the step fuse (F1b) still aborts the run if a poisoned label ever
+    # drives a non-finite loss. w/uw keep their dedicated F06 gate below.
+    for _k in FIELDS:
+        if _k in ("value", "w", "uw"):
+            continue
+        _hit = _scan_finite_array(D[_k])
+        if _hit is not None:
+            raise SystemExit(f"F1: non-finite feature entries in dataset {dirn!r} field "
+                             f"{_k!r}: {_hit[0]} NaN/Inf (first at flat index {_hit[1]}); "
+                             f"refusing to train")
     # Weight fields (owner re-review, P1-A): a field the generation
     # manifest declares is generation property and is read from the
     # certified generation directory ONLY -- _resolve_load_source has
@@ -406,11 +625,12 @@ def load(dirn):
     wgate = _check_finite_weights(D, dirn)
     if wgate:
         print(json.dumps({"weight_gate": wgate, "data": dirn}), flush=True)
-    if float(os.environ.get("BC_AUX_W", "0")) > 0:                      # auxiliary targets written by aux_labels.py
-        for k in AUXK:
-            D[k] = np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm)
     meta = json.load(open(os.path.join(src, "meta.json")))
     meta["dataset_source"] = src
+    if float(os.environ.get("BC_AUX_W", "0")) > 0:                      # auxiliary targets: sealed bound bundle only (F2)
+        _aux, _aux_sum = _load_aux_bound(dirn, src, man, meta, mm)
+        D.update(_aux)
+        meta["aux_binding"] = _aux_sum
     if man is None:
         # Legacy flat view (no generation pointer): refuse a torn mirror
         # instead of training on it. Fields must all agree on row count,
@@ -507,26 +727,65 @@ def loader(D, idx, bs, aug, shuffle=True, nthreads=None):
     lock = threading.Lock()
     it = iter(range(len(chunks)))
     res = {}
+    # F6: the daemon workers used to die silently on any fetch error --
+    # the consumer then blocked on q.get() forever and the run hung
+    # with no diagnosis -- and a consumer that stopped early (the spe
+    # break in the training loop) left them parked on a full queue
+    # until process exit, accumulating across calls. Workers now
+    # record errors into `errors` and set `stop`; the consumer polls
+    # with a timeout and raises the worker's error itself; the
+    # generator's finally sets `stop` and joins every worker on BOTH
+    # the normal and the early-exit path (daemon=True remains only as
+    # a backstop, never as the reclaim mechanism).
+    stop = threading.Event()
+    errors = []
 
     def work():
-        while True:
+        while not stop.is_set():
             with lock:
                 try:
                     j = next(it)
                 except StopIteration:
                     return
-            res_b = fetch(D, chunks[j])
-            q.put((j, res_b))
-    ths = [threading.Thread(target=work, daemon=True) for _ in range(nthreads)]
+            try:
+                res_b = fetch(D, chunks[j])
+            except BaseException as e:  # noqa: BLE001 -- re-raised by the consumer below
+                errors.append((j, e, traceback.format_exc()))
+                stop.set()
+                return
+            while not stop.is_set():
+                try:
+                    q.put((j, res_b), timeout=0.25)
+                    break
+                except queue.Full:
+                    continue
+
+    ths = [threading.Thread(target=work, daemon=True, name=f"bc-loader-{t}")
+           for t in range(nthreads)]
     for th in ths:
         th.start()
     nxt = 0
-    while nxt < len(chunks):
-        while nxt not in res:
-            j, b = q.get()
-            res[j] = b
-        yield to_dev(res.pop(nxt), aug)
-        nxt += 1
+    try:
+        while nxt < len(chunks):
+            while nxt not in res:
+                if errors:
+                    j, e, tb = errors[0]
+                    raise RuntimeError(f"loader worker failed fetching chunk {j}: {e!r}\n{tb}")
+                try:
+                    j, b = q.get(timeout=0.25)
+                except queue.Empty:
+                    if not any(th.is_alive() for th in ths):
+                        raise RuntimeError(
+                            f"loader: all {nthreads} workers exited but chunk {nxt} of "
+                            f"{len(chunks)} was never delivered and no error was reported")
+                    continue
+                res[j] = b
+            yield to_dev(res.pop(nxt), aug)
+            nxt += 1
+    finally:
+        stop.set()
+        for th in ths:
+            th.join(timeout=10)
 
 
 AMP = os.environ.get("BC_AMP", "bf16")
@@ -569,6 +828,11 @@ def evaluate(net, D, idx, bs=1024):
     ok = np.zeros(3); n = np.zeros(3); lsum = 0.0; ln = 0
     for b in loader(D, idx, bs, aug=False, shuffle=False):
         lpi, lv, la, lg = losses(net, b)
+        if not bool(torch.isfinite(lg).all()):
+            raise SystemExit("F1: evaluate: non-finite logits from the network; the val "
+                             "metrics would be counted from garbage -- refusing to "
+                             "report them (check the weights/features feeding this "
+                             "evaluation)")
         pred = lg.argmax(-1)
         y = b["y"]
         kind = b["tok_kind"][:, :F.OWN]
@@ -576,6 +840,9 @@ def evaluate(net, D, idx, bs=1024):
             m = (y >= 0) & (kind == k)
             ok[k] += ((pred == y) & m).sum().item(); n[k] += m.sum().item()
         lsum += lpi.item() * len(y); ln += len(y)
+    if not math.isfinite(lsum):
+        raise SystemExit("F1: evaluate: accumulated val loss is non-finite; refusing "
+                         "to report metrics")
     net.train()
     r = {nm: round(ok[k] / max(n[k], 1), 4) for k, nm in enumerate(("collector", "planter", "base"))}
     r["all"] = round(ok.sum() / max(n.sum(), 1), 4)
@@ -716,7 +983,8 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
             b, tok, pre = light(perm[i * bs:(i + 1) * bs])
             lpi, _ = batch_loss(b, tok, pre)
             opt.zero_grad(set_to_none=True); lpi.backward()
-            torch.nn.utils.clip_grad_norm_([p_ for p_ in net.parameters() if p_.requires_grad], float(os.environ.get("BC_CLIP", "2.0")))
+            _gn = torch.nn.utils.clip_grad_norm_([p_ for p_ in net.parameters() if p_.requires_grad], float(os.environ.get("BC_CLIP", "2.0")))
+            _fuse_finite(lpi, _gn, f"train_cached step {i}")
             opt.step(); sched.step()
             if i % 50 == 0:
                 acc += lpi.item(); nb += 1
@@ -730,11 +998,23 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
 
 def export(net, path, meta):
     sd = {k: v.detach().cpu().float().numpy() for k, v in net.state_dict().items()}
+    # F1(c): no export may carry a non-finite array -- a poisoned run
+    # must fail HERE, loudly, instead of writing weights that only fail
+    # (or worse, silently pass) downstream.
+    _check_finite_arrays(sd, f"export {path!r}")
+    # F7: every product records the effective BC_* environment it was
+    # trained under, so runs that differ only in env are separable from
+    # their artifacts alone.
+    meta = dict(meta)
+    meta["bc_env"] = _BC_ENV_REC if _BC_ENV_REC is not None else _bc_env_record()
     np.savez(path, **sd, meta=np.array(json.dumps(meta)))
 
 
 def main(data, out, epochs, cfg):
     torch.manual_seed(0); np.random.seed(0)
+    global _BC_ENV_REC
+    _BC_ENV_REC = _bc_env_record()          # F7: effective env, printed and exported
+    print(json.dumps({"bc_env": _BC_ENV_REC}), flush=True)
     D, is_val, meta = load(data)
     tr = np.nonzero(~is_val)[0]; va = np.nonzero(is_val)[0]
     sub = int(os.environ.get("BC_SUBSET", "0"))          # sanity runs: random subset of train / val
@@ -746,12 +1026,18 @@ def main(data, out, epochs, cfg):
     init = os.environ.get("BC_INIT")
     if init:
         w = np.load(init)
+        # F1(a): the init backbone passes a full-tensor finite gate
+        # BEFORE migration -- one NaN array in the npz would otherwise
+        # be migrated in silently and poison every step (and every
+        # export) downstream.
+        _init_sd = {k: w[k] for k in w.files if k != "meta"}
+        _check_finite_arrays(_init_sd, f"BC_INIT {init!r}")
         # Stage 0 new heads (utility/wdl/margin) may be absent in old weights, like tattn.*:
         # load through the shared migration path (F01, cnet2_model.migrate_state_dict) --
         # only the new-head keys and new trunk-attention layers (cfg TA, identity at init)
         # may be absent; anything else is a hard error, same as the PPO/resume entry.
         try:
-            mig_ = migrate_state_dict(net, {k: torch.from_numpy(w[k]) for k in w.files if k != "meta"},
+            mig_ = migrate_state_dict(net, {k: torch.from_numpy(a) for k, a in _init_sd.items()},
                                       allow_missing_prefixes=("tattn.",), source="BC_INIT")
         except RuntimeError as e:
             raise SystemExit(str(e))
@@ -893,6 +1179,9 @@ def main(data, out, epochs, cfg):
         net.eval(); c_ok = c_n = k_ok = k_n = 0; ok = np.zeros(3); nn_ = np.zeros(3); ax = np.zeros(3); an = 0
         for b in loader(D, va, 1024, aug=False, shuffle=False):
             _, _, _, _, lg, r0, chg, v_ = exit_terms(net, b)
+            if not bool(torch.isfinite(lg).all()):
+                raise SystemExit("F1: evaluate_exit: non-finite logits from the network; "
+                                 "refusing to report metrics counted from garbage")
             if heads is not None:
                 ax += [x.item() for x in last_aux["t"]]; an += 1
             pred = lg.argmax(-1); y = b["y"]; kind = b["tok_kind"][:, :F.OWN]
@@ -934,7 +1223,8 @@ def main(data, out, epochs, cfg):
                     loss = loss + car_kl * klc
                     lv = klc                                          # logged in the "v" column
             opt.zero_grad(set_to_none=True); loss.backward()
-            torch.nn.utils.clip_grad_norm_(net.parameters(), float(os.environ.get("BC_CLIP", "2.0")))
+            _gn = torch.nn.utils.clip_grad_norm_(net.parameters(), float(os.environ.get("BC_CLIP", "2.0")))
+            _fuse_finite(loss, _gn, f"main loop ep {ep} step {i}")
             opt.step(); sched.step()
             if heads is not None:
                 opt_h.step()
@@ -950,7 +1240,9 @@ def main(data, out, epochs, cfg):
         print(json.dumps(rec), flush=True); log.write(json.dumps(rec) + "\n"); log.flush()
         export(net, out.replace(".npz", "_last.npz"), {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
         if heads is not None:
-            np.savez(out.replace(".npz", "_auxheads.npz"), **{k: v.detach().cpu().numpy() for k, v in heads.state_dict().items()})
+            _hsd = {k: v.detach().cpu().numpy() for k, v in heads.state_dict().items()}
+            _check_finite_arrays(_hsd, f"export {out.replace('.npz', '_auxheads.npz')!r}")
+            np.savez(out.replace(".npz", "_auxheads.npz"), **_hsd)
         if os.environ.get("BC_SAVE_EPOCHS") == "1":       # keep every epoch for the online probes to choose from
             export(net, out.replace(".npz", f"_ep{ep}.npz"), {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
         if r["all"] > best:
