@@ -649,3 +649,31 @@ utility.weight/bias 两键＝183 键），四条件：键集可验、resume
 不单独开轮。届时验收条件（策略组）：附 resume 路径用例
 （init 缺头＋state 有头→放行；两者皆缺→仍拒绝）、复跑
 test_ppo_u_mode 全套、更新 md5 备案、全队随该轮一并刷盘。
+
+### gen-1 重造尺寸单（2026-11-13 23:20，策略组定，DGX 执行）
+
+前置已闭环：DGX 刷盘（克隆 HEAD e20313d0、代码集 a4dd8329、
+8 件 md5 全合、py_compile 8/8）；main 版 build a3f16063 对
+gen1_shard0 真实语料回测 **REFUSED（mirror share 0.995，与函数级
+复测逐字一致）**，零落盘、ds_gen1 本体未动；DGX 冻结两闸已存档
+（frozen-gates-archive-20261113/，含 MANIFEST、不入仓），对账
+关闭。§16 解冻扳机已触发，重造尺寸定如下：
+
+- **局数 400**，分 2 shard×200，shard0 先行交付（终局验证可先
+  在 shard0 上开跑，不等全量）。旧 119,600 分母作废，新口径：
+  约 23.9 万位（598/局）、其中 step≥200 终局位约 8 万（200/局）。
+- **权重/双座**：cnet2_m3s2r1_heads_v2.npz（md5 06a03d9c），
+  双座同权重、双座名 m3s2r1（如实申报单策略自博；多样性靠
+  开局采样，不靠换权重）。
+- **对局配置**：生产 CONF——GUARD=True、GUARD_NARROW=True、
+  GUARD_CASH=40、TEACHER=2、TEACHER_LATE=2（Echo3 生成口径）。
+- **多样性**：--open-t 1.0、--open-steps 50（每局派生开局种子
+  为新 producer 原生行为）；**禁用 --allow-mirror**。
+- **终局口径**：Stage C 进料以 step≥200 位先行；语料须带
+  step＋seat 索引与终局结果（价值监督覆盖全部有效结果样本，
+  按 gen-1 正式表述），diversity provenance 块随产出（新
+  producer 原生）。
+- **验收回执**（DGX 每 shard 一份）：局数/位数/终局位数、
+  建集 meta.json 的 mirror_gate share（须 <0.5、预期≈0，
+  且建集不得带 CNET2_ALLOW_MIRROR）、U 标签 distinct 数与
+  均值（须非退化）、producer identity 的 diversity 块齐全。
