@@ -382,16 +382,18 @@ def _q_scene(task):
     # distillation actually trains towards), and under q**tau renormalised
     # when generation-time temperature tau is in play.
     soft = float(q @ Q - Q[0])
-    tau = cfg.get("behavior_temp", 1.0)
-    if tau != 1.0:
+
+    def _tempered_gain(tau):
+        if tau == 1.0:
+            return soft
         qt = np.power(np.maximum(q, 1e-12), tau)
         qt = qt / qt.sum()
-        soft_t = float(qt @ Q - Q[0])
-    else:
-        soft_t = soft
+        return float(qt @ Q - Q[0])
     return {"game": spec["game"], "step": spec["step"], "me": spec["me"],
             "gain": gain, "improved": bool(best != 0 and gain > 0),
-            "soft_gain": soft, "soft_gain_behavior": soft_t,
+            "soft_gain": soft,
+            "soft_gain_behavior": _tempered_gain(cfg.get("behavior_temp", 1.0)),
+            "soft_gain_train": _tempered_gain(cfg.get("train_temp", 1.0)),
             "entropy": float(r["entropy"]), "agree": bool(r["agree_greedy"]),
             "best_arm": [int(v) for v in r["arms"][best]],
             "wall_ms": r["wall_ms"], "guard": r["guard"]}
@@ -419,7 +421,10 @@ def _anchor_task(task):
                         K=cfg["K"], M=cfg["M"], H=cfg["H"],
                         seed_base=cfg["seed_teacher"] + spec["step"])
     q = np.asarray(r["q"], dtype=np.float64)
-    tau = cfg.get("behavior_temp", 1.0)
+    # R23: the anchor's soft arm weights follow the DECLARED TRAINING target
+    # distribution (q ** train_temp normalised), not a generation-time
+    # behaviour temperature; the verdict certifies exactly that target.
+    tau = cfg.get("train_temp", 1.0)
     if tau != 1.0:
         bw = np.power(np.maximum(q, 1e-12), tau)
         bw = bw / bw.sum()
@@ -479,11 +484,15 @@ def _atomic_dump(obj, path):
     os.replace(tmp, path)
 
 
-def _verify_pilot_artifact(path, header, formal_games):
-    """S08: a formal du run must consume the Stage A artifact: identity
-    hash, weights/code/config equality, games disjoint from the pilot's,
-    and the game count must reach the locked N (checked by the caller via
-    the returned locked N in the reason string on success)."""
+def _verify_pilot_artifact(path, header, formal_games, ds_ids=None,
+                           expect_run_id=None):
+    """S08/R22: a formal du run must consume a FORMAL-GRADE Stage A
+    artifact: content hash, issuing-run id, qualification grade (canonical,
+    uncapped, isolation-checked, adequate independent units, sigma>0),
+    weights/code/config/train-target equality, pilot games disjoint from
+    the formal games AND from the formal run's training manifest, and the
+    training-data version must match the pilot's. The returned locked N
+    (games) is checked by the caller."""
     if not path:
         return False, 0, "missing --pilot-artifact"
     try:
@@ -494,20 +503,33 @@ def _verify_pilot_artifact(path, header, formal_games):
     want = hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
     if art.get("artifact_id") != want:
         return False, 0, "artifact_id hash mismatch"
+    if art.get("kind") != "stage1_du_pilot_artifact":
+        return False, 0, "not a du pilot artifact"
+    if art.get("grade") != "formal":
+        return False, 0, ("pilot artifact is diagnostic-grade: "
+                          + "; ".join(art.get("grade_reasons", []) or ["unspecified"]))
+    if expect_run_id and art.get("pilot_run_id") != expect_run_id:
+        return False, 0, "artifact run_id does not match --expect-pilot-run-id"
     if art.get("weights_md5") != header["weights_md5"]:
         return False, 0, "weights differ from pilot"
     if art.get("code_md5") != header["code_md5"]:
         return False, 0, "code differs from pilot"
-    for k in ("K", "M", "H", "teacher_style", "behavior_temp"):
-        hv = header["K"] if k == "K" else header["M"] if k == "M" else \
-            header["H"] if k == "H" else header[k]
-        if art.get(k) != hv:
+    for k in ("K", "M", "H", "teacher_style", "behavior_temp", "train_temp"):
+        if art.get(k) != header.get(k):
             return False, 0, f"config field {k} differs from pilot"
-    both = sorted(set(art.get("pilot_games", [])) & set(formal_games))
+    pg = set(art.get("pilot_games", []))
+    both = sorted(pg & set(formal_games))
     if both:
         return False, 0, f"formal games overlap pilot games: {both[:5]}"
+    if ds_ids is not None:
+        bad = sorted(pg & set(ds_ids))
+        if bad:
+            return False, 0, f"pilot games overlap the training corpus: {bad[:5]}"
+    if art.get("train_data_version") != header.get("train_data_version"):
+        return False, 0, "train_data_version differs from pilot (recalibrate)"
     locked = int(art.get("locked_N_games", 0))
-    return True, locked, f"ok (locked_N_games={locked})"
+    return True, locked, (f"ok (locked_N_games={locked}, "
+                          f"pilot_run_id={art.get('pilot_run_id')})")
 
 
 # ----------------------------- main ----------------------------------------
@@ -529,10 +551,20 @@ def main():
     ap.add_argument("--M", type=int, default=CANON["M"])
     ap.add_argument("--H", type=int, default=CANON["H"])
     ap.add_argument("--n-anchor", type=int, default=ANCHOR_N)
+    ap.add_argument("--train-temp", type=float, default=None,
+                    help="R23: temperature of the training target distribution "
+                         "(targets = q ** train_temp, normalised; default 1.0 "
+                         "= raw q). The q verdict certifies exactly this "
+                         "distribution and every result header binds the value; "
+                         "a generation-time --behavior-temp never widens it.")
     ap.add_argument("--behavior-temp", type=float, default=1.0,
                     help="temperature applied to q at generation time, if any; "
                          "the gate scores that behaviour distribution too")
     ap.add_argument("--pilot", action="store_true", help="du mode: Stage A, no verdict")
+    ap.add_argument("--expect-pilot-run-id", default=None,
+                    help="R22: when given, the pilot artifact's issuing "
+                         "run_id must equal this value (binds the artifact "
+                         "to the intended pilot run).")
     ap.add_argument("--pilot-artifact", default=None,
                     help="du formal: Stage A artifact JSON written by a --pilot run")
     ap.add_argument("--n-required", type=int, default=150)
@@ -592,8 +624,10 @@ def main():
         specs = specs[:a.max_scenes]
         capped = True
     canonical = (a.K, a.M, a.H) == (CANON["K"], CANON["M"], CANON["H"]) and not capped
+    train_temp = a.train_temp if a.train_temp is not None else 1.0
     cfg = {"K": a.K, "M": a.M, "H": a.H, "seed_teacher": a.seed_teacher,
            "seed_cont": a.seed_cont, "behavior_temp": a.behavior_temp,
+           "train_temp": train_temp,
            "teacher_style": a.teacher_style}
     code_md5 = {fn: md5_of(os.path.join(HERE, fn)) for fn in
                 ("stage0_teacher.py", "cnet2_np.py", "cnet2_search.py",
@@ -611,6 +645,8 @@ def main():
         "code_md5": code_md5,
         "guard_cfg": T.TEACHER_GUARD_CFG, "K": a.K, "M": a.M, "H": a.H,
         "behavior_temp": a.behavior_temp, "teacher_style": a.teacher_style,
+        "train_temp": train_temp,
+        "certified_target": "q ** train_temp, normalised (R23)",
         "q_select_source": "teacher Q (stage0_teacher.evaluate_root)",
         "q_eval_source": "real terminal continuations (anchor / paired arms)",
         "root_feat_history": "fresh Feats at root (isolated-root scope)",
@@ -648,16 +684,30 @@ def main():
         res["anchor"] = {"n": len(arows), "hard": hard_c, "soft": soft_c,
                          "soft_ci95_boot_cluster": list(
                              cluster_bootstrap_ci(arows, a.seed_anchor, "du_soft"))}
-        soft_gain_b = res["q_soft_gain_behavior_mean"]
+        # R21: the verdict reads the SAME game-level statistics the report
+        # publishes -- per-game means for the scene gains, the strict-improve
+        # rate, and both anchors. Root means stay in the report only.
+        gain_c = cluster_stats(rows, "gain")
+        rate_by_game = {}
+        for r in rows:
+            rate_by_game.setdefault(r["game"], []).append(bool(r["improved"]))
+        rate_game = float(np.mean([np.mean(v) for v in rate_by_game.values()])) \
+            if rate_by_game else float("nan")
+        res["q_gain_game_mean"] = gain_c["game_mean"]
+        res["strict_improve_rate_game"] = rate_game
+        res["q_soft_gain_train_mean"] = float(np.mean(
+            [r["soft_gain_train"] for r in rows]))
+        soft_train = res["q_soft_gain_train_mean"]
         soft_hi = res["anchor"]["soft_ci95_boot_cluster"][1]
         if formal and len(rows) >= 150 and a.n_anchor >= ANCHOR_N:
-            if (res["q_gain_mean"] <= Q_FAIL["gain"] or rate < Q_FAIL["rate"]
-                    or soft_gain_b <= 0
+            if (gain_c["game_mean"] <= Q_FAIL["gain"] or rate_game < Q_FAIL["rate"]
+                    or soft_train <= 0
                     or (soft_hi is not None and soft_hi < 0)):
                 verdict = "FAIL"
-            elif (res["q_gain_mean"] >= Q_PASS["gain"] and rate >= Q_PASS["rate"]
-                    and hard_c["root_mean"] > 0 and soft_gain_b > 0
-                    and soft_c["root_mean"] > 0):
+            elif (gain_c["game_mean"] >= Q_PASS["gain"]
+                    and rate_game >= Q_PASS["rate"]
+                    and hard_c["game_mean"] > 0 and soft_train > 0
+                    and soft_c["game_mean"] > 0):
                 verdict = "PASS"
             else:
                 verdict = "INDETERMINATE"
@@ -679,42 +729,75 @@ def main():
                "teacher_ms_per_call": (ms / calls) if calls else None,
                "teacher_calls": calls}
         if a.pilot:
+            # R22: a pilot run ALWAYS publishes a fresh sidecar bound to its
+            # own run_id -- a rerun can never leave a previous run's artifact
+            # in place. Grade "formal" requires every qualification: sigma
+            # estimable and > 0, canonical uncapped config, training-set
+            # isolation actually run, and enough independent games; anything
+            # less is an explicitly diagnostic artifact that Stage B refuses.
+            from statistics import NormalDist
+            grade_reasons = list(reasons)
+            if not cs["sigma_game"]:
+                grade_reasons.append("sigma_game undefined or zero (degenerate pilot)")
+            if cs["n_games"] < 10 or cs["n_rows"] < 30:
+                grade_reasons.append(
+                    f"pilot sample too small: {cs['n_games']} games / "
+                    f"{cs['n_rows']} roots (need >= 10 games and >= 30 roots)")
+            grade = "formal" if not grade_reasons else "diagnostic"
             if cs["sigma_game"]:
-                from statistics import NormalDist
                 raw = int(math.ceil((140.0 * cs["sigma_game"]) ** 2))
                 locked = max(50, min(200, raw))
-                power = float(NormalDist().cdf(
-                    0.02 / (cs["sigma_game"] / math.sqrt(locked)) - 1.96))
-                art = {"kind": "stage1_du_pilot_artifact",
-                       "weights_md5": header["weights_md5"], "code_md5": code_md5,
-                       "guard_cfg": T.TEACHER_GUARD_CFG,
-                       "K": a.K, "M": a.M, "H": a.H,
-                       "teacher_style": a.teacher_style,
-                       "behavior_temp": a.behavior_temp,
-                       "pilot_games": sorted({r["game"] for r in rows}),
-                       "seeds": header["seeds"],
-                       "sigma_game": cs["sigma_game"],
-                       "sigma_root": cs["sigma_root"],
-                       "locked_N_games_raw": raw, "locked_N_games": locked,
-                       "power_at_locked_for_0.02": power}
-                art["artifact_id"] = hashlib.sha256(json.dumps(
-                    art, sort_keys=True).encode()).hexdigest()
-                res["pilot_artifact"] = art
-                res["stageB_N_games"] = locked
-                res["stageB_N_formula"] = locked  # games unit (S03/S08)
-                res["stageB_N_raw"] = raw
-                if a.out:
-                    _atomic_dump(art, a.out + ".pilot.json")
+                se_l = cs["sigma_game"] / math.sqrt(locked)
+                power_sig = float(NormalDist().cdf(0.02 / se_l - 1.96))
+                power_conj = float(NormalDist().cdf(
+                    (0.02 - max(0.02, 1.96 * se_l)) / se_l))
+            else:
+                raw = locked = None
+                power_sig = power_conj = None
+            art = {"kind": "stage1_du_pilot_artifact",
+                   "grade": grade, "grade_reasons": grade_reasons,
+                   "pilot_run_id": header["run_id"],
+                   "weights_md5": header["weights_md5"], "code_md5": code_md5,
+                   "guard_cfg": T.TEACHER_GUARD_CFG,
+                   "K": a.K, "M": a.M, "H": a.H,
+                   "teacher_style": a.teacher_style,
+                   "behavior_temp": a.behavior_temp,
+                   "train_temp": train_temp,
+                   "train_data_version": a.train_data_version,
+                   "ds_manifest_md5": ds_md5,
+                   "ds_overlap_check": ds_check,
+                   "pilot_games": sorted({r["game"] for r in rows}),
+                   "pilot_n_games": cs["n_games"], "pilot_n_roots": cs["n_rows"],
+                   "seeds": header["seeds"],
+                   "sigma_game": cs["sigma_game"],
+                   "sigma_root": cs["sigma_root"],
+                   "locked_N_games_raw": raw, "locked_N_games": locked,
+                   "power_significance_only_at_locked": power_sig,
+                   "power_conjunction_approx_at_locked": power_conj,
+                   "power_note": ("significance-only power excludes the "
+                                  "sample-mean >= 0.02 business gate; the "
+                                  "conjunction figure approximates the full "
+                                  "pass rule under a normal model")}
+            art["artifact_id"] = hashlib.sha256(json.dumps(
+                art, sort_keys=True).encode()).hexdigest()
+            res["pilot_artifact"] = art
+            res["stageB_N_games"] = locked
+            res["stageB_N_formula"] = locked  # games unit (S03/S08)
+            res["stageB_N_raw"] = raw
+            if a.out:
+                _atomic_dump(art, a.out + ".pilot.json")
             res["verdict"] = "PILOT (no verdict)"
             verdict = res["verdict"]
         else:
             art_ok, locked_n, art_why = _verify_pilot_artifact(
-                a.pilot_artifact, header, games)
+                a.pilot_artifact, header, games,
+                ds_ids=ds_ids, expect_run_id=a.expect_pilot_run_id)
             res["pilot_check"] = art_why
             if art_ok and cs["n_games"] < locked_n:
                 art_ok = False
-                res["pilot_check"] = (f"n_games {cs['n_games']} below locked "
-                                      f"N {locked_n} (S08)")
+                art_why = (f"n_games {cs['n_games']} below locked "
+                           f"N {locked_n} (S08)")
+                res["pilot_check"] = art_why
             need_rows = max(a.n_required, 150)
             if formal and art_ok and len(rows) >= need_rows:
                 gm, glo = cs["game_mean"], cs["game_ci95_t"][0]
