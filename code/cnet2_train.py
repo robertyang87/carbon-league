@@ -167,8 +167,10 @@ def _validate_derived_layer(D, dirn, meta, sources=None, gen_ctx=None):
     sidecar (derived.json, format "cnet2-derived/1", mirrored into the
     flat meta.json under "derived_layer"): for every weight actually
     consumed -- its field must not be a generation-manifest field, its
-    base_generation must equal the generation current.json points at,
-    its rows must equal that generation's total, and its dtype/shape/
+    base_generation must equal the generation load() pinned at resolve
+    time (gen_ctx; the current.json pointer is only checked against
+    that pin and a mid-load move refuses -- R3 P1), its rows must equal
+    that generation's total, and its dtype/shape/
     sha256 must match the file on disk. A sidecar/meta mirror mismatch
     also refuses. A dataset with a generation pointer but UNDECLARED
     non-generation weights refuses outright (the F05 stale-weight hazard:
@@ -203,7 +205,36 @@ def _validate_derived_layer(D, dirn, meta, sources=None, gen_ctx=None):
     decl = side if side is not None else mirror
     gen_id = None; gen_fields = set(); gen_total = None
     ptr = os.path.join(dirn, "current.json")
-    if os.path.exists(ptr):
+    if gen_ctx is not None:
+        # R3 P1 (owner re-review): load() resolved and hash-verified ONE
+        # generation before reading any array, and every field/weight in
+        # memory was sourced against THAT manifest (gen_ctx). Identity
+        # here is judged against the pinned manifest ONLY; the pointer
+        # is re-read solely to prove it still names the pinned
+        # generation. The previous code let the re-read REPLACE the
+        # pinned context whenever a pointer existed, so a publish
+        # landing mid-load switched identity to the new generation B:
+        # B's derived sidecar then validated cleanly against B while
+        # the features in memory were A's -- old features + new weights
+        # under a "verified" label. Policy on a moved pointer: REFUSE,
+        # naming both generations. An in-load retry was rejected as the
+        # fix because it reopens the same race one level up (the retry
+        # can itself straddle a second publish); the caller reruns
+        # load() so exactly one generation is used end to end.
+        gen_id = gen_ctx.get("generation")
+        gen_fields = set(gen_ctx.get("fields", ()))
+        gen_total = gen_ctx.get("total")
+        if os.path.exists(ptr):
+            ptrj = json.load(open(ptr))
+            if ptrj.get("generation") != gen_id:
+                raise SystemExit(
+                    f"derived layer: generation pointer in dataset {dirn!r} moved "
+                    f"during load: load() pinned and hash-verified {gen_id!r}, "
+                    f"the pointer now names {ptrj.get('generation')!r}; the "
+                    f"arrays in memory belong to the pinned generation and must "
+                    f"never be validated against another generation's identity; "
+                    f"refusing to train -- rerun load() end to end")
+    elif os.path.exists(ptr):
         ptrj = json.load(open(ptr))
         gen_id = ptrj["generation"]
         man = json.load(open(os.path.join(dirn, ptrj["dir"], "manifest.json")))
@@ -212,12 +243,6 @@ def _validate_derived_layer(D, dirn, meta, sources=None, gen_ctx=None):
                              f"dataset {dirn!r}; refusing to train")
         gen_fields = set(man.get("fields", {}))
         gen_total = int(man["total"])
-    if gen_id is None and gen_ctx is not None:
-        # Directory that IS a generation (no pointer): load() resolved
-        # and hash-verified this manifest itself; use it as the context.
-        gen_id = gen_ctx.get("generation")
-        gen_fields = set(gen_ctx.get("fields", ()))
-        gen_total = gen_ctx.get("total")
     if decl is None:
         if gen_id is None:
             print(json.dumps({"derived_layer_check": "WARNING: derived identity unverified "
