@@ -20,14 +20,23 @@ if [ "${DGX_FULL_CONFIRM:-}" != "1" ]; then
 fi
 cd ~/junyang/carbon/code
 until grep -q SWEEP_DONE ../data/ex1g_logs/run.log 2>/dev/null; do sleep 30; done
+# --- P3 tail fix (REVIEW_FULL_20261113): fail-stop tail ---
+# The confirmed tail previously ignored every failure: a failed cp (missing
+# .d0dd809 source) and a training command exiting 7 still ended with
+# FULL_DONE and exit 0. Now any failed step writes FULL_FAIL to full.log and
+# exits nonzero immediately; FULL_DONE is written only after every step
+# succeeded. (The DGX_FULL_CONFIRM guard at the top is unchanged.)
+L=../data/ex1g_logs; PY=../.venv/bin/python
+full_fail() { echo "FULL_FAIL: $1" >> $L/full.log; echo "dgx_full.sh: FULL_FAIL: $1" >&2; exit 1; }
+set -o pipefail
 # Guard confirmed above (DGX_FULL_CONFIRM=1): overwrite trainer with the
 # unversioned .d0dd809 copy, keeping the pre-overwrite backup alongside.
-cp cnet2_train.py cnet2_train.py.pre_d0dd809; cp cnet2_train.py.d0dd809 cnet2_train.py
-L=../data/ex1g_logs; PY=../.venv/bin/python
+cp cnet2_train.py cnet2_train.py.pre_d0dd809 || full_fail "backup cp of cnet2_train.py failed"
+cp cnet2_train.py.d0dd809 cnet2_train.py || full_fail "cp of cnet2_train.py.d0dd809 over cnet2_train.py failed"
 C="BC_DEVICE=cuda BC_RAM=1 BC_THREADS=4 BC_SAVE_EPOCHS=0 BC_INIT=../data/weights/cnet2_b128m2t3.npz BC_USE_W=0 BC_USE_UW=0 BC_EXIT_W=1"
 for M in a:300:3e-5 b:1000:3e-5 c:3000:3e-5 d:1000:1e-5; do IFS=: read N K LR <<< "$M"
   echo "== full_$N kl=$K lr=$LR $(date +%T)" >> $L/full.log
-  env $C BC_SELF_KL=$K BC_LR=$LR $PY cnet2_train.py ../data/cnet2_ds_ex1g ../data/weights/cnet2_b128ex1f_$N.npz 3 '{"C":128,"NB":8,"D":128}' > $L/train_full_$N.log 2>&1
-  grep '"ep"' $L/train_full_$N.log | sed 's/"train_pi.*//' >> $L/full.log
+  env $C BC_SELF_KL=$K BC_LR=$LR $PY cnet2_train.py ../data/cnet2_ds_ex1g ../data/weights/cnet2_b128ex1f_$N.npz 3 '{"C":128,"NB":8,"D":128}' > $L/train_full_$N.log 2>&1 || full_fail "training full_$N exited $?"
+  grep '"ep"' $L/train_full_$N.log | sed 's/"train_pi.*//' >> $L/full.log || full_fail "no epoch lines extracted from train_full_$N.log"
 done
 echo FULL_DONE >> $L/full.log
