@@ -1,0 +1,9 @@
+{"load_source": "generation", "generation": "gen-e530a66259e079ed", "rows": 2392, "data": "/home/hatch/workspace/fix4-residual/ds_heads_ok"}
+{"labels": {"total_rows": 2392, "exact_rows": 1196, "approx_rows": 598, "unusable_rows": 598, "approx_labels": true, "label_source": "mixed: margin_raw/u_raw exact + tanh-inverse approx"}}
+{"init_migrated_missing": []}
+{"train": 1794, "val": 598, "epochs": 1, "steps_per_epoch": 8, "cfg": {"C": 32, "NB": 2, "D": 64, "NH": 4, "L": 1, "E": 16, "G": 8}}
+/home/hatch/workspace/fix4-residual/tree/stage0_train_heads.py:100: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return l_u + 0.25 * l_wdl + 0.25 * l_m, float(l_u), float(l_wdl), float(l_m), acc, mae, ur, counts
+EPOCH {"ep": 1, "train_l_u": 0.171, "train_l_wdl": 1.5299, "train_l_m": 0.0276, "train_label_exact": 598, "train_label_approx": 598, "train_label_unusable": 598, "train_value_rows": 1196, "val_l_u": 0.08963, "val_wdl_acc": 0.0, "val_margin_mae": 400.0, "val_u_calib_mean": -0.00174, "val_u_target_binned_resid": 0.29934, "val_u_calib_pred_binned": 0.0031, "val_u_calib_pred_bins": [[386, 0.4963, 0.5, 0.0153], [212, 0.5019, 0.5, 0.0206]], "val_u_range": [0.472, 0.503], "val_n": 598, "s": 4}
+TRAIN-DONE {"out": "/home/hatch/workspace/fix4-residual/heads_ok.npz", "manifest": "/home/hatch/workspace/fix4-residual/heads_ok.npz.manifest.json", "labels": {"total_rows": 2392, "exact_rows": 1196, "approx_rows": 598, "unusable_rows": 598, "approx_labels": true, "label_source": "mixed: margin_raw/u_raw exact + tanh-inverse approx"}, "s": 4}
