@@ -66,7 +66,7 @@ continuation (S04).
 Guard posture everywhere (candidate generation, continuations, both arms,
 opponent): production config GUARD=True, GUARD_NARROW=True, GUARD_CASH=40.0,
 LOWW=2 (stage0_teacher.TEACHER_GUARD_CFG). Guard state inside a continuation
-starts fresh at the root scene and evolves within that continuation only;
+inherits public worker-loss history from the replay prefix and evolves within the continuation;
 each arm holds its own instances (no cross-arm / cross-seat sharing).
 
 Non-canonical teacher params (K/M/H overridden) or reduced scene counts
@@ -170,7 +170,7 @@ def sample_scene_specs(game_paths, layers, seed, opening_share=None):
         if opening_share is None:
             use_layers = layers
         for (lo, hi) in use_layers:
-            hi_c = min(hi, n_steps - 1)
+            hi_c = min(hi, n_steps)
             if hi_c <= lo:
                 continue
             t = int(rng.integers(lo, hi_c))
@@ -207,11 +207,23 @@ def extract_scene(spec):
     # the v3 teacher replaces the opponent's history with its scenario model.
     x_me = fm.observe(sim.obs(me))
     x_opp = fo.observe(sim.obs(1 - me))
+    guards = [BankruptcyGuard(T.TEACHER_GUARD_CFG) for _ in range(2)]
+    def observe_guards():
+        # Only public identities are needed to reconstruct the state at
+        # apply() entry; replay actions need not be re-decoded by a policy.
+        for seat, feat in ((me, fm), (1 - me, fo)):
+            cur = {u for u in feat.own_uid[:10] if u is not None}
+            guards[seat].lostw += len(guards[seat].prevw - cur)
+            guards[seat].prevw = cur
+    observe_guards()
     for t in range(spec["step"]):
         sim.step(st[t + 1][0].get("action") or {}, st[t + 1][1].get("action") or {})
         x_me = fm.observe(sim.obs(me))
         x_opp = fo.observe(sim.obs(1 - me))
+        observe_guards()
     return {"full": sim.full_observation(0), "step": spec["step"], "me": me,
+            "state": sim.get_state(),
+            "guard_snaps": [g.snapshot() for g in guards],
             "game": spec["game"], "fm": fm, "fo": fo,
             "x_me": x_me, "aux_me": fm.aux, "x_opp": x_opp, "aux_opp": fo.aux}
 
@@ -244,24 +256,28 @@ def continue_game(pol, scene, first_labels, cont_seed, teacher=1, guided_KMH=Non
     `me` seat asks the teacher every step and plays argmax q; otherwise the
     `me` seat plays `first_labels` on step 1 (if given) and guarded greedy
     afterwards. The opponent always plays guarded greedy. Both seats hold
-    their own guard instances, fresh at the root. Returns U from me's seat
+    their own guard instances, restored from the public prefix. Returns U from me's seat
     (F01/F04 via stage0_teacher._terminal_u) and call timing stats."""
     stats = stats if stats is not None else {}
     me = scene["me"]
-    sim = FastCarbon(CFG)
-    sim.load_observation(scene["full"])
+    sim = _fresh_sim(scene)
     feats = {me: copy.deepcopy(scene["fm"]), 1 - me: copy.deepcopy(scene["fo"])}
     guards = {0: BankruptcyGuard(T.TEACHER_GUARD_CFG),
               1: BankruptcyGuard(T.TEACHER_GUARD_CFG)}
+    for seat in (0, 1):
+        guards[seat].restore(scene["guard_snaps"][seat])
     pre = sim.get_state()
     step_no = 0
     while True:
         st = sim.get_state()
         if T._extinct_state(st, 0) or T._extinct_state(st, 1) or sim.step_count >= 299:
             break
-        xs = {}
-        for seat in (0, 1):
-            xs[seat] = feats[seat].observe(sim.obs(seat))
+        if step_no == 0:
+            # extract_scene has already observed the root exactly once.
+            xs = {me: copy.deepcopy(scene["x_me"]),
+                  1 - me: copy.deepcopy(scene["x_opp"])}
+        else:
+            xs = {seat: feats[seat].observe(sim.obs(seat)) for seat in (0, 1)}
         acts = {}
         for seat in (0, 1):
             if seat == me and guided_KMH is not None:
@@ -269,7 +285,8 @@ def continue_game(pol, scene, first_labels, cont_seed, teacher=1, guided_KMH=Non
                 # S04: the teacher sees each seat's guard history AS EVOLVED
                 # inside this continuation (snapshots of the live guards),
                 # not a fresh guard -- GUARD_NARROW depends on lostw.
-                snaps = (guards[me].snapshot(), guards[other].snapshot())
+                snaps = (guards[me].snapshot(), guards[other].snapshot()
+                         if guided_KMH.get("belief", "sample") == "oracle" else None)
                 r = T.evaluate_root(
                     sim, me, pol, copy.deepcopy(xs[me]), copy.deepcopy(feats[me].aux),
                     copy.deepcopy(xs[other]), copy.deepcopy(feats[other].aux),
@@ -406,6 +423,7 @@ def _q_scene(task):
                         K=cfg["K"], M=cfg["M"], H=cfg["H"],
                         seed_base=cfg["seed_teacher"] + spec["step"],
                         feats=(scene["fm"], scene["fo"]),
+                        guard_snaps=_teacher_guard_snaps(scene, cfg.get("belief", "sample")),
                         belief=cfg.get("belief", "sample"))
     _expect_teacher(r, cfg.get("belief", "sample"))
     q = np.asarray(r["q"])
@@ -442,8 +460,16 @@ def _q_scene(task):
 
 def _fresh_sim(scene):
     sim = FastCarbon(CFG)
-    sim.load_observation(scene["full"])
+    sim.set_state(scene["state"])
     return sim
+
+
+def _teacher_guard_snaps(scene, belief):
+    me = scene["me"]
+    # v3 receives no real opponent guard state. That state is used only
+    # for the real opponent's continuation (or privileged oracle diagnostics).
+    return (scene["guard_snaps"][me],
+            scene["guard_snaps"][1 - me] if belief == "oracle" else None)
 
 
 def _anchor_task(task):
@@ -462,6 +488,7 @@ def _anchor_task(task):
                         K=cfg["K"], M=cfg["M"], H=cfg["H"],
                         seed_base=cfg["seed_teacher"] + spec["step"],
                         feats=(scene["fm"], scene["fo"]),
+                        guard_snaps=_teacher_guard_snaps(scene, cfg.get("belief", "sample")),
                         belief=cfg.get("belief", "sample"))
     _expect_teacher(r, cfg.get("belief", "sample"))
     q = np.asarray(r["q"], dtype=np.float64)
@@ -559,7 +586,7 @@ def _verify_pilot_artifact(path, header, formal_games, ds_ids=None,
     if art.get("code_md5") != header["code_md5"]:
         return False, 0, "code differs from pilot"
     for k in ("K", "M", "H", "teacher_style", "behavior_temp", "train_temp",
-              "belief", "teacher_version"):
+              "belief", "teacher_version", "scene_window", "scene_contract"):
         if art.get(k) != header.get(k):
             return False, 0, f"config field {k} differs from pilot"
     pg = set(art.get("pilot_games", []))
@@ -626,8 +653,19 @@ def main():
     ap.add_argument("--workers", type=int, default=1)
     ap.add_argument("--max-scenes", type=int, default=0,
                     help="cap on sampled scenes; a run actually capped by it is DIAGNOSTIC ONLY")
+    ap.add_argument("--step-min", type=int, default=None,
+                    help="explicit root window, inclusive (e.g. 200 for an endgame pilot)")
+    ap.add_argument("--step-max", type=int, default=None,
+                    help="explicit root window, exclusive (default 299 when --step-min is given)")
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
+    scene_window = None
+    if a.step_min is not None or a.step_max is not None:
+        lo = 0 if a.step_min is None else a.step_min
+        hi = 299 if a.step_max is None else a.step_max
+        if not 0 <= lo < hi <= 299:
+            ap.error("root window must satisfy 0 <= step-min < step-max <= 299")
+        scene_window = [lo, hi]
     _W["weights_path"] = a.weights
     t_start = time.time()
 
@@ -669,8 +707,12 @@ def main():
             ds_check = f"RUN, disjoint (ds n={len(ds_ids)})"
     paths = list_replays(a.replays, games)
     layers = LAYERS_Q if a.mode == "q" else LAYERS_DU
+    if scene_window is not None:
+        layers = [tuple(scene_window)]
     specs = sample_scene_specs(paths, layers, a.seed_scene,
-                               opening_share=DU_OPENING_SHARE if a.mode == "du" else None)
+                               opening_share=DU_OPENING_SHARE if a.mode == "du" and scene_window is None else None)
+    if not specs:
+        raise SystemExit("no non-terminal roots in the requested scene window")
     capped = False
     if a.max_scenes and len(specs) > a.max_scenes:
         specs = specs[:a.max_scenes]
@@ -684,7 +726,7 @@ def main():
            "train_temp": train_temp,
            "teacher_style": a.teacher_style, "belief": a.belief}
     code_md5 = {fn: md5_of(os.path.join(HERE, fn)) for fn in
-                ("stage0_teacher.py", "cnet2_np.py", "cnet2_search.py",
+                ("stage0_teacher.py", "cnet2_np.py", "cnet2_search.py", "cnet2_feat.py", "fastsim.py",
                  "stage1_teacher_gate.py")}
     reasons = []
     if not canonical:
@@ -694,6 +736,8 @@ def main():
     formal = not reasons
     header = {
         "gate": "q" if a.mode == "q" else "du",
+        "scene_window": scene_window,
+        "scene_contract": "prefix-feat-guard-snapshot-v1",
         "run_id": hashlib.sha256(f"{time.time()}-{os.getpid()}".encode()).hexdigest()[:16],
         "weights": a.weights, "weights_md5": md5_of(a.weights),
         "code_md5": code_md5,
@@ -826,6 +870,8 @@ def main():
                 raw = locked = None
                 power_sig = power_conj = None
             art = {"kind": "stage1_du_pilot_artifact",
+                   "scene_window": scene_window,
+                   "scene_contract": header["scene_contract"],
                    "grade": grade, "grade_reasons": grade_reasons,
                    "pilot_run_id": header["run_id"],
                    "weights_md5": header["weights_md5"], "code_md5": code_md5,

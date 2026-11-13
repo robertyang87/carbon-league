@@ -1293,11 +1293,13 @@ def main(out, dirs):
                     # declared margins (full check, not a sample).
                     _rp = games[gi]["raw_payload"]
                     if _rp["outcome"] != OUTCOME_CODES["unusable"]:
-                        _vals = np.asarray(D["margin_raw"], np.float64)
-                        _fin = _vals[np.isfinite(_vals)]
-                        _exp = {float(_rp["mg"][s_]) for s_ in games[gi]["sides"]}
-                        if len(_fin) != len(_vals) or not all(
-                                any(abs(v - e) <= 1e-4 for e in _exp) for v in _fin):
+                        # The shard is stored in RAW_FIELDS' dtype. Compare
+                        # values after the SAME quantization, not a float64
+                        # index value against float32 with a fixed epsilon.
+                        _dtype = RAW_FIELDS["margin_raw"][0]
+                        _vals = np.asarray(D["margin_raw"], dtype=_dtype)
+                        _exp = np.asarray([_rp["mg"][s_] for s_ in games[gi]["sides"]], dtype=_dtype)
+                        if not np.isfinite(_vals).all() or not np.isfinite(_exp).all() or not np.isin(_vals, _exp).all():
                             raise ValueError(
                                 f"raw label alignment failed for {games[gi]['key']}")
                 for k in fields:

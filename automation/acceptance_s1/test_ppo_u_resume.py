@@ -136,7 +136,7 @@ def main():
                    "--init", init_path, "--resume", state_path, "--out", out, "--device", "cpu",
                    "--reward", "u", "--gamma", "1", "--rscale", "1", "--value-head", "utility",
                    "--sep-value", str(separate), "--resume-vwarm", "1", "--workers", "1", "--games", "2",
-                   "--pool", "[]", "--self-prior", "1", "--eval-every", "0", "--iters", "1",
+                   "--pool", "[]", "--self-prior", "1", "--eval-every", "0", "--iters", "0",
                    "--epochs", "1", "--mb", "512", "--pre-mb", "1024", "--overlap", "0"]
             cp = subprocess.run(cmd, capture_output=True, text=True, timeout=180, cwd=CODE)
             check(f"actual main resume/warmup, separate={separate}", cp.returncode == 0)
@@ -144,6 +144,9 @@ def main():
                 print(cp.stdout[-2000:] + cp.stderr[-2000:]); continue
             got = torch.load(os.path.join(out, "state_last.pt"), map_location="cpu", weights_only=False)
             effective = json.load(open(os.path.join(out, "effective_params.json")))
+            check(f"warmup does not consume formal iteration or budget, separate={separate}",
+                  got["it"] == 7 and not open(os.path.join(out, "train.jsonl")).read()
+                  and json.loads(open(os.path.join(out, "warmup.jsonl")).readline())["it"] == 7)
             policy_keys = [k for k in base_sd if separate or not k.startswith("utility.")]
             check(f"warmup preserves policy and policy optimizer, separate={separate}",
                   all(torch.equal(base_sd[k], got["net"][k]) for k in policy_keys)
@@ -157,6 +160,68 @@ def main():
                   and len(effective["utility_provenance"]["source_file_sha256"]) == 64
                   and effective["critic_warmup_iters"] == 1
                   and got["training"] == PT.training_contract(args(sep_value=separate)))
+            check(f"warmup does not publish a formal snapshot, separate={separate}",
+                  not os.path.exists(os.path.join(out, "ckpt_7.npz"))
+                  and not os.path.exists(os.path.join(out, "snap_7.npz")))
+            if separate:
+                # Continue a completed warm stage: do not warm twice, and
+                # --iters is still the number of FORMAL PPO updates.
+                resumed = os.path.join(td, 'formal_after_warm')
+                formal_cmd = cmd.copy()
+                for key, value in (("--resume", os.path.join(out, "state_last.pt")),
+                                   ("--out", resumed), ("--iters", "1")):
+                    formal_cmd[formal_cmd.index(key)+1] = value
+                follow = subprocess.run(formal_cmd, capture_output=True, text=True, timeout=180, cwd=CODE)
+                check("completed warm stage resumes into exactly one formal iteration", follow.returncode == 0)
+                if follow.returncode:
+                    print(follow.stdout[-2000:]+follow.stderr[-2000:])
+                else:
+                    formal_state = torch.load(os.path.join(resumed, 'state_last.pt'), weights_only=False)
+                    check("formal iteration budget and actor update preserved after warm",
+                          formal_state['it'] == 8 and formal_state['resume_warmup'] is None
+                          and not same(formal_state['net'], got['net'])
+                          and not open(os.path.join(resumed, 'warmup.jsonl')).read()
+                          and len(open(os.path.join(resumed, 'train.jsonl')).readlines()) == 1)
+                # Fixture for an interrupted two-batch warm stage, saved
+                # after batch one. Only the remaining critic batch may run.
+                partial = copy.deepcopy(got)
+                partial['resume_warmup']['requested'] = 2
+                partial_path = os.path.join(td, 'partial_warm.pt'); torch.save(partial, partial_path)
+                partial_out = os.path.join(td, 'partial_continued')
+                partial_cmd = cmd.copy()
+                for key, value in (("--resume", partial_path), ("--out", partial_out), ("--resume-vwarm", "2")):
+                    partial_cmd[partial_cmd.index(key)+1] = value
+                continued = subprocess.run(partial_cmd, capture_output=True, text=True, timeout=180, cwd=CODE)
+                check("interrupted critic warm stage can resume", continued.returncode == 0)
+                if continued.returncode:
+                    print(continued.stdout[-2000:]+continued.stderr[-2000:])
+                else:
+                    final = torch.load(os.path.join(partial_out, 'state_last.pt'), weights_only=False)
+                    warm_rows = [json.loads(x) for x in open(os.path.join(partial_out, 'warmup.jsonl'))]
+                    check("warm continuation runs only the remaining batch, preserves it/actor/optimizer",
+                          final['it'] == 7 and final['resume_warmup']['completed'] == 2
+                          and len(warm_rows) == 1 and warm_rows[0]['warmup_batch'] == 2
+                          and same(final['net'], partial['net']) and same(final['opt'], partial['opt']))
+        for bad_field in ('backbone', 'optimizer'):
+            bad_state = copy.deepcopy(declared)
+            if bad_field == 'backbone':
+                bad_state['vnet']['stem.weight'].flatten()[0] = float('nan')
+            else:
+                first = next(iter(bad_state['vopt']['state'].values()))
+                first['exp_avg'].flatten()[0] = float('nan')
+            bad_path = os.path.join(td, 'bad_'+bad_field+'.pt'); torch.save(bad_state, bad_path)
+            bad_out = os.path.join(td, 'bad_'+bad_field); os.makedirs(bad_out)
+            last = os.path.join(bad_out, 'state_last.pt'); torch.save(declared, last)
+            healthy = open(last, 'rb').read()
+            bad_cmd = cmd.copy()
+            for key, value in (("--resume", bad_path), ("--out", bad_out), ("--sep-value", "1")):
+                bad_cmd[bad_cmd.index(key)+1] = value
+            failed = subprocess.run(bad_cmd, capture_output=True, text=True, timeout=180, cwd=CODE)
+            check('non-finite '+bad_field+' fails before publishing and preserves recovery point',
+                  failed.returncode != 0 and 'non-finite' in failed.stderr
+                  and os.path.exists(os.path.join(bad_out, 'numerical_failure.json'))
+                  and open(last, 'rb').read() == healthy
+                  and not os.path.exists(os.path.join(bad_out, 'ckpt_last.npz')))
     print(f"==== {sum(RES)}/{len(RES)} checks passed ====", flush=True)
     return 0 if all(RES) else 1
 

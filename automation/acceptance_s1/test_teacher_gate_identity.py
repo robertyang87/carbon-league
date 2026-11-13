@@ -39,10 +39,10 @@ class TeacherIdentityTests(unittest.TestCase):
                      u_guided=0.55, u_greedy=0.50, teacher_calls=1,
                      teacher_ms=1.0) for scene, _cfg in tasks]
 
-    def run_pilot(self, root, belief):
+    def run_pilot(self, root, belief, extra=(), n_games=12):
         replays = root / "replays"
         replays.mkdir(exist_ok=True)
-        games = [f"p{i}" for i in range(12)]
+        games = [f"p{i}" for i in range(n_games)]
         for game in games:
             with gzip.open(replays / f"{game}.json.gz", "wt") as fh:
                 json.dump({"steps": [[]] * 300}, fh)
@@ -53,7 +53,7 @@ class TeacherIdentityTests(unittest.TestCase):
         argv = ["gate", "--weights", str(root / "weights.npz"),
                 "--replays", str(replays), "--split-manifest", str(root / "split.json"),
                 "--ds-games-file", str(root / "train.txt"), "--train-data-version", "fixture-v1",
-                "--mode", "du", "--pilot", "--belief", belief, "--out", str(out)]
+                "--mode", "du", "--pilot", "--belief", belief, "--out", str(out), *extra]
         with patch.object(sys, "argv", argv), patch.object(gate, "run_tasks", self.workers), \
                 contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(gate.main(), 0)
@@ -86,6 +86,19 @@ class TeacherIdentityTests(unittest.TestCase):
                 self.assertFalse(result["prereg"]["formal"])
                 self.assertEqual(json.loads(path.read_text())["grade"], "diagnostic")
                 self.assertNotEqual(result["du_gate"]["verdict"], "PASS")
+
+    def test_endgame_window_is_enforced_and_bound_to_pilot(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result, path = self.run_pilot(Path(tmp), "sample", ["--step-min", "200", "--step-max", "299"], n_games=32)
+            self.assertTrue(result['rows'])
+            self.assertTrue(all(200 <= r['step'] < 299 for r in result['rows']))
+            self.assertEqual(result['prereg']['scene_window'], [200, 299])
+            artifact = json.loads(path.read_text())
+            self.assertEqual(artifact['scene_window'], [200, 299])
+            header = dict(result['prereg'], scene_window=[210, 299])
+            ok, _, why = gate._verify_pilot_artifact(path, header, {'other_game'})
+            self.assertFalse(ok)
+            self.assertIn('scene_window', why)
 
 
 if __name__ == "__main__":

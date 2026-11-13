@@ -48,6 +48,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 import rl2_ppo_adapters as AD  # noqa: E402
+from rl2_checkpoint import require_finite, atomic_json, commit_checkpoint  # noqa: E402
 
 DEFAULT_POOL = [["exp/opp_1cz_v5.py", 1.0], ["exp/cand_c1z_v1.py", 1.0], ["exp/submission_nn_v9.py", 0.5]]
 
@@ -103,7 +104,7 @@ def parse():
     a("--sep-value", type=int, default=1, help="1: separate value network (copy of init)")
     a("--vwarm", type=int, default=2, help="iterations training only the value function")
     a("--resume-vwarm", type=int, default=0,
-      help="explicit critic-only warmup iterations after resume, e.g. when changing reward/readout; policy is frozen")
+      help="critic-only warmup batches after resume, before formal iterations; policy/optimizer and formal it stay frozen")
     a("--pool", default=json.dumps(DEFAULT_POOL), help="json [[bot_file, prior], ...]")
     a("--snap-every", type=int, default=10)
     a("--snap-prior", type=float, default=0.5)
@@ -415,6 +416,24 @@ def main():
     import torch
     torch.manual_seed(0)
     os.makedirs(args.out, exist_ok=True)
+    progress = {"it": None, "phase": "initialization"}
+    def finite(value, label):
+        try:
+            require_finite(value, label)
+        except FloatingPointError as exc:
+            atomic_json(dict(progress, error=str(exc)), os.path.join(args.out, "numerical_failure.json"))
+            raise
+    def clip_gradients(parameters, label):
+        parameters = list(parameters)
+        finite([p.grad for p in parameters], label + ".gradients")
+        try:
+            return torch.nn.utils.clip_grad_norm_(parameters, args.gclip, error_if_nonfinite=True)
+        except RuntimeError as exc:
+            if "non-finite" not in str(exc):
+                raise
+            message = f"non-finite {label}.gradient_norm: {exc}"
+            atomic_json(dict(progress, error=message), os.path.join(args.out, "numerical_failure.json"))
+            raise FloatingPointError(message) from exc
     live = os.path.join(args.out, "live"); os.makedirs(live, exist_ok=True)
     dev = torch.device(args.device if (args.device != "mps" or torch.backends.mps.is_available()) else "cpu")
     if dev.type == "cpu":
@@ -464,6 +483,12 @@ def main():
             for _pg in vopt.param_groups:
                 _pg["lr"] = args.vlr
     apply_utility_source(utility_plan, ad, w0, net, vnet, vopt)
+    for name, model in (("actor", net), ("critic", vnet), ("reference", ref)):
+        if model is not None:
+            finite(model.state_dict(), name)
+    finite(opt.state_dict(), "actor_optimizer")
+    if vopt is not None:
+        finite(vopt.state_dict(), "critic_optimizer")
     if utility_plan is not None:
         h = hashlib.sha256()
         with open(utility_plan["path"], "rb") as fh:
@@ -471,6 +496,20 @@ def main():
                 h.update(chunk)
         utility_plan["source_file_sha256"] = h.hexdigest()
     warm_iters = args.resume_vwarm if args.resume else args.vwarm
+    warm_done = 0
+    prior_warm = (stt or {}).get("resume_warmup") or {}
+    if (args.resume and not (utility_plan or {}).get("reset_critic_optimizer")
+            and prior_warm.get("at_it") == it0
+            and prior_warm.get("requested") == args.resume_vwarm):
+        warm_done = int(prior_warm["completed"])
+        if not 0 <= warm_done <= warm_iters:
+            raise SystemExit("invalid checkpoint resume_warmup progress")
+        if hopt is not None and stt.get("hopt") is not None:
+            hopt.load_state_dict(stt["hopt"])
+            if args.vlr is not None:
+                for group in hopt.param_groups:
+                    group["lr"] = args.vlr
+            finite(hopt.state_dict(), "warmup_optimizer")
     # R03: record the hyper-parameters that actually took effect (post-resume), so any run can be
     # audited against what was claimed on the command line (config.json keeps the raw claims).
     _eff = {"lr": float(opt.param_groups[0]["lr"]),
@@ -480,6 +519,8 @@ def main():
             "reward": args.reward, "gamma": args.gamma, "rscale": args.rscale,
             "value_head": args.value_head, "u_mode_problems": u_mode_check(args),
             "utility_provenance": utility_plan, "critic_warmup_iters": warm_iters}
+    _eff["resume_warmup_completed"] = warm_done
+    _eff["resume_warmup_counts_as_iteration"] = False
     for _p in _eff["u_mode_problems"]:
         print(f"[u-mode] WARNING: {_p}", flush=True)
     json.dump(_eff, open(os.path.join(args.out, "effective_params.json"), "w"), indent=1)
@@ -492,10 +533,16 @@ def main():
         if v.get("snap") and not os.path.exists(k.split(":", 2)[2]):
             v["prior"] = 0.0
     tlog = open(os.path.join(args.out, "train.jsonl"), "a")
+    wlog = open(os.path.join(args.out, "warmup.jsonl"), "a")
     elog = open(os.path.join(args.out, "eval.jsonl"), "a")
     json.dump(vars(args), open(os.path.join(args.out, "config.json"), "w"), indent=1)
     rng = np.random.default_rng(int(time.time()) % 100000 + it0)
+    # Warm trajectories have their own reproducible seed range and do not
+    # consume seeds belonging to formal iterations.
     seed = args.seed0 + it0 * args.games
+    formal_seed = seed
+    if args.resume and warm_done < warm_iters:
+        seed = args.seed0 + 1000000000 + (it0 * max(1, warm_iters) + warm_done) * args.games
 
     cur_it = [it0]
 
@@ -563,17 +610,21 @@ def main():
     import rl2_ppo_rollout as RO
     pending_eval = []
     wk = publish(it0)
-    if it0 == 0 and args.eval_every > 0:
+    if not args.resume and it0 == 0 and args.eval_every > 0:
         pending_eval.append((0, [pool.apply_async(RO.play_batch, (t,)) for t in eval_tasks(args, args.adapter, wk, 0)]))
     nxt = submit_rollouts(wk)
     t_start = time.time()
     it = it0
-    while it < it0 + args.iters and time.time() - t_start < 60 * args.minutes:
-        it += 1
+    while (it < it0 + args.iters or (args.resume and warm_done < warm_iters)) and time.time() - t_start < 60 * args.minutes:
+        resume_warm = bool(args.resume and warm_done < warm_iters)
+        if not resume_warm:
+            it += 1
+        warm = resume_warm or (not args.resume and it <= args.vwarm)
+        progress.update(it=it, phase="warmup" if resume_warm else "train")
         res_async, t_sub = nxt
         res = res_async.get()
         t_roll = time.time() - t_sub
-        if args.overlap:
+        if args.overlap and not resume_warm:
             nxt = submit_rollouts(wk)            # behaviour policy = current weights (1-iter stale for next update)
         games = [g for r in res for g in r["games"]]
         trajs = [g["recs"] for g in games]
@@ -621,12 +672,13 @@ def main():
             a_, r_ = gae(game_rewards(g, args, it), V[offs[gi]:offs[gi + 1]], args.gamma, args.lam)
             ADV[offs[gi]:offs[gi + 1]] = a_; RET[offs[gi]:offs[gi + 1]] = r_
         ADVn = (ADV - ADV.mean()) / (ADV.std() + 1e-6)
+        finite({"values": V, "advantages": ADV, "returns": RET,
+                "normalized_advantages": ADVn, "behavior_logp": LP0}, "rollout")
         # ---------------- PPO epochs
         net.train()
         if vnet is not None:
             vnet.train()
         stats = []
-        warm = (it - it0) <= warm_iters
         tq = lambda a: torch.from_numpy(a).to(dev)
         for ep in range(args.epochs):
             perm = np.random.permutation(SUB)
@@ -660,21 +712,24 @@ def main():
                 if vnet is not None:
                     vv = ad.evaluate(vnet, bt, args.temp)["value"]
                     vl = ((vv - ret.clamp(-1, 1)) ** 2).mean()
+                    finite(vl, "critic_loss")
                     vopt.zero_grad(); sc_v.scale(vl).backward(); sc_v.unscale_(vopt)
-                    torch.nn.utils.clip_grad_norm_(vnet.parameters(), args.gclip); sc_v.step(vopt); sc_v.update()
+                    clip_gradients(vnet.parameters(), "critic")
+                    sc_v.step(vopt); sc_v.update()
                     loss = pl - args.ent * ent.mean() + kl_coef * kl.mean()
                 else:
                     vl = ((o["value"] - ret.clamp(-1, 1)) ** 2).mean()
                     loss = pl - args.ent * ent.mean() + kl_coef * kl.mean() + args.vf * vl
                     if warm:
                         loss = args.vf * vl
+                finite({"loss": loss, "policy": pl, "value": vl, "kl": kl, "entropy": ent}, "losses")
                 if warm and hopt is not None:
                     hopt.zero_grad(); (args.vf * vl).backward()
-                    torch.nn.utils.clip_grad_norm_(vhead, args.gclip); hopt.step()
+                    clip_gradients(vhead, "warmup"); hopt.step()
                     gn = 0.0
                 elif not (warm and vnet is not None):
                     opt.zero_grad(); sc_p.scale(loss).backward(); sc_p.unscale_(opt)
-                    gn = torch.nn.utils.clip_grad_norm_(net.parameters(), args.gclip).item()
+                    gn = clip_gradients(net.parameters(), "actor").item()
                 else:
                     gn = 0.0
                 if not warm:
@@ -684,15 +739,20 @@ def main():
                 stats.append([pl.item(), vl.item(), ent.mean().item(), kl.mean().item(), cf, gn,
                               (lp - tq(LP0[idx])).mean().item()])
         st = np.mean(stats, axis=0)
-        if args.kl_target > 0:
+        finite(st, "update_statistics")
+        for name, model in (("actor", net), ("critic", vnet)):
+            if model is not None:
+                finite(model.state_dict(), name)
+        finite(opt.state_dict(), "actor_optimizer")
+        if vopt is not None:
+            finite(vopt.state_dict(), "critic_optimizer")
+        if args.kl_target > 0 and not warm:
             kl_coef *= 1.5 if st[3] > 1.5 * args.kl_target else (1 / 1.5 if st[3] < args.kl_target / 1.5 else 1.0)
             kl_coef = float(np.clip(kl_coef, 1e-4, 10.0))
         t_upd = time.time() - t1
-        wk = publish(it)
-        if not args.overlap:
-            nxt = submit_rollouts(wk)
-        for g in games:
-            league.update(g["opp"], g["margin"])
+        if not resume_warm:
+            for g in games:
+                league.update(g["opp"], g["margin"])
         by = {}
         for g in games:
             by.setdefault(g["opp"], []).append(g["margin"])
@@ -712,23 +772,37 @@ def main():
                                round(float(np.mean([g.get("planted_op", 0) for g in games if g["opp"] == k])), 1)]
                            for k in by},
                "buf_mb": round(buf.nbytes() / 1e6, 1), "rss_mb": round(rss_mb()), "workers_rss_mb": round(children_rss_mb())}
-        tlog.write(json.dumps(rec) + "\n"); tlog.flush()
-        print(json.dumps(rec), flush=True)
+        if resume_warm:
+            warm_done += 1
+            rec["warmup_batch"] = warm_done
+            rec["phase"] = "warmup"
         del buf, trajs, games, res
-        if it % args.snap_every == 0:
+        if not resume_warm and it % args.snap_every == 0:
             sp = os.path.join(args.out, f"snap_{it}.npz")
             AD.save_npz(ad.export(net), sp, {"it": it})
             league.add_snap(f"SNAP:{args.adapter}:{sp}", args.max_snaps)
         league.save()
-        if it % args.ckpt_every == 0 or it == it0 + args.iters:
+        if not resume_warm and (it % args.ckpt_every == 0 or it == it0 + args.iters):
             AD.save_npz(ad.export(net), os.path.join(args.out, f"ckpt_{it}.npz"), {"it": it})
         AD.save_npz(ad.export(net), os.path.join(args.out, "ckpt_last.npz"), {"it": it})
-        torch.save({"net": net.state_dict(), "opt": opt.state_dict(),
+        state = {"net": net.state_dict(), "opt": opt.state_dict(),
                     "vnet": vnet.state_dict() if vnet is not None else None,
                     "vopt": vopt.state_dict() if vopt is not None else None,
                     "it": it, "kl_coef": kl_coef, "training": training_contract(args),
-                    "utility_provenance": utility_plan}, os.path.join(args.out, "state_last.pt"))
-        if args.eval_every > 0 and it % args.eval_every == 0:
+                    "utility_provenance": utility_plan,
+                    "hopt": hopt.state_dict() if hopt is not None else None,
+                    "resume_warmup": {"at_it": it0, "requested": warm_iters, "completed": warm_done}
+                    if resume_warm else None}
+        rec["checkpoint"] = commit_checkpoint(args.out, state, os.path.join(args.out, "ckpt_last.npz"), progress["phase"])
+        log = wlog if resume_warm else tlog
+        log.write(json.dumps(rec, allow_nan=False) + "\n"); log.flush(); os.fsync(log.fileno())
+        print(json.dumps(rec, allow_nan=False), flush=True)
+        wk = publish(it)
+        if resume_warm and warm_done == warm_iters:
+            seed = formal_seed
+        if resume_warm or not args.overlap:
+            nxt = submit_rollouts(wk)
+        if not resume_warm and args.eval_every > 0 and it % args.eval_every == 0:
             ek = os.path.join(args.out, f"eval_w_{it}.npz")
             AD.save_npz(ad.export(net), ek, {"it": it})
             pending_eval.append((it, [pool.apply_async(RO.play_batch, (t,)) for t in eval_tasks(args, args.adapter, ek, it)]))
@@ -753,6 +827,7 @@ def main():
         if os.path.exists(ek):
             os.remove(ek)
     pool.terminate()
+    tlog.close(); wlog.close(); elog.close()
     if server is not None:
         server.stop()
 
