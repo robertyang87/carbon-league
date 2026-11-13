@@ -20,7 +20,7 @@ import torch.nn.functional as Fn
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import cnet2_feat as F  # noqa: E402
-from cnet2_build import FIELDS  # noqa: E402
+from cnet2_build import FIELDS, load_generation  # noqa: E402
 from cnet2_model import CNet2, migrate_state_dict, migrate_optimizer_state, NEW_HEAD_KEYS  # noqa: E402
 
 DEV = torch.device(os.environ.get("BC_DEVICE", "mps"))
@@ -256,9 +256,63 @@ def _validate_derived_layer(D, dirn, meta):
     return {"mode": "verified", "generation": gen_id, "files": checked}
 
 
+def _resolve_load_source(dirn):
+    """Residual 3 (F05 torn flat mirror): decide WHERE dataset fields are
+    read from. If dirn carries a generation pointer (current.json), the
+    fields come from the certified generation directory it points at --
+    every manifest field hash-verified via cnet2_build.load_generation --
+    and the flat mirror in dirn itself is NEVER read for fields: a
+    publish that died mid-refresh leaves new arrays next to an old meta
+    in the root, and training on that mix (maps of the new build, labels
+    of the old) must be impossible, not silent. A directory that IS a
+    generation (manifest.json, no pointer) is verified the same way and
+    read directly. Only a pre-generation legacy dataset (neither file)
+    falls back to the flat view, and load() then cross-checks field row
+    counts (and the builder's flat_total stamp when present) so a torn
+    legacy mirror is refused by name instead of read.
+    Returns (source_dir, manifest_or_None)."""
+    if os.path.exists(os.path.join(dirn, "current.json")):
+        try:
+            gen_dir, man = load_generation(dirn, verify=True)
+            return gen_dir, man
+        except FileNotFoundError:
+            # The pointer names a generation whose field files are not
+            # all present in its directory: that dataset was never a
+            # sealed builder product (hand-made / foreign layout), so
+            # there is no certified generation to resolve to. Fall back
+            # to the flat view, loudly -- load() applies the legacy row
+            # cross-checks, and _validate_derived_layer still binds any
+            # derived weights to the pointer's generation. A hash
+            # MISMATCH (ValueError from load_generation) is corruption
+            # of a sealed generation and stays a hard refusal above.
+            print(json.dumps({"load_source": "WARNING: generation pointer present but the "
+                              "generation's files are incomplete; falling back to the flat "
+                              "view with row cross-checks", "data": dirn}), flush=True)
+            return dirn, None
+    man_p = os.path.join(dirn, "manifest.json")
+    if os.path.exists(man_p):
+        man = json.load(open(man_p))
+        for _name, info in man.get("fields", {}).items():
+            p = os.path.join(dirn, info["file"])
+            if not os.path.exists(p) or _sha256_path(p) != info["sha256"]:
+                raise SystemExit(
+                    f"dataset generation file failed verification: {p}; refusing to train")
+        return dirn, man
+    return dirn, None
+
+
 def load(dirn):
     mm = None if os.environ.get("BC_RAM") == "1" else "r"     # BC_RAM=1: read the whole dataset into memory
-    D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm) for k in FIELDS}
+    src, man = _resolve_load_source(dirn)
+    D = {k: np.load(os.path.join(src, k + ".npy"), mmap_mode=mm) for k in FIELDS}
+    if man is not None:
+        _bad = [k for k in FIELDS if int(np.asarray(D[k]).shape[0]) != int(man["total"])]
+        if _bad:
+            raise SystemExit(
+                f"dataset generation {man.get('generation')} in {dirn!r}: fields {_bad} do not "
+                f"have the manifest row count {man['total']}; refusing to train")
+        print(json.dumps({"load_source": "generation", "generation": man.get("generation"),
+                          "rows": int(man["total"]), "data": dirn}), flush=True)
     if os.path.exists(os.path.join(dirn, "w.npy")) and os.environ.get("BC_USE_W", "1") == "1":
         D["w"] = np.load(os.path.join(dirn, "w.npy"), mmap_mode=mm)      # per-sample weights (dataset v4+)
     if os.path.exists(os.path.join(dirn, "uw.npy")) and os.environ.get("BC_USE_UW", "1") == "1":
@@ -269,7 +323,33 @@ def load(dirn):
     if float(os.environ.get("BC_AUX_W", "0")) > 0:                      # auxiliary targets written by aux_labels.py
         for k in AUXK:
             D[k] = np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm)
-    meta = json.load(open(os.path.join(dirn, "meta.json")))
+    meta = json.load(open(os.path.join(src, "meta.json")))
+    meta["dataset_source"] = src
+    if man is None:
+        # Legacy flat view (no generation pointer): refuse a torn mirror
+        # instead of training on it. Fields must all agree on row count,
+        # and -- when the builder stamped the flat meta (flat_total) --
+        # agree with the stamp.
+        _rows = {k: int(np.asarray(D[k]).shape[0]) for k in FIELDS}
+        _stamp = meta.get("flat_total")
+        if len(set(_rows.values())) != 1 or \
+                (_stamp is not None and set(_rows.values()) != {int(_stamp)}):
+            raise SystemExit(
+                f"legacy flat dataset {dirn!r} has inconsistent field row counts {_rows} "
+                f"(flat_total stamp: {_stamp}); this is a torn flat mirror left by an "
+                f"interrupted publish -- rebuild the dataset; refusing to train")
+        print(json.dumps({"load_source": "WARNING: legacy flat view (no generation pointer); "
+                          "fields read from the root after a row-count cross-check",
+                          "data": dirn}), flush=True)
+    elif "derived_layer" not in meta:
+        # The derived-layer mirror lives in the FLAT meta; keep it visible
+        # to _validate_derived_layer when fields came from the generation.
+        try:
+            _root_meta = json.load(open(os.path.join(dirn, "meta.json")))
+            if isinstance(_root_meta, dict) and "derived_layer" in _root_meta:
+                meta["derived_layer"] = _root_meta["derived_layer"]
+        except Exception:
+            pass
     if wgate:
         meta["weight_gate"] = wgate
     dchk = _validate_derived_layer(D, dirn, meta)
