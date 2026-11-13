@@ -47,13 +47,17 @@ never from the flat mirror), written to the dataset ROOT like the
 derived layer (never into the immutable generation), and sealed with
 out/k0_aux.json, format "cnet2-k0-aux/1", mirroring the cnet2-derived/1
 entry shape. The sidecar binds: base_generation, row count, a row-key
-fingerprint (sha256 over the pinned gid.npy + step.npy file hashes), the
-sha256 of every label file, and per-game lineage {gi, key, file,
+fingerprint (sha256 over the pinned gid.npy + step.npy file hashes),
+the sha256 of every label file, the build lineage (top-level "lineage"
+= the pinned manifest's cfg_fp), and per-game lineage {gi, key, file,
 replay_sha256 (file bytes), sides, first_terminal, terminal_cause,
 physical/clearing counts}. verify_aux_labels(ds) / `--verify` re-pins
 the CURRENT generation and rejects on any mismatch: a moved pointer, a
 tampered label row (hash), a swapped replay (hash), or a lineage set
-that no longer matches the certified meta.
+that no longer matches the certified meta. This sidecar is the single
+contract the consumer (k0_train.check_aux_sidecar) validates against:
+same format string, same file name, same field names and hash
+compositions on both sides.
 
 Usage:
   python3 k0_aux_labels.py DS [WORKERS]     write labels + sidecar
@@ -317,6 +321,7 @@ def label_dataset(ds, workers=None):
             entry["clearing_deaths"] = acc["clearing"]
         lineage.append(entry)
     side = {"format": FORMAT, "tool": "k0_aux_labels", "base_generation": gen_id,
+            "lineage": man.get("cfg_fp"),
             "rows": int(N), "row_key": {"fields": ["gid", "step"],
                                         "sha256": _row_key(gen_dir, man)},
             "horizons": {"die": list(KD), "dep": list(KP), "dw": list(KD)},
@@ -356,6 +361,9 @@ def verify_aux_labels(ds):
     if side.get("base_generation") != gen_id:
         errors.append(f"base_generation {side.get('base_generation')!r} != current "
                       f"certified generation {gen_id!r} (pointer moved or bundle re-bound)")
+    if side.get("lineage") != man.get("cfg_fp"):
+        errors.append(f"lineage {side.get('lineage')!r} != current manifest cfg_fp "
+                      f"{man.get('cfg_fp')!r} (bundle bound to another build lineage)")
     if side.get("rows") != int(man["total"]):
         errors.append(f"rows {side.get('rows')} != generation total {man['total']}")
     try:
