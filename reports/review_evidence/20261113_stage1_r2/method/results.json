@@ -1,0 +1,348 @@
+{
+  "reviewed_ref": "7b025ae58f83250265e75a5cccf274f63ca7d0a3",
+  "source_sha256": "b77e66454d3f0e50e034333b1bdacd4d11a79fa638c7fc9a1faad75f9f2a0afd",
+  "scope": "Actual _q_scene/_anchor_task/main/samplers/statistics; teacher and real-terminal outcome tables are explicit deterministic stubs; no real model quality claim.",
+  "original_negative_soft_tau1": {
+    "return_code": 1,
+    "formal": true,
+    "summary": {
+      "n": 150,
+      "n_games": 50,
+      "q_gain_mean": 0.029999999999999912,
+      "q_soft_gain_mean": -0.01857148886937532,
+      "q_soft_gain_behavior_mean": -0.01857148886937532,
+      "behavior_temp": 1.0,
+      "strict_improve_rate": 1.0,
+      "entropy_mean": 2.5744869959929946,
+      "agree_rate": 0.0,
+      "anchor": {
+        "n": 30,
+        "hard": {
+          "n_rows": 30,
+          "n_games": 21,
+          "root_mean": 0.029999999999999916,
+          "game_mean": 0.029999999999999916,
+          "game_ci95_t": [
+            0.029999999999999916,
+            0.029999999999999916
+          ],
+          "t_exact": true,
+          "sigma_game": 0.0,
+          "sigma_root": 0.0
+        },
+        "soft": {
+          "n_rows": 30,
+          "n_games": 21,
+          "root_mean": -0.01857148886937532,
+          "game_mean": -0.01857148886937532,
+          "game_ci95_t": [
+            -0.01857148886937532,
+            -0.01857148886937532
+          ],
+          "t_exact": true,
+          "sigma_game": 0.0,
+          "sigma_root": 0.0
+        },
+        "soft_ci95_boot_cluster": [
+          -0.01857148886937532,
+          -0.01857148886937532
+        ]
+      },
+      "verdict": "FAIL"
+    }
+  },
+  "raw_training_q_negative_tau2_behavior_positive": {
+    "return_code": 0,
+    "formal": true,
+    "summary": {
+      "n": 150,
+      "n_games": 50,
+      "q_gain_mean": 0.029999999999999912,
+      "q_soft_gain_mean": -0.01857148886937532,
+      "q_soft_gain_behavior_mean": 0.004308495981331539,
+      "behavior_temp": 2.0,
+      "strict_improve_rate": 1.0,
+      "entropy_mean": 2.5744869959929946,
+      "agree_rate": 0.0,
+      "anchor": {
+        "n": 30,
+        "hard": {
+          "n_rows": 30,
+          "n_games": 21,
+          "root_mean": 0.029999999999999916,
+          "game_mean": 0.029999999999999916,
+          "game_ci95_t": [
+            0.029999999999999916,
+            0.029999999999999916
+          ],
+          "t_exact": true,
+          "sigma_game": 0.0,
+          "sigma_root": 0.0
+        },
+        "soft": {
+          "n_rows": 30,
+          "n_games": 21,
+          "root_mean": 0.004308495981331539,
+          "game_mean": 0.004308495981331539,
+          "game_ci95_t": [
+            0.004308495981331539,
+            0.004308495981331539
+          ],
+          "t_exact": true,
+          "sigma_game": 0.0,
+          "sigma_root": 0.0
+        },
+        "soft_ci95_boot_cluster": [
+          0.004308495981331539,
+          0.004308495981331539
+        ]
+      },
+      "verdict": "PASS"
+    }
+  },
+  "all_arm_anchor_check": {
+    "calls_per_run": 480,
+    "n_anchor": 30,
+    "n_arms": 16,
+    "all_candidates_continued": true
+  },
+  "original_cluster_example_after_real_pilot_artifact": {
+    "return_code": 1,
+    "formal": true,
+    "summary": {
+      "n": 150,
+      "n_games": 50,
+      "du_mean_roots": 0.04,
+      "du_mean": 0.03999999999999999,
+      "du_ci95_t_cluster": [
+        -0.0174164353465497,
+        0.09741643534654967
+      ],
+      "t_exact": true,
+      "du_ci95_boot_cluster": [
+        -0.016000000000000007,
+        0.096
+      ],
+      "sigma_game": 0.20203050891044214,
+      "sigma_root": 0.20067001862719533,
+      "teacher_ms_per_call": 1.0,
+      "teacher_calls": 150,
+      "pilot_check": "ok (locked_N_games=50)",
+      "verdict": "FAIL"
+    }
+  },
+  "pilot_fixture": {
+    "n_games": 30,
+    "locked_N_games": 50,
+    "same_code_weights_config": true,
+    "games_disjoint_from_confirmation": true
+  },
+  "anchor_point_estimate_counterexample": {
+    "actual_main": {
+      "return_code": 0,
+      "formal": true,
+      "summary": {
+        "n": 150,
+        "n_games": 50,
+        "q_gain_mean": 0.029999999999999912,
+        "q_soft_gain_mean": 0.018671415600132413,
+        "q_soft_gain_behavior_mean": 0.018671415600132413,
+        "behavior_temp": 1.0,
+        "strict_improve_rate": 1.0,
+        "entropy_mean": 0.6628867109631404,
+        "agree_rate": 0.0,
+        "anchor": {
+          "n": 30,
+          "hard": {
+            "n_rows": 30,
+            "n_games": 21,
+            "root_mean": 0.05066666666666664,
+            "game_mean": -0.013333333333333345,
+            "game_ci95_t": [
+              -0.08369488649831107,
+              0.057028219831644376
+            ],
+            "t_exact": true,
+            "sigma_game": 0.1545746852926873,
+            "sigma_root": 0.16237320428957594
+          },
+          "soft": {
+            "n_rows": 30,
+            "n_games": 21,
+            "root_mean": 0.03153394634689035,
+            "game_mean": -0.008298406933392196,
+            "game_ci95_t": [
+              -0.05209006698052931,
+              0.03549325311374491
+            ],
+            "t_exact": true,
+            "sigma_game": 0.09620427301198149,
+            "sigma_root": 0.10105791932052935
+          },
+          "soft_ci95_boot_cluster": [
+            -0.046233981486042235,
+            0.029637167619257842
+          ]
+        },
+        "verdict": "PASS"
+      }
+    },
+    "anchor_roots": 30,
+    "anchor_unique_games": 21,
+    "source_game_multiplicity": {
+      "confirm_011": 3,
+      "confirm_027": 1,
+      "confirm_010": 1,
+      "confirm_012": 1,
+      "confirm_044": 3,
+      "confirm_023": 2,
+      "confirm_043": 2,
+      "confirm_041": 2,
+      "confirm_013": 2,
+      "confirm_001": 1,
+      "confirm_017": 1,
+      "confirm_004": 2,
+      "confirm_008": 1,
+      "confirm_042": 1,
+      "confirm_003": 1,
+      "confirm_009": 1,
+      "confirm_015": 1,
+      "confirm_019": 1,
+      "confirm_038": 1,
+      "confirm_035": 1,
+      "confirm_031": 1
+    },
+    "terminal_rule": "For selected games with multiplicity>1, U_g=.75,U_q=.95; for singleton games U_g=.90,U_q=.78; teacher q selects arm1, all U in normal win range.",
+    "soft_weight": 0.6223805200044148
+  },
+  "positive_control": {
+    "return_code": 0,
+    "formal": true,
+    "summary": {
+      "n": 150,
+      "n_games": 50,
+      "q_gain_mean": 0.029999999999999912,
+      "q_soft_gain_mean": 0.018671415600132413,
+      "q_soft_gain_behavior_mean": 0.018671415600132413,
+      "behavior_temp": 1.0,
+      "strict_improve_rate": 1.0,
+      "entropy_mean": 0.6628867109631404,
+      "agree_rate": 0.0,
+      "anchor": {
+        "n": 30,
+        "hard": {
+          "n_rows": 30,
+          "n_games": 21,
+          "root_mean": 0.029999999999999916,
+          "game_mean": 0.029999999999999916,
+          "game_ci95_t": [
+            0.029999999999999916,
+            0.029999999999999916
+          ],
+          "t_exact": true,
+          "sigma_game": 0.0,
+          "sigma_root": 0.0
+        },
+        "soft": {
+          "n_rows": 30,
+          "n_games": 21,
+          "root_mean": 0.018671415600132413,
+          "game_mean": 0.018671415600132413,
+          "game_ci95_t": [
+            0.018671415600132413,
+            0.018671415600132413
+          ],
+          "t_exact": true,
+          "sigma_game": 0.0,
+          "sigma_root": 0.0
+        },
+        "soft_ci95_boot_cluster": [
+          0.018671415600132413,
+          0.018671415600132413
+        ]
+      },
+      "verdict": "PASS"
+    }
+  },
+  "negative_terminal_anchor_control": {
+    "return_code": 1,
+    "formal": true,
+    "summary": {
+      "n": 150,
+      "n_games": 50,
+      "q_gain_mean": 0.029999999999999912,
+      "q_soft_gain_mean": 0.018671415600132413,
+      "q_soft_gain_behavior_mean": 0.018671415600132413,
+      "behavior_temp": 1.0,
+      "strict_improve_rate": 1.0,
+      "entropy_mean": 0.6628867109631404,
+      "agree_rate": 0.0,
+      "anchor": {
+        "n": 30,
+        "hard": {
+          "n_rows": 30,
+          "n_games": 21,
+          "root_mean": -0.029999999999999916,
+          "game_mean": -0.029999999999999916,
+          "game_ci95_t": [
+            -0.029999999999999916,
+            -0.029999999999999916
+          ],
+          "t_exact": true,
+          "sigma_game": 0.0,
+          "sigma_root": 0.0
+        },
+        "soft": {
+          "n_rows": 30,
+          "n_games": 21,
+          "root_mean": -0.018671415600132413,
+          "game_mean": -0.018671415600132413,
+          "game_ci95_t": [
+            -0.018671415600132413,
+            -0.018671415600132413
+          ],
+          "t_exact": true,
+          "sigma_game": 0.0,
+          "sigma_root": 0.0
+        },
+        "soft_ci95_boot_cluster": [
+          -0.018671415600132413,
+          -0.018671415600132413
+        ]
+      },
+      "verdict": "FAIL"
+    }
+  },
+  "opening_full_length": {
+    "n_games": 10000,
+    "n_roots": 33333,
+    "n_opening": 3333,
+    "share": 0.0999909999099991
+  },
+  "power_semantics": [
+    {
+      "sigma_game": 0.01,
+      "N_raw": 2,
+      "N_locked": 50,
+      "true_effect": 0.02,
+      "reported_significance_power": 1.0,
+      "composite_gate_power_normal_approx": 0.5
+    },
+    {
+      "sigma_game": 0.1,
+      "N_raw": 196,
+      "N_locked": 196,
+      "true_effect": 0.02,
+      "reported_significance_power": 0.7995458067395502,
+      "composite_gate_power_normal_approx": 0.5
+    },
+    {
+      "sigma_game": 0.36,
+      "N_raw": 2541,
+      "N_locked": 200,
+      "true_effect": 0.02,
+      "reported_significance_power": 0.12013227678707827,
+      "composite_gate_power_normal_approx": 0.12013227678707833
+    }
+  ]
+}
