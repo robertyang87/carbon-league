@@ -313,7 +313,16 @@ class FastCarbon:
             for tid, (pos, age) in full_obs["players"][p][3].items():
                 self.trees[tid] = _Tree(tid, p, pos, age)
                 self.player_trees[p].append(tid)
-                tc[p] = max(tc[p], _id_suffix(tid) + 1)
+                # Tree ids embed the *creator* ("player-<c>-tree-<n>"), and a
+                # seized tree keeps its creator id while changing owner. The
+                # per-player id counter is the creator's high-water mark, so
+                # restore it under the creator parsed from the id -- not under
+                # the current owner. Crediting the owner left the creator's
+                # counter at 0 after a seizure, and the creator's next planted
+                # tree reused the seized tree's live id and overwrote it
+                # (REVIEW_FULL_20261113 P3 snapshot defect).
+                tc[_id_creator(tid, p)] = max(tc[_id_creator(tid, p)],
+                                              _id_suffix(tid) + 1)
             for wid, (pos, cargo, occ) in full_obs["players"][p][2].items():
                 self.workers[wid] = _Worker(wid, p, pos, cargo, occ == "COLLECTOR")
                 self.player_workers[p].append(wid)
@@ -690,3 +699,18 @@ def _id_suffix(entity_id):
         return int(str(entity_id).rsplit("-", 1)[1])
     except (ValueError, IndexError):
         return -1
+
+
+def _id_creator(entity_id, fallback):
+    """Creator player index embedded in an entity id ("player-<c>-...").
+
+    Falls back to `fallback` for ids that do not carry a valid creator."""
+    parts = str(entity_id).split("-")
+    if len(parts) >= 3 and parts[0] == "player":
+        try:
+            c = int(parts[1])
+        except ValueError:
+            return fallback
+        if c in (0, 1):
+            return c
+    return fallback
