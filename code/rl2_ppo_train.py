@@ -430,6 +430,29 @@ def apply_utility_source(plan, ad, init_weights, net, vnet, vopt):
     plan["initial_critic_sha256"] = h.hexdigest()
 
 
+def _select_remote_files(names, cur_it, max_stale):
+    """Split-mode remote-dir file selection (the staleness contract): a
+    trajectory file may be consumed iff its behaviour iteration lies in
+    [cur_it - max_stale, cur_it]. Older files are stale (the caller
+    deletes them); NEWER files are future trajectories -- behaviour
+    weights ahead of the learner, e.g. a previous run's actor sharing
+    the directory -- never consumed and never deleted; they become
+    selectable if the learner reaches their iteration. Returns
+    (keep, stale, future) with keep newest-first, the historical
+    consumption order."""
+    keep, stale, future = [], [], []
+    for f in sorted(names):
+        fit = int(f[2:8])
+        if fit < cur_it - max_stale:
+            stale.append(f)
+        elif fit > cur_it:
+            future.append(f)
+        else:
+            keep.append(f)
+    keep.reverse()
+    return keep, stale, future
+
+
 def main():
     args = parse()
     args.out = os.path.abspath(args.out)
@@ -615,20 +638,26 @@ def main():
     cur_it = [it0]
 
     class _Remote:
-        """split mode: newest cloud games (behaviour weights >= it - max_stale), at least args.games of them"""
+        """split mode: newest cloud games whose behaviour iteration lies in
+        [it - max_stale, it] (see _select_remote_files), at least args.games
+        of them; future-iteration files are reported, never consumed"""
+        def __init__(self):
+            self._future_seen = []
+
         def get(self):
             while True:
-                fs = sorted(f for f in os.listdir(args.remote) if f.endswith(".pkl.z"))
-                keep = []
-                for f in fs:
-                    if int(f[2:8]) < cur_it[0] - args.max_stale:
-                        os.remove(os.path.join(args.remote, f))
-                    else:
-                        keep.append(f)
+                fs = [f for f in os.listdir(args.remote) if f.endswith(".pkl.z")]
+                keep, stale, future = _select_remote_files(fs, cur_it[0], args.max_stale)
+                for f in stale:
+                    os.remove(os.path.join(args.remote, f))
+                if future and future != self._future_seen:
+                    self._future_seen = list(future)
+                    print(f"[remote] ignoring {len(future)} future trajectory file(s) "
+                          f"(behaviour iteration > {cur_it[0]}): {future[:3]}", flush=True)
                 n = sum(int(f.rsplit("_", 1)[1].split(".")[0]) for f in keep)
                 if n >= args.games:
                     games = []
-                    for f in reversed(keep):
+                    for f in keep:
                         if len(games) >= args.games:
                             break
                         fp = os.path.join(args.remote, f)
