@@ -21,7 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import cnet2_feat as F  # noqa: E402
 from cnet2_build import FIELDS  # noqa: E402
-from cnet2_model import CNet2  # noqa: E402
+from cnet2_model import CNet2, migrate_state_dict  # noqa: E402
 
 DEV = torch.device(os.environ.get("BC_DEVICE", "mps"))
 TW = {0: 1.5, 1: 1.5, 2: 1.5}       # Master, 1C-Zero v9, v8-preview weighted up
@@ -336,13 +336,17 @@ def main(data, out, epochs, cfg):
     init = os.environ.get("BC_INIT")
     if init:
         w = np.load(init)
-        mk_ = net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"}, strict=False)
-        # Stage 0 new heads (utility/wdl/margin) may be absent in old weights, like tattn.*
-        bad_ = [k for k in mk_.missing_keys if not (k.startswith("tattn.") or k.startswith(("utility.", "wdl.", "margin.")))] + list(mk_.unexpected_keys)
-        if bad_:                              # only new trunk-attention layers (cfg TA, identity at init) may be absent
-            raise SystemExit(f"BC_INIT does not fit the model: {bad_[:8]}")
-        if mk_.missing_keys:
-            print(json.dumps({"init_new_layers": len(mk_.missing_keys)}), flush=True)
+        # Stage 0 new heads (utility/wdl/margin) may be absent in old weights, like tattn.*:
+        # load through the shared migration path (F01, cnet2_model.migrate_state_dict) --
+        # only the new-head keys and new trunk-attention layers (cfg TA, identity at init)
+        # may be absent; anything else is a hard error, same as the PPO/resume entry.
+        try:
+            mig_ = migrate_state_dict(net, {k: torch.from_numpy(w[k]) for k in w.files if k != "meta"},
+                                      allow_missing_prefixes=("tattn.",), source="BC_INIT")
+        except RuntimeError as e:
+            raise SystemExit(str(e))
+        if mig_["migrated_missing"]:
+            print(json.dumps({"init_new_layers": len(mig_["migrated_missing"])}), flush=True)
         for r_ in [int(x) for x in os.environ.get("BC_REINIT_TEACH", "").split(",") if x]:
             with torch.no_grad():   # fresh style row for a re-assigned slot (others keep their warm start)
                 net.teach.weight[r_].normal_(0.0, float(net.teach.weight.std()))
