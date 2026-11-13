@@ -28,11 +28,28 @@ if os.path.exists(_bf):
     sys.exit(f"set_uw: {_bf} is present -- the dataset root is a torn flat "
              f"mirror left by an interrupted publish; rebuild the dataset "
              f"before deriving weights (refusing to run)")
-try:
-    gen_dir, _man = load_generation(ds_abs, verify=True)
+# R3 P2 (owner re-review): the legacy fallback is ONLY for a dataset
+# with no generation pointer at all. The previous code caught every
+# FileNotFoundError from load_generation and fell back to the flat
+# root, so a PRESENT pointer with a damaged sealed generation (e.g. a
+# missing maps.npy) was misread as "no generation pointer": set_uw
+# derived weights from the unverified root, wrote them out and exited
+# 0 -- while the training loader refuses that same generation. With a
+# pointer in force, ANY load_generation failure (missing file, hash
+# mismatch, unreadable manifest) is a hard refusal BEFORE anything is
+# written, and the error names the underlying cause.
+_ptr = os.path.join(ds_abs, "current.json")
+if os.path.exists(_ptr):
+    try:
+        gen_dir, _man = load_generation(ds_abs, verify=True)
+    except Exception as e:  # noqa: BLE001 -- the refusal must name it
+        sys.exit(f"set_uw: generation pointer {_ptr} exists but the sealed "
+                 f"generation failed verification: {type(e).__name__}: {e}; "
+                 f"refusing to derive weights (no legacy fallback while a "
+                 f"pointer is in force)")
     base_gen = _man["generation"]
     feat_dir = gen_dir          # derivation inputs: certified generation ONLY
-except FileNotFoundError:
+else:
     # Pre-generation legacy dataset: no pointer exists, the flat root
     # is the only source there is (registration stays impossible and
     # the consumer will flag the weights unverified, as before).
