@@ -118,9 +118,11 @@ export BC_DEVICE=${BC_DEVICE:-cuda} BC_RAM=1 BC_THREADS=${BC_THREADS:-5} BC_USE_
 unset BC_AMP BC_CLIP BC_TRAIN_PREFIX BC_CACHE_TRUNK BC_SELF_KL BC_EXIT_W BC_AUX_W BC_COMPILE BC_CAR_KL
 BC_INIT=$D/weights/cnet2_arch_n1_last.npz nohup ../.venv/bin/python cnet2_train.py "$DS" "$D/weights/cnet2_${PREFIX}r1.npz" "$EPOCHS" \
   '{"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}' > "$LOGD/${PREFIX}r1.log" 2>&1 &
+PID_R1=$!
 BC_INIT=$D/weights/cnet2_b128m2t3.npz nohup ../.venv/bin/python cnet2_train.py "$DS" "$D/weights/cnet2_${PREFIX}g1.npz" "$EPOCHS" \
   '{"C":128,"NB":8,"D":128}' > "$LOGD/${PREFIX}g1.log" 2>&1 &
-sleep 5; echo "pids: $(pgrep -f 'cnet2_train[.]py' | tr '\n' ' ')"
+PID_G1=$!
+sleep 5; echo "pids: r1=$PID_R1 g1=$PID_G1 (all train procs: $(pgrep -f 'cnet2_train[.]py' | tr '\n' ' '))"
 
 echo '--- 5) ATTESTATION (completion = trio live + this block in the log) ---'
 sleep 120
@@ -133,7 +135,17 @@ echo "logs:"; ls -l --time-style=+%F_%T "$LOGD/${PREFIX}r1.log" "$LOGD/${PREFIX}
 echo "weights:"; ls -lt --time-style=+%F_%T "$D/weights/cnet2_${PREFIX}"*.npz 2>/dev/null | head -6
 read RP MT IX <<< "$(counts)"; echo "counts: replays=$RP matches=$MT index=$IX dataset_games=$GAMES"
 echo "ep0 lines: r1=$EP0R g1=$EP0G"
-if [ "${EP0R:-0}" -lt 1 ] || [ "${EP0G:-0}" -lt 1 ] || ! pgrep -f 'cnet2_train[.]py' >/dev/null 2>&1; then
-  mark "FAIL attestation: trio not live (ep0 r1=$EP0R g1=$EP0G) -- NOT complete, escalate with this log"; exit 1
+# P2-4 (Codex review 20261114): liveness is PER ARM, judged on the PID each
+# arm was actually launched with (PID_R1 / PID_G1 above). The previous third
+# leg -- "any cnet2_train process alive anywhere" -- let a dead arm pass
+# whenever the other arm (or an unrelated train process) was still up: with
+# g1 dead after ep0 the chain still printed LAUNCH-OK.
+ALIVE_R1=0; [ -n "${PID_R1:-}" ] && kill -0 "$PID_R1" 2>/dev/null && ALIVE_R1=1
+ALIVE_G1=0; [ -n "${PID_G1:-}" ] && kill -0 "$PID_G1" 2>/dev/null && ALIVE_G1=1
+echo "arm liveness: r1 pid=${PID_R1:-?} alive=$ALIVE_R1; g1 pid=${PID_G1:-?} alive=$ALIVE_G1"
+if [ "${EP0R:-0}" -lt 1 ] || [ "${EP0G:-0}" -lt 1 ] || [ "$ALIVE_R1" != 1 ] || [ "$ALIVE_G1" != 1 ]; then
+  DEAD_ARMS=""; [ "$ALIVE_R1" != 1 ] && DEAD_ARMS="$DEAD_ARMS r1(pid=${PID_R1:-?})"
+  [ "$ALIVE_G1" != 1 ] && DEAD_ARMS="$DEAD_ARMS g1(pid=${PID_G1:-?})"
+  mark "LAUNCH-FAIL attestation: dead arm(s):${DEAD_ARMS:- none} (ep0 r1=$EP0R g1=$EP0G) -- NOT complete, escalate with this log"; exit 1
 fi
 mark "LAUNCH-OK + ATTESTED -- executor complete ONLY in this sense; training itself continues to ep$((EPOCHS-1))"
