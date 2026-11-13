@@ -296,20 +296,38 @@ def eval_tasks(args, adapter, wkey, it):
     return tasks
 
 
+def _clustered_se(pairs):
+    """SE of the mean with the SEED as the independent unit (section 20
+    R2): a seed's games (both seats) are averaged into one cluster value
+    and the SE runs over clusters. The per-game iid SE treats the two
+    seats of a seed as independent and understates the SE by up to
+    sqrt(2). Returns (se, n_clusters); se is None with < 2 clusters."""
+    by_seed = {}
+    for seed, v in pairs:
+        by_seed.setdefault(seed, []).append(float(v))
+    if len(by_seed) < 2:
+        return None, len(by_seed)
+    cm = np.array([np.mean(v) for v in by_seed.values()])
+    return float(cm.std(ddof=1) / math.sqrt(len(cm))), len(by_seed)
+
+
 def summarize_eval(it, results):
     by = {}
     for r in results:
         for g in r["games"]:
-            by.setdefault(g["opp"], []).append(g["margin"])
+            by.setdefault(g["opp"], []).append((g.get("seed"), g["margin"]))
     rows = []
-    for opp, m in by.items():
-        m = np.array(m)
+    for opp, pairs in by.items():
+        m = np.array([v for _, v in pairs])
         u = np.array([terminal_u(float(x)) for x in m])
-        rows.append({"it": it, "opp": opp, "n": len(m), "wins": int((m > 0).sum()),
+        se_m, n_seeds = _clustered_se(pairs)
+        se_u, _ = _clustered_se([(s, terminal_u(float(v))) for s, v in pairs])
+        rows.append({"it": it, "opp": opp, "n": len(m), "n_seeds": n_seeds,
+                     "wins": int((m > 0).sum()),
                      "mean_u": round(float(u.mean()), 4),
-                     "se_u": round(float(u.std(ddof=1) / math.sqrt(len(u))) if len(u) > 1 else 0.0, 4),
+                     "se_u": round(se_u, 4) if se_u is not None else 0.0,
                      "mean": round(float(m.mean()), 1),
-                     "se": round(float(m.std(ddof=1) / math.sqrt(len(m))) if len(m) > 1 else 0.0, 1),
+                     "se": round(se_m, 1) if se_m is not None else 0.0,
                      "t": time.time()})
     return rows
 
@@ -621,6 +639,12 @@ def main():
               "sampling uses the league table (pass --pool-authoritative to retire them)", flush=True)
     _eff["pool_unlisted_active"] = _unlisted
     _eff["pool_active"] = sorted(k for k, v in league.tab.items() if v["prior"] > 0)
+    # The run's operative environment: the adapter and rollout read the
+    # CNET2_*/RL2_* variables at import, and an offline evaluation run
+    # under a different env once produced a false crash reading -- a
+    # run's receipt must show the values it actually played under.
+    _eff["env"] = {k: v for k, v in sorted(os.environ.items())
+                   if k.startswith(("CNET2_", "RL2_")) or k in ("BC_W", "LEARNER_THREADS")}
     json.dump(_eff, open(os.path.join(args.out, "effective_params.json"), "w"), indent=1)
     league.save()                         # split mode: the cloud actor needs the table before iteration 1
     tlog = open(os.path.join(args.out, "train.jsonl"), "a")
