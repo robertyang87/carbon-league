@@ -73,6 +73,12 @@ def main():
         max_dq = max(max_dq, float(np.abs(r1["q"] - r2["q"]).max()),
                      float(np.abs(r1["Q_mean"] - r2["Q_mean"]).max()))
         assert all(np.array_equal(a, b) for a, b in zip(r1["arms"], r2["arms"])), "arms differ"
+        # Hardened (Codex review P3): NaN must not hide inside max()
+        # reductions, and q must be a normalised distribution.
+        for r in (r1, r2):
+            assert np.isfinite(r["q"]).all() and np.isfinite(r["Q_mean"]).all(), \
+                "non-finite teacher output"
+            assert abs(float(r["q"].sum()) - 1.0) < 1e-6, "q not normalised"
     print(f"CachePolicy parity (guard off): max |dq|={max_dq:.3e} over {len(R)} roots "
           f"({time.time()-t0:.0f}s)")
     assert max_dq == 0.0, "CachePolicy parity FAILED (must be exact)"
