@@ -263,3 +263,34 @@ v1.0 中与下列冲突的表述以本节为准。
 candidates（S05 保持 0.0）；自家验收 A1/A2/A3/A3-teacher 全过。
 runtime 探针（S04）本轮未复跑：其作用面文件（guided_match、search）
 与 v1.1 已验版本逐字节相同。
+
+## 10. v1.3 勘误（2026-11-13，Codex 第三轮复核 da198a15 后）
+
+第三轮确认 R22、R23、到时 root、guard-on finite、功效口径按原范围
+关闭；R21 余一处残余，另有两项 P3。处置如下，与 §9 冲突处以本节为准。
+
+- **R21 残余（P1）**：训练目标软场景收益 `q_soft_gain_train_mean`
+  此前仍按逐根均值进入裁决，现改为 `cluster_stats(rows,
+  "soft_gain_train")` 的 `game_mean`，FAIL/PASS 共用；逐根值改名
+  `q_soft_gain_train_root_mean` 只作描述。至此 q 闸全部裁决输入
+  （场景收益、改善率、训练软收益、硬/软锚点）均为按局统计。复核的
+  长短局混合反例（逐根 +0.00407652／按局 −0.00724748）在新版判
+  **FAIL**，字段值与按局派生值逐值一致；原锚点异号例保持
+  INDETERMINATE，正负对照不变。
+- **P3-a（fixture 锁）**：落实正典清单锁——a3 compare 要求恰 63 条
+  唯一 (game,t) 记录；a3_teacher 要求恰 50 个根且根身份（观察哈希＋
+  席位）唯一。50 条唯一 compare、40 根、50 个重复根均被拒绝，正典
+  fixture 在 Studio 实跑仍全过。§9 中「锁 fixture 数量与唯一身份」
+  的表述至此才完整成立。
+- **P3-b（du 诊断入口回归）**：`ds_ids` 改为读清单前初始化为 None；
+  du 模式省略 `--ds-games-file` 时正常返回 DIAGNOSTIC ONLY
+  （formal=false、退出码 0），不再抛 UnboundLocalError。
+
+验证（Studio，同一最终版）：R3 method/pilot/terminal 三探针复跑
+（pilot 28 项观测中仅「UnboundLocalError 出现」一项按预期翻转为
+否，其余全合）；P3-a 合成例与 P3-b 冒烟按预期；自家验收
+A1/A2/A3/A3-teacher 全过（A1/A2 作用面本轮未变，沿用本轮实跑结果）。
+
+运行口径（所有者 2026-11-13 确认）：34 局隔离池可用于正式级 pilot；
+正式 Stage B 仍需 ≥50 个与 pilot 不交的来源局（按锁定 N 可达 200），
+换种子/席位不产生新的独立局。
