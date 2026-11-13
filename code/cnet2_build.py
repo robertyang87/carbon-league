@@ -716,9 +716,17 @@ def _patch_flat_meta_derived(out, side):
     os.replace(tmp, meta_path)
 
 
-def register_derived(out, files, params=None):
+def register_derived(out, files, params=None, expected_base=None):
     """Sanctioned post-processing entry (owner pt.4): register derived
     files (e.g. set_uw's w.npy / uw.npy) that live in the dataset ROOT.
+
+    `expected_base` (P1-B): a caller that read its derivation inputs
+    from a pinned generation passes that generation id here; if the
+    dataset pointer has moved since, registration is REFUSED before
+    anything is written -- the derived rows were computed from another
+    generation's features and must never be bound to the new one.
+    Callers that pass nothing keep the historical behaviour (bind to
+    whatever generation is current at registration time).
 
     Sidecar format "cnet2-derived/1" (out/derived.json, mirrored into
     flat meta.json under "derived_layer"):
@@ -740,6 +748,11 @@ def register_derived(out, files, params=None):
     assert_not_in_generation(out_abs, "register a derived layer for")
     gen_dir, man = load_generation(out_abs, verify=False)
     base_gen = man["generation"]
+    if expected_base is not None and base_gen != expected_base:
+        raise ValueError(
+            f"derived registration refused: dataset generation is {base_gen}, "
+            f"caller pinned {expected_base} -- the pointer moved since the "
+            f"derivation inputs were read; rerun the derivation")
     total_rows = int(man["total"])
     side_path = os.path.join(out_abs, DERIVED_SIDECAR)
     entries = {}
