@@ -130,7 +130,7 @@ F11 data-contract fixes (REVIEW_FULL_20261113, 2026-11-13):
   generated" is a claim about a CONFIGURATION, not just a seed. Every
   index entry and every replay payload carries an "identity" block:
   {weights_md5, config_hash, config, names, code_md5{eval_v53, fastsim,
-  cnet2_search, selfplay_gen}}. Startup reconciliation compares each
+  cnet2_search, cnet2_feat, cnet2_np, selfplay_gen}}. Startup reconciliation compares each
   committed entry's identity with the CURRENT run identity; ANY
   mismatch (weights changed by one byte, config changed, code changed)
   is an identity_mismatch -- the game is NOT adopted and NOT skipped as
@@ -248,6 +248,14 @@ def _run_identity(weights, conf, name_a, name_b, diversity=None):
     code = {}
     for mod in (eval_v53, _fastsim_mod, CS):
         code[os.path.basename(mod.__file__)] = _md5_file(mod.__file__)
+    # cnet2_feat / cnet2_np are the playing agent's feature and policy
+    # modules (cnet2_search imports them unconditionally); the identity
+    # map used to omit them, so a feat/np change left the identity --
+    # and the equal-identity adoption check -- unchanged. Hash them too.
+    for _dep in ("cnet2_feat", "cnet2_np"):
+        _m = sys.modules.get(_dep)
+        if _m is not None and getattr(_m, "__file__", None):
+            code[os.path.basename(_m.__file__)] = _md5_file(_m.__file__)
     code[os.path.basename(__file__)] = _md5_file(__file__)
     return {"weights_md5": (_md5_file(weights)
                             if weights and os.path.exists(weights) else "absent"),
