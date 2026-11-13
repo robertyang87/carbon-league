@@ -1,0 +1,188 @@
+COLLECTOR options
+  depth 8: heldout action 0.683  target-following 0.570  majority 0.319  n=92140
+|--- o_appr <= 0.5
+|   |--- stay_p <= 0.6
+|   |   |--- o_appr <= -0.5
+|   |   |   |--- o_e_at_gt <= 0.5
+|   |   |   |   |--- home_p <= 0.9
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- home_p >  0.9
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- o_e_at_gt >  0.5
+|   |   |   |   |--- cargo <= 0.2
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- cargo >  0.2
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |--- o_appr >  -0.5
+|   |   |   |--- stay_p <= 0.2
+|   |   |   |   |--- stay_p <= 0.1
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- stay_p >  0.1
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- stay_p >  0.2
+|   |   |   |   |--- stay_p <= 0.4
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- stay_p >  0.4
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |--- stay_p >  0.6
+|   |   |--- o_epl1 <= 0.5
+|   |   |   |--- stay_p <= 0.8
+|   |   |   |   |--- stay_p <= 0.7
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- stay_p >  0.7
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- stay_p >  0.8
+|   |   |   |   |--- stay_p <= 0.9
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- stay_p >  0.9
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |--- o_epl1 >  0.5
+|   |   |   |--- stay_p <= 0.7
+|   |   |   |   |--- cargo <= 23.5
+|   |   |   |   |   |--- class: 0
+|   |   |   |   |--- cargo >  23.5
+|   |   |   |   |   |--- class: 0
+|   |   |   |--- stay_p >  0.7
+|   |   |   |   |--- step <= 115.0
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- step >  115.0
+|   |   |   |   |   |--- truncated branch of depth 4
+|--- o_appr >  0.5
+|   |--- o_epl_at <= 0.5
+|   |   |--- o_e_at_gt <= 0.5
+|   |   |   |--- o_e_at_eq <= 0.5
+|   |   |   |   |--- stay_p <= 0.7
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- stay_p >  0.7
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- o_e_at_eq >  0.5
+|   |   |   |   |--- o_ebase <= 0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_ebase >  0.5
+|   |   |   |   |   |--- class: 0
+|   |   |--- o_e_at_gt >  0.5
+|   |   |   |--- stay_p <= 0.6
+|   |   |   |   |--- cargo <= 12.0
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- cargo >  12.0
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- stay_p >  0.6
+|   |   |   |   |--- stay_p <= 0.7
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- stay_p >  0.7
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |--- o_epl_at >  0.5
+|   |   |--- o_own1 <= 0.5
+|   |   |   |--- o_etree8 <= 0.5
+|   |   |   |   |--- o_e_lt1 <= 0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_e_lt1 >  0.5
+|   |   |   |   |   |--- class: 0
+|   |   |   |--- o_etree8 >  0.5
+|   |   |   |   |--- cargo <= 30.7
+|   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |--- cargo >  30.7
+|   |   |   |   |   |--- truncated branch of depth 2
+|   |   |--- o_own1 >  0.5
+|   |   |   |--- car_here <= 29.4
+|   |   |   |   |--- left <= 47.0
+|   |   |   |   |   |--- class: 0
+|   |   |   |   |--- left >  47.0
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- car_here >  29.4
+|   |   |   |   |--- o_car <= 21.4
+|   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |--- o_car >  21.4
+|   |   |   |   |   |--- class: 0
+
+PLANTER options
+  depth 8: heldout action 0.591  target-following 0.471  majority 0.221  n=44799
+|--- o_appr <= -0.5
+|   |--- o_ecol1 <= 0.5
+|   |   |--- o_etree <= 0.5
+|   |   |   |--- o_depl_ch <= -0.5
+|   |   |   |   |--- o_own1 <= 0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_own1 >  0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- o_depl_ch >  -0.5
+|   |   |   |   |--- depl_here <= 5.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- depl_here >  5.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |--- o_etree >  0.5
+|   |   |   |--- depl_here <= 1.5
+|   |   |   |   |--- o_nb <= 72.8
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_nb >  72.8
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- depl_here >  1.5
+|   |   |   |   |--- o_own1 <= 0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_own1 >  0.5
+|   |   |   |   |   |--- class: 1
+|   |--- o_ecol1 >  0.5
+|   |   |--- o_otree <= 0.5
+|   |   |   |--- o_ecol_at <= 0.5
+|   |   |   |   |--- free_here <= 0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- free_here >  0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- o_ecol_at >  0.5
+|   |   |   |   |--- dtg <= 4.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- dtg >  4.5
+|   |   |   |   |   |--- truncated branch of depth 2
+|   |   |--- o_otree >  0.5
+|   |   |   |--- cash <= 3092.7
+|   |   |   |   |--- class: 0
+|   |   |   |--- cash >  3092.7
+|   |   |   |   |--- class: 0
+|--- o_appr >  -0.5
+|   |--- o_depl <= 0.5
+|   |   |--- o_own1 <= 0.5
+|   |   |   |--- o_otree <= 0.5
+|   |   |   |   |--- etree_here <= 0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- etree_here >  0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- o_otree >  0.5
+|   |   |   |   |--- o_nb <= 25.6
+|   |   |   |   |   |--- class: 1
+|   |   |   |   |--- o_nb >  25.6
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |--- o_own1 >  0.5
+|   |   |   |--- tgt_p <= 0.7
+|   |   |   |   |--- o_nb <= 78.6
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_nb >  78.6
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- tgt_p >  0.7
+|   |   |   |   |--- o_nb <= 89.5
+|   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |--- o_nb >  89.5
+|   |   |   |   |   |--- class: 0
+|   |--- o_depl >  0.5
+|   |   |--- o_etree <= 0.5
+|   |   |   |--- o_depl_ch <= -0.5
+|   |   |   |   |--- tgt_p <= 0.7
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- tgt_p >  0.7
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |--- o_depl_ch >  -0.5
+|   |   |   |   |--- o_nb <= 114.8
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_nb >  114.8
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |--- o_etree >  0.5
+|   |   |   |--- tgt_p <= 0.9
+|   |   |   |   |--- o_ecol1 <= 0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_ecol1 >  0.5
+|   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |--- tgt_p >  0.9
+|   |   |   |   |--- o_appr <= 0.5
+|   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- o_appr >  0.5
+|   |   |   |   |   |--- truncated branch of depth 2
+
