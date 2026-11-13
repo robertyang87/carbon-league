@@ -160,7 +160,7 @@ def _sha256_path(path):
     return h.hexdigest()
 
 
-def _validate_derived_layer(D, dirn, meta):
+def _validate_derived_layer(D, dirn, meta, sources=None, gen_ctx=None):
     """Derived-layer consumer gate (owner pt.4, final acceptance): w/uw in
     the dataset root are post-processing products (set_uw), NOT generation
     fields. Before any of them enters a loss, verify identity against the
@@ -175,6 +175,16 @@ def _validate_derived_layer(D, dirn, meta):
     bytes left behind by another build must never be consumed silently).
     Only a pre-generation legacy dataset (no pointer, no sidecar) may
     consume w/uw unverified, and then only with a loud warning.
+    P1-A (owner re-review): `sources` records where load() ACTUALLY read
+    each weight from -- "generation" (the hash-verified generation
+    directory) or "root" (the flat mirror). The generation-owned verdict
+    below may only rest on an actual generation read; the previous code
+    inferred ownership from the field NAME while the bytes came from the
+    unverified root, so a tampered or torn root w was consumed under a
+    "generation-owned" label, and a sealed w vanished silently when the
+    root copy was missing. `gen_ctx` carries the manifest load() itself
+    resolved (for a directory that IS a generation: no pointer exists
+    for _validate to re-read).
     Returns a summary dict recorded into meta["derived_layer_check"]."""
     used = [k for k in ("w", "uw") if k in D]
     if not used:
@@ -202,31 +212,55 @@ def _validate_derived_layer(D, dirn, meta):
                              f"dataset {dirn!r}; refusing to train")
         gen_fields = set(man.get("fields", {}))
         gen_total = int(man["total"])
+    if gen_id is None and gen_ctx is not None:
+        # Directory that IS a generation (no pointer): load() resolved
+        # and hash-verified this manifest itself; use it as the context.
+        gen_id = gen_ctx.get("generation")
+        gen_fields = set(gen_ctx.get("fields", ()))
+        gen_total = gen_ctx.get("total")
     if decl is None:
         if gen_id is None:
             print(json.dumps({"derived_layer_check": "WARNING: derived identity unverified "
                               "(legacy dataset: no generation pointer, no derived.json); "
                               "w/uw consumed on file presence only", "data": dirn}), flush=True)
             return {"mode": "legacy-unverified", "used": used}
-        bad = [k for k in used if k not in gen_fields]
+        bad = [k for k in used
+               if (sources or {}).get(k) != "generation" or k not in gen_fields]
         if bad:
-            raise SystemExit(f"derived layer: weights {bad} in dataset {dirn!r} are neither "
-                             f"fields of generation {gen_id} nor declared in a derived.json "
-                             f"sidecar (stale or foreign weights); refusing to train")
-        return {"mode": "generation-owned", "generation": gen_id, "used": used}
+            raise SystemExit(f"derived layer: weights {bad} in dataset {dirn!r} were not "
+                             f"read from the certified generation {gen_id} and are not "
+                             f"declared in a derived.json sidecar (stale or foreign "
+                             f"weights); refusing to train")
+        return {"mode": "generation-owned", "generation": gen_id, "used": used,
+                "sources": {k: "generation" for k in used}}
     if gen_id is None:
         raise SystemExit(f"derived layer: dataset {dirn!r} declares a derived.json sidecar "
                          f"but has no generation pointer; identity cannot be verified; "
                          f"refusing to train")
     entries = decl.get("files", {}) if isinstance(decl, dict) else {}
     checked = []
+    owned = []
     for k in used:
-        if k in gen_fields:
+        src_k = (sources or {}).get(k)
+        if src_k == "generation" or (src_k is None and k in gen_fields):
+            # Bytes came from the hash-verified generation directory
+            # (or, for a caller that does not report sources, the field
+            # is generation property by manifest). Ownership is only
+            # ever granted on this path -- never for root bytes.
+            if k not in gen_fields:
+                raise SystemExit(f"derived layer: {k} in dataset {dirn!r} was read from "
+                                 f"the generation directory but is not a field of "
+                                 f"generation {gen_id}; refusing to train")
             if (k + ".npy") in entries:
                 raise SystemExit(f"derived layer: {k}.npy in dataset {dirn!r} is BOTH a field "
                                  f"of generation {gen_id} and a declared derived file; "
                                  f"refusing to train")
+            owned.append(k)
             continue
+        if k in gen_fields:
+            raise SystemExit(f"derived layer: {k}.npy in dataset {dirn!r} is a field of "
+                             f"generation {gen_id} but was read from the unverified "
+                             f"flat root; refusing to train")
         name = k + ".npy"
         e = entries.get(name)
         if e is None:
@@ -253,7 +287,12 @@ def _validate_derived_layer(D, dirn, meta):
             raise SystemExit(f"derived layer: {name} in dataset {dirn!r} failed identity "
                              f"checks: " + "; ".join(probs) + "; refusing to train")
         checked.append(name)
-    return {"mode": "verified", "generation": gen_id, "files": checked}
+    out = {"mode": "verified", "generation": gen_id, "files": checked}
+    if owned:
+        out["owned"] = owned
+    if sources:
+        out["sources"] = dict(sources)
+    return out
 
 
 def _resolve_load_source(dirn):
@@ -310,10 +349,35 @@ def load(dirn):
                 f"have the manifest row count {man['total']}; refusing to train")
         print(json.dumps({"load_source": "generation", "generation": man.get("generation"),
                           "rows": int(man["total"]), "data": dirn}), flush=True)
-    if os.path.exists(os.path.join(dirn, "w.npy")) and os.environ.get("BC_USE_W", "1") == "1":
-        D["w"] = np.load(os.path.join(dirn, "w.npy"), mmap_mode=mm)      # per-sample weights (dataset v4+)
-    if os.path.exists(os.path.join(dirn, "uw.npy")) and os.environ.get("BC_USE_UW", "1") == "1":
-        D["uw"] = np.load(os.path.join(dirn, "uw.npy"), mmap_mode=mm)    # per-unit weights (dataset v6+)
+    # Weight fields (owner re-review, P1-A): a field the generation
+    # manifest declares is generation property and is read from the
+    # certified generation directory ONLY -- _resolve_load_source has
+    # already hash-verified those exact bytes via load_generation, and
+    # the flat root mirror (torn by an interrupted publish, or tampered)
+    # is never a source for them: previously w/uw were loaded from the
+    # root unconditionally and merely LABELLED generation-owned when the
+    # name appeared in the manifest, so a root w of all-123 trained
+    # under a verified label and a sealed w vanished silently when the
+    # root copy was deleted. Only a field the manifest does NOT declare
+    # may come from the root, and then only as a derived-layer product
+    # that _validate_derived_layer verifies against the sidecar below.
+    # `wsrc` records the ACTUAL source of every weight consumed.
+    gen_fields = set(man.get("fields", {})) if man is not None else set()
+    wsrc = {}
+    for _k, _env in (("w", "BC_USE_W"), ("uw", "BC_USE_UW")):
+        if os.environ.get(_env, "1") != "1":
+            continue
+        if _k in gen_fields:
+            _p = os.path.join(src, _k + ".npy")
+            if not os.path.exists(_p):
+                raise SystemExit(
+                    f"dataset generation {man.get('generation')} in {dirn!r}: manifest "
+                    f"declares weight field {_k!r} but {_p} is missing; refusing to train")
+            D[_k] = np.load(_p, mmap_mode=mm)
+            wsrc[_k] = "generation"
+        elif os.path.exists(os.path.join(dirn, _k + ".npy")):
+            D[_k] = np.load(os.path.join(dirn, _k + ".npy"), mmap_mode=mm)
+            wsrc[_k] = "root"
     wgate = _check_finite_weights(D, dirn)
     if wgate:
         print(json.dumps({"weight_gate": wgate, "data": dirn}), flush=True)
@@ -349,7 +413,10 @@ def load(dirn):
             pass
     if wgate:
         meta["weight_gate"] = wgate
-    dchk = _validate_derived_layer(D, dirn, meta)
+    _gen_ctx = ({"generation": man.get("generation"),
+                 "fields": set(man.get("fields", {})),
+                 "total": int(man["total"])} if man is not None else None)
+    dchk = _validate_derived_layer(D, dirn, meta, sources=wsrc, gen_ctx=_gen_ctx)
     if dchk:
         meta["derived_layer_check"] = dchk
         print(json.dumps({"derived_layer_check": dchk, "data": dirn}), flush=True)
