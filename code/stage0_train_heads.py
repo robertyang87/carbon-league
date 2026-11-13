@@ -133,7 +133,17 @@ def load_label_columns(data, D):
                             if info["approx_rows"] else "margin_raw/u_raw (exact)")
     return info
 
+def _assert_val_nonempty(va):
+    """Residual 6: an empty validation split used to die as a bare
+    numpy ValueError inside np.concatenate in evaluate(). Name it."""
+    if va is None or len(va) == 0:
+        raise SystemExit(
+            "val 集为空（0 局），检查 split 配置：没有任何样本被划入验证集"
+            "（meta.games 的 val 标记 / 数据集划分），拒绝在空验证集上评估或训练")
+
+
 def evaluate(net, D, va, bs):
+    _assert_val_nonempty(va)
     net.eval()
     us, uts, preds, clss, mks, mgs, sts = [], [], [], [], [], [], []
     with torch.no_grad():
@@ -191,9 +201,13 @@ def main():
     epochs = int(sys.argv[4]) if len(sys.argv) > 4 else 20
     bs = int(os.environ.get("BC_BS", "256"))
     D, is_val, meta = CT.load(data)
-    label_info = load_label_columns(data, D)
+    # Label columns must come from the SAME source CT.load resolved to
+    # (the certified generation when a pointer exists), never from a
+    # possibly torn flat mirror in the raw data root.
+    label_info = load_label_columns(meta.get("dataset_source", data), D)
     print(json.dumps({"labels": label_info}), flush=True)
     tr = np.nonzero(~is_val)[0]; va = np.nonzero(is_val)[0]
+    _assert_val_nonempty(va)
     w = np.load(init)
     cfg = json.loads(str(w["meta"]))["cfg"]
     net = CNet2(**cfg).to(CT.DEV)
