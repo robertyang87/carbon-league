@@ -105,7 +105,14 @@ def parse():
     a("--vwarm", type=int, default=2, help="iterations training only the value function")
     a("--resume-vwarm", type=int, default=0,
       help="critic-only warmup batches after resume, before formal iterations; policy/optimizer and formal it stay frozen")
+    a("--abandon-resume-vwarm", action="store_true",
+      help="discard an unfinished resume warmup recorded in the checkpoint instead of continuing it; "
+           "the discard is recorded in effective_params and in the next checkpoint state (never silent)")
     a("--pool", default=json.dumps(DEFAULT_POOL), help="json [[bot_file, prior], ...]")
+    a("--pool-authoritative", action="store_true",
+      help="treat --pool (+ --self-prior) as the whole sampling pool: league.json members it does not "
+           "list are retired (prior 0, record kept) instead of merging forever; without it, members the "
+           "persisted league table carries but --pool omits stay active and are reported in effective_params")
     a("--snap-every", type=int, default=10)
     a("--snap-prior", type=float, default=0.5)
     a("--max-snaps", type=int, default=6)
@@ -165,6 +172,23 @@ class League:
         for f, pr in pool:
             self.tab.setdefault(f, {"prior": pr, "n": 0, "wr": 0.5, "margin": 0.0})
             self.tab[f]["prior"] = pr
+
+    def reconcile(self, wanted, keep_self):
+        """Authoritative pool reconciliation (--pool-authoritative): retire
+        (prior -> 0; the row and its n/wr/margin record are kept) every
+        non-snapshot entry the launch does not want, so a member dropped
+        from --pool -- or SELF under --self-prior 0 -- actually leaves the
+        sampling pool. Without this the persisted table only ever grows:
+        setdefault above merges the launch pool in, nothing removes.
+        Returns the retired keys."""
+        retired = []
+        for k, v in self.tab.items():
+            if v.get("snap") or (k == "SELF" and keep_self) or k in wanted:
+                continue
+            if v["prior"] > 0:
+                v["prior"] = 0.0
+                retired.append(k)
+        return retired
 
     def add_snap(self, spec, max_snaps):
         self.tab[spec] = {"prior": self.snap_prior, "n": 0, "wr": 0.5, "margin": 0.0, "snap": True}
@@ -498,6 +522,31 @@ def main():
     warm_iters = args.resume_vwarm if args.resume else args.vwarm
     warm_done = 0
     prior_warm = (stt or {}).get("resume_warmup") or {}
+    abandoned_warm = None
+    if (args.resume and not (utility_plan or {}).get("reset_critic_optimizer")
+            and prior_warm.get("at_it") == it0
+            and isinstance(prior_warm.get("requested"), int)
+            and isinstance(prior_warm.get("completed"), int)
+            and not prior_warm.get("abandoned")
+            and prior_warm["completed"] != prior_warm["requested"]):
+        # A previous launch left this warmup unfinished (or its progress record
+        # is inconsistent). Never let a mismatched --resume-vwarm silently skip
+        # the remainder: the first formal round would overwrite the record with
+        # None and erase that a warmup was ever left pending. The launch must
+        # claim the record with the identical flag (handled below), or abandon
+        # it explicitly -- the abandonment stays on the record either way.
+        if not (args.resume_vwarm == prior_warm["requested"]
+                and 0 <= prior_warm["completed"] < prior_warm["requested"]):
+            if args.abandon_resume_vwarm:
+                abandoned_warm = {"at_it": it0, "requested": prior_warm["requested"],
+                                  "completed": prior_warm["completed"]}
+            else:
+                raise SystemExit(
+                    "checkpoint carries an unfinished resume warmup "
+                    f"(at_it={it0}, requested={prior_warm['requested']}, "
+                    f"completed={prior_warm['completed']}); relaunch with "
+                    f"--resume-vwarm {prior_warm['requested']} to continue it, or "
+                    "--abandon-resume-vwarm to discard it on the record")
     if (args.resume and not (utility_plan or {}).get("reset_critic_optimizer")
             and prior_warm.get("at_it") == it0
             and prior_warm.get("requested") == args.resume_vwarm):
@@ -521,17 +570,36 @@ def main():
             "utility_provenance": utility_plan, "critic_warmup_iters": warm_iters}
     _eff["resume_warmup_completed"] = warm_done
     _eff["resume_warmup_counts_as_iteration"] = False
+    if abandoned_warm is not None:
+        _eff["resume_warmup_abandoned"] = abandoned_warm
     for _p in _eff["u_mode_problems"]:
         print(f"[u-mode] WARNING: {_p}", flush=True)
-    json.dump(_eff, open(os.path.join(args.out, "effective_params.json"), "w"), indent=1)
     league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
     if args.self_prior > 0:
         league.tab.setdefault("SELF", {"prior": args.self_prior, "n": 0, "wr": 0.5, "margin": 0.0})
         league.tab["SELF"]["prior"] = args.self_prior
-    league.save()                         # split mode: the cloud actor needs the table before iteration 1
     for k, v in league.tab.items():      # resumed snapshots keep their files
         if v.get("snap") and not os.path.exists(k.split(":", 2)[2]):
             v["prior"] = 0.0
+    # The sampling pool is the league table, not the --pool list: league.json
+    # persists across launches and the League merge never removes a member,
+    # so a receipt quoting --pool (or a members count) does not describe who
+    # is actually sampled. Report the divergence on every launch, and retire
+    # it only under explicit --pool-authoritative.
+    _wanted = {f for f, _pr in json.loads(args.pool)}
+    _unlisted = sorted(k for k, v in league.tab.items()
+                       if v["prior"] > 0 and not v.get("snap") and k != "SELF" and k not in _wanted)
+    if args.pool_authoritative:
+        _eff["pool_retired"] = league.reconcile(_wanted, keep_self=args.self_prior > 0)
+        if _eff["pool_retired"]:
+            print(f"[pool] retired league members absent from --pool: {_eff['pool_retired']}", flush=True)
+    elif _unlisted:
+        print(f"[pool] WARNING: league table carries active members absent from --pool: {_unlisted}; "
+              "sampling uses the league table (pass --pool-authoritative to retire them)", flush=True)
+    _eff["pool_unlisted_active"] = _unlisted
+    _eff["pool_active"] = sorted(k for k, v in league.tab.items() if v["prior"] > 0)
+    json.dump(_eff, open(os.path.join(args.out, "effective_params.json"), "w"), indent=1)
+    league.save()                         # split mode: the cloud actor needs the table before iteration 1
     tlog = open(os.path.join(args.out, "train.jsonl"), "a")
     wlog = open(os.path.join(args.out, "warmup.jsonl"), "a")
     elog = open(os.path.join(args.out, "eval.jsonl"), "a")
@@ -792,7 +860,10 @@ def main():
                     "utility_provenance": utility_plan,
                     "hopt": hopt.state_dict() if hopt is not None else None,
                     "resume_warmup": {"at_it": it0, "requested": warm_iters, "completed": warm_done}
-                    if resume_warm else None}
+                    if resume_warm else
+                    ({"at_it": abandoned_warm["at_it"], "requested": abandoned_warm["requested"],
+                      "completed": abandoned_warm["completed"], "abandoned": True}
+                     if abandoned_warm is not None else None)}
         rec["checkpoint"] = commit_checkpoint(args.out, state, os.path.join(args.out, "ckpt_last.npz"), progress["phase"])
         log = wlog if resume_warm else tlog
         log.write(json.dumps(rec, allow_nan=False) + "\n"); log.flush(); os.fsync(log.fileno())
