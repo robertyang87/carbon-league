@@ -84,7 +84,7 @@ def parse():
     a("--gamma", type=float, default=0.995)
     a("--lam", type=float, default=0.95)
     a("--rscale", type=float, default=1 / 5000.0)
-    a("--reward", default="dense", choices=["dense", "terminal", "worth"],
+    a("--reward", default="dense", choices=["dense", "terminal", "worth", "u"],
       help="dense: per-step change of the cash margin; worth: per-step change of the worth margin (cash + cargo on board + "
            "remaining tree value; sums to the same final margin, credit arrives at pick-up / planting time)")
     a("--win-bonus", type=float, default=0.1)
@@ -189,8 +189,30 @@ def gae(rew, val, gamma, lam):
     return adv, adv + val
 
 
+# Terminal-U: U = 0.5*W + 0.5*sigmoid(margin/1000); W = 1 win / 0 loss /
+# 0.5 draw. The draw value is forced, not a knob (strategy-group ruling):
+# U(-M) = 1 - U(M) holds for every terminal state iff the two seats' draw
+# W are complementary, whose symmetric solution is 0.5 -- then U(draw, 0)
+# = 0.5 and the seats sum to 1 (zero-sum consistent). This is the same U
+# as the teacher terminal (eval_v53 _terminal_u) and the utility-head
+# training labels: one definition across gate/teacher/value/PPO.
+DRAW_W = 0.5
+
+
+def terminal_u(margin):
+    w = 1.0 if margin > 0 else (DRAW_W if margin == 0 else 0.0)
+    return 0.5 * w + 0.5 / (1.0 + math.exp(-margin / 1000.0))
+
+
 def game_rewards(g, args, it):
     dm = g["dmargin"].astype(np.float64)
+    if args.reward == "u":
+        # Terminal-U: non-terminal steps pay 0; terminal pays 2*(U-0.5) in
+        # [-1, 1]. No shaping terms and no win bonus in this mode (U already
+        # carries the win term). Launch with --rscale 1.0 --gamma 1.0.
+        r = np.zeros_like(dm)
+        r[-1] = 2.0 * (terminal_u(float(g["margin"])) - 0.5)
+        return (r * args.rscale).astype(np.float32)
     if args.reward == "terminal":
         r = np.zeros_like(dm); r[-1] = dm.sum()
     elif args.reward == "worth":
@@ -222,7 +244,10 @@ def summarize_eval(it, results):
     rows = []
     for opp, m in by.items():
         m = np.array(m)
+        u = np.array([terminal_u(float(x)) for x in m])
         rows.append({"it": it, "opp": opp, "n": len(m), "wins": int((m > 0).sum()),
+                     "mean_u": round(float(u.mean()), 4),
+                     "se_u": round(float(u.std(ddof=1) / math.sqrt(len(u))) if len(u) > 1 else 0.0, 4),
                      "mean": round(float(m.mean()), 1),
                      "se": round(float(m.std(ddof=1) / math.sqrt(len(m))) if len(m) > 1 else 0.0, 1),
                      "t": time.time()})
