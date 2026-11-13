@@ -1,7 +1,9 @@
 """cnet2_np -- pure NumPy inference of cnet2_model.CNet2 (single observation).
 
 Policy(weights dict).act(x, aux, teacher, greedy=True) -> (labels [OWN], logits [OWN,5], value)
-Autoregressive decoding over own slots with cnet2_feat.Prefix features.
+With want_u=True, also returns the Stage 0 utility head u = sigmoid(ctx @ utility) in [0,1]
+as a fourth element: (labels, logits, value, u). Missing utility keys raise KeyError
+(no silent fallback to the old value head).
 """
 
 import json
@@ -25,6 +27,14 @@ SHIFTS = [(ki - 1, kj - 1) for ki in range(3) for kj in range(3)]
 _r, _c = F.ROW, F.COL
 IM2COL = np.stack([((_r + dr) % F.S) * F.S + (_c + dc) % F.S for dr, dc in SHIFTS], 1)   # [N,9]
 
+
+
+def _sigmoid(z):
+    """Numerically stable sigmoid (matches torch.sigmoid to float precision)."""
+    if z >= 0:
+        return 1.0 / (1.0 + math.exp(-z))
+    e = math.exp(z)
+    return e / (1.0 + e)
 
 
 def _tk(t, s, x):
@@ -162,12 +172,19 @@ class Policy:
         n = np.tanh(gi[2 * D:] + r * gh[2 * D:])
         return (1 - z) * n + z * h
 
-    def act(self, x, aux, teacher=0, forced=None, sample_rng=None, temp=1.0, hook=None, sample_kinds=None):
+    def act(self, x, aux, teacher=0, forced=None, sample_rng=None, temp=1.0, hook=None, sample_kinds=None,
+            want_u=False):
         """forced: optional labels to teacher-force (parity tests).
-        hook(s, logits, prefix) -> optional action override (rule layer)."""
+        hook(s, logits, prefix) -> optional action override (rule layer).
+        want_u: also return the Stage 0 utility head u (E[U], [0,1]) as a 4th
+        element. Raises KeyError naming the missing utility key on old weights
+        that lack it -- never silently falls back to the value head."""
         w = self.w
         tok, ctx = self.encode(x, teacher)
         value = math.tanh(float(ctx @ w["value.weightT"][:, 0] + w["value.bias"][0]))
+        u = None
+        if want_u:
+            u = _sigmoid(float(ctx @ w["utility.weightT"][:, 0] + w["utility.bias"][0]))
         h = self.lin(ctx, "h0")
         prev = 8
         pf = F.Prefix(x, aux)
@@ -199,6 +216,8 @@ class Policy:
             labels[s] = a
             pf.advance(s, a)
             prev = a + (0 if s < 10 else 5)
+        if want_u:
+            return labels, logits, value, u
         return labels, logits, value
 
 
