@@ -63,7 +63,11 @@ def drive_agent():
 def compare():
     a = json.load(open(os.path.join(HERE, "guard_parity_old.json")))
     b = json.load(open(os.path.join(HERE, "guard_parity_new.json")))
-    assert len(a) == len(b), "length mismatch"
+    # Hardened (Codex review P3): an empty comparison or shared non-zero
+    # error counts must not be able to print PASS.
+    assert len(a) == len(b) and len(a) > 0, "length mismatch or empty comparison"
+    assert all(o["errors"] == 0 for o in a) and all(o["errors"] == 0 for o in b), \
+        "non-zero errors in parity fixtures"
     n_diff = 0
     for x, y in zip(a, b):
         if x != y:
