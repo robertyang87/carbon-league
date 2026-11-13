@@ -1,0 +1,13 @@
+PASS set_uw exit0 s': 32, 'car_tokens': 28, 'base_tokens': 84, 'car_w': 0.0, 'planter_w': 2.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+PASS sidecar format+base ['uw.npy', 'w.npy']
+FAIL load verified mode FileNotFoundError: generation file missing: /home/hatch/workspace/final-accept/work/ds1/generations/gen-test1/maps.npy
+FAIL tamper base_generation rejected FileNotFoundError: generation file missing: /home/hatch/workspace/final-accept/work/ds2/generations/gen-test1/maps.npy
+FAIL tamper rows rejected FileNotFoundError: generation file missing: /home/hatch/workspace/final-accept/work/ds3/generations/gen-test1/maps.npy
+FAIL tamper file bytes rejected (sha256) FileNotFoundError: generation file missing: /home/hatch/workspace/final-accept/work/ds4/generations/gen-test1/maps.npy
+FAIL mirror mismatch rejected FileNotFoundError: generation file missing: /home/hatch/workspace/final-accept/work/ds5/generations/gen-test1/maps.npy
+PASS set_uw into generation refused -layer guard: refusing to set_uw write weights into inside an immutable generation directory: /home/hatch/workspace/final-accept/work/ds1/generations/gen-test1
+
+PASS legacy load ok + warning {'mode': 'legacy-unverified', 'used': ['w', 'uw']}
+FAIL undeclared stale w refused FileNotFoundError: generation file missing: /home/hatch/workspace/final-accept/work/ds8/generations/gen-test1/maps.npy
+
+== derived-layer: 4/10 passed ==
