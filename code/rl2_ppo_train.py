@@ -229,6 +229,35 @@ def summarize_eval(it, results):
     return rows
 
 
+def _resume_sd(model, sd, opt, opt_sd, tag):
+    """F01 (final acceptance): resume one model+optimizer pair from a
+    checkpoint. A NEW-format checkpoint (same key set) takes the plain
+    strict path. A PRE-HEADS checkpoint (only the 6 Stage 0 head keys
+    absent, nothing unexpected) resumes through the shared migration:
+    weights via cnet2_model.migrate_state_dict, optimizer via
+    cnet2_train.migrate_optimizer_checked (the id->name mapping is proven
+    from the checkpoint's own key order, moments post-verified). Anything
+    else falls back to the strict load so the real mismatch raises."""
+    missing = set(model.state_dict()) - set(sd)
+    extra = set(sd) - set(model.state_dict())
+    if not missing and not extra:
+        model.load_state_dict(sd); opt.load_state_dict(opt_sd)
+        return "strict"
+    from cnet2_model import NEW_HEAD_KEYS
+    if extra or not missing <= set(NEW_HEAD_KEYS):
+        model.load_state_dict(sd)          # raises with the real mismatch
+        opt.load_state_dict(opt_sd)
+        return "strict"
+    from cnet2_model import migrate_state_dict
+    from cnet2_train import migrate_optimizer_checked
+    migrate_state_dict(model, sd, source=f"rl2 resume {tag}")
+    rep = migrate_optimizer_checked(opt, opt_sd, sd, model, source=f"rl2 resume {tag}")
+    print(f"[resume] {tag}: pre-heads checkpoint migrated; carried "
+          f"{len(rep['carried'])} params, cold-started {len(rep['cold'])} head params, "
+          f"steps preserved {rep['steps_preserved']}", flush=True)
+    return "migrated"
+
+
 def main():
     args = parse()
     args.out = os.path.abspath(args.out)
@@ -267,9 +296,9 @@ def main():
     kl_coef = kl0
     if args.resume:
         stt = torch.load(args.resume, map_location="cpu")
-        net.load_state_dict(stt["net"]); opt.load_state_dict(stt["opt"])
+        _resume_sd(net, stt["net"], opt, stt["opt"], "net")
         if vnet is not None and stt.get("vnet"):
-            vnet.load_state_dict(stt["vnet"]); vopt.load_state_dict(stt["vopt"])
+            _resume_sd(vnet, stt["vnet"], vopt, stt["vopt"], "vnet")
         it0 = stt["it"]
         # R03: load_state_dict restored the checkpoint's optimizer LR and the old code took the
         # checkpoint's kl_coef unconditionally, so a fresh --lr/--vlr/--kl on the command line was
