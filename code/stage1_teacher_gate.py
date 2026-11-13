@@ -601,6 +601,7 @@ def main():
         raise SystemExit(f"split manifest has no games for mode {a.mode}")
     ds_check = "NOT RUN"
     ds_md5 = None
+    ds_ids = None
     if a.ds_games_file:
         raw = open(a.ds_games_file, "rb").read()
         ds_md5 = hashlib.md5(raw).hexdigest()
@@ -695,7 +696,12 @@ def main():
             if rate_by_game else float("nan")
         res["q_gain_game_mean"] = gain_c["game_mean"]
         res["strict_improve_rate_game"] = rate_game
-        res["q_soft_gain_train_mean"] = float(np.mean(
+        # R21 residual (R3): the train-target soft scene gain is a verdict
+        # input, so it too is read at game level; the root mean is kept as a
+        # clearly-named descriptive field only.
+        res["q_soft_gain_train_mean"] = cluster_stats(
+            rows, "soft_gain_train")["game_mean"]
+        res["q_soft_gain_train_root_mean"] = float(np.mean(
             [r["soft_gain_train"] for r in rows]))
         soft_train = res["q_soft_gain_train_mean"]
         soft_hi = res["anchor"]["soft_ci95_boot_cluster"][1]
