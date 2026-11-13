@@ -377,21 +377,32 @@ def continue_game(pol, scene, first_labels, cont_seed, teacher=1, guided_KMH=Non
 
 
 def _t_crit(df, alpha=0.05):
-    """Exact t critical value via scipy when available; the stdlib-only
-    fallback uses a table and is labelled approximate at the call site."""
+    """Exact t critical value via scipy when available. The stdlib-only
+    fallback uses a table that is CONSERVATIVE everywhere: dense exact
+    values for df 1..30, and for larger df the critical value of the
+    largest tabulated df <= df (t crit decreases with df, so this never
+    under-covers -- the old next-key-up lookup and the 1.96 tail both
+    could). The fallback stays labelled approximate (exact=False)
+    regardless: verdict-grade intervals want scipy or the bootstrap."""
     try:
         from scipy import stats as _st
         return float(_st.t.ppf(1 - alpha / 2, df)), True
     except Exception:
-        table = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447,
-                 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228, 12: 2.179, 15: 2.131,
-                 20: 2.086, 25: 2.060, 30: 2.042, 40: 2.021, 50: 2.009, 60: 1.990}
-        if df in table:
-            return table[df], False
-        for k in sorted(table):
-            if df <= k:
-                return table[k], False
-        return 1.96, False
+        pass
+    if alpha != 0.05:
+        return 1.96, False   # only the 95% table is carried; flagged inexact
+    table = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447,
+             7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228, 11: 2.201, 12: 2.179,
+             13: 2.160, 14: 2.145, 15: 2.131, 16: 2.120, 17: 2.110, 18: 2.101,
+             19: 2.093, 20: 2.086, 21: 2.080, 22: 2.074, 23: 2.069, 24: 2.064,
+             25: 2.060, 26: 2.056, 27: 2.052, 28: 2.048, 29: 2.045, 30: 2.042,
+             40: 2.021, 50: 2.009, 60: 2.000, 80: 1.990, 100: 1.984, 120: 1.980}
+    if df in table:
+        return table[df], False
+    lower = [k for k in table if k < df]
+    if lower:
+        return table[max(lower)], False
+    return table[1], False
 
 
 def t_ci(vals, alpha=0.05):
