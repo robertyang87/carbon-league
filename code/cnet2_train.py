@@ -337,7 +337,8 @@ def main(data, out, epochs, cfg):
     if init:
         w = np.load(init)
         mk_ = net.load_state_dict({k: torch.from_numpy(w[k]) for k in w.files if k != "meta"}, strict=False)
-        bad_ = [k for k in mk_.missing_keys if not k.startswith("tattn.")] + list(mk_.unexpected_keys)
+        # Stage 0 new heads (utility/wdl/margin) may be absent in old weights, like tattn.*
+        bad_ = [k for k in mk_.missing_keys if not (k.startswith("tattn.") or k.startswith(("utility.", "wdl.", "margin.")))] + list(mk_.unexpected_keys)
         if bad_:                              # only new trunk-attention layers (cfg TA, identity at init) may be absent
             raise SystemExit(f"BC_INIT does not fit the model: {bad_[:8]}")
         if mk_.missing_keys:

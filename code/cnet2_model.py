@@ -158,6 +158,10 @@ class CNet2(nn.Module):
         self.teach = nn.Embedding(F.N_TEACH, 16)
         self.ctx = nn.Linear(C + D + 64 + 16, D)
         self.value = nn.Linear(D, 1)
+        # Stage 0 value heads (2026-11-13, CarbonFormer adoption):
+        self.utility = nn.Linear(D, 1)   # E[U] main value head (sigmoid -> [0,1])
+        self.wdl = nn.Linear(D, 3)       # win/draw/loss auxiliary head
+        self.margin = nn.Linear(D, 1)    # raw-margin expectation aux head (predicts M/1000)
         self.h0 = nn.Linear(D, D)
         self.din = nn.Linear(2 * D + F.UF + 5 * F.MF, D)
         self.aemb = nn.Embedding(9, D)
@@ -200,6 +204,21 @@ class CNet2(nn.Module):
     def ctx_from(self, pre, teacher):
         """style enters only here: trunk summary [B, C+D+64] + teach[teacher] -> ctx."""
         return Fn.relu(self.ctx(torch.cat([pre, self.teach(teacher)], -1)))
+
+    def heads(self, ctx):
+        """Stage 0 value heads from context: (utility [B] in [0,1] = E[U],
+        wdl logits [B,3] (win/draw/loss), margin_k [B] = E[margin]/1000)."""
+        u = torch.sigmoid(self.utility(ctx)).squeeze(1)
+        return u, self.wdl(ctx), self.margin(ctx).squeeze(1)
+
+    def forward_heads(self, b):
+        """teacher-forced forward + Stage 0 heads.
+        Returns (logits, value, aux, utility, wdl, margin_k)."""
+        tok, ctx, aux = self.encode(b)
+        lg = self.decode(b, tok, ctx)
+        v = torch.tanh(self.value(ctx)).squeeze(1)
+        u, wdl, mk = self.heads(ctx)
+        return lg, v, aux, u, wdl, mk
 
     def decode(self, b, tok, ctx):
         """teacher-forced decoder from given trunk outputs (tok [B,>=OWN,D], ctx [B,D]) -> logits [B,OWN,5]."""
