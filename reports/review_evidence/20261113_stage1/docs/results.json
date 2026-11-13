@@ -1,0 +1,53 @@
+{
+  "head": "a5c63648e037e342b154949c1b4eea6d11eef139",
+  "scope": "read-only static and AST-isolated test assertions",
+  "packs": {
+    "cnet2_np.py": {
+      "source_sha256": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+      "pack_sha256": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+      "equal": true
+    },
+    "cnet2_search.py": {
+      "source_sha256": "75f9d6f409c81f72f377608f2bf04425520a7610c0e05c956213fa5cba371374",
+      "pack_sha256": "75f9d6f409c81f72f377608f2bf04425520a7610c0e05c956213fa5cba371374",
+      "equal": true
+    }
+  },
+  "baseline": {
+    "sha": "a0d674148a1dac2512fd35f21e978caa959776ca",
+    "ancestor": true,
+    "commits_since": "21"
+  },
+  "acceptance_files": [
+    "automation/acceptance_s1/README.md",
+    "automation/acceptance_s1/test_s12_a1.py",
+    "automation/acceptance_s1/test_s12_a2.py",
+    "automation/acceptance_s1/test_s12_a3.py",
+    "automation/acceptance_s1/test_s12_a3_teacher.py"
+  ],
+  "syntax": {
+    "automation/acceptance_s1/test_s12_a1.py": "PASS",
+    "automation/acceptance_s1/test_s12_a2.py": "PASS",
+    "automation/acceptance_s1/test_s12_a3.py": "PASS",
+    "automation/acceptance_s1/test_s12_a3_teacher.py": "PASS"
+  },
+  "a3_compare": {
+    "zero_positions": {
+      "accepted": true,
+      "stdout": "agent parity: 0 positions, diffs=0\n"
+    },
+    "one_position_with_errors": {
+      "accepted": true,
+      "stdout": "agent parity: 1 positions, diffs=0\n"
+    }
+  },
+  "a3_teacher_nan_outputs": {
+    "accepted": true,
+    "stdout": "roots: 50\nCachePolicy parity (guard off): max |dq|=0.000e+00 over 50 roots (0s)\nguard-on smoke: 50 roots OK, guard_moves=0, guard_recruit=0 (0s, K=4 M=2 H=2)\nguard on/off (report only, same 50 roots):\n  roots with any q change: 0/50\n  mean |q_on - q_off| = nan, max = nan\n  Q_mean on  = nan +- nan\n  Q_mean off = nan +- nan\n  mean(Q_on - Q_off) per root: mean=+nan, min=+nan, max=+nan\nA3 teacher PASS (smoke ran; parity exact; on/off differences reported)\n"
+  },
+  "limitations": [
+    "Synthetic stubs prove acceptance assertion gaps, not that actual Studio outputs were erroneous or NaN.",
+    "Canonical heads_v2 and the original replay fixture are absent, so advertised canonical A1/A2/A3 runs were not reproduced.",
+    "No training, model inference, remote calls, or production mutations."
+  ]
+}

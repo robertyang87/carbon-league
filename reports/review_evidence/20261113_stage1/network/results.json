@@ -1,0 +1,217 @@
+{
+  "head": "a5c63648e037e342b154949c1b4eea6d11eef139",
+  "baseline": "bc1a84d4",
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "1.26.4",
+    "torch": "2.5.1+cpu",
+    "torch_threads": 1
+  },
+  "fixture": {
+    "kind": "deterministic untrained small CNet2",
+    "seed": 20261113,
+    "cfg": {
+      "C": 16,
+      "NB": 1,
+      "D": 16,
+      "NH": 4,
+      "L": 1,
+      "E": 8,
+      "G": 4,
+      "TA": 1,
+      "TNH": 4
+    },
+    "positions": 20,
+    "sim_steps": 10,
+    "seats": [
+      0,
+      1
+    ],
+    "canonical_heads_v2": false
+  },
+  "source_sha256": {
+    "cnet2_np.py": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+    "cnet2_model.py": "3dc3b3aaaf083c8b7168299acaa0c573c3957d95a63074776d2f0f4aa52add8f",
+    "cnet2_search.py": "75f9d6f409c81f72f377608f2bf04425520a7610c0e05c956213fa5cba371374",
+    "stage0_teacher.py": "4b7ff5b37819060ad07d4e3c0a5cb055858a36d28c92669de07e01db576c53ee",
+    "stage1_teacher_gate.py": "8358b50c8088bad8c93e04d65a4387786513bcd2e5406c1af873432fcab4ebad"
+  },
+  "direct_parity": {
+    "default_triple_bit_equal_to_baseline": true,
+    "sampled_outputs_bit_equal": true,
+    "sample_rng_state_equal": true,
+    "input_features_aux_unchanged": true,
+    "numpy_cache_encoder_max_error": 0.0,
+    "torch_utility_max_error": 5.693119309313488e-08,
+    "torch_legacy_value_max_error": 8.280090640910842e-08,
+    "torch_legal_logit_max_error": 1.1920928955078125e-07
+  },
+  "load_paths": {
+    "npz_mapping": {
+      "exact": true,
+      "G": 4,
+      "transpose_exact": true
+    },
+    "npz_dict": {
+      "exact": true,
+      "G": 4,
+      "transpose_exact": true
+    },
+    "raw_dict": {
+      "exact": true,
+      "G": 4,
+      "transpose_exact": true
+    },
+    "prepared_with_meta": {
+      "exact": true,
+      "G": 4,
+      "transpose_exact": true
+    },
+    "dict_meta": {
+      "exact": true,
+      "G": 4,
+      "transpose_exact": true
+    }
+  },
+  "worker_weight_reload": {
+    "new_object": true,
+    "empty_initial_cache": true,
+    "preserved_G": 4,
+    "fresh_model_exact": true
+  },
+  "missing_keys": [
+    {
+      "removed": [
+        "utility.weight"
+      ],
+      "raised": "KeyError",
+      "key": "utility.weightT",
+      "default_triple_works": true,
+      "sampling_rng_unchanged": true
+    },
+    {
+      "removed": [
+        "utility.bias"
+      ],
+      "raised": "KeyError",
+      "key": "utility.bias",
+      "default_triple_works": true,
+      "sampling_rng_unchanged": true
+    },
+    {
+      "removed": [
+        "utility.weight",
+        "utility.bias"
+      ],
+      "raised": "KeyError",
+      "key": "utility.weightT",
+      "default_triple_works": true,
+      "sampling_rng_unchanged": true
+    }
+  ],
+  "stable_sigmoid": {
+    "-1000": 0.0,
+    "-100": 3.720075976020836e-44,
+    "0": 0.5,
+    "100": 1.0,
+    "1000": 1.0
+  },
+  "cache_invalidation": [
+    {
+      "field": "maps",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 0.0014591515064239502
+    },
+    {
+      "field": "scal",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 0.0043599605560302734
+    },
+    {
+      "field": "tok_pos",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 0.7595888376235962
+    },
+    {
+      "field": "tok_kind",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 0.03273892402648926
+    },
+    {
+      "field": "tok_mask",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 2.4179720878601074
+    },
+    {
+      "field": "tok_cargo",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 0.012665748596191406
+    },
+    {
+      "field": "hist_cell",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 0.0031374692916870117
+    },
+    {
+      "field": "hist_cargo",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 0.020529508590698242
+    },
+    {
+      "field": "hist_move",
+      "different_signature": true,
+      "fresh_encode_max_error": 0.0,
+      "fixture_encoding_difference": 0.04063683748245239
+    }
+  ],
+  "cache_extra": {
+    "teacher_switch_error": 0.0,
+    "tta_restore_error": 0.0
+  },
+  "guard_direct_fresh_vs_cache": {
+    "labels_exact": true,
+    "stats_fresh": {
+      "guard_recruit": 1
+    },
+    "stats_cache": {
+      "guard_recruit": 1
+    }
+  },
+  "teacher_wrapper": {
+    "G": 4,
+    "cfg_equal": true,
+    "utility_keys_present": true,
+    "source_weights_unchanged": true,
+    "direct_outputs_exact": true,
+    "utility_leaf_calls": 2,
+    "all_calls_requested_teacher": true,
+    "counter_matches_real_calls": true,
+    "root_sim_unchanged": true,
+    "root_input_unchanged": true,
+    "numpy_global_rng_unchanged": true,
+    "Q_mean": [
+      0.5721034750463067,
+      0.5721034750463067
+    ]
+  },
+  "candidate_wrapper": {
+    "G": 4,
+    "cfg_equal": true,
+    "direct_outputs_exact": true
+  },
+  "limits": [
+    "Untrained small deterministic fixture; does not reproduce canonical Studio heads_v2 figures or playing strength.",
+    "Nine cache-key perturbations are interface fixtures, not claims of complete-game reachability.",
+    "Stage1 creates a new policy on weight load; arbitrary in-place weight mutation/hot-swap is not an implemented cache contract.",
+    "No optimizer/training, no full match, no remote operation."
+  ],
+  "passed": true
+}

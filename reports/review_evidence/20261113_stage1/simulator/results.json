@@ -1,0 +1,1066 @@
+{
+  "commit": "a5c63648e037e342b154949c1b4eea6d11eef139",
+  "terminal_cases": [
+    {
+      "name": "root_extinction_survivor_spends",
+      "me": 0,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 1,
+      "simulated_end_step": 101,
+      "exact_reference": {
+        "scores": [
+          -200.0,
+          50.0
+        ],
+        "step": 101,
+        "transitions": 1,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.21891174955710097,
+      "direct_terminal_helper": 0.21891174955710097,
+      "got_q": 0.21891174955710097,
+      "terminal_routing_pass": true,
+      "leaf_calls": [],
+      "root_not_mutated": true
+    },
+    {
+      "name": "early_continuation_extinction",
+      "me": 0,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 2,
+      "simulated_end_step": 102,
+      "exact_reference": {
+        "scores": [
+          -199.0,
+          20.0
+        ],
+        "step": 102,
+        "transitions": 2,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.2227338888193856,
+      "direct_terminal_helper": 0.2227338888193856,
+      "got_q": 0.2227338888193856,
+      "terminal_routing_pass": true,
+      "leaf_calls": [],
+      "root_not_mutated": true
+    },
+    {
+      "name": "last_continuation_extinction",
+      "me": 0,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 3,
+      "simulated_end_step": 103,
+      "exact_reference": {
+        "scores": [
+          -198.0,
+          20.0
+        ],
+        "step": 103,
+        "transitions": 3,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.22285740866326603,
+      "direct_terminal_helper": 0.22285740866326603,
+      "got_q": 0.876,
+      "terminal_routing_pass": false,
+      "leaf_calls": [
+        {
+          "step": 103,
+          "alive": 0
+        }
+      ],
+      "root_not_mutated": true
+    },
+    {
+      "name": "root_extinction_survivor_spends",
+      "me": 1,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 1,
+      "simulated_end_step": 101,
+      "exact_reference": {
+        "scores": [
+          50.0,
+          -200.0
+        ],
+        "step": 101,
+        "transitions": 1,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.21891174955710097,
+      "direct_terminal_helper": 0.21891174955710097,
+      "got_q": 0.21891174955710097,
+      "terminal_routing_pass": true,
+      "leaf_calls": [],
+      "root_not_mutated": true
+    },
+    {
+      "name": "early_continuation_extinction",
+      "me": 1,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 2,
+      "simulated_end_step": 102,
+      "exact_reference": {
+        "scores": [
+          20.0,
+          -199.0
+        ],
+        "step": 102,
+        "transitions": 2,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.2227338888193856,
+      "direct_terminal_helper": 0.2227338888193856,
+      "got_q": 0.2227338888193856,
+      "terminal_routing_pass": true,
+      "leaf_calls": [],
+      "root_not_mutated": true
+    },
+    {
+      "name": "last_continuation_extinction",
+      "me": 1,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 3,
+      "simulated_end_step": 103,
+      "exact_reference": {
+        "scores": [
+          20.0,
+          -198.0
+        ],
+        "step": 103,
+        "transitions": 3,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.22285740866326603,
+      "direct_terminal_helper": 0.22285740866326603,
+      "got_q": 0.876,
+      "terminal_routing_pass": false,
+      "leaf_calls": [
+        {
+          "step": 103,
+          "alive": 0
+        }
+      ],
+      "root_not_mutated": true
+    },
+    {
+      "name": "H1_last_continuation_extinction",
+      "me": 0,
+      "H": 1,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 2,
+      "simulated_end_step": 102,
+      "exact_reference": {
+        "scores": [
+          -199.0,
+          20.0
+        ],
+        "step": 102,
+        "transitions": 2,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.2227338888193856,
+      "direct_terminal_helper": 0.2227338888193856,
+      "got_q": 0.876,
+      "terminal_routing_pass": false,
+      "leaf_calls": [
+        {
+          "step": 102,
+          "alive": 0
+        }
+      ],
+      "root_not_mutated": true
+    },
+    {
+      "name": "H0_root_extinction",
+      "me": 0,
+      "H": 0,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 1,
+      "simulated_end_step": 101,
+      "exact_reference": {
+        "scores": [
+          -200.0,
+          20.0
+        ],
+        "step": 101,
+        "transitions": 1,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.2226103824463926,
+      "direct_terminal_helper": 0.2226103824463926,
+      "got_q": 0.876,
+      "terminal_routing_pass": false,
+      "leaf_calls": [
+        {
+          "step": 101,
+          "alive": 0
+        }
+      ],
+      "root_not_mutated": true
+    },
+    {
+      "name": "early_continuation_survivor_spends",
+      "me": 0,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 2,
+      "simulated_end_step": 102,
+      "exact_reference": {
+        "scores": [
+          -199.0,
+          50.0
+        ],
+        "step": 102,
+        "transitions": 2,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.21903482424056667,
+      "direct_terminal_helper": 0.21903482424056667,
+      "got_q": 0.21903482424056667,
+      "terminal_routing_pass": true,
+      "leaf_calls": [],
+      "root_not_mutated": true
+    },
+    {
+      "name": "last_continuation_survivor_spends",
+      "me": 0,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 3,
+      "simulated_end_step": 103,
+      "exact_reference": {
+        "scores": [
+          -198.0,
+          50.0
+        ],
+        "step": 103,
+        "transitions": 3,
+        "extinct": true
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.21915791416909208,
+      "direct_terminal_helper": 0.21915791416909208,
+      "got_q": 0.876,
+      "terminal_routing_pass": false,
+      "leaf_calls": [
+        {
+          "step": 103,
+          "alive": 0
+        }
+      ],
+      "root_not_mutated": true
+    },
+    {
+      "name": "last_legal_root",
+      "me": 0,
+      "H": 2,
+      "guard": "on",
+      "root_step": 298,
+      "simulated_transitions": 1,
+      "simulated_end_step": 299,
+      "exact_reference": {
+        "scores": [
+          20.0,
+          20.0
+        ],
+        "step": 299,
+        "transitions": 1,
+        "extinct": false
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.5,
+      "direct_terminal_helper": 0.5,
+      "got_q": 0.5,
+      "terminal_routing_pass": true,
+      "leaf_calls": [],
+      "root_not_mutated": true
+    },
+    {
+      "name": "already_timed_out_root",
+      "me": 0,
+      "H": 2,
+      "guard": "on",
+      "root_step": 299,
+      "simulated_transitions": 1,
+      "simulated_end_step": 300,
+      "exact_reference": {
+        "scores": [
+          20.0,
+          20.0
+        ],
+        "step": 299,
+        "transitions": 0,
+        "extinct": false
+      },
+      "terminal": true,
+      "expected_terminal_u": 0.5,
+      "direct_terminal_helper": 0.5,
+      "got_q": 0.5,
+      "terminal_routing_pass": true,
+      "leaf_calls": [],
+      "root_not_mutated": true
+    },
+    {
+      "name": "nonterminal_H2_depth",
+      "me": 0,
+      "H": 2,
+      "guard": "on",
+      "root_step": 100,
+      "simulated_transitions": 3,
+      "simulated_end_step": 103,
+      "exact_reference": {
+        "scores": [
+          20.0,
+          20.0
+        ],
+        "step": 103,
+        "transitions": 3,
+        "extinct": false
+      },
+      "terminal": false,
+      "expected_terminal_u": null,
+      "direct_terminal_helper": null,
+      "got_q": 0.876,
+      "terminal_routing_pass": null,
+      "leaf_calls": [
+        {
+          "step": 103,
+          "alive": 1
+        }
+      ],
+      "root_not_mutated": true
+    }
+  ],
+  "choice_consequence": {
+    "guard": "on",
+    "H": 2,
+    "K": 2,
+    "M": 1,
+    "arms": [
+      {
+        "player-0-worker-0": "DOWN"
+      },
+      {}
+    ],
+    "actual_Q": [
+      0.876,
+      0.876
+    ],
+    "actual_q": [
+      0.6224593312018546,
+      0.37754066879814546
+    ],
+    "expected_Q_with_exact_terminal": [
+      0.22285740866326603,
+      0.876
+    ],
+    "expected_q_with_exact_terminal": [
+      3.4996229411800115e-06,
+      0.9999965003770588
+    ],
+    "actual_selected_arm": 0,
+    "expected_selected_arm": 1,
+    "terminal_by_arm": [
+      true,
+      false
+    ]
+  },
+  "guard_isolation": [
+    {
+      "me": 0,
+      "arms": 2,
+      "scenarios": 2,
+      "pass_": true,
+      "root_and_features_not_mutated": true,
+      "no_cross_seat_snapshots": true,
+      "no_snapshot_set_aliases": true,
+      "lostw_independent_across_branches": true,
+      "fresh_feature_instances": 20,
+      "history_lengths": [
+        1
+      ],
+      "events": [
+        {
+          "instance": 139786298974736,
+          "step": 100,
+          "seat": 1,
+          "before_prevw": [],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786298974736,
+          "step": 100,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786298974688,
+          "step": 100,
+          "seat": 0,
+          "before_prevw": [],
+          "after_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786298974688,
+          "step": 100,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299031728,
+          "step": 101,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-1"
+          ],
+          "lostw": 1
+        },
+        {
+          "instance": 139786299034032,
+          "step": 101,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299031728,
+          "step": 102,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-1"
+          ],
+          "lostw": 1
+        },
+        {
+          "instance": 139786299034032,
+          "step": 102,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299031632,
+          "step": 101,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-1"
+          ],
+          "lostw": 1
+        },
+        {
+          "instance": 139786299041664,
+          "step": 101,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299031632,
+          "step": 102,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-1"
+          ],
+          "lostw": 1
+        },
+        {
+          "instance": 139786299041664,
+          "step": 102,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299041520,
+          "step": 101,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299031824,
+          "step": 101,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299041520,
+          "step": 102,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299031824,
+          "step": 102,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299031776,
+          "step": 101,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299032208,
+          "step": 101,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299031776,
+          "step": 102,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "after_prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299032208,
+          "step": 102,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0"
+          ],
+          "after_prevw": [
+            "player-1-worker-0"
+          ],
+          "lostw": 0
+        }
+      ],
+      "restores": [
+        {
+          "instance": 139786299031728,
+          "lostw": 0,
+          "prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786299034032,
+          "lostw": 0,
+          "prevw": [
+            "player-1-worker-0"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786299031632,
+          "lostw": 0,
+          "prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786299041664,
+          "lostw": 0,
+          "prevw": [
+            "player-1-worker-0"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786299041520,
+          "lostw": 0,
+          "prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786299031824,
+          "lostw": 0,
+          "prevw": [
+            "player-1-worker-0"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786299031776,
+          "lostw": 0,
+          "prevw": [
+            "player-0-worker-0",
+            "player-0-worker-1"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786299032208,
+          "lostw": 0,
+          "prevw": [
+            "player-1-worker-0"
+          ],
+          "aliases_snapshot": false
+        }
+      ]
+    },
+    {
+      "me": 1,
+      "arms": 2,
+      "scenarios": 2,
+      "pass_": true,
+      "root_and_features_not_mutated": true,
+      "no_cross_seat_snapshots": true,
+      "no_snapshot_set_aliases": true,
+      "lostw_independent_across_branches": true,
+      "fresh_feature_instances": 20,
+      "history_lengths": [
+        1
+      ],
+      "events": [
+        {
+          "instance": 139786299032544,
+          "step": 100,
+          "seat": 0,
+          "before_prevw": [],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299032544,
+          "step": 100,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299032304,
+          "step": 100,
+          "seat": 1,
+          "before_prevw": [],
+          "after_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299032304,
+          "step": 100,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299032592,
+          "step": 101,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299032976,
+          "step": 101,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-1"
+          ],
+          "lostw": 1
+        },
+        {
+          "instance": 139786299032592,
+          "step": 102,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786299032976,
+          "step": 102,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-1"
+          ],
+          "lostw": 1
+        },
+        {
+          "instance": 139786302588112,
+          "step": 101,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786304172544,
+          "step": 101,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-1"
+          ],
+          "lostw": 1
+        },
+        {
+          "instance": 139786302588112,
+          "step": 102,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786304172544,
+          "step": 102,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-1"
+          ],
+          "lostw": 1
+        },
+        {
+          "instance": 139786383504304,
+          "step": 101,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786383591952,
+          "step": 101,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786383504304,
+          "step": 102,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786383591952,
+          "step": 102,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786301215504,
+          "step": 101,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786309723792,
+          "step": 101,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786301215504,
+          "step": 102,
+          "seat": 0,
+          "before_prevw": [
+            "player-0-worker-0"
+          ],
+          "after_prevw": [
+            "player-0-worker-0"
+          ],
+          "lostw": 0
+        },
+        {
+          "instance": 139786309723792,
+          "step": 102,
+          "seat": 1,
+          "before_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "after_prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "lostw": 0
+        }
+      ],
+      "restores": [
+        {
+          "instance": 139786299032976,
+          "lostw": 0,
+          "prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786299032592,
+          "lostw": 0,
+          "prevw": [
+            "player-0-worker-0"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786304172544,
+          "lostw": 0,
+          "prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786302588112,
+          "lostw": 0,
+          "prevw": [
+            "player-0-worker-0"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786383591952,
+          "lostw": 0,
+          "prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786383504304,
+          "lostw": 0,
+          "prevw": [
+            "player-0-worker-0"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786309723792,
+          "lostw": 0,
+          "prevw": [
+            "player-1-worker-0",
+            "player-1-worker-1"
+          ],
+          "aliases_snapshot": false
+        },
+        {
+          "instance": 139786301215504,
+          "lostw": 0,
+          "prevw": [
+            "player-0-worker-0"
+          ],
+          "aliases_snapshot": false
+        }
+      ]
+    }
+  ]
+}

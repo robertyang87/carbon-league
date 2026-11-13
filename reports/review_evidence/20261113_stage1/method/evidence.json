@@ -1,0 +1,290 @@
+{
+  "source": "/workspace/carbon-review-stage1/repo/code/stage1_teacher_gate.py",
+  "source_sha256": "8358b50c8088bad8c93e04d65a4387786513bcd2e5406c1af873432fcab4ebad",
+  "execution_scope": "Repository _q_scene, main, t_ci, bootstrap_ci, sample_scene_specs; synthetic teacher/worker rows only; no search or training.",
+  "soft_negative_pass": {
+    "priors": [
+      0.1,
+      0.09,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864,
+      0.057857142857142864
+    ],
+    "Q": [
+      0.8,
+      0.83,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76,
+      0.76
+    ],
+    "q": [
+      0.13309389787193424,
+      0.2300679316535339,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085,
+      0.04548844074818085
+    ],
+    "q_row": {
+      "game": "fixture",
+      "step": 50,
+      "me": 0,
+      "gain": 0.029999999999999916,
+      "improved": true,
+      "soft_gain": -0.018571488869375208,
+      "soft_gain_behavior": -0.018571488869375208,
+      "entropy": 2.574486995992994,
+      "agree": false,
+      "best_arm": [
+        1
+      ],
+      "wall_ms": 1.0,
+      "guard": {}
+    },
+    "actual_main": {
+      "return_code": 0,
+      "summary": {
+        "n": 150,
+        "q_gain_mean": 0.029999999999999912,
+        "q_soft_gain_mean": -0.01857148886937521,
+        "q_soft_gain_behavior_mean": -0.01857148886937521,
+        "behavior_temp": 1.0,
+        "strict_improve_rate": 1.0,
+        "entropy_mean": 2.5744869959929946,
+        "agree_rate": 0.0,
+        "anchor": {
+          "n": 30,
+          "du_mean": 0.030000000000000006,
+          "du_ci95": [
+            0.030000000000000002,
+            0.03000000000000001
+          ]
+        },
+        "verdict": "PASS"
+      },
+      "canonical": true
+    }
+  },
+  "cluster_counterexample": {
+    "n_source_games": 50,
+    "n_roots": 150,
+    "game_deltas": [
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      0.24,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16,
+      -0.16
+    ],
+    "root_t_ci": [
+      0.04,
+      0.007886698815942027,
+      0.07211330118405798
+    ],
+    "game_t_ci": [
+      0.03999999999999999,
+      -0.017400000000000006,
+      0.09739999999999999
+    ],
+    "game_boot_ci": [
+      -0.016000000000000007,
+      0.096
+    ],
+    "actual_main": {
+      "return_code": 0,
+      "summary": {
+        "n": 150,
+        "du_mean": 0.04,
+        "du_ci95_t": [
+          0.007886698815942027,
+          0.07211330118405798
+        ],
+        "du_ci95_boot": [
+          0.00799999999999999,
+          0.072
+        ],
+        "sigma": 0.20067001862719533,
+        "teacher_ms_per_call": 1.0,
+        "teacher_calls": 150,
+        "verdict": "PASS"
+      },
+      "canonical": true
+    }
+  },
+  "opening_sampler": {
+    "n_games": 10000,
+    "n_roots": 31018,
+    "n_opening": 1018,
+    "observed_opening_share": 0.03281965310464891,
+    "expected_opening_share": 0.03225806451612903,
+    "configured_share": 0.1
+  },
+  "power_normal_approximation": [
+    {
+      "sigma": 0.1,
+      "raw_n": 196,
+      "n": 196,
+      "at_true_delta": 0.02,
+      "normal_approx_significance_power": 0.7995559032981123,
+      "normal_approx_actual_gate_power": 0.5
+    },
+    {
+      "sigma": 0.2,
+      "raw_n": 784,
+      "n": 600,
+      "at_true_delta": 0.02,
+      "normal_approx_significance_power": 0.6877652384915075,
+      "normal_approx_actual_gate_power": 0.5
+    },
+    {
+      "sigma": 0.3,
+      "raw_n": 1764,
+      "n": 600,
+      "at_true_delta": 0.02,
+      "normal_approx_significance_power": 0.3718449767376284,
+      "normal_approx_actual_gate_power": 0.3718449767376284
+    }
+  ],
+  "same_Q_selection_example": {
+    "true_action_value": 0.5,
+    "true_any_policy_gain": 0,
+    "measured_argmax_gain": 0.04418280995768986,
+    "measured_soft_gain": 0.01475843542273688,
+    "strict_improvement_rate": 0.9388,
+    "note": "Independent terminal anchor can detect this; mean>0 sign-only check is not a 95% test."
+  },
+  "ipw_union_example": {
+    "base_inclusion": 0.1,
+    "extra_if_not_selected": 0.5,
+    "true_inclusion": 0.55,
+    "incorrect_product": 0.05,
+    "note": "Illustrates future S1-4 inclusion-probability contract; not an implemented-code finding."
+  },
+  "reviewed_ref": "a5c63648e037e342b154949c1b4eea6d11eef139",
+  "findings": [
+    {
+      "id": "S1-M01",
+      "severity": "P1",
+      "kind": "implemented_gate_and_protocol_object_mismatch",
+      "title": "Negative soft q gain can receive PASS",
+      "fixture": "soft_negative_pass",
+      "refs": [
+        "code/stage1_teacher_gate.py:278",
+        "code/stage1_teacher_gate.py:426",
+        "code/stage1_teacher_gate.py:442",
+        "reports/STAGE1_TEACHER_GATES_20261113.md:63"
+      ]
+    },
+    {
+      "id": "S1-M02",
+      "severity": "P1",
+      "kind": "statistical_independence_not_enforced",
+      "title": "Multiple roots per replay treated as independent observations",
+      "fixture": "cluster_counterexample",
+      "refs": [
+        "code/stage1_teacher_gate.py:115",
+        "code/stage1_teacher_gate.py:220",
+        "code/stage1_teacher_gate.py:249",
+        "code/stage1_teacher_gate.py:455"
+      ]
+    },
+    {
+      "id": "S1-M03",
+      "severity": "P2",
+      "kind": "sampling_distribution_mismatch",
+      "title": "10 percent games with extra root produces about 3.2 percent opening roots",
+      "fixture": "opening_sampler",
+      "refs": [
+        "code/stage1_teacher_gate.py:84",
+        "code/stage1_teacher_gate.py:125"
+      ]
+    },
+    {
+      "id": "S1-M04",
+      "severity": "P2",
+      "kind": "power_reporting_and_protocol_clarity",
+      "title": "Capped sample size omits promised power; formula does not power full point-threshold conjunction",
+      "fixture": "power_normal_approximation",
+      "refs": [
+        "reports/STAGE1_TEACHER_GATES_20261113.md:82",
+        "code/stage1_teacher_gate.py:465"
+      ]
+    }
+  ]
+}

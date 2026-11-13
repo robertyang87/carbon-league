@@ -1,0 +1,938 @@
+{
+  "artifact_kind": "derived compact review evidence",
+  "source": {
+    "file": "gate-input-results.json",
+    "sha256": "ac90c922050dbf2711399aaf538ec7aefe0c12f6f1d1d68434f4f59c0bed2505",
+    "bytes": 618371
+  },
+  "reproduction": {
+    "script": "recheck_gate_inputs.py",
+    "script_sha256": "1559b53308e5bc73f66fad4cf84d9bd3cbbb7f24f176af262c960b8a1f0aa580",
+    "method": "Run the preserved script with CARBON_REPO and CARBON_REVIEW_OUT to regenerate full raw evidence; outputs are synthetic control-flow observations, not measured teacher quality."
+  },
+  "derivation": {
+    "rows": "Long rows/anchor_rows replaced by row/game/root counts and identity hashes. Root identity is [game,step,me]; JSON hashes use sorted keys, compact separators, UTF-8, ensure_ascii=false.",
+    "stdout": "Repeated whole-result stdout JSON omitted; result fields are retained below.",
+    "nonfinite": "Non-finite numeric values are encoded as strings NaN/Infinity/-Infinity; contains_nonstandard_NaN refers to original report text.",
+    "stderr": "Only final error line retained, not duplicate Python stack frames."
+  },
+  "commit": "a5c63648e037e342b154949c1b4eea6d11eef139",
+  "source_sha256": "8358b50c8088bad8c93e04d65a4387786513bcd2e5406c1af873432fcab4ebad",
+  "scope": "Actual CLI main and sampler in subprocess; expensive run_tasks replaced with named deterministic records; no teacher-quality conclusion",
+  "common_prereg_identity": {
+    "weights": "<TMP>/header-only.npz",
+    "weights_md5": "78710d10fb41a606aa97c16a136941f9",
+    "code_md5": {
+      "stage0_teacher.py": "5a17bfbc6c0135322572902a297bd6c6",
+      "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+      "cnet2_search.py": "b81be6feeae4c22947212bc131484c48",
+      "stage1_teacher_gate.py": "1ef245cb0f1c9dc43c6517532f5aa2d9"
+    },
+    "guard_cfg": {
+      "GUARD": true,
+      "GUARD_NARROW": true,
+      "GUARD_CASH": 40.0,
+      "LOWW": 2
+    },
+    "K": 16,
+    "M": 8,
+    "H": 2,
+    "behavior_temp": 1.0,
+    "seeds": {
+      "scene": 995300,
+      "teacher": 7000,
+      "cont": 996100,
+      "anchor": 995310
+    }
+  },
+  "checks": {
+    "missing_ds_formal_pass": true,
+    "empty_ds_formal_pass": true,
+    "exact_training_overlap_refused": true,
+    "q_du_overlap_refused": true,
+    "missing_replay_refused": true,
+    "unvalidated_id_namespace_observed": true,
+    "duplicates_formal_pass": true,
+    "nonbinding_cap_formal_pass": true,
+    "tiny_stage_b_formal_pass": true,
+    "stage_a_b_unbound": true,
+    "fail_verdict_exit_zero": true,
+    "worker_error_nonzero_old_artifact_remains": true,
+    "empty_mode_refused": true,
+    "empty_replay_nan_report": true,
+    "terminal_anchor_independent_of_learned_leaf": true
+  },
+  "all_expected_checks_passed": true,
+  "cases": {
+    "without_training_ids": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "prereg": {
+        "gate": "q",
+        "n_scenes": 150,
+        "ds_overlap_check": "NOT RUN",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 50,
+          "unique_games": 50,
+          "sequence_sha256": "42881f5dd1dedb8560bb25424199ff332c074009644c1ff863ebb70132345352",
+          "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+          "game_ids_first_last": [
+            "q0",
+            "q9"
+          ],
+          "game_ids_omitted": true
+        }
+      },
+      "q_gate": {
+        "n": 150,
+        "q_gain_mean": 0.02,
+        "q_soft_gain_mean": 0.02,
+        "q_soft_gain_behavior_mean": 0.02,
+        "behavior_temp": 1.0,
+        "strict_improve_rate": 1.0,
+        "entropy_mean": 0.19999999999999996,
+        "agree_rate": 0.0,
+        "anchor": {
+          "n": 30,
+          "du_mean": 0.05000000000000002,
+          "du_ci95": [
+            0.05000000000000001,
+            0.050000000000000024
+          ]
+        },
+        "verdict": "PASS"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 150,
+        "unique_games": 50,
+        "unique_roots": 150,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "572d32b17269a397ca89032d9d91faa66367bc68204c28840fa26074299a1ac6",
+        "unique_roots_sha256": "fa06eb2a12d6546070e1c8b18d44c05b7028471daa53ba16a8bee22c9387a747",
+        "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+        "game_ids_first_last": [
+          "q0",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      },
+      "anchor_rows_summary": {
+        "derived": true,
+        "rows": 30,
+        "unique_games": 25,
+        "unique_roots": 30,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "355217d1550ed25719e4e7d692abf86d8809b95922df1ed305d0c69ca7b1be3d",
+        "unique_roots_sha256": "b2362a1508371ce9f8a1cd1dd6db1388a2f08f71610796e8e9bd189db8e34ed5",
+        "game_ids_sha256": "dbfef7be951a5bdfe1949c8ea4b5a68218c6e7b5dae99934e5b4f725b9d0de06",
+        "game_ids_first_last": [
+          "q1",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      }
+    },
+    "empty_training_ids": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "prereg": {
+        "gate": "q",
+        "n_scenes": 150,
+        "ds_overlap_check": "RUN, disjoint (ds n=0)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 50,
+          "unique_games": 50,
+          "sequence_sha256": "42881f5dd1dedb8560bb25424199ff332c074009644c1ff863ebb70132345352",
+          "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+          "game_ids_first_last": [
+            "q0",
+            "q9"
+          ],
+          "game_ids_omitted": true
+        }
+      },
+      "q_gate": {
+        "n": 150,
+        "q_gain_mean": 0.02,
+        "q_soft_gain_mean": 0.02,
+        "q_soft_gain_behavior_mean": 0.02,
+        "behavior_temp": 1.0,
+        "strict_improve_rate": 1.0,
+        "entropy_mean": 0.19999999999999996,
+        "agree_rate": 0.0,
+        "anchor": {
+          "n": 30,
+          "du_mean": 0.05000000000000002,
+          "du_ci95": [
+            0.05000000000000001,
+            0.050000000000000024
+          ]
+        },
+        "verdict": "PASS"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 150,
+        "unique_games": 50,
+        "unique_roots": 150,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "572d32b17269a397ca89032d9d91faa66367bc68204c28840fa26074299a1ac6",
+        "unique_roots_sha256": "fa06eb2a12d6546070e1c8b18d44c05b7028471daa53ba16a8bee22c9387a747",
+        "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+        "game_ids_first_last": [
+          "q0",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      },
+      "anchor_rows_summary": {
+        "derived": true,
+        "rows": 30,
+        "unique_games": 25,
+        "unique_roots": 30,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "355217d1550ed25719e4e7d692abf86d8809b95922df1ed305d0c69ca7b1be3d",
+        "unique_roots_sha256": "b2362a1508371ce9f8a1cd1dd6db1388a2f08f71610796e8e9bd189db8e34ed5",
+        "game_ids_sha256": "dbfef7be951a5bdfe1949c8ea4b5a68218c6e7b5dae99934e5b4f725b9d0de06",
+        "game_ids_first_last": [
+          "q1",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      }
+    },
+    "exact_training_overlap": {
+      "exit_code": 1,
+      "prereg_printed": false,
+      "result_exists": false,
+      "last_error": "scene games overlap the training corpus: ['q0']"
+    },
+    "q_du_overlap": {
+      "exit_code": 1,
+      "prereg_printed": false,
+      "result_exists": false,
+      "last_error": "split manifest overlap between q and du sets: ['q0']"
+    },
+    "missing_replay": {
+      "exit_code": 1,
+      "prereg_printed": false,
+      "result_exists": false,
+      "last_error": "split manifest games not in replay dir: ['not-found']"
+    },
+    "training_ids_with_suffix": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "prereg": {
+        "gate": "q",
+        "n_scenes": 150,
+        "ds_overlap_check": "RUN, disjoint (ds n=50)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 50,
+          "unique_games": 50,
+          "sequence_sha256": "42881f5dd1dedb8560bb25424199ff332c074009644c1ff863ebb70132345352",
+          "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+          "game_ids_first_last": [
+            "q0",
+            "q9"
+          ],
+          "game_ids_omitted": true
+        }
+      },
+      "q_gate": {
+        "n": 150,
+        "q_gain_mean": 0.02,
+        "q_soft_gain_mean": 0.02,
+        "q_soft_gain_behavior_mean": 0.02,
+        "behavior_temp": 1.0,
+        "strict_improve_rate": 1.0,
+        "entropy_mean": 0.19999999999999996,
+        "agree_rate": 0.0,
+        "anchor": {
+          "n": 30,
+          "du_mean": 0.05000000000000002,
+          "du_ci95": [
+            0.05000000000000001,
+            0.050000000000000024
+          ]
+        },
+        "verdict": "PASS"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 150,
+        "unique_games": 50,
+        "unique_roots": 150,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "572d32b17269a397ca89032d9d91faa66367bc68204c28840fa26074299a1ac6",
+        "unique_roots_sha256": "fa06eb2a12d6546070e1c8b18d44c05b7028471daa53ba16a8bee22c9387a747",
+        "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+        "game_ids_first_last": [
+          "q0",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      },
+      "anchor_rows_summary": {
+        "derived": true,
+        "rows": 30,
+        "unique_games": 25,
+        "unique_roots": 30,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "355217d1550ed25719e4e7d692abf86d8809b95922df1ed305d0c69ca7b1be3d",
+        "unique_roots_sha256": "b2362a1508371ce9f8a1cd1dd6db1388a2f08f71610796e8e9bd189db8e34ed5",
+        "game_ids_sha256": "dbfef7be951a5bdfe1949c8ea4b5a68218c6e7b5dae99934e5b4f725b9d0de06",
+        "game_ids_first_last": [
+          "q1",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      }
+    },
+    "duplicate_manifest_ids": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "unique_games": 1,
+      "unique_roots": 122,
+      "prereg": {
+        "gate": "q",
+        "n_scenes": 150,
+        "ds_overlap_check": "RUN, disjoint (ds n=1)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 50,
+          "unique_games": 1,
+          "game_ids": [
+            "q0"
+          ],
+          "sequence_sha256": "082f24218c647dc7c58fc8e1dfdfee4b5a566504a34d17e7f68ae3bf1cea59cb"
+        }
+      },
+      "q_gate": {
+        "n": 150,
+        "q_gain_mean": 0.02,
+        "q_soft_gain_mean": 0.02,
+        "q_soft_gain_behavior_mean": 0.02,
+        "behavior_temp": 1.0,
+        "strict_improve_rate": 1.0,
+        "entropy_mean": 0.19999999999999996,
+        "agree_rate": 0.0,
+        "anchor": {
+          "n": 30,
+          "du_mean": 0.05000000000000002,
+          "du_ci95": [
+            0.05000000000000001,
+            0.050000000000000024
+          ]
+        },
+        "verdict": "PASS"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 150,
+        "unique_games": 1,
+        "game_ids": [
+          "q0"
+        ],
+        "unique_roots": 122,
+        "duplicate_root_rows": 28,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "07be227aee7c5b3395ea1a565cbcd4a2588836a26dccdc2de593d5c6c8f311d6",
+        "unique_roots_sha256": "05e09f105190e8c02d32e7e38793ccf218606e0a82c47ad74cbe1e63d3730fa7",
+        "repeated_unique_roots": 26,
+        "repeated_root_multiplicity_histogram": {
+          "2": 25,
+          "4": 1
+        }
+      },
+      "anchor_rows_summary": {
+        "derived": true,
+        "rows": 30,
+        "unique_games": 1,
+        "game_ids": [
+          "q0"
+        ],
+        "unique_roots": 28,
+        "duplicate_root_rows": 2,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "1463a515d13a6dd6b0604db26af46e73bff4a918e1c109112bc6a17271603bb3",
+        "unique_roots_sha256": "ac24c25462f5a887ae1aee6d39588e27aab6de793e43dbf5359243b62e1317b4",
+        "repeated_unique_roots": 2,
+        "repeated_root_multiplicity_histogram": {
+          "2": 2
+        }
+      }
+    },
+    "nonbinding_diagnostic_cap": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "prereg": {
+        "gate": "q",
+        "n_scenes": 150,
+        "ds_overlap_check": "RUN, disjoint (ds n=1)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 50,
+          "unique_games": 50,
+          "sequence_sha256": "42881f5dd1dedb8560bb25424199ff332c074009644c1ff863ebb70132345352",
+          "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+          "game_ids_first_last": [
+            "q0",
+            "q9"
+          ],
+          "game_ids_omitted": true
+        }
+      },
+      "q_gate": {
+        "n": 150,
+        "q_gain_mean": 0.02,
+        "q_soft_gain_mean": 0.02,
+        "q_soft_gain_behavior_mean": 0.02,
+        "behavior_temp": 1.0,
+        "strict_improve_rate": 1.0,
+        "entropy_mean": 0.19999999999999996,
+        "agree_rate": 0.0,
+        "anchor": {
+          "n": 30,
+          "du_mean": 0.05000000000000002,
+          "du_ci95": [
+            0.05000000000000001,
+            0.050000000000000024
+          ]
+        },
+        "verdict": "PASS"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 150,
+        "unique_games": 50,
+        "unique_roots": 150,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "572d32b17269a397ca89032d9d91faa66367bc68204c28840fa26074299a1ac6",
+        "unique_roots_sha256": "fa06eb2a12d6546070e1c8b18d44c05b7028471daa53ba16a8bee22c9387a747",
+        "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+        "game_ids_first_last": [
+          "q0",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      },
+      "anchor_rows_summary": {
+        "derived": true,
+        "rows": 30,
+        "unique_games": 25,
+        "unique_roots": 30,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "355217d1550ed25719e4e7d692abf86d8809b95922df1ed305d0c69ca7b1be3d",
+        "unique_roots_sha256": "b2362a1508371ce9f8a1cd1dd6db1388a2f08f71610796e8e9bd189db8e34ed5",
+        "game_ids_sha256": "dbfef7be951a5bdfe1949c8ea4b5a68218c6e7b5dae99934e5b4f725b9d0de06",
+        "game_ids_first_last": [
+          "q1",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      }
+    },
+    "tiny_stage_b": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "prereg": {
+        "gate": "du",
+        "n_scenes": 3,
+        "ds_overlap_check": "RUN, disjoint (ds n=1)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 1,
+          "unique_games": 1,
+          "game_ids": [
+            "d0"
+          ],
+          "sequence_sha256": "bf6eaede065dfa451edc3c7307ec3c91160b0f28d1167e85b7c344c03956b2a5"
+        }
+      },
+      "du_gate": {
+        "n": 3,
+        "du_mean": 0.05100000000000001,
+        "du_ci95_t": [
+          0.048515661791677045,
+          0.053484338208322976
+        ],
+        "du_ci95_boot": [
+          0.05000000000000001,
+          0.05200000000000001
+        ],
+        "sigma": 0.0010000000000000009,
+        "teacher_ms_per_call": 1.0,
+        "teacher_calls": 3,
+        "verdict": "PASS"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 3,
+        "unique_games": 1,
+        "game_ids": [
+          "d0"
+        ],
+        "unique_roots": 3,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "29b1ec79a8a04561634aa5872445b7e45a1dcda26372ae6ee2c5ef351d93ff35",
+        "unique_roots_sha256": "d5a40a0cdf0a9859cefab98bcbf27910bbfe916f52699983c9621def501766a6",
+        "repeated_unique_roots": 0
+      }
+    },
+    "stage_a_all_scenes": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "prereg": {
+        "gate": "du",
+        "n_scenes": 155,
+        "ds_overlap_check": "RUN, disjoint (ds n=1)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 50,
+          "unique_games": 50,
+          "sequence_sha256": "39f1a8c05f8f80f1ad7e37f2d41a15a08d501dfcabdd2436ae8c9df74c75047c",
+          "game_ids_sha256": "8da4a4ac6c4c555b61488ee1e20031e1cb5aedd115252bde8d5852dda3d26e5b",
+          "game_ids_first_last": [
+            "d0",
+            "d9"
+          ],
+          "game_ids_omitted": true
+        }
+      },
+      "du_gate": {
+        "n": 155,
+        "du_mean": 0.2987096774193549,
+        "du_ci95_t": [
+          0.26712265506997274,
+          0.33029669976873705
+        ],
+        "du_ci95_boot": [
+          0.267741935483871,
+          0.32967741935483874
+        ],
+        "sigma": 0.2006441240508404,
+        "teacher_ms_per_call": 1.0,
+        "teacher_calls": 155,
+        "stageB_N_formula": 600,
+        "stageB_N_raw": 790,
+        "verdict": "PILOT (no verdict)"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 155,
+        "unique_games": 50,
+        "unique_roots": 155,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "7e696644a8fadbfcc814eafc445992697f1454e3c60083b89c0dd07326204b20",
+        "unique_roots_sha256": "36dc3c327654e4cedfd68b20d96596e5a6f42d8c842de57c052f199218b8c093",
+        "game_ids_sha256": "8da4a4ac6c4c555b61488ee1e20031e1cb5aedd115252bde8d5852dda3d26e5b",
+        "game_ids_first_last": [
+          "d0",
+          "d9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      }
+    },
+    "stage_b_without_locked_n": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "prereg": {
+        "gate": "du",
+        "n_scenes": 155,
+        "ds_overlap_check": "RUN, disjoint (ds n=1)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 50,
+          "unique_games": 50,
+          "sequence_sha256": "39f1a8c05f8f80f1ad7e37f2d41a15a08d501dfcabdd2436ae8c9df74c75047c",
+          "game_ids_sha256": "8da4a4ac6c4c555b61488ee1e20031e1cb5aedd115252bde8d5852dda3d26e5b",
+          "game_ids_first_last": [
+            "d0",
+            "d9"
+          ],
+          "game_ids_omitted": true
+        }
+      },
+      "du_gate": {
+        "n": 155,
+        "du_mean": 0.2987096774193549,
+        "du_ci95_t": [
+          0.26712265506997274,
+          0.33029669976873705
+        ],
+        "du_ci95_boot": [
+          0.267741935483871,
+          0.32967741935483874
+        ],
+        "sigma": 0.2006441240508404,
+        "teacher_ms_per_call": 1.0,
+        "teacher_calls": 155,
+        "verdict": "PASS"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 155,
+        "unique_games": 50,
+        "unique_roots": 155,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "7e696644a8fadbfcc814eafc445992697f1454e3c60083b89c0dd07326204b20",
+        "unique_roots_sha256": "36dc3c327654e4cedfd68b20d96596e5a6f42d8c842de57c052f199218b8c093",
+        "game_ids_sha256": "8da4a4ac6c4c555b61488ee1e20031e1cb5aedd115252bde8d5852dda3d26e5b",
+        "game_ids_first_last": [
+          "d0",
+          "d9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      }
+    },
+    "statistical_fail_exit": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": false,
+      "prereg": {
+        "gate": "q",
+        "n_scenes": 150,
+        "ds_overlap_check": "RUN, disjoint (ds n=1)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 50,
+          "unique_games": 50,
+          "sequence_sha256": "42881f5dd1dedb8560bb25424199ff332c074009644c1ff863ebb70132345352",
+          "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+          "game_ids_first_last": [
+            "q0",
+            "q9"
+          ],
+          "game_ids_omitted": true
+        }
+      },
+      "q_gate": {
+        "n": 150,
+        "q_gain_mean": 0.0,
+        "q_soft_gain_mean": 0.0,
+        "q_soft_gain_behavior_mean": 0.0,
+        "behavior_temp": 1.0,
+        "strict_improve_rate": 0.0,
+        "entropy_mean": 0.19999999999999996,
+        "agree_rate": 1.0,
+        "anchor": {
+          "n": 30,
+          "du_mean": 0.05000000000000002,
+          "du_ci95": [
+            0.05000000000000001,
+            0.050000000000000024
+          ]
+        },
+        "verdict": "FAIL"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 150,
+        "unique_games": 50,
+        "unique_roots": 150,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "572d32b17269a397ca89032d9d91faa66367bc68204c28840fa26074299a1ac6",
+        "unique_roots_sha256": "fa06eb2a12d6546070e1c8b18d44c05b7028471daa53ba16a8bee22c9387a747",
+        "game_ids_sha256": "cc5311a9d50ffe4bc45f65fa5df50efebdb37a0ed4648fb2c3e9e0ffc4e6bc06",
+        "game_ids_first_last": [
+          "q0",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      },
+      "anchor_rows_summary": {
+        "derived": true,
+        "rows": 30,
+        "unique_games": 25,
+        "unique_roots": 30,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "355217d1550ed25719e4e7d692abf86d8809b95922df1ed305d0c69ca7b1be3d",
+        "unique_roots_sha256": "b2362a1508371ce9f8a1cd1dd6db1388a2f08f71610796e8e9bd189db8e34ed5",
+        "game_ids_sha256": "dbfef7be951a5bdfe1949c8ea4b5a68218c6e7b5dae99934e5b4f725b9d0de06",
+        "game_ids_first_last": [
+          "q1",
+          "q9"
+        ],
+        "game_ids_omitted": true,
+        "repeated_unique_roots": 0
+      }
+    },
+    "worker_failure_old_artifact": {
+      "exit_code": 1,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": false,
+      "old_output_unchanged": true,
+      "last_error": "RuntimeError: review injected worker failure before report publication",
+      "q_gate": {
+        "verdict": "PASS"
+      },
+      "old_run": true
+    },
+    "empty_mode_games": {
+      "exit_code": 1,
+      "prereg_printed": false,
+      "result_exists": false,
+      "last_error": "split manifest has no games for mode q"
+    },
+    "empty_replay_diagnostic": {
+      "exit_code": 0,
+      "prereg_printed": true,
+      "result_exists": true,
+      "contains_nonstandard_NaN": true,
+      "old_output_unchanged": false,
+      "last_error": "  return _methods._mean(a, axis=axis, dtype=dtype,",
+      "prereg": {
+        "gate": "q",
+        "n_scenes": 0,
+        "ds_overlap_check": "RUN, disjoint (ds n=1)",
+        "canonical_config": true,
+        "game_list": {
+          "entries": 1,
+          "unique_games": 1,
+          "game_ids": [
+            "empty"
+          ],
+          "sequence_sha256": "6c7accfe4beda7ac50b2228fb8e847f3900c2ed65b1b8b729a5d5f88c753d066"
+        }
+      },
+      "q_gate": {
+        "n": 0,
+        "q_gain_mean": "NaN",
+        "q_soft_gain_mean": "NaN",
+        "q_soft_gain_behavior_mean": "NaN",
+        "behavior_temp": 1.0,
+        "strict_improve_rate": "NaN",
+        "entropy_mean": "NaN",
+        "agree_rate": "NaN",
+        "anchor": {
+          "n": 0,
+          "du_mean": "NaN",
+          "du_ci95": [
+            "NaN",
+            "NaN"
+          ]
+        },
+        "verdict": "DIAGNOSTIC ONLY"
+      },
+      "rows_summary": {
+        "derived": true,
+        "rows": 0,
+        "unique_games": 0,
+        "game_ids": [],
+        "unique_roots": 0,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "unique_roots_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "repeated_unique_roots": 0
+      },
+      "anchor_rows_summary": {
+        "derived": true,
+        "rows": 0,
+        "unique_games": 0,
+        "game_ids": [],
+        "unique_roots": 0,
+        "duplicate_root_rows": 0,
+        "root_id_schema": [
+          "game",
+          "step",
+          "me"
+        ],
+        "root_sequence_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "unique_roots_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "repeated_unique_roots": 0
+      }
+    }
+  },
+  "stage_a_b_binding": {
+    "same_roots": true,
+    "stage_a_n": 155,
+    "stage_b_recommended_n": 600,
+    "stage_b_actual_n": 155,
+    "stage_b_verdict": "PASS"
+  },
+  "independent_continuation": {
+    "u_seed100": 0.7524999166699999,
+    "u_seed999": 0.7524999166699999,
+    "expected_terminal_u": 0.7524999166699999,
+    "learned_leaf_forbidden": true,
+    "policy_only_received_features": true
+  },
+  "probe_case_conditions": {
+    "derived_from": "preserved recheck_gate_inputs.py case definitions; does not add measured teacher results",
+    "without_training_ids": {
+      "ds_games_file": null
+    },
+    "empty_training_ids": {
+      "ds_id_count": 0
+    },
+    "exact_training_overlap": {
+      "ds_ids": [
+        "q0"
+      ]
+    },
+    "q_du_overlap": {
+      "shared_id": "q0"
+    },
+    "training_ids_with_suffix": {
+      "ds_id_format": "q{i}.json.gz",
+      "ds_id_count": 50,
+      "gate_id_format": "q{i}"
+    },
+    "duplicate_manifest_ids": {
+      "q_list": [
+        "q0"
+      ],
+      "repeat_count": 50
+    },
+    "nonbinding_diagnostic_cap": {
+      "max_scenes": 999
+    },
+    "tiny_stage_b": {
+      "n_required": 2,
+      "du_game_ids": [
+        "d0"
+      ]
+    },
+    "stage_a_all_scenes": {
+      "pilot": true,
+      "worker_du_sequence": "0.1,0.5 alternating"
+    },
+    "stage_b_without_locked_n": {
+      "pilot": false,
+      "n_required": 150,
+      "stage_a_artifact_input": null,
+      "worker_du_sequence": "0.1,0.5 alternating"
+    },
+    "statistical_fail_exit": {
+      "worker_q_gain": 0,
+      "worker_strict_improve_rate": 0
+    },
+    "worker_failure_old_artifact": {
+      "injection": "run_tasks raises RuntimeError",
+      "existing_out_verdict": "PASS"
+    },
+    "empty_replay_diagnostic": {
+      "steps": []
+    }
+  }
+}
