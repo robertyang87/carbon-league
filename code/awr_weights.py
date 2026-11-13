@@ -21,14 +21,28 @@ F06: the weight chain stays float32 end to end. ESS / w_max give no positive low
 anchor's mean(w)/w inversion turns a tiny positive w into an uw that overflows float16 downstream (inf -> NaN
 loss), so positive game weights are floored at AWR_WMIN (default 1e-3; mirror games keep w = 0 exactly). Every
 floored game is counted and named in the output JSON -- never silent. w / uw are hard-gated for finiteness
-before anything is saved: a non-finite entry aborts with the offending game keys, it is not published."""
+before anything is saved: a non-finite entry aborts with the offending game keys, it is not published.
+P2-3 (Codex review 20261114): w / uw are derived-layer products, never generation fields -- the same
+contract set_uw already follows. On a dataset with a generation pointer the base generation is pinned
+and hash-verified BEFORE any derivation input is read (inputs come from the certified generation only,
+never the flat root mirror), and after the save the weights are registered via
+cnet2_build.register_derived with the pinned base passed as expected_base; a loader-equivalent
+identity self-check must then pass, else the tool exits non-zero. (The previous code np.save'd straight
+into the dataset root with no registration: on a sealed dataset it exited 0 while cnet2_train's strict
+loader refused the very weights it had just written.) Only a dataset with NO generation pointer at all
+keeps the legacy path: root reads, root write, weights left UNREGISTERED with a loud warning."""
 import gzip
+import hashlib
 import json
 import os
 import sys
 from collections import defaultdict
 
 import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cnet2_build import (assert_not_in_generation, load_generation,  # noqa: E402
+                         register_derived)
 
 
 def side_value(obs, carbon, p):
@@ -103,8 +117,94 @@ def rescore(corpus):
     return games
 
 
+def _sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for blk in iter(lambda: fh.read(1 << 22), b""):
+            h.update(blk)
+    return h.hexdigest()
+
+
+def _derived_layer_problems(ds_abs, base_gen, gen_total):
+    """Post-registration self-check (P2-3): the loader-equivalent identity
+    gate -- mirrors, for the two weight files this tool just registered,
+    the checks cnet2_train._validate_derived_layer applies before any
+    weight enters a loss (sidecar present and mirrored into the flat
+    meta; per file: field, base_generation == the pinned generation,
+    rows == generation total, dtype/shape, sha256 of the file bytes).
+    Returns a list of problems; empty means the training loader accepts
+    the derived layer as verified."""
+    probs = []
+    sp = os.path.join(ds_abs, "derived.json")
+    if not os.path.exists(sp):
+        return ["derived.json sidecar missing after registration"]
+    try:
+        side = json.load(open(sp))
+    except Exception as e:  # noqa: BLE001 -- named in the refusal
+        return [f"derived.json sidecar unreadable: {e}"]
+    try:
+        mirror = json.load(open(os.path.join(ds_abs, "meta.json"))).get("derived_layer")
+    except Exception:  # noqa: BLE001
+        mirror = None
+    if mirror is not None and mirror != side:
+        probs.append("derived.json and meta.json 'derived_layer' mirror disagree")
+    entries = side.get("files", {}) if isinstance(side, dict) else {}
+    for name in ("w.npy", "uw.npy"):
+        e = entries.get(name)
+        if e is None:
+            probs.append(f"{name} is not declared in the derived.json sidecar")
+            continue
+        arr = np.load(os.path.join(ds_abs, name), mmap_mode="r")
+        if e.get("field") != name[:-4]:
+            probs.append(f"{name}: sidecar field {e.get('field')!r} != {name[:-4]!r}")
+        if e.get("base_generation") != base_gen:
+            probs.append(f"{name}: base_generation {e.get('base_generation')!r} != pinned {base_gen!r}")
+        if int(e.get("rows", -1)) != gen_total:
+            probs.append(f"{name}: sidecar rows {e.get('rows')} != generation total {gen_total}")
+        if int(arr.shape[0]) != gen_total:
+            probs.append(f"{name}: file rows {int(arr.shape[0])} != generation total {gen_total}")
+        if e.get("dtype") != str(arr.dtype):
+            probs.append(f"{name}: dtype {e.get('dtype')!r} != file {str(arr.dtype)!r}")
+        if [int(x) for x in arr.shape] != [int(x) for x in e.get("shape", [])]:
+            probs.append(f"{name}: shape {e.get('shape')} != file {list(arr.shape)}")
+        if _sha256_file(os.path.join(ds_abs, name)) != e.get("sha256"):
+            probs.append(f"{name}: sha256 mismatch (file bytes differ from registration)")
+    return probs
+
+
 def main():
     ds, corpora = sys.argv[1], sys.argv[2:]
+    ds_abs = os.path.abspath(ds)
+    assert_not_in_generation(ds_abs, "awr_weights write weights into")
+    # P2-3, set_uw's accepted discipline: pin and VERIFY the base
+    # generation before touching any derivation input, and refuse a torn
+    # publish outright (BUILD_FAILED.json in the root means an interrupted
+    # publish left the flat mirror mixing generations). The legacy
+    # fallback is ONLY for a dataset with no generation pointer at all:
+    # with a pointer in force, ANY load_generation failure (missing file,
+    # hash mismatch, unreadable manifest) is a hard refusal BEFORE
+    # anything is written, and the error names the underlying cause.
+    _bf = os.path.join(ds_abs, "BUILD_FAILED.json")
+    if os.path.exists(_bf):
+        sys.exit(f"awr_weights: {_bf} is present -- the dataset root is a torn flat "
+                 f"mirror left by an interrupted publish; rebuild the dataset "
+                 f"before deriving weights (refusing to run)")
+    _ptr = os.path.join(ds_abs, "current.json")
+    if os.path.exists(_ptr):
+        try:
+            gen_dir, _man = load_generation(ds_abs, verify=True)
+        except Exception as e:  # noqa: BLE001 -- the refusal must name it
+            sys.exit(f"awr_weights: generation pointer {_ptr} exists but the sealed "
+                     f"generation failed verification: {type(e).__name__}: {e}; "
+                     f"refusing to derive weights (no legacy fallback while a "
+                     f"pointer is in force)")
+        base_gen = _man["generation"]; gen_total = int(_man["total"])
+        feat_dir = gen_dir          # derivation inputs: certified generation ONLY
+    else:
+        # Pre-generation legacy dataset: no pointer exists, the flat root
+        # is the only source there is (registration stays impossible and
+        # the consumer will flag the weights unverified, as before).
+        gen_dir = None; base_gen = None; gen_total = None; feat_dir = ds_abs
     games = [g for c in corpora for g in rescore(c)]
     nmir = sum(g["mirror"] for g in games)
     A = np.array([g["adv2"] for g in games if not g["mirror"]])
@@ -122,7 +222,7 @@ def main():
             break
         beta *= 1.25
     wkey = {g["key"]: 0.0 if g["mirror"] else float(np.minimum(wmax, np.exp(g["adv2"] / beta))) for g in games}     # np.minimum (not min) so a NaN would propagate to gate 1 instead of becoming wmax
-    meta = json.load(open(os.path.join(ds, "meta.json"))); gid = np.load(os.path.join(ds, "gid.npy"))
+    meta = json.load(open(os.path.join(feat_dir, "meta.json"))); gid = np.load(os.path.join(feat_dir, "gid.npy"))
     if len(wkey) != len(games):
         sys.exit(f"awr_weights: {len(games)} games but only {len(wkey)} distinct keys -- the corpora share game keys "
                  f"(same seed range). Run awr_rekey.py on each corpus (a different TAG each) and rebuild the dataset.")
@@ -142,8 +242,8 @@ def main():
     gw[fl] = np.float32(w_floor)
     w = gw[gid].astype(np.float32)
     floored_rows = int(fl[gid].sum())
-    kind = np.load(os.path.join(ds, "tok_kind.npy"), mmap_mode="r")
-    S = np.load(os.path.join(ds, "y.npy"), mmap_mode="r").shape[1]
+    kind = np.load(os.path.join(feat_dir, "tok_kind.npy"), mmap_mode="r")
+    S = np.load(os.path.join(feat_dir, "y.npy"), mmap_mode="r").shape[1]
     uw = np.ones((len(gid), S), np.float32)
     uw[:, :10] = (np.asarray(kind[:, :10]) != 0).astype(np.float32)
     # Self-anchor for the cars. With weight 0 nothing holds the car outputs while the shared decoder is trained on the
@@ -161,13 +261,70 @@ def main():
         keys_bad = [meta["games"][int(gid[i])]["key"] for i in rows_bad]
         sys.exit(f"awr_weights: non-finite w/uw in rows of games {keys_bad} (ds={ds}) -- not publishing")
     np.save(os.path.join(ds, "w.npy"), w); np.save(os.path.join(ds, "uw.npy"), uw)
+    # Derived-layer registration (P2-3, set_uw's contract): w/uw are
+    # post-processing products, never generation fields -- register them
+    # in the dataset root sidecar so cnet2_train.load can verify their
+    # identity (base generation, rows, sha256) before consuming them. The
+    # pinned base is passed as expected_base so a pointer that moved
+    # since the pin is refused inside register_derived BEFORE the
+    # sidecar is written; afterwards the binding is re-resolved once
+    # more, and a late move rolls the sidecar back to its previous
+    # bytes. Finally the loader-equivalent self-check must pass: this
+    # tool never exits 0 leaving weights its own consumer would refuse.
+    if gen_dir is not None:
+        _sp = os.path.join(ds_abs, "derived.json")
+        _prev_side = None
+        if os.path.exists(_sp):
+            with open(_sp, "rb") as _fh:
+                _prev_side = _fh.read()
+
+        def _rollback_sidecar():
+            if _prev_side is None:
+                try:
+                    os.remove(_sp)
+                except OSError:
+                    pass
+            else:
+                with open(_sp, "wb") as _fh:
+                    _fh.write(_prev_side)
+
+        _side = register_derived(ds_abs, [os.path.join(ds_abs, "uw.npy"), os.path.join(ds_abs, "w.npy")],
+                                 params={"tool": "awr_weights", "beta": float(beta),
+                                         "ess_min": ess_min, "w_max": wmax,
+                                         "car_anchor": car_anchor, "w_floor": w_floor,
+                                         "corpora": [os.path.basename(c.rstrip("/")) for c in corpora],
+                                         "mirror_dropped": int(nmir),
+                                         "floored_games": len(floored_keys)},
+                                 expected_base=base_gen)
+        try:
+            _now = load_generation(ds_abs, verify=False)[1]["generation"]
+        except Exception:  # noqa: BLE001
+            _now = None
+        if _now != base_gen:
+            _rollback_sidecar()
+            sys.exit(f"awr_weights: generation pointer moved during registration "
+                     f"({base_gen} -> {_now}); the derived registration was "
+                     f"rolled back -- rerun awr_weights")
+        _probs = _derived_layer_problems(ds_abs, base_gen, gen_total)
+        if _probs:
+            _rollback_sidecar()
+            sys.exit(f"awr_weights: derived layer failed the loader-equivalent "
+                     f"self-check: {'; '.join(_probs)}; the derived registration "
+                     f"was rolled back -- not publishing as verified")
+        derived_info = {"derived_layer": _side["format"], "base_generation": base_gen,
+                        "derived_check": "verified"}
+    else:
+        derived_info = {"derived_layer": "WARNING: no generation pointer in dataset; w/uw left "
+                                         "UNREGISTERED (legacy dataset) -- consumers will flag "
+                                         "derived identity as unverified",
+                        "base_generation": None, "derived_check": "legacy-unverified"}
     r_old = np.array([g["reward"] for g in games]); r_new = np.array([g["reward2"] for g in games])
     print(json.dumps({"rows": int(len(gid)), "games": len(games), "mirror_dropped": int(nmir), "beta": round(beta, 1), "ess_frac": round(float(ess), 3),
                       "adv_sd": round(float(A.std()), 1), "reward_old_mean": round(float(r_old.mean()), 1),
                       "reward_new_mean": round(float(r_new.mean()), 1), "corr_old_new": round(float(np.corrcoef(r_old, r_new)[0, 1]), 3),
                       "w_max": round(float(gw.max()), 2), "car_anchor": car_anchor,
                       "w_floor": w_floor, "floored_games": len(floored_keys), "floored_keys": floored_keys[:20],
-                      "floored_rows": floored_rows}), flush=True)
+                      "floored_rows": floored_rows, **derived_info}), flush=True)
 
 
 if __name__ == "__main__":
