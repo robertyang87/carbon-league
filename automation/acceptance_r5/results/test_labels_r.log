@@ -1,0 +1,34 @@
+PASS producer made 8 games n=8
+padded val game valpad-14.json.gz
+PASS at least 1 val + 3 train games val=[False, False, False, False, False, False, False, False, True]
+classes: fault=0 unusable=1 approx=2 normal=3
+{"games": 9, "samples": 5382, "val_games": 1, "teacher_sides": {"claude-AlphaCarbon-Master": 18}, "cfg_fp": "2faadb44d5fb3dea", "terminal_games": 9, "terminal_short_games": 0, "labels": {"raw_games": 8, "games": 9, "exact_rows": 4186, "approx_rows": 598, "unusable_rows": 598, "rows": 5382}, "generation": "gen-88576547426b989e"}
+PASS normal rows+class rows=598
+PASS fault rows+class rows=598
+PASS unusable rows+class rows=598
+PASS approx rows+class rows=598
+PASS normal u == U(margin) 
+PASS fault margin +-200 
+PASS fault u == WDL only u=[0. 1.]
+PASS unusable NaN 
+PASS approx NaN raw 
+manifest labels: {'raw_games': 8, 'games': 9, 'exact_rows': 4186, 'approx_rows': 598, 'unusable_rows': 598, 'rows': 5382}
+PASS manifest counts == dataset counts man={'raw_games': 8, 'games': 9, 'exact_rows': 4186, 'approx_rows': 598, 'unusable_rows': 598, 'rows': 5382} ds exact=4186 approx=598 unusable=598
+32, "NB": 2, "D": 64, "NH": 4, "L": 1, "E": 16, "G": 8}}
+EPOCH {"ep": 1, "train_l_u": 0.03571, "train_l_wdl": 0.796, "train_l_m": 0.0145, "train_label_exact": 3588, "train_label_approx": 598, "train_label_unusable": 598, "train_value_rows": 4186, "val_l_u": 8e-05, "val_wdl_acc": 1.0, "val_margin_mae": 22.7, "val_u_calib_mean": 0.00676, "val_u_target_binned_resid": 0.00676, "val_u_calib_pred_binned": 0.00823, "val_u_calib_pred_bins": [[34, 0.4871, 0.5, 0.0], [564, 0.5079, 0.5, 0.0]], "val_u_range": [0.475, 0.512], "val_n": 598, "s": 13}
+TRAIN-DONE {"out": "/home/hatch/workspace/final-accept/work/heads_out2.npz", "manifest": "/home/hatch/workspace/final-accept/work/heads_out2.npz.manifest.json", "labels": {"total_rows": 5382, "exact_rows": 4186, "approx_rows": 598, "unusable_rows": 598, "approx_labels": true, "label_source": "mixed: margin_raw/u_raw exact + tanh-inverse approx"}, "s": 14}
+
+=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return l_u + 0.25 * l_wdl + 0.25 * l_m, float(l_u), float(l_wdl), float(l_m), acc, mae, ur, counts
+
+PASS heads exit0 + TRAIN-DONE rc=0
+heads manifest keys: ['dataset', 'epochs', 'init', 'labels', 'out', 's']
+heads labels: {'total_rows': 5382, 'exact_rows': 4186, 'approx_rows': 598, 'unusable_rows': 598, 'approx_labels': True, 'label_source': 'mixed: margin_raw/u_raw exact + tanh-inverse approx'} | approx_labels: None | source: None
+PASS heads manifest approx flagged 
+PASS heads counts match heads={'total_rows': 5382, 'exact_rows': 4186, 'approx_rows': 598, 'unusable_rows': 598, 'approx_labels': True, 'label_source': 'mixed: margin_raw/u_raw exact + tanh-inverse approx'} ds unusable=598 approx=598
+PASS epoch log unusable count present k/heads_out2.npz", "manifest": "/home/hatch/workspace/final-accept/work/heads_out2.npz.manifest.json", "labels": {"total_rows": 5382, "exact_rows": 4186, "approx_rows": 598, "unusable_rows": 598, "approx_labels": true, "label_source": "mixed: margin_raw/u_raw exact + tanh-inverse approx"}, "s": 14}
+
+PASS unusable excluded from value rows value_rows=4186 train=4784 unusable=598
+
+== mixed labels v2: 17/17 passed ==
