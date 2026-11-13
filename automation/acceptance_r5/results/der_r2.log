@@ -1,0 +1,16 @@
+PASS set_uw exit0 s': 32, 'car_tokens': 28, 'base_tokens': 84, 'car_w': 0.0, 'planter_w': 2.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+PASS sidecar format+base ['uw.npy', 'w.npy']
+PASS load verified mode {'mode': 'verified', 'generation': 'gen-test1', 'files': ['w.npy', 'uw.npy']}
+PASS load w/uw == set_uw files 
+PASS loss weighting equality 0.6999999284744263 vs 0.6999999284744263
+PASS weight_gate prod from these weights {'w_max': 1.0, 'uw_max': 2.0, 'prod_max': 2.0, 'prod_mean': 1.0277777777777777, 'prod_n': 144}
+PASS tamper base_generation rejected derived layer: w.npy in dataset '/home/hatch/workspace/final-accept/work/ds2' failed identity checks: base_generation 'gen-old' != current '
+PASS tamper rows rejected derived layer: w.npy in dataset '/home/hatch/workspace/final-accept/work/ds3' failed identity checks: sidecar rows 999 != generation total 6
+PASS tamper file bytes rejected (sha256) derived layer: uw.npy in dataset '/home/hatch/workspace/final-accept/work/ds4' failed identity checks: sha256 mismatch (file bytes changed a
+PASS mirror mismatch rejected derived layer: derived.json and meta.json 'derived_layer' mirror disagree in dataset '/home/hatch/workspace/final-accept/work/ds5'; refusing
+PASS set_uw into generation refused -layer guard: refusing to set_uw write weights into inside an immutable generation directory: /home/hatch/workspace/final-accept/work/ds1/generations/gen-test1
+
+PASS legacy load ok + warning {'mode': 'legacy-unverified', 'used': ['w', 'uw']}
+PASS undeclared stale w refused derived layer: weights ['w'] in dataset '/home/hatch/workspace/final-accept/work/ds8' are neither fields of generation gen-test1 nor declare
+
+== derived-layer: 13/13 passed ==
