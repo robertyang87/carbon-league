@@ -125,6 +125,22 @@ PID_G1=$!
 sleep 5; echo "pids: r1=$PID_R1 g1=$PID_G1 (all train procs: $(pgrep -f 'cnet2_train[.]py' | tr '\n' ' '))"
 
 echo '--- 5) ATTESTATION (completion = trio live + this block in the log) ---'
+# R2 (Codex re-review 20261114): freshness snapshot. Per-arm liveness
+# (P2-4) still passes an arm that printed ep0 and then hung -- alive,
+# but its log and weights never move again. So before the proof-window
+# sleep, snapshot each arm's log mtime and newest-weight mtime;
+# LAUNCH-OK below requires BOTH to have advanced during the window,
+# per arm. Platform-agnostic on purpose: mtimes only (stat in GNU and
+# BSD form), no GPU probe -- this chain also runs on boxes without
+# NVIDIA tooling, so GPU health is attested in the printout above for
+# a human, never as a pass/fail leg.
+mt_of() { stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null || echo 0; }
+newest_wt() { ls -t "$D/weights/cnet2_${PREFIX}$1"*.npz 2>/dev/null | head -1; }
+WT_R1=$(newest_wt r1); WT_G1=$(newest_wt g1)
+SNAP_LOG_R1=$(mt_of "$LOGD/${PREFIX}r1.log"); SNAP_LOG_G1=$(mt_of "$LOGD/${PREFIX}g1.log")
+SNAP_WT_R1=0; [ -n "$WT_R1" ] && SNAP_WT_R1=$(mt_of "$WT_R1")
+SNAP_WT_G1=0; [ -n "$WT_G1" ] && SNAP_WT_G1=$(mt_of "$WT_G1")
+echo "freshness snapshot (pre-window): r1 log=$SNAP_LOG_R1 wt=$SNAP_WT_R1; g1 log=$SNAP_LOG_G1 wt=$SNAP_WT_G1"
 sleep 120
 EP0R=$(grep -c '"ep": 0' "$LOGD/${PREFIX}r1.log" 2>/dev/null || true)
 EP0G=$(grep -c '"ep": 0' "$LOGD/${PREFIX}g1.log" 2>/dev/null || true)
@@ -143,9 +159,22 @@ echo "ep0 lines: r1=$EP0R g1=$EP0G"
 ALIVE_R1=0; [ -n "${PID_R1:-}" ] && kill -0 "$PID_R1" 2>/dev/null && ALIVE_R1=1
 ALIVE_G1=0; [ -n "${PID_G1:-}" ] && kill -0 "$PID_G1" 2>/dev/null && ALIVE_G1=1
 echo "arm liveness: r1 pid=${PID_R1:-?} alive=$ALIVE_R1; g1 pid=${PID_G1:-?} alive=$ALIVE_G1"
-if [ "${EP0R:-0}" -lt 1 ] || [ "${EP0G:-0}" -lt 1 ] || [ "$ALIVE_R1" != 1 ] || [ "$ALIVE_G1" != 1 ]; then
+# R2 freshness verdict: each arm's log AND newest weight must carry a
+# strictly newer mtime than the pre-window snapshot -- an arm alive
+# but frozen (no log line, no weight save during the whole window)
+# fails here and is named, with the stuck artifact values printed.
+WT_R1=$(newest_wt r1); WT_G1=$(newest_wt g1)
+NOW_LOG_R1=$(mt_of "$LOGD/${PREFIX}r1.log"); NOW_LOG_G1=$(mt_of "$LOGD/${PREFIX}g1.log")
+NOW_WT_R1=0; [ -n "$WT_R1" ] && NOW_WT_R1=$(mt_of "$WT_R1")
+NOW_WT_G1=0; [ -n "$WT_G1" ] && NOW_WT_G1=$(mt_of "$WT_G1")
+FRESH_R1=1; { [ "$NOW_LOG_R1" -gt "$SNAP_LOG_R1" ] && [ "$NOW_WT_R1" -gt "$SNAP_WT_R1" ]; } || FRESH_R1=0
+FRESH_G1=1; { [ "$NOW_LOG_G1" -gt "$SNAP_LOG_G1" ] && [ "$NOW_WT_G1" -gt "$SNAP_WT_G1" ]; } || FRESH_G1=0
+echo "arm freshness: r1 log $SNAP_LOG_R1->$NOW_LOG_R1 wt $SNAP_WT_R1->$NOW_WT_R1 fresh=$FRESH_R1; g1 log $SNAP_LOG_G1->$NOW_LOG_G1 wt $SNAP_WT_G1->$NOW_WT_G1 fresh=$FRESH_G1"
+if [ "${EP0R:-0}" -lt 1 ] || [ "${EP0G:-0}" -lt 1 ] || [ "$ALIVE_R1" != 1 ] || [ "$ALIVE_G1" != 1 ] || [ "$FRESH_R1" != 1 ] || [ "$FRESH_G1" != 1 ]; then
   DEAD_ARMS=""; [ "$ALIVE_R1" != 1 ] && DEAD_ARMS="$DEAD_ARMS r1(pid=${PID_R1:-?})"
   [ "$ALIVE_G1" != 1 ] && DEAD_ARMS="$DEAD_ARMS g1(pid=${PID_G1:-?})"
-  mark "LAUNCH-FAIL attestation: dead arm(s):${DEAD_ARMS:- none} (ep0 r1=$EP0R g1=$EP0G) -- NOT complete, escalate with this log"; exit 1
+  STALE_ARMS=""; [ "$FRESH_R1" != 1 ] && STALE_ARMS="$STALE_ARMS r1(log:$SNAP_LOG_R1->$NOW_LOG_R1 wt:$SNAP_WT_R1->$NOW_WT_R1)"
+  [ "$FRESH_G1" != 1 ] && STALE_ARMS="$STALE_ARMS g1(log:$SNAP_LOG_G1->$NOW_LOG_G1 wt:$SNAP_WT_G1->$NOW_WT_G1)"
+  mark "LAUNCH-FAIL attestation: dead arm(s):${DEAD_ARMS:- none}; stale arm(s):${STALE_ARMS:- none} (ep0 r1=$EP0R g1=$EP0G) -- NOT complete, escalate with this log"; exit 1
 fi
 mark "LAUNCH-OK + ATTESTED -- executor complete ONLY in this sense; training itself continues to ep$((EPOCHS-1))"
