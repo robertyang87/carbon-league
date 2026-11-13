@@ -286,7 +286,16 @@ class FastCarbon:
     def load_observation(self, full_obs):
         """Load state from a *full* (unfiltered) observation dict, i.e. the
         format Board.observation produces / populate_board leaves in
-        state[0].observation (with 'full_carbon' or full 'carbon')."""
+        state[0].observation (with 'full_carbon' or full 'carbon').
+
+        Id counters: if the dict carries "tid_counter" / "wid_counter"
+        (get_state() snapshots do; a bare Board-format observation does
+        not), they are restored as the authoritative counters -- exact,
+        dead entities' consumed numbers included. Without them the
+        counters are re-derived from live entities only, which is a
+        lower-bound recovery (see the counter block below); the bare-
+        observation path must never be described as an exact counter
+        restoration."""
         size = self.size
         carbon = full_obs.get("full_carbon", full_obs["carbon"])
         self.reset(full_carbon=list(carbon))
@@ -314,21 +323,46 @@ class FastCarbon:
                 self.trees[tid] = _Tree(tid, p, pos, age)
                 self.player_trees[p].append(tid)
                 # Tree ids embed the *creator* ("player-<c>-tree-<n>"), and a
-                # seized tree keeps its creator id while changing owner. The
-                # per-player id counter is the creator's high-water mark, so
-                # restore it under the creator parsed from the id -- not under
-                # the current owner. Crediting the owner left the creator's
-                # counter at 0 after a seizure, and the creator's next planted
-                # tree reused the seized tree's live id and overwrote it
-                # (REVIEW_FULL_20261113 P3 snapshot defect).
+                # seized tree keeps its creator id while changing owner, so
+                # the live-implied counter bound is credited under the creator
+                # parsed from the id -- not under the current owner. Crediting
+                # the owner left the creator's bound at 0 after a seizure, and
+                # the creator's next planted tree reused the seized tree's
+                # live id and overwrote it (REVIEW_FULL_20261113 P3 snapshot
+                # defect). This per-creator parse only yields the lower bound
+                # discussed in the counter block below.
                 tc[_id_creator(tid, p)] = max(tc[_id_creator(tid, p)],
                                               _id_suffix(tid) + 1)
             for wid, (pos, cargo, occ) in full_obs["players"][p][2].items():
                 self.workers[wid] = _Worker(wid, p, pos, cargo, occ == "COLLECTOR")
                 self.player_workers[p].append(wid)
                 wc[p] = max(wc[p], _id_suffix(wid) + 1)
-        self._wid_counter = wc
-        self._tid_counter = tc
+        # --- id counters -------------------------------------------------
+        # Exact mode: counters carried by the snapshot itself (get_state()
+        # writes them; set_state() forwards them) are authoritative and are
+        # restored verbatim -- including numbers consumed by entities that
+        # have since died. (The elementwise max with the live-implied bound
+        # is a no-op for genuine snapshots, whose counters dominate every
+        # live id they ever issued; it only guards corrupt hand-made dicts.)
+        # Lower-bound mode: a bare observation carries no counters, so all
+        # that can be derived is max(live id suffix) + 1 per player (per
+        # creator for trees). That is a LOWER-BOUND recovery, not an exact
+        # restoration: numbers consumed by trees/workers that have already
+        # died are invisible in an observation and cannot be recovered from
+        # it, so the restored counter may sit below the true historical
+        # counter and a future id may reuse a *dead* entity's id. It can
+        # never reuse a *live* entity's id. This is also why cnet2_search
+        # and nn_search add a +500 bump to the counter after
+        # load_observation: a safety margin that exists precisely because
+        # the bare-observation restore is only a lower bound. Callers that
+        # need the exact id sequence must snapshot the counters themselves
+        # (get_state()/set_state()).
+        sup_tc = full_obs.get("tid_counter")
+        sup_wc = full_obs.get("wid_counter")
+        self._tid_counter = ([max(int(sup_tc[p]), tc[p]) for p in range(2)]
+                             if sup_tc is not None else tc)
+        self._wid_counter = ([max(int(sup_wc[p]), wc[p]) for p in range(2)]
+                             if sup_wc is not None else wc)
         src_trees_dict = full_obs.get("trees", {})
         self.trees_dict = {}
         for p in range(2):
@@ -390,7 +424,14 @@ class FastCarbon:
         }
 
     def get_state(self):
-        """Compact state export for comparisons / training pipelines."""
+        """Compact state export for comparisons / training pipelines.
+
+        This is FastCarbon's own snapshot format: it carries the
+        authoritative monotonic id counters ("tid_counter" / "wid_counter"),
+        so a get_state() / set_state() round trip restores them verbatim
+        and the id sequence continues exactly -- unlike a bare observation
+        round trip, which can only lower-bound the counters from live
+        entities (see load_observation)."""
         return {
             "step": self.step_count,
             "cash": list(self.cash),
@@ -406,7 +447,48 @@ class FastCarbon:
             },
             "bases": {p: list(self.bases[p]) for p in range(2)},
             "trees_dict": {tid: [v[0], v[1]] for tid, v in self.trees_dict.items()},
+            "tid_counter": list(self._tid_counter),
+            "wid_counter": list(self._wid_counter),
+            "remainingOverageTime": self.remaining_overage,
         }
+
+    def set_state(self, state):
+        """Restore a snapshot produced by get_state(), counters included.
+
+        The id counters are restored verbatim from the snapshot, so trees
+        and workers created afterwards continue the original id sequence
+        exactly -- no reuse of live *or* dead ids. (Snapshots written
+        before counters were recorded fall back to load_observation's
+        lower-bound derivation from live entities.)"""
+        workers_by_p = {0: {}, 1: {}}
+        for wid, w in state["workers"].items():
+            workers_by_p[w["player"]][wid] = [
+                w["pos"], w["carbon"], w["type"]]
+        trees_by_p = {0: {}, 1: {}}
+        for tid, t in state["trees"].items():
+            trees_by_p[t["player"]][tid] = [t["pos"], t["age"]]
+        bases_src = state["bases"]
+        players = []
+        for p in range(2):
+            blist = bases_src.get(p, bases_src.get(str(p), []))
+            players.append([state["cash"][p],
+                            {bid: pos for bid, pos in blist},
+                            workers_by_p[p], trees_by_p[p]])
+        full_obs = {
+            "full_carbon": list(state["carbon"]),
+            "carbon": list(state["carbon"]),
+            "players": players,
+            "trees": state["trees_dict"],
+            "step": state["step"],
+            "remainingOverageTime": state.get(
+                "remainingOverageTime",
+                self.config.get("remainingOverageTime", 60)),
+        }
+        if "tid_counter" in state:
+            full_obs["tid_counter"] = list(state["tid_counter"])
+        if "wid_counter" in state:
+            full_obs["wid_counter"] = list(state["wid_counter"])
+        return self.load_observation(full_obs)
 
     # ----------------------------------------------------------------- step
     def _kill_worker(self, w, cell_worker):
