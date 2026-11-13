@@ -506,6 +506,111 @@ def hunter_acts(obs, me, acts_o, cfg):
     return out
 
 
+class BankruptcyGuard:
+    """Stateful anti-bankruptcy guard (A3: extracted verbatim from
+    make_search_agent's bankrupt_guard closure; behaviour identical, see the
+    parity test in automation/acceptance_r5/ -- same positions, same cfg,
+    same outputs).
+
+    State (per game, per seat): lostw = own workers lost since the last
+    game reset; prevw = own worker uids at the last guarded step;
+    guard_base = base slots this guard forced to recruit a collector
+    (per step; cleared by reset_step, which the agent calls once per step
+    exactly where it used to rebind st["guard_base"]).
+    cfg keys read: LOWW, GUARD_NARROW, GUARD_CASH, GUARD_LOG.
+    NOTE on base_fix: it is NOT guard state -- it is per-step rule-layer
+    state written by the MACRO/LATE_PLANT blocks and reconciled by the
+    agent after the guard call, so it stays in the agent's st dict; the
+    guard only ever reads it indirectly through the caller's post-guard
+    loop. Each candidate arm / scenario branch holds its own copy
+    (snapshot()/restore()/copy()); never share one instance across
+    branches, or one arm's lostw leaks into another.
+    """
+
+    def __init__(self, cfg):
+        self.cfg = cfg
+        self.lostw = 0
+        self.prevw = set()
+        self.guard_base = set()
+
+    def reset_game(self):
+        """Per-game reset (was: st["lostw"]=0; st["prevw"]=set())."""
+        self.lostw = 0
+        self.prevw = set()
+        self.guard_base.clear()
+
+    def reset_step(self):
+        """Per-step reset (was: st["guard_base"]=set()). Clears in place so
+        any alias (e.g. the agent's st["guard_base"]) stays bound."""
+        self.guard_base.clear()
+
+    def snapshot(self):
+        return {"lostw": self.lostw, "prevw": set(self.prevw),
+                "guard_base": set(self.guard_base)}
+
+    def restore(self, snap):
+        self.lostw = snap["lostw"]
+        self.prevw = set(snap["prevw"])
+        self.guard_base = set(snap["guard_base"])
+
+    def copy(self):
+        g = BankruptcyGuard(self.cfg)
+        g.restore(self.snapshot())
+        return g
+
+    def apply(self, x, aux, y, lg0, pol, own_uid, teacher, stats=None):
+        """Guarded labels for one step. own_uid = this seat's slot-indexed
+        worker uids (feat.own_uid); teacher = teacher slot for the re-decode
+        path (pol.enc_for); stats is an optional dict receiving guard_moves /
+        guard_recruit / guard_log (None = throwaway)."""
+        stats = stats if stats is not None else {}
+        cfg = self.cfg
+        m = x["tok_mask"]; kind = x["tok_kind"]; pos = x["tok_pos"]; cargo = x["tok_cargo"]
+        nw = int(sum(1 for s_ in range(10) if m[s_]))
+        ncol = int(sum(1 for s_ in range(10) if m[s_] and kind[s_] == 0))
+        fz = np.full(F.OWN, -1, np.int64); first = None
+        cur = {u for u in own_uid[:10] if u is not None}
+        self.lostw = self.lostw + len(self.prevw - cur)
+        self.prevw = cur
+        risky = nw <= cfg["LOWW"]
+        if cfg["GUARD_NARROW"]:
+            # only a real bankruptcy risk: we already lost a unit and a further death could not be re-bought
+            risky = risky and self.lostw > 0 and x["cash"] < cfg["GUARD_CASH"]
+        if risky:
+            for s_ in range(10):
+                if not m[s_]:
+                    continue
+                d = F.DEST[int(pos[s_])]
+                if kind[s_] == 0:
+                    bad = aux["en_min"][d] <= float(cargo[s_])
+                else:
+                    bad = aux["thr"][d] > 0
+                if bad[y[s_]] and not bad.all():
+                    ok = [k for k in np.argsort(-lg0[s_]) if not bad[k]]
+                    fz[s_] = int(ok[0]); first = s_ if first is None else first
+                    stats["guard_moves"] = stats.get("guard_moves", 0) + 1
+                    if cfg.get("GUARD_LOG"):
+                        p_ = int(pos[s_]); en = [(int(F.DIST[p_, int(pos[e])]), int(kind[e]), float(cargo[e])) for e in range(12, 22) if m[e]]
+                        stats.setdefault("guard_log", []).append({
+                            "step": 299 - int(x["left"]), "nw": nw, "cash": round(float(x["cash"])), "lost": int(self.lostw),
+                            "uid": own_uid[s_], "kind": "C" if kind[s_] == 0 else "P", "cargo": round(float(cargo[s_])),
+                            "dob": int(aux["dob"][p_]), "nearest_enemy": min(en) if en else None,
+                            "net_move": int(y[s_]), "chosen": int(ok[0])})
+        if ncol == 0 and x["cash"] >= 30 and x["slots"] > 0 and x["left"] > 10:
+            bs = [s_ for s_ in (10, 11) if m[s_]]
+            if bs and not any(y[s_] == 1 for s_ in bs):
+                fz[bs[0]] = 1; first = bs[0] if first is None else min(first, bs[0]); self.guard_base.add(bs[0])
+                stats["guard_recruit"] = stats.get("guard_recruit", 0) + 1
+        if first is None:
+            return y
+        fz[:first] = y[:first]                  # the guard has priority over rule-edited bases: no base_fix here
+        tok, ctx = pol.enc_for(x, teacher)      # R12: original-frame encoding of THIS x (last_enc may be a TTA view)
+        X1 = {k: x[k][None] for k in ("tok_pos", "tok_kind", "tok_mask", "tok_cargo")}
+        X1["cash"] = [x["cash"]]; X1["slots"] = [x["slots"]]; X1["left"] = [x["left"]]
+        y2 = decode_b(pol, X1, [aux], tok[None], ctx[None], fz[None])[0]
+        return y2
+
+
 def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     cfg = dict(DEFAULTS)
     cfg.update(conf or {})
@@ -526,6 +631,8 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     ens = cfg.get("ENS")
     epol = NP.Ensemble([pol] + [NP.Policy(load_weights(e_)) for e_ in ens]) if ens else None
     st = {"f": None, "fo": None}
+    guard = BankruptcyGuard(cfg)   # A3: the agent's one guard instance (per game, per seat)
+    st["guard_base"] = guard.guard_base   # search reads this alias; reset_step() clears it in place
     pool = []
     stats = {"steps": 0, "searched": 0, "branches": 0, "changed": 0, "branch_steps": 0, "worst_ms": 0.0,
              "gain": 0.0, "errors": 0, "shallow": 0, "depth_sum": 0}
@@ -705,7 +812,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         f, fo = st["f"], st["fo"]
         if obs["step"] == 0 or "lpost" not in st:
             st["lpost"] = np.array([cfg["ID_PRIOR"] if k == OT else 0.0 for k in cfg["STYLES"]])
-            st["ot"] = OT; st["oprev"] = None; st["pw"] = None; st["ntrk"] = 0; st["lostw"] = 0; st["prevw"] = set()
+            st["ot"] = OT; st["oprev"] = None; st["pw"] = None; st["ntrk"] = 0; guard.reset_game()
             KS, KT = len(cfg["STYLES"]) + (1 if xpol is not None else 0), len(cfg["TEMPS"])
             st["L"] = np.zeros((KS, KT)); st["M"] = np.zeros(KT)
             st["lprior"] = np.array([cfg["ID_PRIOR"] if k == OT else 0.0 for k in cfg["STYLES"]] + ([0.0] if xpol is not None else []))
@@ -752,7 +859,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                     y, lg0, _ = (epol if epol is not None else pol).act(x, f.aux, teacher=st["T_now"])
         st["lg0"] = lg0; st["y0"] = y.copy()
         st["base_fix"] = {}      # base slots set by a rule layer this step: every search candidate / guard re-decode keeps them
-        st["guard_base"] = set() # base slots the bankruptcy guard forced to recruit a collector this step (never searched)
+        guard.reset_step()       # A3: clears guard_base in place (st["guard_base"] stays aliased)
         # car-curve rule (both opponent lines, BEFORE the bankruptcy guard so the guard still sees the final plan):
         # while below the Master2s collector curve (target = 2 + #{CC_STEPS <= t}, 8 after the last step, off after
         # CC_END) ONE base switches to a collector: a planter recruit -> collector (only with >= 2 planters in play),
@@ -952,58 +1059,11 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             agent.last_stats = dict(stats)
             return acts
 
-    def f_own_uids():
-        return [u for u in st["f"].own_uid[:10] if u is not None]
-
     def bankrupt_guard(x, aux, y, lg0):
-        """anti-bankruptcy: (1) with no own collector (and none recruited this step) a base recruits a collector
-        when cash allows; (2) with <= LOWW own workers, a unit never moves/stays where an enemy unit that would
-        kill it can arrive (planter: any enemy unit; collector: enemy collector with cargo <= ours), if a safe
-        move exists (best logit among safe).  Later slots are re-decoded after the first forced change."""
-        m = x["tok_mask"]; kind = x["tok_kind"]; pos = x["tok_pos"]; cargo = x["tok_cargo"]
-        nw = int(sum(1 for s_ in range(10) if m[s_]))
-        ncol = int(sum(1 for s_ in range(10) if m[s_] and kind[s_] == 0))
-        fz = np.full(F.OWN, -1, np.int64); first = None
-        cur = {u for u in f_own_uids()}
-        st["lostw"] = st.get("lostw", 0) + len(st.get("prevw", set()) - cur)
-        st["prevw"] = cur
-        risky = nw <= cfg["LOWW"]
-        if cfg["GUARD_NARROW"]:
-            # only a real bankruptcy risk: we already lost a unit and a further death could not be re-bought
-            risky = risky and st["lostw"] > 0 and x["cash"] < cfg["GUARD_CASH"]
-        if risky:
-            for s_ in range(10):
-                if not m[s_]:
-                    continue
-                d = F.DEST[int(pos[s_])]
-                if kind[s_] == 0:
-                    bad = aux["en_min"][d] <= float(cargo[s_])
-                else:
-                    bad = aux["thr"][d] > 0
-                if bad[y[s_]] and not bad.all():
-                    ok = [k for k in np.argsort(-lg0[s_]) if not bad[k]]
-                    fz[s_] = int(ok[0]); first = s_ if first is None else first
-                    stats["guard_moves"] = stats.get("guard_moves", 0) + 1
-                    if cfg.get("GUARD_LOG"):
-                        p_ = int(pos[s_]); en = [(int(F.DIST[p_, int(pos[e])]), int(kind[e]), float(cargo[e])) for e in range(12, 22) if m[e]]
-                        stats.setdefault("guard_log", []).append({
-                            "step": 299 - int(x["left"]), "nw": nw, "cash": round(float(x["cash"])), "lost": int(st.get("lostw", 0)),
-                            "uid": st["f"].own_uid[s_], "kind": "C" if kind[s_] == 0 else "P", "cargo": round(float(cargo[s_])),
-                            "dob": int(aux["dob"][p_]), "nearest_enemy": min(en) if en else None,
-                            "net_move": int(y[s_]), "chosen": int(ok[0])})
-        if ncol == 0 and x["cash"] >= 30 and x["slots"] > 0 and x["left"] > 10:
-            bs = [s_ for s_ in (10, 11) if m[s_]]
-            if bs and not any(y[s_] == 1 for s_ in bs):
-                fz[bs[0]] = 1; first = bs[0] if first is None else min(first, bs[0]); st.setdefault("guard_base", set()).add(bs[0])
-                stats["guard_recruit"] = stats.get("guard_recruit", 0) + 1
-        if first is None:
-            return y
-        fz[:first] = y[:first]                  # the guard has priority over rule-edited bases: no base_fix here
-        tok, ctx = pol.enc_for(x, st["T_now"])     # R12: original-frame encoding of THIS x (last_enc may be a TTA view)
-        X1 = {k: x[k][None] for k in ("tok_pos", "tok_kind", "tok_mask", "tok_cargo")}
-        X1["cash"] = [x["cash"]]; X1["slots"] = [x["slots"]]; X1["left"] = [x["left"]]
-        y2 = decode_b(pol, X1, [aux], tok[None], ctx[None], fz[None])[0]
-        return y2
+        """Thin wrapper kept for the single call site below; the logic lives
+        in BankruptcyGuard.apply (A3). st["guard_base"] stays aliased to
+        guard.guard_base (same set object; reset_step clears in place)."""
+        return guard.apply(x, aux, y, lg0, pol, st["f"].own_uid, st["T_now"], stats)
 
     def track_losses(obs):
         """our / their collectors that vanished while carrying cargo (caught), by load."""
