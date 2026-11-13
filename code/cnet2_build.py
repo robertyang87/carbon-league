@@ -1111,9 +1111,36 @@ def main(out, dirs):
         for k in fields:
             shutil.copyfile(os.path.join(gen_dir, k + ".npy"), os.path.join(tmp_out, k + ".npy"))
         shutil.copyfile(os.path.join(gen_dir, "meta.json"), os.path.join(tmp_out, "meta.json"))
+        # Residual 3: stamp the FLAT copy of the meta with the generation
+        # it mirrors and that generation's row count (the generation's own
+        # meta.json stays pristine). A flat-view consumer can then verify
+        # the mirror belongs to a single build instead of trusting file
+        # presence: after a torn publish the stamp names the NEW
+        # generation while current.json still certifies the old one, and
+        # the field row counts disagree with the stamp.
+        _fm = json.load(open(os.path.join(tmp_out, "meta.json")))
+        _fm["flat_generation"] = gen_id
+        _fm["flat_total"] = total
+        with open(os.path.join(tmp_out, "meta.json"), "w") as fh:
+            json.dump(_fm, fh)
         for k in fields:
             os.replace(os.path.join(tmp_out, k + ".npy"), os.path.join(out, k + ".npy"))
         os.replace(os.path.join(tmp_out, "meta.json"), os.path.join(out, "meta.json"))
+    except Exception:
+        # Residual 3: a mid-publish failure leaves the pointer certifying
+        # the previous generation (resolve_dataset consumers never see a
+        # mix), but the flat mirror itself may be torn (new arrays + old
+        # meta). Mark it explicitly so no flat-view consumer mistakes it
+        # for a fresh product; loaders additionally resolve the pointer
+        # and cross-check row counts (see cnet2_train.load).
+        try:
+            with open(os.path.join(out, "BUILD_FAILED.json"), "w") as fh:
+                json.dump({"cfg_fp": cfg_fp, "time": time.time(),
+                           "failed_stage": "publish", "generation": gen_id,
+                           "error": repr(sys.exc_info()[1])[:300]}, fh)
+        except Exception:
+            pass
+        raise
     finally:
         shutil.rmtree(tmp_out, ignore_errors=True)
     if not weighted:
@@ -1137,7 +1164,19 @@ def main(out, dirs):
     with open(ptr_tmp, "w") as fh:
         json.dump({"generation": gen_id, "dir": f"generations/{gen_id}",
                    "cfg_fp": cfg_fp, "total": total, "created": time.time()}, fh)
-    os.replace(ptr_tmp, os.path.join(out, "current.json"))
+    try:
+        os.replace(ptr_tmp, os.path.join(out, "current.json"))
+    except Exception:
+        # Residual 3: same marking discipline as the flat refresh -- a
+        # failed commit must not leave an unmarked, half-published root.
+        try:
+            with open(os.path.join(out, "BUILD_FAILED.json"), "w") as fh:
+                json.dump({"cfg_fp": cfg_fp, "time": time.time(),
+                           "failed_stage": "pointer", "generation": gen_id,
+                           "error": repr(sys.exc_info()[1])[:300]}, fh)
+        except Exception:
+            pass
+        raise
     try:
         os.remove(os.path.join(out, "BUILD_FAILED.json"))
     except OSError:
