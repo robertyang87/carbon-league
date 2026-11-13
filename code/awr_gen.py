@@ -12,6 +12,11 @@ Our agent module must accept env overrides AWR_TAU / AWR_SEED (see exp/awr_us.py
 
 Whole games (self-play rounds on cloud hosts): AWR_STEPS=300 plays to the end and the reward is the final score
 difference (cash, ours minus theirs; trees and cargo are worth nothing after the last step).
+F02 terminal contract: a game also ends the moment a player is extinct (eval_v53._extinct) -- generation stops,
+the replay's final state is marked DONE for both sides, info carries terminal/end_step/scores, and the reward is
+the canonical SCORE difference (extinct player: steps_played - EPISODE_STEPS - 1; survivor: its cash carried
+into the terminal step). awr_weights.rescore consumes info.scores for such games, so an extinction finish can no
+longer be misread as a mirror game.
 Every finished game is appended to OUT_DIR/awr_raw.jsonl at once, and a rerun with the same arguments skips the games
 already there (spot instances get reclaimed); awr.jsonl and index.json are written when all games are done.
 AWR_TAG=<name> prefixes every game key and file name. Corpora that will be built into one dataset MUST have different
@@ -26,6 +31,24 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 AWR_NAME = "awr_us"
 STEPS = int(os.environ.get("AWR_STEPS", "100"))
+
+
+def _game_result(sim, side, steps_played, pre_cash):
+    """Canonical terminal contract (F02) -- mirrors eval_v53's scoring block.
+    Returns (margin, terminal, scores) from `side`'s perspective: extinction
+    scores per eval_v53 (extinct = steps_played - EPISODE_STEPS - 1, survivor
+    keeps pre_cash, the cash carried INTO the terminal step); a time-out
+    finish scores final cash. dagger_gen and lb_relabel carry the same
+    helper; keep the three in sync."""
+    import eval_v53
+    post = sim.get_state()
+    extinct = [eval_v53._extinct(post, p) for p in (0, 1)]
+    if any(extinct):
+        scores = [float(steps_played - eval_v53.EPISODE_STEPS - 1) if extinct[p]
+                  else float(pre_cash[p]) for p in (0, 1)]
+        return float(scores[side] - scores[1 - side]), "extinction", scores
+    scores = [float(post["cash"][p]) for p in (0, 1)]
+    return float(scores[side] - scores[1 - side]), "timeout", scores
 
 
 def _tree_value(carbon, trees):
@@ -52,7 +75,7 @@ def play(task):
     agents[1 - side] = E.load_agent_fn(os.path.join(HERE, opp))
     steps = []
 
-    def snap(acts):
+    def snap(acts, status="ACTIVE"):
         full = [round(float(v), 2) for v in sim.carbon]
         row = []
         for p in (0, 1):
@@ -62,13 +85,24 @@ def play(task):
                 ob["full_carbon"] = full
             if o.get("trees") is not None:
                 ob["trees"] = o["trees"]          # [creator, last absorption] per tree: unit_ledger's tree income
-            row.append({"observation": ob, "action": acts[p] if acts else None, "status": "ACTIVE"})
+            row.append({"observation": ob, "action": acts[p] if acts else None, "status": status})
         return row
     steps.append(snap(None))
-    for t in range(1, min(STEPS, 299) + 1):
+    steps_played = 0; terminal = None
+    pre_cash = [float(sim.get_state()["cash"][p]) for p in (0, 1)]
+    cap = min(STEPS, 299)
+    for t in range(1, cap + 1):
         acts = [agents[p](sim.obs(p), E.CFG) for p in (0, 1)]
+        pre_cash = [float(sim.get_state()["cash"][p]) for p in (0, 1)]
         sim.step(acts[0], acts[1])
-        steps.append(snap(acts))
+        steps_played = t
+        if any(E._extinct(sim.get_state(), p) for p in (0, 1)):
+            terminal = "extinction"       # F02: the game ends NOW -- no post-terminal states enter the replay
+        elif t == cap and STEPS >= 299:
+            terminal = "timeout"
+        steps.append(snap(acts, "DONE" if terminal else "ACTIVE"))
+        if terminal:
+            break
     st = sim.get_state()
     val = []
     for p in (0, 1):
@@ -77,14 +111,19 @@ def play(task):
         cargo = sum(float(w["carbon"]) for w in st["workers"].values() if w["player"] == p)
         trees = {tid: (t_["pos"], t_["age"]) for tid, t_ in st["trees"].items() if t_["player"] == p}
         val.append(cash + cargo + _tree_value(sim.carbon, trees))
-    reward = val[side] - val[1 - side]
-    if STEPS >= 299:
-        reward = float(st["cash"][side]) - float(st["cash"][1 - side])
+    mg, _, scores = _game_result(sim, side, steps_played, pre_cash)
+    if terminal == "extinction" or STEPS >= 299:
+        reward = mg           # F02: a finished game scores by the canonical contract, not the step-cap instant value
+    else:
+        terminal = "cap"; scores = None
+        reward = val[side] - val[1 - side]
     key = (os.environ["AWR_TAG"] + "_" if os.environ.get("AWR_TAG") else "") + f"awr_{seed}_{k}"
     fn = os.path.join(out, "replays", key + ".json.gz")
     with gzip.open(fn, "wt") as fh:
-        json.dump({"steps": steps, "info": {"TeamNames": [AWR_NAME if p == side else "opp" for p in (0, 1)]}}, fh)
-    return {"key": key, "file": "replays/" + key + ".json.gz", "seed": seed, "k": k, "side": side, "reward": round(reward, 1)}
+        json.dump({"steps": steps, "info": {"TeamNames": [AWR_NAME if p == side else "opp" for p in (0, 1)],
+                                            "terminal": terminal, "end_step": steps_played, "scores": scores}}, fh)
+    return {"key": key, "file": "replays/" + key + ".json.gz", "seed": seed, "k": k, "side": side, "reward": round(reward, 1),
+            "terminal": terminal, "end_step": steps_played, "scores": scores, "snaps": len(steps)}
 
 
 def main():
@@ -110,7 +149,7 @@ def main():
             r["adv"] = round(r["reward"] - base[r["seed"]], 1)
             fh.write(json.dumps(r) + "\n")
             order = ["a", "b"] if r["side"] == 0 else ["b", "a"]     # seat 0 plays strategy order[0]
-            idx.append({"id": r["key"], "file": r["file"], "steps": 300, "order": order,
+            idx.append({"id": r["key"], "file": r["file"], "steps": r.get("snaps", 300), "order": order,
                         "strategies": {"a": {"name": AWR_NAME}, "b": {"name": "opp"}},
                         "scores": {"a": 1.0, "b": 0.0}})
     json.dump(idx, open(os.path.join(out, "index.json"), "w"))
