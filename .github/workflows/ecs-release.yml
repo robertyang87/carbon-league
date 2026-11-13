@@ -32,5 +32,13 @@ jobs:
           ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
           ACS_REGION: ${{ inputs.region }}
+          # P2-5 fix (Codex review 20261114): inputs go through env, never
+          # interpolated into the shell script itself -- direct interpolation
+          # lets anyone with dispatch permission inject extra shell commands
+          # through a crafted input value (same pattern as the
+          # cloud-assistant P3 fix).
+          ECS_INSTANCE_ID: ${{ inputs.instance_id }}
+          ECS_EXPECTED_IP: ${{ inputs.expected_ip }}
+          ECS_MARKER: ${{ inputs.marker }}
         run: |
-          python3 tools/ecs_release.py "${{ inputs.instance_id }}" "${{ inputs.expected_ip }}" "${{ inputs.marker }}"
+          python3 tools/ecs_release.py "$ECS_INSTANCE_ID" "$ECS_EXPECTED_IP" "$ECS_MARKER"
