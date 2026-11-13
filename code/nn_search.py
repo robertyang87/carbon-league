@@ -134,6 +134,10 @@ def make_search_agent(weights, vweights):
                 out = []
                 for a in cands:
                     sim.load_observation(full)
+                    # Same post-load tree-counter guard as cnet2_search
+                    # (REVIEW_FULL_20261113 P3): never let a restored sim
+                    # reissue a live tree id when it plants after a seizure.
+                    sim._tid_counter = [c + 500 for c in sim._tid_counter]
                     if me == 0:
                         sim.step(a, acts_o)
                     else:
@@ -143,6 +147,7 @@ def make_search_agent(weights, vweights):
                 return np.array(out)
             for a in cands:
                 sim.load_observation(full)
+                sim._tid_counter = [c + 500 for c in sim._tid_counter]
                 if me == 0:
                     sim.step(a, acts_o)
                 else:
