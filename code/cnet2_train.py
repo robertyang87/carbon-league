@@ -21,7 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import cnet2_feat as F  # noqa: E402
 from cnet2_build import FIELDS  # noqa: E402
-from cnet2_model import CNet2, migrate_state_dict  # noqa: E402
+from cnet2_model import CNet2, migrate_state_dict, migrate_optimizer_state, NEW_HEAD_KEYS  # noqa: E402
 
 DEV = torch.device(os.environ.get("BC_DEVICE", "mps"))
 TW = {0: 1.5, 1: 1.5, 2: 1.5}       # Master, 1C-Zero v9, v8-preview weighted up
@@ -31,7 +31,11 @@ AUXK = ("aux_die", "aux_die_m", "aux_dep", "aux_dep_m", "aux_dw", "aux_dw_m")
 
 def _check_finite_weights(D, dirn):
     """F06 hard gate: loss weights must be finite BEFORE any training. A single inf/NaN in w/uw
-    silently poisons every weighted batch (batch_loss = NaN); refuse the dataset and name it."""
+    silently poisons every weighted batch (batch_loss = NaN); refuse the dataset and name it.
+    Also gates the EFFECTIVE product w*uw (owner point 2): w and uw can each be finite float32
+    while their product -- the multiplier the loss actually applies -- overflows to inf.
+    Returns a summary dict (per-field maxima + product distribution) for the load log."""
+    summ = {}
     for k in ("w", "uw"):
         if k not in D:
             continue
@@ -39,16 +43,112 @@ def _check_finite_weights(D, dirn):
         if not np.issubdtype(a.dtype, np.floating):
             continue
         flat = a.reshape(-1)
-        bad = 0; first = -1
+        bad = 0; first = -1; mx = 0.0
         for a0 in range(0, flat.size, 1 << 22):
-            blk = np.isfinite(flat[a0:a0 + (1 << 22)])
-            if not blk.all():
-                bad += int((~blk).sum())
+            blkf = flat[a0:a0 + (1 << 22)].astype(np.float32)
+            fin = np.isfinite(blkf)
+            if not fin.all():
+                bad += int((~fin).sum())
                 if first < 0:
-                    first = a0 + int(np.argmax(~blk))
+                    first = a0 + int(np.argmax(~fin))
+            if fin.any():
+                mx = max(mx, float(np.abs(blkf[fin]).max()))
         if bad:
             raise SystemExit(f"F06: non-finite loss weights in dataset {dirn!r} field {k!r}: "
                              f"{bad} NaN/Inf entries (first at flat index {first}); refusing to train")
+        summ[k + "_max"] = mx
+    if "w" in D and "uw" in D:
+        w = np.asarray(D["w"]); uw = np.asarray(D["uw"])
+        if np.issubdtype(w.dtype, np.floating) and np.issubdtype(uw.dtype, np.floating):
+            if w.ndim != 1 or uw.ndim != 2 or uw.shape[0] != w.shape[0]:
+                raise SystemExit(f"F06: loss-weight shape mismatch in dataset {dirn!r}: "
+                                 f"w{w.shape} vs uw{uw.shape}; refusing to train")
+            bad = 0; first = -1; pmax = 0.0; psum = 0.0; pcnt = 0
+            for a0 in range(0, w.shape[0], 1 << 15):
+                prod = w[a0:a0 + (1 << 15)].astype(np.float32)[:, None] * uw[a0:a0 + (1 << 15)].astype(np.float32)
+                fin = np.isfinite(prod)
+                if not fin.all():
+                    bad += int((~fin).sum())
+                    if first < 0:
+                        first = a0 * uw.shape[1] + int(np.argmax(~fin))
+                if fin.any():
+                    pv = np.abs(prod[fin])
+                    pmax = max(pmax, float(pv.max())); psum += float(pv.sum(dtype=np.float64)); pcnt += int(fin.sum())
+            if bad:
+                raise SystemExit(f"F06: non-finite effective loss weights (w*uw) in dataset {dirn!r} field 'w*uw': "
+                                 f"{bad} NaN/Inf entries (first at flat index {first}); refusing to train")
+            summ["prod_max"] = pmax
+            summ["prod_mean"] = psum / max(pcnt, 1)
+            summ["prod_n"] = pcnt
+    return summ
+
+
+def old_param_names_checked(old_sd, model, source="checkpoint"):
+    """Derive the OLD model's flat parameter order for optimizer migration
+    (F01, owner point 3). An old optimizer state_dict keys its moments by
+    INTEGER id -- the id is only meaningful against the old model's parameter
+    order, so that order must be proven, never guessed:
+      * source A is the old checkpoint's OWN key order (torch state_dicts and
+        this repo's npz exports both preserve named_parameters order);
+      * source B is the order reconstructed from the new model (its
+        named_parameters order with the Stage 0 head keys removed -- the
+        heads were inserted as one block, nothing else moved).
+    The two must agree EXACTLY, the checkpoint must not contain tensors the
+    model does not know, the only parameters absent from it may be the new
+    heads, and every old tensor's shape must equal the new parameter's shape.
+    Any disagreement -> RuntimeError: with same-shape parameters everywhere,
+    a wrong order would silently land moments on the wrong weights."""
+    new_params = dict(model.named_parameters())
+    recon = [n for n in new_params if n not in NEW_HEAD_KEYS]
+    sd_keys = list(old_sd.keys())
+    unknown = [k for k in sd_keys if k not in new_params]
+    if unknown:
+        raise RuntimeError(f"{source}: checkpoint holds tensors the model does not know: {unknown[:8]}")
+    absent = [n for n in new_params if n not in old_sd]
+    if any(n not in NEW_HEAD_KEYS for n in absent):
+        raise RuntimeError(f"{source}: checkpoint is missing non-head parameters: "
+                           f"{[n for n in absent if n not in NEW_HEAD_KEYS][:8]}")
+    order_a = [k for k in sd_keys if k in set(recon)]
+    if order_a != recon:
+        raise RuntimeError(f"{source}: checkpoint key order disagrees with the reconstructed "
+                           f"old parameter order; refusing to guess the optimizer id mapping")
+    for n in recon:
+        if tuple(old_sd[n].shape) != tuple(new_params[n].shape):
+            raise RuntimeError(f"{source}: shape mismatch for {n!r}: checkpoint {tuple(old_sd[n].shape)} "
+                               f"vs model {tuple(new_params[n].shape)}")
+    return recon
+
+
+def migrate_optimizer_checked(optimizer, old_opt_sd, old_sd, model, source="checkpoint"):
+    """The only sanctioned entry for resuming an OLD optimizer on the new
+    (post-heads) model: derives the id->name mapping via
+    old_param_names_checked, migrates by name through
+    cnet2_model.migrate_optimizer_state, then post-verifies that every
+    carried moment's shape equals its parameter's shape. `optimizer` must be
+    built over ALL of the model's parameters in named order (the flat-order
+    contract); a frozen-prefix optimizer must instead document its own
+    provenance. Returns the migration report plus provenance and the set of
+    preserved step counts."""
+    old_names = old_param_names_checked(old_sd, model, source)
+    new_names = [n for n, _ in model.named_parameters()]
+    opt_params = [p for g in optimizer.param_groups for p in g["params"]]
+    if opt_params != [p for _, p in model.named_parameters()]:
+        raise RuntimeError("migrate_optimizer_checked: optimizer must cover all model "
+                           "parameters in named order")
+    rep = migrate_optimizer_state(optimizer, old_opt_sd, old_names, new_names)
+    params = dict(model.named_parameters())
+    steps = set()
+    for n in rep["carried"]:
+        st = optimizer.state[params[n]]
+        for mk in ("exp_avg", "exp_avg_sq"):
+            if mk in st and tuple(st[mk].shape) != tuple(params[n].shape):
+                raise RuntimeError(f"{source}: migrated {mk} for {n!r} has shape "
+                                   f"{tuple(st[mk].shape)}, parameter is {tuple(params[n].shape)}")
+        if "step" in st:
+            steps.add(float(st["step"]))
+    rep["provenance"] = "checkpoint key order == reconstructed new-minus-heads order; shapes verified"
+    rep["steps_preserved"] = sorted(steps)
+    return rep
 
 
 def load(dirn):
@@ -58,11 +158,15 @@ def load(dirn):
         D["w"] = np.load(os.path.join(dirn, "w.npy"), mmap_mode=mm)      # per-sample weights (dataset v4+)
     if os.path.exists(os.path.join(dirn, "uw.npy")) and os.environ.get("BC_USE_UW", "1") == "1":
         D["uw"] = np.load(os.path.join(dirn, "uw.npy"), mmap_mode=mm)    # per-unit weights (dataset v6+)
-    _check_finite_weights(D, dirn)
+    wgate = _check_finite_weights(D, dirn)
+    if wgate:
+        print(json.dumps({"weight_gate": wgate, "data": dirn}), flush=True)
     if float(os.environ.get("BC_AUX_W", "0")) > 0:                      # auxiliary targets written by aux_labels.py
         for k in AUXK:
             D[k] = np.load(os.path.join(dirn, k + ".npy"), mmap_mode=mm)
     meta = json.load(open(os.path.join(dirn, "meta.json")))
+    if wgate:
+        meta["weight_gate"] = wgate
     val_g = np.array([g["val"] for g in meta["games"]])
     is_val = val_g[np.asarray(D["gid"])]
     return D, is_val, meta
