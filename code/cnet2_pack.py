@@ -6,9 +6,17 @@ rest; zlib + base64). Also writes the dequantised weights as an .npz so an
 unpacked wrapper can be checked game-for-game against the packed file.
 
 Usage: python cnet2_pack.py WEIGHTS.npz OUT.py [teacher] [shield nocollide endgame as 0/1]
+
+Source identity: the generated pack stamps every embedded module with
+_CNET2_SRC_SHA256 (sha256 of that module's embedded source) and exposes
+_PACK_SRC_SHA256 (joint hash of the three sources, in MODS order) at top
+level. Loading a pack whose embedded sources differ from an already-loaded
+packed module raises RuntimeError instead of silently running the new
+pack's weights/opts against the first pack's code.
 """
 
 import base64
+import hashlib
 import json
 import os
 import sys
@@ -72,15 +80,31 @@ TEMPLATE = '''"""cnet2 packed submission (pure NumPy)."""
 import os
 for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
     os.environ.setdefault(_k, "1")
-import base64, json, sys, types, zlib
+import base64, hashlib, json, sys, types, zlib
 import numpy as np
 
 _SRC = %(src)r
+_SRC_SHA256 = {_n: hashlib.sha256(_SRC[_n].encode("utf-8")).hexdigest() for _n in %(mods)r}
+_PACK_SRC_SHA256 = hashlib.sha256(
+    "".join(_SRC_SHA256[_n] for _n in %(mods)r).encode("ascii")).hexdigest()
+for _name in %(mods)r:
+    _old = sys.modules.get(_name)
+    if _old is not None and getattr(_old, "_CNET2_PACKED", False):
+        _old_sha = getattr(_old, "_CNET2_SRC_SHA256", None)
+        if _old_sha != _SRC_SHA256[_name]:
+            _old_desc = _old_sha[:12] if _old_sha else "<none: legacy pack without src stamp>"
+            raise RuntimeError(
+                f"cnet2 pack source conflict: module {_name} is already loaded "
+                f"from another packed submission (src sha256 {_old_desc}); "
+                f"this pack embeds src sha256 {_SRC_SHA256[_name][:12]}. "
+                f"Refusing to run this pack's weights/opts against the "
+                f"other pack's code.")
 for _name in %(mods)r:
     if _name in sys.modules and getattr(sys.modules[_name], "_CNET2_PACKED", False):
         continue
     _m = types.ModuleType(_name)
     _m.__dict__["_CNET2_PACKED"] = True
+    _m.__dict__["_CNET2_SRC_SHA256"] = _SRC_SHA256[_name]
     _m.__dict__["__file__"] = globals().get("__file__", _name + ".py")
     sys.modules[_name] = _m
     exec(compile(_SRC[_name], _name + ".py", "exec"), _m.__dict__)
@@ -127,12 +151,15 @@ def main(wpath, out, teacher=1, shield=0, nocollide=0, endgame=0, pshield=0, rgu
     deq_path = wpath.replace(".npz", "_q8.npz" if QMODE == "int8" else "_f16.npz")
     np.savez(deq_path, **deq, meta=w["meta"])
     src = {m: open(os.path.join(HERE, m + ".py")).read() for m in MODS}
+    src_sha = {m: hashlib.sha256(src[m].encode("utf-8")).hexdigest() for m in MODS}
+    pack_sha = hashlib.sha256("".join(src_sha[m] for m in MODS).encode("ascii")).hexdigest()
     opts = dict(teacher=int(teacher), shield=bool(int(shield)), nocollide=bool(int(nocollide)),
                 endgame=bool(int(endgame)), pshield=bool(int(pshield)), rguard=bool(int(rguard)))
     code = TEMPLATE % dict(src=src, mods=MODS, qmeta=json.dumps(meta), wmeta=str(w["meta"]),
                            blob=base64.b64encode(zlib.compress(raw, 9)).decode(), opts=opts)
     open(out, "w").write(code)
-    print(json.dumps({"out": out, "bytes": len(code), "deq": deq_path, "opts": opts}))
+    print(json.dumps({"out": out, "bytes": len(code), "deq": deq_path, "opts": opts,
+                      "src_sha256": src_sha, "pack_src_sha256": pack_sha}))
 
 
 if __name__ == "__main__":
