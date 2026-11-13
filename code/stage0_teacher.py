@@ -122,7 +122,6 @@ def gen_candidates(pol, x, aux, teacher, K=16, counter=None, guard=None, own_uid
                              pol, own_uid, teacher)
     greedy = np.asarray(labels, dtype=np.int64)
     arms = [greedy]
-    arm_logits = [logits]
     gaps = []
     for s in range(F.OWN):
         if int(greedy[s]) < 0:
@@ -150,19 +149,47 @@ def gen_candidates(pol, x, aux, teacher, K=16, counter=None, guard=None, own_uid
                 lab = guard.apply(x, aux, lab, lg2, pol, own_uid, teacher)
             if not any(np.array_equal(lab, a) for a in arms):
                 arms.append(lab)
-                arm_logits.append(lg2)
             if len(arms) >= K:
                 break
         if len(arms) >= K:
             break
-    lps = np.array([joint_logp(lg, a) for lg, a in zip(arm_logits, arms)])
+    # S05 (Codex review 2026-11-13): the guard may have rewritten an arm's
+    # labels, so the decode logits captured along the PRE-guard path no
+    # longer score the arm actually returned. Re-score every final arm by
+    # teacher-forcing its exact labels, verify each chosen action is legal
+    # under its own final prefix (masked logit above NEG/2), and drop
+    # deviation arms that fail; priors are the normalised joint policy
+    # probs of the FINAL arms. The greedy arm must always survive: it is
+    # produced by a real decode / guard re-decode, so a legality failure
+    # there means the two decoders disagree -- fail loudly.
+    scored = []
+    for i, arm in enumerate(arms):
+        counter[0] += 1
+        _, lg2, _ = pol.act(x, aux, teacher=teacher,
+                            forced=np.asarray(arm, dtype=np.int64))
+        legal = all(int(arm[s]) < 0 or float(lg2[s][int(arm[s])]) > NEG / 2
+                    for s in range(F.OWN) if x["tok_mask"][s])
+        if not legal:
+            if i == 0:
+                raise RuntimeError("greedy arm illegal under its own final prefix")
+            continue
+        scored.append((arm, joint_logp(lg2, arm)))
+    arms = [a for a, _ in scored]
+    lps = np.array([lp for _, lp in scored])
     priors = np.exp(lps - lps.max())
     priors = priors / priors.sum()
     return arms, priors
 
 
+def _is_terminal(sim):
+    """Terminal after a step: either seat extinct, or the step cap reached."""
+    st = sim.get_state()
+    return _extinct_state(st, 0) or _extinct_state(st, 1) or sim.step_count >= 299
+
+
 def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
-                  teacher=1, K=16, M=8, H=2, seed_base=7000, guard="on"):
+                  teacher=1, K=16, M=8, H=2, seed_base=7000, guard="on",
+                  guard_snaps=None):
     """Root-candidate teacher evaluation at one position.
 
     sim: FastCarbon at the root position (not mutated). feat_me / feat_opp are
@@ -172,6 +199,14 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     re-decode path needs enc_for; numerics are unchanged).
     guard: "on" (default, production config TEACHER_GUARD_CFG), None/False
     (guard-off, legacy path), or a cfg dict merged over TEACHER_GUARD_CFG.
+    guard_snaps: optional (snap_me, snap_opp) BankruptcyGuard snapshots
+    carrying each seat's REAL guard history up to the root (S04: GUARD_NARROW
+    depends on lostw, so a fresh guard at the root misstates the production
+    continuation whenever a unit was lost earlier). Either entry may be
+    None (fresh for that seat). Branch guards restore from the root
+    snapshots, so branches never mutate the caller's history.
+    Depth: the root step plus H continuation steps (H=2 -> 3 plies total).
+    Raises ValueError on an already-terminal root position.
     Returns dict with arms, priors P_A, Q (mean U over scenarios), target q,
     entropy, agreement with greedy, act-call count, wall ms, and guard
     trigger totals.
@@ -180,6 +215,9 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     t0 = time.time()
     counter = [0]
     ep_steps = int(CFG.get("episodeSteps", 300))
+    _root_st = sim.get_state()
+    if _extinct_state(_root_st, 0) or _extinct_state(_root_st, 1):
+        raise ValueError("evaluate_root called on an already-terminal root position")
     if not isinstance(pol, CachePolicy):
         _cfg = pol.cfg
         pol = CachePolicy(pol.w)
@@ -197,6 +235,12 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
         raise ValueError(f"guard must be 'on', None, or a cfg dict, got {guard!r}")
     g_me_root = BankruptcyGuard(gcfg) if gcfg is not None else None
     g_opp_root = BankruptcyGuard(gcfg) if gcfg is not None else None
+    if guard_snaps is not None and gcfg is not None:
+        _sm, _so = guard_snaps
+        if _sm is not None:
+            g_me_root.restore(_sm)
+        if _so is not None:
+            g_opp_root.restore(_so)
     gtot = {"guard_moves": 0, "guard_recruit": 0}
 
     def act(px, paux, **kw):
@@ -235,11 +279,15 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
                 g_me.restore(me_snap)
             if g_opp is not None:
                 g_opp.restore(opp_snap)
-            done = False
+            # S01 (Codex review 2026-11-13): terminal status is checked after
+            # EVERY step, including the root step and the last continuation
+            # step. The old loop only checked at the top of the next
+            # iteration, so an extinction caused by the final step fell
+            # through to the network leaf value. `pre` always holds the
+            # state before the step that caused termination.
+            done = _is_terminal(clone)
             for _ in range(H):
-                st = clone.get_state()
-                if _extinct_state(st, 0) or _extinct_state(st, 1) or clone.step_count >= 299:
-                    done = True
+                if done:
                     break
                 f0 = F.Feat(0)
                 f1 = F.Feat(1)
@@ -266,7 +314,8 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
                 pre = clone.get_state()  # state before this continuation step
                 clone.step(*(f0.to_actions(np.asarray(l0, dtype=np.int64)),
                              f1.to_actions(np.asarray(l1, dtype=np.int64))))
-            if done or clone.step_count >= 299:
+                done = _is_terminal(clone)
+            if done:
                 Q[ci, m] = _terminal_u(clone, me, pre, episode_steps=ep_steps)
             else:
                 Q[ci, m] = _leaf_u(clone, me, pol, teacher, counter)
