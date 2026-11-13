@@ -5,7 +5,14 @@ save merged weights (init arrays + trained heads) as a new npz.
 Run from code/:
   BC_DEVICE=cuda BC_RAM=1 BC_BS=256 python3 stage0_train_heads.py \
     <ds_dir> <init.npz> <out.npz> [epochs=20]
-Labels/loss identical to stage0_smoke_heads.head_losses (atanh-derived).
+Labels/loss identical to stage0_smoke_heads.head_losses (atanh-derived);
+margin head loss is MSE (expectation head, F10).
+Calibration (F12): the headline U-calibration bins by PREDICTED u and checks
+E[U | predicted u] ~= predicted u; the old target-binned statistic is kept
+only as a renamed diagnostic (val_u_target_binned_resid).
+Hard gates (F10): init missing any non-head key, any non-finite train/val
+metric, or any non-finite parameter before saving aborts non-zero and
+saves nothing (no TRAIN-DONE).
 """
 import json, os, sys, time
 import numpy as np
@@ -16,7 +23,7 @@ os.environ.setdefault("BC_RAM", "1")
 import torch
 import torch.nn.functional as Fn
 import cnet2_train as CT
-from cnet2_model import CNet2
+from cnet2_model import CNet2, migrate_state_dict
 from stage0_smoke_heads import head_losses
 
 def targets(b):
@@ -40,17 +47,35 @@ def evaluate(net, D, va, bs):
     u = np.concatenate(us); ut = np.concatenate(uts)
     pr = np.concatenate(preds); cl = np.concatenate(clss)
     mk = np.concatenate(mks); mg = np.concatenate(mgs)
-    bins = np.clip((ut * 10).astype(int), 0, 9)
-    calib_bin = 0.0
+    # Diagnostic ONLY (renamed, F12): residual stratified by TARGET u. This is
+    # NOT calibration -- it bins on the observed value, not the prediction.
+    tbins = np.clip((ut * 10).astype(int), 0, 9)
+    target_bin_resid = 0.0
     for i in range(10):
-        m = bins == i
+        m = tbins == i
         if m.sum() > 0:
-            calib_bin += m.mean() * abs(u[m].mean() - ut[m].mean())
+            target_bin_resid += m.mean() * abs(u[m].mean() - ut[m].mean())
+    # Calibration (headline, F12): bin by PREDICTED u; per bin compare the
+    # observed mean E[U | predicted u] against the predicted mean, with the
+    # bin count and the standard error of the observed mean as uncertainty.
+    pbins = np.clip((u * 10).astype(int), 0, 9)
+    calib_pred = 0.0
+    pred_bins = []
+    for i in range(10):
+        m = pbins == i
+        n_i = int(m.sum())
+        if n_i > 0:
+            mp = float(u[m].mean()); mo = float(ut[m].mean())
+            se = float(ut[m].std(ddof=1) / np.sqrt(n_i)) if n_i > 1 else 0.0
+            calib_pred += (n_i / len(u)) * abs(mo - mp)
+            pred_bins.append([n_i, round(mp, 4), round(mo, 4), round(se, 4)])
     return {"val_l_u": round(float(np.mean((u - ut) ** 2)), 5),
             "val_wdl_acc": round(float((pr == cl).mean()), 4),
             "val_margin_mae": round(float(np.abs(mk - mg).mean() * 1000), 1),
             "val_u_calib_mean": round(float(u.mean() - ut.mean()), 5),
-            "val_u_calib_binned": round(float(calib_bin), 5),
+            "val_u_target_binned_resid": round(float(target_bin_resid), 5),
+            "val_u_calib_pred_binned": round(float(calib_pred), 5),
+            "val_u_calib_pred_bins": pred_bins,
             "val_u_range": [round(float(u.min()), 3), round(float(u.max()), 3)],
             "val_n": int(len(u))}
 
@@ -64,8 +89,13 @@ def main():
     cfg = json.loads(str(w["meta"]))["cfg"]
     net = CNet2(**cfg).to(CT.DEV)
     sd = {k: torch.from_numpy(w[k]) for k in w.files if k != "meta"}
-    missing = net.load_state_dict(sd, strict=False)
-    assert sorted(missing.missing_keys) == ["margin.bias", "margin.weight", "utility.bias", "utility.weight", "wdl.bias", "wdl.weight"], missing.missing_keys
+    try:   # F01 migration path: only the 6 new-head keys may be absent (a bad
+        # trunk key such as stem.weight is still a hard error); heads already
+        # present (this script's own output as init) load as-is.
+        mig = migrate_state_dict(net, sd, source="stage0_train_heads init")
+    except RuntimeError as e:
+        raise SystemExit(str(e))
+    print(json.dumps({"init_migrated_missing": mig["migrated_missing"]}), flush=True)
     for n, p in net.named_parameters():
         p.requires_grad_(n.split(".")[0] in ("utility", "wdl", "margin"))
     steps_per_epoch = int(np.ceil(len(tr) / bs))
@@ -83,9 +113,19 @@ def main():
             hs.append((l_u, l_wdl, l_m))
         h = np.array(hs)
         ev = evaluate(net, D, va, bs)
+        # F10 hard gate: non-finite train/val metrics abort before any print/save.
+        nums = [float(h[:, 0].mean()), float(h[:, 1].mean()), float(h[:, 2].mean()),
+                ev["val_l_u"], ev["val_wdl_acc"], ev["val_margin_mae"], ev["val_u_calib_mean"],
+                ev["val_u_target_binned_resid"], ev["val_u_calib_pred_binned"],
+                ev["val_u_range"][0], ev["val_u_range"][1]]
+        if not (np.isfinite(h).all() and np.isfinite(nums).all()):
+            raise SystemExit(f"F10 gate: non-finite train/val metric at epoch {ep}; nothing saved")
         print("EPOCH", json.dumps({"ep": ep, "train_l_u": round(float(h[:, 0].mean()), 5),
               "train_l_wdl": round(float(h[:, 1].mean()), 4), "train_l_m": round(float(h[:, 2].mean()), 4),
               **ev, "s": round(time.time() - t0)}), flush=True)
+    # F10 hard gate: never publish non-finite parameters.
+    if not all(bool(torch.isfinite(p).all()) for p in net.parameters()):
+        raise SystemExit("F10 gate: non-finite parameter before save; nothing saved")
     sd_out = {k: v.detach().cpu().numpy() for k, v in net.state_dict().items()}
     sd_out["meta"] = w["meta"]
     np.savez(out, **sd_out)
