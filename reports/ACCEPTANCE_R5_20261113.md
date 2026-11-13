@@ -170,3 +170,18 @@
 **如实说明**：P1-A/B 主复现夹具为按 builder 发布形态手工封印的合法 generation（完整文件＋真实 sha256 清单，与 §7 的占位符夹具不同）；真实 builder/producer 链路由 test_publish_f05/test_labels 在修复树上覆盖。复现工件留于工程组本地（~/workspace/r5fix-w/），未入仓——是否归档进 automation/acceptance_r5/ 待所有者裁。
 
 修复后 md5：code/cnet2_build.py `030b317bc649fd45c07249c5e3bb662f`（67,650 B）；code/set_uw.py `5f9297c13f10e47e5312089b8dfc4467`（5,290 B）；code/cnet2_train.py `371b0301b5bbdbb809b333a321a2bda2`（53,643 B）。HEAD `d75850def7e4360e6a0e9eb69304a70794556bae`。
+
+## §9 三次勘误（所有者 2026-11-13 15:03 复核，绑定 cda64b42；15:08 于 60852b2a 复确认仍可复现）
+
+所有者确认前两轮五个 P1 原反例均通过，另新增 1 个 P1、1 个 P2（复现证据：review_latest_edges.py / latest_edge_results.json、round4_edge_results.json；真实 builder＋原 loader 函数 AST 执行，未覆盖完整 torch 训练及设备侧状态）。修复（修复线自建等价复现、修前红修后绿）：
+
+| 项 | 缺陷 | 修复提交 | 复验 |
+|---|---|---|---|
+| P1（换代混用） | load() 固定 generation A 后，_validate_derived_layer 重新读取当前指针：加载途中发布 B 并为 B 生成派生权重，最终特征来自 A、权重登记为 B、仍报 verified；4 个有效 token 应为 0、实际均为 2 | `a194fd9b7554eb180cd1ecb0c1e7da36edd88eb2`（cnet2_train：派生身份只认 load() 在 resolve 时钉住并哈希验证的 manifest（gen_ctx 优先），指针重读仅作一致性断言；已换代 ⇒ SystemExit 点名两代 id 拒绝。选拒绝而非重试，理由入代码注释：重试会在上一层重开同一竞态，调用方整体重跑 load() 才能保证单一代贯穿） | 修后 load 拒绝并点名 pinned 'gen-AAAA' vs pointer 'gen-BBBB'；无换代对照不变（verified、权重与手算逐值一致） |
+| P2（缺文件误判 legacy） | set_uw 钉验段捕获所有 FileNotFoundError 回退 root legacy：指针在册、封印 maps.npy 缺失时仍 rc=0、写出权重、误报「无 generation pointer」 | `b7e1db92fc0e4650ef1e1ad953ec43b2a3e286dc`（set_uw：先判指针文件本身是否存在，不存在才走 legacy；指针在册时 load_generation(verify=True) 任何失败在写出前硬拒绝并点名底层原因；与 BUILD_FAILED 拒绝、登记后复核共存） | 修后 rc=1、w/uw/derived.json 零写出、报错点名缺失的 maps.npy 且无 legacy 误报；真 legacy（无指针）仍 rc=0 正常跑完 |
+
+**回归（修复树实跑）**：本轮复现套件 4/4 GREEN；上轮权重链套件 8/8 GREEN（P1-A 两复现、P1-B 三复现、篡改派生 uw sha256 拒绝均仍绿）；legacy 无指针 legacy-unverified 加载、撕裂 legacy 拒绝、direct-generation generation-owned 均绿；归档套件 test_labels 17/17（exact 4186 / approx 598 / unusable 598）、test_publish_f05 PASS；两文件 py_compile 通过。cnet2_build.py 本轮未动（030b317b…）。
+
+**如实说明**：复现工件留于工程组本地（~/workspace/r5fix-w2/，含上轮 r5fix-w/），未入仓——与 §8 工件一并待所有者裁是否归档 automation/acceptance_r5/。
+
+修复后 md5：code/cnet2_train.py `4140d3986d2f7e3a1884e7a4cda9b48d`（55,274 B）；code/set_uw.py `0d0fbf103ddb11c1269e556ecad8c9eb`（6,363 B）。HEAD `b7e1db92fc0e4650ef1e1ad953ec43b2a3e286dc`。
