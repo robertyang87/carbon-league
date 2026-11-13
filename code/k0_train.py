@@ -50,19 +50,29 @@ A0/A1 protocol (built in, not convention):
   lambda, freeze flag, games used / present, root count.
 
 Aux sidecar binding (gate 3 contract, consumer side). --aux-dir must hold
-aux_die.npy, aux_die_m.npy and k0_aux_sidecar.json:
-  {"format": "k0-aux/1",
-   "generation": <must equal the dataset's pinned generation id>,
-   "rows": <must equal the manifest row total>,
-   "row_order_sha256": sha256(gid.npy bytes || step.npy bytes) of the
-                       certified generation -- binds labels to the exact
-                       row order they were computed for,
-   "replay_sha256": sha256 of the canonical JSON of
-                       [[game key, replay file, scores], ...] from the
-                       certified generation's meta.json -- binds labels to
-                       the exact replays,
+aux_die.npy, aux_die_m.npy and the producer's sidecar k0_aux.json, format
+"cnet2-k0-aux/1" -- the single contract k0_aux_labels writes and this
+entry validates (same file name, field names and hash compositions):
+  {"format": "cnet2-k0-aux/1",
+   "base_generation": <must equal the dataset's pinned generation id>,
    "lineage": <must equal the manifest cfg_fp -- the build lineage>,
-   "files": {"aux_die.npy": sha256, "aux_die_m.npy": sha256}}
+   "rows": <must equal the manifest row total>,
+   "row_key": {"fields": ["gid", "step"],
+               "sha256": sha256 over the pinned generation's per-field
+               file hashes (gid, step -- the manifest-named files,
+               sha256 hex digests joined by "|") -- binds labels to the
+               exact row order they were computed for},
+   "files": {"aux_die.npy": {"sha256": ..., "shape": ..., "dtype": ...},
+             "aux_die_m.npy": {...}} -- per-file entries as the derived
+             layer writes them; the two files this entry consumes are
+             hash-, shape- and dtype-checked,
+   "games": [{gi, key, file, replay_sha256, ...}] -- per-game lineage;
+             the game set and file paths must match the certified meta,
+             and every replay the labels could come from (meta file
+             ending .json.gz, present on disk) must carry a replay_sha256
+             equal to the sha256 of the replay FILE BYTES -- the labels
+             are bound to the exact replay contents, not to a meta
+             description of them}
 Any mismatch refuses the start, naming the failed item. No sidecar, no
 training: there is no unbound-labels fallback in this entry.
 
@@ -107,7 +117,8 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-AUX_FORMAT = "k0-aux/1"
+AUX_FORMAT = "cnet2-k0-aux/1"
+AUX_SIDECAR = "k0_aux.json"
 DEATH_HORIZONS = (10, 25, 50)
 
 
@@ -133,61 +144,91 @@ def _sha256_file(path):
     return h.hexdigest()
 
 
-def row_order_sha256(gen_dir):
-    """Binding hash over the certified generation's row identity sequence:
-    sha256(gid.npy bytes || step.npy bytes), files as sealed on disk."""
-    h = hashlib.sha256()
-    for name in ("gid.npy", "step.npy"):
-        with open(os.path.join(gen_dir, name), "rb") as fh:
-            for blk in iter(lambda: fh.read(1 << 22), b""):
-                h.update(blk)
-    return h.hexdigest()
-
-
-def replay_sha256(meta):
-    """Binding hash over the replays behind the generation's rows:
-    sha256 of the canonical JSON of [[key, file, scores], ...] taken from
-    the certified generation's meta.json, in meta order."""
-    tab = [[g.get("key"), g.get("file"), g.get("scores")] for g in meta["games"]]
-    return hashlib.sha256(json.dumps(tab, sort_keys=True).encode()).hexdigest()
+def row_key_sha256(gen_dir, man):
+    """Binding hash over the certified generation's row identity sequence,
+    composed exactly as the producer (k0_aux_labels._row_key) writes it:
+    sha256 of the per-field file sha256 hex digests (gid, step -- the
+    manifest-named files) joined by "|". Binds labels to the exact row
+    order they were computed for, with per-field domain separation."""
+    fields = man.get("fields", {})
+    parts = []
+    for name in ("gid", "step"):
+        info = fields.get(name)
+        if info is None:
+            raise SystemExit(f"k0 aux: generation manifest lacks field {name!r}; "
+                             f"cannot verify the row-order binding; refusing to start")
+        parts.append(_sha256_file(os.path.join(gen_dir, info["file"])))
+    return hashlib.sha256("|".join(parts).encode()).hexdigest()
 
 
 def check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows):
-    """Validate the K0 aux bundle against the pinned generation. Returns
-    the parsed sidecar on success; raises SystemExit naming the failed
-    binding item otherwise. Pure numpy/json: unit-testable without torch."""
-    sc_path = os.path.join(aux_dir, "k0_aux_sidecar.json")
+    """Validate the K0 aux bundle against the pinned generation, per the
+    unified cnet2-k0-aux/1 contract the producer (k0_aux_labels) writes.
+    Returns the parsed sidecar on success; raises SystemExit naming the
+    failed binding item otherwise. Pure numpy/json: unit-testable
+    without torch."""
+    sc_path = os.path.join(aux_dir, AUX_SIDECAR)
     if not os.path.exists(sc_path):
         raise SystemExit(f"k0 aux: sidecar missing: {sc_path}; refusing to start "
                          f"(labels must be bound to the generation by {AUX_FORMAT})")
     sc = json.load(open(sc_path))
     if sc.get("format") != AUX_FORMAT:
         raise SystemExit(f"k0 aux: sidecar format {sc.get('format')!r} != {AUX_FORMAT!r}; refusing to start")
-    if sc.get("generation") != man.get("generation"):
-        raise SystemExit(f"k0 aux: sidecar generation {sc.get('generation')!r} != pinned generation "
+    if sc.get("base_generation") != man.get("generation"):
+        raise SystemExit(f"k0 aux: sidecar base_generation {sc.get('base_generation')!r} != pinned generation "
                          f"{man.get('generation')!r}; refusing to start (labels bound to another generation)")
     if int(sc.get("rows", -1)) != int(n_rows) or int(sc.get("rows", -1)) != int(man["total"]):
         raise SystemExit(f"k0 aux: sidecar rows {sc.get('rows')!r} != dataset rows {n_rows} "
                          f"(manifest total {man['total']}); refusing to start")
-    ro = row_order_sha256(gen_dir)
-    if sc.get("row_order_sha256") != ro:
-        raise SystemExit(f"k0 aux: row_order_sha256 mismatch (sidecar {sc.get('row_order_sha256')!r} "
+    rk = sc.get("row_key") or {}
+    if rk.get("fields") != ["gid", "step"]:
+        raise SystemExit(f"k0 aux: sidecar row_key fields {rk.get('fields')!r} != ['gid', 'step']; "
+                         f"refusing to start")
+    ro = row_key_sha256(gen_dir, man)
+    if rk.get("sha256") != ro:
+        raise SystemExit(f"k0 aux: row_key sha256 mismatch (sidecar {rk.get('sha256')!r} "
                          f"!= generation {ro!r}); labels are not bound to this row order; refusing to start")
-    rp = replay_sha256(meta)
-    if sc.get("replay_sha256") != rp:
-        raise SystemExit(f"k0 aux: replay_sha256 mismatch (sidecar {sc.get('replay_sha256')!r} "
-                         f"!= generation {rp!r}); labels are not bound to these replays; refusing to start")
     if sc.get("lineage") != man.get("cfg_fp"):
         raise SystemExit(f"k0 aux: lineage mismatch (sidecar {sc.get('lineage')!r} != manifest cfg_fp "
                          f"{man.get('cfg_fp')!r}); refusing to start")
+    # Replay binding: per-game lineage vs the certified meta. The labels
+    # are bound to the replay FILE BYTES (the producer's per-game
+    # replay_sha256), never to a meta description of the replays.
+    meta_games = {g["gi"]: g for g in meta["games"]}
+    lin = {e.get("gi"): e for e in sc.get("games") or []}
+    if set(lin) != set(meta_games):
+        raise SystemExit(f"k0 aux: sidecar lineage game set {sorted(lin)} != generation meta games "
+                         f"{sorted(meta_games)}; refusing to start")
+    for gi, ent in sorted(lin.items()):
+        gm = meta_games[gi]
+        if ent.get("file") != gm["file"]:
+            raise SystemExit(f"k0 aux: game {gi}: lineage file {ent.get('file')!r} != meta file "
+                             f"{gm['file']!r}; refusing to start")
+        want = ent.get("replay_sha256")
+        if gm["file"].endswith(".json.gz"):
+            if not os.path.exists(gm["file"]):
+                raise SystemExit(f"k0 aux: game {gi}: replay file missing: {gm['file']}; "
+                                 f"labels bound to it cannot be verified; refusing to start")
+            if want is None:
+                raise SystemExit(f"k0 aux: game {gi}: sidecar lineage carries no replay_sha256 for "
+                                 f"{gm['file']!r}; labels are not bound to the replay bytes; refusing to start")
+            if _sha256_file(gm["file"]) != want:
+                raise SystemExit(f"k0 aux: game {gi}: replay hash mismatch (replay replaced since "
+                                 f"labelling); refusing to start")
+        elif want is not None:
+            if not os.path.exists(gm["file"]):
+                raise SystemExit(f"k0 aux: game {gi}: replay file missing: {gm['file']}; refusing to start")
+            if _sha256_file(gm["file"]) != want:
+                raise SystemExit(f"k0 aux: game {gi}: replay hash mismatch (replay replaced since "
+                                 f"labelling); refusing to start")
     for name in ("aux_die.npy", "aux_die_m.npy"):
         p = os.path.join(aux_dir, name)
         if not os.path.exists(p):
             raise SystemExit(f"k0 aux: label file missing: {p}; refusing to start")
-        want = (sc.get("files") or {}).get(name)
-        if want is None:
-            raise SystemExit(f"k0 aux: sidecar files map has no sha256 for {name}; refusing to start")
-        if _sha256_file(p) != want:
+        ent = (sc.get("files") or {}).get(name)
+        if not isinstance(ent, dict) or ent.get("sha256") is None:
+            raise SystemExit(f"k0 aux: sidecar files map has no sha256 entry for {name}; refusing to start")
+        if _sha256_file(p) != ent["sha256"]:
             raise SystemExit(f"k0 aux: {name} sha256 mismatch vs sidecar; refusing to start")
     return sc
 
@@ -228,8 +269,8 @@ def main():
     ap.add_argument("--data", required=True, help="cnet2_build dataset dir (sealed generation required)")
     ap.add_argument("--init", default=None, help="backbone init: cnet2_train export .npz")
     ap.add_argument("--resume", default=None, help="K0 checkpoint .pt to resume (heads + optimizer + counters)")
-    ap.add_argument("--aux-dir", default=None, help="dir holding aux_die.npy/aux_die_m.npy + k0_aux_sidecar.json "
-                                                    "(default: the dataset dir)")
+    ap.add_argument("--aux-dir", default=None, help="dir holding aux_die.npy/aux_die_m.npy + k0_aux.json "
+                                                    "(the k0_aux_labels sidecar; default: the dataset dir)")
     ap.add_argument("--out", required=True, help="checkpoint output path (.pt)")
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--aux-route", choices=("detach", "backbone"), default="detach")
@@ -299,6 +340,11 @@ def main():
     if aux_die.shape != (n_rows, 10, 3) or aux_die_m.shape != (n_rows, 10, 3):
         raise SystemExit(f"k0 aux: aux_die/aux_die_m shapes {aux_die.shape}/{aux_die_m.shape} != "
                          f"({n_rows}, 10, 3); refusing to start")
+    for name, arr in (("aux_die.npy", aux_die), ("aux_die_m.npy", aux_die_m)):
+        ent = sc["files"][name]
+        if [int(x) for x in arr.shape] != ent.get("shape") or str(arr.dtype) != ent.get("dtype"):
+            raise SystemExit(f"k0 aux: {name} shape/dtype {list(arr.shape)}/{arr.dtype} != sidecar entry "
+                             f"{ent.get('shape')}/{ent.get('dtype')}; refusing to start")
     if not set(np.unique(aux_die).tolist()) <= {0, 1}:
         raise SystemExit("k0 finite gate: tensor 'aux_die' has values outside {0, 1}; refusing to start")
     require_finite_np("aux_die", aux_die.astype(np.float64))
@@ -382,7 +428,7 @@ def main():
         "start_sha256": init_sha,
         "data": args.data,
         "data_fingerprint": {"generation": man.get("generation"), "cfg_fp": man.get("cfg_fp"),
-                             "rows": n_rows, "row_order_sha256": row_order_sha256(gen_dir)},
+                             "rows": n_rows, "row_key_sha256": row_key_sha256(gen_dir, man)},
         "aux": {"dir": aux_dir, "sidecar_format": sc.get("format"), "lineage": sc.get("lineage")},
         "seed": args.seed, "route": args.aux_route, "lambda_death": args.lambda_death,
         "freeze_backbone": bool(args.freeze_backbone),
