@@ -27,6 +27,35 @@ sys.path.insert(0, HERE)
 import rl2_ppo_rollout as RO  # noqa: E402
 
 
+def _clustered_se(pairs):
+    """SE of the mean with the SEED as the independent unit (section 20
+    R2; same semantics as rl2_ppo_train._clustered_se): a seed's games
+    (both seats) are averaged into one cluster value and the SE runs
+    over clusters. Returns (se, n_clusters); se None with < 2 clusters."""
+    by_seed = {}
+    for seed, v in pairs:
+        by_seed.setdefault(seed, []).append(float(v))
+    if len(by_seed) < 2:
+        return None, len(by_seed)
+    cm = np.array([np.mean(v) for v in by_seed.values()])
+    return float(cm.std(ddof=1) / math.sqrt(len(cm))), len(by_seed)
+
+
+def summarize(by):
+    """Per-opponent summary rows from {opp: [(seed, margin)]}. "se" is
+    the seed-clustered SE; "se_iid" keeps the old per-game figure for
+    continuity (it understates by up to sqrt(2) on paired seats)."""
+    out = {}
+    for o, pairs in by.items():
+        m = np.array([v for _, v in pairs], dtype=np.float64)
+        se, n_seeds = _clustered_se(pairs)
+        out[o] = {"n": len(m), "n_seeds": n_seeds, "wins": int((m > 0).sum()),
+                  "mean": round(float(m.mean()), 1),
+                  "se": round(se, 1) if se is not None else 0.0,
+                  "se_iid": round(float(m.std(ddof=1) / math.sqrt(len(m))), 1) if len(m) > 1 else 0.0}
+    return out
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--adapter", default="small")
@@ -50,14 +79,11 @@ def main():
     by = {}
     for r in res:
         for g in r["games"]:
-            by.setdefault(g["opp"], []).append(g["margin"])
+            by.setdefault(g["opp"], []).append((g.get("seed"), g["margin"]))
     os.makedirs(os.path.dirname(a.log), exist_ok=True)
     with open(a.log, "a") as f:
-        for o, m in by.items():
-            m = np.array(m)
-            row = {"tag": a.tag, "w": a.w, "opp": o, "n": len(m), "wins": int((m > 0).sum()),
-                   "mean": round(float(m.mean()), 1),
-                   "se": round(float(m.std(ddof=1) / math.sqrt(len(m))), 1) if len(m) > 1 else 0.0,
+        for o, s in summarize(by).items():
+            row = {"tag": a.tag, "w": a.w, "opp": o, **s,
                    "seed0": a.seed0, "wall_s": round(time.time() - t0), "t": time.time()}
             f.write(json.dumps(row) + "\n")
             print(json.dumps(row), flush=True)
