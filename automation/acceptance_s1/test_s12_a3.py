@@ -74,7 +74,10 @@ def compare():
     kb = [(o["game"], o["t"]) for o in b]
     assert len(set(ka)) == len(ka) and len(set(kb)) == len(kb), \
         "duplicate fixture identities"
-    assert len(a) >= 50, f"parity fixture shrank: {len(a)} entries"
+    # Canonical fixture lock (Codex R3 P3-a): the committed parity fixture
+    # is exactly 63 unique positions; any other count is not the canonical
+    # fixture, whatever its contents.
+    assert len(a) == 63, f"non-canonical parity fixture: {len(a)} entries (want 63)"
     n_diff = 0
     for x, y in zip(a, b):
         if x != y:
