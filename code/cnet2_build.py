@@ -971,6 +971,17 @@ def load_generation(out, verify=True):
                 raise FileNotFoundError(f"generation file missing: {p}")
             if _sha256_file(p) != info["sha256"]:
                 raise ValueError(f"generation file hash mismatch: {p}")
+        # Generations published with the meta seal carry meta_sha256;
+        # verify it too (older generations predate the seal and load as
+        # before -- the Stage B split checklist requires the seal on any
+        # generation a formal split is cut from).
+        meta_sha = man.get("meta_sha256")
+        if meta_sha is not None:
+            mp = os.path.join(gen_dir, "meta.json")
+            if not os.path.exists(mp):
+                raise FileNotFoundError(f"generation file missing: {mp}")
+            if _sha256_file(mp) != meta_sha:
+                raise ValueError(f"generation meta hash mismatch: {mp}")
     return gen_dir, man
 
 
@@ -1331,6 +1342,11 @@ def main(out, dirs):
                    "terminal_games": terminal_games,
                    "terminal_short_games": terminal_short,
                    "labels": label_cov,
+                   # Seal meta.json into the generation product: the split
+                   # (per-game val flags) and game counts live there, and a
+                   # manifest covering only the field arrays left every
+                   # meta edit (val-flag flips included) undetectable.
+                   "meta_sha256": _sha256_file(os.path.join(staging, "meta.json")),
                    "fields": {k: {"file": k + ".npy", "rows": total,
                                   "sha256": _sha256_file(os.path.join(staging, k + ".npy"))}
                               for k in fields}}
