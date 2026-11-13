@@ -144,10 +144,55 @@ def list_replays(replay_dir, game_ids):
     return [by_id[g] for g in game_ids]
 
 
+def _ft_frame_obs(entry):
+    if isinstance(entry, (list, tuple)):
+        e = entry[0] if entry else None
+    else:
+        e = entry
+    return e.get("observation") if isinstance(e, dict) else None
+
+
+def _ft_side_extinct(P, cheapest):
+    """Observation form of cnet2_search._extinct for one player record
+    P = [cash, bases, units, trees]."""
+    if len(P[2]) > 0 or len(P[3]) > 0:
+        return False
+    if len(P[1]) == 0:
+        return True
+    return float(P[0]) < cheapest
+
+
+def first_terminal_step(steps, cheapest=30.0):
+    """-> (index, cause): the first frame at which the game is over.
+    Semantics identical to k0_aux_labels.first_terminal (the K0 data
+    gates' reference implementation; the two are cross-checked by
+    test_gate_terminal_bound): cause is "status" (a seat entry first
+    reports non-ACTIVE), "extinction" (a side first meets the _extinct
+    rule), or "end_of_record" (neither fired; index is the last frame).
+    One gate-side extension: an empty frame carries no terminal evidence
+    and is skipped (the K0 reference is only defined on populated
+    frames, where the two agree exactly)."""
+    for t, entry in enumerate(steps):
+        entries = entry if isinstance(entry, (list, tuple)) else [entry]
+        if any(isinstance(e, dict) and e.get("status") not in (None, "ACTIVE")
+               for e in entries):
+            return t, "status"
+        obs = _ft_frame_obs(entry)
+        if obs is not None:
+            players = obs.get("players")
+            if players:
+                for P in players:
+                    if _ft_side_extinct(P, cheapest):
+                        return t, "extinction"
+    return len(steps) - 1, "end_of_record"
+
+
 def sample_scene_specs(game_paths, layers, seed, opening_share=None):
     """Deterministic (game, step, me) scene specs: one position per game per
     layer, sampled with the prereg scene RNG. Root identity is
-    (game, step, me); duplicates are removed and counted.
+    (game, step, me); duplicates are removed and counted. Steps are bounded
+    by each game's first-terminal frame (see first_terminal_step), never by
+    the padded file length.
 
     opening_share (ΔU gate, S09): the share of opening-layer roots in the
     TOTAL root count. With L non-opening layers per game, a fraction f of
@@ -165,7 +210,12 @@ def sample_scene_specs(game_paths, layers, seed, opening_share=None):
     for gi, gp in enumerate(game_paths):
         with gzip.open(gp) as fh:
             d = json.load(fh)
-        n_steps = len(d["steps"]) - 1  # step t uses actions of steps[t+1]
+        ft, _ft_cause = first_terminal_step(d["steps"])
+        # Bound by the game's first-terminal frame, not the file length:
+        # replay files are padded with copies of the terminal frame, so a
+        # file-length bound samples terminal scenes whose continuations
+        # short-circuit (teacher_calls=0, du=0) and dilute the aggregate.
+        n_steps = min(len(d["steps"]) - 1, ft)  # step t uses actions of steps[t+1]
         use_layers = layers if gi in open_games else layers[1:]
         if opening_share is None:
             use_layers = layers
@@ -175,7 +225,8 @@ def sample_scene_specs(game_paths, layers, seed, opening_share=None):
                 continue
             t = int(rng.integers(lo, hi_c))
             me = int(rng.integers(0, 2))
-            specs.append({"game": game_id_of(gp), "path": gp, "step": t, "me": me})
+            specs.append({"game": game_id_of(gp), "path": gp, "step": t, "me": me,
+                          "ft": ft})
     rng.shuffle(specs)
     seen, uniq = set(), []
     for s in specs:
@@ -524,7 +575,24 @@ def _du_scene(task):
     return {"game": spec["game"], "step": spec["step"], "me": spec["me"],
             "du": u_guided - u_greedy, "u_guided": u_guided, "u_greedy": u_greedy,
             "teacher_calls": stats.get("teacher_calls", 0),
-            "teacher_ms": stats.get("teacher_ms", 0.0)}
+            "teacher_ms": stats.get("teacher_ms", 0.0),
+            "ft": spec.get("ft")}
+
+
+def _drop_padding_rows(rows):
+    """Split du rows into (used, dropped): a row is padding iff it carries
+    its game's first-terminal frame (ft, stamped by the sampler) and its
+    step is at/past it -- such rows are terminal scenes, not measurements.
+    Rows without an ft stamp (artifacts produced before the sampler bound)
+    are kept; they are corrected by the join procedure, not by guessing."""
+    used, dropped = [], []
+    for r in rows:
+        ft = r.get("ft")
+        if ft is not None and r["step"] >= ft:
+            dropped.append(r)
+        else:
+            used.append(r)
+    return used, dropped
 
 
 def run_tasks(fn, tasks, workers):
@@ -831,12 +899,14 @@ def main():
         out["rows"] = rows
         out["anchor_rows"] = arows
     else:
-        rows = run_tasks(_du_scene, [(s, cfg) for s in specs], a.workers)
+        rows_all = run_tasks(_du_scene, [(s, cfg) for s in specs], a.workers)
+        rows, _dropped = _drop_padding_rows(rows_all)
         cs = cluster_stats(rows, "du")
         blo, bhi = cluster_bootstrap_ci(rows, a.seed_cont, "du")
         calls = sum(r["teacher_calls"] for r in rows)
         ms = sum(r["teacher_ms"] for r in rows)
         res = {"n": cs["n_rows"], "n_games": cs["n_games"],
+               "n_rows_total": len(rows_all), "n_padding_dropped": len(_dropped),
                "du_mean_roots": cs["root_mean"], "du_mean": cs["game_mean"],
                "du_ci95_t_cluster": cs["game_ci95_t"], "t_exact": cs["t_exact"],
                "du_ci95_boot_cluster": [blo, bhi],
@@ -852,6 +922,10 @@ def main():
             # less is an explicitly diagnostic artifact that Stage B refuses.
             from statistics import NormalDist
             grade_reasons = list(reasons)
+            if _dropped:
+                grade_reasons.append(
+                    f"padding rows dropped at aggregation: {len(_dropped)} of "
+                    f"{len(rows_all)} (the sampler bound should have prevented these)")
             if not cs["sigma_game"]:
                 grade_reasons.append("sigma_game undefined or zero (degenerate pilot)")
             if cs["n_games"] < 10 or cs["n_rows"] < 30:
