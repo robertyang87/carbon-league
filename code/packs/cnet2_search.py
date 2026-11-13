@@ -909,6 +909,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
                 opp_id(obs, xo)
             left = 299 - obs["step"]
             if not cfg["SEARCH"] or left < cfg["ENDGAME_STOP"] or (opol is not None and obs["step"] < cfg.get("OPEN_NET_STEP", 0)):
+                agent.last_stats = dict(stats)
                 return acts
             if cfg["MODE"] == "mcts":
                 st["seq_last"] = None
@@ -944,9 +945,11 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
             stats["worst_ms"] = max(stats["worst_ms"], (clk() - t0) * 1000)
             stats["worst_wall_ms"] = max(stats.get("worst_wall_ms", 0.0), (time.time() - tw) * 1000)
             stats.setdefault("ms_steps", []).append(round((time.time() - tw) * 1000))   # wall ms of every searched step
+            agent.last_stats = dict(stats)
             return out
         except Exception as e:  # never let the search layer lose a game
             stats["errors"] += 1; stats["last_error"] = repr(e)[:300]
+            agent.last_stats = dict(stats)
             return acts
 
     def f_own_uids():
