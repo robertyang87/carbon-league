@@ -31,14 +31,53 @@ temporary directory inside the output dir first and moved into place with
 os.replace (meta.json last, as the commit marker) only after every array
 is complete. A mid-merge failure therefore cannot leave half-overwritten
 arrays behind a stale meta; the previously published product is untouched.
+
+F05 generation publishing (REVIEW_FULL_20261113): the temp-dir merge only
+protected the merge phase; the per-field os.replace sequence could still
+leave a MIXED product (new maps=2 rows beside old y=6 rows behind an old
+meta) for a concurrent reader or after an injected mid-publish failure,
+and a stale derived file (w.npy from a weighted build) survived an
+unweighted rebuild in the same directory and was loaded by existence.
+Datasets are now published as immutable GENERATIONS:
+  out/generations/gen-<id>/   one complete product: <field>.npy files,
+                              meta.json and manifest.json (field list,
+                              per-file sha256, row count, cfg_fp, build
+                              declaration), written in a staging dir and
+                              renamed into place in one operation;
+  out/current.json            the pointer, switched LAST with a single
+                              os.replace after the generation is complete
+                              and the legacy flat view has been refreshed.
+Consumers should resolve the generation BEFORE opening any array --
+resolve_dataset(out) / `python cnet2_build.py --resolve OUT_DIR` --
+which pins one generation directory and (by default) verifies every
+manifest hash; files not declared in the manifest never enter the
+product. The flat <field>.npy + meta.json view in `out` itself is kept
+as a legacy mirror for existing consumers (replica_chain.sh deletes its
+DS dir before every build and consumes serially; set_uw.py adds its
+derived w.npy/uw.npy there, outside the generation manifest), refreshed
+from the new generation before the pointer switch. On a C02 abort
+nothing is published: the pointer and the previous generation stay
+intact, the flat meta.json is removed so the aborted run cannot be
+mistaken for a fresh product, and BUILD_FAILED.json records the abort.
+
+F11 terminal contract (REVIEW_FULL_20261113): an index entry may carry
+"terminal": true (producer attestation that the game actually ENDED,
+with "end_reason": "extinction"|"horizon"). Terminal-marked games are
+exempt from the min_steps filter -- a real two-step extinction game is
+complete data, not a truncated fragment -- and are counted separately
+in meta (terminal_games / terminal_short_games). Entries WITHOUT the
+marker keep the historical min_steps behaviour, so truncated or legacy
+short games are still filtered as min_steps, never silently promoted.
 """
 
 import gc
 import gzip
+import hashlib
 import json
 import os
 import shutil
 import sys
+import time
 import zlib
 from concurrent.futures import ProcessPoolExecutor
 
@@ -264,6 +303,7 @@ def _scan(dirs, min_steps=200, weighted=False):
     as missing when the game would otherwise have been built."""
     games, seen = [], set()
     missing = []
+    missing_by_key = {}
     filtered = {}
 
     def _filtered(reason):
@@ -278,7 +318,11 @@ def _scan(dirs, min_steps=200, weighted=False):
             if key in seen:
                 _filtered("duplicate")
                 continue
-            if g.get("steps", 0) < min_steps:
+            # F11: a producer-attested terminal game (it actually ended,
+            # e.g. a two-step extinction) is complete data and exempt
+            # from min_steps; unmarked short games stay filtered.
+            terminal = g.get("terminal") is True
+            if g.get("steps", 0) < min_steps and not terminal:
                 _filtered("min_steps")
                 continue
             fp = os.path.join(rd, g["file"])
@@ -300,22 +344,38 @@ def _scan(dirs, min_steps=200, weighted=False):
             if not sides:
                 _filtered("no_teacher_side")
                 continue
-            seen.add(key)
             if not os.path.exists(fp):
+                if key in missing_by_key:
+                    _filtered("duplicate")
+                    continue
                 # N03: this game SHOULD have been built (it passed every
                 # eligibility filter) but its replay is gone. Record it as
                 # a failure -- the old code continued here silently, so the
                 # game never reached the errs contract and the build
                 # published partial=false with no trace of the lost id.
-                missing.append({"key": key, "file": fp, "names": names,
-                                "scores": scores, "sides": sides,
-                                "val": zlib.crc32(key.encode()) % 10 == 0,
-                                "src": os.path.basename(rd.rstrip("/")),
-                                "reason": "missing_replay",
-                                "error": f"missing_replay: indexed replay file not found: {fp}"})
+                m = {"key": key, "file": fp, "names": names,
+                     "scores": scores, "sides": sides,
+                     "val": zlib.crc32(key.encode()) % 10 == 0,
+                     "src": os.path.basename(rd.rstrip("/")),
+                     "terminal": terminal, "end_reason": g.get("end_reason"),
+                     "steps": g.get("steps", 0),
+                     "reason": "missing_replay",
+                     "error": f"missing_replay: indexed replay file not found: {fp}"}
+                missing.append(m)
+                missing_by_key[key] = m
                 continue
+            if key in missing_by_key:
+                # REVIEW_FULL S7: an earlier shard's copy was missing but
+                # THIS copy exists -- the good copy wins regardless of
+                # shard order (previously seen-before-existence made the
+                # outcome depend on which copy came first).
+                missing.remove(missing_by_key.pop(key))
+            seen.add(key)
             g = {"file": fp, "key": key, "names": names, "scores": scores, "sides": sides,
-                 "val": zlib.crc32(key.encode()) % 10 == 0, "src": os.path.basename(rd.rstrip("/"))}
+                 "val": zlib.crc32(key.encode()) % 10 == 0, "src": os.path.basename(rd.rstrip("/")),
+                 "terminal": terminal, "end_reason": g.get("end_reason"),
+                 "steps": g.get("steps", 0),
+                 "short_terminal": bool(terminal and g.get("steps", 0) < min_steps)}
             if weighted:
                 strong = min(R.get(names[0], 0), R.get(names[1], 0)) >= STRONG
                 g["wts"] = [(2.0 if scores[s] > scores[1 - s] else 1.0) * (1.5 if strong else 1.0) for s in sides]
@@ -375,13 +435,61 @@ def _cfg_fingerprint():
     return hashlib.sha256(json.dumps(detail, sort_keys=True).encode()).hexdigest()[:16]
 
 
+def _sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def load_generation(out, verify=True):
+    # F05: resolve the dataset generation the pointer certifies.
+    # Returns (generation_dir, manifest). With verify=True (default)
+    # every file the manifest declares must exist with a matching
+    # sha256 -- a consumer that resolves BEFORE opening any array can
+    # therefore never observe a mixed-generation product, and
+    # undeclared files (e.g. a stale w.npy from an earlier weighted
+    # build) are not part of the product. Raises
+    # FileNotFoundError/ValueError on any inconsistency.
+    ptr_path = os.path.join(out, "current.json")
+    if not os.path.exists(ptr_path):
+        raise FileNotFoundError(f"no dataset generation pointer: {ptr_path}")
+    ptr = json.load(open(ptr_path))
+    gen_dir = os.path.join(out, ptr["dir"])
+    man_path = os.path.join(gen_dir, "manifest.json")
+    if not os.path.exists(man_path):
+        raise FileNotFoundError(f"generation manifest missing: {man_path}")
+    man = json.load(open(man_path))
+    if man.get("generation") != ptr.get("generation"):
+        raise ValueError("pointer/manifest generation mismatch")
+    if verify:
+        for name, info in man.get("fields", {}).items():
+            p = os.path.join(gen_dir, info["file"])
+            if not os.path.exists(p):
+                raise FileNotFoundError(f"generation file missing: {p}")
+            if _sha256_file(p) != info["sha256"]:
+                raise ValueError(f"generation file hash mismatch: {p}")
+    return gen_dir, man
+
+
+def resolve_dataset(out, verify=True):
+    # Path of the current certified generation directory (see
+    # load_generation). CLI: python cnet2_build.py --resolve OUT_DIR.
+    return load_generation(out, verify=verify)[0]
+
+
 def main(out, dirs):
     os.makedirs(os.path.join(out, "shards"), exist_ok=True)
+    os.makedirs(os.path.join(out, "generations"), exist_ok=True)
     # P3: drop leftovers of a crashed publish; the temp dir is never a
     # published product (only os.replace'd files in `out` itself are).
     for stale in os.listdir(out):
         if stale.startswith(".tmp_publish_"):
             shutil.rmtree(os.path.join(out, stale), ignore_errors=True)
+    for stale in os.listdir(os.path.join(out, "generations")):
+        if stale.startswith(".staging-"):
+            shutil.rmtree(os.path.join(out, "generations", stale), ignore_errors=True)
     weighted = os.environ.get("CNET2_WEIGHTED") == "1"
     games, missing, filtered = _scan(dirs, weighted=weighted)
     # N03: missing-but-eligible games join the games list as declared
@@ -392,7 +500,9 @@ def main(out, dirs):
     for m in missing:
         games.append({"file": m["file"], "key": m["key"], "names": m["names"],
                       "scores": m["scores"], "sides": m["sides"],
-                      "val": m["val"], "src": m["src"], "missing_replay": True})
+                      "val": m["val"], "src": m["src"], "missing_replay": True,
+                      "terminal": m.get("terminal", False),
+                      "end_reason": m.get("end_reason"), "steps": m.get("steps", 0)})
     fields = dict(FIELDS)
     if weighted:
         fields["w"] = (np.float16, ())
@@ -512,67 +622,172 @@ def main(out, dirs):
               flush=True)
         for f_ in failed:
             print(f"C02-FAIL game {f_['key']} (gi {f_['gi']}): {f_['error']}", flush=True)
-        # Do not leave a stale complete-looking product behind: a previous
-        # successful run's meta.json / merged npy files in this out dir
-        # would otherwise be mistaken for this run's output. Shards and the
-        # manifest are kept (they certify only good games) so a retry after
-        # fixing the bad replay reuses them.
-        for name in ["meta.json"] + [k + ".npy" for k in fields]:
-            try:
-                os.remove(os.path.join(out, name))
-            except OSError:
-                pass
+        # F05: publish NOTHING on abort. The generation pointer keeps
+        # certifying the previous complete generation (the certified
+        # product of record); shards and the shard manifest are kept so
+        # a retry after fixing the bad replay reuses them. The flat
+        # meta.json is removed so the aborted run cannot be mistaken for
+        # a fresh flat product, and BUILD_FAILED.json records the abort.
+        try:
+            os.remove(os.path.join(out, "meta.json"))
+        except OSError:
+            pass
+        with open(os.path.join(out, "BUILD_FAILED.json"), "w") as fh:
+            json.dump({"cfg_fp": cfg_fp, "time": time.time(),
+                       "failed_games": [f_["key"] for f_ in failed]}, fh)
         sys.exit(1)
     total = sum(ns.values())
     for g in games:
         g["n"] = ns.get(g["gi"], 0)
         if g["gi"] in errs:
             g["failed"] = errs[g["gi"]]
+    terminal_games = sum(1 for g in games if g.get("terminal"))
+    terminal_short = sum(1 for g in games if g.get("short_terminal"))
     meta = {"games": games, "total": total, "teachers": F.TEACHERS, "cfg_fp": cfg_fp,
             "failed_games": failed, "partial": bool(failed),
-            "valid_games": valid, "filtered_games": filtered}
-    # P3 (REVIEW_FIXES_20261113_R2): publish transactionally. The merged
-    # arrays and meta are fully written inside a temp dir in `out` first;
-    # only then are they moved over the formal outputs with os.replace,
-    # meta.json LAST (it is the declaration consumers read, so it acts as
-    # the commit marker). Previously the merge truncated the formal .npy
-    # files in place before reading the shards, so a mid-merge failure
-    # (e.g. a cached shard missing a field) left half-overwritten arrays
-    # behind the previous meta. Now such a failure discards the temp dir
-    # and leaves the previously published product byte-identical.
+            "valid_games": valid, "filtered_games": filtered,
+            "terminal_games": terminal_games, "terminal_short_games": terminal_short}
+    # F05 (REVIEW_FULL_20261113): publish as one immutable GENERATION.
+    # The R2 temp-dir merge protected only the merge phase; the per-field
+    # os.replace sequence into `out` could still expose (or, on an
+    # injected mid-publish failure, permanently leave) a mixed product.
+    # Now the merged arrays are written into a staging dir under
+    # out/generations/, sealed with manifest.json (field list, per-file
+    # sha256, row count, cfg fingerprint, declaration), and renamed into
+    # place as gen-<id> in one operation. The generation id is derived
+    # from the full build content, so an identical rebuild reuses the
+    # existing generation instead of rewriting it. Only after the
+    # generation is complete is the legacy flat view in `out` refreshed
+    # from it (arrays first, meta.json last), and only then is the
+    # pointer out/current.json switched with a single os.replace -- the
+    # one atomic commit of the whole publish. A failure anywhere before
+    # the pointer switch leaves the pointer certifying the previous
+    # complete generation; resolve_dataset() consumers never see a mix.
+    gen_key = {"cfg_fp": cfg_fp, "weighted": weighted, "total": total,
+               "valid": valid, "partial": bool(failed),
+               "failed": [f_["key"] for f_ in failed],
+               "filtered": filtered,
+               "games": [[g["key"], int(ns.get(g["gi"], 0))] for g in games]}
+    gen_id = "gen-" + hashlib.sha256(
+        json.dumps(gen_key, sort_keys=True).encode()).hexdigest()[:16]
+    gen_root = os.path.join(out, "generations")
+    gen_dir = os.path.join(gen_root, gen_id)
+    w_copy = None
+
+    def _gen_complete(path):
+        try:
+            man = json.load(open(os.path.join(path, "manifest.json")))
+            return all(os.path.exists(os.path.join(path, info["file"]))
+                       for info in man.get("fields", {}).values())
+        except Exception:
+            return False
+
+    if _gen_complete(gen_dir):
+        man = json.load(open(os.path.join(gen_dir, "manifest.json")))
+        if weighted:
+            w_copy = np.load(os.path.join(gen_dir, "w.npy")).astype(np.float32)
+    else:
+        staging = os.path.join(gen_root, f".staging-{os.getpid()}")
+        shutil.rmtree(staging, ignore_errors=True)
+        os.makedirs(staging)
+        try:
+            mm = {k: np.lib.format.open_memmap(os.path.join(staging, k + ".npy"), mode="w+", dtype=dt,
+                                               shape=(total,) + sh) for k, (dt, sh) in fields.items()}
+            o = 0
+            for gi in range(len(games)):
+                if not ns.get(gi):
+                    continue
+                D = np.load(games[gi]["shard"])
+                n = len(D["y"])
+                for k in FIELDS:
+                    mm[k][o:o + n] = D[k] if k != "gid" else gi
+                if weighted:
+                    # rows are side-major (each side's steps ascending): a step reset starts the next side
+                    st_ = D["step"].astype(np.int64)
+                    seg = np.concatenate([[0], np.cumsum(np.diff(st_) < 0)])
+                    mm["w"][o:o + n] = np.asarray(games[gi]["wts"], np.float32)[seg]
+                o += n
+            if weighted:
+                w_copy = np.asarray(mm["w"], np.float32).copy()
+            for k in mm:
+                mm[k].flush()
+            mm = {}
+            gc.collect()  # release the memmaps so the rename cannot race a writer
+            with open(os.path.join(staging, "meta.json"), "w") as fh:
+                json.dump(meta, fh)
+            man = {"generation": gen_id, "created": time.time(),
+                   "cfg_fp": cfg_fp, "weighted": weighted, "total": total,
+                   "valid_games": valid, "partial": bool(failed),
+                   "failed_games": [f_["key"] for f_ in failed],
+                   "filtered_games": filtered,
+                   "terminal_games": terminal_games,
+                   "terminal_short_games": terminal_short,
+                   "fields": {k: {"file": k + ".npy", "rows": total,
+                                  "sha256": _sha256_file(os.path.join(staging, k + ".npy"))}
+                              for k in fields}}
+            with open(os.path.join(staging, "manifest.json"), "w") as fh:
+                json.dump(man, fh)
+            if _gen_complete(gen_dir):
+                shutil.rmtree(staging, ignore_errors=True)  # identical gen landed meanwhile
+            else:
+                shutil.rmtree(gen_dir, ignore_errors=True)
+                os.replace(staging, gen_dir)
+        finally:
+            shutil.rmtree(staging, ignore_errors=True)
+    # Legacy flat view: refresh from the sealed generation (arrays first,
+    # meta.json last as the flat commit marker), via a temp dir so each
+    # individual file still lands by os.replace. Derived files written
+    # later by other tools (set_uw's w.npy/uw.npy) are NOT touched here
+    # except when the build itself is weighted, in which case w.npy is a
+    # build field of THIS generation and is refreshed like any other.
     tmp_out = os.path.join(out, f".tmp_publish_{os.getpid()}")
     os.makedirs(tmp_out, exist_ok=True)
-    w_copy = None
     try:
-        mm = {k: np.lib.format.open_memmap(os.path.join(tmp_out, k + ".npy"), mode="w+", dtype=dt,
-                                           shape=(total,) + sh) for k, (dt, sh) in fields.items()}
-        o = 0
-        for gi in range(len(games)):
-            if not ns.get(gi):
-                continue
-            D = np.load(games[gi]["shard"])
-            n = len(D["y"])
-            for k in FIELDS:
-                mm[k][o:o + n] = D[k] if k != "gid" else gi
-            if weighted:
-                # rows are side-major (each side's steps ascending): a step reset starts the next side
-                st_ = D["step"].astype(np.int64)
-                seg = np.concatenate([[0], np.cumsum(np.diff(st_) < 0)])
-                mm["w"][o:o + n] = np.asarray(games[gi]["wts"], np.float32)[seg]
-            o += n
-        if weighted:
-            w_copy = np.asarray(mm["w"], np.float32).copy()
-        for k in mm:
-            mm[k].flush()
-        mm = {}
-        gc.collect()  # release the memmaps so os.replace cannot race a writer
-        with open(os.path.join(tmp_out, "meta.json"), "w") as fh:
-            json.dump(meta, fh)
+        for k in fields:
+            shutil.copyfile(os.path.join(gen_dir, k + ".npy"), os.path.join(tmp_out, k + ".npy"))
+        shutil.copyfile(os.path.join(gen_dir, "meta.json"), os.path.join(tmp_out, "meta.json"))
         for k in fields:
             os.replace(os.path.join(tmp_out, k + ".npy"), os.path.join(out, k + ".npy"))
         os.replace(os.path.join(tmp_out, "meta.json"), os.path.join(out, "meta.json"))
     finally:
         shutil.rmtree(tmp_out, ignore_errors=True)
+    if not weighted:
+        # F05 unweighted-rebuild case: a flat w.npy that is byte-identical
+        # to the PREVIOUS generation's build-owned w field is a stale
+        # build product, not a set_uw derivative -- remove it so an
+        # existence-based consumer (BC_USE_W=1) cannot silently load
+        # weights this generation never produced. A w.npy whose bytes
+        # differ (rewritten by set_uw after the previous build) is kept.
+        try:
+            _pdir, _pman = load_generation(out, verify=False)
+            if _pman.get("weighted") and "w" in _pman.get("fields", {}):
+                _flat_w = os.path.join(out, "w.npy")
+                if os.path.exists(_flat_w) and \
+                        _sha256_file(_flat_w) == _pman["fields"]["w"]["sha256"]:
+                    os.remove(_flat_w)
+        except Exception:
+            pass
+    # The pointer switch is the single atomic commit of the publish.
+    ptr_tmp = os.path.join(out, f".current-{os.getpid()}.tmp")
+    with open(ptr_tmp, "w") as fh:
+        json.dump({"generation": gen_id, "dir": f"generations/{gen_id}",
+                   "cfg_fp": cfg_fp, "total": total, "created": time.time()}, fh)
+    os.replace(ptr_tmp, os.path.join(out, "current.json"))
+    try:
+        os.remove(os.path.join(out, "BUILD_FAILED.json"))
+    except OSError:
+        pass
+    # Prune generations older than the previous one (best effort): keep
+    # the current generation and the one it replaced for rollback reads.
+    try:
+        gens = sorted((os.path.getmtime(os.path.join(gen_root, d)), d)
+                      for d in os.listdir(gen_root)
+                      if d.startswith("gen-") and os.path.isdir(os.path.join(gen_root, d)))
+        for _mt, d in gens[:-2]:
+            if d != gen_id:
+                shutil.rmtree(os.path.join(gen_root, d), ignore_errors=True)
+    except Exception:
+        pass
     from collections import Counter
     c = Counter(F.TEACHERS[t] for g in games if ns.get(g["gi"], 0) > 0
                 for t in [teacher_id(g["names"][s]) for s in g["sides"]])
@@ -584,6 +799,10 @@ def main(out, dirs):
         rep["partial"] = True
     if filtered:
         rep["filtered_games"] = filtered
+    if terminal_games:
+        rep["terminal_games"] = terminal_games
+        rep["terminal_short_games"] = terminal_short
+    rep["generation"] = gen_id
     if weighted:
         w = w_copy
         rep["ours_loss_games"] = sum(1 for g in games if g.get("ours_loss"))
@@ -594,4 +813,7 @@ def main(out, dirs):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2:])
+    if len(sys.argv) >= 3 and sys.argv[1] == "--resolve":
+        print(resolve_dataset(sys.argv[2], verify="--no-verify" not in sys.argv))
+    else:
+        main(sys.argv[1], sys.argv[2:])
