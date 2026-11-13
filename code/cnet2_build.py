@@ -554,6 +554,38 @@ def _game_content_key(g, tids, mg):
     return hashlib.sha256(json.dumps(detail, sort_keys=True).encode()).hexdigest()[:16]
 
 
+def _game_label_digest(g):
+    """Per-game digest of every INDEX-derived input that feeds this game's
+    value/label columns, for the F05 generation key in main(). The
+    generation id used to fingerprint only [key, row count] per game, so
+    editing a game's scores/margin/u (or its fault class) in index.json
+    rebuilt the shard -- the shard cache key covers scores/margins/wts --
+    yet left the generation id unchanged: the sealed previous generation
+    was reused wholesale and the build silently published the OLD value
+    and raw-label columns for the edited game.
+    Coverage: scores (value = tanh(margin/3000) with margins the per-side
+    score differences), the declared raw margin/u pair (the margin_raw /
+    u_raw columns), and the outcome class (it selects the u rule --
+    formula vs WDL-only -- and NaN labelling for unusable games; the
+    class is a deterministic function of the index fault fields and the
+    label code consults only the class). Names/sides/wts ride along as
+    in _game_content_key: they fix the teacher column and the weighted
+    w column. A shard sha256 is NOT a substitute for this digest: the
+    shard only partially reflects these inputs (a fault_one_side game's
+    declared u is never written into it, and raw margins are
+    cross-checked against scores only to 1e-4), so the digest is taken
+    from the normalized index values themselves."""
+    detail = {"names": g["names"], "scores": [float(x) for x in g["scores"]],
+              "sides": g["sides"],
+              "raw_margin": (None if g.get("raw_margin") is None
+                             else [float(x) for x in g["raw_margin"]]),
+              "raw_u": (None if g.get("raw_u") is None
+                        else [float(x) for x in g["raw_u"]]),
+              "outcome": g.get("outcome", "normal"),
+              "wts": g.get("wts")}
+    return hashlib.sha256(json.dumps(detail, sort_keys=True).encode()).hexdigest()[:16]
+
+
 def _cfg_fingerprint():
     """R08: fingerprint of everything that changes shard CONTENT -- the step window,
     the unit-weight switches, the teacher map, the field schema / feature shapes and
@@ -987,7 +1019,11 @@ def main(out, dirs):
     # sha256, row count, cfg fingerprint, declaration), and renamed into
     # place as gen-<id> in one operation. The generation id is derived
     # from the full build content, so an identical rebuild reuses the
-    # existing generation instead of rewriting it. Only after the
+    # existing generation instead of rewriting it. The per-game component
+    # of the id is [key, rows, label digest] -- the digest (see
+    # _game_label_digest) puts the game's scores/margin/u and outcome
+    # class inside the id, so a label-only index edit mints a NEW
+    # generation instead of reusing the sealed one. Only after the
     # generation is complete is the legacy flat view in `out` refreshed
     # from it (arrays first, meta.json last), and only then is the
     # pointer out/current.json switched with a single os.replace -- the
@@ -999,7 +1035,8 @@ def main(out, dirs):
                "failed": [f_["key"] for f_ in failed],
                "filtered": filtered,
                "labels": label_cov,
-               "games": [[g["key"], int(ns.get(g["gi"], 0))] for g in games]}
+               "games": [[g["key"], int(ns.get(g["gi"], 0)), _game_label_digest(g)]
+                         for g in games]}
     gen_id = "gen-" + hashlib.sha256(
         json.dumps(gen_key, sort_keys=True).encode()).hexdigest()[:16]
     gen_root = os.path.join(out, "generations")
