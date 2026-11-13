@@ -34,9 +34,16 @@ jobs:
           ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
           ACS_REGION: ${{ inputs.region }}
+          # P3 fix (REVIEW_FULL_20261113): inputs go through env, never
+          # interpolated into the shell script itself -- direct interpolation
+          # let $-expressions in the command text be expanded by the RUNNER
+          # shell before the command ever reached the remote host.
+          ACS_INSTANCE_ID: ${{ inputs.instance_id }}
+          ACS_COMMAND: ${{ inputs.command }}
+          ACS_COMMAND_B64: ${{ inputs.command_b64 }}
         run: |
-          if [ -n "${{ inputs.command_b64 }}" ]; then
-            python3 tools/acs_runcommand.py "${{ inputs.instance_id }}" --b64 "${{ inputs.command_b64 }}"
+          if [ -n "$ACS_COMMAND_B64" ]; then
+            python3 tools/acs_runcommand.py "$ACS_INSTANCE_ID" --b64 "$ACS_COMMAND_B64"
           else
-            python3 tools/acs_runcommand.py "${{ inputs.instance_id }}" "${{ inputs.command }}"
+            python3 tools/acs_runcommand.py "$ACS_INSTANCE_ID" "$ACS_COMMAND"
           fi
