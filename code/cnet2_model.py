@@ -309,3 +309,97 @@ class CNet2(nn.Module):
             a = y[:, s] + (0 if s < 10 else 5)
             prev = torch.where(mask[:, s], a, prev)
         return torch.stack(outs, 1), torch.tanh(self.value(ctx)).squeeze(1), aux
+
+
+# ---------------------------------------------------------------------------
+# Checkpoint migration (F01, REVIEW_FULL_20261113). The Stage 0 heads added
+# 6 parameter keys (utility/wdl/margin). Pre-heads checkpoints must load ONLY
+# through the two helpers below -- never a bare strict=False -- so that:
+#   * the ONLY tolerable missing keys are the new-head keys (plus prefixes a
+#     caller explicitly approves, e.g. "tattn." for BC_INIT); any other
+#     missing key and any unexpected key is a hard error;
+#   * new heads keep the model's default init (cold start);
+#   * optimizer moments are carried across BY PARAMETER NAME, with the
+#     param groups rebuilt over the new model's parameters.
+NEW_HEAD_KEYS = ("utility.weight", "utility.bias", "wdl.weight", "wdl.bias",
+                 "margin.weight", "margin.bias")
+NEW_HEAD_PREFIXES = ("utility.", "wdl.", "margin.")
+
+
+def migrate_state_dict(model, state_dict, allow_missing_prefixes=(), source="checkpoint"):
+    """Load `state_dict` into `model` tolerating only absent Stage 0 head
+    keys. Returns {"migrated_missing": [...], "new_head_init": [...]}.
+    Raises RuntimeError on any other missing/unexpected key."""
+    allowed = set(NEW_HEAD_KEYS)
+    if allow_missing_prefixes:
+        model_keys = set(model.state_dict())
+        for pref in allow_missing_prefixes:
+            allowed |= {k for k in model_keys if k.startswith(pref)}
+    incompat = model.load_state_dict(state_dict, strict=False)
+    bad_missing = [k for k in incompat.missing_keys if k not in allowed]
+    if bad_missing or incompat.unexpected_keys:
+        raise RuntimeError(
+            f"{source} does not fit the model: missing={bad_missing[:8]} "
+            f"unexpected={list(incompat.unexpected_keys)[:8]}")
+    return {"migrated_missing": sorted(incompat.missing_keys),
+            "new_head_init": sorted(k for k in incompat.missing_keys
+                                    if k in NEW_HEAD_KEYS)}
+
+
+def migrate_optimizer_state(optimizer, old_state_dict, old_param_names, new_param_names):
+    """Load an old optimizer state_dict into `optimizer` (built over the NEW
+    model), aligning by parameter name. `old_param_names` / `new_param_names`
+    are the flat parameter orders in which the old / new optimizers iterate
+    their param_groups (e.g. [n for n, p in model.named_parameters()
+    if p.requires_grad]).
+
+    - exp_avg / exp_avg_sq / step of surviving params are carried over;
+    - params that exist only in the new model (the Stage 0 heads) get no
+      state: they cold-start;
+    - param groups are rebuilt to match the NEW optimizer's grouping, with
+      hyperparameters (lr, weight_decay, ...) taken from the old groups
+      (same group index; group 0 if the old state had fewer groups).
+    Returns {"carried": [...], "cold": [...], "dropped": [...]} and leaves
+    the migrated state loaded into `optimizer`."""
+    import copy as _copy
+    old_groups = list(old_state_dict.get("param_groups") or [])
+    old_state = {int(k): v for k, v in (old_state_dict.get("state") or {}).items()}
+    flat_ids = [int(i) for g in old_groups for i in g["params"]]
+    if sorted(flat_ids) != list(range(len(old_param_names))):
+        raise RuntimeError(
+            "migrate_optimizer_state: old param_groups do not line up with "
+            "old_param_names; refusing to guess the parameter mapping")
+    name2state = {old_param_names[pid]: st for pid, st in old_state.items()
+                  if 0 <= pid < len(old_param_names)}
+    state, groups, pos = {}, [], 0
+    for gi, g in enumerate(optimizer.param_groups):
+        cnt = len(g["params"])
+        names = list(new_param_names[pos:pos + cnt])
+        if len(names) != cnt:
+            raise RuntimeError(
+                "migrate_optimizer_state: new_param_names does not match "
+                "the new optimizer's parameter count")
+        src = old_groups[gi] if gi < len(old_groups) else (old_groups[0] if old_groups else {})
+        hypers = {k: _copy.deepcopy(v) for k, v in src.items() if k != "params"}
+        for k, v in g.items():
+            if k != "params" and k not in hypers:
+                hypers[k] = _copy.deepcopy(v)
+        ids = []
+        for j, nm in enumerate(names):
+            nid = pos + j
+            ids.append(nid)
+            if nm in name2state:
+                state[nid] = {kk: (vv.clone() if torch.is_tensor(vv) else vv)
+                              for kk, vv in name2state[nm].items()}
+        hypers["params"] = ids
+        groups.append(hypers)
+        pos += cnt
+    if pos != len(new_param_names):
+        raise RuntimeError(
+            "migrate_optimizer_state: new_param_names does not match "
+            "the new optimizer's parameter count")
+    optimizer.load_state_dict({"state": state, "param_groups": groups})
+    old_names, new_names = set(old_param_names), set(new_param_names)
+    return {"carried": sorted(old_names & new_names),
+            "cold": sorted(new_names - old_names),
+            "dropped": sorted(old_names - new_names)}
