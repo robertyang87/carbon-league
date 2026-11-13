@@ -68,6 +68,13 @@ def compare():
     assert len(a) == len(b) and len(a) > 0, "length mismatch or empty comparison"
     assert all(o["errors"] == 0 for o in a) and all(o["errors"] == 0 for o in b), \
         "non-zero errors in parity fixtures"
+    # Fixture identity lock (Codex R2 P3): canonical fixture is 63 unique
+    # (game, t) positions; duplicates or shrinkage must not pass.
+    ka = [(o["game"], o["t"]) for o in a]
+    kb = [(o["game"], o["t"]) for o in b]
+    assert len(set(ka)) == len(ka) and len(set(kb)) == len(kb), \
+        "duplicate fixture identities"
+    assert len(a) >= 50, f"parity fixture shrank: {len(a)} entries"
     n_diff = 0
     for x, y in zip(a, b):
         if x != y:
