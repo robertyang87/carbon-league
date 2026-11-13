@@ -136,3 +136,20 @@
 1. **完整平台资源认证未做**：1.5 CPU / 512 MiB cgroup 下单步 1s／硬顶 3s、整局 1500s 的整场认证未执行；F04 数字均为无约束宿主机短测。
 2. **冻结裸网 ΔU 收益验证未做**：属 Stage 实验范畴，另行排期。
 3. **Codex 证据 harness 需按最终树刷新**：automation/probe.py 及 recheck 脚本多处按第五轮源码行号/标记抽取，在最终树上不能端到端原样运行；本次验收用的是本地适配副本（已入仓，见 §4）。第六轮复核前须先刷新证据 harness。
+
+
+## §7 勘误与追加（2026-11-13 14:17，所有者复核 73ebd4af 后）
+
+所有者复核本归档后发现 3 个 P1（最小输入复现），归档时点的「未关闭三项」结论因此不完整，追加如下：
+
+| P1 | 缺陷 | 修复提交 | 复验 |
+|---|---|---|---|
+| P1-1 | 分片缓存键遗漏 outcome/raw_margin/raw_u 等标签输入：只加 fault_sides 的增量构建沿用旧标签（u_raw 约 0.2251/0.7749、outcome=normal），全新目录构建为 1/0、fault | `9c098ed30f42d80063ca481b04ed80ac0b46dbcc`（与 P1-2 同笔：单一逐局指纹 _game_fingerprint，分片缓存与 generation key 共用） | 增量与全新目录逐值一致（u_raw {0,1}、outcome=1、同 gen） |
+| P1-2 | generation key 未含回放内容：改回放 carbon（index/行数不变）后仍发布旧 generation | 同上（指纹含回放解压后内容 sha256） | 换代且 carbon 总和与全新目录一致（13,010,226）；同语料双建同 gen、封印 mtime 不动 |
+| P1-3 | cnet2_train.load 在 generation 文件缺失时回退未经哈希验证的扁平数据（删 gen 的 maps.npy＋root 改全 123 仍放行） | `a4b19298c8801ba5316048feeff15195f2273cd2` | 修后硬拒绝 FileNotFoundError；legacy 无指针数据集仍可读、行数核对保留 |
+
+**口径变更（P1-3）**：指针在册时 generation 不完整/哈希不符一律硬拒绝，不再回退扁平；这推翻了验收后收尾线为手造 manifest 夹具留的刻意回退设计，裁定来源为所有者本次复核，代码注释已注明。
+
+**夹具处置**：归档工件 test_derived.py 的 gen-test1 夹具属手造 manifest（sha256 为占位符、gen 目录无字段文件），新口径下其 6 项在 load 源头被拒——属夹具口径冲突、非派生校验回归；派生消费链已在真实封印 generation 上单独复验（set_uw 登记→load mode=verified、篡改 base_generation 被拒）。该夹具须改为完整封印 generation 形态后重跑，列入第六轮证据 harness 刷新清单。
+
+修复后 md5：code/cnet2_build.py `d6e867187ceec289c0e28a53399eb01a`（66,847 B）；code/cnet2_train.py `39e749cb177e3d72511e8d9fc986da80`（49,861 B）。回归：test_labels 17/17、test_publish_f05 PASS。
