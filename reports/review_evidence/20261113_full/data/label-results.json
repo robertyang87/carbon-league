@@ -1,0 +1,87 @@
+{
+  "commit": "98ffadfa19a8db8a1d91998386e7fa9dbfc61a4c",
+  "scope": "Real source functions, simulator, features and original environment; deterministic inference stubs; no training",
+  "reference": {
+    "steps": 2,
+    "rewards": [
+      -299.0,
+      50.0
+    ],
+    "margin": -349.0,
+    "value_float16": -0.11578369140625
+  },
+  "lb_selfplay": {
+    "result": {
+      "seed": 0,
+      "opp": "exp/cnet2_v6t5g.py",
+      "side": 0,
+      "margin": 0.0,
+      "n": 30,
+      "supervised": 60,
+      "changed": 0,
+      "ms_mean": 0.0,
+      "ms_max": 0.0,
+      "stats": {
+        "searched": 0,
+        "changed": 0,
+        "errors": 0
+      }
+    },
+    "step_range": [
+      270,
+      299
+    ],
+    "unique_values": [
+      0.0
+    ],
+    "post_terminal_rows": 30
+  },
+  "dagger": {
+    "result": {
+      "seed": 0,
+      "opp": "exp/cnet2_v6t5g.py",
+      "side": 0,
+      "margin": 0.0,
+      "n": 300,
+      "planter": 0,
+      "changed": 0
+    },
+    "step_range": [
+      0,
+      299
+    ],
+    "unique_values": [
+      0.0
+    ],
+    "post_terminal_rows": 298
+  },
+  "dagger_prefix": {
+    "worker_uids": [
+      "player-0-worker-0",
+      "player-0-worker-1"
+    ],
+    "actual_prefix_y": [
+      0,
+      0
+    ],
+    "stored_targets_y": [
+      1,
+      4
+    ],
+    "later_slot_mf_max_abs_difference_from_stored_y_prefix": 0.5,
+    "different_coordinates": [
+      [
+        4,
+        0
+      ]
+    ],
+    "model_prefix_source": "cnet2_model.py:273,290-291 reads stored b[y], whereas dagger_gen.py:72 advances actual y"
+  },
+  "checks": {
+    "reference_extinction_at_2": true,
+    "lb_post_terminal_and_wrong_target": true,
+    "dagger_post_terminal_and_wrong_target": true,
+    "dagger_prefix_mismatch": true
+  },
+  "all_expected_checks_passed": true
+}

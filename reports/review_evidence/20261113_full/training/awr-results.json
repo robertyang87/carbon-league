@@ -1,0 +1,40 @@
+{
+  "head": "98ffadfa19a8db8a1d91998386e7fa9dbfc61a4c",
+  "authority": "Same two-step legal recruitment sequence as data/recheck_labels.py: original env ends at step2, rewards[-299,50], margin -349.",
+  "authority_reused": true,
+  "scope": "AWR generator runs unchanged 299-step loop with trivial deterministic agents; no real training or policy evaluation.",
+  "terminal_semantics": {
+    "generator_reward": 0.0,
+    "replay_states": 300,
+    "last_step": 299,
+    "all_status_active": true,
+    "scorer_reward2": 0.0,
+    "misclassified_as_mirror": true,
+    "builder_return": [
+      0,
+      299,
+      null
+    ],
+    "built_rows": 299,
+    "post_terminal_rows": 297,
+    "built_value_unique": [
+      0.0
+    ],
+    "expected_official_margin": -349.0
+  },
+  "weight_precision": {
+    "actual_awr_weights_exit": 0,
+    "actual_awr_weights_stdout": "{\"rows\": 200, \"games\": 200, \"mirror_dropped\": 0, \"beta\": 15.8, \"ess_frac\": 0.211, \"adv_sd\": 15.8, \"reward_old_mean\": 99.0, \"reward_new_mean\": 99.0, \"corr_old_new\": 1.0, \"w_max\": 20.0, \"car_anchor\": 0.0}",
+    "actual_anchor_exit": 0,
+    "actual_anchor_stdout": "{'rows': 200, 'collector_tokens': 200, 'per_row': 1.0, 'w_mean': 1.375, 'scale': 1.0, 'zero_w_rows': 0, 'finite': True}",
+    "min_w": 3.2104139791044872e-06,
+    "max_w": 20.0,
+    "max_uw": 428293.6875,
+    "raw_weights_finite": true,
+    "cached_uw_finite": false,
+    "actual_cached_loss": "nan",
+    "fixed_hyperparameters": "AWR_ESS_MIN=0.2, AWR_WMAX=20, anchor SCALE=1 (defaults)",
+    "reachability_limit": "Actual scorer/weight/anchor/cached loss entry chain; constructed score distribution, not actual training-data min/max or validated replay trajectories.",
+    "guarantee": "ESS and max clipping impose no positive lower bound on exp(A/beta)."
+  }
+}

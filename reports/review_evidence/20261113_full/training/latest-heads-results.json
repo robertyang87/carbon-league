@@ -1,0 +1,319 @@
+{
+  "head": "62e0dee16419725ece6f18a22f095c83bb6fcd0f",
+  "old_model_source": "98ffadfa19a8db8a1d91998386e7fa9dbfc61a4c",
+  "scope": "Real old/new small models and loading/loss/pack interfaces. No real training; smoke main uses nonmutating stub optimizer and injected losses.",
+  "old_npz_ppo": {
+    "raised": true,
+    "exception": "RuntimeError",
+    "message": "Error(s) in loading state_dict for CNet2:\n\tMissing key(s) in state_dict: \"utility.weight\", \"utility.bias\", \"wdl.weight\", \"wdl.bias\", \"margin.weight\", \"margin.bias\". "
+  },
+  "existing_trained_npz_ppo": {
+    "basename": "baseline.npz",
+    "sha256": "c405fdcf40f2f9b3aa996f79a0202c189c4e84faf9d3ae1ad5bebff051b8a762",
+    "cfg": {
+      "C": 128,
+      "NB": 8,
+      "D": 128,
+      "NH": 4,
+      "L": 2,
+      "E": 32,
+      "G": 8
+    },
+    "recorded_epoch": 13,
+    "note": "Existing historical trained b128 artifact from prior runtime review, not a claim about latest online weights.",
+    "raised": true,
+    "exception": "RuntimeError",
+    "message": "Error(s) in loading state_dict for CNet2:\n\tMissing key(s) in state_dict: \"utility.weight\", \"utility.bias\", \"wdl.weight\", \"wdl.bias\", \"margin.weight\", \"margin.bias\". "
+  },
+  "bc_legacy_load_allowlist": {
+    "missing": [
+      "utility.weight",
+      "utility.bias",
+      "wdl.weight",
+      "wdl.bias",
+      "margin.weight",
+      "margin.bias"
+    ],
+    "unexpected": [],
+    "only_heads": true
+  },
+  "old_optimizer": {
+    "raised": true,
+    "exception": "ValueError",
+    "message": "loaded state dict contains a parameter group that doesn't match the size of optimizer's group",
+    "old_parameters": 59,
+    "new_parameters": 65
+  },
+  "old_checkpoint_net": {
+    "raised": true,
+    "exception": "RuntimeError",
+    "message": "Error(s) in loading state_dict for CNet2:\n\tMissing key(s) in state_dict: \"utility.weight\", \"utility.bias\", \"wdl.weight\", \"wdl.bias\", \"margin.weight\", \"margin.bias\". "
+  },
+  "old_policy_preserved_after_allowed_load": {
+    "max_logit_error": 0.0,
+    "max_legacy_value_error": 0.0,
+    "forward_heads_legacy_logit_error": 0.0,
+    "new_shapes": [
+      [
+        1
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1
+      ]
+    ]
+  },
+  "normal_bc_gradients": {
+    "new_heads": {
+      "utility.weight": false,
+      "utility.bias": false,
+      "wdl.weight": false,
+      "wdl.bias": false,
+      "margin.weight": false,
+      "margin.bias": false
+    },
+    "stem_has_gradient": true,
+    "legacy_value_has_gradient": true,
+    "loss": 4.413699150085449
+  },
+  "dedicated_smoke_gradient_path": {
+    "new_heads": {
+      "utility.weight": true,
+      "utility.bias": true,
+      "wdl.weight": true,
+      "wdl.bias": true,
+      "margin.weight": true,
+      "margin.bias": true
+    },
+    "stem_has_gradient": false,
+    "loss_finite": true
+  },
+  "numpy_old_new_heads": {
+    "policy_logits_max_error": 0.0,
+    "legacy_value_error": 0.0,
+    "large_new_head_mutation_changes_logits": false,
+    "large_new_head_mutation_changes_value": false
+  },
+  "smoke_constant_loss": {
+    "exit_equivalent": 0,
+    "summary": {
+      "steps": 1,
+      "epochs": 1,
+      "s": 0,
+      "train_first50": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "train_last50": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "val_l_u": 1.0,
+      "val_l_wdl": 1.0,
+      "val_l_m": 1.0,
+      "val_wdl_acc": 0.5,
+      "val_margin_mae": 1.0,
+      "val_u_range": [
+        0.5,
+        0.5
+      ],
+      "finite": true,
+      "decreasing": false
+    },
+    "init_report": {
+      "init_missing": [
+        "utility.weight",
+        "utility.bias",
+        "wdl.weight",
+        "wdl.bias",
+        "margin.weight",
+        "margin.bias"
+      ],
+      "train": 1,
+      "val": 1,
+      "cfg": {
+        "C": 16,
+        "NB": 1,
+        "D": 16,
+        "NH": 4,
+        "L": 1,
+        "E": 8,
+        "G": 8
+      },
+      "bs": 1
+    },
+    "scope": "Actual main/control flow; stub loader/loss, no-op optimizer/scheduler; no model parameters updated."
+  },
+  "smoke_nonfinite_train": {
+    "exit_equivalent": 0,
+    "summary": {
+      "steps": 1,
+      "epochs": 1,
+      "s": 0,
+      "train_first50": [
+        "nan",
+        "nan",
+        "nan"
+      ],
+      "train_last50": [
+        "nan",
+        "nan",
+        "nan"
+      ],
+      "val_l_u": "nan",
+      "val_l_wdl": "nan",
+      "val_l_m": "nan",
+      "val_wdl_acc": 0.5,
+      "val_margin_mae": "nan",
+      "val_u_range": [
+        0.5,
+        0.5
+      ],
+      "finite": false,
+      "decreasing": false
+    },
+    "init_report": {
+      "init_missing": [
+        "utility.weight",
+        "utility.bias",
+        "wdl.weight",
+        "wdl.bias",
+        "margin.weight",
+        "margin.bias"
+      ],
+      "train": 1,
+      "val": 1,
+      "cfg": {
+        "C": 16,
+        "NB": 1,
+        "D": 16,
+        "NH": 4,
+        "L": 1,
+        "E": 8,
+        "G": 8
+      },
+      "bs": 1
+    },
+    "scope": "Actual main/control flow; stub loader/loss, no-op optimizer/scheduler; no model parameters updated."
+  },
+  "smoke_nonfinite_validation": {
+    "exit_equivalent": 0,
+    "summary": {
+      "steps": 1,
+      "epochs": 1,
+      "s": 0,
+      "train_first50": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "train_last50": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "val_l_u": "nan",
+      "val_l_wdl": "nan",
+      "val_l_m": "nan",
+      "val_wdl_acc": 0.5,
+      "val_margin_mae": "nan",
+      "val_u_range": [
+        0.5,
+        0.5
+      ],
+      "finite": true,
+      "decreasing": false
+    },
+    "init_report": {
+      "init_missing": [
+        "utility.weight",
+        "utility.bias",
+        "wdl.weight",
+        "wdl.bias",
+        "margin.weight",
+        "margin.bias"
+      ],
+      "train": 1,
+      "val": 1,
+      "cfg": {
+        "C": 16,
+        "NB": 1,
+        "D": 16,
+        "NH": 4,
+        "L": 1,
+        "E": 8,
+        "G": 8
+      },
+      "bs": 1
+    },
+    "scope": "Actual main/control flow; stub loader/loss, no-op optimizer/scheduler; no model parameters updated."
+  },
+  "smoke_missing_old_trunk": {
+    "exit_equivalent": 0,
+    "summary": {
+      "steps": 1,
+      "epochs": 1,
+      "s": 0,
+      "train_first50": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "train_last50": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "val_l_u": 1.0,
+      "val_l_wdl": 1.0,
+      "val_l_m": 1.0,
+      "val_wdl_acc": 0.5,
+      "val_margin_mae": 1.0,
+      "val_u_range": [
+        0.5,
+        0.5
+      ],
+      "finite": true,
+      "decreasing": false
+    },
+    "init_report": {
+      "init_missing": [
+        "stem.weight",
+        "utility.weight",
+        "utility.bias",
+        "wdl.weight",
+        "wdl.bias",
+        "margin.weight",
+        "margin.bias"
+      ],
+      "train": 1,
+      "val": 1,
+      "cfg": {
+        "C": 16,
+        "NB": 1,
+        "D": 16,
+        "NH": 4,
+        "L": 1,
+        "E": 8,
+        "G": 8
+      },
+      "bs": 1
+    },
+    "scope": "Actual main/control flow; stub loader/loss, no-op optimizer/scheduler; no model parameters updated."
+  },
+  "new_weight_pack": {
+    "writer_ok": true,
+    "one_action_ok": true,
+    "actions": {
+      "player-0-recrtCenter-0": "RECPLANTER",
+      "player-0-recrtCenter-1": "RECPLANTER"
+    },
+    "bytes": 146831
+  },
+  "new_heads_main_trainer_status": "Only dedicated forward_heads/smoke uses heads. Existing BC/PPO/NumPy still uses legacy value; interface addition is not an E[U] training migration."
+}

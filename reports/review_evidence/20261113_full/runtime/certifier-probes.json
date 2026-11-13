@@ -1,0 +1,697 @@
+{
+  "reviewed_sha": "98ffadfa19a8db8a1d91998386e7fa9dbfc61a4c",
+  "method": "real subprocesses; source unmodified; short workloads only; default time gates",
+  "cases": [
+    {
+      "case": "legal",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-B",
+        "/workspace/carbon-league/code/certify_pack.py",
+        "/workspace/carbon-review-round5/runtime/legal.py",
+        "--steps-per-game",
+        "2",
+        "--out",
+        "/workspace/carbon-review-round5/runtime/legal.certificate.json"
+      ],
+      "exit_code": 0,
+      "certificate": {
+        "tool": "certify_pack",
+        "pack": "/workspace/carbon-review-round5/runtime/legal.py",
+        "opp": null,
+        "games": [
+          {
+            "seed": 996000,
+            "fatal": null,
+            "init_wall_s": 0.1304283489999989,
+            "exec_ms": 0.8,
+            "first_call_ms": 0.0,
+            "harness": true,
+            "game_wall_s": 0.13068322700002,
+            "rc": 0,
+            "a_errors": 0,
+            "err_by_cat": {},
+            "call_errors": 0,
+            "peak_rss_mib": 31.4,
+            "steps": 2,
+            "step_wall_ms": {
+              "mean": 0.1,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            }
+          }
+        ],
+        "aggregate": {
+          "steps": 2,
+          "step_wall_ms": {
+            "mean": 0.1,
+            "p50": 0.1,
+            "p95": 0.1,
+            "p99": 0.1,
+            "max": 0.1
+          },
+          "slow_steps_over_soft": 0,
+          "overage_pool_s": 0.0,
+          "max_init_wall_s": 0.13,
+          "max_game_wall_s": 0.131,
+          "peak_rss_mib_child_self": 31.4,
+          "peak_rss_mib_parent_rusage_children": 31.6,
+          "a_errors": 0,
+          "fatals": []
+        },
+        "checks": {
+          "init_le_limit": {
+            "value_s": 0.13,
+            "limit_s": 20.0,
+            "pass": true
+          },
+          "step_hard_le_limit": {
+            "value_ms": 0.1,
+            "limit_ms": 3000.0,
+            "pass": true
+          },
+          "slow_count_le_limit": {
+            "value": 0,
+            "limit": 3,
+            "pass": true
+          },
+          "overage_pool_le_limit": {
+            "value_s": 0.0,
+            "limit_s": 5.0,
+            "pass": true
+          },
+          "game_wall_le_limit": {
+            "value_s": 0.131,
+            "limit_s": 1500.0,
+            "pass": true
+          },
+          "internal_errors_zero": {
+            "value": 0,
+            "limit": 0,
+            "pass": true
+          },
+          "child_exit_clean": {
+            "value": [],
+            "limit": [],
+            "pass": true
+          },
+          "peak_rss": {
+            "value_mib": 31.4,
+            "limit_mib": null,
+            "pass": null,
+            "note": "child RUSAGE_SELF ru_maxrss; report-only unless --mem-limit-mib given"
+          },
+          "step_p95_report": {
+            "value_ms": 0.1,
+            "pass": null,
+            "note": "reported metric, not a gate"
+          }
+        },
+        "overall": "PASS"
+      },
+      "stdout_nonjson": null,
+      "stderr": ""
+    },
+    {
+      "case": "cold_3050",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-B",
+        "/workspace/carbon-league/code/certify_pack.py",
+        "/workspace/carbon-review-round5/runtime/cold_3050.py",
+        "--steps-per-game",
+        "2",
+        "--out",
+        "/workspace/carbon-review-round5/runtime/cold_3050.certificate.json"
+      ],
+      "exit_code": 0,
+      "certificate": {
+        "tool": "certify_pack",
+        "pack": "/workspace/carbon-review-round5/runtime/cold_3050.py",
+        "opp": null,
+        "games": [
+          {
+            "seed": 996000,
+            "fatal": null,
+            "init_wall_s": 3.1839017679999984,
+            "exec_ms": 0.8,
+            "first_call_ms": 3050.2,
+            "harness": true,
+            "game_wall_s": 3.184264736999978,
+            "rc": 0,
+            "a_errors": 0,
+            "err_by_cat": {},
+            "call_errors": 0,
+            "peak_rss_mib": 31.4,
+            "steps": 2,
+            "step_wall_ms": {
+              "mean": 0.1,
+              "p50": 0.1,
+              "p95": 0.2,
+              "max": 0.2
+            }
+          }
+        ],
+        "aggregate": {
+          "steps": 2,
+          "step_wall_ms": {
+            "mean": 0.1,
+            "p50": 0.1,
+            "p95": 0.2,
+            "p99": 0.2,
+            "max": 0.2
+          },
+          "slow_steps_over_soft": 0,
+          "overage_pool_s": 0.0,
+          "max_init_wall_s": 3.184,
+          "max_game_wall_s": 3.184,
+          "peak_rss_mib_child_self": 31.4,
+          "peak_rss_mib_parent_rusage_children": 31.6,
+          "a_errors": 0,
+          "fatals": []
+        },
+        "checks": {
+          "init_le_limit": {
+            "value_s": 3.184,
+            "limit_s": 20.0,
+            "pass": true
+          },
+          "step_hard_le_limit": {
+            "value_ms": 0.2,
+            "limit_ms": 3000.0,
+            "pass": true
+          },
+          "slow_count_le_limit": {
+            "value": 0,
+            "limit": 3,
+            "pass": true
+          },
+          "overage_pool_le_limit": {
+            "value_s": 0.0,
+            "limit_s": 5.0,
+            "pass": true
+          },
+          "game_wall_le_limit": {
+            "value_s": 3.184,
+            "limit_s": 1500.0,
+            "pass": true
+          },
+          "internal_errors_zero": {
+            "value": 0,
+            "limit": 0,
+            "pass": true
+          },
+          "child_exit_clean": {
+            "value": [],
+            "limit": [],
+            "pass": true
+          },
+          "peak_rss": {
+            "value_mib": 31.4,
+            "limit_mib": null,
+            "pass": null,
+            "note": "child RUSAGE_SELF ru_maxrss; report-only unless --mem-limit-mib given"
+          },
+          "step_p95_report": {
+            "value_ms": 0.2,
+            "pass": null,
+            "note": "reported metric, not a gate"
+          }
+        },
+        "overall": "PASS"
+      },
+      "stdout_nonjson": null,
+      "stderr": ""
+    },
+    {
+      "case": "warm_3050",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-B",
+        "/workspace/carbon-league/code/certify_pack.py",
+        "/workspace/carbon-review-round5/runtime/warm_3050.py",
+        "--steps-per-game",
+        "1",
+        "--out",
+        "/workspace/carbon-review-round5/runtime/warm_3050.certificate.json"
+      ],
+      "exit_code": 1,
+      "certificate": {
+        "tool": "certify_pack",
+        "pack": "/workspace/carbon-review-round5/runtime/warm_3050.py",
+        "opp": null,
+        "games": [
+          {
+            "seed": 996000,
+            "fatal": null,
+            "init_wall_s": 3.1660087310000335,
+            "exec_ms": 0.8,
+            "first_call_ms": 3050.2,
+            "harness": true,
+            "game_wall_s": 6.217101769999999,
+            "rc": 0,
+            "a_errors": 0,
+            "err_by_cat": {},
+            "call_errors": 0,
+            "peak_rss_mib": 31.6,
+            "steps": 1,
+            "step_wall_ms": {
+              "mean": 3051.0,
+              "p50": 3051.0,
+              "p95": 3051.0,
+              "max": 3051.0
+            }
+          }
+        ],
+        "aggregate": {
+          "steps": 1,
+          "step_wall_ms": {
+            "mean": 3051.0,
+            "p50": 3051.0,
+            "p95": 3051.0,
+            "p99": 3051.0,
+            "max": 3051.0
+          },
+          "slow_steps_over_soft": 1,
+          "overage_pool_s": 2.051,
+          "max_init_wall_s": 3.166,
+          "max_game_wall_s": 6.217,
+          "peak_rss_mib_child_self": 31.6,
+          "peak_rss_mib_parent_rusage_children": 31.8,
+          "a_errors": 0,
+          "fatals": []
+        },
+        "checks": {
+          "init_le_limit": {
+            "value_s": 3.166,
+            "limit_s": 20.0,
+            "pass": true
+          },
+          "step_hard_le_limit": {
+            "value_ms": 3051.0,
+            "limit_ms": 3000.0,
+            "pass": false
+          },
+          "slow_count_le_limit": {
+            "value": 1,
+            "limit": 3,
+            "pass": true
+          },
+          "overage_pool_le_limit": {
+            "value_s": 2.051,
+            "limit_s": 5.0,
+            "pass": true
+          },
+          "game_wall_le_limit": {
+            "value_s": 6.217,
+            "limit_s": 1500.0,
+            "pass": true
+          },
+          "internal_errors_zero": {
+            "value": 0,
+            "limit": 0,
+            "pass": true
+          },
+          "child_exit_clean": {
+            "value": [],
+            "limit": [],
+            "pass": true
+          },
+          "peak_rss": {
+            "value_mib": 31.6,
+            "limit_mib": null,
+            "pass": null,
+            "note": "child RUSAGE_SELF ru_maxrss; report-only unless --mem-limit-mib given"
+          },
+          "step_p95_report": {
+            "value_ms": 3051.0,
+            "pass": null,
+            "note": "reported metric, not a gate"
+          }
+        },
+        "overall": "FAIL"
+      },
+      "stdout_nonjson": null,
+      "stderr": ""
+    },
+    {
+      "case": "two_games_two_slow_each",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-B",
+        "/workspace/carbon-league/code/certify_pack.py",
+        "/workspace/carbon-review-round5/runtime/two_games_two_slow_each.py",
+        "--steps-per-game",
+        "2",
+        "--games",
+        "2",
+        "--out",
+        "/workspace/carbon-review-round5/runtime/two_games_two_slow_each.certificate.json"
+      ],
+      "exit_code": 1,
+      "certificate": {
+        "tool": "certify_pack",
+        "pack": "/workspace/carbon-review-round5/runtime/two_games_two_slow_each.py",
+        "opp": null,
+        "games": [
+          {
+            "seed": 996000,
+            "fatal": null,
+            "init_wall_s": 1.1100169169999958,
+            "exec_ms": 0.7,
+            "first_call_ms": 1020.2,
+            "harness": true,
+            "game_wall_s": 3.1508179049999967,
+            "rc": 0,
+            "a_errors": 0,
+            "err_by_cat": {},
+            "call_errors": 0,
+            "peak_rss_mib": 31.7,
+            "steps": 2,
+            "step_wall_ms": {
+              "mean": 1020.3,
+              "p50": 1020.3,
+              "p95": 1020.4,
+              "max": 1020.4
+            }
+          },
+          {
+            "seed": 996001,
+            "fatal": null,
+            "init_wall_s": 1.1249320940000302,
+            "exec_ms": 0.7,
+            "first_call_ms": 1020.1,
+            "harness": true,
+            "game_wall_s": 3.1676331670000195,
+            "rc": 0,
+            "a_errors": 0,
+            "err_by_cat": {},
+            "call_errors": 0,
+            "peak_rss_mib": 31.6,
+            "steps": 2,
+            "step_wall_ms": {
+              "mean": 1021.1,
+              "p50": 1021.1,
+              "p95": 1021.6,
+              "max": 1021.7
+            }
+          }
+        ],
+        "aggregate": {
+          "steps": 4,
+          "step_wall_ms": {
+            "mean": 1020.7,
+            "p50": 1020.5,
+            "p95": 1021.5,
+            "p99": 1021.7,
+            "max": 1021.7
+          },
+          "slow_steps_over_soft": 4,
+          "overage_pool_s": 0.083,
+          "max_init_wall_s": 1.125,
+          "max_game_wall_s": 3.168,
+          "peak_rss_mib_child_self": 31.7,
+          "peak_rss_mib_parent_rusage_children": 31.8,
+          "a_errors": 0,
+          "fatals": []
+        },
+        "checks": {
+          "init_le_limit": {
+            "value_s": 1.125,
+            "limit_s": 20.0,
+            "pass": true
+          },
+          "step_hard_le_limit": {
+            "value_ms": 1021.7,
+            "limit_ms": 3000.0,
+            "pass": true
+          },
+          "slow_count_le_limit": {
+            "value": 4,
+            "limit": 3,
+            "pass": false
+          },
+          "overage_pool_le_limit": {
+            "value_s": 0.083,
+            "limit_s": 5.0,
+            "pass": true
+          },
+          "game_wall_le_limit": {
+            "value_s": 3.168,
+            "limit_s": 1500.0,
+            "pass": true
+          },
+          "internal_errors_zero": {
+            "value": 0,
+            "limit": 0,
+            "pass": true
+          },
+          "child_exit_clean": {
+            "value": [],
+            "limit": [],
+            "pass": true
+          },
+          "peak_rss": {
+            "value_mib": 31.7,
+            "limit_mib": null,
+            "pass": null,
+            "note": "child RUSAGE_SELF ru_maxrss; report-only unless --mem-limit-mib given"
+          },
+          "step_p95_report": {
+            "value_ms": 1021.5,
+            "pass": null,
+            "note": "reported metric, not a gate"
+          }
+        },
+        "overall": "FAIL"
+      },
+      "stdout_nonjson": null,
+      "stderr": ""
+    },
+    {
+      "case": "invalid_opponent",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-B",
+        "/workspace/carbon-league/code/certify_pack.py",
+        "/workspace/carbon-review-round5/runtime/invalid_opponent.py",
+        "--steps-per-game",
+        "2",
+        "--opp",
+        "/workspace/carbon-review-round5/runtime/nonexistent-opponent.py",
+        "--out",
+        "/workspace/carbon-review-round5/runtime/invalid_opponent.certificate.json"
+      ],
+      "exit_code": 0,
+      "certificate": {
+        "tool": "certify_pack",
+        "pack": "/workspace/carbon-review-round5/runtime/invalid_opponent.py",
+        "opp": "/workspace/carbon-review-round5/runtime/nonexistent-opponent.py",
+        "games": [
+          {
+            "seed": 996000,
+            "fatal": null,
+            "init_wall_s": 0.09451666400002523,
+            "exec_ms": 0.8,
+            "first_call_ms": 0.0,
+            "harness": true,
+            "game_wall_s": 0.09477017000000387,
+            "rc": 0,
+            "a_errors": 0,
+            "err_by_cat": {},
+            "call_errors": 0,
+            "peak_rss_mib": 31.6,
+            "steps": 2,
+            "step_wall_ms": {
+              "mean": 0.1,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            }
+          }
+        ],
+        "aggregate": {
+          "steps": 2,
+          "step_wall_ms": {
+            "mean": 0.1,
+            "p50": 0.1,
+            "p95": 0.1,
+            "p99": 0.1,
+            "max": 0.1
+          },
+          "slow_steps_over_soft": 0,
+          "overage_pool_s": 0.0,
+          "max_init_wall_s": 0.095,
+          "max_game_wall_s": 0.095,
+          "peak_rss_mib_child_self": 31.6,
+          "peak_rss_mib_parent_rusage_children": 31.7,
+          "a_errors": 0,
+          "fatals": []
+        },
+        "checks": {
+          "init_le_limit": {
+            "value_s": 0.095,
+            "limit_s": 20.0,
+            "pass": true
+          },
+          "step_hard_le_limit": {
+            "value_ms": 0.1,
+            "limit_ms": 3000.0,
+            "pass": true
+          },
+          "slow_count_le_limit": {
+            "value": 0,
+            "limit": 3,
+            "pass": true
+          },
+          "overage_pool_le_limit": {
+            "value_s": 0.0,
+            "limit_s": 5.0,
+            "pass": true
+          },
+          "game_wall_le_limit": {
+            "value_s": 0.095,
+            "limit_s": 1500.0,
+            "pass": true
+          },
+          "internal_errors_zero": {
+            "value": 0,
+            "limit": 0,
+            "pass": true
+          },
+          "child_exit_clean": {
+            "value": [],
+            "limit": [],
+            "pass": true
+          },
+          "peak_rss": {
+            "value_mib": 31.6,
+            "limit_mib": null,
+            "pass": null,
+            "note": "child RUSAGE_SELF ru_maxrss; report-only unless --mem-limit-mib given"
+          },
+          "step_p95_report": {
+            "value_ms": 0.1,
+            "pass": null,
+            "note": "reported metric, not a gate"
+          }
+        },
+        "overall": "PASS"
+      },
+      "stdout_nonjson": null,
+      "stderr": ""
+    },
+    {
+      "case": "wrong_action_key",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-B",
+        "/workspace/carbon-league/code/certify_pack.py",
+        "/workspace/carbon-review-round5/runtime/wrong_action_key.py",
+        "--steps-per-game",
+        "2",
+        "--out",
+        "/workspace/carbon-review-round5/runtime/wrong_action_key.certificate.json"
+      ],
+      "exit_code": 0,
+      "certificate": {
+        "tool": "certify_pack",
+        "pack": "/workspace/carbon-review-round5/runtime/wrong_action_key.py",
+        "opp": null,
+        "games": [
+          {
+            "seed": 996000,
+            "fatal": null,
+            "init_wall_s": 0.10309419899999739,
+            "exec_ms": 1.2,
+            "first_call_ms": 0.0,
+            "harness": true,
+            "game_wall_s": 0.10334715499999447,
+            "rc": 0,
+            "a_errors": 0,
+            "err_by_cat": {},
+            "call_errors": 0,
+            "peak_rss_mib": 31.6,
+            "steps": 2,
+            "step_wall_ms": {
+              "mean": 0.1,
+              "p50": 0.1,
+              "p95": 0.1,
+              "max": 0.1
+            }
+          }
+        ],
+        "aggregate": {
+          "steps": 2,
+          "step_wall_ms": {
+            "mean": 0.1,
+            "p50": 0.1,
+            "p95": 0.1,
+            "p99": 0.1,
+            "max": 0.1
+          },
+          "slow_steps_over_soft": 0,
+          "overage_pool_s": 0.0,
+          "max_init_wall_s": 0.103,
+          "max_game_wall_s": 0.103,
+          "peak_rss_mib_child_self": 31.6,
+          "peak_rss_mib_parent_rusage_children": 31.7,
+          "a_errors": 0,
+          "fatals": []
+        },
+        "checks": {
+          "init_le_limit": {
+            "value_s": 0.103,
+            "limit_s": 20.0,
+            "pass": true
+          },
+          "step_hard_le_limit": {
+            "value_ms": 0.1,
+            "limit_ms": 3000.0,
+            "pass": true
+          },
+          "slow_count_le_limit": {
+            "value": 0,
+            "limit": 3,
+            "pass": true
+          },
+          "overage_pool_le_limit": {
+            "value_s": 0.0,
+            "limit_s": 5.0,
+            "pass": true
+          },
+          "game_wall_le_limit": {
+            "value_s": 0.103,
+            "limit_s": 1500.0,
+            "pass": true
+          },
+          "internal_errors_zero": {
+            "value": 0,
+            "limit": 0,
+            "pass": true
+          },
+          "child_exit_clean": {
+            "value": [],
+            "limit": [],
+            "pass": true
+          },
+          "peak_rss": {
+            "value_mib": 31.6,
+            "limit_mib": null,
+            "pass": null,
+            "note": "child RUSAGE_SELF ru_maxrss; report-only unless --mem-limit-mib given"
+          },
+          "step_p95_report": {
+            "value_ms": 0.1,
+            "pass": null,
+            "note": "reported metric, not a gate"
+          }
+        },
+        "overall": "PASS"
+      },
+      "stdout_nonjson": null,
+      "stderr": ""
+    }
+  ]
+}

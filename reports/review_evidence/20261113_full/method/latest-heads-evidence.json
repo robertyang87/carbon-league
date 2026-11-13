@@ -1,0 +1,120 @@
+{
+  "review_ref": "62e0dee16419725ece6f18a22f095c83bb6fcd0f",
+  "scope": "Exact extracted head_losses with constant output stub; backward derivatives only, no optimizer step, no dataset training.",
+  "source_sha256": {
+    "code/cnet2_model.py": "ab2dfe59d2e0df72b57f43fec7e2df7a19bb7627a71376ea22b79050a0fbde80",
+    "code/stage0_smoke_heads.py": "762a449109182de825db0c9c9a1eb9e3ca7385e01c30b8b6b0f3ff3b27163741",
+    "code/stage0_heads_patch.py": "c99286ae270309ae64aa5c76b9c43fe3e7691d7caf18a525871b37d8989a4f1a",
+    "code/cnet2_build.py": "37bbb0fdf2edcad91493c6580c9e8cb146d51c9b30e96f8ea017c7637518367b"
+  },
+  "expectation_vs_huber": {
+    "distribution": "90% M=0, 10% M=10000, passed through actual float16 label storage then inverse transform",
+    "true_mean_raw_margin": 1000.0,
+    "mean_recovered_margin": 1006.0660400390625,
+    "smooth_l1_optimum_margin": 111.11111111111111,
+    "gradient_probes": [
+      {
+        "prediction_m_over_1000": 0.1111111111111111,
+        "total_loss": 0.5372785925865173,
+        "margin_smooth_l1": 0.9505107998847961,
+        "total_loss_gradient_wrt_mk": -1.3969838619232178e-09,
+        "margin_MAE": 1094.9546098709106
+      },
+      {
+        "prediction_m_over_1000": 1.006066083908081,
+        "total_loss": 0.6273806691169739,
+        "margin_smooth_l1": 1.3109190464019775,
+        "total_loss_gradient_wrt_mk": 0.20000001788139343,
+        "margin_MAE": 1810.9188079833984
+      }
+    ]
+  },
+  "inverse_tanh_float16": [
+    {
+      "raw_margin": 0.0,
+      "stored_float16": 0.0,
+      "recovered_margin": 0.0,
+      "margin_error": 0.0,
+      "normal_U_error": 0.0
+    },
+    {
+      "raw_margin": 0.01,
+      "stored_float16": 3.337860107421875e-06,
+      "recovered_margin": 0.010013580322265625,
+      "margin_error": 1.3580322265624792e-05,
+      "normal_U_error": 1.6975403305252712e-09
+    },
+    {
+      "raw_margin": 100.0,
+      "stored_float16": 0.0333251953125,
+      "recovered_margin": 100.01261901855469,
+      "margin_error": 0.0126190185546875,
+      "normal_U_error": 1.573439943225452e-06
+    },
+    {
+      "raw_margin": 1000.0,
+      "stored_float16": 0.321533203125,
+      "recovered_margin": 1000.0685424804688,
+      "margin_error": 0.06854248046875,
+      "normal_U_error": 6.738028082153846e-06
+    },
+    {
+      "raw_margin": 4000.0,
+      "stored_float16": 0.8701171875,
+      "recovered_margin": 4000.685791015625,
+      "margin_error": 0.685791015625,
+      "normal_U_error": 6.054461011983925e-06
+    },
+    {
+      "raw_margin": 5000.0,
+      "stored_float16": 0.93115234375,
+      "recovered_margin": 5000.9638671875,
+      "margin_error": 0.9638671875,
+      "normal_U_error": 3.2023989099405625e-06
+    },
+    {
+      "raw_margin": 10000.0,
+      "stored_float16": 0.99755859375,
+      "recovered_margin": 10060.66015625,
+      "margin_error": 60.66015625,
+      "normal_U_error": 1.3359334845031157e-06
+    },
+    {
+      "raw_margin": 11400.0,
+      "stored_float16": 0.9990234375,
+      "recovered_margin": 11400.623046875,
+      "margin_error": 0.623046875,
+      "normal_U_error": 3.4864915399168694e-09
+    },
+    {
+      "raw_margin": 13320.0,
+      "stored_float16": 0.99951171875,
+      "recovered_margin": 11400.623046875,
+      "margin_error": -1919.376953125,
+      "normal_U_error": -4.773526596779654e-06
+    },
+    {
+      "raw_margin": 20000.0,
+      "stored_float16": 1.0,
+      "recovered_margin": 11400.623046875,
+      "margin_error": -8599.376953125,
+      "normal_U_error": -5.593162684114361e-06
+    }
+  ],
+  "clamp_mathematical_cap": 11400.603501750598,
+  "outcome_kind_not_identifiable_from_margin": {
+    "margin": 100,
+    "normal_win_U": 0.76248959373947,
+    "single_fault_win_U": 1.0,
+    "comment": "The same margin field cannot determine whether soft margin applies. No claim that ds_m3s2 actually contains abnormal games."
+  },
+  "implemented_and_not_implemented": {
+    "utility_sigmoid_and_U_MSE": true,
+    "WDL_three_class_CE": true,
+    "unbounded_margin_output": true,
+    "margin_MSE_in_smoke": false,
+    "separate_bare_mixed_heads": false,
+    "raw_terminal_margin_label_in_builder": false,
+    "smoke_exports_trained_heads": false
+  }
+}

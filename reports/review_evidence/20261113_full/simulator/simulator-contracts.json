@@ -1,0 +1,370 @@
+{
+  "commit": "98ffadfa19a8db8a1d91998386e7fa9dbfc61a4c",
+  "original_board_parity": [
+    {
+      "section": "map",
+      "name": "generation#2 == env.reset() full_carbon",
+      "pass": true,
+      "detail": "equal=True, sums 1956.0 vs 1956"
+    },
+    {
+      "section": "map",
+      "name": "reset(seed) deterministic & 4-fold symmetric",
+      "pass": true,
+      "detail": "gen1 sum=2422.0 nonzero=99"
+    },
+    {
+      "section": "game",
+      "name": "seed=7 obs() visibility parity (every 25 steps)",
+      "pass": true,
+      "detail": "carbon visibility, players, trees, step all match interpreter rule"
+    },
+    {
+      "section": "game",
+      "name": "seed=7 300 steps full parity",
+      "pass": true,
+      "detail": "final cash=[20, 9.92], plants>=1, max_workers=4, max_trees=1"
+    },
+    {
+      "section": "game",
+      "name": "seed=123 obs() visibility parity (every 25 steps)",
+      "pass": true,
+      "detail": "carbon visibility, players, trees, step all match interpreter rule"
+    },
+    {
+      "section": "game",
+      "name": "seed=123 300 steps full parity",
+      "pass": true,
+      "detail": "final cash=[20, 104.63], plants>=15, max_workers=10, max_trees=7"
+    },
+    {
+      "section": "scenario",
+      "name": "S1a collision capture parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S1a collision capture: winner is P1 collector with 60 cargo",
+      "pass": true,
+      "detail": "{'player-1-worker-0': (1, 112, 60, 'COLLECTOR')}"
+    },
+    {
+      "section": "scenario",
+      "name": "S1b collision tie parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S1b collision tie: both dead, cell carbon 40",
+      "pass": true,
+      "detail": "({}, 40.0)"
+    },
+    {
+      "section": "scenario",
+      "name": "S1c collision vs planter parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S1c collision vs planter: planter dead, collector cargo 35",
+      "pass": true,
+      "detail": "{'player-1-worker-0': (1, 112, 35, 'COLLECTOR')}"
+    },
+    {
+      "section": "scenario",
+      "name": "S1d planter pileup on tree parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S1d planter pileup on tree: both planters dead, P0 cash 110",
+      "pass": true,
+      "detail": "({}, [110, 100])"
+    },
+    {
+      "section": "scenario",
+      "name": "S2a own deposit parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S2a own deposit: cash 180, cargo 0, worker alive on base",
+      "pass": true,
+      "detail": "([180, 100], {'player-0-worker-0': (0, 64, 0, 'COLLECTOR')})"
+    },
+    {
+      "section": "scenario",
+      "name": "S2b enemy deposit parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S2b enemy deposit: P0 cash 150, P1 collector alive cargo 0",
+      "pass": true,
+      "detail": "([150, 100], {'player-1-worker-0': (1, 64, 0, 'COLLECTOR')})"
+    },
+    {
+      "section": "scenario",
+      "name": "S2c enemy empty on base dies parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S2c enemy empty on base dies: worker deleted, cash unchanged",
+      "pass": true,
+      "detail": "({}, [100, 100])"
+    },
+    {
+      "section": "scenario",
+      "name": "S3 plant + absorb timing parity",
+      "pass": true,
+      "detail": "2 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S3 plant + absorb timing: cash 995 after absorb step, neighbours 96.25",
+      "pass": true,
+      "detail": "([995.0, 100], 96.25)"
+    },
+    {
+      "section": "scenario",
+      "name": "S3b plant cost inflation parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S3b plant cost inflation: cash == round(1000-26.175,2), 2 trees",
+      "pass": true,
+      "detail": "([973.83, 100], 2)"
+    },
+    {
+      "section": "scenario",
+      "name": "S4 seize parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S4 seize: tree flipped to P0 age 21, cash 100-20+15=95",
+      "pass": true,
+      "detail": "({'player-1-tree-0': (0, 112, 21)}, [95.0, 100])"
+    },
+    {
+      "section": "scenario",
+      "name": "S5 wither parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S5 wither: tree gone, collector cargo 9, cell carbon 21",
+      "pass": true,
+      "detail": "({}, {'player-0-worker-0': (0, 112, 9.0, 'COLLECTOR')}, 21.0)"
+    },
+    {
+      "section": "scenario",
+      "name": "S6 absorption & siphon parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S6 absorption & siphon: P0 cash 535.5 (23+5 siphon, 3.75+3.75 cells)",
+      "pass": true,
+      "detail": "[535.5, 500]"
+    },
+    {
+      "section": "scenario",
+      "name": "S6 absorption & siphon: siphoned collector 230 collected -> 207 after 10%",
+      "pass": true,
+      "detail": "{'player-0-worker-0': (0, 97, 70.0, 'COLLECTOR'), 'player-1-worker-0': (1, 127, 207.0, 'COLLECTOR'), 'player-1-worker-1': (1, 98, 45.0, 'COLLECTOR')}"
+    },
+    {
+      "section": "scenario",
+      "name": "S6 absorption & siphon: blocked cell carbon 70 (collected, no tree absorption)",
+      "pass": true,
+      "detail": "70.0"
+    },
+    {
+      "section": "scenario",
+      "name": "S7 worker limit parity",
+      "pass": true,
+      "detail": "1 step(s)"
+    },
+    {
+      "section": "scenario",
+      "name": "S7 worker limit: exactly 10 workers after double recruit attempt",
+      "pass": true,
+      "detail": "10"
+    },
+    {
+      "section": "agents",
+      "name": "example.py runs 30 steps on FastCarbon",
+      "pass": true,
+      "detail": "cash=[80, 80]"
+    },
+    {
+      "section": "agents",
+      "name": "reference_juzi.py runs 10 steps on FastCarbon",
+      "pass": true,
+      "detail": "cash=[8.79, 20], 1.9s for 10 steps (agent-bound)"
+    }
+  ],
+  "seized_tree_snapshot": {
+    "pass_": false,
+    "before": {
+      "step": 7,
+      "cash": [
+        32.75,
+        30.85
+      ],
+      "players": [
+        [
+          32.75,
+          {
+            "player-0-recrtCenter-0": 64,
+            "player-0-recrtCenter-1": 160
+          },
+          {
+            "player-0-worker-0": [
+              125,
+              0,
+              "PLANTER"
+            ]
+          },
+          {}
+        ],
+        [
+          30.85,
+          {
+            "player-1-recrtCenter-0": 70,
+            "player-1-recrtCenter-1": 154
+          },
+          {
+            "player-1-worker-0": [
+              65,
+              0,
+              "PLANTER"
+            ]
+          },
+          {
+            "player-0-tree-0": [
+              65,
+              5
+            ]
+          }
+        ]
+      ],
+      "original_counters": [
+        1,
+        0
+      ],
+      "restored_counters": [
+        0,
+        1
+      ]
+    },
+    "actions": [
+      {},
+      {}
+    ],
+    "expected": {
+      "player-0-tree-1": [
+        0,
+        125,
+        1
+      ],
+      "player-0-tree-0": [
+        1,
+        65,
+        6
+      ]
+    },
+    "restored": {
+      "player-0-tree-0": [
+        0,
+        125,
+        1
+      ]
+    },
+    "restored_players": [
+      [
+        12.75,
+        {
+          "player-0-recrtCenter-0": 64,
+          "player-0-recrtCenter-1": 160
+        },
+        {
+          "player-0-worker-0": [
+            125,
+            0,
+            "PLANTER"
+          ]
+        },
+        {
+          "player-0-tree-0": [
+            125,
+            1
+          ]
+        }
+      ],
+      [
+        30.85,
+        {
+          "player-1-recrtCenter-0": 70,
+          "player-1-recrtCenter-1": 154
+        },
+        {
+          "player-1-worker-0": [
+            65,
+            0,
+            "PLANTER"
+          ]
+        },
+        {
+          "player-0-tree-0": [
+            125,
+            1
+          ]
+        }
+      ]
+    ],
+    "diff": [
+      "cash ref=[12.75, 31.67] sim=[12.75, 30.85]",
+      "carbon 1 cells differ, first: [(66, 21.033, 22.508)]",
+      "trees[player-0-tree-0] ref=(1, 65, 6) sim=(0, 125, 1)",
+      "trees[player-0-tree-1] ref=(0, 125, 1) sim=None",
+      "trees_dict[player-0-tree-0] ref=['player-1-worker-0', 0.81945] sim=['player-0-worker-0', 0]",
+      "trees_dict[player-0-tree-1] ref=['player-0-worker-0', 0] sim=None"
+    ],
+    "continuous_matches_original": true
+  },
+  "hidden_map_noninterference": [
+    {
+      "seat": 0,
+      "visible_count": 4,
+      "changed_hidden_cells": 221,
+      "differing_feature_fields": [],
+      "pass_": true
+    },
+    {
+      "seat": 1,
+      "visible_count": 4,
+      "changed_hidden_cells": 221,
+      "differing_feature_fields": [],
+      "pass_": true
+    }
+  ],
+  "feature_clone_isolation": {
+    "pass": true,
+    "changed_root_fields": []
+  }
+}

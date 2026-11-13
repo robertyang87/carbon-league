@@ -1,0 +1,186 @@
+{
+  "commit": "98ffadfa19a8db8a1d91998386e7fa9dbfc61a4c",
+  "scope": "local extracted-helper/AST/fake-worker probes only; no real evaluation, training, network, workflow dispatch or cloud operations",
+  "failed_old_seed_omitted_then_resumed_batch_accepted": {
+    "old_error_seed": 994000,
+    "missing_count": 99,
+    "old_error_seed_retried": false,
+    "new_summary_health_check": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "total_expected": 100,
+    "healthy_expected_after_resume": 99
+  },
+  "complete_healthy_missing_list": {
+    "missing_stdout": "\n",
+    "missing_exit": 0,
+    "source_empty_branch_sets_failure": true
+  },
+  "wrong_identity_duplicate_seed_summary_accepted": {
+    "summary": {
+      "tag": "sx_S20_probe",
+      "FAIL": false,
+      "n": 2,
+      "a": "old_actor.py",
+      "b": "wrong_opponent.py",
+      "games": [
+        [
+          7,
+          1,
+          1
+        ],
+        [
+          7,
+          1,
+          1
+        ]
+      ]
+    },
+    "health_check": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "no_summary_no_output_accepted": {
+    "exit": 0,
+    "stdout": "HEALTH-WARN tag=sx_S20_probe: no bigeval summary record found; relying on exit code only\n",
+    "stderr": ""
+  },
+  "stale_done_after_failure": {
+    "branch": {
+      "exit": 1,
+      "stdout": "N02: search-vs-pure exam FAILED -- SX_DONE not written, fork stage not started\n",
+      "stderr": ""
+    },
+    "done_still_exists": true,
+    "fail_exists": true
+  },
+  "per_pid_failure_propagates": {
+    "exit": 1,
+    "stdout": "FAIL tag=probe pid=1665 exit=1\n",
+    "stderr": ""
+  },
+  "count_contracts": {
+    "q_h14d.sh": {
+      "SEEDS_STALLED": {
+        "count": 57,
+        "unique_count": 57
+      },
+      "SEEDS_NORMAL": {
+        "count": 30,
+        "unique_count": 30
+      }
+    },
+    "q_h15.sh": {
+      "SEEDS_STALLED": {
+        "count": 57,
+        "unique_count": 57
+      },
+      "SEEDS_NORMAL": {
+        "count": 30,
+        "unique_count": 30
+      }
+    }
+  },
+  "dgx_unconfirmed_prefix": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "WARNING: dgx_full.sh would overwrite cnet2_train.py with the UNVERSIONED cnet2_train.py.d0dd809 copy.\nThat mutation is not tracked by git and invalidates repo-state claims for this directory.\nRefusing to run. If you really want this, re-run with DGX_FULL_CONFIRM=1.\n"
+  },
+  "dgx_confirmed_prefix_only": {
+    "exit": 0,
+    "stdout": "GUARD_PASSED_NO_OPERATION\n",
+    "stderr": ""
+  },
+  "dgx_confirmed_tail_failures_still_done": {
+    "fake_env_intercepts_all_training": true,
+    "branch": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "cp: cannot stat 'cnet2_train.py.d0dd809': No such file or directory\n"
+    },
+    "unversioned_copy_exists": false,
+    "trainer_still_original": true,
+    "full_done_written": true
+  },
+  "bigeval_duplicate_explicit_seeds": {
+    "exit": 0,
+    "summary": {
+      "tag": "duplicate_probe",
+      "a": "A.py",
+      "b": "B.py",
+      "seed0": 0,
+      "n": 2,
+      "err": 0,
+      "wins": 2,
+      "mean": 1,
+      "se": 0,
+      "lo2se": 1,
+      "worst": 1,
+      "worst_ms": 0,
+      "dep": [
+        0,
+        0
+      ],
+      "tree": [
+        0,
+        0
+      ],
+      "deathcargo": [
+        0,
+        0
+      ],
+      "plants": [
+        0,
+        0
+      ],
+      "t": "03:18",
+      "search_games": 0,
+      "changed0_games": 0,
+      "games": [
+        [
+          17,
+          1,
+          1
+        ],
+        [
+          17,
+          1,
+          1
+        ]
+      ],
+      "search_error_games": 0,
+      "a_errors_total": 0,
+      "root_errors_total": 0,
+      "first_error": null,
+      "first_search_error_seed": null,
+      "FAIL": false
+    },
+    "unique_seeds": 1,
+    "fake_workers": true
+  },
+  "ladder_post_ambiguous_retry": {
+    "attempt_methods": [
+      "POST",
+      "POST"
+    ],
+    "return": "stub_success",
+    "network_calls": 0,
+    "scope": "client retry behavior only; server acceptance simulated"
+  },
+  "cloud_command_local_expansion": {
+    "exit": 0,
+    "stdout": "tools/acs_runcommand.py\ni-stub\necho LOCAL_RUNNER_VALUE\n",
+    "stderr": ""
+  },
+  "ladder_submit_static": {
+    "trigger": "workflow_dispatch_only",
+    "bytes": 4576790,
+    "md5": "7b7620499411a088cf4dc17c0e929bd7",
+    "workflow_executed": false,
+    "client_executed_live": false
+  }
+}

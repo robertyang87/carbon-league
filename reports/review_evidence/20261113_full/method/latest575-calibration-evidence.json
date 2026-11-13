@@ -1,0 +1,65 @@
+{
+  "review_ref": "57557a83a73cd4d6b26b56ebebb4c0df8e13a155",
+  "scope": "Only exact evaluate/targets AST functions, in-memory fixture loader/net. No optimizer or training.",
+  "source_sha256": {
+    "code/stage0_train_heads.py": "1b5060a5c6a755411cfe78641a681fe3c5b591a59f834adb501c753de6b89704",
+    "code/stage0_smoke_heads.py": "762a449109182de825db0c9c9a1eb9e3ca7385e01c30b8b6b0f3ff3b27163741"
+  },
+  "fixtures": [
+    {
+      "name": "calibrated_constant_mean_false_alarm",
+      "actual_targets": [
+        0.09997283667325974,
+        0.9000271558761597
+      ],
+      "predictions": [
+        0.5,
+        0.5
+      ],
+      "actual_repository_evaluate": {
+        "val_l_u": 0.16002,
+        "val_wdl_acc": 0.5,
+        "val_margin_mae": 1386.6,
+        "val_u_calib_mean": 0.0,
+        "val_u_calib_binned": 0.40003,
+        "val_u_range": [
+          0.5,
+          0.5
+        ],
+        "val_n": 2
+      },
+      "prediction_binned_absolute_calibration": 0.0
+    },
+    {
+      "name": "miscalibrated_predictions_false_pass",
+      "actual_targets": [
+        0.5,
+        0.5
+      ],
+      "predictions": [
+        0.2,
+        0.8
+      ],
+      "actual_repository_evaluate": {
+        "val_l_u": 0.09,
+        "val_wdl_acc": 0.0,
+        "val_margin_mae": 0.0,
+        "val_u_calib_mean": 0.0,
+        "val_u_calib_binned": 0.0,
+        "val_u_range": [
+          0.2,
+          0.8
+        ],
+        "val_n": 2
+      },
+      "prediction_binned_absolute_calibration": 0.30000000000000004
+    }
+  ],
+  "formal_target": "Mean calibration requires E[observed U | predicted u] = predicted u; binning on observed U measures a different conditional residual.",
+  "training_scope_change": {
+    "imports_smoke_head_losses": true,
+    "calls_same_loss": true,
+    "writes_weights": true,
+    "margin_loss_still_smooth_l1": true
+  }
+}
