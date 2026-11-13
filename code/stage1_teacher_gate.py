@@ -186,13 +186,23 @@ def extract_scene(spec):
         d = json.load(fh)
     st = d["steps"]
     sim = FastCarbon(CFG).reset(seed=1, full_carbon=st[0][0]["observation"]["full_carbon"])
-    for t in range(spec["step"]):
-        sim.step(st[t + 1][0].get("action") or {}, st[t + 1][1].get("action") or {})
     me = spec["me"]
     fm = F.Feat(me)
     fo = F.Feat(1 - me)
+    # Feat belief-history reconstruction (owner-delegated decision, spec
+    # SS11/SS12): Feat carries a belief state that a fresh instance resets
+    # to the uninformed prior; guided/production play observes EVERY step.
+    # Replay the prefix observations so the root features carry the same
+    # belief a live Feat would hold at this point of a real game. Exactly
+    # one observe per step value (a repeat observe at the same step would
+    # reset the Feat). Continuation steps inside the teacher/anchor stay
+    # fresh-Feat -- that is the separately-versioned item (c), not this fix.
     x_me = fm.observe(sim.obs(me))
     x_opp = fo.observe(sim.obs(1 - me))
+    for t in range(spec["step"]):
+        sim.step(st[t + 1][0].get("action") or {}, st[t + 1][1].get("action") or {})
+        x_me = fm.observe(sim.obs(me))
+        x_opp = fo.observe(sim.obs(1 - me))
     return {"full": sim.full_observation(0), "step": spec["step"], "me": me,
             "game": spec["game"], "fm": fm, "fo": fo,
             "x_me": x_me, "aux_me": fm.aux, "x_opp": x_opp, "aux_opp": fo.aux}
@@ -650,7 +660,8 @@ def main():
         "certified_target": "q ** train_temp, normalised (R23)",
         "q_select_source": "teacher Q (stage0_teacher.evaluate_root)",
         "q_eval_source": "real terminal continuations (anchor / paired arms)",
-        "root_feat_history": "fresh Feats at root (isolated-root scope)",
+        "root_feat_history": "prefix-replayed Feat belief (guided-aligned); "
+                             "continuations remain fresh-Feat (spec SS11/SS12)",
         "seeds": {"scene": a.seed_scene, "teacher": a.seed_teacher,
                   "cont": a.seed_cont, "anchor": a.seed_anchor},
         "games": games, "n_scenes": len(specs), "ds_overlap_check": ds_check,
