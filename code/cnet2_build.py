@@ -60,6 +60,43 @@ nothing is published: the pointer and the previous generation stay
 intact, the flat meta.json is removed so the aborted run cannot be
 mistaken for a fresh product, and BUILD_FAILED.json records the abort.
 
+Derived-layer contract (owner review pt.4, 2026-11-13): post-processing
+(set_uw.py and successors) must NEVER write into a published generation
+directory -- generations are immutable once sealed. The sanctioned path
+is register_derived(out, files, params): derived files (w.npy / uw.npy)
+live in the dataset ROOT (the flat view), and register_derived records a
+self-describing sidecar (out/derived.json, format "cnet2-derived/1"):
+per file {field, dtype, rows, shape, sha256, base_generation, params},
+where base_generation is the generation the derived rows align with.
+The flat meta.json carries the same declaration under "derived_layer",
+and every build publish refreshes that declaration for pre-existing
+derived files. load_generation() only ever reads the generation
+manifest's own fields -- derived-layer files are never part of a
+generation product, whether they sit in the root or (illegally) inside
+a generation dir. assert_not_in_generation(path) is the write guard.
+
+Exact-label contract (owner review pt.7 + follow-up, 2026-11-13): when a
+source index entry carries explicit raw "margin"/"u" dicts (producer
+corpora; dagger/awr GameResult corpora use the same keys), the dataset
+gains four columns -- margin_raw / u_raw (float32), outcome_type
+(int8), label_status (int8) -- aligned per row with the game each row
+came from. outcome_type is the RESULT class: 0 normal, 1
+fault_one_side, 2 unusable, -1 not recorded. The class comes from the
+entry's declared fields ("outcome", "unusable", "fault_sides" player
+indices); no declaration means normal. u_raw is computed BY CLASS from
+the raw margin: normal -> 0.5*WDL + 0.5*sigmoid(M/1000);
+fault_one_side -> the WDL value alone (1 / 0.5 / 0 by margin sign);
+unusable -> NaN (margin_raw is NaN too -- an unusable game has no
+usable result, and its labels are NEVER zero-filled as if true).
+label_status is per row: 0 exact (raw labels, normal or fault class),
+1 approx (no raw labels; only the legacy tanh value exists), 2
+unusable. Games without raw dicts contribute approx rows with NaN raw
+columns -- nothing is fabricated -- and a corpus with no raw-aware game
+at all gets NO raw columns (absent means absent). The builder
+cross-checks the source's raw margin against the index scores margin
+and (for normal games) the source u against the formula; a mismatch
+fails that game under the C02 contract.
+
 F11 terminal contract (REVIEW_FULL_20261113): an index entry may carry
 "terminal": true (producer attestation that the game actually ENDED,
 with "end_reason": "extinction"|"horizon"). Terminal-marked games are
@@ -110,6 +147,64 @@ UW_LIFE_LONG, UW_LIFE_SHORT, LIFE_LONG, LIFE_SHORT = 1.5, 0.8, 40, 15
 ALLOW_PARTIAL = os.environ.get("CNET2_ALLOW_PARTIAL") == "1"   # C02: publish a DECLARED partial dataset despite per-game failures (default: any failure fails the build)
 if UW:
     FIELDS["uw"] = (np.float16, (F.OWN,))
+
+# Exact-label columns (owner pt.7): NOT part of FIELDS -- cnet2_train.load
+# requires every FIELDS file to exist, and legacy datasets have no raw
+# columns. They join a generation's field set only when at least one
+# contributing game is label-aware (see main).
+RAW_FIELDS = {"margin_raw": (np.float32, ()), "u_raw": (np.float32, ()),
+              "outcome_type": (np.int8, ()), "label_status": (np.int8, ())}
+OUTCOME_CODES = {"normal": 0, "fault_one_side": 1, "unusable": 2}
+OUTCOME_MISSING = -1
+LABEL_EXACT, LABEL_APPROX, LABEL_UNUSABLE = 0, 1, 2
+_RAW_FILL = {"margin_raw": np.nan, "u_raw": np.nan,
+             "outcome_type": np.int8(OUTCOME_MISSING),
+             "label_status": np.int8(LABEL_APPROX)}
+DERIVED_FILES = ("w.npy", "uw.npy")
+DERIVED_SIDECAR = "derived.json"
+DERIVED_FORMAT = "cnet2-derived/1"
+
+
+def _u_of_margin(m):
+    """Normal-game utility: U = 0.5*WDL + 0.5*sigmoid(M/1000),
+    WDL = 1 / 0.5 / 0 for M > / = / < 0 (platform rule, CarbonFormer
+    adoption). Same formula as producer selfplay_gen._u_of_margin."""
+    import math
+    w = 1.0 if m > 0 else (0.0 if m < 0 else 0.5)
+    return 0.5 * w + 0.5 / (1.0 + math.exp(-float(m) / 1000.0))
+
+
+def _wdl_value(m):
+    """WDL value alone -- the utility of a single-side execution-fault
+    game (platform rule: fault games are scored on WDL only)."""
+    return 1.0 if m > 0 else (0.0 if m < 0 else 0.5)
+
+
+def _outcome_class(e):
+    """Result class of an index entry from its declared fault fields.
+    Fault EVIDENCE wins over the "outcome" string: a producer stamps
+    outcome="normal" at generation time, and platform fault records
+    (fault_sides / unusable) are attached to the entry afterwards --
+    the later, more specific record must not be overridden by the
+    earlier generic stamp. Order: "unusable": true / fault_sides
+    (player indices; 2+ distinct = unusable, 1 = fault_one_side) >
+    explicit "outcome" > normal."""
+    if e.get("unusable") is True:
+        return "unusable"
+    fs = e.get("fault_sides")
+    if isinstance(fs, (list, tuple)):
+        try:
+            n = len({int(x) for x in fs if int(x) in (0, 1)})
+        except Exception:
+            n = 0
+        if n >= 2:
+            return "unusable"
+        if n == 1:
+            return "fault_one_side"
+    oc = e.get("outcome")
+    if oc in OUTCOME_CODES:
+        return oc
+    return "normal"
 
 
 def unit_weights(st, p, slots):
@@ -213,11 +308,35 @@ def build_game(task):
 
 
 def _build_game(task):
-    path, sides, gi, tids, margins, out = task
+    path, sides, gi, tids, margins, out = task[:6]
+    # Exact-label payload (owner pt.7): None, or {"mg": [per-player raw
+    # margins] | None, "u": [per-player source u], "outcome": code}.
+    # "mg" is None only for declared-unusable games (labels are NaN by
+    # definition; no margin is needed or trusted).
+    raw = task[6] if len(task) > 6 else None
     d = json.load(gzip.open(path))
     st = d["steps"]
     rows = {k: [] for k in FIELDS}
+    if raw is not None:
+        for k in RAW_FIELDS:
+            rows[k] = []
     for p, tid, mg in zip(sides, tids, margins):
+        rmg = ru = None
+        if raw is not None and raw["mg"] is not None:
+            rmg = float(raw["mg"][p])
+            ru = float(raw["u"][p])
+            # Alignment cross-check: the declared raw margin must equal
+            # the index-scores margin this side's value label is built
+            # from, and (normal games) the declared u must equal the
+            # formula value. A mismatch means the corpus's raw record
+            # disagrees with its own scores -- fail the game (C02).
+            if abs(rmg - float(mg)) > 1e-4:
+                raise ValueError(
+                    f"raw margin mismatch side {p}: declared {rmg} vs scores margin {float(mg)}")
+            if raw["outcome"] == OUTCOME_CODES["normal"] and \
+                    abs(ru - _u_of_margin(rmg)) > 1e-6:
+                raise ValueError(
+                    f"raw u mismatch side {p}: declared {ru} vs formula {_u_of_margin(rmg)}")
         f = F.Feat(p)
         slots = []
         for t in range(len(st) - 1):
@@ -253,6 +372,16 @@ def _build_game(task):
             r["carbon"].append(F.q8(full[order] / 100.0))
             r["value"].append(np.tanh(mg / 3000.0)); r["teacher"].append(tid)
             r["gid"].append(gi); r["step"].append(t)
+            if raw is not None:
+                if raw["outcome"] == OUTCOME_CODES["unusable"]:
+                    r["margin_raw"].append(np.nan); r["u_raw"].append(np.nan)
+                    r["label_status"].append(LABEL_UNUSABLE)
+                else:
+                    r["margin_raw"].append(rmg)
+                    r["u_raw"].append(_u_of_margin(rmg) if raw["outcome"] == OUTCOME_CODES["normal"]
+                                      else _wdl_value(rmg))
+                    r["label_status"].append(LABEL_EXACT)
+                r["outcome_type"].append(raw["outcome"])
             if UW:
                 slots.append((t, list(f.own_uid)))
         if UW and slots:
@@ -268,7 +397,8 @@ def _build_game(task):
         except OSError:
             pass
         return gi, 0, None
-    arr = {k: np.asarray(v).astype(FIELDS[k][0]) for k, v in rows.items()}
+    arr = {k: np.asarray(v).astype((RAW_FIELDS[k] if k in RAW_FIELDS else FIELDS[k])[0])
+           for k, v in rows.items()}
     np.savez(out, **arr)
     return gi, n, None
 
@@ -329,6 +459,17 @@ def _scan(dirs, min_steps=200, weighted=False):
             order = g["order"]
             names = [g["strategies"][order[s]]["name"] for s in (0, 1)]
             scores = [g["scores"][order[s]] for s in (0, 1)]
+            # Exact-label provenance (owner pt.7): explicit per-strategy-key
+            # raw margin/u dicts are the ONLY source of exact labels; the
+            # result class comes from the declared fault fields.
+            raw_mg = raw_u = None
+            if isinstance(g.get("margin"), dict) and isinstance(g.get("u"), dict):
+                try:
+                    raw_mg = [float(g["margin"][order[s]]) for s in (0, 1)]
+                    raw_u = [float(g["u"][order[s]]) for s in (0, 1)]
+                except Exception:
+                    raw_mg = raw_u = None
+            oclass = _outcome_class(g)
             if ours:
                 us = [s for s in (0, 1) if names[s].startswith(OUR_NAMES)]
                 if len(us) != 1:
@@ -359,6 +500,7 @@ def _scan(dirs, min_steps=200, weighted=False):
                      "src": os.path.basename(rd.rstrip("/")),
                      "terminal": terminal, "end_reason": g.get("end_reason"),
                      "steps": g.get("steps", 0),
+                     "raw_margin": raw_mg, "raw_u": raw_u, "outcome": oclass,
                      "reason": "missing_replay",
                      "error": f"missing_replay: indexed replay file not found: {fp}"}
                 missing.append(m)
@@ -374,6 +516,7 @@ def _scan(dirs, min_steps=200, weighted=False):
             g = {"file": fp, "key": key, "names": names, "scores": scores, "sides": sides,
                  "val": zlib.crc32(key.encode()) % 10 == 0, "src": os.path.basename(rd.rstrip("/")),
                  "terminal": terminal, "end_reason": g.get("end_reason"),
+                 "raw_margin": raw_mg, "raw_u": raw_u, "outcome": oclass,
                  "steps": g.get("steps", 0),
                  "short_terminal": bool(terminal and g.get("steps", 0) < min_steps)}
             if weighted:
@@ -425,6 +568,8 @@ def _cfg_fingerprint():
         "weighted": os.environ.get("CNET2_WEIGHTED") == "1",
         "teachers": list(F.TEACHERS),
         "fields": {k: [str(dt), list(sh)] for k, (dt, sh) in FIELDS.items()},
+        "raw_fields_v1": {k: [str(dt), list(sh)] for k, (dt, sh) in RAW_FIELDS.items()},
+        "outcome_codes": OUTCOME_CODES, "label_codes": [LABEL_EXACT, LABEL_APPROX, LABEL_UNUSABLE],
         "feat_sig": [F.P, F.N, F.NS, F.T, F.H, F.OWN, F.UF, F.MF],
     }
     for mod in (__file__, getattr(F, "__file__", None)):
@@ -443,6 +588,159 @@ def _sha256_file(path):
     return h.hexdigest()
 
 
+def _is_generation_path(path):
+    parts = os.path.abspath(path).split(os.sep)
+    return any(seg == "generations" and parts[i + 1].startswith("gen-")
+               for i, seg in enumerate(parts[:-1]))
+
+
+def assert_not_in_generation(path, what="write"):
+    """Write guard (owner pt.4): NOTHING may write into a published
+    generation directory -- generations are immutable once sealed, so a
+    post-processing tool pointed at one is a configuration error, not a
+    variant. Post-processing writes go to the dataset root via
+    register_derived()."""
+    if _is_generation_path(path):
+        raise ValueError(
+            f"derived-layer guard: refusing to {what} inside an immutable "
+            f"generation directory: {path}")
+
+
+def _patch_flat_meta_derived(out, side):
+    """Mirror the derived-layer declaration into the flat meta.json so a
+    flat-view consumer can find each derived file's base generation and
+    hash without opening the sidecar. side=None strips the declaration.
+    Only the FLAT meta is patched -- the generation's own meta/manifest
+    stay pristine."""
+    meta_path = os.path.join(out, "meta.json")
+    if not os.path.exists(meta_path):
+        return
+    try:
+        meta = json.load(open(meta_path))
+    except Exception:
+        return
+    if side is None:
+        if "derived_layer" not in meta:
+            return
+        meta.pop("derived_layer", None)
+    else:
+        meta["derived_layer"] = side
+    tmp = meta_path + f".tmp-{os.getpid()}"
+    with open(tmp, "w") as fh:
+        json.dump(meta, fh)
+    os.replace(tmp, meta_path)
+
+
+def register_derived(out, files, params=None):
+    """Sanctioned post-processing entry (owner pt.4): register derived
+    files (e.g. set_uw's w.npy / uw.npy) that live in the dataset ROOT.
+
+    Sidecar format "cnet2-derived/1" (out/derived.json, mirrored into
+    flat meta.json under "derived_layer"):
+      {"format": "cnet2-derived/1",
+       "files": {<file name>: {"field": <name without .npy>,
+                              "dtype": str, "rows": int, "shape": [..],
+                              "sha256": <hex of the file bytes>,
+                              "base_generation": <generation id the
+                                  rows align with>,
+                              "params": <generation parameters dict>}}}
+    A consumer (planned: cnet2_train.load) validates: the file's
+    base_generation == the dataset's current generation (else the
+    derived rows belong to another build and must be regenerated),
+    rows == the generation's row count, and the sha256 matches before
+    use. Files inside a generation directory are REFUSED here -- a
+    derived file can never become part of a generation product.
+    Returns the sidecar dict."""
+    out_abs = os.path.abspath(out)
+    assert_not_in_generation(out_abs, "register a derived layer for")
+    gen_dir, man = load_generation(out_abs, verify=False)
+    base_gen = man["generation"]
+    total_rows = int(man["total"])
+    side_path = os.path.join(out_abs, DERIVED_SIDECAR)
+    entries = {}
+    if os.path.exists(side_path):
+        try:
+            prev = json.load(open(side_path))
+            if isinstance(prev, dict):
+                entries = prev.get("files", {}) or {}
+        except Exception:
+            entries = {}
+    for fp in files:
+        ap = os.path.abspath(fp)
+        assert_not_in_generation(ap, "write derived file")
+        if os.path.dirname(ap) != out_abs:
+            raise ValueError(
+                "derived files must live in the dataset root (flat view), "
+                f"not in a generation directory: {ap}")
+        if not os.path.exists(ap):
+            raise FileNotFoundError(ap)
+        arr = np.load(ap, mmap_mode="r")
+        if int(arr.shape[0]) != total_rows:
+            raise ValueError(
+                f"derived file {os.path.basename(ap)} has {int(arr.shape[0])} rows, "
+                f"generation {base_gen} has {total_rows}: row order/count mismatch")
+        name = os.path.basename(ap)
+        entries[name] = {
+            "field": name[:-4] if name.endswith(".npy") else name,
+            "dtype": str(arr.dtype), "rows": int(arr.shape[0]),
+            "shape": [int(x) for x in arr.shape],
+            "sha256": _sha256_file(ap), "base_generation": base_gen,
+            "params": params or {}}
+    side = {"format": DERIVED_FORMAT, "files": entries}
+    tmp = side_path + f".tmp-{os.getpid()}"
+    with open(tmp, "w") as fh:
+        json.dump(side, fh)
+    os.replace(tmp, side_path)
+    _patch_flat_meta_derived(out_abs, side)
+    return side
+
+
+def _refresh_derived_declaration(out, gen_id, prev_gen, pre_existing, gen_fields):
+    """Publish-time derived bookkeeping: derived files that already sit
+    in the flat root (written by post-processing between builds) are
+    re-declared against their base generation -- the previous
+    generation if the file's bytes predate this publish (params carried
+    over from the old sidecar when the hash matches), else the new one.
+    Generation-owned fields (a weighted build's w) are never derived."""
+    side_path = os.path.join(out, DERIVED_SIDECAR)
+    prev_entries = {}
+    if os.path.exists(side_path):
+        try:
+            prev_entries = json.load(open(side_path)).get("files", {}) or {}
+        except Exception:
+            prev_entries = {}
+    entries = {}
+    for name in DERIVED_FILES:
+        if name[:-4] in gen_fields:
+            continue
+        fp = os.path.join(out, name)
+        if not os.path.exists(fp):
+            continue
+        sha = _sha256_file(fp)
+        arr = np.load(fp, mmap_mode="r")
+        ent = {"field": name[:-4], "dtype": str(arr.dtype),
+               "rows": int(arr.shape[0]), "shape": [int(x) for x in arr.shape],
+               "sha256": sha, "base_generation": gen_id, "params": {}}
+        prev_ent = prev_entries.get(name)
+        if name in pre_existing and pre_existing[name] == sha:
+            ent["base_generation"] = (prev_ent or {}).get("base_generation") or prev_gen or gen_id
+            ent["params"] = (prev_ent or {}).get("params", {})
+        entries[name] = ent
+    if entries:
+        side = {"format": DERIVED_FORMAT, "files": entries}
+        tmp = side_path + f".tmp-{os.getpid()}"
+        with open(tmp, "w") as fh:
+            json.dump(side, fh)
+        os.replace(tmp, side_path)
+        _patch_flat_meta_derived(out, side)
+    else:
+        try:
+            os.remove(side_path)
+        except OSError:
+            pass
+        _patch_flat_meta_derived(out, None)
+
+
 def load_generation(out, verify=True):
     # F05: resolve the dataset generation the pointer certifies.
     # Returns (generation_dir, manifest). With verify=True (default)
@@ -450,7 +748,8 @@ def load_generation(out, verify=True):
     # sha256 -- a consumer that resolves BEFORE opening any array can
     # therefore never observe a mixed-generation product, and
     # undeclared files (e.g. a stale w.npy from an earlier weighted
-    # build) are not part of the product. Raises
+    # build, or derived-layer files) are not part of the product and
+    # are ignored here, never read. Raises
     # FileNotFoundError/ValueError on any inconsistency.
     ptr_path = os.path.join(out, "current.json")
     if not os.path.exists(ptr_path):
@@ -480,6 +779,7 @@ def resolve_dataset(out, verify=True):
 
 
 def main(out, dirs):
+    assert_not_in_generation(out, "build a dataset into")
     os.makedirs(os.path.join(out, "shards"), exist_ok=True)
     os.makedirs(os.path.join(out, "generations"), exist_ok=True)
     # P3: drop leftovers of a crashed publish; the temp dir is never a
@@ -502,7 +802,9 @@ def main(out, dirs):
                       "scores": m["scores"], "sides": m["sides"],
                       "val": m["val"], "src": m["src"], "missing_replay": True,
                       "terminal": m.get("terminal", False),
-                      "end_reason": m.get("end_reason"), "steps": m.get("steps", 0)})
+                      "end_reason": m.get("end_reason"), "steps": m.get("steps", 0),
+                      "raw_margin": m.get("raw_margin"), "raw_u": m.get("raw_u"),
+                      "outcome": m.get("outcome", "normal")})
     fields = dict(FIELDS)
     if weighted:
         fields["w"] = (np.float16, ())
@@ -515,7 +817,18 @@ def main(out, dirs):
         g["shard"] = os.path.join(out, "shards", g["key"].replace(".json.gz", "") + suffix + ".npz")
         if g.get("missing_replay"):
             continue
-        tasks.append((g["file"], g["sides"], gi, tids, mg, g["shard"]))
+        # Exact-label payload: full (raw margins declared), unusable-only
+        # (declared unusable -- labels are NaN, no margin trusted), or
+        # None (approx game: only the legacy tanh value exists).
+        if g.get("raw_margin") is not None:
+            g["raw_payload"] = {"mg": g["raw_margin"], "u": g["raw_u"],
+                                "outcome": OUTCOME_CODES[g.get("outcome", "normal")]}
+        elif g.get("outcome") == "unusable":
+            g["raw_payload"] = {"mg": None, "u": None,
+                                "outcome": OUTCOME_CODES["unusable"]}
+        else:
+            g["raw_payload"] = None
+        tasks.append((g["file"], g["sides"], gi, tids, mg, g["shard"], g["raw_payload"]))
     cfg_fp = _cfg_fingerprint()
     man_path = os.path.join(out, "shards", "_cfp.json")
     man = {}
@@ -643,9 +956,27 @@ def main(out, dirs):
             g["failed"] = errs[g["gi"]]
     terminal_games = sum(1 for g in games if g.get("terminal"))
     terminal_short = sum(1 for g in games if g.get("short_terminal"))
+    # Exact-label coverage (owner pt.7): the raw columns join this
+    # generation's field set iff at least one CONTRIBUTING game is
+    # label-aware; approx rows are counted, never hidden.
+    raw_games = sum(1 for g in games
+                    if g.get("raw_payload") is not None and ns.get(g["gi"], 0) > 0)
+    if raw_games:
+        fields.update(RAW_FIELDS)
+    exact_rows = sum(ns.get(g["gi"], 0) for g in games
+                     if g.get("raw_payload") is not None
+                     and g["raw_payload"]["outcome"] != OUTCOME_CODES["unusable"])
+    unusable_rows = sum(ns.get(g["gi"], 0) for g in games
+                        if g.get("raw_payload") is not None
+                        and g["raw_payload"]["outcome"] == OUTCOME_CODES["unusable"])
+    label_cov = {"raw_games": raw_games, "games": len(games),
+                 "exact_rows": exact_rows,
+                 "approx_rows": total - exact_rows - unusable_rows,
+                 "unusable_rows": unusable_rows, "rows": total}
     meta = {"games": games, "total": total, "teachers": F.TEACHERS, "cfg_fp": cfg_fp,
             "failed_games": failed, "partial": bool(failed),
             "valid_games": valid, "filtered_games": filtered,
+            "labels": label_cov,
             "terminal_games": terminal_games, "terminal_short_games": terminal_short}
     # F05 (REVIEW_FULL_20261113): publish as one immutable GENERATION.
     # The R2 temp-dir merge protected only the merge phase; the per-field
@@ -667,6 +998,7 @@ def main(out, dirs):
                "valid": valid, "partial": bool(failed),
                "failed": [f_["key"] for f_ in failed],
                "filtered": filtered,
+               "labels": label_cov,
                "games": [[g["key"], int(ns.get(g["gi"], 0))] for g in games]}
     gen_id = "gen-" + hashlib.sha256(
         json.dumps(gen_key, sort_keys=True).encode()).hexdigest()[:16]
@@ -699,8 +1031,26 @@ def main(out, dirs):
                     continue
                 D = np.load(games[gi]["shard"])
                 n = len(D["y"])
-                for k in FIELDS:
-                    mm[k][o:o + n] = D[k] if k != "gid" else gi
+                if games[gi].get("raw_payload") is not None and "margin_raw" in D:
+                    # Row-alignment assertion: every finite raw margin in
+                    # the shard must be one of this game's kept sides'
+                    # declared margins (full check, not a sample).
+                    _rp = games[gi]["raw_payload"]
+                    if _rp["outcome"] != OUTCOME_CODES["unusable"]:
+                        _vals = np.asarray(D["margin_raw"], np.float64)
+                        _fin = _vals[np.isfinite(_vals)]
+                        _exp = {float(_rp["mg"][s_]) for s_ in games[gi]["sides"]}
+                        if len(_fin) != len(_vals) or not all(
+                                any(abs(v - e) <= 1e-4 for e in _exp) for v in _fin):
+                            raise ValueError(
+                                f"raw label alignment failed for {games[gi]['key']}")
+                for k in fields:
+                    if k == "w":
+                        continue  # weighted w is computed below from wts, not stored in shards
+                    if k in RAW_FIELDS and k not in D:
+                        mm[k][o:o + n] = _RAW_FILL[k]
+                    else:
+                        mm[k][o:o + n] = D[k] if k != "gid" else gi
                 if weighted:
                     # rows are side-major (each side's steps ascending): a step reset starts the next side
                     st_ = D["step"].astype(np.int64)
@@ -722,6 +1072,7 @@ def main(out, dirs):
                    "filtered_games": filtered,
                    "terminal_games": terminal_games,
                    "terminal_short_games": terminal_short,
+                   "labels": label_cov,
                    "fields": {k: {"file": k + ".npy", "rows": total,
                                   "sha256": _sha256_file(os.path.join(staging, k + ".npy"))}
                               for k in fields}}
@@ -734,6 +1085,20 @@ def main(out, dirs):
                 os.replace(staging, gen_dir)
         finally:
             shutil.rmtree(staging, ignore_errors=True)
+    # Derived-layer snapshot: which derived files (bytes) predate this
+    # publish, and which generation was current before it -- the
+    # declaration written after the pointer switch binds pre-existing
+    # derived files to the generation they were derived from.
+    _pre_derived = {}
+    for _dn in DERIVED_FILES:
+        _dp = os.path.join(out, _dn)
+        if os.path.exists(_dp):
+            _pre_derived[_dn] = _sha256_file(_dp)
+    _prev_gen = None
+    try:
+        _prev_gen = json.load(open(os.path.join(out, "current.json")))["generation"]
+    except Exception:
+        _prev_gen = None
     # Legacy flat view: refresh from the sealed generation (arrays first,
     # meta.json last as the flat commit marker), via a temp dir so each
     # individual file still lands by os.replace. Derived files written
@@ -777,6 +1142,10 @@ def main(out, dirs):
         os.remove(os.path.join(out, "BUILD_FAILED.json"))
     except OSError:
         pass
+    # Derived-layer declaration for whatever post-processing files sit
+    # in the flat root now (never generation fields, never generation
+    # content): sidecar + flat meta mirror, refreshed every publish.
+    _refresh_derived_declaration(out, gen_id, _prev_gen, _pre_derived, set(fields))
     # Prune generations older than the previous one (best effort): keep
     # the current generation and the one it replaced for rollback reads.
     try:
@@ -802,6 +1171,8 @@ def main(out, dirs):
     if terminal_games:
         rep["terminal_games"] = terminal_games
         rep["terminal_short_games"] = terminal_short
+    if raw_games:
+        rep["labels"] = label_cov
     rep["generation"] = gen_id
     if weighted:
         w = w_copy
