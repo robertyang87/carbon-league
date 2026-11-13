@@ -220,3 +220,46 @@ v1.0 中与下列冲突的表述以本节为准。
   q/ΔU 双闸驱动 `code/stage1_teacher_gate.py`、本定版。
   接线底本为工程组接线代理的工作副本（~/workspace/s12work），策略组
   复审补正一处：教师续弈守卫快照按席位索引（me=1 防错配）。
+
+## 9. v1.2 勘误（2026-11-13，Codex 第二轮复核 91cab34d 后）
+
+第二轮复核在 v1.1 上确认六项按原范围关闭，S02/S03/S08 部分关闭，余
+1 P1＋2 P2＋P3 若干。处置如下，本节与 §8 冲突处以本节为准。
+
+- **R21（P1，S03 残余）**：q 闸的**场景收益、严格改善率、硬/软锚点**
+  裁决输入全部改读按局统计（game_mean／逐局改善率）；逐根均值只留在
+  报告中，不再进入任何裁决条件。复核的均值异号反例（硬锚点按根
+  +0.0507／按局 −0.0133、软锚点按根 +0.0315／按局 −0.0083）在新版
+  判 **INDETERMINATE**（点估计未过、软区间上界未低于 0，不误判
+  FAIL）；正向例仍 PASS、负锚点例仍 FAIL。
+- **R22（P2，S08 残余）**：pilot 工件资格与配对补齐。Stage A 每趟
+  **无条件发布属于本趟 run_id 的 sidecar**（零方差/不合格也发诊断级
+  工件，旧 sidecar 不再残留）；工件带 `grade`（formal 须同时满足：
+  σ_game 可估且 >0、规范未截断配置、训练隔离已跑、≥10 局且 ≥30 根）
+  与 `grade_reasons`、`pilot_run_id`、ds 清单 md5 与 train_data_version。
+  Stage B 校验 grade、（可选）`--expect-pilot-run-id` 配对、pilot 局表
+  与本趟训练清单的交叉隔离、训练版本一致；四类 A→B 流程（诊断 pilot
+  升格／训练集 pilot／版本变更／零方差旧 sidecar）在新版全部拒绝，
+  合格 pilot→Stage B PASS 不受影响。
+- **R23（P2，S02 残余）**：认证对象绑定**训练目标分布**。新增
+  `--train-temp`（默认 1.0＝原始 q）：q 闸的软收益与全臂软锚点一律
+  按 `q ** train_temp` 归一化分布计算，结论只覆盖该分布；每个结果头
+  记录 `train_temp` 与 `certified_target`。`--behavior-temp` 只影响
+  报告中的行为分布收益，不再进入裁决。复核反例（τ=2 行为收益
+  +0.00431、原 q 收益 −0.01857）在默认训练目标下判 **FAIL**；若训练
+  确实改用 q^τ 目标，传 `--train-temp τ` 即可按该目标认证。
+- **P3**：`evaluate_root` 入口改用 `_is_terminal` 统一拒绝已终局根
+  （含 step≥299 到时根，复核三例由「推进」变「抛 ValueError、零
+  转移」）；§8 中「已终局根均抛 ValueError」的表述至此才完整成立。
+  验收加固续：a3_teacher 的 finite/非负/归一断言覆盖 guard-on 路径，
+  a3 compare 与 a3_teacher 锁 fixture 数量与唯一身份（单条/重复 63 条
+  均拒绝）。功效字段改名 `power_significance_only_at_locked` 并新增
+  `power_conjunction_approx_at_locked`（含样本均值 ≥0.02 业务门的
+  近似放行率）与 `power_note` 说明口径。
+
+验证（Studio，同一最终版）：R2 六个证据脚本复跑——method（R21/R23
+翻转＋正负对照不变）、inputs（R22 四项翻转＋合格链路不变）、terminal
+（S01 路由保持＋到时根拒绝）、docs 合成例（断言覆盖按预期）、
+candidates（S05 保持 0.0）；自家验收 A1/A2/A3/A3-teacher 全过。
+runtime 探针（S04）本轮未复跑：其作用面文件（guided_match、search）
+与 v1.1 已验版本逐字节相同。
