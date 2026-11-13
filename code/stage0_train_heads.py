@@ -5,7 +5,23 @@ save merged weights (init arrays + trained heads) as a new npz.
 Run from code/:
   BC_DEVICE=cuda BC_RAM=1 BC_BS=256 python3 stage0_train_heads.py \
     <ds_dir> <init.npz> <out.npz> [epochs=20]
-Labels/loss identical to stage0_smoke_heads.head_losses (atanh-derived);
+Labels: EXACT labels first (owner review pt.7 follow-up, 2026-11-13).
+When the dataset carries margin_raw/u_raw/label_status columns
+(cnet2_build exact-label contract), targets come from those columns --
+per row, never silently mixed: rows with finite raw values are exact,
+rows without fall back to the atanh-derived approximation and are
+counted as approx in the log and in the product manifest
+(<out>.manifest.json: approx_labels=true whenever any approx row is
+present, label_source recorded). Without the columns the whole dataset
+is approx (source "tanh-inverse(value)") and the manifest says so.
+Value-loss masking: rows with label_status == LABEL_UNUSABLE (an
+unusable game result -- double execution fault / missing data) are
+excluded from the U and margin losses AND from the WDL cross-entropy:
+their result class does not exist, so no head target is defined for
+them. (The BC policy loss lives in cnet2_train, does not consume these
+columns, and is unaffected by this mask.) Approx rows DO enter the
+value losses -- they are counted separately, not excluded.
+Loss composition otherwise identical to stage0_smoke_heads.head_losses;
 margin head loss is MSE (expectation head, F10).
 Calibration (F12): the headline U-calibration bins by PREDICTED u and checks
 E[U | predicted u] ~= predicted u; the old target-binned statistic is kept
@@ -26,17 +42,100 @@ import cnet2_train as CT
 from cnet2_model import CNet2, migrate_state_dict
 from stage0_smoke_heads import head_losses
 
+# Label-status codes -- MUST match cnet2_build (LABEL_* there).
+LABEL_EXACT, LABEL_APPROX, LABEL_UNUSABLE = 0, 1, 2
+
+
 def targets(b):
+    """Per-row head targets. Exact raw columns win row by row; rows
+    whose raw value is NaN (approx rows) fall back to the atanh-derived
+    target from the legacy value field."""
     mg = 3000.0 * torch.atanh(b["value"].clamp(-0.999, 0.999))
+    if "margin_raw" in b:
+        mr = b["margin_raw"].float()
+        mg = torch.where(torch.isfinite(mr), mr, mg)
     w = torch.where(mg > 0, torch.ones_like(mg), torch.where(mg < 0, torch.zeros_like(mg), torch.full_like(mg, 0.5)))
     u_tgt = 0.5 * w + 0.5 * torch.sigmoid(mg / 1000.0)
+    if "u_raw" in b:
+        ur = b["u_raw"].float()
+        u_tgt = torch.where(torch.isfinite(ur), ur, u_tgt)
     cls = torch.where(mg > 0, torch.zeros_like(mg, dtype=torch.long),
                       torch.where(mg < 0, torch.full_like(mg, 2, dtype=torch.long), torch.ones_like(mg, dtype=torch.long)))
     return mg, u_tgt, cls
 
+
+def _usable_mask(b, n):
+    """Rows allowed into value-family losses: everything except
+    label_status == LABEL_UNUSABLE. Also returns per-status counts."""
+    if "label_status" in b:
+        st = b["label_status"]
+        return st != LABEL_UNUSABLE, {
+            "exact": int((st == LABEL_EXACT).sum()),
+            "approx": int((st == LABEL_APPROX).sum()),
+            "unusable": int((st == LABEL_UNUSABLE).sum())}
+    return torch.ones(n, dtype=torch.bool, device=b["value"].device), {
+        "exact": 0, "approx": int(n), "unusable": 0}
+
+
+def masked_head_losses(net, b):
+    """head_losses with exact-label targets + the unusable mask.
+    Returns (loss, l_u, l_wdl, l_m, acc, mae, u_range, counts)."""
+    lg, v, aux, u, wdl, mk = net.forward_heads(b)
+    mg, u_tgt, cls = targets(b)
+    usable, counts = _usable_mask(b, mg.numel())
+    nu = int(usable.sum())
+
+    def _mse(pred, tgt):
+        if nu == 0:
+            return (pred * 0.0).sum()   # no usable rows: zero, graph intact
+        return Fn.mse_loss(pred[usable], tgt[usable])
+
+    l_u = _mse(u, u_tgt)
+    l_m = _mse(mk, mg / 1000.0)
+    l_wdl = Fn.cross_entropy(wdl[usable], cls[usable]) if nu else (wdl * 0.0).sum()
+    with torch.no_grad():
+        acc = float((wdl[usable].argmax(1) == cls[usable]).float().mean()) if nu else 0.0
+        mae = float((mk[usable] - mg[usable] / 1000.0).abs().mean() * 1000.0) if nu else 0.0
+        ur = (float(u.min()), float(u.max()))
+    return l_u + 0.25 * l_wdl + 0.25 * l_m, float(l_u), float(l_wdl), float(l_m), acc, mae, ur, counts
+
+
+def load_label_columns(data, D):
+    """Load the builder's exact-label columns (if any) into D and the
+    batch loader. Returns the provenance record used in the log and the
+    product manifest. A PARTIAL column set is a hard error -- provenance
+    is never guessed."""
+    total = len(D["y"])
+    info = {"total_rows": int(total), "exact_rows": 0, "approx_rows": int(total),
+            "unusable_rows": 0, "approx_labels": True,
+            "label_source": "tanh-inverse(value)"}
+    cols = ("margin_raw", "u_raw", "outcome_type", "label_status")
+    have = [k for k in cols if os.path.exists(os.path.join(data, k + ".npy"))]
+    if not have:
+        return info
+    if "label_status" not in have or "margin_raw" not in have:
+        raise SystemExit(
+            f"label columns incomplete in {data}: found {have}; refusing to guess provenance")
+    for k in have:
+        arr = np.load(os.path.join(data, k + ".npy"))
+        if len(arr) != total:
+            raise SystemExit(
+                f"label column {k} has {len(arr)} rows, dataset has {total}: misaligned, refusing")
+        D[k] = arr
+        if k not in CT.LOAD:
+            CT.LOAD.append(k)
+    st = np.asarray(D["label_status"])
+    info.update({"exact_rows": int((st == LABEL_EXACT).sum()),
+                 "approx_rows": int((st == LABEL_APPROX).sum()),
+                 "unusable_rows": int((st == LABEL_UNUSABLE).sum())})
+    info["approx_labels"] = info["approx_rows"] > 0
+    info["label_source"] = ("mixed: margin_raw/u_raw exact + tanh-inverse approx"
+                            if info["approx_rows"] else "margin_raw/u_raw (exact)")
+    return info
+
 def evaluate(net, D, va, bs):
     net.eval()
-    us, uts, preds, clss, mks, mgs = [], [], [], [], [], []
+    us, uts, preds, clss, mks, mgs, sts = [], [], [], [], [], [], []
     with torch.no_grad():
         for b in CT.loader(D, va, bs, aug=False, shuffle=False):
             _, _, _, u, wdl, mk = net.forward_heads(b)
@@ -44,9 +143,17 @@ def evaluate(net, D, va, bs):
             us.append(u.cpu().numpy()); uts.append(u_tgt.cpu().numpy())
             preds.append(wdl.argmax(1).cpu().numpy()); clss.append(cls.cpu().numpy())
             mks.append(mk.cpu().numpy()); mgs.append((mg / 1000.0).cpu().numpy())
+            if "label_status" in b:
+                sts.append(b["label_status"].cpu().numpy())
     u = np.concatenate(us); ut = np.concatenate(uts)
     pr = np.concatenate(preds); cl = np.concatenate(clss)
     mk = np.concatenate(mks); mg = np.concatenate(mgs)
+    if sts:
+        # Unusable rows have no defined targets: exclude them from every
+        # value metric and from calibration (their fallback targets are
+        # placeholders, not labels).
+        keep = np.concatenate(sts) != LABEL_UNUSABLE
+        u, ut, pr, cl, mk, mg = u[keep], ut[keep], pr[keep], cl[keep], mk[keep], mg[keep]
     # Diagnostic ONLY (renamed, F12): residual stratified by TARGET u. This is
     # NOT calibration -- it bins on the observed value, not the prediction.
     tbins = np.clip((ut * 10).astype(int), 0, 9)
@@ -84,6 +191,8 @@ def main():
     epochs = int(sys.argv[4]) if len(sys.argv) > 4 else 20
     bs = int(os.environ.get("BC_BS", "256"))
     D, is_val, meta = CT.load(data)
+    label_info = load_label_columns(data, D)
+    print(json.dumps({"labels": label_info}), flush=True)
     tr = np.nonzero(~is_val)[0]; va = np.nonzero(is_val)[0]
     w = np.load(init)
     cfg = json.loads(str(w["meta"]))["cfg"]
@@ -107,10 +216,13 @@ def main():
     for ep in range(1, epochs + 1):
         net.train()
         hs = []
+        cnt = {"exact": 0, "approx": 0, "unusable": 0}
         for b in CT.loader(D, tr, bs, aug=False, shuffle=True):
-            loss, l_u, l_wdl, l_m, acc, mae, ur = head_losses(net, b)
+            loss, l_u, l_wdl, l_m, acc, mae, ur, c1 = masked_head_losses(net, b)
             opt.zero_grad(set_to_none=True); loss.backward(); opt.step(); sched.step()
             hs.append((l_u, l_wdl, l_m))
+            for k in cnt:
+                cnt[k] += c1[k]
         h = np.array(hs)
         ev = evaluate(net, D, va, bs)
         # F10 hard gate: non-finite train/val metrics abort before any print/save.
@@ -122,6 +234,9 @@ def main():
             raise SystemExit(f"F10 gate: non-finite train/val metric at epoch {ep}; nothing saved")
         print("EPOCH", json.dumps({"ep": ep, "train_l_u": round(float(h[:, 0].mean()), 5),
               "train_l_wdl": round(float(h[:, 1].mean()), 4), "train_l_m": round(float(h[:, 2].mean()), 4),
+              "train_label_exact": cnt["exact"], "train_label_approx": cnt["approx"],
+              "train_label_unusable": cnt["unusable"],
+              "train_value_rows": cnt["exact"] + cnt["approx"],
               **ev, "s": round(time.time() - t0)}), flush=True)
     # F10 hard gate: never publish non-finite parameters.
     if not all(bool(torch.isfinite(p).all()) for p in net.parameters()):
@@ -129,7 +244,17 @@ def main():
     sd_out = {k: v.detach().cpu().numpy() for k, v in net.state_dict().items()}
     sd_out["meta"] = w["meta"]
     np.savez(out, **sd_out)
-    print("TRAIN-DONE", json.dumps({"out": out, "s": round(time.time() - t0)}), flush=True)
+    # Product manifest: label provenance is part of the product record --
+    # approx_labels=true whenever ANY training row used the tanh-inverse
+    # approximation (pure-approx datasets included), never silent.
+    manifest = {"out": out, "dataset": data, "init": init, "epochs": epochs,
+                "labels": label_info, "s": round(time.time() - t0)}
+    man_path = out + ".manifest.json"
+    with open(man_path, "w") as fh:
+        json.dump(manifest, fh)
+    print("TRAIN-DONE", json.dumps({"out": out, "manifest": man_path,
+                                    "labels": label_info,
+                                    "s": round(time.time() - t0)}), flush=True)
 
 if __name__ == "__main__":
     main()
