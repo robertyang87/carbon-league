@@ -10,10 +10,14 @@ Margin/win follow eval_v53 exactly (F01/F04 terminal score):
   finish scores the cash it carried INTO the terminal step; a plain
   time-out finish scores final cash. margin = score[me] - score[opp].
 
-Both arms use the SAME raw Policy (m3s2r1), guards off, so the delta
-isolates the teacher: guided = argmax q arm per step; greedy = argmax
-decode per step. Opponents are the exam-stack agents (Master2 real /
-Echo2 search-agent CONF), unchanged.
+Both arms use the SAME Policy (m3s2r1) under the production guard config
+(GUARD=True, GUARD_NARROW=True, GUARD_CASH=40.0, LOWW=2), so the delta
+isolates the teacher: guided = argmax q arm per step (the teacher applies
+the guard internally, stage0_teacher guard="on" default); greedy = NP
+policy argmax decode per step plus the same BankruptcyGuard. (Pre-S1 this
+driver ran guards off on both arms; that posture is retired -- it measured
+a guard-off delta that production never sees.) Opponents are the
+exam-stack agents (Master2 real / Echo2 search-agent CONF), unchanged.
 
 Usage (from code/):
   python3 stage0_guided_match.py --weights <npz> --opponent master2|echo2
@@ -46,6 +50,7 @@ from fastsim import FastCarbon  # noqa: E402
 from rl2_ppo_cnet2 import Cnet2Actor  # noqa: E402
 import rl2_ppo_adapters as AD  # noqa: E402
 import cnet2_np as NP  # noqa: E402
+from cnet2_search import BankruptcyGuard, CachePolicy  # noqa: E402
 import stage0_teacher as T  # noqa: E402
 
 OPP_FILES = {
@@ -93,7 +98,8 @@ def play_one(task):
     t0 = time.time()
     try:
         w = AD.load_npz(weights)
-        pol = NP.Policy(w)
+        pol = CachePolicy(w)
+        guard_me = BankruptcyGuard(T.TEACHER_GUARD_CFG)
         actor = Cnet2Actor(w)
         opp_agent = load_opp_agent(opp_name)
         me = seed % 2  # bigeval seat rule: side alternates by seed parity
@@ -129,9 +135,12 @@ def play_one(task):
                 arm = r["arms"][int(np.argmax(r["q"]))]
                 a_me = st_me["f"].to_actions(np.asarray(arm, dtype=np.int64))
             else:
-                y, _, _, _, _, _, _ = actor._decode(
-                    x_me, st_me["f"].aux, rng, 1.0, True)
-                a_me = st_me["f"].to_actions(y)
+                y, lg0, _ = pol.act(x_me, st_me["f"].aux, teacher=1)
+                guard_me.reset_step()
+                y = guard_me.apply(x_me, st_me["f"].aux,
+                                   np.asarray(y, dtype=np.int64), lg0, pol,
+                                   st_me["f"].own_uid, 1, {})
+                a_me = st_me["f"].to_actions(np.asarray(y, dtype=np.int64))
             # --- opponent side (exam-stack agent) ---
             try:
                 a_opp = opp_agent(o_opp, None)
