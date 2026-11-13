@@ -22,6 +22,13 @@ def main(a, b, s0, n, tag):
     if os.environ.get("EVO_SEEDS") and len(seeds) != n:
         print(json.dumps({"tag": tag, "ERROR": f"EVO_SEEDS has {len(seeds)} seeds but N={n}; refusing inconsistent exam size"}), file=sys.stderr, flush=True)
         sys.exit(2)
+    # REVIEW_FULL_20261113 F07 (P2): a duplicated explicit seed silently
+    # shrank the exam's independent sample (EVO_SEEDS=17,17 with N=2 exited 0
+    # with n=2, se=0 but only ONE independent seed). The count check above
+    # cannot see it (len still equals N), so reject duplicates up front too.
+    if os.environ.get("EVO_SEEDS") and len(set(seeds)) != len(seeds):
+        print(json.dumps({"tag": tag, "ERROR": "EVO_SEEDS contains duplicate seeds; refusing non-independent exam sample"}), file=sys.stderr, flush=True)
+        sys.exit(2)
     tasks = [(tag, a, b, s, s % 2) for s in seeds]
     live = os.path.join(HERE, "..", "data", "bigeval_live"); os.makedirs(live, exist_ok=True)
     lf = open(os.path.join(live, tag + ".jsonl"), "a")
