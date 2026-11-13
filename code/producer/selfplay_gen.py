@@ -8,6 +8,13 @@ file name, so shards must use disjoint seed ranges).
 
   python3 selfplay_gen.py --weights <npz> --seed0 991000 --seed1 991020 --out <dir> --workers 56
 
+* --max-games is a BATCH-BOUNDARY soft budget, not an exact hard cap:
+  games are dispatched in chunks of --workers, the budget is only
+  re-checked between chunks, so a single run may produce up to
+  workers-1 games beyond --max-games (e.g. --max-games 1 --workers 3
+  can produce 3 games). Size seed ranges, not --max-games, when an
+  exact game count matters.
+
 Player: cnet2_search.make_search_agent with the pack CONF verbatim (code/packs/
 PACK_CONF_TEMPLATE.txt, 13 keys: SEARCH=False, ROLL="self", GUARD=True,
 GUARD_NARROW=True, MODE="sweep", MIX=False, TEACHER=2, TEACHER_LATE=2,
@@ -221,18 +228,56 @@ def _obs_full(sim, p):
     return o
 
 
+def _stats_dicts(ag):
+    """Every DISTINCT stats dict an agent exposes, in priority order:
+
+    1. the ``stats`` attribute -- production make_search_agent attaches
+       its counter dict to the returned function (agent.stats = stats);
+    2. ``__globals__["stats"]`` -- a bare agent function used without
+       the factory tail that attaches the attribute (e.g. exec'd from
+       the make_search_agent AST, as in the final-acceptance in-process
+       probe): its counters live in its global namespace, and reading
+       only the attribute silently misses every swallowed error;
+    3. closure cells holding an error-counter dict (the factory-local
+       stats a returned agent closes over).
+
+    Deduped by identity: the attribute and the closure cell are normally
+    the SAME dict object for a production agent, and it must be counted
+    exactly once -- this is the only counting site, so play() and the
+    CLI/worker layer can never double-report the same increment."""
+    out, seen = [], set()
+
+    def _add(d):
+        if isinstance(d, dict) and id(d) not in seen:
+            seen.add(id(d))
+            out.append(d)
+
+    _add(getattr(ag, "stats", None))
+    g = getattr(ag, "__globals__", None)
+    if isinstance(g, dict):
+        _add(g.get("stats"))
+    for cell in getattr(ag, "__closure__", None) or ():
+        try:
+            v = cell.cell_contents
+        except ValueError:
+            continue
+        if isinstance(v, dict) and any(
+                k == "errors" or k.endswith("_errors") for k in v):
+            _add(v)
+    return out
+
+
 def _agent_error_counters(agents):
-    """Sum the swallowed-error counters the search agent keeps on
-    agent.stats (keys "errors" and "*_errors", e.g. root_errors). Stub
-    agents have no stats -> {} (no-op)."""
+    """Sum the swallowed-error counters the search agent keeps on its
+    stats (keys "errors" and "*_errors", e.g. root_errors), wherever the
+    agent exposes them (see _stats_dicts). Stub agents have no stats
+    -> {} (no-op)."""
     tot = {}
     for ag in agents:
-        st = getattr(ag, "stats", None)
-        if not isinstance(st, dict):
-            continue
-        for k, v in st.items():
-            if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float)):
-                tot[k] = tot.get(k, 0) + int(v)
+        for st in _stats_dicts(ag):
+            for k, v in st.items():
+                if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float)):
+                    tot[k] = tot.get(k, 0) + int(v)
     return tot
 
 
@@ -318,11 +363,15 @@ class _Gen:
             entries.append([{"observation": last[p]["observation"], "action": {},
                              "reward": last[p]["reward"], "status": "DONE", "info": {}}
                             for p in (0, 1)])
-        # F11: swallowed policy errors contaminate the game. The search
-        # root fallback turns exceptions into empty actions + a stats
-        # counter instead of raising, so the outer try alone would write
-        # this game as a normal replay with err=None (round-5 repro:
-        # root_errors=2, replay written). Reject it as an error instead.
+        # F11 + final-acceptance residual 4: swallowed policy errors
+        # contaminate the game. The search root fallback turns exceptions
+        # into empty actions + a stats counter instead of raising, so the
+        # outer try alone would write this game as a normal replay with
+        # err=None (round-5 repro: root_errors=2, replay written). The
+        # increment check lives HERE, in play() itself -- not only in the
+        # CLI/worker layer -- so an in-process caller gets the same
+        # rejection; _stats_dicts finds the counters wherever the agent
+        # exposes them (attribute / __globals__ / closure).
         delta = _counter_delta(err_before, _agent_error_counters(agents))
         if delta:
             return None, nsteps, 0.0, f"policy_errors: {delta}"
@@ -559,7 +608,8 @@ def main():
     ap.add_argument("--name", default="m3s2r1")
     ap.add_argument("--name-a", default=None)
     ap.add_argument("--name-b", default=None)
-    ap.add_argument("--max-games", type=int, default=20)
+    ap.add_argument("--max-games", type=int, default=20,
+                    help="soft budget enforced at batch boundaries only: games are dispatched in chunks of --workers, so a run may overshoot by up to workers-1 games; NOT an exact hard cap")
     ap.add_argument("--max-seconds", type=float, default=180.0)
     ap.add_argument("--warmup", type=int, default=1)
     ap.add_argument("--open-t", type=float, default=None)
