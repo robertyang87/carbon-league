@@ -58,6 +58,9 @@ def main():
     pol_cache = CachePolicy(w)
     R = roots(50)
     print(f"roots: {len(R)}")
+    # Fixture identity lock (Codex R2 P3): the canonical fixture yields 50
+    # roots; a shrunken or duplicated fixture must not silently pass.
+    assert len(R) >= 40, f"fixture shrank: only {len(R)} roots"
     K, M, H = 4, 2, 2
 
     # --- CachePolicy parity (guard off): NP.Policy vs CachePolicy must agree exactly.
@@ -94,6 +97,14 @@ def main():
                                teacher=1, K=K, M=M, H=H, guard="on")
         r_off = T.evaluate_root(sim, me, pol_np, xm, am, xo, ao, fm, fo,
                                 teacher=1, K=K, M=M, H=H, guard=None)
+        # Hardened (Codex R2 P3): the finite/shape/normalisation checks
+        # apply to the guard-ON path too, not only to the parity loop.
+        for r in (r_on, r_off):
+            assert np.isfinite(r["q"]).all() and np.isfinite(r["Q_mean"]).all(), \
+                "non-finite teacher output (guard-on/off smoke)"
+            assert (r["q"] >= 0).all() and abs(float(r["q"].sum()) - 1.0) < 1e-6, \
+                "q not a normalised distribution (guard-on/off smoke)"
+            assert len(r["arms"]) == len(r["q"]) == len(r["Q_mean"])
         q_on.append(r_on["q"])
         q_off.append(r_off["q"])
         qm_on.append(r_on["Q_mean"])
