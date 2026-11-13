@@ -70,11 +70,27 @@ NOTES -- record format, grounded in the repo (2026-11-13):
   buildable only when the build is invoked with the generating policy's name
   in that env, e.g. CNET2_TOP_TEACHERS="m3s2r1@2". The script defaults both
   sides' names to --name (default "m3s2r1"); the caller owns the name.
-* Diversity: with the pack CONF the agent is fully greedy (DEFAULTS
-  OPEN_T=0.0, OPEN_STEPS=50, OPEN_SEED=0) -- per-game diversity comes from
-  the map seed only, exactly as in exams. --open-t/--open-steps/--open-seed
-  override the opening sampler; generation diversity policy is a Stage-1
-  decision, not this script's.
+* Diversity / mirror gate (spec SS14 item 1, 2026-11-13): with the pack
+  CONF the agent is fully greedy (DEFAULTS OPEN_T=0.0). Both seats play
+  the SAME weights, the map is 4-fold symmetric and the features are
+  seat-canonical, so a greedy game is an exact mirror game: identical
+  final scores, margin 0, U = 0.5 for both seats, and the two seats'
+  dataset rows are byte-identical (measured: ds_gen1 200/200 games).
+  Such a corpus is not a supervision source. The generator therefore
+  REFUSES to run (exit 2, before any game) unless opening sampling is on
+  (--open-t > 0 and --open-steps > 0) or --allow-mirror is given
+  explicitly (pipeline rehearsals only; recorded in the identity).
+  Opening sampling: the first --open-steps moves are sampled at
+  temperature --open-t; each game gets its OWN opening seed,
+  (open_seed_base * 1000003 + game_seed) mod 2^31, and the search agent
+  derives the two seats' streams from it (OPEN_SEED * 7 + seat), so the
+  seats differ and a game is reproducible from (weights, config, seed)
+  alone. The diversity block {mode, open_t, open_steps, open_seed_base,
+  open_seed_rule} is part of the run identity (identity.json, every
+  index entry, every replay); each entry also carries its "open_seed"
+  and "mirror_signature" (final scores equal). A run that still ends
+  with more than half of its games mirror-signed fails (exit 1) unless
+  --allow-mirror.
 * Extinction: FastCarbon does not model it; the generator applies the
   original-env rule itself (same logic as cnet2_search._extinct /
   rl2_ppo_rollout._extinct) and pads the remaining entries to 300 with the
@@ -200,7 +216,30 @@ def _md5_file(path):
         return None
 
 
-def _run_identity(weights, conf, name_a, name_b):
+OPEN_SEED_RULE = "(open_seed_base * 1000003 + game_seed) mod 2^31"
+MIRROR_FAIL_SHARE = 0.5
+
+
+def game_open_seed(base, seed):
+    """Per-game opening seed (see module docstring)."""
+    return (int(base) * 1000003 + int(seed)) % (1 << 31)
+
+
+def diversity_of(conf, allow_mirror=False):
+    """The run's diversity declaration. mode "open-sampling" requires a
+    positive opening temperature over at least one step; anything else is
+    "greedy-mirror" (same weights + greedy = exact mirror games)."""
+    sampled = float(conf.get("OPEN_T") or 0.0) > 0.0 and int(conf.get("OPEN_STEPS", 50) or 0) > 0
+    return {"mode": "open-sampling" if sampled else "greedy-mirror",
+            "open_t": float(conf.get("OPEN_T") or 0.0),
+            "open_steps": int(conf.get("OPEN_STEPS", 50) or 0),
+            "open_kinds": conf.get("OPEN_KINDS"),
+            "open_seed_base": int(conf.get("OPEN_SEED", 0) or 0),
+            "open_seed_rule": OPEN_SEED_RULE,
+            "allow_mirror": bool(allow_mirror)}
+
+
+def _run_identity(weights, conf, name_a, name_b, diversity=None):
     """The identity a generated game belongs to: agent weights bytes,
     the full generation config (CONF + opening overrides + names) and
     the rules/code hashes. Deterministic -- no timestamps -- so two
@@ -214,7 +253,8 @@ def _run_identity(weights, conf, name_a, name_b):
                             if weights and os.path.exists(weights) else "absent"),
             "config_hash": hashlib.sha256(
                 json.dumps(cfg, sort_keys=True, default=str).encode()).hexdigest(),
-            "config": cfg, "names": [name_a, name_b], "code_md5": code}
+            "config": cfg, "names": [name_a, name_b], "code_md5": code,
+            "diversity": diversity}
 
 
 def _obs_full(sim, p):
@@ -314,6 +354,14 @@ class _Gen:
         random.seed(eval_v53.rng_seed(seed, a_side))
         sim = FastCarbon(CFG).reset(seed=seed)
         agents = self._agents()
+        # Per-game opening seed: the agent re-seeds its opening sampler from
+        # cfg["OPEN_SEED"] at step 0 (cnet2_search: OPEN_SEED * 7 + seat), and
+        # agent.cfg IS the dict its closure reads. Without this every game of
+        # a run replayed the same opening random stream.
+        open_seed = game_open_seed(self.conf.get("OPEN_SEED", 0) or 0, seed)
+        for ag in agents:
+            if isinstance(getattr(ag, "cfg", None), dict):
+                ag.cfg["OPEN_SEED"] = open_seed
         repdir = os.path.join(outdir, "replays")
         os.makedirs(repdir, exist_ok=True)
         fname = f"selfplay-{seed}.json.gz"
@@ -389,6 +437,8 @@ class _Gen:
                                   "winner_side": 0 if scores[0] > scores[1] else
                                   (1 if scores[1] > scores[0] else None),
                                   "a_side": a_side, "outcome": "normal",
+                                  "open_seed": open_seed,
+                                  "mirror_signature": bool(float(scores[0]) == float(scores[1])),
                                   "identity": self.identity,
                                   "terminal": True, "end_reason": end_reason}}
             # F11: atomic commit -- temp file in the same dir, verified by
@@ -419,6 +469,8 @@ class _Gen:
                  "steps": nsteps, "file": f"replays/{fname}",
                  "terminal": True, "end_reason": end_reason,
                  "outcome": "normal", "identity": self.identity,
+                 "open_seed": open_seed,
+                 "mirror_signature": bool(float(sa) == float(sb)),
                  "sha256": sha, "bytes": nbytes,
                  "created": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                  "strategies": {"a": {"id": "", "name": self.name_a},
@@ -614,7 +666,11 @@ def main():
     ap.add_argument("--warmup", type=int, default=1)
     ap.add_argument("--open-t", type=float, default=None)
     ap.add_argument("--open-steps", type=int, default=None)
-    ap.add_argument("--open-seed", type=int, default=None)
+    ap.add_argument("--open-seed", type=int, default=None,
+                    help="opening-seed BASE; each game derives its own seed from it and the game seed")
+    ap.add_argument("--allow-mirror", action="store_true",
+                    help="permit greedy same-weights self-play (exact mirror games: margin 0, U 0.5, "
+                         "duplicated rows). Pipeline rehearsals only -- never a supervision source")
     a = ap.parse_args()
     conf = dict(CONF)
     if a.open_t is not None:
@@ -625,7 +681,14 @@ def main():
         conf["OPEN_SEED"] = a.open_seed
     name_a = a.name_a or a.name
     name_b = a.name_b or a.name
-    identity = _run_identity(a.weights, conf, name_a, name_b)
+    diversity = diversity_of(conf, a.allow_mirror)
+    identity = _run_identity(a.weights, conf, name_a, name_b, diversity)
+    if diversity["mode"] != "open-sampling" and not a.allow_mirror and not STUB:
+        print(f"{MARK} FAIL mirror-gate: same weights on both seats + greedy play (OPEN_T="
+              f"{diversity['open_t']}, OPEN_STEPS={diversity['open_steps']}) produces exact mirror "
+              f"games (margin 0, U 0.5, duplicated rows). Pass --open-t > 0 (and --open-steps > 0), "
+              f"or --allow-mirror for a declared rehearsal run. Nothing generated.", flush=True)
+        return 2
     if not STUB and not os.path.exists(a.weights):
         print(f"{MARK} FAIL weights-missing {a.weights}", flush=True)
         return 1
@@ -741,6 +804,14 @@ def main():
     with open(id_tmp, "w", encoding="utf-8") as f:
         json.dump({"identity": identity}, f, ensure_ascii=False)
     os.replace(id_tmp, os.path.join(a.out, "identity.json"))
+    # Mirror signature over this corpus (all committed entries): a run that
+    # is nominally sampled but still mostly mirror games is a failure.
+    n_sig = sum(1 for e in done_entries if e.get("mirror_signature") is True or
+                (e.get("mirror_signature") is None and e.get("margin", {}).get("a") == 0))
+    mirror_share = (n_sig / len(done_entries)) if done_entries else 0.0
+    if mirror_share > MIRROR_FAIL_SHARE and not a.allow_mirror and not STUB:
+        errors.append({"seed": None, "err": f"mirror_signature on {n_sig}/{len(done_entries)} games "
+                                             f"(> {MIRROR_FAIL_SHARE:.0%}); corpus is not a supervision source"})
     import statistics as st
     res = {"games": games, "wall_s": round(wall, 1), "total_wall_s": round(total_wall, 1),
            "games_per_min": round(games / (wall / 60.0), 2) if wall > 0 else 0,
@@ -751,7 +822,8 @@ def main():
            "eff_cores": round(cpu_tot / wall, 2) if wall > 0 else 0,
            "errors": errors, "budget_hit": budget, "stub": STUB,
            "adopted": adopted, "identity_mismatches": len(mismatched),
-           "identity": identity,
+           "identity": identity, "diversity": diversity,
+           "mirror_signature_games": n_sig, "mirror_signature_share": round(mirror_share, 4),
            "repaired_drops": sum(1 for d_ in dropped if d_["seed"] in have),
            "weights": a.weights, "conf": {k: conf[k] for k in sorted(conf)},
            "out": a.out}

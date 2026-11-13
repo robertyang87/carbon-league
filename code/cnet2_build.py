@@ -876,6 +876,27 @@ def resolve_dataset(out, verify=True):
     return load_generation(out, verify=verify)[0]
 
 
+MIRROR_GATE_SHARE = 0.5
+
+
+def mirror_signature(games):
+    """Mirror-degeneracy signature of same-policy self-play (spec SS14).
+
+    A game is SAME-POLICY SELF-PLAY when both sides are kept as teacher
+    sides under one strategy name (never true of a ladder game). The map
+    is 4-fold symmetric and the features are seat-canonical, so a greedy
+    net against itself plays an exact mirror game: both seats finish on
+    the identical score to the cent, every value label is 0 (U = 0.5) and
+    the two seats' rows are byte-identical duplicates. The signature read
+    here is the cheap index-level one: equal final scores. Returns
+    {"selfplay_games", "mirrored_games", "share"}."""
+    sp = [g for g in games if len(g.get("sides", ())) == 2
+          and g["names"][0] == g["names"][1] and not g.get("missing_replay")]
+    mir = [g for g in sp if float(g["scores"][0]) == float(g["scores"][1])]
+    return {"selfplay_games": len(sp), "mirrored_games": len(mir),
+            "share": (len(mir) / len(sp)) if sp else 0.0}
+
+
 def main(out, dirs):
     assert_not_in_generation(out, "build a dataset into")
     os.makedirs(os.path.join(out, "shards"), exist_ok=True)
@@ -890,6 +911,21 @@ def main(out, dirs):
             shutil.rmtree(os.path.join(out, "generations", stale), ignore_errors=True)
     weighted = os.environ.get("CNET2_WEIGHTED") == "1"
     games, missing, filtered = _scan(dirs, weighted=weighted)
+    # Mirror gate (spec SS14 item 2): a corpus whose same-policy self-play
+    # games are mostly exact mirror games is not a supervision source --
+    # refuse the whole batch before any shard is built or anything is
+    # published (the previous product, if any, stays untouched).
+    # CNET2_ALLOW_MIRROR=1 is the explicit opt-in for pipeline rehearsals;
+    # the counts are declared in meta.json either way.
+    mirror = mirror_signature(games)
+    mirror["allowed"] = os.environ.get("CNET2_ALLOW_MIRROR") == "1"
+    if mirror["share"] > MIRROR_GATE_SHARE and not mirror["allowed"]:
+        print(json.dumps({"MIRROR-GATE": "FAIL", **mirror}), flush=True)
+        raise SystemExit(
+            f"mirror gate: {mirror['mirrored_games']}/{mirror['selfplay_games']} same-policy "
+            f"self-play games end on identical scores (mirror games: value labels all 0, "
+            f"duplicated rows); refusing to build. Regenerate the corpus with opening "
+            f"sampling, or set CNET2_ALLOW_MIRROR=1 for a declared rehearsal build")
     # N03: missing-but-eligible games join the games list as declared
     # failures (no task is built for them; their gi is pre-seeded into
     # errs below), exactly like a bad-gzip game: default abort, or a
@@ -1077,7 +1113,8 @@ def main(out, dirs):
             "failed_games": failed, "partial": bool(failed),
             "valid_games": valid, "filtered_games": filtered,
             "labels": label_cov,
-            "terminal_games": terminal_games, "terminal_short_games": terminal_short}
+            "terminal_games": terminal_games, "terminal_short_games": terminal_short,
+            "mirror_gate": mirror}
     # F05 (REVIEW_FULL_20261113): publish as one immutable GENERATION.
     # The R2 temp-dir merge protected only the merge phase; the per-field
     # os.replace sequence into `out` could still expose (or, on an
