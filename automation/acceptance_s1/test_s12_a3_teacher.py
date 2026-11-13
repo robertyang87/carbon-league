@@ -58,9 +58,17 @@ def main():
     pol_cache = CachePolicy(w)
     R = roots(50)
     print(f"roots: {len(R)}")
-    # Fixture identity lock (Codex R2 P3): the canonical fixture yields 50
-    # roots; a shrunken or duplicated fixture must not silently pass.
-    assert len(R) >= 40, f"fixture shrank: only {len(R)} roots"
+    # Canonical fixture lock (Codex R3 P3-a): exactly 50 roots, each with a
+    # unique identity (root observation hash + seat); duplicates or any
+    # other count are not the canonical fixture.
+    import hashlib
+    ids = set()
+    for (root_full, me, *_rest) in R:
+        ids.add(hashlib.sha256(
+            json.dumps(root_full, sort_keys=True, default=str).encode()
+            + f"|{me}".encode()).hexdigest())
+    assert len(R) == 50 and len(ids) == 50, \
+        f"non-canonical root fixture: {len(R)} roots, {len(ids)} unique"
     K, M, H = 4, 2, 2
 
     # --- CachePolicy parity (guard off): NP.Policy vs CachePolicy must agree exactly.
