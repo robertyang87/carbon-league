@@ -9,7 +9,11 @@ import sys
 
 import numpy as np
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cnet2_build import assert_not_in_generation, register_derived  # noqa: E402
+
 ds = sys.argv[1]; car_w = float(sys.argv[2]) if len(sys.argv) > 2 else 0.0
+assert_not_in_generation(os.path.abspath(ds), "set_uw write weights into")
 pl_w = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0; base_w = float(sys.argv[4]) if len(sys.argv) > 4 else 1.0
 kind = np.load(os.path.join(ds, "tok_kind.npy"), mmap_mode="r"); y = np.load(os.path.join(ds, "y.npy"), mmap_mode="r")
 N, S = y.shape
@@ -20,6 +24,20 @@ w = np.ones(N, np.float32)
 if end_w != 1.0:
     w[np.load(os.path.join(ds, "step.npy")) >= end_from] = end_w
 np.save(os.path.join(ds, "uw.npy"), uw); np.save(os.path.join(ds, "w.npy"), w)
+# Derived-layer registration (owner pt.4 / final acceptance): w/uw are
+# post-processing products, never generation fields -- register them in
+# the dataset root sidecar so cnet2_train.load can verify their identity
+# (base generation, rows, sha256) before consuming them.
+try:
+    _side = register_derived(ds, [os.path.join(ds, "uw.npy"), os.path.join(ds, "w.npy")],
+                              params={"car_w": car_w, "planter_w": pl_w, "base_w": base_w,
+                                      "end_w": end_w, "end_from": end_from, "tool": "set_uw"})
+    print({"derived_layer": _side["format"],
+           "base_generation": next(iter(_side["files"].values()))["base_generation"]})
+except FileNotFoundError:
+    print({"derived_layer": "WARNING: no generation pointer in dataset; w/uw left "
+                            "UNREGISTERED (legacy dataset) -- consumers will flag "
+                            "derived identity as unverified"})
 v = np.asarray(y) >= 0; k = np.asarray(kind[:, :10])
 print({"rows": int(N), "planter_tokens": int((v[:, :10] & (k == 1)).sum()), "car_tokens": int((v[:, :10] & (k == 0)).sum()),
        "base_tokens": int(v[:, 10:].sum()), "car_w": car_w, "planter_w": pl_w, "base_w": base_w,
