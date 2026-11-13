@@ -1,0 +1,257 @@
+{
+  "reviewed_sha": "8fc10d075e28599359e3f10dbbca292642478537",
+  "scope": "AST-isolated synthetic acceptance functions; source hashes and Git inventory; actual roots/FastCarbon/Feat producer with synthetic replay actions",
+  "packs": {
+    "cnet2_np.py": {
+      "source_sha256": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+      "pack_sha256": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+      "source_equals_pack": true,
+      "source_unchanged_since_7b025ae5": true
+    },
+    "cnet2_search.py": {
+      "source_sha256": "ac4f6e86d05dd447ca81deb3ff24b7e6cbbe97faecf498c1be51f06eabd7fc87",
+      "pack_sha256": "ac4f6e86d05dd447ca81deb3ff24b7e6cbbe97faecf498c1be51f06eabd7fc87",
+      "source_equals_pack": true,
+      "source_unchanged_since_7b025ae5": true
+    }
+  },
+  "canonical_heads_named_files": [],
+  "acceptance_files": [
+    "automation/acceptance_s1/README.md",
+    "automation/acceptance_s1/test_s12_a1.py",
+    "automation/acceptance_s1/test_s12_a2.py",
+    "automation/acceptance_s1/test_s12_a3.py",
+    "automation/acceptance_s1/test_s12_a3_teacher.py"
+  ],
+  "acceptance_syntax": {
+    "automation/acceptance_s1/test_s12_a1.py": "PASS",
+    "automation/acceptance_s1/test_s12_a2.py": "PASS",
+    "automation/acceptance_s1/test_s12_a3.py": "PASS",
+    "automation/acceptance_s1/test_s12_a3_teacher.py": "PASS"
+  },
+  "a3_compare": {
+    "empty_original_counterexample": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "length mismatch or empty comparison"
+      },
+      "stdout": ""
+    },
+    "equal_errors_original_counterexample": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-zero errors in parity fixtures"
+      },
+      "stdout": ""
+    },
+    "single_position_only": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-canonical parity fixture: 1 entries (want 63)"
+      },
+      "stdout": ""
+    },
+    "63_duplicate_positions": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "duplicate fixture identities"
+      },
+      "stdout": ""
+    },
+    "63_unique_positive": {
+      "accepted": true,
+      "error": null,
+      "stdout": "agent parity: 63 positions, diffs=0\n"
+    },
+    "50_unique_shrunken": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-canonical parity fixture: 50 entries (want 63)"
+      },
+      "stdout": ""
+    }
+  },
+  "a3_teacher": {
+    "all_nan": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-finite teacher output"
+      },
+      "stdout": "roots: 50\n",
+      "calls": {
+        "off": 2,
+        "on": 0
+      }
+    },
+    "unnormalized": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "q not normalised"
+      },
+      "stdout": "roots: 50\n",
+      "calls": {
+        "off": 2,
+        "on": 0
+      }
+    },
+    "guard_on_nan": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-finite teacher output (guard-on/off smoke)"
+      },
+      "stdout": "roots: 50\nCachePolicy parity (guard off): max |dq|=0.000e+00 over 50 roots (0s)\n",
+      "calls": {
+        "off": 101,
+        "on": 1
+      }
+    },
+    "negative_mass": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "q not a normalised distribution (guard-on/off smoke)"
+      },
+      "stdout": "roots: 50\nCachePolicy parity (guard off): max |dq|=0.000e+00 over 50 roots (0s)\n",
+      "calls": {
+        "off": 101,
+        "on": 1
+      }
+    },
+    "shape_mismatch": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": ""
+      },
+      "stdout": "roots: 50\nCachePolicy parity (guard off): max |dq|=0.000e+00 over 50 roots (0s)\n",
+      "calls": {
+        "off": 101,
+        "on": 1
+      }
+    },
+    "normal": {
+      "accepted": true,
+      "error": null,
+      "stdout": "roots: 50\nCachePolicy parity (guard off): max |dq|=0.000e+00 over 50 roots (0s)\nguard-on smoke: 50 roots OK, guard_moves=0, guard_recruit=0 (0s, K=4 M=2 H=2)\nguard on/off (report only, same 50 roots):\n  roots with any q change: 0/50\n  mean |q_on - q_off| = 0.0000, max = 0.0000\n  Q_mean on  = 0.7500 +- 0.0500\n  Q_mean off = 0.7500 +- 0.0500\n  mean(Q_on - Q_off) per root: mean=+0.0000, min=+0.0000, max=+0.0000\nA3 teacher PASS (smoke ran; parity exact; on/off differences reported)\n",
+      "calls": {
+        "off": 150,
+        "on": 50
+      }
+    },
+    "single_root_only": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-canonical root fixture: 1 roots, 1 unique"
+      },
+      "stdout": "roots: 1\n",
+      "calls": {
+        "off": 0,
+        "on": 0
+      }
+    },
+    "40_unique_shrunken": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-canonical root fixture: 40 roots, 40 unique"
+      },
+      "stdout": "roots: 40\n",
+      "calls": {
+        "off": 0,
+        "on": 0
+      }
+    },
+    "50_duplicate_roots": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-canonical root fixture: 50 roots, 1 unique"
+      },
+      "stdout": "roots: 50\n",
+      "calls": {
+        "off": 0,
+        "on": 0
+      }
+    }
+  },
+  "actual_drive_agent_identity_positive": {
+    "drive": {
+      "old": {
+        "accepted": true,
+        "error": null,
+        "stdout": "old: 63 positions, guard_moves=0, guard_recruit=0, errors=0\n"
+      },
+      "new": {
+        "accepted": true,
+        "error": null,
+        "stdout": "new: 63 positions, guard_moves=0, guard_recruit=0, errors=0\n"
+      }
+    },
+    "compare": {
+      "accepted": true,
+      "error": null,
+      "stdout": "agent parity: 63 positions, diffs=0\n"
+    },
+    "record_fields": [
+      "game",
+      "t",
+      "acts",
+      "guard_moves",
+      "guard_recruit",
+      "errors"
+    ],
+    "count": 63,
+    "unique_game_t": 63,
+    "fixture_scope": "Actual replay iterator/record producer; synthetic replay observations and no-op policy, no neural parity claim."
+  },
+  "actual_roots_identity_positive": {
+    "n_roots": 50,
+    "unique_observation_seat_hashes": 50,
+    "root_observations_plain_json_serialisable": true,
+    "normal_main": {
+      "accepted": true,
+      "error": null,
+      "stdout": "roots: 50\nCachePolicy parity (guard off): max |dq|=0.000e+00 over 50 roots (0s)\nguard-on smoke: 50 roots OK, guard_moves=0, guard_recruit=0 (0s, K=4 M=2 H=2)\nguard on/off (report only, same 50 roots):\n  roots with any q change: 0/50\n  mean |q_on - q_off| = 0.0000, max = 0.0000\n  Q_mean on  = 0.7500 +- 0.0500\n  Q_mean off = 0.7500 +- 0.0500\n  mean(Q_on - Q_off) per root: mean=+0.0000, min=+0.0000, max=+0.0000\nA3 teacher PASS (smoke ran; parity exact; on/off differences reported)\n",
+      "calls": {
+        "off": 150,
+        "on": 50
+      }
+    },
+    "one_duplicate_root_main": {
+      "accepted": false,
+      "error": {
+        "type": "AssertionError",
+        "message": "non-canonical root fixture: 50 roots, 49 unique"
+      },
+      "stdout": "roots: 50\n",
+      "calls": {
+        "off": 0,
+        "on": 0
+      }
+    },
+    "same_observation_different_seat_identity_main": {
+      "accepted": true,
+      "error": null,
+      "stdout": "roots: 50\nCachePolicy parity (guard off): max |dq|=0.000e+00 over 50 roots (0s)\nguard-on smoke: 50 roots OK, guard_moves=0, guard_recruit=0 (0s, K=4 M=2 H=2)\nguard on/off (report only, same 50 roots):\n  roots with any q change: 0/50\n  mean |q_on - q_off| = 0.0000, max = 0.0000\n  Q_mean on  = 0.7500 +- 0.0500\n  Q_mean off = 0.7500 +- 0.0500\n  mean(Q_on - Q_off) per root: mean=+0.0000, min=+0.0000, max=+0.0000\nA3 teacher PASS (smoke ran; parity exact; on/off differences reported)\n",
+      "calls": {
+        "off": 150,
+        "on": 50
+      }
+    },
+    "fixture_scope": "Original roots + real FastCarbon/Feat on five synthetic no-op replays; teacher outputs are controlled, no canonical model-quality claim."
+  },
+  "limitations": [
+    "Controlled outputs prove assertion coverage only; no claim that real model produced NaN or invalid probabilities.",
+    "Canonical Studio heads/replays and new rerun output are not reconstructed by these stubs.",
+    "Exit 0 means all explicitly asserted acceptance contracts in this probe passed; it does not certify real model quality or all S1 subsystems."
+  ]
+}
