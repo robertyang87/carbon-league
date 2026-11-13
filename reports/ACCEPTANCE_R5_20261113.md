@@ -153,3 +153,20 @@
 **夹具处置**：归档工件 test_derived.py 的 gen-test1 夹具属手造 manifest（sha256 为占位符、gen 目录无字段文件），新口径下其 6 项在 load 源头被拒——属夹具口径冲突、非派生校验回归；派生消费链已在真实封印 generation 上单独复验（set_uw 登记→load mode=verified、篡改 base_generation 被拒）。该夹具须改为完整封印 generation 形态后重跑，列入第六轮证据 harness 刷新清单。
 
 修复后 md5：code/cnet2_build.py `d6e867187ceec289c0e28a53399eb01a`（66,847 B）；code/cnet2_train.py `39e749cb177e3d72511e8d9fc986da80`（49,861 B）。回归：test_labels 17/17、test_publish_f05 PASS。
+
+## §8 二次勘误（所有者 2026-11-13 14:26 复核：权重链 2 个新 P1）
+
+所有者确认 §7 的 3 个 P1 复验通过（build/train md5 与本文记录一致），另在权重链发现 2 个新 P1，均已最小输入复现。复核证据：review_again_results.json / torn_derived_result.json（所有者环境）；loader 以 AST 提取方式测，未跑全量 torch 套件、未覆盖设备侧状态。修复提交与复验（修复线自建等价复现、修前红修后绿）：
+
+| P1 | 缺陷 | 修复提交 | 复验 |
+|---|---|---|---|
+| P1-A | load() 验证封印 generation 后仍从 root 读 w/uw，且仅凭字段名在 manifest 里即标 generation-owned：封印 w=[2,2,1,1]、root 改全 123 → 训练吃到 123；删 root w.npy → 封印权重静默丢失 | `d75850def7e4360e6a0e9eb69304a70794556bae`（cnet2_train：manifest 声明字段只从已验证 generation 目录读；root 仅供 manifest 外派生字段且过 sidecar 校验；wsrc 记录实际读取来源，generation-owned 只能由实际 generation 读产生） | 修后 A1 加载 [2.0,2.0,1.0,1.0]；A2 删 root w 后仍从封印代读到 [2,2,1,1] |
+| P1-B | set_uw 从 root 扁平镜像读特征、往当前指针登记，从不证明特征属于该 generation：发布中断的撕裂态（旧指针＋BUILD_FAILED 在册＋root tok_kind 已是新代）下 set_uw 以 rc=0 登记成功，loader 报 verified、但 4 个有效 token 的权重全错为 2 | `5906496db278968f07c1cabccf04a3902af1a430`（set_uw：开工先钉验，BUILD_FAILED 在册点名拒绝；load_generation(verify=True) 固定 base；特征全从 generation 目录读；登记传 expected_base 且登记后复核指针，迟到的指针移动回滚 sidecar）＋`4247404f3f6240e6e79079c913f8c744ce8ec15c`（register_derived 新增可选 expected_base=None：指针已移动在任何写入前 ValueError 拒绝；默认 None＝历史行为） | 修后 B1：rc=1、无 sidecar、无 w/uw 写出，点名 torn flat mirror；B2：root tok_kind 毒化（无 BUILD_FAILED）时 uw 与按 generation 特征手算逐值相等、load verified；B3：登记竞态 ValueError 点名两代 id、sidecar 字节不变 |
+
+**register_derived 兼容**：全仓逐文件 grep（约 90 个候选文件读回核）确认唯一调用方为 set_uw.py，已同步传钉；新参数默认 None 不改变其他调用方行为（无 expected_base 调用实测照常）。
+
+**回归（修复树实跑）**：自建复现套件 8/8 GREEN（含派生 uw verified 消费、篡改派生 uw sha256 拒绝）；legacy 无指针数据集照常 legacy-unverified 加载、撕裂 legacy 被行数交叉核对拒绝、direct-generation 目录 mode=generation-owned；归档套件 test_publish_f05 PASS、test_labels 17/17（exact 4186 / approx 598 / unusable 598）；三文件 py_compile 通过。
+
+**如实说明**：P1-A/B 主复现夹具为按 builder 发布形态手工封印的合法 generation（完整文件＋真实 sha256 清单，与 §7 的占位符夹具不同）；真实 builder/producer 链路由 test_publish_f05/test_labels 在修复树上覆盖。复现工件留于工程组本地（~/workspace/r5fix-w/），未入仓——是否归档进 automation/acceptance_r5/ 待所有者裁。
+
+修复后 md5：code/cnet2_build.py `030b317bc649fd45c07249c5e3bb662f`（67,650 B）；code/set_uw.py `5f9297c13f10e47e5312089b8dfc4467`（5,290 B）；code/cnet2_train.py `371b0301b5bbdbb809b333a321a2bda2`（53,643 B）。HEAD `d75850def7e4360e6a0e9eb69304a70794556bae`。
