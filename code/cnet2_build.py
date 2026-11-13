@@ -180,6 +180,23 @@ def _wdl_value(m):
     return 1.0 if m > 0 else (0.0 if m < 0 else 0.5)
 
 
+def _label_inputs(e):
+    """Normalized declared fields that decide the exact-label class.
+    The class alone is too coarse for cache/generation identity: the
+    producer's explicit outcome string, the unusable flag and the exact
+    fault_sides list are all label provenance and are fingerprinted
+    verbatim (after JSON-safe normalization)."""
+    fs = e.get("fault_sides")
+    if isinstance(fs, (list, tuple)):
+        fs = [int(x) if isinstance(x, (int, float)) and float(x).is_integer()
+              else str(x) for x in fs]
+    elif fs is not None:
+        fs = str(fs)
+    return {"outcome": e.get("outcome") if isinstance(e.get("outcome"), str) else None,
+            "unusable": e.get("unusable") is True,
+            "fault_sides": fs}
+
+
 def _outcome_class(e):
     """Result class of an index entry from its declared fault fields.
     Fault EVIDENCE wins over the "outcome" string: a producer stamps
@@ -501,6 +518,7 @@ def _scan(dirs, min_steps=200, weighted=False):
                      "terminal": terminal, "end_reason": g.get("end_reason"),
                      "steps": g.get("steps", 0),
                      "raw_margin": raw_mg, "raw_u": raw_u, "outcome": oclass,
+                     "label_inputs": _label_inputs(g),
                      "reason": "missing_replay",
                      "error": f"missing_replay: indexed replay file not found: {fp}"}
                 missing.append(m)
@@ -517,6 +535,7 @@ def _scan(dirs, min_steps=200, weighted=False):
                  "val": zlib.crc32(key.encode()) % 10 == 0, "src": os.path.basename(rd.rstrip("/")),
                  "terminal": terminal, "end_reason": g.get("end_reason"),
                  "raw_margin": raw_mg, "raw_u": raw_u, "outcome": oclass,
+                 "label_inputs": _label_inputs(g),
                  "steps": g.get("steps", 0),
                  "short_terminal": bool(terminal and g.get("steps", 0) < min_steps)}
             if weighted:
@@ -538,20 +557,53 @@ def scan(dirs, min_steps=200, weighted=False):
     return games
 
 
-def _game_content_key(g, tids, mg):
-    """F05/R08: per-game content key -- every index-derived input that changes
-    shard CONTENT: the kept sides, their teacher ids, the margins computed
-    from index scores, and (weighted mode) the per-side sample weights. The
-    replay file itself is covered by its (size, mtime_ns) stat in the
-    manifest. Before this, the cache key was only the replay stat, so editing
-    index.json scores silently reused shards whose value labels were computed
-    from the old margins."""
-    import hashlib
+def _replay_content_digest(path):
+    """SHA256 of the replay's decompressed content. The gzip/stat identity
+    is NOT a content identity: a replay can be rewritten with different
+    carbon values under an unchanged index and row count, and a cache or
+    generation keyed on (size, mtime) -- or on the index alone -- would
+    then rebuild a shard and still republish the previous generation.
+    Hashing the decompressed stream also keeps a byte-identical replay
+    from minting a new generation merely for new gzip framing."""
+    h = hashlib.sha256()
+    try:
+        with gzip.open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""):
+                h.update(chunk)
+    except OSError:
+        with open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""):
+                h.update(chunk)
+    return h.hexdigest()
+
+
+def _game_fingerprint(g, tids, mg):
+    """The single per-game content fingerprint used by BOTH the shard
+    cache key and the generation key. It merges the three input classes
+    that determine a game's published rows: (1) the index-derived shard
+    inputs (kept sides, teacher ids, score margins, sample weights);
+    (2) the exact-label inputs via _game_label_digest (scores, declared
+    margin/u, outcome class and its declared fault provenance) -- the
+    shard cache previously omitted these, so adding fault_sides=[0]
+    changed the generation id while the stale shard underneath kept
+    publishing normal labels; and (3) the replay content digest itself,
+    so a carbon-only replay edit cannot hide behind an unchanged index.
+    One fingerprint, one definition: the cache can never certify a
+    shard that the generation key would not also distinguish."""
     detail = {"key": g["key"], "names": g["names"], "scores": g["scores"],
               "sides": g["sides"], "tids": list(tids),
               "mg": [float(x) for x in mg],
-              "wts": g.get("wts"), "ours_loss": bool(g.get("ours_loss", False))}
+              "wts": g.get("wts"), "ours_loss": bool(g.get("ours_loss", False)),
+              "label_digest": _game_label_digest(g),
+              "replay_sha256": (_replay_content_digest(g["file"])
+                                if g.get("file") and os.path.exists(g["file"]) else None)}
     return hashlib.sha256(json.dumps(detail, sort_keys=True).encode()).hexdigest()[:16]
+
+
+def _game_content_key(g, tids, mg):
+    """Backward-compatible alias: the shard cache key IS the unified
+    per-game fingerprint (see _game_fingerprint)."""
+    return _game_fingerprint(g, tids, mg)
 
 
 def _game_label_digest(g):
@@ -582,6 +634,7 @@ def _game_label_digest(g):
               "raw_u": (None if g.get("raw_u") is None
                         else [float(x) for x in g["raw_u"]]),
               "outcome": g.get("outcome", "normal"),
+              "label_inputs": g.get("label_inputs"),
               "wts": g.get("wts")}
     return hashlib.sha256(json.dumps(detail, sort_keys=True).encode()).hexdigest()[:16]
 
@@ -836,7 +889,8 @@ def main(out, dirs):
                       "terminal": m.get("terminal", False),
                       "end_reason": m.get("end_reason"), "steps": m.get("steps", 0),
                       "raw_margin": m.get("raw_margin"), "raw_u": m.get("raw_u"),
-                      "outcome": m.get("outcome", "normal")})
+                      "outcome": m.get("outcome", "normal"),
+                      "label_inputs": m.get("label_inputs")})
     fields = dict(FIELDS)
     if weighted:
         fields["w"] = (np.float16, ())
@@ -845,6 +899,7 @@ def main(out, dirs):
         g["gi"] = gi
         tids = [teacher_id(g["names"][s]) for s in g["sides"]]
         mg = [g["scores"][s] - g["scores"][1 - s] for s in g["sides"]]
+        g["fingerprint"] = _game_fingerprint(g, tids, mg)
         suffix = ("_s" + "".join(map(str, g["sides"]))) if weighted else ""
         g["shard"] = os.path.join(out, "shards", g["key"].replace(".json.gz", "") + suffix + ".npz")
         if g.get("missing_replay"):
@@ -888,7 +943,7 @@ def main(out, dirs):
     todo = []
     for t in tasks:
         gi = t[2]
-        ck = _game_content_key(games[gi], t[3], t[4])
+        ck = games[gi].get("fingerprint") or _game_content_key(games[gi], t[3], t[4])
         ckeys[gi] = ck
         base = os.path.basename(t[5])
         ent = old_man.get(base)
@@ -1020,9 +1075,11 @@ def main(out, dirs):
     # place as gen-<id> in one operation. The generation id is derived
     # from the full build content, so an identical rebuild reuses the
     # existing generation instead of rewriting it. The per-game component
-    # of the id is [key, rows, label digest] -- the digest (see
-    # _game_label_digest) puts the game's scores/margin/u and outcome
-    # class inside the id, so a label-only index edit mints a NEW
+    # of the id is [key, rows, unified fingerprint] -- the fingerprint
+    # (see _game_fingerprint) puts the game's index/shard inputs, its
+    # exact-label inputs (scores/margin/u, outcome class and declared
+    # fault provenance) AND its replay content digest inside the id, so
+    # a label-only index edit or a carbon-only replay edit mints a NEW
     # generation instead of reusing the sealed one. Only after the
     # generation is complete is the legacy flat view in `out` refreshed
     # from it (arrays first, meta.json last), and only then is the
@@ -1035,7 +1092,11 @@ def main(out, dirs):
                "failed": [f_["key"] for f_ in failed],
                "filtered": filtered,
                "labels": label_cov,
-               "games": [[g["key"], int(ns.get(g["gi"], 0)), _game_label_digest(g)]
+               "games": [[g["key"], int(ns.get(g["gi"], 0)),
+                          g.get("fingerprint") or _game_fingerprint(
+                              g,
+                              [teacher_id(g["names"][s]) for s in g["sides"]],
+                              [g["scores"][s] - g["scores"][1 - s] for s in g["sides"]])]
                          for g in games]}
     gen_id = "gen-" + hashlib.sha256(
         json.dumps(gen_key, sort_keys=True).encode()).hexdigest()[:16]
