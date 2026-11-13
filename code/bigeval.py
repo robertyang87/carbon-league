@@ -5,7 +5,13 @@ EXAM_ARCHIVE_20261114: per-game archive records (live rows and the summary's
 games/games_full) carry the RAW margin, both raw scores and U computed from
 the raw margin, plus md5 identity of both policy files and of this harness.
 Rounding is display-only (summary statistics); it never enters a per-game
-record, so an archived exam can be re-derived exactly (wins and U)."""
+record, so an archived exam can be re-derived exactly (wins and U).
+F4_20261114: opponent-side internal errors are visible and gated. Live rows
+carry berr (the opponent's internal-error total, mirroring serr) and bst
+(its error-class stats summary); the summary counts b_search_error_games /
+b_errors_total / b_root_errors_total and FAILs the exam on the same F09
+caliber as the candidate side -- a margin earned against a silently
+degraded opponent is not a measurement."""
 import hashlib, json, math, os, statistics as st, sys, time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
@@ -65,6 +71,7 @@ def main(a, b, s0, n, tag):
             r = f.result(); rows.append(r)
             g = {"seed": r.get("seed"), "side": r.get("policy_side"), "margin": r["margin"] if "margin" in r else None,
                  "err": r.get("error"), "t": time.strftime("%H:%M:%S"), "serr": r.get("a_errors", 0),
+                 "berr": r.get("b_errors", 0),
                  "ah": a_md5, "bh": b_md5, "hh": harness_md5}
             if "margin" in r:
                 g.update(sa=r.get("my_score"), sb=r.get("opp_score"), win=r.get("win"), u=_u_of(r["margin"]))
@@ -79,7 +86,11 @@ def main(a, b, s0, n, tag):
                          **({"srch": r["a_stats"].get("searched"), "chg": r["a_stats"].get("changed"),
                              "shal": r["a_stats"].get("shallow"), "ab": r["a_stats"].get("aborted", 0),
                              "rerr": r["a_stats"].get("root_errors", 0), "eh_e": r["a_stats"].get("eh_edge", 0), "eh_h": r["a_stats"].get("eh_heavy", 0),
-                             "cc21": r["a_stats"].get("cc_2to1", 0), "cc01": r["a_stats"].get("cc_0to1", 0), "pa": r["a_stats"].get("pa_moves", 0), "paerr": r["a_stats"].get("pa_errors", 0), "pb": r["a_stats"].get("pb_skip", 0), "mnp": r["a_stats"].get("mnp", 0), "eh_alt": r["a_stats"].get("eh_alt", 0), "fixdrop": r["a_stats"].get("fix_dropped", 0), "pk_in": r["a_stats"].get("pk_in", 0), "pk_cut": r["a_stats"].get("pk_cut", 0), "sims": r["a_stats"].get("sims", 0), "pk_rep": r["a_stats"].get("pk_rep", 0), "pk_rep3": r["a_stats"].get("pk_rep_plant3", 0), "pk_repc": r["a_stats"].get("pk_rep_cash", 0), "bk_in": r["a_stats"].get("bk_in", 0), "bk_cut": r["a_stats"].get("bk_cut", 0), "simsl": r["a_stats"].get("sims_steps"), "cb": [r["a_stats"].get(k, 0) for k in ("cb_seen", "cb", "cb_ok", "cb_errors")], "se": [r["a_stats"].get(k, 0) for k in ("se_seen", "se", "se_ok", "se_none", "se_errors")], "se_lat": r["a_stats"].get("se_lat"), "msl": r["a_stats"].get("ms_steps"), "px": [r["a_stats"].get("px", 0), r["a_stats"].get("px_errors", 0)], "opl": [r["a_stats"].get("opl", 0), r["a_stats"].get("opl_errors", 0)], "tg": r["a_stats"].get("tg", 0), "rg": r["a_stats"].get("rg", 0), "seqc": r["a_stats"].get("seq_changed", 0)} if r.get("a_stats") else {}))
+                             "cc21": r["a_stats"].get("cc_2to1", 0), "cc01": r["a_stats"].get("cc_0to1", 0), "pa": r["a_stats"].get("pa_moves", 0), "paerr": r["a_stats"].get("pa_errors", 0), "pb": r["a_stats"].get("pb_skip", 0), "mnp": r["a_stats"].get("mnp", 0), "eh_alt": r["a_stats"].get("eh_alt", 0), "fixdrop": r["a_stats"].get("fix_dropped", 0), "pk_in": r["a_stats"].get("pk_in", 0), "pk_cut": r["a_stats"].get("pk_cut", 0), "sims": r["a_stats"].get("sims", 0), "pk_rep": r["a_stats"].get("pk_rep", 0), "pk_rep3": r["a_stats"].get("pk_rep_plant3", 0), "pk_repc": r["a_stats"].get("pk_rep_cash", 0), "bk_in": r["a_stats"].get("bk_in", 0), "bk_cut": r["a_stats"].get("bk_cut", 0), "simsl": r["a_stats"].get("sims_steps"), "cb": [r["a_stats"].get(k, 0) for k in ("cb_seen", "cb", "cb_ok", "cb_errors")], "se": [r["a_stats"].get(k, 0) for k in ("se_seen", "se", "se_ok", "se_none", "se_errors")], "se_lat": r["a_stats"].get("se_lat"), "msl": r["a_stats"].get("ms_steps"), "px": [r["a_stats"].get("px", 0), r["a_stats"].get("px_errors", 0)], "opl": [r["a_stats"].get("opl", 0), r["a_stats"].get("opl_errors", 0)], "tg": r["a_stats"].get("tg", 0), "rg": r["a_stats"].get("rg", 0), "seqc": r["a_stats"].get("seq_changed", 0)} if r.get("a_stats") else {}),
+                         # F4: opponent-side error-class summary (the *_errors
+                         # categories of b_stats), so a live row shows WHICH
+                         # opponent internals fired, not just the berr total.
+                         **({"bst": {k: v for k, v in r["b_stats"].items() if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float))}} if r.get("b_stats") else {}))
             lf.write(json.dumps(g) + "\n"); lf.flush()
     m = [r["margin"] for r in rows if "margin" in r]
     # REVIEW_FIXES_20261113 S4 (P3): the run's health is computed ONCE, here,
@@ -95,18 +106,32 @@ def main(a, b, s0, n, tag):
     search_error_games = sum(1 for r in rows if r.get("a_errors"))
     a_errors_total = sum(r.get("a_errors", 0) for r in rows)
     root_errors_total = sum((r.get("a_stats") or {}).get("root_errors", 0) for r in rows)
+    # F4: opponent-side internal health, computed and gated exactly like the
+    # candidate side above. Before this, fb's last_stats were never read at
+    # all (eval_v53 returned no b_* fields), so an opponent that degraded to
+    # an internal fallback left no trace in any record and its games counted
+    # as clean measurements.
+    b_search_error_games = sum(1 for r in rows if r.get("b_errors"))
+    b_errors_total = sum(r.get("b_errors", 0) for r in rows)
+    b_root_errors_total = sum((r.get("b_stats") or {}).get("root_errors", 0) for r in rows)
     # F09: rows arrive in completion order; report the FIRST failure's stack
     # deterministically (lowest seed, traceback preferred over the repr).
     by_seed = sorted(rows, key=lambda r: (r.get("seed") is None, r.get("seed") or 0))
     first_error = next((r.get("tb") or r.get("error") for r in by_seed if r.get("error")), None)
     first_search_error_seed = next((r.get("seed") for r in rows if r.get("a_errors")), None)
+    first_b_search_error_seed = next((r.get("seed") for r in rows if r.get("b_errors")), None)
     # F09: FAIL covers every failure class -- internal search/rule errors,
     # outer per-game exceptions and missing games. Previously it counted only
     # the internal classes, so a 2-of-3 exam with one crashed game was saved
     # with FAIL=false (err=1, n=2) while exiting 2.
     outer_errors = sum(1 for r in rows if r.get("error"))
     missing = len(tasks) - len(m)
-    internal_failed = bool(search_error_games or a_errors_total or root_errors_total)
+    # F4: the internal-failure gate is symmetric -- opponent-side internal
+    # errors fail the exam on the same caliber as candidate-side ones (the
+    # result is marked FAIL and the run exits 3 below). A degraded opponent
+    # invalidates the measurement just as a degraded candidate does.
+    internal_failed = bool(search_error_games or a_errors_total or root_errors_total
+                           or b_search_error_games or b_errors_total or b_root_errors_total)
     failed = bool(internal_failed or outer_errors or missing)
     if len(m) < 2:
         # F09: this path used to save nothing at all; an incomplete exam must
@@ -116,6 +141,9 @@ def main(a, b, s0, n, tag):
                "search_error_games": search_error_games, "a_errors_total": a_errors_total,
                "root_errors_total": root_errors_total, "first_error": first_error,
                "first_search_error_seed": first_search_error_seed,
+               "b_search_error_games": b_search_error_games, "b_errors_total": b_errors_total,
+               "b_root_errors_total": b_root_errors_total,
+               "first_b_search_error_seed": first_b_search_error_seed,
                "a_md5": a_md5, "b_md5": b_md5, "harness_md5": harness_md5}
         open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(bad) + "\n")
         print(json.dumps(bad), file=sys.stderr, flush=True)
@@ -135,11 +163,15 @@ def main(a, b, s0, n, tag):
            "a_md5": a_md5, "b_md5": b_md5, "harness_md5": harness_md5}
     rec.update({"search_error_games": search_error_games, "a_errors_total": a_errors_total,
                 "root_errors_total": root_errors_total, "first_error": first_error,
-                "first_search_error_seed": first_search_error_seed, "FAIL": failed})
+                "first_search_error_seed": first_search_error_seed,
+                "b_search_error_games": b_search_error_games, "b_errors_total": b_errors_total,
+                "b_root_errors_total": b_root_errors_total,
+                "first_b_search_error_seed": first_b_search_error_seed, "FAIL": failed})
     open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k not in ("games", "games_full")}), flush=True)
     # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
-    if internal_failed:      # R05: any exception inside the search / rule layers means the exam is not testing the intended code: fail it (the saved record above already carries the FAIL marker)
-        print(json.dumps({"tag": tag, "FAIL_SEARCH_ERRORS": search_error_games, "a_errors_total": a_errors_total, "of": len(rows)}), file=sys.stderr, flush=True)
+    if internal_failed:      # R05: any exception inside the search / rule layers means the exam is not testing the intended code: fail it (the saved record above already carries the FAIL marker). F4: opponent-side internal errors take the same exit, with their counts named on the same line.
+        print(json.dumps({"tag": tag, "FAIL_SEARCH_ERRORS": search_error_games, "a_errors_total": a_errors_total,
+                          "FAIL_B_SEARCH_ERRORS": b_search_error_games, "b_errors_total": b_errors_total, "of": len(rows)}), file=sys.stderr, flush=True)
         sys.exit(3)
     if rec["changed0_games"]:
         print(json.dumps({"tag": tag, "WARN_SEARCH_NEVER_CHANGED": rec["changed0_games"], "of": rec["search_games"]}), file=sys.stderr, flush=True)
