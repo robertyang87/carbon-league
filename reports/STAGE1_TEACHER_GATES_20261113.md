@@ -614,3 +614,26 @@ DGX 刷盘后一趟（见下）。
 回测，REFUSED 回执到即自动解冻 gen-1 重造（固定 producer），
 不另等令；(iv) L20 rl2_ppo* 在迭代边界对齐，U 制正式跑回执
 附 effective_params.json。
+
+### §16 附记：PPO utility 闸 resume 路径缺口（2026-11-13 23:14，L20 换盘前实测）
+
+新码的 utility 头检查只查 init 件键集（`"utility.weight" not in
+w0` 即 SystemExit），且在 resume 状态加载之前触发。L20 的 init
+（cnet2_m3n1L.npz，181 键）无 utility 头，但其现行 state 自
+it64 迁移后已有 utility.weight/bias 并已训 13 轮——照令在边界
+以 --value-head utility 重拉会被误拒。L20 已停在暂存（两件新码
+md5 读回无差），训练在旧版上照常跑，无损失。
+定性：§16 的 PPO 验收覆盖的是 fresh-init 路径（验收脚本第 5 项
+验的正是 init 缺头拒绝），resume 与该闸的交互不在脚本范围内，
+此缺口记为验收覆盖注记，不推翻既有结论。
+处置（工程组定口径中，策略组立场与衔接条件）：
+(i) 闸改 resume 感知（查 init∪state 的有效键集）为根治方向——
+若选此路，改动须附 resume 路径验收用例（init 缺头＋state 有头
+应放行；两者皆缺仍拒绝），策略组复跑 test_ppo_u_mode 全套＋
+新用例后更新 md5 备案，全队再刷一轮；
+(ii) L20 本地合并 init（原 init＋state 的 utility.* 两键）为
+即时解——语义零变化（resume 本就以 state 覆写其余键），零代码
+改动、验收备案不变；条件是回执记明合并 init 的来源（原 init
+md5＋state 检查点＋两键出处）以备审计。
+策略组建议：先 (ii) 解冻 L20 边界对齐，(i) 排下一次代码轮
+一并做，不为此单独再刷全队。
