@@ -103,6 +103,21 @@ F11 data-contract fixes (REVIEW_FULL_20261113, 2026-11-13):
   entry) are verified and adopted by reconstructing the entry from the
   replay's own result block (marked "adopted": true), or removed when
   corrupt -- never a permanent "exists" deadlock.
+* Recovery identity (owner review pt.4 follow-up, 2026-11-13): "already
+  generated" is a claim about a CONFIGURATION, not just a seed. Every
+  index entry and every replay payload carries an "identity" block:
+  {weights_md5, config_hash, config, names, code_md5{eval_v53, fastsim,
+  cnet2_search, selfplay_gen}}. Startup reconciliation compares each
+  committed entry's identity with the CURRENT run identity; ANY
+  mismatch (weights changed by one byte, config changed, code changed)
+  is an identity_mismatch -- the game is NOT adopted and NOT skipped as
+  done. Policy: mismatched products are stale output of another
+  configuration -- they are removed, regenerated when the seed is in
+  this run's range, and a hard error when it is not. The run identity
+  is also written to <out>/identity.json.
+* Outcome class: every entry/result declares "outcome": "normal"
+  (local self-play has no platform execution faults; the builder maps
+  declared fault fields of other corpora to fault_one_side/unusable).
 * Policy-error accounting: the search agent swallows its own failures
   into agent.stats counters (*_errors / errors; the root fallback
   returns an empty action instead of raising). play() snapshots those
@@ -129,6 +144,7 @@ os.environ.setdefault("BC_W", "64")
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import eval_v53  # noqa: E402
+import fastsim as _fastsim_mod  # noqa: E402
 from fastsim import FastCarbon  # noqa: E402
 import cnet2_search as CS  # noqa: E402
 
@@ -165,6 +181,34 @@ def _u_of_margin(m):
     return 0.5 * w + 0.5 / (1.0 + math.exp(-float(m) / 1000.0))
 
 
+def _md5_file(path):
+    try:
+        h = hashlib.md5()
+        with open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""):
+                h.update(chunk)
+        return h.hexdigest()
+    except OSError:
+        return None
+
+
+def _run_identity(weights, conf, name_a, name_b):
+    """The identity a generated game belongs to: agent weights bytes,
+    the full generation config (CONF + opening overrides + names) and
+    the rules/code hashes. Deterministic -- no timestamps -- so two
+    runs with the same identity produce interchangeable corpora."""
+    cfg = {k: conf[k] for k in sorted(conf)}
+    code = {}
+    for mod in (eval_v53, _fastsim_mod, CS):
+        code[os.path.basename(mod.__file__)] = _md5_file(mod.__file__)
+    code[os.path.basename(__file__)] = _md5_file(__file__)
+    return {"weights_md5": (_md5_file(weights)
+                            if weights and os.path.exists(weights) else "absent"),
+            "config_hash": hashlib.sha256(
+                json.dumps(cfg, sort_keys=True, default=str).encode()).hexdigest(),
+            "config": cfg, "names": [name_a, name_b], "code_md5": code}
+
+
 def _obs_full(sim, p):
     """sim.obs(p) plus the SUPERVISION-ONLY full carbon map (see module
     docstring): the complete simulator carbon at this step, stored under
@@ -199,11 +243,12 @@ def _counter_delta(before, after):
 class _Gen:
     """One worker process: two cached agent instances (one per side)."""
 
-    def __init__(self, weights, conf, name_a, name_b):
+    def __init__(self, weights, conf, name_a, name_b, identity=None):
         self.weights = weights
         self.conf = conf
         self.name_a = name_a
         self.name_b = name_b
+        self.identity = identity
         self.agents = None
 
     def _agents(self):
@@ -288,11 +333,13 @@ class _Gen:
         nbytes = None
         if record:
             payload = {"id": "selfplay", "steps": entries,
+                       "identity": self.identity,
                        "result": {"scores": [float(scores[0]), float(scores[1])],
                                   "margin": mg_side, "u": u_side,
                                   "winner_side": 0 if scores[0] > scores[1] else
                                   (1 if scores[1] > scores[0] else None),
-                                  "a_side": a_side,
+                                  "a_side": a_side, "outcome": "normal",
+                                  "identity": self.identity,
                                   "terminal": True, "end_reason": end_reason}}
             # F11: atomic commit -- temp file in the same dir, verified by
             # a full re-read, then os.replace. A crash can leave a temp
@@ -321,6 +368,7 @@ class _Gen:
                  "winner": "a" if sa > sb else ("b" if sb > sa else None),
                  "steps": nsteps, "file": f"replays/{fname}",
                  "terminal": True, "end_reason": end_reason,
+                 "outcome": "normal", "identity": self.identity,
                  "sha256": sha, "bytes": nbytes,
                  "created": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                  "strategies": {"a": {"id": "", "name": self.name_a},
@@ -332,8 +380,8 @@ _GEN = [None]
 _CPU0 = [None]
 
 
-def _init(weights, conf, name_a, name_b):
-    _GEN[0] = _Gen(weights, conf, name_a, name_b)
+def _init(weights, conf, name_a, name_b, identity=None):
+    _GEN[0] = _Gen(weights, conf, name_a, name_b, identity=identity)
     _CPU0[0] = os.times()
 
 
@@ -394,6 +442,8 @@ def _entry_from_replay(outdir, fname, name_a, name_b):
             "winner": "a" if sa > sb else ("b" if sb > sa else None),
             "steps": nsteps, "file": f"replays/{fname}",
             "terminal": True, "end_reason": end_reason,
+            "outcome": res.get("outcome", "normal"),
+            "identity": d.get("identity") or res.get("identity"),
             "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw),
             "adopted": True,
             "created": datetime.datetime.fromtimestamp(
@@ -402,13 +452,21 @@ def _entry_from_replay(outdir, fname, name_a, name_b):
                            "b": {"id": "", "name": name_b}}}
 
 
-def _reconcile(outdir, name_a, name_b):
-    """Startup reconciliation (F11). Returns (entries, dropped, adopted):
-    entries -- indexed games whose replay verified intact;
+def _reconcile(outdir, name_a, name_b, identity=None):
+    """Startup reconciliation (F11 + identity). Returns
+    (entries, dropped, adopted, mismatched):
+    entries -- indexed games whose replay verified intact AND whose
+               recorded identity equals the current run identity;
     dropped -- [{seed, err}] indexed entries whose replay is missing or
                corrupt (an ERROR condition, never a silent skip: the
                caller regenerates in-range seeds and fails on the rest);
-    adopted -- count of orphan replays re-registered into the index.
+    adopted -- count of orphan replays re-registered into the index;
+    mismatched -- [{seed, err}] committed games (indexed or orphan)
+               whose recorded identity differs from the current run
+               identity (identity=None disables the check, legacy
+               behaviour). A mismatched game is NEVER treated as done:
+               its file is removed so an in-range seed regenerates under
+               the current identity, and an out-of-range seed fails.
     Corrupt orphans and stale temp files are removed."""
     repdir = os.path.join(outdir, "replays")
     os.makedirs(repdir, exist_ok=True)
@@ -425,16 +483,24 @@ def _reconcile(outdir, name_a, name_b):
             raw_entries = json.load(open(idx_path))
         except Exception:
             raw_entries = []  # corrupt index: rebuild from replays below
-    entries, dropped = [], []
+    entries, dropped, mismatched = [], [], []
+    mismatched_seeds = set()
     indexed_files = set()
     for e in raw_entries:
         fpath = os.path.join(outdir, e.get("file", ""))
         ok, reason = _verify_replay_file(fpath, e)
-        if ok:
-            entries.append(e)
-            indexed_files.add(os.path.basename(e["file"]))
-        else:
+        if not ok:
             dropped.append({"seed": e.get("game"), "err": f"indexed_replay_{reason}"})
+            continue
+        if identity is not None and e.get("identity") != identity:
+            # Stale product of another configuration: not done, never
+            # adopted below (the orphan pass removes the file).
+            mismatched.append({"seed": e.get("game"),
+                               "err": "identity_mismatch: indexed entry"})
+            mismatched_seeds.add(e.get("game"))
+            continue
+        entries.append(e)
+        indexed_files.add(os.path.basename(e["file"]))
     adopted = 0
     for fn in sorted(os.listdir(repdir)):
         if not (fn.startswith("selfplay-") and fn.endswith(".json.gz")):
@@ -443,19 +509,33 @@ def _reconcile(outdir, name_a, name_b):
             continue
         fpath = os.path.join(repdir, fn)
         ok, _reason = _verify_replay_file(fpath)
+        ent = None
         if ok:
             try:
-                entries.append(_entry_from_replay(outdir, fn, name_a, name_b))
-                adopted += 1
-                continue
+                ent = _entry_from_replay(outdir, fn, name_a, name_b)
             except Exception:  # noqa: BLE001
+                ent = None
+        if ent is not None and identity is not None and ent.get("identity") != identity:
+            seed = ent.get("game")
+            try:
+                os.remove(fpath)  # stale-identity orphan: clear, seed regenerates
+            except OSError:
                 pass
+            if seed not in mismatched_seeds:
+                mismatched.append({"seed": seed,
+                                   "err": "identity_mismatch: orphan replay"})
+                mismatched_seeds.add(seed)
+            continue
+        if ent is not None:
+            entries.append(ent)
+            adopted += 1
+            continue
         try:
             os.remove(fpath)  # corrupt orphan: clear it, seed regenerates
         except OSError:
             pass
     entries.sort(key=lambda e: e.get("game", 0))
-    return entries, dropped, adopted
+    return entries, dropped, adopted, mismatched
 
 
 def _write_index(outdir, entries):
@@ -494,6 +574,7 @@ def main():
         conf["OPEN_SEED"] = a.open_seed
     name_a = a.name_a or a.name
     name_b = a.name_b or a.name
+    identity = _run_identity(a.weights, conf, name_a, name_b)
     if not STUB and not os.path.exists(a.weights):
         print(f"{MARK} FAIL weights-missing {a.weights}", flush=True)
         return 1
@@ -503,10 +584,14 @@ def main():
     # committed before scheduling anything. Indexed-but-missing/corrupt
     # replays are dropped loudly (regenerated below when in range);
     # orphan replays are adopted, not deadlocked on "exists".
-    done_entries, dropped, adopted = _reconcile(a.out, name_a, name_b)
+    done_entries, dropped, adopted, mismatched = _reconcile(
+        a.out, name_a, name_b, identity=identity)
     if dropped:
         for d_ in dropped:
             print(f"RECONCILE-DROP seed={d_['seed']} {d_['err']}", flush=True)
+    if mismatched:
+        for d_ in mismatched:
+            print(f"RECONCILE-MISMATCH seed={d_['seed']} {d_['err']}", flush=True)
     if adopted:
         print(f"RECONCILE-ADOPT orphans={adopted}", flush=True)
     _write_index(a.out, done_entries)
@@ -519,7 +604,8 @@ def main():
     cpu_tot = 0.0
     budget = None
     with ProcessPoolExecutor(max_workers=a.workers,
-                             initializer=_init, initargs=(a.weights, conf, name_a, name_b)) as ex:
+                             initializer=_init,
+                             initargs=(a.weights, conf, name_a, name_b, identity)) as ex:
         # warm-up: one game per worker, unrecorded seeds, untimed (agent build + numpy warm).
         if a.warmup and not STUB:
             wseeds = [a.seed0 - 1000 - i for i in range(a.workers)]
@@ -544,9 +630,25 @@ def main():
                     # silently skip a corrupt file.
                     fpath = os.path.join(a.out, "replays", f"selfplay-{r['seed']}.json.gz")
                     ok, reason = _verify_replay_file(fpath)
+                    ent = None
                     if ok:
-                        done_entries.append(_entry_from_replay(
-                            a.out, f"selfplay-{r['seed']}.json.gz", name_a, name_b))
+                        try:
+                            ent = _entry_from_replay(
+                                a.out, f"selfplay-{r['seed']}.json.gz", name_a, name_b)
+                        except Exception:  # noqa: BLE001
+                            ent = None
+                    if ent is not None and ent.get("identity") != identity:
+                        # Committed under another identity (race with a
+                        # crashed run of a different configuration): not
+                        # adoptable; clear it and fail loudly.
+                        try:
+                            os.remove(fpath)
+                        except OSError:
+                            pass
+                        errors.append({"seed": r["seed"], "err": "identity_mismatch: exists race"})
+                        print(f"GAME-ERROR seed={r['seed']} identity_mismatch: exists race", flush=True)
+                    elif ent is not None:
+                        done_entries.append(ent)
                         games += 1
                         adopted += 1
                     else:
@@ -579,9 +681,15 @@ def main():
     # error (in-range drops were regenerated above and are only failures
     # if their regeneration also failed, which already landed in errors).
     have = {e["game"] for e in done_entries}
-    for d_ in dropped:
+    for d_ in dropped + mismatched:
         if d_["seed"] not in have and not (a.seed0 <= (d_["seed"] or -1) < a.seed1):
             errors.append({"seed": d_["seed"], "err": d_["err"] + " (out of repair range)"})
+    # The run identity is part of the corpus record (entries carry it
+    # individually too); written atomically like the index.
+    id_tmp = os.path.join(a.out, f"identity.json.tmp-{os.getpid()}")
+    with open(id_tmp, "w", encoding="utf-8") as f:
+        json.dump({"identity": identity}, f, ensure_ascii=False)
+    os.replace(id_tmp, os.path.join(a.out, "identity.json"))
     import statistics as st
     res = {"games": games, "wall_s": round(wall, 1), "total_wall_s": round(total_wall, 1),
            "games_per_min": round(games / (wall / 60.0), 2) if wall > 0 else 0,
@@ -591,7 +699,8 @@ def main():
            "workers": a.workers, "cpu_seconds": round(cpu_tot, 1),
            "eff_cores": round(cpu_tot / wall, 2) if wall > 0 else 0,
            "errors": errors, "budget_hit": budget, "stub": STUB,
-           "adopted": adopted,
+           "adopted": adopted, "identity_mismatches": len(mismatched),
+           "identity": identity,
            "repaired_drops": sum(1 for d_ in dropped if d_["seed"] in have),
            "weights": a.weights, "conf": {k: conf[k] for k in sorted(conf)},
            "out": a.out}
