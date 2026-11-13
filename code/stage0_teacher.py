@@ -216,8 +216,9 @@ def evaluate_root(sim, me, pol, x_me, aux_me, x_opp, aux_opp, feat_me, feat_opp,
     counter = [0]
     ep_steps = int(CFG.get("episodeSteps", 300))
     _root_st = sim.get_state()
-    if _extinct_state(_root_st, 0) or _extinct_state(_root_st, 1):
-        raise ValueError("evaluate_root called on an already-terminal root position")
+    if _is_terminal(sim):
+        raise ValueError("evaluate_root called on an already-terminal root "
+                         "position (extinct, or step limit reached)")
     if not isinstance(pol, CachePolicy):
         _cfg = pol.cfg
         pol = CachePolicy(pol.w)
