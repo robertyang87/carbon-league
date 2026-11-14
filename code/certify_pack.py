@@ -518,7 +518,10 @@ def main():
     ap = argparse.ArgumentParser(description="Outer platform resource certification for a packed submission (N04).")
     ap.add_argument("pack")
     ap.add_argument("--opp", default="")
-    ap.add_argument("--seed0", type=int, default=996000)
+    # certify probe self-reserved block 993000-993999 (outside the S2
+    # partition table); 996000+ are exam blocks and the probe must not
+    # default into them (strategy-group S2 ruling).
+    ap.add_argument("--seed0", type=int, default=993000)
     ap.add_argument("--games", type=int, default=1)
     ap.add_argument("--steps-per-game", type=int, default=299)
     ap.add_argument("--init-limit-s", type=float, default=20.0)
