@@ -502,11 +502,15 @@ def main():
     # ---- data: sealed generation only (load() pins + hash-verifies it) ----
     D, is_val, meta = T.load(args.data)
     gen_dir = meta["dataset_source"]
-    man_path = os.path.join(gen_dir, "manifest.json")
-    if not os.path.exists(man_path):
-        raise SystemExit(f"k0: dataset {args.data!r} has no sealed generation manifest at {man_path}; "
-                         f"K0 requires a generation-pinned dataset (sidecar binding + u_raw); refusing to start")
-    man = json.load(open(man_path))
+    # N2-b: the manifest is the one T.load verified against, handed over
+    # in meta -- never a by-path re-read of manifest.json, which reopens
+    # the post-verification swap window (a swapped manifest steered the
+    # u_raw/label_status loads under the sealed generation's identity).
+    man = meta.get("generation_manifest")
+    if man is None:
+        raise SystemExit(f"k0: dataset {args.data!r} has no sealed generation manifest handed over by the "
+                         f"verified load; K0 requires a generation-pinned dataset (sidecar binding + u_raw); "
+                         f"refusing to start")
     n_rows = int(man["total"])
     if int(np.asarray(D["y"]).shape[0]) != n_rows:
         raise SystemExit(f"k0: dataset rows {np.asarray(D['y']).shape[0]} != manifest total {n_rows}; refusing to start")
@@ -1027,11 +1031,12 @@ def _screen_eval(args):
     # ---- data: the training path's sealed load + gates, verbatim ----
     D, is_val, meta = T.load(args.data)
     gen_dir = meta["dataset_source"]
-    man_path = os.path.join(gen_dir, "manifest.json")
-    if not os.path.exists(man_path):
-        raise SystemExit(f"k0 screen: dataset {args.data!r} has no sealed generation manifest at {man_path}; "
-                         f"refusing to run")
-    man = json.load(open(man_path))
+    # N2-b: same hand-over as the training path -- the manifest T.load
+    # verified against, never a by-path re-read (see run()).
+    man = meta.get("generation_manifest")
+    if man is None:
+        raise SystemExit(f"k0 screen: dataset {args.data!r} has no sealed generation manifest handed over "
+                         f"by the verified load; refusing to run")
     n_rows = int(man["total"])
     if int(np.asarray(D["y"]).shape[0]) != n_rows:
         raise SystemExit(f"k0 screen: dataset rows {np.asarray(D['y']).shape[0]} != manifest total {n_rows}; "
