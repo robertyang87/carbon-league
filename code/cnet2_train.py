@@ -405,8 +405,10 @@ def _resolve_load_source(dirn):
     publish that died mid-refresh leaves new arrays next to an old meta
     in the root, and training on that mix (maps of the new build, labels
     of the old) must be impossible, not silent. A directory that IS a
-    generation (manifest.json, no pointer) is verified the same way and
-    read directly. Only a pre-generation legacy dataset (neither file)
+    generation (manifest.json, no pointer) is verified the same way --
+    field hashes AND, when the manifest carries it, the meta_sha256 seal
+    over meta.json -- and read directly. Only a pre-generation legacy
+    dataset (neither file)
     falls back to the flat view, and load() then cross-checks field row
     counts (and the builder's flat_total stamp when present) so a torn
     legacy mirror is refused by name instead of read.
@@ -434,6 +436,28 @@ def _resolve_load_source(dirn):
             if not os.path.exists(p) or _sha256_path(p) != info["sha256"]:
                 raise SystemExit(
                     f"dataset generation file failed verification: {p}; refusing to train")
+        # Meta seal (Codex batch 1+2 re-review): the field loop above does
+        # not cover meta.json, and the split (per-game val flags) lives
+        # there -- a tampered meta passed this direct path while the
+        # pointer path (load_generation) refused it. Mirror build's
+        # load_generation semantics exactly: a manifest carrying
+        # meta_sha256 must match sha256(meta.json); generations predating
+        # the seal (no meta_sha256) are verified as before. (Build keeps
+        # this check inline in load_generation, which requires a pointer
+        # and so cannot serve a bare generation directory; the condition
+        # and refusal shape are copied, not reinvented.)
+        _meta_sha = man.get("meta_sha256")
+        if _meta_sha is not None:
+            _mp = os.path.join(dirn, "meta.json")
+            if not os.path.exists(_mp):
+                raise SystemExit(
+                    f"dataset generation meta file missing: {_mp}; the manifest "
+                    f"carries a meta_sha256 seal; refusing to train")
+            if _sha256_path(_mp) != _meta_sha:
+                raise SystemExit(
+                    f"dataset generation meta failed verification: {_mp} "
+                    f"(meta_sha256 mismatch -- meta.json changed after the "
+                    f"generation was sealed); refusing to train")
         return dirn, man
     return dirn, None
 
