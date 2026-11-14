@@ -58,3 +58,8 @@ v2 新断点（2026-11-13 下午 it320／Lite-V7／哈基米三轮实证）：�
 
 - 一切 md5 期望值写完整 32 位（s30push-0205 假警报教训：29 位截断＋grep 多空格）。
 - 本流程的变更经所有者或作战室写入本文件并提交 main，口头改动不算数。
+
+## 登记·同名文件处置（2026-11-14 作战室裁定，工程组删前引用扫结论）
+
+- `code/packs/cnet2_pack.py`（5,048 B，无戳版）：**活的生产依赖，永不删**。权威打包器 `code/packs/cnet2_search_pack.py` 第 30–31 行以同目录 import 它，全部权重经其 `P.quantize()` 量化；其 quantize/dequantize 与根目录现行版（md5 119e9bb9bf8413685b87721cff8cfe18）逐字节同、从未漂移。审计的「陈旧变体」标签作废——形态旧、职能活；按此标签清理此文件＝DGX 打包线 ModuleNotFoundError、无回落路径。
+- `code/cnet2_search_pack.py`（根目录，6,411 B）：**复现／证据工具文件，保留不删**。无现行生产引用（生产建包只认 `code/packs/cnet2_search_pack.py`），但 mkref.sh、build_v17.sh、四件评审证据 harness、data/s64*_eval.sh 仍引用它实跑，删之断复现与证据链。同名混淆的防护靠本登记与打包单口径，不靠删除。
