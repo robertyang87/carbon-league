@@ -1200,7 +1200,15 @@ def _selection_config():
     form = os.environ.get("BC_SELECTION_FORM", "auto")
     if form not in ("auto", "deployed", "naked-proxy"):
         raise SystemExit(f"selection: BC_SELECTION_FORM={form!r} not in auto|deployed|naked-proxy")
-    sel = {"examiner": os.path.abspath(ex), "examiner_md5": _selection_md5(ex),
+    # V06: read the examiner bytes ONCE, here. The identity (md5) and every
+    # game ever played against this examiner consume these exact bytes via
+    # the snapshot _selection_open writes; the origin path is never
+    # re-read after this point, so a mid-run file swap cannot mix two
+    # examiners into one record stamped with the first one's md5.
+    with open(ex, "rb") as fh:
+        ex_raw = fh.read()
+    sel = {"examiner": os.path.abspath(ex), "examiner_md5": hashlib.md5(ex_raw).hexdigest(),
+           "_examiner_bytes": ex_raw,
            "seed0": seed0, "pairs": pairs, "form": form, "fixture": fixture,
            "workers": int(os.environ.get("BC_SELECTION_WORKERS", "8")), "dir": None}
     sel["public"] = {"method": "examiner_pairs", "examiner": sel["examiner"],
@@ -1215,7 +1223,105 @@ def _selection_open(sel, out):
         d = f"{d}_{os.getpid()}"
     os.makedirs(d)
     sel["dir"] = d
+    _selection_freeze_examiner(sel)
     return d
+
+
+def _selection_snapshot_deps(origin_path, raw, snap_dir):
+    """Freeze the examiner's sibling dependencies (V06): modules it imports
+    that resolve to files sitting next to the ORIGINAL examiner file, plus
+    literal-named data files it references there -- all copied byte-exact
+    into the snapshot dir and recorded as {file, md5}. Returns the
+    provenance list. Dynamic code loading relative to __file__ cannot be
+    enumerated, so it dies by name: an examiner whose execution inputs
+    cannot be frozen may not be stamped as the fixed examiner."""
+    import ast as _ast
+    import re as _re
+    origin_dir = os.path.dirname(os.path.abspath(origin_path))
+    src = raw.decode("utf-8", "replace")
+    if "__file__" in src and ("spec_from_file_location" in src or "exec_module" in src):
+        raise SystemExit("selection: the examiner loads code dynamically relative to __file__; "
+                         "its execution inputs cannot be frozen into the selection snapshot -- "
+                         "refusing to run selection against an unbindable examiner")
+    deps, seen = [], set()
+
+    def scan_imports(code):
+        names = []
+        try:
+            tree = _ast.parse(code)
+        except SyntaxError:
+            return names
+        for node in _ast.walk(tree):
+            if isinstance(node, _ast.Import):
+                names += [a.name.split(".")[0] for a in node.names]
+            elif isinstance(node, _ast.ImportFrom) and node.level == 0 and node.module:
+                names.append(node.module.split(".")[0])
+            elif isinstance(node, _ast.Call):
+                fn = node.func
+                is_dyn = (isinstance(fn, _ast.Name) and fn.id == "__import__") or \
+                         (isinstance(fn, _ast.Attribute) and fn.attr == "import_module")
+                if is_dyn and node.args and isinstance(node.args[0], _ast.Constant) \
+                        and isinstance(node.args[0].value, str):
+                    names.append(node.args[0].value.split(".")[0])
+        return names
+
+    def add_file(srcpath, arc):
+        if srcpath in seen:
+            return
+        seen.add(srcpath)
+        with open(srcpath, "rb") as fh:
+            data = fh.read()
+        dst = os.path.join(snap_dir, arc)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        with open(dst, "wb") as fh:
+            fh.write(data)
+        deps.append({"file": arc, "md5": hashlib.md5(data).hexdigest()})
+        if srcpath.endswith(".py"):
+            resolve_from(scan_imports(data.decode("utf-8", "replace")),
+                           [os.path.dirname(srcpath), origin_dir])
+
+    def resolve_from(names, dirs):
+        for name in sorted(set(names)):
+            for base in dirs:
+                cand = os.path.join(base, name + ".py")
+                pkg = os.path.join(base, name, "__init__.py")
+                if os.path.isfile(cand):
+                    add_file(cand, os.path.relpath(cand, origin_dir))
+                    break
+                if os.path.isfile(pkg):
+                    pkgdir = os.path.join(base, name)
+                    for root, _sub, files in os.walk(pkgdir):
+                        for fn in files:
+                            if fn.endswith(".py"):
+                                p = os.path.join(root, fn)
+                                add_file(p, os.path.relpath(p, origin_dir))
+                    break
+
+    resolve_from(scan_imports(src), [origin_dir])
+    for lit in sorted(set(_re.findall(r"[\"']([A-Za-z0-9_.\-]+\.(?:npz|json|bin|txt|csv))[\"']", src))):
+        p = os.path.join(origin_dir, lit)
+        if os.path.isfile(p):
+            add_file(p, lit)
+    return deps
+
+
+def _selection_freeze_examiner(sel):
+    """Write the frozen examiner snapshot into the selection dir (V06) and
+    point all execution at it. sel['examiner'] keeps naming the ORIGIN file
+    for provenance; sel['examiner_exec'] is what games actually load, and
+    its bytes are the ones sel['examiner_md5'] was computed from."""
+    if sel.get("_examiner_bytes") is None:
+        return                      # hand-built sel dicts (unit probes): no freeze
+    raw = sel["_examiner_bytes"]
+    ext = os.path.splitext(sel["examiner"])[1] or ".py"
+    snap = os.path.join(sel["dir"], "examiner_snapshot" + ext)
+    with open(snap, "wb") as fh:
+        fh.write(raw)
+    deps = _selection_snapshot_deps(sel["examiner"], raw, sel["dir"]) if ext == ".py" else []
+    sel["examiner_exec"] = snap
+    sel["examiner_snapshot_deps"] = deps
+    sel["public"]["examiner_snapshot"] = os.path.basename(snap)
+    sel["public"]["examiner_deps"] = deps
 
 
 def _selection_build_pack(cand_npz, out_py):
@@ -1283,7 +1389,7 @@ def _selection_eval(sel, policy_file, form):
     import multiprocessing as mp
     from concurrent.futures import ProcessPoolExecutor
     seeds = list(range(sel["seed0"], sel["seed0"] + sel["pairs"]))
-    tasks = [("selection", policy_file, sel["examiner"], s, side)
+    tasks = [("selection", policy_file, sel.get("examiner_exec") or sel["examiner"], s, side)
              for s in seeds for side in (0, 1)]
     t0 = time.time()
     got = {}
@@ -1438,6 +1544,9 @@ def _selection_finish(sel, rows, net, out, meta_extra):
         "selection_pairs": sel["pairs"],
         "selection_examiner": sel["examiner"],
         "selection_examiner_md5": sel["examiner_md5"],
+        "selection_examiner_snapshot": (os.path.basename(sel["examiner_exec"])
+                                        if sel.get("examiner_exec") else None),
+        "selection_examiner_deps": sel.get("examiner_snapshot_deps"),
         "selection_epochs": [{k: r.get(k) for k in ("epoch", "mean_u", "se", "ci95", "agreement",
                                                      "ok", "form", "games", "errors", "wall_s",
                                                      "candidate_md5", "seed_u")} for r in rows],
