@@ -280,9 +280,14 @@ def verify_annotation_generation(data_arg):
     the manifest bytes, the manifest's self-seal, the pointer/manifest
     generation match, the meta seal, then every declared file
     (existence, byte size, sha256; row count for .npy fields and for
-    the label bundles' key arrays). Returns (gen_dir, manifest, meta).
-    A sealed generation directory passed directly is refused: the
-    verified generation is the one the pointer certifies."""
+    the label bundles' key arrays). Returns (gen_dir, manifest, meta,
+    verified): verified maps every declared field name to the object
+    parsed from the very bytes whose hash was checked (an array for
+    .npy fields, a {name: array} dict for the label bundles) -- the
+    consumer trains on the verified bytes, never on a second read of
+    the path (r4 X04(b)). A sealed generation directory passed
+    directly is refused: the verified generation is the one the
+    pointer certifies."""
     if os.path.isfile(data_arg):
         ptr_path = data_arg
         root = os.path.dirname(os.path.abspath(data_arg))
@@ -327,11 +332,17 @@ def verify_annotation_generation(data_arg):
             f"k0_distill data: manifest self-seal mismatch in {gen_dir!r}: manifest "
             f"content does not match its self_sha256; refusing to start")
     meta_p = os.path.join(gen_dir, "meta.json")
-    if not os.path.exists(meta_p) or _sha256_file(meta_p) != man.get("meta_sha256"):
+    if not os.path.exists(meta_p):
         raise SystemExit(
             f"k0_distill data: meta seal mismatch in {gen_dir!r}: meta.json does not "
             f"match manifest meta_sha256; refusing to start")
-    meta = json.load(open(meta_p))
+    meta_raw = open(meta_p, "rb").read()
+    if hashlib.sha256(meta_raw).hexdigest() != man.get("meta_sha256"):
+        raise SystemExit(
+            f"k0_distill data: meta seal mismatch in {gen_dir!r}: meta.json does not "
+            f"match manifest meta_sha256; refusing to start")
+    meta = json.loads(meta_raw)
+    verified = {}
     for k in sorted(man.get("fields", {})):
         info = man["fields"][k]
         p = os.path.join(gen_dir, info["file"])
@@ -339,25 +350,30 @@ def verify_annotation_generation(data_arg):
             raise SystemExit(
                 f"k0_distill data: generation file missing: field {k!r} ({p!r}); "
                 f"refusing to start")
-        if os.path.getsize(p) != info["bytes"]:
+        raw = open(p, "rb").read()
+        if len(raw) != info["bytes"]:
             raise SystemExit(
                 f"k0_distill data: generation file size mismatch: field {k!r} has "
-                f"{os.path.getsize(p)} bytes, manifest declares {info['bytes']}; "
+                f"{len(raw)} bytes, manifest declares {info['bytes']}; "
                 f"refusing to start")
-        if _sha256_file(p) != info["sha256"]:
+        if hashlib.sha256(raw).hexdigest() != info["sha256"]:
             raise SystemExit(
                 f"k0_distill data: generation file hash mismatch: field {k!r} "
                 f"({info['file']}); refusing to start")
         if info["file"].endswith(".npy"):
-            rows = int(np.load(p, mmap_mode="r").shape[0])
+            arr = np.load(io.BytesIO(raw))
+            rows = int(arr.shape[0])
+            verified[k] = arr
         else:
-            with np.load(p) as z:
-                rows = int(z["game"].shape[0])
+            with np.load(io.BytesIO(raw)) as z:
+                bundle = {kk: z[kk] for kk in z.files}
+            rows = int(bundle["game"].shape[0])
+            verified[k] = bundle
         if rows != info["rows"]:
             raise SystemExit(
                 f"k0_distill data: generation file row mismatch: field {k!r} has "
                 f"{rows} rows, manifest declares {info['rows']}; refusing to start")
-    return gen_dir, man, meta
+    return gen_dir, man, meta, verified
 
 
 def _die_rec(what, root=None):
@@ -384,15 +400,15 @@ def load_annotation(data_arg, q_temp=Q_TEMP_DEFAULT):
                teacher_weights_md5, belief, ipw_active, ...}
     Every gate refuses by naming the failed item / root."""
     import cnet2_feat as F
-    gen_dir, man, meta = verify_annotation_generation(data_arg)
+    gen_dir, man, meta, verified = verify_annotation_generation(data_arg)
     fields = man.get("fields", {})
     for k in FEATURE_FIELDS + (POLICY_BUNDLE, VALUE_BUNDLE):
         if k not in fields:
             raise SystemExit(
                 f"k0_distill data: generation {man.get('generation')} declares no "
                 f"field {k!r}; refusing to start")
-    feats = {k: np.load(os.path.join(gen_dir, fields[k]["file"]))
-             for k in FEATURE_FIELDS}
+    # Consume the verified parses (r4 X04(b)): no path is opened twice.
+    feats = {k: verified[k] for k in FEATURE_FIELDS}
     R = int(man["total"])
     for k in FEATURE_FIELDS:
         if int(feats[k].shape[0]) != R:
@@ -406,10 +422,8 @@ def load_annotation(data_arg, q_temp=Q_TEMP_DEFAULT):
             raise SystemExit(
                 f"k0_distill data: feature field {k!r} holds {bad} non-finite "
                 f"entries; refusing to start")
-    with np.load(os.path.join(gen_dir, fields[POLICY_BUNDLE]["file"])) as z:
-        pol = {k: z[k] for k in z.files}
-    with np.load(os.path.join(gen_dir, fields[VALUE_BUNDLE]["file"])) as z:
-        val = {k: z[k] for k in z.files}
+    pol = verified[POLICY_BUNDLE]
+    val = verified[VALUE_BUNDLE]
     for name, bundle, need in (
             ("policy", pol, ("game", "step", "seat", "arms", "n_arms", "priors",
                              "q", "pi0", "pi1", "pi")),
