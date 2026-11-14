@@ -1364,6 +1364,28 @@ def _selection_pick(sel, rows):
                 if sed is not None and abs(dd) > sed:
                     winner = top if dd > 0 else second
                     pick["rule"] = "duel_deployed"
+            else:
+                # V03: the duel RAN but a side's evaluation failed (ok=false:
+                # games errored / no valid clusters). That is an executed
+                # failure, NOT a statistical tie -- a failed candidate may
+                # not win through the later-epoch tie fallback, and the
+                # failure must be on the record. (A duel that could not be
+                # BUILT at all stays machinery_usable=False below: no
+                # deployment comparison exists, nobody's fault.)
+                bad = [e for e, r in ((top["epoch"], rt), (second["epoch"], rs))
+                       if not (r.get("ok") and r.get("mean_u") is not None)]
+                duel["failed_epochs"] = bad
+                pick["failed_epochs"] = sorted(set(pick["failed_epochs"]) | set(bad))
+                pick["duel"] = duel
+                if len(bad) == 2:
+                    raise SystemExit(f"selection: the deployment duel failed for BOTH tied "
+                                     f"candidates (epochs {bad[0]} and {bad[1]}) -- no healthy "
+                                     "deployed comparison exists and a failed candidate may "
+                                     "not be selected; refusing to export a winner")
+                winner = second if bad[0] == top["epoch"] else top
+                pick["rule"] = "duel_opponent_failed"
+                pick["winner_epoch"] = winner["epoch"]
+                return pick
             pick["duel"] = duel
         else:
             duel = {"machinery_usable": False,
