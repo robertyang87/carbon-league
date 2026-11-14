@@ -44,14 +44,16 @@ def _clustered_se(pairs):
 def summarize(by):
     """Per-opponent summary rows from {opp: [(seed, margin)]}. "se" is
     the seed-clustered SE; "se_iid" keeps the old per-game figure for
-    continuity (it understates by up to sqrt(2) on paired seats)."""
+    continuity (it understates by up to sqrt(2) on paired seats).
+    A single seed makes the clustered SE inestimable: the row emits
+    se as null, never 0.0 (Codex re-review item 3)."""
     out = {}
     for o, pairs in by.items():
         m = np.array([v for _, v in pairs], dtype=np.float64)
         se, n_seeds = _clustered_se(pairs)
         out[o] = {"n": len(m), "n_seeds": n_seeds, "wins": int((m > 0).sum()),
                   "mean": round(float(m.mean()), 1),
-                  "se": round(se, 1) if se is not None else 0.0,
+                  "se": round(se, 1) if se is not None else None,
                   "se_iid": round(float(m.std(ddof=1) / math.sqrt(len(m))), 1) if len(m) > 1 else 0.0}
     return out
 
