@@ -80,7 +80,16 @@ def load_exit(dirn):
                 f"expected {ref} (from {ref_src}); refusing to train")
     # Finite scan: any NaN/Inf in a float field dies here, naming the
     # field (the BC half's F1 gate has refused such data all along).
+    # Field 'q' is the single exception and is NOT blanket-scanned: the
+    # producer contract (exit_gen.record) writes NaN into q as the
+    # "not evaluated" sentinel -- unsearched rows carry an all-NaN q and
+    # searched rows carry NaN at the moves the search did not evaluate.
+    # Blanket-rejecting q's NaNs refuses normal production data (V01);
+    # q is validated semantically by _check_exit_q below instead. The
+    # sentinel is never filled in or otherwise repaired here.
     for k in keys:
+        if k == "q":
+            continue
         a = D[k]
         if np.issubdtype(a.dtype, np.floating):
             bad = int((~np.isfinite(np.asarray(a))).sum())
@@ -88,6 +97,7 @@ def load_exit(dirn):
                 raise SystemExit(
                     f"exit data non-finite entries in {dirn!r} field {k!r}: "
                     f"{bad} NaN/Inf; refusing to train")
+    _check_exit_q(D, dirn)
     is_val = np.array([g["val"] for g in meta["games"]])[np.asarray(D["gid"])]
     print(json.dumps({"exit_data_identity": {
         "dir": dirn,
@@ -98,6 +108,73 @@ def load_exit(dirn):
         "games": len(meta["games"]),
     }}), flush=True)
     return D, is_val, meta
+
+
+def _check_exit_q(D, dirn):
+    """Semantic validation of field 'q' (V01). The precise sentinel
+    criterion, from exit_gen.record(): per row, q[j] is the search
+    root's mean leaf value for move j of the searched unit, and NaN
+    means "not evaluated" --
+      * unsearched row (no search record): searched=False, q all-NaN,
+        pi_slot=-1, pi all zero;
+      * searched row: q is finite exactly at the evaluated moves; when
+        at least one move was evaluated, pi_slot names the searched
+        unit and pi[pi_slot] is the softmax over the finite entries,
+        so a positive pi entry can only sit on a finite q entry, and
+        the slot's pi row is non-empty; when no move was evaluated, q
+        stays all-NaN with pi_slot=-1 and pi all zero.
+    NaN in q is therefore data, not damage -- but Inf is never a
+    legitimate q entry (the sentinel is NaN only), and any pattern
+    contradicting the contract above dies here, naming field 'q', the
+    contradicting companion field, and the first offending row. Every
+    other field keeps the strict blanket finite scan in load_exit.
+    """
+    q = np.asarray(D["q"], np.float64)
+    pi = np.asarray(D["pi"], np.float64)
+    ps = np.asarray(D["pi_slot"]).astype(np.int64)
+    se = np.asarray(D["searched"]).astype(bool)
+
+    def die(what, rows):
+        rows = np.asarray(rows)
+        raise SystemExit(
+            f"exit data field 'q' contradicts the exit producer contract in {dirn!r}: "
+            f"{what} (first at row {int(rows[0])}, {len(rows)} row(s) affected); "
+            f"refusing to train")
+
+    if np.isinf(q).any():
+        die("q contains Inf entries (the not-evaluated sentinel is NaN only)",
+            np.nonzero(np.isinf(q).any(axis=1))[0])
+    bad_ps = (ps < -1) | (ps >= F.OWN)
+    if bad_ps.any():
+        die("pi_slot outside [-1, OWN)", np.nonzero(bad_ps)[0])
+    qfin = np.isfinite(q)
+    has_q = qfin.any(axis=1)
+    claimed = ps >= 0
+    if (claimed & ~has_q).any():
+        die("pi_slot is set but q has no evaluated (finite) entry",
+            np.nonzero(claimed & ~has_q)[0])
+    if claimed.any():
+        rows = np.nonzero(claimed)[0]
+        pi_at = pi[rows, ps[rows]]
+        bad = (pi_at > 0) & ~qfin[rows]
+        if bad.any():
+            die("pi has a positive entry on a move whose q is NaN (not evaluated)",
+                rows[bad.any(axis=1)])
+        empty = pi_at.max(axis=1) <= 0
+        if empty.any():
+            die("pi_slot is set but the slot's pi row is empty", rows[empty])
+    if (~claimed & has_q).any():
+        die("q has evaluated (finite) entries but pi_slot is -1",
+            np.nonzero(~claimed & has_q)[0])
+    pinz = (pi != 0).any(axis=(1, 2))
+    if (~claimed & pinz).any():
+        die("pi has entries but pi_slot is -1", np.nonzero(~claimed & pinz)[0])
+    if (~se & has_q).any():
+        die("unsearched row (searched=False) carries evaluated q entries",
+            np.nonzero(~se & has_q)[0])
+    if (~se & claimed).any():
+        die("unsearched row (searched=False) carries a pi_slot",
+            np.nonzero(~se & claimed)[0])
 
 
 def _canonical_sha256(obj):
