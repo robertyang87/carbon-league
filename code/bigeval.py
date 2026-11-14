@@ -22,6 +22,18 @@ def _md5_of(path):
 def _resolve(p):    # mirror eval_v53's loading: policy paths are relative to HERE
     q = os.path.join(HERE, p)
     return q if os.path.exists(q) else p
+def _env_snapshot():
+    # F4_SUPPLEMENT_20261114 (strategy-group 07:18 item 8; the F4 final was
+    # verified without this, this supplement lands it): the start record
+    # carries the eval environment next to the identity hashes -- every
+    # EVAL_* variable present at startup, plus CNET2_TEACHER /
+    # RL2_SNAP_TEMP / CNET2_TEMP_KIND verbatim, an unset named variable
+    # recorded as null, never omitted. Nothing else is read: no unrelated
+    # variables and nothing credential-shaped is swept in.
+    env = {k: os.environ[k] for k in sorted(os.environ) if k.startswith("EVAL_")}
+    for k in ("CNET2_TEACHER", "RL2_SNAP_TEMP", "CNET2_TEMP_KIND"):
+        env[k] = os.environ.get(k)
+    return env
 def _u_of(margin):
     # U = 0.5*W + 0.5*sigmoid(margin/1000), W = 1 / 0.5 / 0 for win/draw/loss
     # from the RAW margin's sign (eval_v53 returns margin at the sim's native
@@ -60,7 +72,8 @@ def main(a, b, s0, n, tag):
     harness_md5 = _md5_of(os.path.abspath(__file__))
     a_md5 = _md5_of(_resolve(a)); b_md5 = _md5_of(_resolve(b))
     print(json.dumps({"tag": tag, "start": True, "harness_md5": harness_md5,
-                      "a": a, "a_md5": a_md5, "b": b, "b_md5": b_md5, "n": n}),
+                      "a": a, "a_md5": a_md5, "b": b, "b_md5": b_md5, "n": n,
+                      "env": _env_snapshot()}),
           file=sys.stderr, flush=True)
     live = os.path.join(HERE, "..", "data", "bigeval_live"); os.makedirs(live, exist_ok=True)
     lf = open(os.path.join(live, tag + ".jsonl"), "a")
