@@ -127,7 +127,12 @@ Numeric protection & recovery (spec S19 standard, in code):
      label files' sha256, also compared when carried -- the sidecar's
      internal checks keep a regenerated bundle self-consistent, so
      without this binding the death targets could be swapped under a
-     resume and the run would silently change experiment) -- are
+     resume and the run would silently change experiment), and the
+     game-subset identity (games_used_sha256, recomputed for this
+     invocation and compared against the record -- stricter than the
+     fingerprint class: a checkpoint carrying no subset record at all
+     is refused unless --accept-unrecorded-subset migrates it, the
+     acceptance being recorded) -- are
      checked against this invocation; any mismatch refuses the start,
      naming the field and both values. Exempt by design, as the
      legitimate axes of a continuation: --max-updates, --out,
@@ -142,11 +147,17 @@ sidecar binding and u_raw for the U supervision). --max-games (default
 game is used (games_sampling "all" in the effective config); below it, a
 seeded deterministic sample of that many game ids is drawn from --seed
 (games_sampling "seeded") -- never the enumeration-order prefix, which
-is the build scan order and so a biased subset. The same seed + cap
-always selects the same subset (the P7 resume assertion pins both), so
-arms sharing a seed and cap train on identical game sets; the selected
-set's sha256 (games_used_sha256) and the actual counts are printed in
-the effective config.
+is the build scan order and so a biased subset. The selected set's
+sha256 (games_used_sha256) is recorded in the effective config, and
+the P7 resume assertion pins the recomputed value itself, so a resume
+provably continues on the producing run's game set -- not merely on
+the same seed + cap under whatever selection algorithm the current
+code happens to run (W01: the algorithm changed once already, at B2).
+A checkpoint from before subset recording (the prefix-selection era)
+carries no games_used_sha256: resuming it is refused by default --
+its training subset is unverifiable -- unless
+--accept-unrecorded-subset is given, in which case the acceptance is
+recorded in the new run's effective config (subset_migration).
 
 Stage-A screening (--screen): an eval-only mode of this same entry. It
 takes an arm checkpoint (--checkpoint, bound by its complete marker) and
@@ -357,6 +368,11 @@ def main():
     ap.add_argument("--data", required=True, help="cnet2_build dataset dir (sealed generation required)")
     ap.add_argument("--init", default=None, help="backbone init: cnet2_train export .npz")
     ap.add_argument("--resume", default=None, help="K0 checkpoint .pt to resume (heads + optimizer + counters)")
+    ap.add_argument("--accept-unrecorded-subset", action="store_true",
+                    help="resume migration only: accept a checkpoint carrying no games_used_sha256 subset "
+                         "record (pre-B2, prefix-selection era), although its training subset cannot be "
+                         "verified against this invocation's; the acceptance is recorded in the new "
+                         "checkpoint's effective config (subset_migration)")
     ap.add_argument("--aux-dir", default=None, help="dir holding aux_die.npy/aux_die_m.npy + k0_aux.json "
                                                     "(the k0_aux_labels sidecar; default: the dataset dir)")
     ap.add_argument("--out", default=None, help="checkpoint output path (.pt); required unless --screen")
@@ -507,10 +523,12 @@ def main():
         # looks uniform. The sample is a pure function of (seed,
         # max_games, gids_present), drawn on a dedicated stream so it
         # cannot perturb the batching stream built from the same seed
-        # below; the P7 resume assertion pins seed + max_games, so a
-        # resume recomputes the identical subset. Sorted after the draw
-        # so downstream consumers see the same canonical order as the
-        # uncapped path.
+        # below; the P7 resume assertion pins the recomputed subset's
+        # sha256 against the checkpoint's record (W01), so a resume
+        # provably recomputes the identical subset -- seed + max_games
+        # alone would not pin it across a selection-algorithm change.
+        # Sorted after the draw so downstream consumers see the same
+        # canonical order as the uncapped path.
         _grs = np.random.RandomState((int(args.seed) * 1000003 + 977) % (2 ** 31))
         games_used = np.sort(_grs.choice(gids_present, size=_cap, replace=False))
         games_sampling = "seeded"
@@ -586,6 +604,7 @@ def main():
     opt = torch.optim.AdamW(trainable, lr=args.lr if args.lr is not None else 1e-3, weight_decay=1e-4)
 
     updates_done = 0
+    subset_migration = None
     if ck is not None:
         # P7 first, before any load_state_dict: the assertion must also
         # pre-empt the bare load errors a mismatched continuation would
@@ -599,7 +618,9 @@ def main():
         # --out, --save-every, --resume itself, --lr (P5's rule
         # governs it) and --init (not applicable to a resume). The
         # data fingerprint fields and the aux content identity are
-        # compared when the record carries them.
+        # compared when the record carries them; the game-subset
+        # identity (W01) is stricter -- compared when carried, and a
+        # missing record refuses the start unless explicitly migrated.
         _eff0 = ck.get("effective")
         if _eff0 is None:
             raise SystemExit("k0: resume checkpoint carries no 'effective' record; the resume protocol "
@@ -640,6 +661,37 @@ def main():
                 raise SystemExit(f"k0 resume protocol: aux.files_sha256[{_nm}] differs from the "
                                  f"checkpoint's producing run (checkpoint {_auxf0.get(_nm)!r} != this "
                                  f"invocation {aux_identity['files_sha256'][_nm]!r}); refusing to start")
+        # W01: the game-subset identity. Seed + max_games (asserted
+        # above) pin the selection INPUTS, but the subset is a function
+        # of the selection ALGORITHM, which changed at B2 (prefix ->
+        # seeded): a prefix-era checkpoint resumed under the seeded
+        # algorithm with identical seed + cap silently continued on a
+        # different game set -- same protocol fields, different data.
+        # So the recomputed subset sha is asserted against the record
+        # itself. A checkpoint with no record predates subset
+        # recording: its subset is unverifiable, and the resume is
+        # refused unless the caller explicitly migrates it with
+        # --accept-unrecorded-subset; the acceptance is then written
+        # into the new run's effective config (subset_migration).
+        _sub0 = _eff0.get("games_used_sha256")
+        if _sub0 is None:
+            if not args.accept_unrecorded_subset:
+                raise SystemExit(f"k0 resume protocol: checkpoint carries no games_used_sha256 subset "
+                                 f"record (it predates subset recording -- the prefix-selection era "
+                                 f"before B2); its training subset cannot be verified against this "
+                                 f"invocation's subset {games_used_sha256!r} (sampling {games_sampling!r}); "
+                                 f"refusing to start -- pass --accept-unrecorded-subset to migrate it "
+                                 f"explicitly (the acceptance is recorded in the new checkpoint)")
+            subset_migration = {"accept_unrecorded_subset": True,
+                                "checkpoint_games_sampling": _eff0.get("games_sampling"),
+                                "invocation_games_sampling": games_sampling,
+                                "invocation_games_used_sha256": games_used_sha256}
+        elif _sub0 != games_used_sha256:
+            raise SystemExit(f"k0 resume protocol: games_used_sha256 (subset identity) differs from the "
+                             f"checkpoint's producing run (checkpoint {_sub0!r}, sampling "
+                             f"{_eff0.get('games_sampling')!r} != this invocation {games_used_sha256!r}, "
+                             f"sampling {games_sampling!r}); the resume would train on a different game "
+                             f"set; refusing to start")
         net.load_state_dict(ck["backbone"])
         u_head.load_state_dict(ck["u_head"])
         death_head.load_state_dict(ck["death_head"])
@@ -679,6 +731,8 @@ def main():
         "games_sampling": games_sampling, "games_used_sha256": games_used_sha256,
         "roots": int(len(roots)), "u_nan_unusable_rows": n_u_nan,
         "init_migrated_missing": mig["migrated_missing"], "device": args.device}}
+    if subset_migration is not None:
+        eff["k0_effective"]["subset_migration"] = subset_migration
     log_path = args.out + ".log.jsonl"
     log = open(log_path, "w")
 
