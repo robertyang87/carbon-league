@@ -257,9 +257,18 @@ def build_plan(a):
              f"lists (e.g. {iso[clash[0]]}); refusing to annotate")
     paths = G.list_replays(a.replays, games)
     cfg = teacher_config(a)
+    # The teacher weights are read exactly once, here at plan time:
+    # the recorded weights_md5 is the md5 of these bytes, and every
+    # teacher load in the run parses these same bytes (X04) -- hashing
+    # by path and later loading by path would let a swapped weights
+    # file evaluate under the recorded identity of another.
+    with open(a.weights, "rb") as fh:
+        weights_bytes = fh.read()
     plan = {"games": games, "paths": paths, "config": cfg,
             "config_sha256": _sha256_bytes(_canonical(cfg)),
-            "weights": a.weights, "weights_md5": _md5_file(a.weights),
+            "weights": a.weights,
+            "weights_md5": hashlib.md5(weights_bytes).hexdigest(),
+            "weights_bytes": weights_bytes,
             "pi0": float(a.pi0), "pi1": float(a.pi1), "seed": int(a.seed),
             "code_md5s": code_md5s(),
             "per_game": []}
@@ -315,8 +324,11 @@ def build_plan(a):
 _W = {}
 
 
-def _init_worker(weights_path):
-    w = dict(np.load(weights_path))
+def _init_worker(weights_bytes):
+    """Load the teacher from the plan's frozen weights bytes (the
+    exact bytes whose md5 the plan/identity/manifest record) -- never
+    by path."""
+    w = dict(np.load(io.BytesIO(weights_bytes)))
     from cnet2_search import CachePolicy
     _W["pol"] = CachePolicy(w)
 
@@ -361,9 +373,9 @@ def _root_row(r, K):
 
 
 def _annotate_game(task):
-    pg, cfg, weights_path, shard_dir, identity = task
+    pg, cfg, weights_bytes, shard_dir, identity = task
     if "pol" not in _W:
-        _init_worker(weights_path)
+        _init_worker(weights_bytes)
     g = pg["game"]
     K = cfg["K"]
     rows = {k: [] for k in FIELDS}
@@ -944,17 +956,17 @@ def main(argv=None):
         print(json.dumps({"shard_done": m["game"],
                           "n_roots": m["n_roots"]}), flush=True)
 
-    tasks = [(pg, plan["config"], a.weights, shard_dir, plan["identity"])
-             for pg in todo]
+    tasks = [(pg, plan["config"], plan["weights_bytes"], shard_dir,
+              plan["identity"]) for pg in todo]
     if tasks:
         if a.workers and a.workers > 1:
             with ProcessPoolExecutor(max_workers=a.workers,
                                      initializer=_init_worker,
-                                     initargs=(a.weights,)) as ex:
+                                     initargs=(plan["weights_bytes"],)) as ex:
                 for m in ex.map(_annotate_game, tasks):
                     _record(m)
         else:
-            _init_worker(a.weights)
+            _init_worker(plan["weights_bytes"])
             for t in tasks:
                 _record(_annotate_game(t))
     summary = publish(out_dir, plan, [metas[g] for g in plan["games"]])
