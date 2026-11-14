@@ -1234,7 +1234,7 @@ def _selection_open(sel, out):
 _SELECTION_FROZEN_IMPORTS = {}
 
 
-def _selection_snapshot_deps(origin_path, raw, snap_dir):
+def _selection_snapshot_deps(origin_path, raw, snap_dir, skips_out=None):
     """Freeze the examiner's sibling dependencies (V06): modules it imports
     that resolve to files sitting next to the ORIGINAL examiner file, plus
     data files it reads there -- all copied byte-exact into the snapshot
@@ -1273,6 +1273,35 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
     filename literal mentioned anywhere in a frozen file keeps the legacy
     treatment: an existing same-directory file freezes as data.
 
+    Skip ledger (W04 accounting): every read open whose path expression
+    IS evaluated by the data scan but does NOT freeze is recorded, one
+    entry per call site, as {"file", "expr", "reason"} -- the scanned
+    file's path relative to the examiner directory, the path
+    expression's verbatim source text, and exactly one reason class:
+    "irreducible" (the expression does not reduce to a concrete file
+    path: unbound/runtime-computed, W10-shadowed, a bare relative
+    literal, a directory form, or an exists-guarded candidate list
+    containing such a candidate), "missing" (the expression reduces to
+    a path at which no regular file exists -- absent, or occupied by a
+    non-file -- wherever that path sits), or "out-of-dir-existing" (the
+    expression reduces to a regular file that exists OUTSIDE the
+    examiner directory). The classes are kept pure on purpose: an
+    out-of-dir path with no file on it is "missing", never
+    "out-of-dir-existing". A read of the scanned file itself (__file__
+    as the target) is not a skip: those bytes are already frozen. Two
+    boundaries are classified BEFORE evaluation and are not ledger
+    events: write-mode opens (outputs, not inputs), buffer-object
+    arguments (np.load(io.BytesIO(...)) reads bytes embedded in the
+    frozen source itself -- its "path" is not a path), and call shapes
+    the scan does not recognize as read opens (no path expression is
+    ever evaluated for them). The legacy bare-literal scan likewise has
+    no
+    expression to record -- a non-matching literal is a string, not an
+    open. When `skips_out` (a list) is passed, the ledger is appended to
+    it; _selection_freeze_examiner always passes one and publishes the
+    ledger in the selection record, an explicit empty list when no read
+    was skipped.
+
     Absolute-path loads (W09): a dynamic load whose path is anchored on an
     absolute string literal names the ORIGINAL file at runtime, so the
     snapshot copy would never be read. In the examiner itself such a load
@@ -1301,6 +1330,7 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
     origin_file = os.path.abspath(origin_path)
     src = raw.decode("utf-8", "replace")
     deps, entries = [], {}
+    data_skips = []          # W04 skip ledger (see docstring)
     MAX_DYN_DEPTH = 8
     SHADOW = ("shadow",)
 
@@ -1842,7 +1872,10 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
         Path.read_text and similar, through bound names as well. Soft by
         design (unlike code loads): write-mode opens are outputs, paths
         that do not reduce are runtime business, and a missing target may
-        be a guarded optional read -- all skipped, never fatal."""
+        be a guarded optional read -- all skipped, never fatal, and every
+        evaluated skip is appended to the W04 ledger (data_skips) with
+        its reason class; only the freeze DECISION is soft, the
+        accounting is not."""
         cur_dir = os.path.dirname(cur_file)
         try:
             tree = _ast.parse(code)
@@ -1851,37 +1884,55 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
         found = []
 
         def soft_target(v):
+            """Resolve an evaluated data-open path to a freezable file.
+            Returns (ap, None) for a frozen target, (None, reason) for a
+            ledgered skip (reason classes per the W04 ledger definition
+            in _selection_snapshot_deps' docstring), or (None, None)
+            when the target is the scanned file itself -- already
+            frozen, so nothing is skipped. The freeze decisions are
+            exactly the pre-ledger ones; this only names them."""
             if v is None or v == SHADOW:
-                return None
+                return None, "irreducible"
             if v[0] == "oneof":
+                # Exists-guarded candidates: mirror the runtime choice --
+                # the first candidate that exists decides; candidates
+                # before it simply do not exist and are not skips.
                 for cand in v[1]:
                     if cand is None or cand[0] not in ("path", "lit", "file", "pfile"):
-                        return None
+                        return None, "irreducible"
                     if cand[0] == "path":
                         ap = cand[1]
                     elif cand[0] == "lit":
                         if not os.path.isabs(cand[1]):
-                            return None
+                            return None, "irreducible"
                         ap = os.path.normpath(cand[1])
                     else:
                         ap = cur_file
                     if os.path.isfile(ap):
-                        return ap if (os.path.dirname(ap) == cur_dir
-                                      and ap != cur_file) else None
+                        if os.path.dirname(ap) == cur_dir and ap != cur_file:
+                            return ap, None
+                        if ap == cur_file:
+                            return None, None
+                        return None, "out-of-dir-existing"
                     if os.path.exists(ap):
-                        return None
-                return None
+                        return None, "missing"
+                return None, "missing"
             if v[0] == "path":
                 ap = v[1]
             elif v[0] == "lit":
                 if not os.path.isabs(v[1]):
-                    return None
+                    return None, "irreducible"
                 ap = os.path.normpath(v[1])
+            elif v in (("file",), ("pfile",)):
+                ap = cur_file
             else:
-                return None
-            if os.path.dirname(ap) != cur_dir or ap == cur_file:
-                return None
-            return ap if os.path.isfile(ap) else None
+                return None, "irreducible"
+            if ap == cur_file:
+                return None, None
+            if os.path.dirname(ap) != cur_dir:
+                return None, ("out-of-dir-existing" if os.path.isfile(ap)
+                              else "missing")
+            return (ap, None) if os.path.isfile(ap) else (None, "missing")
 
         def write_mode(node):
             mnode = None
@@ -1919,9 +1970,22 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
                      if k.arg in ("file", "path", "filepath_or_buffer")), None)
             if pnode is None:
                 return
-            ap = soft_target(eval_path(pnode, scopes, cur_file))
+            if isinstance(pnode, _ast.Call) and (
+                    (isinstance(pnode.func, _ast.Attribute)
+                     and pnode.func.attr == "BytesIO")
+                    or (isinstance(pnode.func, _ast.Name)
+                        and pnode.func.id == "BytesIO")):
+                return      # a buffer object, not a path: its bytes
+                            # travel inside the frozen source itself
+            ap, skip_reason = soft_target(eval_path(pnode, scopes, cur_file))
             if ap:
                 found.append(ap)
+            elif skip_reason is not None:
+                data_skips.append({
+                    "file": os.path.relpath(cur_file, origin_dir),
+                    "expr": _ast.get_source_segment(code, pnode)
+                            or _ast.unparse(pnode),
+                    "reason": skip_reason})
 
         walk_scoped(tree, cur_file, on_call)
         return found
@@ -2083,6 +2147,10 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
                     "examiner")
         _SELECTION_FROZEN_IMPORTS[name] = (
             d["md5"], os.path.abspath(os.path.join(snap_dir, d["file"])))
+    if skips_out is not None:
+        skips_out.extend(sorted(
+            data_skips,
+            key=lambda s: (s["file"], s["expr"], s["reason"])))
     return deps
 
 
@@ -2104,7 +2172,9 @@ def _selection_freeze_examiner(sel):
         return                      # hand-built sel dicts (unit probes): no freeze
     raw = sel["_examiner_bytes"]
     ext = os.path.splitext(sel["examiner"])[1] or ".py"
-    deps = _selection_snapshot_deps(sel["examiner"], raw, sel["dir"]) if ext == ".py" else []
+    data_skips = []
+    deps = _selection_snapshot_deps(sel["examiner"], raw, sel["dir"],
+                                    skips_out=data_skips) if ext == ".py" else []
     snap_name = os.path.basename(sel["examiner"])
     if any(d["file"] == snap_name for d in deps):
         snap_name = "examiner_snapshot" + ext
@@ -2113,8 +2183,10 @@ def _selection_freeze_examiner(sel):
         fh.write(raw)
     sel["examiner_exec"] = snap
     sel["examiner_snapshot_deps"] = deps
+    sel["examiner_data_skips"] = data_skips
     sel["public"]["examiner_snapshot"] = snap_name
     sel["public"]["examiner_deps"] = deps
+    sel["public"]["examiner_data_skips"] = data_skips
 
 
 def _selection_build_pack(cand_npz, out_py):
@@ -2392,6 +2464,7 @@ def _selection_finish(sel, rows, net, out, meta_extra):
         "selection_examiner_snapshot": (os.path.basename(sel["examiner_exec"])
                                         if sel.get("examiner_exec") else None),
         "selection_examiner_deps": sel.get("examiner_snapshot_deps"),
+        "selection_examiner_data_skips": sel.get("examiner_data_skips"),
         "selection_epochs": [{k: r.get(k) for k in ("epoch", "mean_u", "se", "ci95", "agreement",
                                                      "ok", "form", "games", "errors", "wall_s",
                                                      "candidate_md5", "seed_u")} for r in rows],
