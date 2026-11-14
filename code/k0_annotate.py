@@ -47,14 +47,26 @@ Sharding and resume (S13-C item 3): one shard per game under
 OUT/shards/<game>.npz, with its sidecar meta (per-array sha256, run
 identity, per-game selection hash) embedded in the npz as a "_meta"
 JSON entry so a shard lands atomically in a single os.replace;
-progress in OUT/progress.json. A rerun under the same run identity
+progress in OUT/progress.json. The run identity binds, beside config /
+weights / window / sampling / the game-id set, the CONTENT of the
+feed: the sha256 of every game's replay file bytes (the plan reads
+each replay exactly once, hashes the bytes it enumerates roots from,
+and a resume recomputes them before any shard is trusted -- replacing
+a replay under the same id dies by name, naming the game), and the
+producer code md5 set (code_md5s(), the same set the publish manifest
+carries -- resuming under different code dies instead of mixing code
+versions into one generation). A rerun under the same run identity
 verifies every finished shard (embedded-meta self-consistency,
 per-array hashes, plan root keys, config hash, weights md5, selection
 hash, and the file sha256 recorded in progress) and skips it; an
 orphan shard that fully verifies is adopted, one that does not verify
 dies by name -- a shard is never silently recomputed. A rerun under a
-different identity (config, weights, window, sampling, feed) dies by
-name.
+different identity dies by name. Progress/shards recorded before the
+content+code binding existed are UNBOUND: they die by default, and
+are adopted only under the explicit --accept-unbound-identity flag,
+which records the adoption in progress.json (the W01 precedent:
+absence of a record may be overridden explicitly, contradiction of a
+record never may).
 
 Publish: OUT/generations/gen-<id>/ assembled from the shards in feed
 order, manifest schema adapted from exit_merge's cnet2-exit-generation/1
@@ -78,6 +90,7 @@ Usage (from code/):
 """
 import argparse
 import hashlib
+import io
 import json
 import os
 import shutil
@@ -189,12 +202,13 @@ def code_md5s():
     return {fn: _md5_file(os.path.join(HERE, fn)) for fn in fns}
 
 
-def enumerate_roots(path, lo, hi):
-    """All (step, seat) roots of one game inside the window, bounded by
-    the game's first-terminal frame exactly as the gate sampler bounds
-    its scenes (step t reads frame t+1, so t < min(len-1, ft))."""
+def _enumerate_roots_bytes(raw, lo, hi):
+    """Roots of one game from its exact replay bytes (the bytes the
+    plan hashed): the identity's replay sha256 therefore covers the
+    very content the roots were enumerated from, never a later
+    by-path re-read."""
     import gzip
-    with gzip.open(path) as fh:
+    with gzip.GzipFile(fileobj=io.BytesIO(raw)) as fh:
         d = json.load(fh)
     ft, _cause = G.first_terminal_step(d["steps"])
     n_steps = min(len(d["steps"]) - 1, ft)
@@ -204,6 +218,15 @@ def enumerate_roots(path, lo, hi):
         for seat in (0, 1):
             roots.append((step, seat))
     return roots, ft
+
+
+def enumerate_roots(path, lo, hi):
+    """All (step, seat) roots of one game inside the window, bounded by
+    the game's first-terminal frame exactly as the gate sampler bounds
+    its scenes (step t reads frame t+1, so t < min(len-1, ft))."""
+    with open(path, "rb") as fh:
+        raw = fh.read()
+    return _enumerate_roots_bytes(raw, lo, hi)
 
 
 def build_plan(a):
@@ -238,6 +261,7 @@ def build_plan(a):
             "config_sha256": _sha256_bytes(_canonical(cfg)),
             "weights": a.weights, "weights_md5": _md5_file(a.weights),
             "pi0": float(a.pi0), "pi1": float(a.pi1), "seed": int(a.seed),
+            "code_md5s": code_md5s(),
             "per_game": []}
     rng = np.random.default_rng(int(a.seed))
     pass_a = {}
@@ -245,7 +269,13 @@ def build_plan(a):
         pass_a[g] = bool(rng.random() < plan["pi0"])
     n_sel = 0
     for gi, (g, p) in enumerate(zip(games, paths)):
-        roots, ft = enumerate_roots(p, a.window_lo, a.window_hi)
+        # One read of the replay: the recorded content sha256 is taken
+        # over the exact bytes the roots are enumerated from, before
+        # anything else consumes the game (X03 / P3(a) consumer half).
+        with open(p, "rb") as fh:
+            raw = fh.read()
+        replay_sha = _sha256_bytes(raw)
+        roots, ft = _enumerate_roots_bytes(raw, a.window_lo, a.window_hi)
         if pass_a[g]:
             sel, pas = list(roots), "A"
         else:
@@ -256,7 +286,7 @@ def build_plan(a):
         sel_keys = [[g, s, seat] for (s, seat) in sel]
         plan["per_game"].append({
             "game": g, "gid": gi, "path": p, "ft": ft, "pass": pas,
-            "roots": sel,
+            "roots": sel, "replay_sha256": replay_sha,
             "selected_sha256": _sha256_bytes(_canonical(sel_keys))})
         n_sel += len(sel)
     plan["n_roots"] = n_sel
@@ -269,7 +299,10 @@ def build_plan(a):
                         "pi0": plan["pi0"], "pi1": plan["pi1"],
                         "seed": plan["seed"],
                         "games_sha256": _sha256_bytes(_canonical(games)),
-                        "selected_sha256": plan["selected_sha256"]}
+                        "selected_sha256": plan["selected_sha256"],
+                        "replay_sha256": {pg["game"]: pg["replay_sha256"]
+                                          for pg in plan["per_game"]},
+                        "code_md5s": plan["code_md5s"]}
     if n_sel == 0:
         _die("sampling selected zero roots (check pi0/pi1 and the window); "
              "refusing to produce an empty generation")
@@ -378,8 +411,41 @@ def _annotate_game(task):
 
 # ------------------------- shard verification ------------------------------
 
+# Run-identity keys recorded before the X03 content+code binding
+# existed, and the binding keys themselves. A recorded identity that
+# carries all legacy keys with equal values but lacks the binding keys
+# is UNBOUND (adoptable only under the explicit migration flag); one
+# whose replay content sha256 CONTRADICTS the current plan dies by
+# name regardless of any flag.
+_IDENTITY_LEGACY_KEYS = ("config_sha256", "weights_md5", "window", "pi0",
+                         "pi1", "seed", "games_sha256", "selected_sha256")
+_IDENTITY_BINDING_KEYS = ("replay_sha256", "code_md5s")
 
-def _verify_shard(shard_dir, pg, identity, recorded_sha=None):
+
+def _identity_replay_changes(old_id, new_id):
+    """Games whose recorded replay content sha256 contradicts the
+    current plan's recomputation (present in both maps, values differ)."""
+    old_map = (old_id or {}).get("replay_sha256") or {}
+    new_map = (new_id or {}).get("replay_sha256") or {}
+    return {g: (old_map[g], new_map[g]) for g in old_map
+            if g in new_map and old_map[g] != new_map[g]}
+
+
+def _identity_unbound_missing(old_id, new_id):
+    """If old_id is a pre-binding identity that agrees with new_id on
+    every legacy key, return the binding keys it lacks; else None."""
+    if not old_id:
+        return None
+    if any(k not in old_id for k in _IDENTITY_LEGACY_KEYS):
+        return None
+    if any(old_id.get(k) != new_id.get(k) for k in _IDENTITY_LEGACY_KEYS):
+        return None
+    missing = [k for k in _IDENTITY_BINDING_KEYS if k not in old_id]
+    return missing or None
+
+
+def _verify_shard(shard_dir, pg, identity, recorded_sha=None,
+                  accept_unbound=False):
     """Full verification of one finished shard against the plan and the
     run identity. Returns the shard meta (with shard_sha256 filled from
     the file bytes), or None if no shard exists; dies by name on any
@@ -415,9 +481,30 @@ def _verify_shard(shard_dir, pg, identity, recorded_sha=None):
         if not (np.asarray(D["gid"]) == pg["gid"]).all():
             _die(f"shard {g}: gid column does not match the plan")
     if meta.get("identity") != identity:
-        _die(f"shard {g}: run identity mismatch (config/weights/window/"
-             f"sampling/feed differ from the recorded run); refusing to "
-             f"mix identities -- remove the output dir to start over")
+        rec_id = meta.get("identity") or {}
+        changed = _identity_replay_changes(rec_id, identity)
+        if g in changed:
+            _die(f"shard {g}: replay content for this game changed "
+                 f"since the shard was produced (recorded replay "
+                 f"sha256 {changed[g][0]}, current {changed[g][1]}); "
+                 f"refusing to mix content generations -- remove the "
+                 f"output dir to start over")
+        missing = _identity_unbound_missing(rec_id, identity)
+        if missing is not None:
+            if not accept_unbound:
+                _die(f"shard {g}: recorded run identity predates the "
+                     f"content/code binding (missing {missing}); the "
+                     f"shard is UNBOUND -- rerun with "
+                     f"--accept-unbound-identity to adopt it "
+                     f"explicitly, or remove the output dir to start "
+                     f"over")
+            meta["identity_migration"] = {
+                "missing": missing, "flag": "--accept-unbound-identity"}
+        else:
+            _die(f"shard {g}: run identity mismatch (config/weights/"
+                 f"window/sampling/feed/code differ from the recorded "
+                 f"run); refusing to mix identities -- remove the "
+                 f"output dir to start over")
     if meta.get("selected_sha256") != pg["selected_sha256"]:
         _die(f"shard {g}: selection hash mismatch with the current plan")
     meta["shard_sha256"] = file_sha
@@ -560,7 +647,15 @@ def publish(out_dir, plan, shard_metas):
         }
         with open(os.path.join(staging, "meta.json"), "w") as fh:
             json.dump(meta, fh, indent=1, sort_keys=True)
-        codes = code_md5s()
+        # The producer identity is the one frozen into the plan (and
+        # the run identity) before work started -- publish never reads
+        # a fresh code hash (X03: identity is frozen at plan time;
+        # reading it here would let a mid-run code change publish
+        # under a different identity than the shards were made under).
+        codes = plan.get("code_md5s")
+        if codes is None:
+            _die("publish: plan carries no frozen code_md5s; refusing "
+                 "to read code identity at publish time")
         producer = {"k0_annotate_md5": codes["k0_annotate.py"],
                     "stage0_teacher_md5": codes["stage0_teacher.py"],
                     "stage1_teacher_gate_md5": codes["stage1_teacher_gate.py"],
@@ -756,6 +851,14 @@ def main(argv=None):
     ap.add_argument("--pi1", type=float, default=1.0)
     ap.add_argument("--isolation-file", action="append", default=[])
     ap.add_argument("--workers", type=int, default=1)
+    ap.add_argument("--accept-unbound-identity", action="store_true",
+                    help="adopt progress/shards recorded before the "
+                         "content+code identity binding existed (their "
+                         "recorded identity agrees on every pre-binding "
+                         "key but carries no replay-content or code "
+                         "binding); the adoption is recorded in "
+                         "progress.json. Contradicted records are never "
+                         "adopted.")
     ap.add_argument("--verify", action="store_true",
                     help="verify the sealed generation at --out and exit")
     a = ap.parse_args(argv)
@@ -772,22 +875,58 @@ def main(argv=None):
     progress = {"identity": plan["identity"], "games": {}}
     if os.path.exists(prog_path):
         old = json.load(open(prog_path))
-        if old.get("identity") != plan["identity"]:
-            _die("existing progress.json belongs to a different run identity "
-                 "(config/weights/window/sampling/feed); refusing to mix -- "
-                 "remove the output dir to start over")
+        old_id = old.get("identity") or {}
+        if old_id != plan["identity"]:
+            changed = _identity_replay_changes(old_id, plan["identity"])
+            if changed:
+                g0 = sorted(changed)[0]
+                _die(f"existing progress.json records replay content "
+                     f"that has since changed for {len(changed)} "
+                     f"game(s) (e.g. {g0}: recorded sha256 "
+                     f"{changed[g0][0]}, current {changed[g0][1]}); "
+                     f"refusing to mix content generations -- remove "
+                     f"the output dir to start over")
+            missing = _identity_unbound_missing(old_id, plan["identity"])
+            if missing is not None and a.accept_unbound_identity:
+                old["identity_migration"] = {
+                    "missing": missing,
+                    "flag": "--accept-unbound-identity",
+                    "time": time.time(),
+                    "adopted_code_md5s": plan["identity"]["code_md5s"],
+                    "adopted_replay_sha256":
+                        plan["identity"]["replay_sha256"]}
+                old["identity"] = plan["identity"]
+                print(json.dumps(
+                    {"progress_identity_migration": {
+                        "missing": missing,
+                        "flag": "--accept-unbound-identity"}}), flush=True)
+            elif missing is not None:
+                _die("existing progress.json predates the content/code "
+                     "identity binding (missing "
+                     f"{missing}); the recorded run is UNBOUND -- rerun "
+                     "with --accept-unbound-identity to adopt it "
+                     "explicitly, or remove the output dir to start over")
+            else:
+                diff = sorted(k for k in set(old_id) | set(plan["identity"])
+                              if old_id.get(k) != plan["identity"].get(k))
+                _die("existing progress.json belongs to a different run "
+                     f"identity (differing keys: {diff}); refusing to "
+                     "mix -- remove the output dir to start over")
         progress = old
     metas = {}
     todo = []
     for pg in plan["per_game"]:
         rec = progress.get("games", {}).get(pg["game"], {})
         m = _verify_shard(shard_dir, pg, plan["identity"],
-                          rec.get("shard_sha256"))
+                          rec.get("shard_sha256"),
+                          accept_unbound=a.accept_unbound_identity)
         if m is not None:
             metas[pg["game"]] = m
-            progress["games"][pg["game"]] = {
-                "status": "done", "n_roots": m["n_roots"],
-                "shard_sha256": m["shard_sha256"]}
+            rec_out = {"status": "done", "n_roots": m["n_roots"],
+                       "shard_sha256": m["shard_sha256"]}
+            if m.get("identity_migration"):
+                rec_out["identity_migration"] = m["identity_migration"]
+            progress["games"][pg["game"]] = rec_out
             print(json.dumps({"shard_skip_verified": pg["game"],
                               "n_roots": m["n_roots"]}), flush=True)
         else:
