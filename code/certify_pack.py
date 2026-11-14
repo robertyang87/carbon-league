@@ -151,10 +151,18 @@ def _read_quota():
     sub-cgroup was misread -- null where only a sub-group limit
     binds, the root's wider value where a narrower sub-group limit
     binds -- and v1 combined mounts such as cpu,cpuacct were never
-    located.) cgroup v2 (cpu.max / memory.max) is tried first, then
-    cgroup v1 (cpu.cfs_quota_us / cpu.cfs_period_us,
-    memory.limit_in_bytes). affinity_cpus is len(os.sched_
-    getaffinity(0)).
+    located.) Two W-round widenings of the same principle: EVERY
+    mount exposing the process's cgroup is walked and merged, not
+    just the deepest-rooted one -- a tighter limit visible only
+    through a shallower mount (set on an ancestor above the deep
+    mount's root) binds just the same (W07); and on hybrid hosts
+    BOTH hierarchies are read and merged per controller, the
+    tighter value winning -- a v1 controller setting is not
+    shadowed by a readable v2 one (W08; source then reads
+    "cgroup_v1+v2"). cgroup v2 (cpu.max / memory.max) and cgroup
+    v1 (cpu.cfs_quota_us / cpu.cfs_period_us,
+    memory.limit_in_bytes) are the two hierarchies.
+    affinity_cpus is len(os.sched_getaffinity(0)).
 
     Unlimited or unreadable is an explicit None -- never omitted,
     never guessed. cpu_max is, under v2, the raw cpu.max text of the
@@ -167,14 +175,23 @@ def _read_quota():
     process's cgroup path per controller, as parsed) and
     ancestor_chain (every directory level actually read, root to
     leaf, with the raw quota text found there -- None where the level
-    carried no readable quota file). "source" names the hierarchy
-    the values were resolved from ("cgroup_v2" / "cgroup_v1" /
-    None), under this process-relative resolution.
+    carried no readable quota file -- plus the mount point it was
+    read through and the hierarchy it belongs to). "source" names
+    the hierarchy the values were resolved from ("cgroup_v2" /
+    "cgroup_v1" / "cgroup_v1+v2" / None), under this
+    process-relative resolution.
 
     Test-only overrides: CERTIFY_PACK_TEST_CGROUP_FILE and
     CERTIFY_PACK_TEST_MOUNTINFO_FILE replace the two /proc paths so
     synthetic hierarchies can be replayed; they must never be set in
-    production.
+    production. W06: whenever either variable is present in the
+    environment, the evidence below comes from the injected files,
+    so "source" is forced to "test_override" and --require-quota
+    treats the quota as unsatisfied (main names "test_override" in
+    the missing list) -- a certificate issued with an override in
+    force never carries unmarked formal quota evidence. The values
+    themselves remain recorded; only their evidentiary status
+    changes.
     """
     quota = {"cpu_max": None, "memory_max": None, "affinity_cpus": None,
              "source": None,
@@ -192,6 +209,12 @@ def _read_quota():
         except Exception:
             return None
 
+    # W06: a test override in force means every byte of quota
+    # evidence below comes from the injected files, not from the
+    # machine. Presence of either variable counts, regardless of
+    # what the injected files contain.
+    test_override = ("CERTIFY_PACK_TEST_CGROUP_FILE" in os.environ
+                     or "CERTIFY_PACK_TEST_MOUNTINFO_FILE" in os.environ)
     cgroup_text = _read(os.environ.get("CERTIFY_PACK_TEST_CGROUP_FILE",
                                        "/proc/self/cgroup"))
     mountinfo_text = _read(os.environ.get("CERTIFY_PACK_TEST_MOUNTINFO_FILE",
@@ -287,39 +310,50 @@ def _read_quota():
         if not cands:
             return None
         cands.sort(key=lambda m: -len(m["root"]))
-        dirs = _chain(cands[0], v2_path)
         res = {"read_any": False,
                "cpu": {"best_ratio": None, "best_raw": None, "chain": []},
                "memory": {"best": None, "chain": []}}
-        for fs_dir, hier in dirs:
-            base = fs_dir.rstrip("/")
-            cpu_raw = _read(base + "/cpu.max")
-            mem_raw = _read(base + "/memory.max")
-            if cpu_raw is not None or mem_raw is not None:
-                res["read_any"] = True
-            res["cpu"]["chain"].append({"path": hier, "value": cpu_raw})
-            res["memory"]["chain"].append({"path": hier, "value": mem_raw})
-            if cpu_raw is not None:
-                parts = cpu_raw.split()
-                if parts and parts[0] != "max":
+        # W07: walk EVERY mount exposing the process's cgroup, not
+        # only the deepest-rooted one: a limit visible through a
+        # shallower mount (set on an ancestor above the deep mount's
+        # root) binds the process just the same, so the effective
+        # value is the minimum over all candidates' chains, and the
+        # recorded chain is the concatenation over mounts (each entry
+        # tagged with the mount it was read through).
+        for mount in cands:
+            for fs_dir, hier in _chain(mount, v2_path):
+                base = fs_dir.rstrip("/")
+                cpu_raw = _read(base + "/cpu.max")
+                mem_raw = _read(base + "/memory.max")
+                if cpu_raw is not None or mem_raw is not None:
+                    res["read_any"] = True
+                res["cpu"]["chain"].append(
+                    {"path": hier, "value": cpu_raw,
+                     "mount": mount["point"], "hier": "v2"})
+                res["memory"]["chain"].append(
+                    {"path": hier, "value": mem_raw,
+                     "mount": mount["point"], "hier": "v2"})
+                if cpu_raw is not None:
+                    parts = cpu_raw.split()
+                    if parts and parts[0] != "max":
+                        try:
+                            period = int(parts[1]) if len(parts) > 1 else 100000
+                            ratio = int(parts[0]) / period
+                        except (ValueError, ZeroDivisionError):
+                            ratio = None
+                        if ratio is not None and (
+                                res["cpu"]["best_ratio"] is None
+                                or ratio < res["cpu"]["best_ratio"]):
+                            res["cpu"]["best_ratio"] = ratio
+                            res["cpu"]["best_raw"] = cpu_raw
+                if mem_raw is not None and mem_raw != "max":
                     try:
-                        period = int(parts[1]) if len(parts) > 1 else 100000
-                        ratio = int(parts[0]) / period
-                    except (ValueError, ZeroDivisionError):
-                        ratio = None
-                    if ratio is not None and (
-                            res["cpu"]["best_ratio"] is None
-                            or ratio < res["cpu"]["best_ratio"]):
-                        res["cpu"]["best_ratio"] = ratio
-                        res["cpu"]["best_raw"] = cpu_raw
-            if mem_raw is not None and mem_raw != "max":
-                try:
-                    val = int(mem_raw)
-                except ValueError:
-                    val = None
-                if val is not None and (res["memory"]["best"] is None
-                                        or val < res["memory"]["best"]):
-                    res["memory"]["best"] = val
+                        val = int(mem_raw)
+                    except ValueError:
+                        val = None
+                    if val is not None and (res["memory"]["best"] is None
+                                            or val < res["memory"]["best"]):
+                        res["memory"]["best"] = val
         return res
 
     _V1_KNOWN = {"cpu", "cpuacct", "cpuset", "memory", "devices",
@@ -345,60 +379,98 @@ def _read_quota():
             return None
         # Prefer the mount of the very hierarchy the process's cgroup
         # line names (same controller set); then the longest root.
+        # (Ordering now only fixes the recorded chain's entry order:
+        # per W07 every candidate mount is walked and merged.)
         cands.sort(key=lambda m: ((m["super"] & _V1_KNOWN) != ctrl_set,
                                   -len(m["root"])))
-        dirs = _chain(cands[0], proc_path)
         res = {"read_any": False, "best_ratio": None, "best": None,
                "chain": []}
-        for fs_dir, hier in dirs:
-            base = fs_dir.rstrip("/")
-            if ctrl == "cpu":
-                q_raw = _read(base + "/cpu.cfs_quota_us")
-                p_raw = _read(base + "/cpu.cfs_period_us")
-                if q_raw is not None or p_raw is not None:
-                    res["read_any"] = True
-                raw = None
-                if q_raw is not None or p_raw is not None:
-                    raw = f"{q_raw}/{p_raw}"
-                res["chain"].append({"path": hier, "value": raw})
-                try:
-                    q_us, p_us = int(q_raw), int(p_raw)
-                    if q_us > 0 and p_us > 0:
-                        ratio = q_us / p_us
-                        if (res["best_ratio"] is None
-                                or ratio < res["best_ratio"]):
-                            res["best_ratio"] = ratio
-                except (TypeError, ValueError):
-                    pass
-            else:
-                m_raw = _read(base + "/memory.limit_in_bytes")
-                if m_raw is not None:
-                    res["read_any"] = True
-                res["chain"].append({"path": hier, "value": m_raw})
-                try:
-                    m_val = int(m_raw)
-                    # v1 reports "unlimited" as a huge page-aligned
-                    # value near 2**63; anything >= 2**60 is not a
-                    # real byte limit.
-                    if 0 < m_val < (1 << 60) and (
-                            res["best"] is None or m_val < res["best"]):
-                        res["best"] = m_val
-                except (TypeError, ValueError):
-                    pass
+        for mount in cands:
+            for fs_dir, hier in _chain(mount, proc_path):
+                base = fs_dir.rstrip("/")
+                if ctrl == "cpu":
+                    q_raw = _read(base + "/cpu.cfs_quota_us")
+                    p_raw = _read(base + "/cpu.cfs_period_us")
+                    if q_raw is not None or p_raw is not None:
+                        res["read_any"] = True
+                    raw = None
+                    if q_raw is not None or p_raw is not None:
+                        raw = f"{q_raw}/{p_raw}"
+                    res["chain"].append(
+                        {"path": hier, "value": raw,
+                         "mount": mount["point"], "hier": "v1"})
+                    try:
+                        q_us, p_us = int(q_raw), int(p_raw)
+                        if q_us > 0 and p_us > 0:
+                            ratio = q_us / p_us
+                            if (res["best_ratio"] is None
+                                    or ratio < res["best_ratio"]):
+                                res["best_ratio"] = ratio
+                    except (TypeError, ValueError):
+                        pass
+                else:
+                    m_raw = _read(base + "/memory.limit_in_bytes")
+                    if m_raw is not None:
+                        res["read_any"] = True
+                    res["chain"].append(
+                        {"path": hier, "value": m_raw,
+                         "mount": mount["point"], "hier": "v1"})
+                    try:
+                        m_val = int(m_raw)
+                        # v1 reports "unlimited" as a huge page-aligned
+                        # value near 2**63; anything >= 2**60 is not a
+                        # real byte limit.
+                        if 0 < m_val < (1 << 60) and (
+                                res["best"] is None or m_val < res["best"]):
+                            res["best"] = m_val
+                    except (TypeError, ValueError):
+                        pass
         return res
 
     v2 = _walk_v2()
-    if v2 is not None and v2["read_any"]:
+    v1_cpu = _walk_v1("cpu")
+    v1_mem = _walk_v1("memory")
+    v2_any = v2 is not None and v2["read_any"]
+    v1_any = (v1_cpu is not None and v1_cpu["read_any"]) or (
+        v1_mem is not None and v1_mem["read_any"])
+    if v2_any and v1_any:
+        # W08: hybrid host -- BOTH hierarchies carry readable
+        # evidence, and a v1 controller setting binds the process
+        # just as a v2 one does (the previous code returned as soon
+        # as v2 yielded anything and never read v1). The effective
+        # value per controller is the tighter of the two, recorded
+        # in the winning hierarchy's native representation (v2 raw
+        # cpu.max text / v1 numeric ratio; bytes for memory either
+        # way); ties keep the v2 representation. process_path keeps
+        # the v2 path parsed above; the v1 paths are visible in the
+        # recorded chains.
+        quota["source"] = "cgroup_v1+v2"
+        v2_ratio = v2["cpu"]["best_ratio"]
+        v1_ratio = v1_cpu["best_ratio"] if v1_cpu is not None else None
+        if v2_ratio is not None and (v1_ratio is None
+                                     or v2_ratio <= v1_ratio):
+            quota["cpu_max"] = v2["cpu"]["best_raw"]
+        elif v1_ratio is not None:
+            quota["cpu_max"] = v1_ratio
+        v2_mem = v2["memory"]["best"]
+        v1_mem_val = v1_mem["best"] if v1_mem is not None else None
+        if v2_mem is not None and (v1_mem_val is None
+                                   or v2_mem <= v1_mem_val):
+            quota["memory_max"] = v2_mem
+        elif v1_mem_val is not None:
+            quota["memory_max"] = v1_mem_val
+        quota["ancestor_chain"] = {
+            "cpu": v2["cpu"]["chain"]
+                   + (v1_cpu["chain"] if v1_cpu is not None else []),
+            "memory": v2["memory"]["chain"]
+                      + (v1_mem["chain"] if v1_mem is not None else [])}
+    elif v2_any:
         quota["source"] = "cgroup_v2"
         quota["cpu_max"] = v2["cpu"]["best_raw"]
         quota["memory_max"] = v2["memory"]["best"]
         quota["ancestor_chain"] = {"cpu": v2["cpu"]["chain"],
                                    "memory": v2["memory"]["chain"]}
-        return quota
-    v1_cpu = _walk_v1("cpu")
-    v1_mem = _walk_v1("memory")
-    if (v1_cpu is not None and v1_cpu["read_any"]) or (
-            v1_mem is not None and v1_mem["read_any"]):
+    elif v1_any:
         quota["source"] = "cgroup_v1"
         quota["process_path"] = {
             "cpu": v1_paths["cpu"][1] if "cpu" in v1_paths else None,
@@ -409,19 +481,27 @@ def _read_quota():
         if v1_mem is not None:
             quota["memory_max"] = v1_mem["best"]
             quota["ancestor_chain"]["memory"] = v1_mem["chain"]
-        return quota
-    # Neither hierarchy yielded a readable quota file: keep the
-    # evidence actually gathered (a walked v2 chain whose levels
-    # carried no quota files, else any v1 chain) with source None and
-    # explicit null values -- never guessed.
-    if v2 is not None:
-        quota["ancestor_chain"] = {"cpu": v2["cpu"]["chain"],
-                                   "memory": v2["memory"]["chain"]}
     else:
+        # Neither hierarchy yielded a readable quota file: keep the
+        # evidence actually gathered (the walked chains, whose levels
+        # carried no quota files) with source None and explicit null
+        # values -- never guessed.
+        chain = {"cpu": [], "memory": []}
+        if v2 is not None:
+            chain["cpu"] += v2["cpu"]["chain"]
+            chain["memory"] += v2["memory"]["chain"]
         if v1_cpu is not None:
-            quota["ancestor_chain"]["cpu"] = v1_cpu["chain"]
+            chain["cpu"] += v1_cpu["chain"]
         if v1_mem is not None:
-            quota["ancestor_chain"]["memory"] = v1_mem["chain"]
+            chain["memory"] += v1_mem["chain"]
+        quota["ancestor_chain"] = chain
+    if test_override:
+        # W06: quota evidence sourced from injected test files is
+        # never formal evidence. The values stay visible (the
+        # synthetic-layout test methodology depends on reading them),
+        # but the source is marked and --require-quota treats it as
+        # unsatisfied (see main).
+        quota["source"] = "test_override"
     return quota
 
 
@@ -805,6 +885,11 @@ def main():
         quota_missing.append("cpu")
     if quota["memory_max"] is None:
         quota_missing.append("memory")
+    if quota["source"] == "test_override":
+        # W06: quota read from CERTIFY_PACK_TEST_* override files is
+        # test evidence, not machine evidence; --require-quota must
+        # not pass on it, and the missing list names why.
+        quota_missing.append("test_override")
 
     games = [run_game(args, args.seed0 + k) for k in range(args.games)]
     all_steps = [ms for g in games for ms in g["steps_ms"]]
@@ -908,7 +993,9 @@ def main():
                              "note": "effective cgroup quota of the certifying process, recorded "
                                      "in identity.params.quota; report-only unless --require-quota "
                                      "given, in which case a null (unlimited or unreadable) cpu "
-                                     "or memory quota fails the certification naming the item"},
+                                     "or memory quota -- or quota sourced from test-override "
+                                     "files (source=test_override) -- fails the certification "
+                                     "naming the item"},
         "step_p95_report": {"value_ms": round(_pct(all_steps, 95), 1) if all_steps else None,
                             "pass": None, "note": "reported metric, not a gate"},
     }
