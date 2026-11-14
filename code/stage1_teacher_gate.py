@@ -75,7 +75,7 @@ force verdict = "DIAGNOSTIC ONLY" in the output header.
 Usage (from code/):
   python3 stage1_teacher_gate.py --weights <heads.npz> --replays <dir>
       --split-manifest split.json --mode q|du [--ds-games-file ids.txt]
-      [--seed-scene 995300] [--seed-cont-base 996100] [--workers 8]
+      [--seed-scene 995300] [--seed-cont 995400] [--workers 8]
       [--pilot] [--n-required 150] [--out gate_q.json]
 """
 import argparse
@@ -696,7 +696,13 @@ def main():
                     help="training-corpus game-id list; overlap check enforced when given")
     ap.add_argument("--seed-scene", type=int, default=995300)
     ap.add_argument("--seed-teacher", type=int, default=7000)
-    ap.add_argument("--seed-cont", type=int, default=996100)
+    # Seed partition (section 20/21 ledger): 996000-996199 is the Master2
+    # exam block, 996200-996399 the E0-field block, 999000-999199 the
+    # Echo2 exam block -- no non-exam protocol may default into them.
+    # The gate's own block is 995300-995699 (scene 995300, anchor 995310,
+    # continuation 995400 + step). The old default 996100 sat inside the
+    # Master2 exam block (S2, Grok round 2).
+    ap.add_argument("--seed-cont", type=int, default=995400)
     ap.add_argument("--seed-anchor", type=int, default=995310)
     ap.add_argument("--K", type=int, default=CANON["K"])
     ap.add_argument("--M", type=int, default=CANON["M"])
