@@ -199,6 +199,80 @@ def construct_target(Q, priors, q_temp=Q_TEMP_DEFAULT, flatten=False):
     return wq / wq.sum()
 
 
+def temper_target(q_row, train_temp):
+    """The certified consumption transform (stage1 teacher gate R23,
+    r4 X02): the target a generation certifies is its SS13-C
+    construction raised to the teacher config's recorded train_temp
+    and renormalised, normalize(q ** train_temp) with the gate's own
+    1e-12 floor. train_temp == 1 returns the construction untouched,
+    bitwise -- the 1.0 path is the pre-X02 behaviour exactly."""
+    q = np.asarray(q_row, dtype=np.float64)
+    if float(train_temp) == 1.0:
+        return q
+    w = np.power(np.maximum(q, 1e-12), float(train_temp))
+    return w / w.sum()
+
+
+def _recorded_train_temp(man, meta):
+    """The generation's recorded teacher train_temp (r4 X02). The
+    authoritative record is meta.teacher.config.train_temp -- the
+    field both product shapes carry (annotator direct and join
+    output). Cross-checks, each refusing by name: a producer.config
+    record, when the producer carries one, must record the same
+    value; every teacher-config hash the records carry
+    (producer.config_sha256, producer.teacher_config_hash,
+    meta.teacher.config_sha256) must agree. A missing or unusable
+    record refuses: silently consuming an untempered target would
+    train on a distribution the gate never certified."""
+    prod = man.get("producer") or {}
+    tmeta = (meta or {}).get("teacher") or {}
+    cfg = tmeta.get("config")
+    if not isinstance(cfg, dict) or cfg.get("train_temp") is None:
+        raise SystemExit(
+            "k0_distill data: generation meta carries no teacher "
+            "train_temp record (meta.teacher.config.train_temp); the "
+            "certified target tempering cannot be reconstructed; "
+            "refusing to start")
+    tau = cfg["train_temp"]
+    pcfg = prod.get("config")
+    if isinstance(pcfg, dict):
+        ptau = pcfg.get("train_temp")
+        if ptau is None:
+            raise SystemExit(
+                "k0_distill data: producer.config carries no "
+                f"train_temp while meta.teacher.config records {tau!r}; "
+                "the generation's two train_temp records disagree; "
+                "refusing to start")
+        if float(ptau) != float(tau):
+            raise SystemExit(
+                "k0_distill data: train_temp records disagree: "
+                f"producer.config.train_temp {ptau!r} != "
+                f"meta.teacher.config.train_temp {tau!r}; refusing "
+                "to start")
+    hashes = {}
+    for key, val in (("producer.config_sha256", prod.get("config_sha256")),
+                     ("producer.teacher_config_hash", prod.get("teacher_config_hash")),
+                     ("meta.teacher.config_sha256", tmeta.get("config_sha256"))):
+        if val:
+            hashes[key] = val
+    if len(set(hashes.values())) > 1:
+        raise SystemExit(
+            "k0_distill data: teacher config hashes disagree across "
+            f"the generation's records: {hashes}; refusing to start")
+    try:
+        tau_f = float(tau)
+    except (TypeError, ValueError):
+        raise SystemExit(
+            f"k0_distill data: recorded train_temp {tau!r} is not a "
+            "number; refusing to start")
+    if not (np.isfinite(tau_f) and tau_f > 0.0):
+        raise SystemExit(
+            f"k0_distill data: recorded train_temp {tau_f} is not "
+            "finite and > 0; the certified tempering cannot be "
+            "reconstructed; refusing to start")
+    return tau_f
+
+
 def verify_annotation_generation(data_arg):
     """Resolve the dataset root's pointer and verify the sealed
     generation in full, mirroring the exit path's verify-or-refuse
@@ -299,7 +373,10 @@ def load_annotation(data_arg, q_temp=Q_TEMP_DEFAULT):
       n_arms  int64 [R]
       priors  float64 [R, K]               P_A (0 on padded candidates)
       q_stored float64 [R, K]              annotator's stored target
-      target  float64 [R, K]               constructed target (S form)
+      target  float64 [R, K]               certified target (S form):
+                                           the SS13-C construction
+                                           tempered by the recorded
+                                           train_temp (r4 X02)
       Q       float64 [R, K]               per-candidate Q (NaN padded)
       pi0, pi1, pi  float64 [R]
       keys    {game, step, seat}
@@ -433,6 +510,16 @@ def load_annotation(data_arg, q_temp=Q_TEMP_DEFAULT):
         if d > 2e-6:
             _die_rec(f"stored q disagrees with the SS13-C construction from "
                      f"its own Q/priors (max abs diff {d:.3g})", r)
+    # r4 X02: the certified target is the construction tempered by
+    # the generation's recorded train_temp (gate R23). The stored-q
+    # cross-check above stays against the UNtempered construction --
+    # the annotator stores raw q; tempering is this consumer's
+    # transform, applied here and in targets_with_flatten alike.
+    train_temp = _recorded_train_temp(man, meta)
+    if train_temp != 1.0:
+        for r in range(R):
+            n = int(n_arms[r])
+            target[r][:n] = temper_target(target[r][:n], train_temp)
     prod = man.get("producer") or {}
     for k in ("teacher_config_hash", "teacher_weights_md5", "belief"):
         if not prod.get(k):
@@ -445,6 +532,8 @@ def load_annotation(data_arg, q_temp=Q_TEMP_DEFAULT):
             "teacher_config_hash": prod["teacher_config_hash"],
             "teacher_weights_md5": prod["teacher_weights_md5"],
             "belief": prod["belief"],
+            "train_temp": train_temp,
+            "train_temp_record": "meta.teacher.config.train_temp",
             "ipw_active": ipw_active,
             "pi_min": float(pi.min()), "pi_mean": float(pi.mean())}
     return {"feats": feats, "arms": arms, "n_arms": n_arms, "priors": priors,
@@ -474,11 +563,13 @@ def targets_with_flatten(ds, flatten, q_temp=Q_TEMP_DEFAULT):
     the seed-driven batch order is the same function for both arms."""
     if not flatten:
         return ds["target"]
+    tau = float(ds["info"]["train_temp"])
     out = np.zeros_like(ds["target"])
     for r in range(ds["info"]["roots"]):
         n = int(ds["n_arms"][r])
-        out[r][:n] = construct_target(ds["Q"][r][:n], ds["priors"][r][:n],
-                                      q_temp, flatten=True)
+        out[r][:n] = temper_target(
+            construct_target(ds["Q"][r][:n], ds["priors"][r][:n],
+                             q_temp, flatten=True), tau)
     return out
 
 
@@ -802,8 +893,11 @@ def main():
     ap.add_argument("--kl-beta", type=float, default=1.0,
                     help="anchor coefficient on KL(pi_student||pi_parent)")
     ap.add_argument("--q-temp", type=float, default=Q_TEMP_DEFAULT,
-                    help="teacher target temperature in U units (default: the "
-                         "stage0_teacher value 0.05)")
+                    help="SS13-C construction temperature in U units "
+                         "(default: the stage0_teacher value 0.05); the "
+                         "certified target is this construction tempered "
+                         "by the generation's recorded train_temp "
+                         "(meta.teacher.config), which has no CLI override")
     ap.add_argument("--lr", type=float, default=3e-4)
     ap.add_argument("--wd", type=float, default=1e-4)
     ap.add_argument("--bs", type=int, default=64, help="roots per update")
@@ -900,6 +994,11 @@ def main():
                  "teacher_weights_md5": info["teacher_weights_md5"],
                  "belief": info["belief"]},
         "recipe": {"q_temp": args.q_temp, "kl_beta": args.kl_beta,
+                   "train_temp": info["train_temp"],
+                   "target_composition": "normalize(construct_target(Q, "
+                                         "priors; q_temp) ** train_temp), "
+                                         "train_temp from the generation "
+                                         "record (meta.teacher.config)",
                    "kl_definition": KL_DEFINITION,
                    "lr": args.lr, "wd": args.wd, "bs": args.bs,
                    "max_updates": args.max_updates, "seed": args.seed,
