@@ -133,9 +133,15 @@ Numeric protection & recovery (spec S19 standard, in code):
 Data: --data is a cnet2_build dataset directory with a sealed generation
 (legacy flat datasets are refused: K0 needs the generation id for the
 sidecar binding and u_raw for the U supervision). --max-games (default
-128) caps the games used: the first max-games game ids present in the
-dataset, in dataset order (seed-independent, identical for A0/A1); the
-actual counts are printed in the effective config.
+128) caps the games used: at or above the generation's game count every
+game is used (games_sampling "all" in the effective config); below it, a
+seeded deterministic sample of that many game ids is drawn from --seed
+(games_sampling "seeded") -- never the enumeration-order prefix, which
+is the build scan order and so a biased subset. The same seed + cap
+always selects the same subset (the P7 resume assertion pins both), so
+arms sharing a seed and cap train on identical game sets; the selected
+set's sha256 (games_used_sha256) and the actual counts are printed in
+the effective config.
 
 Stage-A screening (--screen): an eval-only mode of this same entry. It
 takes an arm checkpoint (--checkpoint, bound by its complete marker) and
@@ -463,7 +469,27 @@ def main():
     # ---- root set: train rows, game cap, unusable exclusion ----
     gid = np.asarray(D["gid"])
     gids_present = np.unique(gid)
-    games_used = gids_present[: max(int(args.max_games), 0)]
+    _cap = max(int(args.max_games), 0)
+    if _cap >= len(gids_present):
+        games_used = gids_present
+        games_sampling = "all"
+    else:
+        # B2: a cap below the generation's game count takes a seeded
+        # deterministic sample, never the enumeration-order prefix --
+        # np.unique order is the build scan order (earliest corpora /
+        # teachers first), so a prefix is a biased subset that merely
+        # looks uniform. The sample is a pure function of (seed,
+        # max_games, gids_present), drawn on a dedicated stream so it
+        # cannot perturb the batching stream built from the same seed
+        # below; the P7 resume assertion pins seed + max_games, so a
+        # resume recomputes the identical subset. Sorted after the draw
+        # so downstream consumers see the same canonical order as the
+        # uncapped path.
+        _grs = np.random.RandomState((int(args.seed) * 1000003 + 977) % (2 ** 31))
+        games_used = np.sort(_grs.choice(gids_present, size=_cap, replace=False))
+        games_sampling = "seeded"
+    games_used_sha256 = hashlib.sha256(
+        np.asarray(games_used, dtype=np.int64).tobytes()).hexdigest()
     roots = np.nonzero(~is_val)[0]
     roots = roots[np.isin(gid[roots], games_used)]
     if unusable is not None:
@@ -607,6 +633,7 @@ def main():
         "lr": eff_lr, "bs": args.bs, "max_updates": args.max_updates,
         "games_in_dataset": len(meta["games"]), "games_present": int(len(gids_present)),
         "games_used": int(len(games_used)), "max_games": args.max_games,
+        "games_sampling": games_sampling, "games_used_sha256": games_used_sha256,
         "roots": int(len(roots)), "u_nan_unusable_rows": n_u_nan,
         "init_migrated_missing": mig["migrated_missing"], "device": args.device}}
     log_path = args.out + ".log.jsonl"
