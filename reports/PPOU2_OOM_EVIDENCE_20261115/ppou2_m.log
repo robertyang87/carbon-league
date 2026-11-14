@@ -1,0 +1,43 @@
+[W1115 00:41:18.898776010 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 11927552, total: 47665709056).
+[W1115 00:41:18.917979371 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 11927552, total: 47665709056).
+[W1115 00:41:18.922120437 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 11927552, total: 47665709056).
+Traceback (most recent call last):
+  File "/root/carbon/code/rl2_ppo_train.py", line 985, in <module>
+    main()
+  File "/root/carbon/code/rl2_ppo_train.py", line 859, in main
+    vv = ad.evaluate(vnet, bt, args.temp)["value"]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/code/rl2_ppo_cnet2.py", line 266, in evaluate
+    lg, v, _ = model(b)                           # [B,12,5] masked (NEG), [B]
+               ^^^^^^^^
+  File "/root/carbon/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1798, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/code/cnet2_model.py", line 289, in forward
+    tok, ctx, aux = self.encode(b)
+                    ^^^^^^^^^^^^^^
+  File "/root/carbon/code/cnet2_model.py", line 181, in encode
+    h = self.tattn[self._ta[i]](h)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1798, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/code/cnet2_model.py", line 126, in forward
+    x = x + self.f2(Fn.relu(self.f1(self.n2(x))))
+                            ^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1798, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/carbon/.venv/lib/python3.12/site-packages/torch/nn/modules/linear.py", line 134, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 170.00 MiB. GPU 0 has a total capacity of 44.39 GiB of which 111.38 MiB is free. Including non-PyTorch memory, this process has 31.91 GiB memory in use. Process 91224 has 10.29 GiB memory in use. Process 91238 has 1.03 GiB memory in use. Process 91251 has 1.03 GiB memory in use. Of the allocated memory 31.35 GiB is allocated by PyTorch, and 206.84 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
