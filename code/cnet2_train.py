@@ -211,6 +211,33 @@ def _sha256_path(path):
     return h.hexdigest()
 
 
+def _read_bytes(path):
+    with open(path, "rb") as fh:
+        return fh.read()
+
+
+def _load_gen_field_bytes(src, man, name):
+    """One manifest-declared generation field, single-read (N2): the
+    file's bytes are read ONCE, the manifest sha256 is checked against
+    those exact bytes, and np.load parses the same buffer, so the
+    verified bytes are the consumed bytes by construction. Before this,
+    load() verified the generation by path (via _resolve_load_source)
+    and then consumed every field by path with mmap_mode="r": the
+    consumed pages were re-read lazily from disk long after the
+    verification pass, so a field file swapped or edited after
+    verification was trained on under a verified label, and even a
+    post-load edit floated into later batches."""
+    info = (man.get("fields") or {}).get(name) or {}
+    p = os.path.join(src, info.get("file") or (name + ".npy"))
+    raw = _read_bytes(p)
+    want = info.get("sha256")
+    if want is not None and hashlib.sha256(raw).hexdigest() != want:
+        raise SystemExit(
+            f"dataset generation file failed verification: {p} (sha256 mismatch -- "
+            f"file bytes changed after the generation was sealed); refusing to train")
+    return np.load(io.BytesIO(raw))
+
+
 _BC_INIT_BLOB = None
 
 
@@ -605,10 +632,11 @@ def _load_aux_bound(dirn, src, man, meta, mm):
         if not isinstance(ent, dict) or ent.get("sha256") is None:
             raise SystemExit(f"BC_AUX_W: aux sidecar declares no sha256 for {name}; "
                              f"refusing to train")
-        if _sha256_path(p) != ent["sha256"]:
+        raw = _read_bytes(p)          # N2 single-read: hash and parse the same bytes
+        if hashlib.sha256(raw).hexdigest() != ent["sha256"]:
             raise SystemExit(f"BC_AUX_W: aux label file {name} sha256 mismatch vs sidecar "
                              f"(contents changed since labelling); refusing to train")
-        arr = np.load(p, mmap_mode=mm)
+        arr = np.load(io.BytesIO(raw))
         if int(arr.shape[0]) != n_rows:
             raise SystemExit(f"BC_AUX_W: aux label file {name} has {int(arr.shape[0])} "
                              f"rows != dataset rows {n_rows}; refusing to train")
@@ -628,7 +656,21 @@ def _load_aux_bound(dirn, src, man, meta, mm):
 def load(dirn):
     mm = None if os.environ.get("BC_RAM") == "1" else "r"     # BC_RAM=1: read the whole dataset into memory
     src, man = _resolve_load_source(dirn)
-    D = {k: np.load(os.path.join(src, k + ".npy"), mmap_mode=mm) for k in FIELDS}
+    if man is not None:
+        # N2 single-read: every field the manifest declares is consumed
+        # from the very bytes its manifest sha256 verifies (see
+        # _load_gen_field_bytes), resident in memory -- no mmap back to
+        # the verified path. A field the manifest does not declare keeps
+        # the legacy by-path read below.
+        _decl = man.get("fields") or {}
+        D = {}
+        for k in FIELDS:
+            if k in _decl:
+                D[k] = _load_gen_field_bytes(src, man, k)
+            else:
+                D[k] = np.load(os.path.join(src, k + ".npy"), mmap_mode=mm)
+    else:
+        D = {k: np.load(os.path.join(src, k + ".npy"), mmap_mode=mm) for k in FIELDS}
     if man is not None:
         _bad = [k for k in FIELDS if int(np.asarray(D[k]).shape[0]) != int(man["total"])]
         if _bad:
@@ -676,15 +718,26 @@ def load(dirn):
                 raise SystemExit(
                     f"dataset generation {man.get('generation')} in {dirn!r}: manifest "
                     f"declares weight field {_k!r} but {_p} is missing; refusing to train")
-            D[_k] = np.load(_p, mmap_mode=mm)
+            D[_k] = _load_gen_field_bytes(src, man, _k)
             wsrc[_k] = "generation"
         elif os.path.exists(os.path.join(dirn, _k + ".npy")):
-            D[_k] = np.load(os.path.join(dirn, _k + ".npy"), mmap_mode=mm)
+            # N2: root-derived w/uw are hash-verified as whole files by
+            # _validate_derived_layer below; consume them from a single
+            # in-memory read of the same bytes, never an mmap that keeps
+            # paging from the path after that verification.
+            D[_k] = np.load(io.BytesIO(_read_bytes(os.path.join(dirn, _k + ".npy"))))
             wsrc[_k] = "root"
     wgate = _check_finite_weights(D, dirn)
     if wgate:
         print(json.dumps({"weight_gate": wgate, "data": dirn}), flush=True)
-    meta = json.load(open(os.path.join(src, "meta.json")))
+    _mp = os.path.join(src, "meta.json")
+    _mraw = _read_bytes(_mp)          # N2 single-read: verify and parse the same bytes
+    if man is not None and man.get("meta_sha256") is not None and \
+            hashlib.sha256(_mraw).hexdigest() != man["meta_sha256"]:
+        raise SystemExit(
+            f"dataset generation meta failed verification: {_mp} (meta_sha256 mismatch -- "
+            f"meta.json changed after the generation was sealed); refusing to train")
+    meta = json.loads(_mraw)
     meta["dataset_source"] = src
     if float(os.environ.get("BC_AUX_W", "0")) > 0:                      # auxiliary targets: sealed bound bundle only (F2)
         _aux, _aux_sum = _load_aux_bound(dirn, src, man, meta, mm)
