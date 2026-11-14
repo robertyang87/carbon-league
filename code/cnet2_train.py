@@ -7,6 +7,7 @@ Augmentation: the 4 symmetries of the canonical frame that keep the base sets.
 """
 
 import hashlib
+import io
 import json
 import math
 import os
@@ -209,6 +210,31 @@ def _sha256_path(path):
     return h.hexdigest()
 
 
+_BC_INIT_BLOB = None
+
+
+def _bc_init_blob():
+    """BC_INIT bytes, read ONCE per process: (raw_bytes, sha256), or
+    (None, None) when BC_INIT is unset or the file is missing. The env
+    record's sha256 and main()'s np.load both consume this single byte
+    object, so the recorded init identity is the loaded weights by
+    construction (the certify_pack caliber: hash and load the same
+    bytes). Before this, the record hashed the path at startup and
+    main() re-read the path after the dataset load -- a file swapped
+    inside that window was trained from while every record (the stdout
+    bc_env line, the exported meta) named the old bytes."""
+    global _BC_INIT_BLOB
+    if _BC_INIT_BLOB is None:
+        init = os.environ.get("BC_INIT")
+        if init and os.path.exists(init):
+            with open(init, "rb") as fh:
+                raw = fh.read()
+            _BC_INIT_BLOB = (raw, hashlib.sha256(raw).hexdigest())
+        else:
+            _BC_INIT_BLOB = (None, None)
+    return _BC_INIT_BLOB
+
+
 _BC_ENV_DEFAULTS = {"BC_AUX_W": "0", "BC_SELF_KL": "0", "BC_EXIT_W": "0",
                     "BC_ONLY_TEACH": None, "BC_TEACH_ROWS": None,
                     "BC_LR": "1e-3", "BC_BS": "512", "BC_MAXSTEPS": "0",
@@ -222,12 +248,12 @@ def _bc_env_record():
     env were indistinguishable from their products. Record the EFFECTIVE
     value of the behaviour switches (env value, or the code default when
     unset), every other BC_* variable actually present, and for BC_INIT
-    the file's sha256 (a bare path string does not identify weights)."""
+    the sha256 of the exact bytes main() loads (a bare path string does
+    not identify weights; see _bc_init_blob)."""
     rec = {k: os.environ.get(k, d) for k, d in _BC_ENV_DEFAULTS.items()}
     init = os.environ.get("BC_INIT")
     if init:
-        rec["BC_INIT"] = {"path": init,
-                          "sha256": _sha256_path(init) if os.path.exists(init) else None}
+        rec["BC_INIT"] = {"path": init, "sha256": _bc_init_blob()[1]}
     else:
         rec["BC_INIT"] = None
     for k in sorted(os.environ):
@@ -1049,7 +1075,8 @@ def main(data, out, epochs, cfg):
     net = CNet2(**cfg).to(DEV)
     init = os.environ.get("BC_INIT")
     if init:
-        w = np.load(init)
+        _init_raw = _bc_init_blob()[0]
+        w = np.load(io.BytesIO(_init_raw)) if _init_raw is not None else np.load(init)
         # F1(a): the init backbone passes a full-tensor finite gate
         # BEFORE migration -- one NaN array in the npz would otherwise
         # be migrated in silently and poison every step (and every
@@ -1274,7 +1301,9 @@ def main(data, out, epochs, cfg):
             export(net, out, {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar, "data": data})
     print("best", best)
     if only and init:          # frozen trunk: prove every parameter except the trained style rows is bit-identical
-        w0 = np.load(init); w1 = np.load(out); diff = []
+        _init_raw = _bc_init_blob()[0]
+        w0 = np.load(io.BytesIO(_init_raw)) if _init_raw is not None else np.load(init)
+        w1 = np.load(out); diff = []
         for k in w0.files:
             if k == "meta":
                 continue
