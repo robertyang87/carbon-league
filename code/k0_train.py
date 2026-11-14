@@ -122,7 +122,12 @@ Numeric protection & recovery (spec S19 standard, in code):
      checkpoint actually came from. At load, the stored effective
      config's protocol fields -- route, lambda_death, seed, bs,
      max_games, freeze_backbone, and the data fingerprint (generation
-     + row_key_sha256, compared when the record carries them) -- are
+     + row_key_sha256, compared when the record carries them), and
+     the aux content identity (the sidecar's byte sha256 plus the
+     label files' sha256, also compared when carried -- the sidecar's
+     internal checks keep a regenerated bundle self-consistent, so
+     without this binding the death targets could be swapped under a
+     resume and the run would silently change experiment) -- are
      checked against this invocation; any mismatch refuses the start,
      naming the field and both values. Exempt by design, as the
      legitimate axes of a continuation: --max-updates, --out,
@@ -466,6 +471,21 @@ def main():
     aux_die = aux_die.astype(np.float32)
     aux_die_m = aux_die_m.astype(bool)
 
+    # ---- aux content identity (V07) ----
+    # The sidecar checks above bind the label files to the sidecar and
+    # the sidecar to the generation, but they do not bind the bundle to
+    # the run that produced a checkpoint: a regenerated bundle -- labels
+    # edited, the sidecar's own file hashes updated to match -- stays
+    # self-consistent, and a resume would silently continue a DIFFERENT
+    # experiment (the death targets are the labels). So the bundle's
+    # content identity -- the sidecar's bytes and the label files'
+    # bytes, hashed from the files themselves -- is computed here,
+    # recorded in the effective config, and asserted on resume (P7,
+    # fingerprint class: compared when the record carries it).
+    aux_identity = {"sidecar_sha256": _sha256_file(os.path.join(aux_dir, AUX_SIDECAR)),
+                    "files_sha256": {name: _sha256_file(os.path.join(aux_dir, name))
+                                     for name in ("aux_die.npy", "aux_die_m.npy")}}
+
     # ---- root set: train rows, game cap, unusable exclusion ----
     gid = np.asarray(D["gid"])
     gids_present = np.unique(gid)
@@ -572,8 +592,8 @@ def main():
         # both values. Exempt by design (see header): --max-updates,
         # --out, --save-every, --resume itself, --lr (P5's rule
         # governs it) and --init (not applicable to a resume). The
-        # data fingerprint fields are compared when the record carries
-        # them.
+        # data fingerprint fields and the aux content identity are
+        # compared when the record carries them.
         _eff0 = ck.get("effective")
         if _eff0 is None:
             raise SystemExit("k0: resume checkpoint carries no 'effective' record; the resume protocol "
@@ -599,6 +619,21 @@ def main():
             raise SystemExit(f"k0 resume protocol: data_fingerprint.row_key_sha256 differs from the "
                              f"checkpoint's producing run (checkpoint {_fp0.get('row_key_sha256')!r} != this "
                              f"invocation {row_key_sha256(gen_dir, man)!r}); refusing to start")
+        # V07: the aux bundle's content identity joins the fingerprint
+        # class -- a relabelled bundle is a new experiment, not a
+        # continuation, however self-consistent its sidecar is.
+        _aux0 = _eff0.get("aux") or {}
+        if _aux0.get("sidecar_sha256") is not None and \
+                _aux0.get("sidecar_sha256") != aux_identity["sidecar_sha256"]:
+            raise SystemExit(f"k0 resume protocol: aux.sidecar_sha256 differs from the checkpoint's "
+                             f"producing run (checkpoint {_aux0.get('sidecar_sha256')!r} != this "
+                             f"invocation {aux_identity['sidecar_sha256']!r}); refusing to start")
+        _auxf0 = _aux0.get("files_sha256") or {}
+        for _nm in ("aux_die.npy", "aux_die_m.npy"):
+            if _auxf0.get(_nm) is not None and _auxf0.get(_nm) != aux_identity["files_sha256"][_nm]:
+                raise SystemExit(f"k0 resume protocol: aux.files_sha256[{_nm}] differs from the "
+                                 f"checkpoint's producing run (checkpoint {_auxf0.get(_nm)!r} != this "
+                                 f"invocation {aux_identity['files_sha256'][_nm]!r}); refusing to start")
         net.load_state_dict(ck["backbone"])
         u_head.load_state_dict(ck["u_head"])
         death_head.load_state_dict(ck["death_head"])
@@ -627,7 +662,9 @@ def main():
         "data": args.data,
         "data_fingerprint": {"generation": man.get("generation"), "cfg_fp": man.get("cfg_fp"),
                              "rows": n_rows, "row_key_sha256": row_key_sha256(gen_dir, man)},
-        "aux": {"dir": aux_dir, "sidecar_format": sc.get("format"), "lineage": sc.get("lineage")},
+        "aux": {"dir": aux_dir, "sidecar_format": sc.get("format"), "lineage": sc.get("lineage"),
+                "sidecar_sha256": aux_identity["sidecar_sha256"],
+                "files_sha256": aux_identity["files_sha256"]},
         "seed": args.seed, "route": args.aux_route, "lambda_death": args.lambda_death,
         "freeze_backbone": bool(args.freeze_backbone),
         "lr": eff_lr, "bs": args.bs, "max_updates": args.max_updates,
