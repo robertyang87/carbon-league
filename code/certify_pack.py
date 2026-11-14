@@ -72,6 +72,16 @@ Method / measurement scope (koujing):
     hashed the source only after the load.) A child that fails to report
     any of the three identities (pack / opponent / its own harness md5)
     is flagged as an identity mismatch, symmetrically for all three.
+  * Quota self-proof (S3 fix): the identity block also records the
+    effective resource quota of the certifying process (cgroup v2
+    cpu.max / memory.max, v1 fallback, plus the sched_getaffinity CPU
+    count) in params.quota, read once at startup; unlimited or
+    unreadable quotas are recorded as explicit nulls. A PASS therefore
+    states the limits it was issued under. --require-quota turns that
+    record into a gate: with the flag set, a null (unlimited or
+    unreadable) CPU or memory quota fails the certification, naming the
+    missing item; without the flag the quota is report-only and the
+    verdict logic is unchanged.
   * p95 / p50 / mean / max of step_wall_ms are reported; p95 itself is a
     reported metric, not a gate (the binding per-step rules are the hard
     limit, slow count and overage pool above).
@@ -111,6 +121,77 @@ def _pct(vals, q):
     lo = int(pos)
     hi = min(lo + 1, len(s) - 1)
     return s[lo] + (s[hi] - s[lo]) * (pos - lo)
+
+
+def _read_quota():
+    """Effective resource quota of this (parent) process, for the
+    certificate's quota self-proof (S3): the identity block records the
+    cgroup CPU/memory limits in force while the certification ran, so a
+    PASS issued under the platform quota (1.5 CPU / 512 MiB) is
+    distinguishable in the certificate itself from one issued on an
+    unrestricted machine. Fleet discipline already runs certification
+    only inside the cgroup; this makes the certificate prove it.
+
+    Sources, in order: cgroup v2 (/sys/fs/cgroup/cpu.max,
+    /sys/fs/cgroup/memory.max); if neither file is readable, cgroup v1
+    (cpu.cfs_quota_us / cpu.cfs_period_us, memory.limit_in_bytes).
+    affinity_cpus is len(os.sched_getaffinity(0)).
+
+    Unlimited or unreadable is an explicit None -- never omitted, never
+    guessed. cpu_max is the raw v2 cpu.max text (e.g. "150000 100000")
+    or, under v1, the equivalent numeric value quota_us / period_us
+    (effective CPUs); memory_max is bytes. Only the None-ness of
+    cpu_max / memory_max carries gate meaning (see --require-quota).
+    """
+    quota = {"cpu_max": None, "memory_max": None, "affinity_cpus": None,
+             "source": None}
+    try:
+        quota["affinity_cpus"] = len(os.sched_getaffinity(0))
+    except Exception:
+        quota["affinity_cpus"] = None
+
+    def _read(path):
+        try:
+            with open(path) as f:
+                return f.read().strip()
+        except Exception:
+            return None
+
+    cpu_raw = _read("/sys/fs/cgroup/cpu.max")
+    mem_raw = _read("/sys/fs/cgroup/memory.max")
+    if cpu_raw is not None or mem_raw is not None:
+        quota["source"] = "cgroup_v2"
+        if cpu_raw is not None:
+            parts = cpu_raw.split()
+            if parts and parts[0] != "max":
+                quota["cpu_max"] = cpu_raw
+        if mem_raw is not None and mem_raw != "max":
+            try:
+                quota["memory_max"] = int(mem_raw)
+            except ValueError:
+                pass
+        return quota
+    # cgroup v1 fallback.
+    q_raw = _read("/sys/fs/cgroup/cpu/cpu.cfs_quota_us")
+    p_raw = _read("/sys/fs/cgroup/cpu/cpu.cfs_period_us")
+    m_raw = _read("/sys/fs/cgroup/memory/memory.limit_in_bytes")
+    if q_raw is not None or p_raw is not None or m_raw is not None:
+        quota["source"] = "cgroup_v1"
+        try:
+            q_us, p_us = int(q_raw), int(p_raw)
+            if q_us > 0 and p_us > 0:
+                quota["cpu_max"] = q_us / p_us
+        except (TypeError, ValueError):
+            pass
+        try:
+            m_val = int(m_raw)
+            # v1 reports "unlimited" as a huge page-aligned value near
+            # 2**63; anything >= 2**60 is not a real byte limit.
+            if 0 < m_val < (1 << 60):
+                quota["memory_max"] = m_val
+        except (TypeError, ValueError):
+            pass
+    return quota
 
 
 # --------------------------------------------------------------------------
@@ -448,6 +529,9 @@ def main():
     ap.add_argument("--game-limit-s", type=float, default=1500.0)
     ap.add_argument("--mem-limit-mib", type=float, default=None,
                     help="hard peak-RSS gate in MiB (default: report only; platform cgroup is 512MiB)")
+    ap.add_argument("--require-quota", action="store_true",
+                    help="refuse PASS unless a finite cgroup CPU and memory quota is in force "
+                         "(and recorded in the certificate); default: quota is recorded, report-only")
     ap.add_argument("--out", default="")
     args = ap.parse_args()
 
@@ -476,6 +560,17 @@ def main():
     pack_pre = _hash_file(args.pack)
     opp_pre = _hash_file(args.opp) if args.opp else None
     self_pre = _hash_file(self_path)
+
+    # S3: quota self-proof, read once at startup (the parent spawns the
+    # game children inside the same cgroup, so the parent's effective
+    # quota is the quota the certification runs under). Recorded in
+    # identity.params.quota and, with --require-quota, gated below.
+    quota = _read_quota()
+    quota_missing = []
+    if quota["cpu_max"] is None:
+        quota_missing.append("cpu")
+    if quota["memory_max"] is None:
+        quota_missing.append("memory")
 
     games = [run_game(args, args.seed0 + k) for k in range(args.games)]
     all_steps = [ms for g in games for ms in g["steps_ms"]]
@@ -571,6 +666,15 @@ def main():
         "peak_rss": {"value_mib": round(peak_rss, 1), "limit_mib": args.mem_limit_mib,
                      "pass": (peak_rss <= args.mem_limit_mib) if args.mem_limit_mib else None,
                      "note": "child RUSAGE_SELF ru_maxrss; report-only unless --mem-limit-mib given"},
+        "quota_self_proof": {"require_quota": bool(args.require_quota),
+                             "cpu_max": quota["cpu_max"], "memory_max": quota["memory_max"],
+                             "affinity_cpus": quota["affinity_cpus"], "source": quota["source"],
+                             "missing": quota_missing,
+                             "pass": (not quota_missing) if args.require_quota else None,
+                             "note": "effective cgroup quota of the certifying process, recorded "
+                                     "in identity.params.quota; report-only unless --require-quota "
+                                     "given, in which case a null (unlimited or unreadable) cpu "
+                                     "or memory quota fails the certification naming the item"},
         "step_p95_report": {"value_ms": round(_pct(all_steps, 95), 1) if all_steps else None,
                             "pass": None, "note": "reported metric, not a gate"},
     }
@@ -598,7 +702,9 @@ def main():
                        "init_limit_s": args.init_limit_s, "step_soft_ms": args.step_soft_ms,
                        "step_hard_ms": args.step_hard_ms, "slow_max": args.slow_max,
                        "overage_limit_s": args.overage_limit_s,
-                       "game_limit_s": args.game_limit_s, "mem_limit_mib": args.mem_limit_mib},
+                       "game_limit_s": args.game_limit_s, "mem_limit_mib": args.mem_limit_mib,
+                       "require_quota": bool(args.require_quota),
+                       "quota": quota},
         },
         "games": [{k: v for k, v in g.items() if k not in ("steps_ms", "child_ms")} | {
             "steps": len(g["steps_ms"]),
