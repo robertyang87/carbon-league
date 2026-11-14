@@ -1,0 +1,108 @@
+{
+  "probe": "pool_discrimination_it95_vs_m3s2g1",
+  "purpose": "budget final-review input only; not a checkpoint, no R3 consumed, \u00a717 baseline untouched",
+  "executor": "C1 / spot-29",
+  "exam_window_cst": "2026-11-14 16:17:26-16:21:27",
+  "seeds": "990000-990199 (probe domain; exam blocks 996000/999000 untouched)",
+  "harness": {
+    "bigeval.py": "354bcd1bc2dc8bc188c813f53d28c893",
+    "eval_v53.py": "45792dfbea3101812836fe77e6752706"
+  },
+  "candidate": {
+    "name": "it95 frozen net (snipe_n1 it95)",
+    "package": "exp/it95.py",
+    "md5": "9e16085acd3549df210c6209ab3fd3cb"
+  },
+  "baseline": {
+    "name": "m3s2r1 pre-U frozen",
+    "package": "exp/m3s2r1_base.py",
+    "md5": "11d8005930b298290c2e150949349647"
+  },
+  "opponent": {
+    "name": "m3s2g1",
+    "package": "exp/m3s2g1_base.py",
+    "blob_sha": "79514aeb0c835f3038520ce52baae262f3f3935c",
+    "bytes": 3728418,
+    "md5": "bb997d7137395e6e66f7b03134d96897"
+  },
+  "guardrail": "field 1 used the it95 frozen package; it96 and later states forbidden",
+  "smoke": {
+    "probe_smoke": {
+      "wins": 0,
+      "mean": -767,
+      "err": 0,
+      "FAIL": false,
+      "md5": "c716580f6b30050e195538bfb8bf1896",
+      "archive_commit": "aa20d591"
+    },
+    "probebase_smoke": {
+      "wins": 2,
+      "mean": 820,
+      "err": 0,
+      "FAIL": false,
+      "md5": "3452d3d9245a19e269dbebb83759103e",
+      "archive_commit": "3128a10e"
+    }
+  },
+  "field1_it95_vs_m3s2g1": {
+    "tag": "probe_it95_g1",
+    "wins": 93,
+    "mean_margin": -23.71,
+    "mean_u": 0.4794,
+    "err": 0,
+    "worst_ms": 123.0,
+    "FAIL": false,
+    "md5": "d228faf368fc7a499c1069cc9c645dfd",
+    "archive_commit": "69c5585f",
+    "archive_sha": "414c0845bbc6d44851699ff9e40fabae55a9dad3"
+  },
+  "field2_baseline_vs_m3s2g1": {
+    "tag": "probe_base_g1",
+    "wins": 112,
+    "mean_margin": 83.24,
+    "mean_u": 0.5407,
+    "err": 0,
+    "worst_ms": 123.0,
+    "FAIL": false,
+    "md5": "e3f7a4caad306f71f64d5c22ce6aad29",
+    "archive_commit": "509718ec",
+    "archive_sha": "93a46dc57a47cfc4de9ec85872e5ed58ef3b183e"
+  },
+  "paired": {
+    "n_pairs": 200,
+    "dU": -0.0613,
+    "dU_se_paired": 0.0309,
+    "ci95_normal": [
+      -0.122,
+      -0.0007
+    ],
+    "ci95_cluster_bootstrap": [
+      -0.121,
+      -0.0009
+    ],
+    "bootstrap_B": 20000,
+    "p_boot_le_0": 0.97675,
+    "pairs_pos_neg_zero": [
+      89,
+      111,
+      0
+    ]
+  },
+  "integrity": {
+    "seed_sets_exact": "990000-990199 each once per field",
+    "err_rows": 0,
+    "draw_rows": [
+      {
+        "tag": "probe_base_g1",
+        "seed": 990111,
+        "margin": 0.0,
+        "u": 0.5
+      }
+    ],
+    "max_u_recompute_dev": 0.0,
+    "ah_bh_hh_single_and_on_value": true,
+    "md5_three_way_machine_local_archive": true
+  },
+  "certify": "not invoked; no certificate issued",
+  "archive_branch": "sync/h29 (ops-room confirmed 2026-11-14 16:19 CST; dispatch text sync/h31 was a copy error from the it95 Echo2 field)"
+}
