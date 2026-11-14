@@ -70,10 +70,18 @@ def main():
     p.add_argument("--tag", default="")
     p.add_argument("--log", default=os.path.join(HERE, "..", "data", "rl2", "eval.jsonl"))
     a = p.parse_args()
+    if a.temp < 0:
+        p.error("--temp must be >= 0 (0 = greedy)")
     if a.seed0 < 980000:
         print("warning: seeds < 980000 overlap other experiments' ranges", file=sys.stderr)
+    # Greedy sends temperature 1.0, never 0.0: the adapters divide the
+    # logits by the temperature BEFORE the argmax (rl2_ppo_cnet2 act:
+    # z = lg / ts; the small adapter likewise), so a literal 0.0 poisons
+    # every logit with inf/NaN and the "greedy" policy collapses to
+    # argmax over NaNs (all-STAY). temp > 0 passes through verbatim.
+    eff_temp = 1.0 if a.temp <= 0 else a.temp
     tasks = [{"adapter": a.adapter, "wkey": os.path.abspath(a.w), "games": [(o, a.seed0 + j, s)],
-              "temp": a.temp, "greedy": a.temp <= 0, "record": False, "rng_seed": j * 2 + s}
+              "temp": eff_temp, "greedy": a.temp <= 0, "record": False, "rng_seed": j * 2 + s}
              for o in a.opps.split(",") for j in range(a.pairs) for s in (0, 1)]
     t0 = time.time()
     with mp.get_context("spawn").Pool(a.workers) as pool:
