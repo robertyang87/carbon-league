@@ -125,14 +125,62 @@ def main(out, dirs):
         with open(os.path.join(staging, "manifest.json"), "w") as fh:
             json.dump(man, fh)
         gen_dir = os.path.join(out, "generations", gen_id)
-        landed = False
-        if os.path.exists(os.path.join(gen_dir, "manifest.json")):
-            try:
-                landed = json.load(open(os.path.join(gen_dir, "manifest.json"))).get("self_sha256") == man["self_sha256"]
-            except Exception:
-                landed = False
-        if not landed:
-            shutil.rmtree(gen_dir, ignore_errors=True)
+        # Publish rule (V02): a landed generation is IMMUTABLE. The old
+        # code compared the stored manifest's self_sha256 against a
+        # freshly built one whose "created" timestamp always differs,
+        # so an identical republish deleted the published directory and
+        # renamed staging over it -- outstanding pointers went stale,
+        # and a failure between the delete and the rename left
+        # current.json pointing at a generation that no longer exists.
+        # Now: if gen_id is already published, verify the published copy
+        # against the manifest core built above (its own self-seal, core
+        # equality modulo the "created"/self-seal bookkeeping, and every
+        # field file's bytes + sha256) and REUSE it exactly as-is:
+        # nothing is rewritten, so its manifest bytes -- and every
+        # pointer already issued for it -- stay valid. A published
+        # directory that does not verify dies here by name; it is never
+        # silently replaced. Only a genuinely new gen_id is renamed
+        # into place, and the pointer flips last (single os.replace
+        # below) to a generation that is already completely in place;
+        # a failure anywhere before that flip touches only staging.
+        reused = False
+        if os.path.isdir(gen_dir):
+            man_p = os.path.join(gen_dir, "manifest.json")
+            if not os.path.exists(man_p):
+                if os.listdir(gen_dir):
+                    raise SystemExit(
+                        f"exit publish: generation directory {gen_dir!r} exists without "
+                        f"manifest.json and is not empty; refusing to overwrite it")
+                os.replace(staging, gen_dir)  # empty leftover dir only
+            else:
+                old = json.load(open(man_p))
+                old_core = {k: v for k, v in old.items() if k != "self_sha256"}
+                if old.get("self_sha256") != hashlib.sha256(_canonical(old_core)).hexdigest():
+                    raise SystemExit(
+                        f"exit publish: published generation {gen_id} in {gen_dir!r} fails "
+                        f"its manifest self-seal; refusing to overwrite a published generation")
+                want_core = dict(core); want_core["generation"] = gen_id
+                have_core = {k: v for k, v in old.items()
+                             if k not in ("self_sha256", "created")}
+                if have_core != want_core:
+                    raise SystemExit(
+                        f"exit publish: published generation {gen_id} in {gen_dir!r} differs "
+                        f"from the inputs being published (content-addressed id collision or "
+                        f"changed inputs); refusing to overwrite a published generation")
+                for k, info in old["fields"].items():
+                    p = os.path.join(gen_dir, info["file"])
+                    if not os.path.exists(p) or os.path.getsize(p) != info["bytes"] \
+                            or _sha256_file(p) != info["sha256"]:
+                        raise SystemExit(
+                            f"exit publish: published generation {gen_id} field {k!r} in "
+                            f"{gen_dir!r} does not match its manifest; refusing to overwrite "
+                            f"a published generation")
+                reused = True
+        elif os.path.exists(gen_dir):
+            raise SystemExit(
+                f"exit publish: {gen_dir!r} exists and is not a directory; "
+                f"refusing to overwrite it")
+        else:
             os.replace(staging, gen_dir)
         # The pointer switch is the single atomic commit of the publish.
         ptr = {"generation": gen_id, "dir": f"generations/{gen_id}",
@@ -146,7 +194,8 @@ def main(out, dirs):
         shutil.rmtree(staging, ignore_errors=True)
     print(json.dumps({"games": len(games), "samples": total, "val_games": sum(g["val"] for g in games),
                       "searched": n_searched, "changed": n_changed,
-                      "generation": gen_id, "sealed": True, "pointer": "current.json"}))
+                      "generation": gen_id, "sealed": True, "pointer": "current.json",
+                      "reused": reused}))
 
 
 if __name__ == "__main__":
