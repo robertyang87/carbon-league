@@ -216,7 +216,11 @@ _BC_INIT_BLOB = None
 
 def _bc_init_blob():
     """BC_INIT bytes, read ONCE per process: (raw_bytes, sha256), or
-    (None, None) when BC_INIT is unset or the file is missing. The env
+    (None, None) when BC_INIT is unset. A BC_INIT that is SET but missing
+    at first touch dies by name (V05): the old (None, None)-for-missing
+    cache plus a by-path fallback in main() let a file created later --
+    e.g. during the dataset load -- be trained from while the record
+    still said sha256=null, i.e. weights with no bound identity. The env
     record's sha256 and main()'s np.load both consume this single byte
     object, so the recorded init identity is the loaded weights by
     construction (the certify_pack caliber: hash and load the same
@@ -227,7 +231,11 @@ def _bc_init_blob():
     global _BC_INIT_BLOB
     if _BC_INIT_BLOB is None:
         init = os.environ.get("BC_INIT")
-        if init and os.path.exists(init):
+        if init:
+            if not os.path.exists(init):
+                raise SystemExit(f"BC_INIT {init!r} does not exist -- an explicitly configured "
+                                 "init file must exist at startup; refusing to continue (a file "
+                                 "appearing later would be loaded with no bound identity)")
             with open(init, "rb") as fh:
                 raw = fh.read()
             _BC_INIT_BLOB = (raw, hashlib.sha256(raw).hexdigest())
@@ -1458,7 +1466,11 @@ def main(data, out, epochs, cfg):
     init = os.environ.get("BC_INIT")
     if init:
         _init_raw = _bc_init_blob()[0]
-        w = np.load(io.BytesIO(_init_raw)) if _init_raw is not None else np.load(init)
+        if _init_raw is None:
+            raise SystemExit(f"BC_INIT {init!r}: no frozen init bytes -- the configured init "
+                             "is consumed only from the single read in _bc_init_blob(); "
+                             "refusing to load weights by path")
+        w = np.load(io.BytesIO(_init_raw))
         # F1(a): the init backbone passes a full-tensor finite gate
         # BEFORE migration -- one NaN array in the npz would otherwise
         # be migrated in silently and poison every step (and every
@@ -1703,7 +1715,11 @@ def main(data, out, epochs, cfg):
     print("best", best)
     if only and init:          # frozen trunk: prove every parameter except the trained style rows is bit-identical
         _init_raw = _bc_init_blob()[0]
-        w0 = np.load(io.BytesIO(_init_raw)) if _init_raw is not None else np.load(init)
+        if _init_raw is None:
+            raise SystemExit(f"BC_INIT {init!r}: no frozen init bytes -- the configured init "
+                             "is consumed only from the single read in _bc_init_blob(); "
+                             "refusing to load weights by path")
+        w0 = np.load(io.BytesIO(_init_raw))
         w1 = np.load(out); diff = []
         for k in w0.files:
             if k == "meta":
