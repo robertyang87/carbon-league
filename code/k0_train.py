@@ -78,8 +78,8 @@ training: there is no unbound-labels fallback in this entry.
 
 Numeric protection & recovery (spec S19 standard, in code):
   P1 every weight/label tensor is isfinite-checked AT LOAD: init arrays,
-     resume tensors, u_raw, aux labels. A non-finite entry refuses the
-     start and names the tensor. Sole documented exception: u_raw NaN is
+     resume tensors (model AND optimizer state), u_raw, aux labels. A
+     non-finite entry refuses the start and names the tensor. Sole documented exception: u_raw NaN is
      the builder's own "unusable game" mask -- a NaN is accepted ONLY
      where label_status == LABEL_UNUSABLE, is counted in the header, and
      such roots are excluded from every loss; Inf is never accepted.
@@ -89,7 +89,18 @@ Numeric protection & recovery (spec S19 standard, in code):
      <ckpt>.complete.json marker (sha256 of the checkpoint) is written the
      same way, and only AFTER both does the "saved" record enter the
      train log -- a completion line in the log therefore always denotes a
-     complete, hash-verified checkpoint on disk.
+     complete, hash-verified checkpoint on disk. Before anything is
+     written, the whole payload (parameters, buffers AND optimizer
+     state) must pass the finite check; a non-finite entry aborts the
+     save through the P2 breaker, leaving the previous checkpoint and
+     its marker untouched.
+  P4 batch-stream reconstruction on resume: the batch partition stream
+     is consumed ONLY by the per-epoch permutation draws, so its
+     position after N completed updates is a pure function of N. A
+     resumed run fast-forwards the stream past the completed epochs and
+     skips the completed batches of the current epoch, consuming exactly
+     the batch sequence the uninterrupted run would have consumed
+     (same --bs and root set, as the update counter already presumes).
 
 Data: --data is a cnet2_build dataset directory with a sealed generation
 (legacy flat datasets are refused: K0 needs the generation id for the
@@ -305,6 +316,27 @@ def main():
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
+    def first_nonfinite(obj, path=""):
+        """First dotted path whose floating tensor holds a non-finite
+        entry, walking dicts/lists/tuples; None when all finite. Used
+        for the optimizer state and the publish payload, whose tensors
+        the per-parameter checks do not reach."""
+        if torch.is_tensor(obj):
+            if obj.dtype.is_floating_point and not bool(torch.isfinite(obj).all()):
+                return path or "<root>"
+            return None
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                r = first_nonfinite(v, f"{path}.{k}" if path else str(k))
+                if r is not None:
+                    return r
+        elif isinstance(obj, (list, tuple)):
+            for i, v in enumerate(obj):
+                r = first_nonfinite(v, f"{path}[{i}]")
+                if r is not None:
+                    return r
+        return None
+
     # ---- data: sealed generation only (load() pins + hash-verifies it) ----
     D, is_val, meta = T.load(args.data)
     gen_dir = meta["dataset_source"]
@@ -394,6 +426,9 @@ def main():
             for tn, tv in sd.items():
                 if torch.is_tensor(tv) and not bool(torch.isfinite(tv).all()):
                     raise SystemExit(f"k0 finite gate: resume tensor {nm}:{tn} is non-finite; refusing to start")
+        bad_opt = first_nonfinite(ck["opt"], "opt")
+        if bad_opt is not None:
+            raise SystemExit(f"k0 finite gate: resume tensor {bad_opt} is non-finite; refusing to start")
         if cfg is None:
             cfg = ck.get("cfg")
     if args.cfg:
@@ -455,6 +490,17 @@ def main():
 
     # ---- batching: seed-derived partition, route-independent ----
     rs = np.random.RandomState(args.seed)
+    # P4: reconstruct the stream position on resume (see header). The
+    # stream is consumed only by the per-epoch permutation draws below,
+    # so completed epochs are replayed as draws and the completed
+    # batches of the current epoch are skipped in the loop.
+    batches_per_epoch = (len(roots) + args.bs - 1) // args.bs
+    epoch = 0
+    skip_batches = 0
+    if ck is not None and batches_per_epoch > 0:
+        epoch, skip_batches = divmod(int(updates_done), batches_per_epoch)
+        for _ in range(epoch):
+            rs.permutation(roots)
     u_t = torch.from_numpy(u_raw.astype(np.float32))
     die_t = torch.from_numpy(aux_die)
     die_m_t = torch.from_numpy(aux_die_m)
@@ -521,6 +567,10 @@ def main():
                    "death_head": death_head.state_dict(), "opt": opt.state_dict(),
                    "updates": int(updates), "cfg": net.cfg,
                    "effective": eff["k0_effective"]}
+        for nm in ("backbone", "u_head", "death_head", "opt"):
+            bad = first_nonfinite(payload[nm], nm)
+            if bad is not None:
+                die_nonfinite(f"publish:{bad}", "non-finite at save time")
         tmp = f"{args.out}.tmp-{os.getpid()}"
         torch.save(payload, tmp)
         os.replace(tmp, args.out)
@@ -536,11 +586,12 @@ def main():
     # ---- training loop ----
     net.train()
     t0 = time.time()
-    epoch = 0
     while updates_done < args.max_updates:
         perm = rs.permutation(roots)
         epoch += 1
-        for a0 in range(0, len(perm), args.bs):
+        for bi, a0 in enumerate(range(0, len(perm), args.bs)):
+            if bi < skip_batches:
+                continue
             if updates_done >= args.max_updates:
                 break
             idx = perm[a0:a0 + args.bs]
@@ -569,6 +620,7 @@ def main():
                   "grad_backbone": g_bb, "lr": args.lr, "elapsed_s": round(time.time() - t0, 2)})
             if args.save_every and updates_done % args.save_every == 0 and updates_done < args.max_updates:
                 save_checkpoint(updates_done)
+        skip_batches = 0
     save_checkpoint(updates_done)
     emit({"done": {"updates": updates_done, "epochs": epoch, "elapsed_s": round(time.time() - t0, 2)}})
     log.close()
