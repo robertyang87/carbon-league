@@ -134,8 +134,9 @@ def main(out, dirs):
         # current.json pointing at a generation that no longer exists.
         # Now: if gen_id is already published, verify the published copy
         # against the manifest core built above (its own self-seal, core
-        # equality modulo the "created"/self-seal bookkeeping, and every
-        # field file's bytes + sha256) and REUSE it exactly as-is:
+        # equality modulo the "created"/self-seal bookkeeping, every
+        # field file's bytes + sha256, and meta.json against the
+        # manifest's meta_sha256 seal -- W05) and REUSE it exactly as-is:
         # nothing is rewritten, so its manifest bytes -- and every
         # pointer already issued for it -- stay valid. A published
         # directory that does not verify dies here by name; it is never
@@ -175,6 +176,19 @@ def main(out, dirs):
                             f"exit publish: published generation {gen_id} field {k!r} in "
                             f"{gen_dir!r} does not match its manifest; refusing to overwrite "
                             f"a published generation")
+                # W05: meta.json is part of the sealed product but is not a
+                # field file, so the loop above never re-hashes the copy on
+                # disk -- an in-place corruption of the published meta.json
+                # passed this verification and the damaged generation was
+                # "reused" and re-pointed at. Recompute it against the
+                # manifest's meta_sha256 seal, like every other file.
+                meta_p = os.path.join(gen_dir, "meta.json")
+                if not os.path.exists(meta_p) \
+                        or _sha256_file(meta_p) != old.get("meta_sha256"):
+                    raise SystemExit(
+                        f"exit publish: published generation {gen_id} file 'meta.json' "
+                        f"in {gen_dir!r} does not match its manifest meta_sha256; "
+                        f"refusing to overwrite a published generation")
                 reused = True
         elif os.path.exists(gen_dir):
             raise SystemExit(
