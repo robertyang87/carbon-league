@@ -262,6 +262,28 @@ def _read_aux_bundle(aux_dir):
     return raw
 
 
+def _load_gen_field(gen_dir, man, name, tag, refuse):
+    """One manifest-declared generation field (u_raw / label_status),
+    single-read (N2): the bytes are read ONCE, the manifest sha256 is
+    checked against those exact bytes, and np.load parses the same
+    buffer. Previously these two K0-consumed columns were re-opened by
+    path AFTER T.load() had pinned and hash-verified the generation,
+    so a file swapped inside that window was trained / screened on
+    under the sealed generation's identity. `tag` / `refuse` carry the
+    caller's refusal wording ("k0" / "refusing to start" on the
+    training path, "k0 screen" / "refusing to run" on the screen
+    path)."""
+    info = (man.get("fields") or {}).get(name) or {}
+    p = os.path.join(gen_dir, info.get("file") or (name + ".npy"))
+    raw = _read_bytes(p)
+    want = info.get("sha256")
+    if want is not None and hashlib.sha256(raw).hexdigest() != want:
+        raise SystemExit(
+            f"{tag}: generation field {name!r} failed verification: {p} (sha256 mismatch -- "
+            f"file bytes changed after the generation was sealed); {refuse}")
+    return np.load(io.BytesIO(raw))
+
+
 def row_key_sha256(gen_dir, man):
     """Binding hash over the certified generation's row identity sequence,
     composed exactly as the producer (k0_aux_labels._row_key) writes it:
@@ -493,10 +515,10 @@ def main():
     if "u_raw" not in man.get("fields", {}):
         raise SystemExit(f"k0: generation {man.get('generation')} declares no 'u_raw' field; K0's U head is "
                          f"supervised by real terminal U only (label-aware generation required); refusing to start")
-    u_raw = np.load(os.path.join(gen_dir, "u_raw.npy")).astype(np.float64)
+    u_raw = _load_gen_field(gen_dir, man, "u_raw", "k0", "refusing to start").astype(np.float64)
     label_status = None
     if "label_status" in man.get("fields", {}):
-        label_status = np.load(os.path.join(gen_dir, "label_status.npy"))
+        label_status = _load_gen_field(gen_dir, man, "label_status", "k0", "refusing to start")
     unusable = (label_status == LABEL_UNUSABLE) if label_status is not None else None
     require_finite_np("u_raw", u_raw, allow_nan_mask=unusable)
     n_u_nan = int(np.isnan(u_raw).sum())
@@ -1017,10 +1039,10 @@ def _screen_eval(args):
     if "u_raw" not in man.get("fields", {}):
         raise SystemExit(f"k0 screen: generation {man.get('generation')} declares no 'u_raw' field; "
                          f"not a label-aware sealed generation; refusing to run")
-    u_raw = np.load(os.path.join(gen_dir, "u_raw.npy")).astype(np.float64)
+    u_raw = _load_gen_field(gen_dir, man, "u_raw", "k0 screen", "refusing to run").astype(np.float64)
     label_status = None
     if "label_status" in man.get("fields", {}):
-        label_status = np.load(os.path.join(gen_dir, "label_status.npy"))
+        label_status = _load_gen_field(gen_dir, man, "label_status", "k0 screen", "refusing to run")
     unusable = (label_status == LABEL_UNUSABLE) if label_status is not None else None
     require_finite_np("u_raw", u_raw, allow_nan_mask=unusable)
     if int(np.isnan(u_raw).sum()) and unusable is None:
