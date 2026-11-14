@@ -322,12 +322,16 @@ def summarize_eval(it, results):
         u = np.array([terminal_u(float(x)) for x in m])
         se_m, n_seeds = _clustered_se(pairs)
         se_u, _ = _clustered_se([(s, terminal_u(float(v))) for s, v in pairs])
+        # Emission caliber (Codex re-review item 3): a single seed makes
+        # the clustered SE inestimable (_clustered_se returns None); the
+        # row must emit null, never 0.0 -- 0.0 falsely claims a zero-width
+        # interval. Consumers treat null se/se_u as "not estimable".
         rows.append({"it": it, "opp": opp, "n": len(m), "n_seeds": n_seeds,
                      "wins": int((m > 0).sum()),
                      "mean_u": round(float(u.mean()), 4),
-                     "se_u": round(se_u, 4) if se_u is not None else 0.0,
+                     "se_u": round(se_u, 4) if se_u is not None else None,
                      "mean": round(float(m.mean()), 1),
-                     "se": round(se_m, 1) if se_m is not None else 0.0,
+                     "se": round(se_m, 1) if se_m is not None else None,
                      "t": time.time()})
     return rows
 
