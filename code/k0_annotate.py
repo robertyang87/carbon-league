@@ -529,8 +529,9 @@ def _verify_shard(shard_dir, pg, identity, recorded_sha=None,
 def validate_records(arrs, window, K, where):
     """The S13-C record gates, applied pre-seal and on consumer verify:
     pi present, finite, in (0, 1] and equal to pi0 + (1-pi0)*pi1; every
-    step inside the registered window; arm counts sane; q normalised
-    over the recorded arms with zero mass on padding; Q finite on arms."""
+    step inside the registered window; arm counts sane; q and priors
+    finite and normalised over the recorded arms with zero mass on
+    padding; Q finite on arms. (Q_std is diagnostic and ungated.)"""
     lo, hi = window
     n = int(arrs["step"].shape[0])
     for k in ("pi0", "pi1", "pi"):
@@ -578,11 +579,25 @@ def validate_records(arrs, window, K, where):
         m = int(na[i])
         if not np.isfinite(Q[i, :m]).all():
             _die(f"{where}: root #{i} has non-finite Q on a recorded arm")
+        # Finiteness BEFORE every comparison gate (X09): NaN makes
+        # (x < 0) and |sum - 1| > tol both False, so a NaN in q or
+        # priors would otherwise sail through the negativity and
+        # normalisation checks below; priors also had no sum gate
+        # at all. Q_std is a diagnostic field and deliberately keeps
+        # its nullable semantics -- it is NOT gated here.
+        if not np.isfinite(q[i, :m]).all():
+            _die(f"{where}: root #{i} has non-finite q on a recorded arm")
+        if not np.isfinite(priors[i, :m]).all():
+            _die(f"{where}: root #{i} has non-finite priors on a recorded arm")
         if (q[i, :m] < 0).any() or (priors[i, :m] < 0).any():
             _die(f"{where}: root #{i} has negative q/priors on a recorded arm")
         s = float(q[i, :m].sum())
         if abs(s - 1.0) > 1e-9:
             _die(f"{where}: root #{i} q sums to {s!r} over its arms, not 1")
+        sp = float(priors[i, :m].sum())
+        if abs(sp - 1.0) > 1e-9:
+            _die(f"{where}: root #{i} priors sum to {sp!r} over its "
+                 f"arms, not 1")
         if (q[i, m:] != 0.0).any() or (priors[i, m:] != 0.0).any():
             _die(f"{where}: root #{i} carries q/priors mass on padding arms")
     keys = set()
