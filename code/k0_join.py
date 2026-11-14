@@ -149,9 +149,12 @@ def _validate_annot_records(arrs, window, K, where):
     """The annotator's S13-C record gates (k0_annotate.validate_records
     caliber), applied to the input before any join work: pi present,
     finite, in (0, 1] and exactly pi0 + (1-pi0)*pi1; steps inside the
-    registered window; arm counts sane; q normalised over the recorded
-    arms with zero mass on padding; Q finite on arms; no duplicate
-    (gid, step, seat) root."""
+    registered window; arm counts sane; q and priors finite and
+    normalised over the recorded arms with zero mass on padding; Q
+    finite on arms; no duplicate (gid, step, seat) root. This mirror
+    is kept in lockstep with the annotator's gates (standing rule:
+    any annotator record-gate change is mirrored here in the same
+    delivery)."""
     lo, hi = window
     n = int(arrs["step"].shape[0])
     pi0 = np.asarray(arrs["pi0"], dtype=np.float64)
@@ -192,11 +195,24 @@ def _validate_annot_records(arrs, window, K, where):
         m = int(na[i])
         if not np.isfinite(Q[i, :m]).all():
             _die(f"{where}: root #{i} has non-finite Q on a recorded arm")
+        # Mirror of the annotator's X09 finite gates: finiteness of q
+        # and priors BEFORE every comparison gate (NaN defeats both
+        # the negativity and the sum comparisons), plus the priors
+        # normalisation gate. Q_std is diagnostic, nullable, ungated
+        # -- exactly as on the annotator side.
+        if not np.isfinite(q[i, :m]).all():
+            _die(f"{where}: root #{i} has non-finite q on a recorded arm")
+        if not np.isfinite(priors[i, :m]).all():
+            _die(f"{where}: root #{i} has non-finite priors on a recorded arm")
         if (q[i, :m] < 0).any() or (priors[i, :m] < 0).any():
             _die(f"{where}: root #{i} has negative q/priors on a recorded arm")
         s = float(q[i, :m].sum())
         if abs(s - 1.0) > 1e-9:
             _die(f"{where}: root #{i} q sums to {s!r} over its arms, not 1")
+        sp = float(priors[i, :m].sum())
+        if abs(sp - 1.0) > 1e-9:
+            _die(f"{where}: root #{i} priors sum to {sp!r} over its "
+                 f"arms, not 1")
         if (q[i, m:] != 0.0).any() or (priors[i, m:] != 0.0).any():
             _die(f"{where}: root #{i} carries q/priors mass on padding arms")
     keys = set()
