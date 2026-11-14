@@ -164,7 +164,13 @@ policy head (teacher-forced per-slot categoricals summed over the
 root's valid action slots, the anchor CE's own factorisation), as
 mean / p99. No optimizer is built and nothing is written. A horizon
 whose valid entries lack positives or negatives reports a null AUC and
-names the missing class instead of inventing a number.
+names the missing class instead of inventing a number. Inputs are gated finite on
+load, and the quantities the metrics are computed from (the death
+probabilities and the per-root KL) plus the metrics themselves are
+gated again after evaluation: a checkpoint whose finite parameters
+overflow in the forward pass refuses the run, naming the metric,
+instead of printing NaN as a result; the emitted line is strict
+JSON (allow_nan=False).
 
 Usage:
   python3 k0_train.py --data DS --init INIT.npz --aux-dir DS \
@@ -878,7 +884,10 @@ def run_screen(args):
     for the whole evaluation."""
     with contextlib.redirect_stdout(sys.stderr):
         out = _screen_eval(args)
-    print(json.dumps(out), flush=True)
+    # allow_nan=False is the last line of defence: the screen record
+    # must be strict JSON, so a non-finite metric that somehow reached
+    # here raises instead of printing a NaN literal as a "result".
+    print(json.dumps(out, allow_nan=False), flush=True)
 
 
 def _screen_eval(args):
@@ -1009,11 +1018,43 @@ def _screen_eval(args):
     probs = np.concatenate(prob_chunks, axis=0)
     kl_all = np.concatenate(kl_roots, axis=0)
 
+    # ---- output finite gate (V08) ----
+    # The gates above verify the INPUTS (arm/init tensors, u_raw, aux
+    # labels). They cannot see overflow that only appears when finite
+    # but extreme parameters run through encode/decode: the screen
+    # used to succeed and print NaN metrics as its result. So what
+    # actually feeds the metrics -- the death probabilities and the
+    # per-root KL -- and then the metrics themselves are gated here;
+    # any non-finite value refuses the run, naming the item. A null
+    # AUC on a single-class horizon stays legitimate (it is an absent
+    # number, not a broken one) and is never gated.
+    n_bad = int((~np.isfinite(probs)).sum())
+    if n_bad:
+        raise SystemExit(f"k0 screen finite gate: death probabilities hold {n_bad} non-finite "
+                         f"entries of {probs.size}; refusing to run")
+    n_bad = int((~np.isfinite(kl_all)).sum())
+    if n_bad:
+        raise SystemExit(f"k0 screen finite gate: per-root KL holds {n_bad} non-finite entries "
+                         f"of {kl_all.shape[0]}; refusing to run")
+
     per_horizon = {}
     for hi, horizon in enumerate(DEATH_HORIZONS):
         m = label_mask[:, :, hi]
         per_horizon[str(horizon)] = _screen_metrics(probs[:, :, hi][m], labels[:, :, hi][m])
     combined = _screen_metrics(probs[label_mask], labels[label_mask])
+    for _where, _m in [(f"death.horizons[{h}]", per_horizon[h]) for h in per_horizon] + \
+                      [("death.combined", combined)]:
+        for _key in ("log_loss", "base_log_loss", "auc"):
+            _v = _m.get(_key)
+            if _v is not None and not math.isfinite(_v):
+                raise SystemExit(f"k0 screen finite gate: metric {_where}.{_key} is non-finite "
+                                 f"({_v}); refusing to run")
+    kl_mean = float(kl_all.mean())
+    kl_p99 = float(np.percentile(kl_all, 99))
+    for _key, _v in (("kl.mean", kl_mean), ("kl.p99", kl_p99)):
+        if not math.isfinite(_v):
+            raise SystemExit(f"k0 screen finite gate: metric {_key} is non-finite ({_v}); "
+                             f"refusing to run")
     out = {"screen": {
         "arm": {"file": args.checkpoint, "md5": arm_md5},
         "init": {"file": args.init, "md5": init_md5},
@@ -1022,7 +1063,7 @@ def _screen_eval(args):
                              "rows": n_rows, "row_key_sha256": row_key_sha256(gen_dir, man)},
         "games": games, "roots": int(n_rows),
         "death": {"horizons": per_horizon, "combined": combined},
-        "kl": {"mean": float(kl_all.mean()), "p99": float(np.percentile(kl_all, 99)),
+        "kl": {"mean": kl_mean, "p99": kl_p99,
                "n": int(kl_all.shape[0])}}}
     return out
 
