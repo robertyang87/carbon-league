@@ -107,6 +107,12 @@ Numeric protection & recovery (spec S19 standard, in code):
      and every lr the run logs (the effective config, the per-step
      lines) is read back from the optimizer itself, so the recorded
      value is the effective value by construction.
+  P6 init/resume identity is single-source: --init and --resume are
+     each read ONCE into memory; the recorded sha256 (and, for resume,
+     the complete-marker comparison) is computed from those bytes, and
+     np.load / torch.load parse the same byte object via BytesIO. The
+     file cannot be swapped between hashing and loading -- the window
+     the certify_pack and cnet2_train init paths were closed for.
 
 Data: --data is a cnet2_build dataset directory with a sealed generation
 (legacy flat datasets are refused: K0 needs the generation id for the
@@ -452,8 +458,11 @@ def main():
     init_sha = None
     start_sd = None
     if args.init:
-        init_sha = _sha256_file(args.init)
-        w = np.load(args.init)
+        # P6: a single byte read -- the recorded sha256 and the np.load
+        # parse derive from the same bytes.
+        init_raw = _read_bytes(args.init)
+        init_sha = hashlib.sha256(init_raw).hexdigest()
+        w = np.load(io.BytesIO(init_raw))
         for k in w.files:
             if k != "meta":
                 require_finite_np(f"init:{k}", w[k])
@@ -465,7 +474,11 @@ def main():
         start_sd = {k: torch.from_numpy(np.ascontiguousarray(w[k])) for k in w.files if k != "meta"}
     ck = None
     if args.resume:
-        init_sha = _sha256_file(args.resume)
+        # P6: a single byte read -- the recorded sha256, the complete
+        # marker comparison and the torch.load parse all derive from
+        # the same bytes.
+        ck_raw = _read_bytes(args.resume)
+        init_sha = hashlib.sha256(ck_raw).hexdigest()
         marker_path = args.resume + ".complete.json"
         if not os.path.exists(marker_path):
             raise SystemExit(f"k0: resume checkpoint {args.resume!r} has no complete marker {marker_path!r}; "
@@ -474,7 +487,7 @@ def main():
         if marker.get("sha256") != init_sha or not marker.get("complete"):
             raise SystemExit(f"k0: complete marker for {args.resume!r} does not match the file sha256 "
                              f"(marker {marker.get('sha256')!r} != actual {init_sha!r}); refusing to start")
-        ck = torch.load(args.resume, map_location=dev, weights_only=False)
+        ck = torch.load(io.BytesIO(ck_raw), map_location=dev, weights_only=False)
         for nm, sd in (("backbone", ck["backbone"]), ("u_head", ck["u_head"]), ("death_head", ck["death_head"])):
             for tn, tv in sd.items():
                 if torch.is_tensor(tv) and not bool(torch.isfinite(tv).all()):
