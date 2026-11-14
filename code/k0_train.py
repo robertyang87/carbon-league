@@ -101,18 +101,34 @@ Numeric protection & recovery (spec S19 standard, in code):
      skips the completed batches of the current epoch, consuming exactly
      the batch sequence the uninterrupted run would have consumed
      (same --bs and root set, as the update counter already presumes).
-  P5 resume learning rate: the checkpoint's optimizer state is loaded
-     for its moments, but its stored lr does not survive a resume --
-     --lr is applied to the param groups right after load_state_dict,
-     and every lr the run logs (the effective config, the per-step
-     lines) is read back from the optimizer itself, so the recorded
-     value is the effective value by construction.
+  P5 resume learning rate: --lr defaults to None, a sentinel rather
+     than a rate. A fresh start reads None as 1e-3, as before. On
+     resume, the checkpoint's optimizer state is loaded for its
+     moments and -- when --lr is not given -- for its rate too: a bare
+     resume must not silently reset the rate to the fresh-start
+     default (the mirror image of the split this paragraph exists to
+     prevent). An explicit --lr is applied to the param groups right
+     after load_state_dict. Every lr the run logs (the effective
+     config, the per-step lines) is read back from the optimizer
+     itself, so the recorded value is the effective value by
+     construction.
   P6 init/resume identity is single-source: --init and --resume are
      each read ONCE into memory; the recorded sha256 (and, for resume,
      the complete-marker comparison) is computed from those bytes, and
      np.load / torch.load parse the same byte object via BytesIO. The
      file cannot be swapped between hashing and loading -- the window
      the certify_pack and cnet2_train init paths were closed for.
+  P7 resume protocol equivalence: a resume must continue the run the
+     checkpoint actually came from. At load, the stored effective
+     config's protocol fields -- route, lambda_death, seed, bs,
+     max_games, freeze_backbone, and the data fingerprint (generation
+     + row_key_sha256, compared when the record carries them) -- are
+     checked against this invocation; any mismatch refuses the start,
+     naming the field and both values. Exempt by design, as the
+     legitimate axes of a continuation: --max-updates, --out,
+     --save-every, --resume itself, --lr (P5's rule), --init (not
+     applicable to a resume). A checkpoint with no effective record
+     is refused outright: an unverifiable resume does not start.
 
 Data: --data is a cnet2_build dataset directory with a sealed generation
 (legacy flat datasets are refused: K0 needs the generation id for the
@@ -340,7 +356,9 @@ def main():
     ap.add_argument("--max-updates", type=int, default=200)
     ap.add_argument("--max-games", type=int, default=128)
     ap.add_argument("--bs", type=int, default=256)
-    ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--lr", type=float, default=None,
+                    help="learning rate (default: 1e-3 on a fresh start; on resume, the checkpoint's "
+                         "rate unless explicitly given)")
     ap.add_argument("--cfg", default=None, help="CNet2 cfg JSON (default: init meta cfg or model DEFAULT)")
     ap.add_argument("--save-every", type=int, default=0, help="also save every N updates (0 = final only)")
     ap.add_argument("--grad-log-every", type=int, default=1,
@@ -513,23 +531,63 @@ def main():
         for p in backbone_params:
             p.requires_grad_(False)
     trainable = [p for p in backbone_params if p.requires_grad] + list(u_head.parameters()) + list(death_head.parameters())
-    opt = torch.optim.AdamW(trainable, lr=args.lr, weight_decay=1e-4)
+    opt = torch.optim.AdamW(trainable, lr=args.lr if args.lr is not None else 1e-3, weight_decay=1e-4)
 
     updates_done = 0
     if ck is not None:
+        # P7 first, before any load_state_dict: the assertion must also
+        # pre-empt the bare load errors a mismatched continuation would
+        # otherwise die with -- a freeze_backbone mismatch, e.g., changes
+        # the optimizer's parameter set, and opt.load_state_dict would
+        # raise a plain ValueError naming nothing.
+        # The resume must continue THIS run -- compare the protocol
+        # fields of the checkpoint's stored effective config against
+        # this invocation and refuse any mismatch, naming the field and
+        # both values. Exempt by design (see header): --max-updates,
+        # --out, --save-every, --resume itself, --lr (P5's rule
+        # governs it) and --init (not applicable to a resume). The
+        # data fingerprint fields are compared when the record carries
+        # them.
+        _eff0 = ck.get("effective")
+        if _eff0 is None:
+            raise SystemExit("k0: resume checkpoint carries no 'effective' record; the resume protocol "
+                             "cannot be verified against the producing run; refusing to start")
+        _proto = (("aux_route (--aux-route)", args.aux_route, _eff0.get("route")),
+                  ("lambda_death (--lambda-death)", args.lambda_death, _eff0.get("lambda_death")),
+                  ("seed (--seed)", args.seed, _eff0.get("seed")),
+                  ("bs (--bs)", args.bs, _eff0.get("bs")),
+                  ("max_games (--max-games)", args.max_games, _eff0.get("max_games")),
+                  ("freeze_backbone (--freeze-backbone)", bool(args.freeze_backbone),
+                   _eff0.get("freeze_backbone")))
+        for _name, _mine_v, _ck_v in _proto:
+            if _ck_v != _mine_v:
+                raise SystemExit(f"k0 resume protocol: {_name} differs from the checkpoint's producing run "
+                                 f"(checkpoint {_ck_v!r} != this invocation {_mine_v!r}); refusing to start")
+        _fp0 = _eff0.get("data_fingerprint") or {}
+        if _fp0.get("generation") is not None and _fp0.get("generation") != man.get("generation"):
+            raise SystemExit(f"k0 resume protocol: data_fingerprint.generation differs from the checkpoint's "
+                             f"producing run (checkpoint {_fp0.get('generation')!r} != this invocation "
+                             f"{man.get('generation')!r}); refusing to start")
+        if _fp0.get("row_key_sha256") is not None and \
+                _fp0.get("row_key_sha256") != row_key_sha256(gen_dir, man):
+            raise SystemExit(f"k0 resume protocol: data_fingerprint.row_key_sha256 differs from the "
+                             f"checkpoint's producing run (checkpoint {_fp0.get('row_key_sha256')!r} != this "
+                             f"invocation {row_key_sha256(gen_dir, man)!r}); refusing to start")
         net.load_state_dict(ck["backbone"])
         u_head.load_state_dict(ck["u_head"])
         death_head.load_state_dict(ck["death_head"])
         opt.load_state_dict(ck["opt"])
         # P5: load_state_dict restores the checkpoint's param_groups, lr
-        # included -- an explicit --lr on the resume command line was
-        # silently discarded while every log line kept printing it (a run
-        # recorded .01 and optimized at the checkpoint's .001). The CLI
-        # value is the caller's intent: apply it to every group. The
-        # moments still come from the checkpoint; only the rate is the
-        # caller's.
-        for _g in opt.param_groups:
-            _g["lr"] = args.lr
+        # included. An explicit --lr is the caller's intent: apply it to
+        # every group (the pre-fix code silently discarded it while
+        # every log line kept printing it -- a run recorded .01 and
+        # optimized at the checkpoint's .001). No --lr (the None
+        # sentinel) keeps the checkpoint's rate: a bare resume must not
+        # silently reset it to the fresh-start default either. The
+        # moments come from the checkpoint in both cases.
+        if args.lr is not None:
+            for _g in opt.param_groups:
+                _g["lr"] = args.lr
         updates_done = int(ck["updates"])
     # The lr every record below carries is read back from the optimizer
     # itself, so the recorded value is the effective value by
