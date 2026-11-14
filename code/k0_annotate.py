@@ -602,7 +602,24 @@ def publish(out_dir, plan, shard_metas):
     parts = {k: [] for k in FIELDS}
     games_meta = []
     for m in order:
-        with np.load(os.path.join(shard_dir, m["shard_file"])) as D:
+        # Assembly consumes the exact bytes whose sha256 the shard
+        # verification recorded: the shard file is read once here and
+        # its hash re-checked against the verified record before any
+        # array is taken from it (a shard replaced after verification
+        # dies by name, never silently assembles).
+        recorded = m.get("shard_sha256")
+        if recorded is None:
+            _die(f"publish: shard {m['game']} carries no verified "
+                 f"shard_sha256 record; refusing to assemble from it")
+        spath = os.path.join(shard_dir, m["shard_file"])
+        with open(spath, "rb") as fh:
+            raw = fh.read()
+        got = _sha256_bytes(raw)
+        if got != recorded:
+            _die(f"publish: shard {m['game']}: file sha256 {got} does "
+                 f"not match the verified shard record {recorded}; "
+                 f"refusing to assemble from unverified bytes")
+        with np.load(io.BytesIO(raw)) as D:
             for k in FIELDS:
                 parts[k].append(np.asarray(D[k]))
         games_meta.append({"game": m["game"], "gid": m["gid"],
@@ -757,9 +774,12 @@ def publish(out_dir, plan, shard_metas):
 # ------------------------------ verify -------------------------------------
 
 
-def verify_generation(gen_dir, ptr):
+def verify_generation(gen_dir, ptr, want_product=False):
     """Verify-or-refuse, mirroring cnet2_exit_train._verify_exit_generation
-    plus the S13-C record gates. Returns a summary dict."""
+    plus the S13-C record gates. Returns a summary dict; with
+    want_product=True the dict also carries the very "meta" and field
+    arrays this verification loaded and checked, so a consumer never
+    re-opens by path what verification already certified."""
     man_path = os.path.join(gen_dir, "manifest.json")
     if not os.path.exists(man_path):
         _die(f"sealed annotation generation has no manifest.json: "
@@ -804,24 +824,30 @@ def verify_generation(gen_dir, ptr):
         _die(f"annotation generation is missing fields {missing}")
     validate_records(arrs, prod["config"]["window"], prod["config"]["K"],
                      f"verify {gen_dir!r}")
-    return {"generation": man.get("generation"), "dir": gen_dir,
-            "format": man.get("format"),
-            "files_verified": len(man.get("fields", {})),
-            "total": man.get("total"),
-            "weights_md5": prod.get("weights_md5"),
-            "config_sha256": prod.get("config_sha256")}
+    summary = {"generation": man.get("generation"), "dir": gen_dir,
+               "format": man.get("format"),
+               "files_verified": len(man.get("fields", {})),
+               "total": man.get("total"),
+               "weights_md5": prod.get("weights_md5"),
+               "config_sha256": prod.get("config_sha256")}
+    if want_product:
+        summary["meta"] = meta
+        summary["arrays"] = arrs
+    return summary
 
 
-def resolve_out_arg(arg):
+def resolve_out_arg(arg, want_product=False):
     """Pointer-only consumption, mirroring cnet2_exit_train.resolve_exit_arg:
     a sealed generation directory passed directly is refused."""
     if os.path.isfile(arg):
         ptr = json.load(open(arg))
         root = os.path.dirname(os.path.abspath(arg))
-        return verify_generation(os.path.join(root, ptr["dir"]), ptr)
+        return verify_generation(os.path.join(root, ptr["dir"]), ptr,
+                                 want_product=want_product)
     if os.path.exists(os.path.join(arg, "current.json")):
         ptr = json.load(open(os.path.join(arg, "current.json")))
-        return verify_generation(os.path.join(arg, ptr["dir"]), ptr)
+        return verify_generation(os.path.join(arg, ptr["dir"]), ptr,
+                                 want_product=want_product)
     if os.path.exists(os.path.join(arg, "manifest.json")):
         _die(f"sealed annotation generation at {arg!r} must be consumed via "
              f"its dataset root / current pointer, not by direct path")
@@ -830,12 +856,11 @@ def resolve_out_arg(arg):
 
 def load_annotated(arg):
     """Verify-or-refuse load for consumers (the round-2 distillation
-    entry): returns (meta, {field: array})."""
-    summary = resolve_out_arg(arg)
-    gen_dir = summary["dir"]
-    meta = json.load(open(os.path.join(gen_dir, "meta.json")))
-    arrs = {k: np.load(os.path.join(gen_dir, k + ".npy")) for k in FIELDS}
-    return meta, arrs
+    entry): returns (meta, {field: array}) -- exactly the meta and
+    arrays the seal verification loaded and checked; nothing is
+    re-opened by path after verification."""
+    summary = resolve_out_arg(arg, want_product=True)
+    return summary["meta"], summary["arrays"]
 
 
 # -------------------------------- main -------------------------------------
