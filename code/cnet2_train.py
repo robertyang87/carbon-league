@@ -779,6 +779,14 @@ def load(dirn):
         print(json.dumps({"derived_layer_check": dchk, "data": dirn}), flush=True)
     val_g = np.array([g["val"] for g in meta["games"]])
     is_val = val_g[np.asarray(D["gid"])]
+    # N2-b: hand the caller the very manifest this load verified against
+    # -- the dict _resolve_load_source parsed once and hash-checked
+    # every declared field by. A consumer that re-opens manifest.json
+    # by path after this verified load reopens the post-verification
+    # swap window the single-read discipline closed, so the manifest
+    # travels with the load instead. Additive key; None on the legacy
+    # flat view (no sealed generation).
+    meta["generation_manifest"] = man
     return D, is_val, meta
 
 
