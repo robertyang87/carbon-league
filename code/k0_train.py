@@ -115,14 +115,36 @@ sidecar binding and u_raw for the U supervision). --max-games (default
 dataset, in dataset order (seed-independent, identical for A0/A1); the
 actual counts are printed in the effective config.
 
+Stage-A screening (--screen): an eval-only mode of this same entry. It
+takes an arm checkpoint (--checkpoint, bound by its complete marker) and
+the common --init, walks the SAME sealed data path as training
+(generation seal, u_raw finite gate, aux sidecar binding -- any failure
+refuses the run, naming the item), and evaluates over the WHOLE
+generation the --data pointer binds (no game cap, no split filter: the
+screen judges the bound dataset as it stands; holdout-ness is the
+caller's property, recorded via the data fingerprint). One JSON line is
+printed: for the death head, per-horizon (10 / 25 / 50) and pooled
+log-loss against the sidecar labels over mask-valid entries -- the
+training loss's own alignment -- with the empirical base-rate log-loss
+and the AUC alongside; and the per-root KL(pi_arm || pi_init) of the
+policy head (teacher-forced per-slot categoricals summed over the
+root's valid action slots, the anchor CE's own factorisation), as
+mean / p99. No optimizer is built and nothing is written. A horizon
+whose valid entries lack positives or negatives reports a null AUC and
+names the missing class instead of inventing a number.
+
 Usage:
   python3 k0_train.py --data DS --init INIT.npz --aux-dir DS \
       --out RUN/k0.pt --seed 7 --aux-route detach --max-updates 200
   python3 k0_train.py ... --selftest-routing   # A0/A1 gradient measurement
+  python3 k0_train.py --screen --checkpoint ARM.pt --init INIT.npz \
+      --data HOLDOUT_DS     # Stage-A screen, one JSON line, no writes
 """
 
 import argparse
+import contextlib
 import hashlib
+import io
 import json
 import math
 import os
@@ -159,6 +181,16 @@ def _sha256_file(path):
         for blk in iter(lambda: fh.read(1 << 22), b""):
             h.update(blk)
     return h.hexdigest()
+
+
+def _read_bytes(path):
+    """Read a file's bytes exactly once. Identity-bound loads (screen
+    checkpoint / init) hash, marker-check and parse THESE bytes, so the
+    recorded identity and the loaded object have a single source -- the
+    file cannot be swapped between hashing and loading (the
+    certify_pack / cnet2_train single-source caliber)."""
+    with open(path, "rb") as fh:
+        return fh.read()
 
 
 def row_key_sha256(gen_dir, man):
@@ -288,7 +320,12 @@ def main():
     ap.add_argument("--resume", default=None, help="K0 checkpoint .pt to resume (heads + optimizer + counters)")
     ap.add_argument("--aux-dir", default=None, help="dir holding aux_die.npy/aux_die_m.npy + k0_aux.json "
                                                     "(the k0_aux_labels sidecar; default: the dataset dir)")
-    ap.add_argument("--out", required=True, help="checkpoint output path (.pt)")
+    ap.add_argument("--out", default=None, help="checkpoint output path (.pt); required unless --screen")
+    ap.add_argument("--screen", action="store_true",
+                    help="eval-only Stage-A screen of --checkpoint against --init on --data; "
+                         "prints one JSON line, writes nothing")
+    ap.add_argument("--checkpoint", default=None,
+                    help="arm checkpoint .pt to screen (with --screen; bound by its complete marker)")
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--aux-route", choices=("detach", "backbone"), default="detach")
     ap.add_argument("--lambda-death", type=float, default=0.05)
@@ -306,6 +343,16 @@ def main():
     ap.add_argument("--selftest-routing", action="store_true",
                     help="measure death-loss backbone grad under both routes on the first batch, print JSON, exit")
     args = ap.parse_args()
+    if args.screen:
+        if args.checkpoint is None or args.init is None:
+            raise SystemExit("k0 --screen: --checkpoint (the arm) and --init (the common start) are "
+                             "both required")
+        if args.resume is not None:
+            raise SystemExit("k0 --screen: --resume is not a screen input; the arm is given by --checkpoint")
+        run_screen(args)
+        return
+    if args.out is None:
+        raise SystemExit("k0: --out is required (training writes a checkpoint; only --screen runs without one)")
     if args.init is None and args.resume is None:
         raise SystemExit("k0: --init or --resume is required (A0/A1 protocol: a declared common start)")
     if args.init is not None and args.resume is not None:
@@ -643,6 +690,206 @@ def main():
     save_checkpoint(updates_done)
     emit({"done": {"updates": updates_done, "epochs": epoch, "elapsed_s": round(time.time() - t0, 2)}})
     log.close()
+
+
+# --------------------------------------------------------------------------
+# Stage-A screening (--screen): eval-only, no optimizer, no writes
+# --------------------------------------------------------------------------
+
+def _screen_metrics(p, y):
+    """Log-loss of predicted probabilities p against 0/1 labels y, the
+    empirical base-rate log-loss (predict the observed positive rate for
+    every entry), and the Mann-Whitney AUC with average ranks for ties.
+    AUC is None -- and the missing class is named in "note" -- when the
+    entries hold no positives or no negatives: the number does not
+    exist there and is never invented."""
+    n = int(y.shape[0])
+    pos = int(y.sum())
+    if n == 0:
+        return {"log_loss": None, "base_log_loss": None, "auc": None,
+                "n": 0, "positives": 0, "note": "no_valid_entries"}
+    pc = np.clip(p, 1e-15, 1.0 - 1e-15)
+    ll = float(-np.mean(y * np.log(pc) + (1.0 - y) * np.log(1.0 - pc)))
+    base = pos / n
+    bc = min(max(base, 1e-15), 1.0 - 1e-15)
+    bll = float(-(base * math.log(bc) + (1.0 - base) * math.log(1.0 - bc)))
+    out = {"log_loss": ll, "base_log_loss": bll, "auc": None, "n": n, "positives": pos}
+    if pos == 0:
+        out["note"] = "no_positive_entries: AUC undefined"
+    elif pos == n:
+        out["note"] = "no_negative_entries: AUC undefined"
+    else:
+        order = np.argsort(p, kind="mergesort")
+        sorted_p = p[order]
+        ranks_sorted = np.empty(n, dtype=np.float64)
+        j = 0
+        while j < n:
+            k = j
+            while k + 1 < n and sorted_p[k + 1] == sorted_p[j]:
+                k += 1
+            ranks_sorted[j:k + 1] = 0.5 * (j + k) + 1.0
+            j = k + 1
+        ranks = np.empty(n, dtype=np.float64)
+        ranks[order] = ranks_sorted
+        pos_rank_sum = float(ranks[y > 0.5].sum())
+        out["auc"] = float((pos_rank_sum - pos * (pos + 1) / 2.0) / (pos * (n - pos)))
+    return out
+
+
+def run_screen(args):
+    """--screen entry: stdout carries the one screen JSON line and
+    nothing else -- library diagnostics from the sealed load path
+    (cnet2_train.load prints its source line) are redirected to stderr
+    for the whole evaluation."""
+    with contextlib.redirect_stdout(sys.stderr):
+        out = _screen_eval(args)
+    print(json.dumps(out), flush=True)
+
+
+def _screen_eval(args):
+    """--screen: the Stage-A screen. Data discipline is the training
+    path's own (sealed generation load, u_raw finite gate, aux sidecar
+    binding -- any failure refuses the run, naming the item); the arm
+    checkpoint is bound by its complete marker and loaded from the same
+    bytes its md5 is taken from, the init likewise. Evaluates over the
+    whole bound generation and returns the screen record (the caller
+    prints it as the single stdout JSON line)."""
+    os.environ["BC_DEVICE"] = args.device          # cnet2_train reads this at import
+    import torch
+    import torch.nn.functional as Fn
+    import cnet2_train as T
+    from cnet2_build import LABEL_UNUSABLE
+    from cnet2_model import CNet2, migrate_state_dict
+
+    dev = torch.device(args.device)
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
+
+    # ---- data: the training path's sealed load + gates, verbatim ----
+    D, is_val, meta = T.load(args.data)
+    gen_dir = meta["dataset_source"]
+    man_path = os.path.join(gen_dir, "manifest.json")
+    if not os.path.exists(man_path):
+        raise SystemExit(f"k0 screen: dataset {args.data!r} has no sealed generation manifest at {man_path}; "
+                         f"refusing to run")
+    man = json.load(open(man_path))
+    n_rows = int(man["total"])
+    if int(np.asarray(D["y"]).shape[0]) != n_rows:
+        raise SystemExit(f"k0 screen: dataset rows {np.asarray(D['y']).shape[0]} != manifest total {n_rows}; "
+                         f"refusing to run")
+    if "u_raw" not in man.get("fields", {}):
+        raise SystemExit(f"k0 screen: generation {man.get('generation')} declares no 'u_raw' field; "
+                         f"not a label-aware sealed generation; refusing to run")
+    u_raw = np.load(os.path.join(gen_dir, "u_raw.npy")).astype(np.float64)
+    label_status = None
+    if "label_status" in man.get("fields", {}):
+        label_status = np.load(os.path.join(gen_dir, "label_status.npy"))
+    unusable = (label_status == LABEL_UNUSABLE) if label_status is not None else None
+    require_finite_np("u_raw", u_raw, allow_nan_mask=unusable)
+    if int(np.isnan(u_raw).sum()) and unusable is None:
+        raise SystemExit("k0 screen finite gate: u_raw has NaN entries but the generation carries no "
+                         "label_status column to excuse them as unusable; refusing to run")
+    aux_dir = args.aux_dir or args.data
+    sc = check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows)
+    aux_die = np.load(os.path.join(aux_dir, "aux_die.npy"))
+    aux_die_m = np.load(os.path.join(aux_dir, "aux_die_m.npy"))
+    if aux_die.shape != (n_rows, 10, 3) or aux_die_m.shape != (n_rows, 10, 3):
+        raise SystemExit(f"k0 screen aux: aux_die/aux_die_m shapes {aux_die.shape}/{aux_die_m.shape} != "
+                         f"({n_rows}, 10, 3); refusing to run")
+    for name, arr in (("aux_die.npy", aux_die), ("aux_die_m.npy", aux_die_m)):
+        ent = sc["files"][name]
+        if [int(x) for x in arr.shape] != ent.get("shape") or str(arr.dtype) != ent.get("dtype"):
+            raise SystemExit(f"k0 screen aux: {name} shape/dtype {list(arr.shape)}/{arr.dtype} != sidecar "
+                             f"entry {ent.get('shape')}/{ent.get('dtype')}; refusing to run")
+    if not set(np.unique(aux_die).tolist()) <= {0, 1}:
+        raise SystemExit("k0 screen finite gate: tensor 'aux_die' has values outside {0, 1}; refusing to run")
+    require_finite_np("aux_die", aux_die.astype(np.float64))
+    labels = aux_die.astype(np.float64)
+    label_mask = aux_die_m.astype(bool)
+    games = int(len(np.unique(np.asarray(D["gid"]))))
+
+    # ---- arm checkpoint: one byte read; md5, marker check and the
+    # torch.load parse all derive from it ----
+    arm_raw = _read_bytes(args.checkpoint)
+    arm_md5 = hashlib.md5(arm_raw).hexdigest()
+    arm_sha = hashlib.sha256(arm_raw).hexdigest()
+    marker_path = args.checkpoint + ".complete.json"
+    if not os.path.exists(marker_path):
+        raise SystemExit(f"k0 screen: arm checkpoint {args.checkpoint!r} has no complete marker "
+                         f"{marker_path!r}; refusing to run")
+    marker = json.load(open(marker_path))
+    if marker.get("sha256") != arm_sha or not marker.get("complete"):
+        raise SystemExit(f"k0 screen: complete marker for {args.checkpoint!r} does not match the file "
+                         f"sha256 (marker {marker.get('sha256')!r} != actual {arm_sha!r}); refusing to run")
+    ck = torch.load(io.BytesIO(arm_raw), map_location=dev, weights_only=False)
+    for nm, sd in (("backbone", ck["backbone"]), ("u_head", ck["u_head"]), ("death_head", ck["death_head"])):
+        for tn, tv in sd.items():
+            if torch.is_tensor(tv) and tv.dtype.is_floating_point and not bool(torch.isfinite(tv).all()):
+                raise SystemExit(f"k0 screen finite gate: arm tensor {nm}:{tn} is non-finite; refusing to run")
+
+    # ---- init: one byte read; md5 and the arrays derive from it ----
+    init_raw = _read_bytes(args.init)
+    init_md5 = hashlib.md5(init_raw).hexdigest()
+    w = np.load(io.BytesIO(init_raw))
+    for k in w.files:
+        if k != "meta":
+            require_finite_np(f"init:{k}", w[k])
+    init_cfg = None
+    if "meta" in w.files:
+        try:
+            init_cfg = json.loads(str(w["meta"])).get("cfg")
+        except Exception:
+            init_cfg = None
+    start_sd = {k: torch.from_numpy(np.ascontiguousarray(w[k])) for k in w.files if k != "meta"}
+
+    net_arm = CNet2(**(ck.get("cfg") or init_cfg or {})).to(dev)
+    net_arm.load_state_dict(ck["backbone"])
+    death_head = torch.nn.Linear(net_arm.cfg["D"], 3).to(dev)
+    death_head.load_state_dict(ck["death_head"])
+    net_init = CNet2(**(init_cfg or ck.get("cfg") or {})).to(dev)
+    migrate_state_dict(net_init, start_sd, allow_missing_prefixes=("tattn.",), source="--init")
+    net_arm.eval()
+    death_head.eval()
+    net_init.eval()
+
+    # ---- evaluation over the whole bound generation ----
+    prob_chunks = []
+    kl_roots = []
+    with torch.no_grad():
+        for a0 in range(0, n_rows, max(int(args.bs), 1)):
+            idx = np.arange(a0, min(a0 + int(args.bs), n_rows))
+            b = T.to_dev(T.fetch(D, idx), False)
+            tok_a, ctx_a, _ = net_arm.encode(b)
+            logits_a = net_arm.decode(b, tok_a, ctx_a)
+            tok_i, ctx_i, _ = net_init.encode(b)
+            logits_i = net_init.decode(b, tok_i, ctx_i)
+            d_prob = torch.sigmoid(death_head(tok_a[:, :10])).detach().cpu().numpy().astype(np.float64)
+            prob_chunks.append(d_prob)
+            logp = Fn.log_softmax(logits_a.double(), dim=-1)
+            logq = Fn.log_softmax(logits_i.double(), dim=-1)
+            pa = logp.exp()
+            kl_slot = (pa * (logp - logq)).sum(dim=-1).cpu().numpy()
+            valid = (b["y"] >= 0).detach().cpu().numpy()
+            kl_roots.append((kl_slot * valid).sum(axis=1))
+    probs = np.concatenate(prob_chunks, axis=0)
+    kl_all = np.concatenate(kl_roots, axis=0)
+
+    per_horizon = {}
+    for hi, horizon in enumerate(DEATH_HORIZONS):
+        m = label_mask[:, :, hi]
+        per_horizon[str(horizon)] = _screen_metrics(probs[:, :, hi][m], labels[:, :, hi][m])
+    combined = _screen_metrics(probs[label_mask], labels[label_mask])
+    out = {"screen": {
+        "arm": {"file": args.checkpoint, "md5": arm_md5},
+        "init": {"file": args.init, "md5": init_md5},
+        "data": args.data,
+        "data_fingerprint": {"generation": man.get("generation"), "cfg_fp": man.get("cfg_fp"),
+                             "rows": n_rows, "row_key_sha256": row_key_sha256(gen_dir, man)},
+        "games": games, "roots": int(n_rows),
+        "death": {"horizons": per_horizon, "combined": combined},
+        "kl": {"mean": float(kl_all.mean()), "p99": float(np.percentile(kl_all, 99)),
+               "n": int(kl_all.shape[0])}}}
+    return out
 
 
 if __name__ == "__main__":
