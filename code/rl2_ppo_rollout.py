@@ -188,12 +188,21 @@ def play_batch(task):
     All positions that use the same model in one step go through ONE actor.act call (one server request).
     Returns list of per-game dicts (traj recs if record) + timing."""
     t0 = time.time()
-    actor = _actor(task["adapter"], task["wkey"], task.get("weights"), role="learner")
+    actor = _actor(task["adapter"], task["wkey"], task.get("weights"),
+                   role=task.get("primary_role", "learner"))
     # R04/F06: the task's primary actor is the learner(-side) actor -- the only one
     # CNET2_TEMP_KIND may govern. It is built with role="learner" (temp_kind=True);
     # snapshot actors built below (and _SnapAgent's) are separate cached objects
     # with temp_kind=False and play at the temperature they are handed, so the
     # learner's per-kind temperatures no longer leak into them.
+    # V04: the role is the CALLER's declaration, defaulting to "learner" (the
+    # trainer's tasks, unchanged). A caller that is not the trainer -- the
+    # standalone evaluator -- passes primary_role="eval": the evaluated net
+    # then plays at the temperature it is handed even when CNET2_TEMP_KIND
+    # is inherited from a trainer env, instead of silently sampling at the
+    # learner's per-kind temperatures. (Greedy was never affected either
+    # way: the per-slot argmax is invariant to a positive per-slot scalar;
+    # only sampling and the recorded logp are temperature-shaped.)
     snap_temp = _snap_temp()
     games = []
     for opp, seed, side in task["games"]:
