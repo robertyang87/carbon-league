@@ -100,6 +100,100 @@ def load_exit(dirn):
     return D, is_val, meta
 
 
+def _canonical_sha256(obj):
+    return hashlib.sha256(
+        json.dumps(obj, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def _verify_exit_generation(gen_dir, ptr):
+    # D1 seal (producer side: exit_merge): a sealed generation is consumed
+    # verify-or-refuse, BEFORE load_exit's own gates -- the pointer's hash
+    # of the manifest bytes, the manifest's self-seal, the pointer/manifest
+    # generation match, the meta seal, then every declared field file
+    # (existence, byte size, sha256, row count), each refusal naming the
+    # item. Nothing is loaded from the generation until all of it passes.
+    man_path = os.path.join(gen_dir, "manifest.json")
+    if not os.path.exists(man_path):
+        raise SystemExit(
+            f"sealed exit generation has no manifest.json: {gen_dir!r}; refusing to train")
+    man_raw = open(man_path, "rb").read()
+    want = ptr.get("manifest_sha256")
+    if want is not None and hashlib.sha256(man_raw).hexdigest() != want:
+        raise SystemExit(
+            f"exit manifest hash mismatch in {gen_dir!r}: manifest.json bytes do not match "
+            f"the pointer's manifest_sha256; refusing to train")
+    man = json.loads(man_raw)
+    if man.get("generation") != ptr.get("generation"):
+        raise SystemExit(
+            f"exit pointer/manifest generation mismatch: pointer {ptr.get('generation')!r} "
+            f"vs manifest {man.get('generation')!r}; refusing to train")
+    core = {k: v for k, v in man.items() if k != "self_sha256"}
+    if man.get("self_sha256") != _canonical_sha256(core):
+        raise SystemExit(
+            f"exit manifest self-seal mismatch in {gen_dir!r}: manifest content does not "
+            f"match its self_sha256; refusing to train")
+    meta_p = os.path.join(gen_dir, "meta.json")
+    if not os.path.exists(meta_p) or _sha256_path(meta_p) != man.get("meta_sha256"):
+        raise SystemExit(
+            f"exit generation meta seal mismatch in {gen_dir!r}: meta.json does not match "
+            f"manifest meta_sha256; refusing to train")
+    for k in sorted(man.get("fields", {})):
+        info = man["fields"][k]
+        p = os.path.join(gen_dir, info["file"])
+        if not os.path.exists(p):
+            raise SystemExit(
+                f"exit generation file missing: field {k!r} ({p!r}); refusing to train")
+        if os.path.getsize(p) != info["bytes"]:
+            raise SystemExit(
+                f"exit generation file size mismatch: field {k!r} has "
+                f"{os.path.getsize(p)} bytes, manifest declares {info['bytes']}; "
+                f"refusing to train")
+        if _sha256_path(p) != info["sha256"]:
+            raise SystemExit(
+                f"exit generation file hash mismatch: field {k!r} ({info['file']}); "
+                f"refusing to train")
+        rows = int(np.load(p, mmap_mode="r").shape[0])
+        if rows != info["rows"]:
+            raise SystemExit(
+                f"exit generation file row mismatch: field {k!r} has {rows} rows, "
+                f"manifest declares {info['rows']}; refusing to train")
+    print(json.dumps({"exit_data_sealed": {
+        "generation": man.get("generation"), "dir": gen_dir,
+        "format": man.get("format"),
+        "files_verified": len(man.get("fields", {})),
+    }}), flush=True)
+    return gen_dir
+
+
+def resolve_exit_arg(arg):
+    # Consumption paths for the EXIT_DIR argument (D1 spec):
+    # - pointer path: `arg` is a current.json pointer file, or a dataset
+    #   root containing current.json -> resolve to the sealed generation
+    #   and verify it in full (the ONLY way to consume a sealed product);
+    # - a sealed generation directory passed directly is refused -- it
+    #   must come through its pointer, so the verified generation is the
+    #   one the pointer certifies, never a lookalike directory;
+    # - direct path: an unsealed legacy flat directory loads as before
+    #   under the transition gates, but NAMED (exit_data_legacy_unsealed).
+    if os.path.isfile(arg):
+        ptr = json.load(open(arg))
+        root = os.path.dirname(os.path.abspath(arg))
+        return _verify_exit_generation(os.path.join(root, ptr["dir"]), ptr)
+    if os.path.exists(os.path.join(arg, "current.json")):
+        ptr = json.load(open(os.path.join(arg, "current.json")))
+        return _verify_exit_generation(os.path.join(arg, ptr["dir"]), ptr)
+    if os.path.exists(os.path.join(arg, "manifest.json")):
+        raise SystemExit(
+            f"sealed exit generation at {arg!r} must be consumed via its dataset root / "
+            f"current pointer, not by direct path; refusing to train")
+    print(json.dumps({"exit_data_legacy_unsealed": {
+        "dir": arg,
+        "note": "no manifest/current pointer: unsealed legacy exit product, "
+                "loading under transition gates (named per D1 spec)",
+    }}), flush=True)
+    return arg
+
+
 def batch_np(Dbc, ibc, Dex, iex):
     ibc = np.sort(ibc); iex = np.sort(iex)
     b = {}
@@ -214,7 +308,7 @@ def evaluate(net, Dbc, vbc, Dex, vex, bs=1024):
 def main(bc_dir, ex_dir, out, epochs):
     torch.manual_seed(0); np.random.seed(0)
     Dbc, vbc_mask, _ = CT.load(bc_dir)
-    Dex, vex_mask, meta = load_exit(ex_dir)
+    Dex, vex_mask, meta = load_exit(resolve_exit_arg(ex_dir))
     tbc = np.nonzero(~vbc_mask)[0]; vbc = np.nonzero(vbc_mask)[0]
     tex = np.nonzero(~vex_mask)[0]; vex = np.nonzero(vex_mask)[0]
     rs = np.random.RandomState(1)
