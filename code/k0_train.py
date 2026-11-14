@@ -243,6 +243,25 @@ def _read_bytes(path):
         return fh.read()
 
 
+def _read_aux_bundle(aux_dir):
+    """Read the aux bundle's bytes exactly once per file (the sidecar
+    plus the two label files). Every consumer of the bundle in this
+    process -- the sidecar checks, the label parse and the recorded
+    content identity -- derives from THESE bytes, so the labels a run
+    trains on and the identity it records are the same bytes by
+    construction (W02: previously the labels were parsed from one read
+    and the identity hashed from a later by-path re-read, so a bundle
+    swapped in between was trained as A and recorded as B). A file
+    that does not exist is simply absent from the dict; the sidecar
+    check names it with its usual refusal."""
+    raw = {}
+    for name in (AUX_SIDECAR, "aux_die.npy", "aux_die_m.npy"):
+        p = os.path.join(aux_dir, name)
+        if os.path.exists(p):
+            raw[name] = _read_bytes(p)
+    return raw
+
+
 def row_key_sha256(gen_dir, man):
     """Binding hash over the certified generation's row identity sequence,
     composed exactly as the producer (k0_aux_labels._row_key) writes it:
@@ -260,17 +279,24 @@ def row_key_sha256(gen_dir, man):
     return hashlib.sha256("|".join(parts).encode()).hexdigest()
 
 
-def check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows):
+def check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows, prefetched=None):
     """Validate the K0 aux bundle against the pinned generation, per the
     unified cnet2-k0-aux/1 contract the producer (k0_aux_labels) writes.
     Returns the parsed sidecar on success; raises SystemExit naming the
     failed binding item otherwise. Pure numpy/json: unit-testable
-    without torch."""
+    without torch. When prefetched (name -> bytes, from
+    _read_aux_bundle) carries a file, the sidecar parse and the
+    label-file hash checks derive from those bytes instead of
+    re-reading by path -- the caller's single read is then the only
+    read of the bundle (W02)."""
     sc_path = os.path.join(aux_dir, AUX_SIDECAR)
-    if not os.path.exists(sc_path):
-        raise SystemExit(f"k0 aux: sidecar missing: {sc_path}; refusing to start "
-                         f"(labels must be bound to the generation by {AUX_FORMAT})")
-    sc = json.load(open(sc_path))
+    if prefetched is not None and prefetched.get(AUX_SIDECAR) is not None:
+        sc = json.loads(prefetched[AUX_SIDECAR])
+    else:
+        if not os.path.exists(sc_path):
+            raise SystemExit(f"k0 aux: sidecar missing: {sc_path}; refusing to start "
+                             f"(labels must be bound to the generation by {AUX_FORMAT})")
+        sc = json.load(open(sc_path))
     if sc.get("format") != AUX_FORMAT:
         raise SystemExit(f"k0 aux: sidecar format {sc.get('format')!r} != {AUX_FORMAT!r}; refusing to start")
     if sc.get("base_generation") != man.get("generation"):
@@ -322,12 +348,16 @@ def check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows):
                                  f"labelling); refusing to start")
     for name in ("aux_die.npy", "aux_die_m.npy"):
         p = os.path.join(aux_dir, name)
-        if not os.path.exists(p):
-            raise SystemExit(f"k0 aux: label file missing: {p}; refusing to start")
         ent = (sc.get("files") or {}).get(name)
         if not isinstance(ent, dict) or ent.get("sha256") is None:
             raise SystemExit(f"k0 aux: sidecar files map has no sha256 entry for {name}; refusing to start")
-        if _sha256_file(p) != ent["sha256"]:
+        if prefetched is not None and prefetched.get(name) is not None:
+            actual = hashlib.sha256(prefetched[name]).hexdigest()
+        else:
+            if not os.path.exists(p):
+                raise SystemExit(f"k0 aux: label file missing: {p}; refusing to start")
+            actual = _sha256_file(p)
+        if actual != ent["sha256"]:
             raise SystemExit(f"k0 aux: {name} sha256 mismatch vs sidecar; refusing to start")
     return sc
 
@@ -474,11 +504,14 @@ def main():
         raise SystemExit("k0 finite gate: u_raw has NaN entries but the generation carries no label_status "
                          "column to excuse them as unusable; refusing to start")
 
-    # ---- aux labels: sidecar binding first, arrays second ----
+    # ---- aux labels: ONE read of the bundle (W02); the sidecar
+    # binding, the label parse and the identity below all derive
+    # from those bytes, never from a second by-path read ----
     aux_dir = args.aux_dir or args.data
-    sc = check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows)
-    aux_die = np.load(os.path.join(aux_dir, "aux_die.npy"))
-    aux_die_m = np.load(os.path.join(aux_dir, "aux_die_m.npy"))
+    aux_raw = _read_aux_bundle(aux_dir)
+    sc = check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows, prefetched=aux_raw)
+    aux_die = np.load(io.BytesIO(aux_raw["aux_die.npy"]))
+    aux_die_m = np.load(io.BytesIO(aux_raw["aux_die_m.npy"]))
     if aux_die.shape != (n_rows, 10, 3) or aux_die_m.shape != (n_rows, 10, 3):
         raise SystemExit(f"k0 aux: aux_die/aux_die_m shapes {aux_die.shape}/{aux_die_m.shape} != "
                          f"({n_rows}, 10, 3); refusing to start")
@@ -501,11 +534,17 @@ def main():
     # self-consistent, and a resume would silently continue a DIFFERENT
     # experiment (the death targets are the labels). So the bundle's
     # content identity -- the sidecar's bytes and the label files'
-    # bytes, hashed from the files themselves -- is computed here,
-    # recorded in the effective config, and asserted on resume (P7,
-    # fingerprint class: compared when the record carries it).
-    aux_identity = {"sidecar_sha256": _sha256_file(os.path.join(aux_dir, AUX_SIDECAR)),
-                    "files_sha256": {name: _sha256_file(os.path.join(aux_dir, name))
+    # bytes -- is computed here, recorded in the effective config, and
+    # asserted on resume (P7, fingerprint class: compared when the
+    # record carries it).
+    # W02: the identity is hashed from aux_raw -- the single read the
+    # labels above were parsed from -- never re-read by path. A bundle
+    # swapped on disk after that read changes neither the labels this
+    # run trains on nor the identity it records; the pre-fix code
+    # hashed the files again here, after the parse, and could record
+    # the swapped bundle's hash against the original bundle's labels.
+    aux_identity = {"sidecar_sha256": hashlib.sha256(aux_raw[AUX_SIDECAR]).hexdigest(),
+                    "files_sha256": {name: hashlib.sha256(aux_raw[name]).hexdigest()
                                      for name in ("aux_die.npy", "aux_die_m.npy")}}
 
     # ---- root set: train rows, game cap, unusable exclusion ----
@@ -988,9 +1027,10 @@ def _screen_eval(args):
         raise SystemExit("k0 screen finite gate: u_raw has NaN entries but the generation carries no "
                          "label_status column to excuse them as unusable; refusing to run")
     aux_dir = args.aux_dir or args.data
-    sc = check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows)
-    aux_die = np.load(os.path.join(aux_dir, "aux_die.npy"))
-    aux_die_m = np.load(os.path.join(aux_dir, "aux_die_m.npy"))
+    aux_raw = _read_aux_bundle(aux_dir)
+    sc = check_aux_sidecar(aux_dir, man, meta, gen_dir, n_rows, prefetched=aux_raw)
+    aux_die = np.load(io.BytesIO(aux_raw["aux_die.npy"]))
+    aux_die_m = np.load(io.BytesIO(aux_raw["aux_die_m.npy"]))
     if aux_die.shape != (n_rows, 10, 3) or aux_die_m.shape != (n_rows, 10, 3):
         raise SystemExit(f"k0 screen aux: aux_die/aux_die_m shapes {aux_die.shape}/{aux_die_m.shape} != "
                          f"({n_rows}, 10, 3); refusing to run")
