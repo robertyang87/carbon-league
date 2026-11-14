@@ -11,6 +11,7 @@ Usage: python cnet2_exit_train.py BC_DIR EXIT_DIR OUT.npz EPOCHS
 env: BC_INIT (warm start npz), BC_BS 512, BC_LR 3e-4, EX_MIX 0.5, EX_CH_W 3, EX_SOFT_W 1, EX_VAL_W 0.5,
      BC_MAXSTEPS, EX_STEPS_PER_EPOCH (default: one pass over the search train set)
 """
+import hashlib
 import json
 import os
 import sys
@@ -37,10 +38,65 @@ SAMPLED_W = float(os.environ.get("EX_SAMPLED_W", "0.3"))     # opening steps who
 LOADK = [k for k in FIELDS if k not in ("gid", "step")]
 
 
+def _sha256_path(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+_EXIT_ROW_KEYS = ("n_rows", "rows", "num_rows", "total_rows", "row_count", "n")
+
+
 def load_exit(dirn):
-    D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode="r") for k in list(FIELDS) + list(EXTRA)}
-    meta = json.load(open(os.path.join(dirn, "meta.json")))
+    keys = list(FIELDS) + list(EXTRA)
+    # D1 (Grok review, P1): the exit half of this trainer used to np.load
+    # every flat file bare -- no row cross-check, no finite scan, no
+    # identity record -- while the BC half of the same main() goes
+    # through cnet2_train.load's full gate stack. The checks below are
+    # the trainer-side minimum for the flat exit format (the exit data
+    # product itself carries no generation/manifest): identity hashes
+    # of the exact bytes on disk, a field row-count cross-check, and a
+    # finite scan, all before anything trains on the data.
+    meta_raw = open(os.path.join(dirn, "meta.json"), "rb").read()
+    meta = json.loads(meta_raw)
+    field_sha = {k: _sha256_path(os.path.join(dirn, k + ".npy")) for k in keys}
+    D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode="r") for k in keys}
+    # Row-count cross-check: every field must agree with the row count
+    # meta declares (when meta carries one) and with every other field;
+    # a torn or mixed flat directory dies here, naming the field.
+    declared = next((meta[k] for k in _EXIT_ROW_KEYS
+                     if isinstance(meta.get(k), int) and not isinstance(meta.get(k), bool)), None)
+    if declared is not None:
+        ref, ref_src = int(declared), "meta declared row count"
+    else:
+        ref, ref_src = int(np.asarray(D["gid"]).shape[0]), "field 'gid'"
+    for k in keys:
+        n_k = int(np.asarray(D[k]).shape[0])
+        if n_k != ref:
+            raise SystemExit(
+                f"exit data row-count mismatch in {dirn!r}: field {k!r} has {n_k} rows, "
+                f"expected {ref} (from {ref_src}); refusing to train")
+    # Finite scan: any NaN/Inf in a float field dies here, naming the
+    # field (the BC half's F1 gate has refused such data all along).
+    for k in keys:
+        a = D[k]
+        if np.issubdtype(a.dtype, np.floating):
+            bad = int((~np.isfinite(np.asarray(a))).sum())
+            if bad:
+                raise SystemExit(
+                    f"exit data non-finite entries in {dirn!r} field {k!r}: "
+                    f"{bad} NaN/Inf; refusing to train")
     is_val = np.array([g["val"] for g in meta["games"]])[np.asarray(D["gid"])]
+    print(json.dumps({"exit_data_identity": {
+        "dir": dirn,
+        "meta_sha256": hashlib.sha256(meta_raw).hexdigest(),
+        "fields": field_sha,
+        "rows": ref,
+        "val_rows": int(is_val.sum()),
+        "games": len(meta["games"]),
+    }}), flush=True)
     return D, is_val, meta
 
 
