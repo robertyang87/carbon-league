@@ -61,6 +61,17 @@ Method / measurement scope (koujing):
     certification naming the artifact and the game. Previously all
     identity hashes were read only after the run, so overwriting the pack
     mid-window issued a PASS for bytes that were never executed.
+    The child's loads are bound to the SAME bytes that were hashed (Codex
+    batch-1+2 re-review fix): the opponent is read and hashed FIRST and
+    then compiled from those very bytes -- never loaded through the import
+    system, whose SourceFileLoader would execute a stale or forged
+    __pycache__ entry whose header (mtime/size) was aligned with different
+    source, recording the source's md5 while running the cached code.
+    (The candidate side already compiled the bytes it hashed; the
+    opponent side previously delegated to eval_v53.load_agent_fn and
+    hashed the source only after the load.) A child that fails to report
+    any of the three identities (pack / opponent / its own harness md5)
+    is flagged as an identity mismatch, symmetrically for all three.
   * p95 / p50 / mean / max of step_wall_ms are reported; p95 itself is a
     reported metric, not a gate (the binding per-step rules are the hard
     limit, slow count and overage pool above).
@@ -111,6 +122,34 @@ def _pct(vals, q):
 def _send(obj):
     sys.stdout.write(PREFIX + json.dumps(obj) + "\n")
     sys.stdout.flush()
+
+
+_load_counter = [0]
+
+
+def _load_agent_from_bytes(path, raw):
+    """Load an agent module from the exact bytes the caller hashed.
+
+    Mirrors eval_v53.load_agent_fn's contract -- same generated module
+    name (evalv53_<n>_<pid>), __file__ set to the source path, the module
+    registered in sys.modules under that name as a normal import would,
+    and the same extraction rule (a policy_* file with make_agent()
+    yields a fresh instance, everything else yields the module-level
+    agent) -- but compiles `raw` directly instead of delegating to the
+    import system, so no __pycache__ entry can substitute different code
+    for the bytes whose md5 is being certified.
+    """
+    import types
+    _load_counter[0] += 1
+    name = f"evalv53_{_load_counter[0]}_{os.getpid()}"
+    m = types.ModuleType(name)
+    m.__file__ = path
+    m.__package__ = ""
+    sys.modules[name] = m
+    exec(compile(raw, path, "exec"), m.__dict__)
+    if os.path.basename(path).startswith("policy_") and hasattr(m, "make_agent"):
+        return m.make_agent()
+    return m.agent
 
 
 def child_main(argv):
@@ -165,13 +204,18 @@ def child_main(argv):
         if not os.path.exists(opp):
             return setup_fail("opponent_missing",
                               FileNotFoundError(f"opponent file not found: {opp}"))
-        try:
-            opp_fn = eval_v53.load_agent_fn(opp)
-        except Exception as e:
-            return setup_fail("opponent_load", e)
+        # Read + hash FIRST, then load from those exact bytes (Codex
+        # re-review fix): the previous order loaded via the import
+        # system first and hashed the source afterwards, so a forged
+        # __pycache__ entry could be what actually executed while the
+        # certificate recorded the source file's md5.
         with open(opp, "rb") as _f:
             _ob = _f.read()
         opp_id = {"md5": _md5_bytes(_ob), "bytes": len(_ob)}
+        try:
+            opp_fn = _load_agent_from_bytes(opp, _ob)
+        except Exception as e:
+            return setup_fail("opponent_load", e)
     try:
         sim = FastCarbon(cfg).reset(seed=seed)
     except Exception as e:
@@ -478,7 +522,12 @@ def main():
                 id_mismatch.append(
                     f"opp game {gi}: child-loaded md5 {co.get('md5')} != pre-run md5 {opp_pre['md5']}")
         cs = g.get("child_self_md5")
-        if cs is not None and cs != self_pre["md5"]:
+        if cs is None:
+            # Symmetric with pack/opp above: a missing child identity
+            # report is a mismatch, not a silent pass.
+            id_mismatch.append(
+                f"harness game {gi}: child reported no certify_pack identity")
+        elif cs != self_pre["md5"]:
             id_mismatch.append(
                 f"harness game {gi}: child certify_pack md5 {cs} != pre-run md5 {self_pre['md5']}")
     if pack_post["md5"] != pack_pre["md5"]:
