@@ -71,7 +71,7 @@ def main():
     if a.seed0 < 980000:
         print("warning: seeds < 980000 overlap other experiments' ranges", file=sys.stderr)
     tasks = [{"adapter": a.adapter, "wkey": os.path.abspath(a.w), "games": [(o, a.seed0 + j, s)],
-              "temp": max(a.temp, 1.0), "greedy": a.temp <= 0, "record": False, "rng_seed": j * 2 + s}
+              "temp": a.temp, "greedy": a.temp <= 0, "record": False, "rng_seed": j * 2 + s}
              for o in a.opps.split(",") for j in range(a.pairs) for s in (0, 1)]
     t0 = time.time()
     with mp.get_context("spawn").Pool(a.workers) as pool:
