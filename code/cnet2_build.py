@@ -777,6 +777,92 @@ def _sha256_file(path):
     return h.hexdigest()
 
 
+def _inspect_generation(path, gen_id=None):
+    """Adoption gate for an existing generation directory (build-side
+    adoption defect, PROGRESS_REVIEW_20261113_20261114 SS6.3).
+
+    The previous check (_gen_complete) only asked whether every file the
+    manifest names EXISTS: a same-id directory whose bytes differ from its
+    own manifest was adopted whole (pointer switched to it, flat mirror
+    refreshed from it). Returns one of
+      ("absent", None)       no such directory;
+      ("incomplete", why)    manifest missing/unreadable/without fields,
+                             or a declared file (or meta.json) missing --
+                             a crashed publish; the caller quarantines it;
+      ("verified", manifest) every declared field's sha256 equals the
+                             bytes on disk AND the meta_sha256 seal holds.
+    Anything else -- a complete directory whose bytes disagree with its
+    manifest, a manifest naming another generation, or a manifest without
+    the meta seal -- raises ValueError naming the file: that is a broken
+    immutable product, never adopted and never repaired in place."""
+    if not os.path.lexists(path):
+        return "absent", None
+    man_p = os.path.join(path, "manifest.json")
+    try:
+        with open(man_p) as fh:
+            man = json.load(fh)
+        fields = man["fields"]
+        files = [(k, os.path.join(path, info["file"]), info["sha256"])
+                 for k, info in fields.items()]
+    except Exception as e:
+        return "incomplete", f"manifest missing or unreadable: {e!r}"
+    if not files:
+        return "incomplete", "manifest declares no fields"
+    meta_p = os.path.join(path, "meta.json")
+    for _k, p, _s in files + [("meta", meta_p, None)]:
+        if not os.path.exists(p):
+            return "incomplete", f"declared file missing: {p}"
+    if gen_id is not None and man.get("generation") != gen_id:
+        raise ValueError(
+            f"generation adoption refused: {man_p} names generation "
+            f"{man.get('generation')!r}, expected {gen_id!r}")
+    for k, p, want in files:
+        if _sha256_file(p) != want:
+            raise ValueError(
+                f"generation adoption refused: field {k!r} file {p} does not match "
+                f"its manifest sha256 (a sealed generation changed on disk); move the "
+                f"directory aside by hand and rebuild -- it is never adopted or deleted")
+    meta_sha = man.get("meta_sha256")
+    if meta_sha is None:
+        raise ValueError(
+            f"generation adoption refused: {man_p} carries no meta_sha256 seal "
+            f"(pre-seal generation; its meta.json cannot be verified); move the "
+            f"directory aside by hand and rebuild")
+    if _sha256_file(meta_p) != meta_sha:
+        raise ValueError(
+            f"generation adoption refused: {meta_p} does not match the manifest "
+            f"meta_sha256 seal; move the directory aside by hand and rebuild")
+    return "verified", man
+
+
+def _quarantine_generation(gen_root, gen_dir, why):
+    """Move an incomplete generation directory aside instead of deleting
+    it (immutability: build never removes a gen-* directory it did not
+    just stage). The quarantine name does not start with "gen-", so the
+    pruner, the pointer and _is_generation_path never see it. Returns the
+    new path."""
+    base = os.path.join(gen_root, f".quarantine-{os.path.basename(gen_dir)}-"
+                                  f"{time.strftime('%Y%m%dT%H%M%S')}-{os.getpid()}")
+    dst, n = base, 0
+    while os.path.lexists(dst):
+        n += 1
+        dst = f"{base}.{n}"
+    os.replace(gen_dir, dst)
+    _generation_ledger(gen_root, {"event": "quarantined", "generation": os.path.basename(gen_dir),
+                                  "to": os.path.basename(dst), "why": why})
+    return dst
+
+
+def _generation_ledger(gen_root, row):
+    """Append-only record of every adoption / quarantine / fresh publish
+    decision (generations/ADOPTION_LEDGER.jsonl)."""
+    row = dict(row, time=time.time(), pid=os.getpid())
+    with open(os.path.join(gen_root, "ADOPTION_LEDGER.jsonl"), "a") as fh:
+        fh.write(json.dumps(row, sort_keys=True) + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
+
+
 def _is_generation_path(path):
     parts = os.path.abspath(path).split(os.sep)
     return any(seg == "generations" and parts[i + 1].startswith("gen-")
@@ -1273,16 +1359,16 @@ def main(out, dirs):
     gen_dir = os.path.join(gen_root, gen_id)
     w_copy = None
 
-    def _gen_complete(path):
-        try:
-            man = json.load(open(os.path.join(path, "manifest.json")))
-            return all(os.path.exists(os.path.join(path, info["file"]))
-                       for info in man.get("fields", {}).values())
-        except Exception:
-            return False
-
-    if _gen_complete(gen_dir):
-        man = json.load(open(os.path.join(gen_dir, "manifest.json")))
+    # Adoption gate: an existing same-id generation is reused only after
+    # every declared field AND the meta seal verify against its manifest
+    # (a mismatch raises, naming the file); an incomplete one is moved to
+    # quarantine at publish time, never deleted. See _inspect_generation.
+    _state, _found = _inspect_generation(gen_dir, gen_id)
+    if _state == "verified":
+        man = _found
+        _generation_ledger(gen_root, {"event": "adopted", "generation": gen_id,
+                                      "fields_verified": sorted(man["fields"]),
+                                      "meta_sha256": man["meta_sha256"]})
         if weighted:
             w_copy = np.load(os.path.join(gen_dir, "w.npy")).astype(np.float32)
     else:
@@ -1352,11 +1438,21 @@ def main(out, dirs):
                               for k in fields}}
             with open(os.path.join(staging, "manifest.json"), "w") as fh:
                 json.dump(man, fh)
-            if _gen_complete(gen_dir):
+            _state2, _found2 = _inspect_generation(gen_dir, gen_id)   # raises on a mismatching gen
+            if _state2 == "verified":
                 shutil.rmtree(staging, ignore_errors=True)  # identical gen landed meanwhile
+                man = _found2
+                _generation_ledger(gen_root, {"event": "adopted", "generation": gen_id,
+                                              "concurrent": True,
+                                              "fields_verified": sorted(man["fields"]),
+                                              "meta_sha256": man["meta_sha256"]})
             else:
-                shutil.rmtree(gen_dir, ignore_errors=True)
+                if _state2 == "incomplete":
+                    _q = _quarantine_generation(gen_root, gen_dir, _found2)
+                    print(json.dumps({"generation_quarantined": gen_id, "to": _q, "why": _found2}),
+                          flush=True)
                 os.replace(staging, gen_dir)
+                _generation_ledger(gen_root, {"event": "published", "generation": gen_id})
         finally:
             shutil.rmtree(staging, ignore_errors=True)
     # Derived-layer snapshot: which derived files (bytes) predate this
