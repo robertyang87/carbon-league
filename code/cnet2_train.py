@@ -12,6 +12,7 @@ import json
 import math
 import os
 import queue
+import shutil
 import sys
 import threading
 import time
@@ -24,7 +25,7 @@ import torch.nn.functional as Fn
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import cnet2_feat as F  # noqa: E402
-from cnet2_build import FIELDS, load_generation  # noqa: E402
+from cnet2_build import FIELDS, load_generation, _u_of_margin  # noqa: E402
 from cnet2_model import CNet2, migrate_state_dict, migrate_optimizer_state, NEW_HEAD_KEYS  # noqa: E402
 
 DEV = torch.device(os.environ.get("BC_DEVICE", "mps"))
@@ -1026,6 +1027,11 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
         return r
 
     best = -1; log = open(out.replace(".npz", "_log.jsonl"), "a")
+    sel = _selection_config()
+    sel_rows = []
+    if sel is not None:
+        _selection_open(sel, out)
+        print(json.dumps({"selection": sel["public"]}), flush=True)
     for ep in range(epochs):
         t1 = time.time(); acc = 0.0; nb = 0
         perm = np.random.permutation(tr)
@@ -1041,8 +1047,15 @@ def train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data):
         r = evaluate_c()
         rec = {"ep": ep, "val": r, "train_pi": round(acc / max(nb, 1), 4), "s": round(time.time() - t1), "cached": True}
         print(json.dumps(rec), flush=True); log.write(json.dumps(rec) + "\n"); log.flush()
-        if r["all"] > best or exit_w > 0:        # distillation: agreement with the labels is not the goal, keep the last epoch
+        if sel is not None:
+            _sel_row = _selection_eval_epoch(sel, net, ep, r["all"], {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar, "data": data, "cached_trunk": True})
+            sel_rows.append(_sel_row)
+            _srec = {"ep": ep, "selection": {"mean_u": _sel_row.get("mean_u"), "se": _sel_row.get("se"), "ok": _sel_row.get("ok"), "form": _sel_row.get("form"), "wall_s": _sel_row.get("wall_s")}}
+            print(json.dumps(_srec), flush=True); log.write(json.dumps(_srec) + "\n"); log.flush()
+        elif r["all"] > best or exit_w > 0:        # distillation: agreement with the labels is not the goal, keep the last epoch
             best = r["all"]; export(net, out, {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar, "data": data, "cached_trunk": True})
+    if sel is not None:
+        best = _selection_finish(sel, sel_rows, net, out, {"params": npar, "data": data, "cached_trunk": True})["agreement"]
     print("best", best)
 
 
@@ -1058,6 +1071,353 @@ def export(net, path, meta):
     meta = dict(meta)
     meta["bc_env"] = _BC_ENV_REC if _BC_ENV_REC is not None else _bc_env_record()
     np.savez(path, **sd, meta=np.array(json.dumps(meta)))
+
+
+# ---------------------------------------------------------------------------
+# A4 selection (strategy-group ruling, 2026-11-14): BC model selection is no
+# longer "best val top-1 teacher agreement". Both branches (main path and
+# distillation) rank every epoch's candidate by PAIRED GAMES against a fixed
+# examiner -- the Master2 real file, configured via BC_SELECTION_EXAMINER --
+# on the registered selection seed block 997000-997199 (selection ONLY, never
+# calibration / confirmation / exams), both seats per seed, >= 64 pairs,
+# ranked by mean U. U comes from cnet2_build._u_of_margin (the verified fleet
+# implementation; no new copy). Uncertainty follows section 20 R2 as
+# implemented in rl2_ppo_eval._clustered_se: the SEED is the independent
+# unit -- a seed's games (both seats) are averaged into one cluster value
+# and the SE / CI run over clusters. Teacher agreement survives only as a
+# diagnostic field in the exported meta.
+# Pre-registered tie rule: rank 1 vs rank 2 with dU within 1 (paired) SE are
+# tied -> take the LATER epoch; still tied -> take the higher agreement.
+# Form ruling (strategy group, same date): deployment form (int8 pack under
+# the template CONF) is preferred; when per-epoch packing makes it
+# infeasible the ranking may run on the naked-proxy form (the trainer's fp32
+# export driven through the same cnet2_search under the identical CONF),
+# provided (a) provenance records selection_form explicitly and (b) a tie
+# inside the band is settled by a deployment-form duel when the pack
+# machinery is usable at all. Selection is OFF unless BC_SELECTION_EXAMINER
+# is set; with it unset, both branches keep their legacy behaviour exactly.
+SELECTION_SEED0 = 997000
+SELECTION_SEED_END = 997199
+SELECTION_PAIRS_DEFAULT = 64
+# Deployment CONF: the 13 keys of code/packs/PACK_CONF_TEMPLATE.txt, verbatim.
+SELECTION_CONF = {"SEARCH": False, "ROLL": "self", "GUARD": True,
+                  "GUARD_NARROW": True, "MODE": "sweep", "MIX": False,
+                  "TEACHER": 2, "TEACHER_LATE": 2, "LATE_STEP": 240,
+                  "BUDGET": 0.7, "HARD": 0.85, "ABORT_DL": 0.95,
+                  "START_DL": None}
+# Table + lower-key rule mirror stage1_teacher_gate._t_crit's stdlib
+# fallback verbatim (dense exact 1..30; above, the largest tabulated df <=
+# df -- t crit decreases with df, so this never under-covers; no 1.96 tail).
+# Kept local rather than imported: the trainer must not depend on the gate
+# module's chain. Values can be diffed against the gate mechanically.
+_SEL_TCRIT = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447,
+              7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228, 11: 2.201, 12: 2.179,
+              13: 2.160, 14: 2.145, 15: 2.131, 16: 2.120, 17: 2.110, 18: 2.101,
+              19: 2.093, 20: 2.086, 21: 2.080, 22: 2.074, 23: 2.069, 24: 2.064,
+              25: 2.060, 26: 2.056, 27: 2.052, 28: 2.048, 29: 2.045, 30: 2.042,
+              40: 2.021, 50: 2.009, 60: 2.000, 80: 1.990, 100: 1.984, 120: 1.980}
+
+
+def _selection_t_crit(df):
+    if df < 1:
+        return None
+    ks = [k for k in _SEL_TCRIT if k <= df]
+    return _SEL_TCRIT[max(ks)] if ks else _SEL_TCRIT[1]
+
+
+def _selection_cluster_stats(vals):
+    """Section 20 R2: vals are per-seed cluster values (each seed's games
+    averaged). se is None (inestimable) below 2 clusters -- never 0.0."""
+    n = len(vals)
+    if n == 0:
+        return {"mean_u": None, "se": None, "ci95": None, "n_clusters": 0}
+    mean = float(np.mean(vals))
+    if n < 2:
+        return {"mean_u": mean, "se": None, "ci95": None, "n_clusters": n}
+    se = float(np.std(vals, ddof=1) / math.sqrt(n))
+    t = _selection_t_crit(n - 1)
+    return {"mean_u": mean, "se": se,
+            "ci95": [mean - t * se, mean + t * se], "n_clusters": n}
+
+
+def _selection_paired_se(ra, rb):
+    """Paired SE of the mean-U difference: per-seed cluster differences on
+    the seeds both rows share (identical block by construction)."""
+    sa, sb = ra.get("seed_u") or {}, rb.get("seed_u") or {}
+    keys = [k for k in sa if k in sb]
+    if len(keys) < 2:
+        return None
+    d = np.array([sa[k] - sb[k] for k in keys], dtype=np.float64)
+    return float(np.std(d, ddof=1) / math.sqrt(len(d)))
+
+
+def _selection_md5(path):
+    h = hashlib.md5()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _selection_config():
+    """Selection config from env; None when selection is off. Every caliber
+    violation dies by name BEFORE any training happens."""
+    ex = os.environ.get("BC_SELECTION_EXAMINER")
+    if not ex:
+        return None
+    if not os.path.isfile(ex):
+        raise SystemExit(f"selection: BC_SELECTION_EXAMINER={ex!r} is not a file -- "
+                         "the fixed examiner (Master2 real pack) must exist; refusing to train")
+    if os.environ.get("EVAL_STEPS", "299") != "299":
+        raise SystemExit("selection: EVAL_STEPS must be unset/299 (selection games are full games)")
+    if float(os.environ.get("EVAL_OPP_CASH", "0") or 0) != 0:
+        raise SystemExit("selection: EVAL_OPP_CASH must be unset/0 (exam-ruler cash breaks the pairing)")
+    for k in ("EVAL_ORACLE_STEPS", "EVAL_REVEAL_STEPS", "EVAL_SNAKE"):
+        if os.environ.get(k):
+            raise SystemExit(f"selection: {k} must be unset (diagnostic overrides break the pairing)")
+    seed0 = int(os.environ.get("BC_SELECTION_SEED0", str(SELECTION_SEED0)))
+    pairs = int(os.environ.get("BC_SELECTION_PAIRS", str(SELECTION_PAIRS_DEFAULT)))
+    fixture = os.environ.get("BC_SELECTION_FIXTURE") == "1"
+    if not (SELECTION_SEED0 <= seed0 <= SELECTION_SEED_END):
+        raise SystemExit(f"selection: seed0 {seed0} outside the registered selection block "
+                         f"{SELECTION_SEED0}-{SELECTION_SEED_END}")
+    if seed0 + pairs - 1 > SELECTION_SEED_END:
+        raise SystemExit(f"selection: seed block {seed0}..{seed0 + pairs - 1} overruns "
+                         f"the registered block end {SELECTION_SEED_END}")
+    if pairs < 2:
+        raise SystemExit(f"selection: pairs {pairs} < 2 (clustered SE inestimable)")
+    if pairs < SELECTION_PAIRS_DEFAULT and not fixture:
+        raise SystemExit(f"selection: pairs {pairs} < {SELECTION_PAIRS_DEFAULT} -- the ruling's minimum; "
+                         "only BC_SELECTION_FIXTURE=1 runs may go below it (and are stamped as fixtures)")
+    form = os.environ.get("BC_SELECTION_FORM", "auto")
+    if form not in ("auto", "deployed", "naked-proxy"):
+        raise SystemExit(f"selection: BC_SELECTION_FORM={form!r} not in auto|deployed|naked-proxy")
+    sel = {"examiner": os.path.abspath(ex), "examiner_md5": _selection_md5(ex),
+           "seed0": seed0, "pairs": pairs, "form": form, "fixture": fixture,
+           "workers": int(os.environ.get("BC_SELECTION_WORKERS", "8")), "dir": None}
+    sel["public"] = {"method": "examiner_pairs", "examiner": sel["examiner"],
+                     "examiner_md5": sel["examiner_md5"], "seed0": seed0, "pairs": pairs,
+                     "form_requested": form, "fixture": fixture}
+    return sel
+
+
+def _selection_open(sel, out):
+    d = out.replace(".npz", "_sel")
+    if os.path.exists(d):
+        d = f"{d}_{os.getpid()}"
+    os.makedirs(d)
+    sel["dir"] = d
+    return d
+
+
+def _selection_build_pack(cand_npz, out_py):
+    """Deployment form: quantize the candidate into a cnet2_search pack under
+    the template CONF. Any failure (incl. the packer's own SystemExit) is
+    reported and returns False -- the caller decides what that means."""
+    try:
+        packs_dir = os.path.join(HERE, "packs")
+        if os.path.isdir(packs_dir) and packs_dir not in sys.path:
+            sys.path.insert(0, packs_dir)
+        import cnet2_search_pack
+        old = os.environ.get("CNET2_NO_ROLL")
+        os.environ["CNET2_NO_ROLL"] = "1"     # template CONF is SEARCH=False: no rollout net
+        try:
+            cnet2_search_pack.main(out_py, repr(SELECTION_CONF), wp=cand_npz)
+        finally:
+            if old is None:
+                os.environ.pop("CNET2_NO_ROLL", None)
+            else:
+                os.environ["CNET2_NO_ROLL"] = old
+        return os.path.isfile(out_py)
+    except BaseException:
+        print(json.dumps({"selection_pack_error": traceback.format_exc(limit=3)}), flush=True)
+        return False
+
+
+def _selection_policy_file(sel, cand_npz, ep, force_form=None):
+    """Resolve the playable policy file for a candidate. Returns
+    (path, form) with form in deployed|naked-proxy, or (None, None) for a
+    failed FORCED deployment build (duel probe). Explicit deployed + build
+    failure dies: no silent degradation to the proxy."""
+    want = force_form or sel["form"]
+    if want in ("auto", "deployed"):
+        if not sel.get("_pack_dead"):
+            out_py = os.path.join(sel["dir"], f"ep{ep}_pack.py")
+            if _selection_build_pack(cand_npz, out_py):
+                return out_py, "deployed"
+            sel["_pack_dead"] = True
+            print(json.dumps({"selection_pack_fallback": "naked-proxy", "epoch": ep}), flush=True)
+        if force_form is not None:
+            return None, None
+        if want == "deployed":
+            raise SystemExit("selection: BC_SELECTION_FORM=deployed but the deployment pack "
+                             "build failed -- refusing silent naked-proxy degradation")
+    proxy = os.path.join(sel["dir"], f"selproxy_ep{ep}.py")
+    src = ("import sys\n"
+           f"sys.path.insert(0, {HERE!r})\n"
+           "from cnet2_search import make_search_agent\n"
+           f"agent = make_search_agent({SELECTION_CONF!r}, weights={cand_npz!r})\n")
+    with open(proxy, "w") as f:
+        f.write(src)
+    return proxy, "naked-proxy"
+
+
+def _selection_play(task):
+    import eval_v53
+    return eval_v53.play_game(task)
+
+
+def _selection_eval(sel, policy_file, form):
+    """Paired games vs the examiner over the selection block: every seed at
+    both seats. A game counts only with a margin AND zero agent errors on
+    both sides (F4/F09 caliber: a margin against or by a silently degraded
+    agent is not a measurement); a seed cluster needs both seats valid."""
+    import multiprocessing as mp
+    from concurrent.futures import ProcessPoolExecutor
+    seeds = list(range(sel["seed0"], sel["seed0"] + sel["pairs"]))
+    tasks = [("selection", policy_file, sel["examiner"], s, side)
+             for s in seeds for side in (0, 1)]
+    t0 = time.time()
+    got = {}
+    with ProcessPoolExecutor(max_workers=sel["workers"],
+                             mp_context=mp.get_context("fork")) as ex_:
+        futs = {ex_.submit(_selection_play, t): t for t in tasks}
+        for fut, t in futs.items():
+            try:
+                got[(t[3], t[4])] = fut.result()
+            except BaseException:
+                got[(t[3], t[4])] = None
+                print(json.dumps({"selection_game_error": traceback.format_exc(limit=3)}), flush=True)
+    seed_u, errors = {}, 0
+    for s in seeds:
+        us = []
+        for side in (0, 1):
+            r = got.get((s, side))
+            if (r is None or r.get("margin") is None
+                    or (r.get("a_errors") or 0) != 0 or (r.get("b_errors") or 0) != 0):
+                errors += 1
+                continue
+            us.append(_u_of_margin(r["margin"]))
+        if len(us) == 2:
+            seed_u[s] = float(np.mean(us))
+    row = {"form": form, "games": len(tasks), "valid_games": 2 * len(seed_u),
+           "errors": errors, "ok": errors == 0 and len(seed_u) == len(seeds),
+           "wall_s": round(time.time() - t0, 1), "seed_u": seed_u}
+    row.update(_selection_cluster_stats([seed_u[s] for s in seeds if s in seed_u]))
+    return row
+
+
+def _selection_eval_epoch(sel, net, ep, agreement, cand_meta):
+    cand = os.path.join(sel["dir"], f"ep{ep}.npz")
+    export(net, cand, dict(cand_meta, selection_candidate=True))
+    pf, form = _selection_policy_file(sel, cand, ep)
+    if sel.get("_form") is None:
+        sel["_form"] = form
+    elif sel["_form"] != form:
+        raise SystemExit(f"selection: form changed mid-run ({sel['_form']} -> {form} at epoch {ep}); "
+                         "a ranking may not mix forms")
+    row = _selection_eval(sel, pf, form)
+    row.update({"epoch": ep, "agreement": agreement, "candidate": cand,
+                "candidate_md5": _selection_md5(cand)})
+    return row
+
+
+def _selection_pick(sel, rows):
+    """Registered rule: rank by mean U; top-vs-second within 1 paired SE is
+    a tie -> deployment-form duel when the ranking ran naked-proxy and the
+    machinery is usable, else the later epoch; agreement only as the final
+    fallback. Failed epochs never rank."""
+    clean = [r for r in rows if r.get("ok") and r.get("mean_u") is not None]
+    pick = {"failed_epochs": [r["epoch"] for r in rows if r not in clean]}
+    if not clean:
+        raise SystemExit("selection: no epoch produced a clean evaluation -- nothing may be "
+                         "exported as selected (per-epoch _last/_ep artifacts remain on disk)")
+    clean.sort(key=lambda r: (-r["mean_u"], -r["epoch"]))
+    top = clean[0]
+    pick["winner_epoch"] = top["epoch"]
+    if len(clean) == 1:
+        pick["rule"] = "sole_candidate"
+        return pick
+    second = clean[1]
+    d = top["mean_u"] - second["mean_u"]
+    se_d = _selection_paired_se(top, second)
+    pick["tie_band"] = {"top_epoch": top["epoch"], "second_epoch": second["epoch"],
+                        "d_u": d, "se_diff": se_d}
+    if se_d is not None and d > se_d:
+        pick["rule"] = "mean_u"
+        return pick
+    # Inside the tie band (or the paired SE is inestimable: treat as tied).
+    winner, duel = None, None
+    if top["form"] == "naked-proxy" and second["form"] == "naked-proxy":
+        pf_t = _selection_policy_file(sel, top["candidate"], top["epoch"], force_form="deployed")
+        pf_s = _selection_policy_file(sel, second["candidate"], second["epoch"], force_form="deployed")
+        if pf_t[0] and pf_s[0]:
+            rt = _selection_eval(sel, pf_t[0], "deployed")
+            rs = _selection_eval(sel, pf_s[0], "deployed")
+            duel = {"machinery_usable": True,
+                    "top": {"epoch": top["epoch"], "mean_u": rt.get("mean_u"), "se": rt.get("se"), "ok": rt.get("ok")},
+                    "second": {"epoch": second["epoch"], "mean_u": rs.get("mean_u"), "se": rs.get("se"), "ok": rs.get("ok")}}
+            if rt.get("ok") and rs.get("ok"):
+                dd = rt["mean_u"] - rs["mean_u"]
+                sed = _selection_paired_se(rt, rs)
+                duel["d_u"] = dd; duel["se_diff"] = sed
+                if sed is not None and abs(dd) > sed:
+                    winner = top if dd > 0 else second
+                    pick["rule"] = "duel_deployed"
+            pick["duel"] = duel
+        else:
+            duel = {"machinery_usable": False,
+                    "reason": "deployment-form pack build failed for a tied candidate"}
+            pick["duel"] = duel
+    if winner is None:
+        if top["epoch"] != second["epoch"]:
+            winner = top if top["epoch"] > second["epoch"] else second
+            if duel is not None and duel.get("machinery_usable"):
+                pick["rule"] = "duel_tie_later_epoch"
+            elif duel is not None:
+                pick["rule"] = "tie_later_epoch_no_deployed"
+            else:
+                pick["rule"] = "tie_later_epoch"
+        else:
+            winner = top if top["agreement"] >= second["agreement"] else second
+            pick["rule"] = "tie_agreement"
+    pick["winner_epoch"] = winner["epoch"]
+    return pick
+
+
+def _selection_finish(sel, rows, net, out, meta_extra):
+    """Export the picked epoch's candidate to `out` with the full selection
+    provenance. The winner's own candidate meta is the base, so the product
+    carries exactly what a legacy export of that epoch would have carried,
+    plus the selection record."""
+    pick = _selection_pick(sel, rows)
+    win = next(r for r in rows if r["epoch"] == pick["winner_epoch"])
+    z = np.load(win["candidate"])
+    sd = {k: torch.from_numpy(np.asarray(z[k])) for k in z.files if k != "meta"}
+    net.load_state_dict(sd)
+    meta = {}
+    if "meta" in z.files:
+        meta = json.loads(str(z["meta"]))
+    meta.pop("selection_candidate", None)
+    meta.update(meta_extra)
+    meta.update({
+        "selection_method": "examiner_pairs",
+        "selection_form": rows[0]["form"],
+        "selection_seed_block": [SELECTION_SEED0, SELECTION_SEED_END],
+        "selection_seed0": sel["seed0"],
+        "selection_pairs": sel["pairs"],
+        "selection_examiner": sel["examiner"],
+        "selection_examiner_md5": sel["examiner_md5"],
+        "selection_epochs": [{k: r.get(k) for k in ("epoch", "mean_u", "se", "ci95", "agreement",
+                                                     "ok", "form", "games", "errors", "wall_s",
+                                                     "candidate_md5", "seed_u")} for r in rows],
+        "selection_pick": pick,
+    })
+    if sel["fixture"]:
+        meta["selection_fixture"] = True
+    export(net, out, meta)
+    print(json.dumps({"selection_pick": pick}), flush=True)
+    return {"agreement": win["agreement"], "epoch": win["epoch"]}
 
 
 def main(data, out, epochs, cfg):
@@ -1156,6 +1516,11 @@ def main(data, out, epochs, cfg):
         return train_cached(net, D, tr, va, epochs, bs, opt, sched, spe, out, npar, data)
     best = -1
     log = open(out.replace(".npz", "_log.jsonl"), "a")
+    sel = _selection_config()
+    sel_rows = []
+    if sel is not None:
+        _selection_open(sel, out)
+        print(json.dumps({"selection": sel["public"]}), flush=True)
     # Whole-network search distillation (no trunk cache): BC_EXIT_W / BC_SELF_KL as in train_cached, but the reference
     # is a frozen copy of the initial net run on the same (augmented) batch. Collector tokens whose played move differs
     # from the reference's own move -> cross-entropy to the played move (x BC_EXIT_W); every other own token -> KL to the
@@ -1296,9 +1661,23 @@ def main(data, out, epochs, cfg):
             np.savez(out.replace(".npz", "_auxheads.npz"), **_hsd)
         if os.environ.get("BC_SAVE_EPOCHS") == "1":       # keep every epoch for the online probes to choose from
             export(net, out.replace(".npz", f"_ep{ep}.npz"), {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
-        if r["all"] > best:
+        if sel is not None:
+            _sel_row = _selection_eval_epoch(sel, net, ep, r["all"], {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar})
+            sel_rows.append(_sel_row)
+            _srec = {"ep": ep, "selection": {"mean_u": _sel_row.get("mean_u"), "se": _sel_row.get("se"), "ok": _sel_row.get("ok"), "form": _sel_row.get("form"), "wall_s": _sel_row.get("wall_s")}}
+            print(json.dumps(_srec), flush=True); log.write(json.dumps(_srec) + "\n"); log.flush()
+            if heads is not None:
+                np.savez(os.path.join(sel["dir"], f"ep{ep}_auxheads.npz"), **{k: v.detach().cpu().numpy() for k, v in heads.state_dict().items()})
+        elif r["all"] > best:
             best = r["all"]
             export(net, out, {"cfg": net.cfg, "epoch": ep, "val": r, "params": npar, "data": data})
+    if sel is not None:
+        _fin = _selection_finish(sel, sel_rows, net, out, {"params": npar, "data": data})
+        best = _fin["agreement"]
+        if heads is not None:
+            _hw = os.path.join(sel["dir"], f"ep{_fin['epoch']}_auxheads.npz")
+            if os.path.exists(_hw):
+                shutil.copyfile(_hw, out.replace(".npz", "_auxheads.npz"))
     print("best", best)
     if only and init:          # frozen trunk: prove every parameter except the trained style rows is bit-identical
         _init_raw = _bc_init_blob()[0]
