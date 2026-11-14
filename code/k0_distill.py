@@ -54,6 +54,23 @@ Recipe (draft SS6, verbatim where it pins the math):
     is 1 (full annotation in the window -- this round's default), the
     weights are identically 1. There is no other, unregistered way to
     turn weighting on.
+  * Candidate-prefix features (r4 X01): the stored uf/mf/legal of a
+    row were built by cnet2_build driving cnet2_feat.Prefix with the
+    LOGGED joint action. Substituting a candidate arm as y while
+    keeping those arrays would feed the decoder the logged action's
+    budget / occupancy / legality state under the candidate's prefix
+    -- the two disagree wherever the candidate's effects differ from
+    the logged action's (a base recruit the candidate skips leaves the
+    next base slot masked at NEG, and the joint logp collapses to
+    ~-1e9). The batch expansion therefore RECOMPUTES the
+    action-effect-derived components per candidate (mf reserved
+    component, uf cash/slots/plants columns, base-slot legal) by
+    replaying the candidate through the Prefix state transitions;
+    every other component is a function of the root observation and
+    the slot index only and is copied from the record. A candidate
+    whose chosen base action is illegal under its own recomputed
+    prefix, or whose root cash cannot be recovered exactly enough to
+    decide that legality, refuses the run, naming the root/candidate.
 
 Data (consumed format, the consumer-side reading of the SS13-C frozen
 schema; the annotator of SS10 item 1 publishes to it):
@@ -121,6 +138,13 @@ FROZEN_PREFIXES = ("utility.", "wdl.", "margin.", "aux.")
 KL_DEFINITION = ("KL(pi_student || pi_parent): per-slot categorical KL "
                  "summed over each candidate's valid slots, averaged "
                  "over the root's candidates")
+RECRUIT_COST = 30.0            # cnet2_feat.Prefix.advance / fastsim recruit cost
+MAX_LOSS = 1e6                 # loss-magnitude circuit breaker: a per-root CE/KL
+                               # is bounded by OWN slots x the per-slot logp/KL
+                               # magnitude of LEGAL actions (order 1e2 in any
+                               # reachable state); a loss at 1e6 scale is the
+                               # NEG-mask signature (-1e9 masked logits), i.e.
+                               # corrupted features, never a training outcome
 # Root-feature fields of the annotation generation: the cnet2_build
 # FIELDS model inputs (everything a batch row carries except the played
 # label y, which the candidate arms replace) plus the row key gid/step.
@@ -483,6 +507,261 @@ def joint_logp_kl(logits_s, logits_p, arms):
     return joint, kl
 
 
+# --------------------------------------------------------------------------
+# Candidate-prefix feature recomputation (r4 X01; pure numpy)
+# --------------------------------------------------------------------------
+
+def _f16q(x):
+    """The cnet2_feat.f16 quantisation (float32 -> float16 -> float32)
+    on a float32 array; the identity on already-quantised values."""
+    return x.astype(np.float16).astype(np.float32)
+
+
+def _root_cash_set(feat_row):
+    """Every root cash value consistent with the record's own cash
+    encodings. fastsim rounds cash to 2 decimals at every step, so the
+    root cash is a multiple of 0.01; Feat.observe encodes it four
+    times: scal[2] = f16(log1p(cash)/9), scal[19] = f16(min(cash/2000,
+    3)), scal[12] = (cash >= 30), scal[13] = (cash >= tree price) with
+    the price rebuilt from the maps tree planes exactly as
+    Feat.observe computes it (20 + 5 * 1.235 ** alive when the seat
+    owns a tree, else 20; alive = trees of either seat with age < 50,
+    read off the min(age, 50)/50 plane). Returns the sorted candidate
+    array -- empty when the encodings are mutually inconsistent."""
+    scal = np.asarray(feat_row["scal"], dtype=np.float64)
+    maps = np.asarray(feat_row["maps"])
+    v2, v19 = float(scal[2]), float(scal[19])
+    if not (np.isfinite(v2) and np.isfinite(v19)) or v2 < 0.0 or v19 < 0.0:
+        return np.zeros(0)
+    own_tree = maps[16] > 0
+    any_tree = own_tree | (maps[17] > 0)
+    alive = int((maps[18][any_tree] < 255).sum()) if bool(any_tree.any()) else 0
+    price = 20.0 + 5.0 * 1.235 ** alive if bool(own_tree.any()) else 20.0
+    approx = math.expm1(9.0 * v2)
+    half = (abs(approx) + 1.0) * 9.0 * (2.0 ** -11) + 0.05
+    lo = max(0.0, approx - half)
+    hi = min(approx + half, 200000.0)
+    cents = np.arange(math.floor(lo * 100.0), math.ceil(hi * 100.0) + 1,
+                      dtype=np.float64) / 100.0
+    if cents.size == 0:
+        return cents
+    enc2 = (np.log1p(cents) / 9.0).astype(np.float32) \
+        .astype(np.float16).astype(np.float32)
+    enc19 = np.minimum(cents / 2000.0, 3.0).astype(np.float32) \
+        .astype(np.float16).astype(np.float32)
+    ok = (enc2 == v2) & (enc19 == v19) \
+        & ((cents >= 30.0) == (float(scal[12]) >= 0.5)) \
+        & ((cents >= price) == (float(scal[13]) >= 0.5))
+    # Fifth equation, from the record itself: when slot 11 is valid,
+    # its stored uf[6] is the cash encoding AFTER the logged slot-10
+    # action -- the same root cash with either no debit (logged arm
+    # stayed) or one RECRUIT_COST debit (it recruited). A root cash
+    # consistent with the record must reproduce that stored value
+    # under one of the two branches.
+    tok_mask = np.asarray(feat_row["tok_mask"])
+    if tok_mask.shape[0] > 11 and bool(tok_mask[11]):
+        uf11 = float(np.asarray(feat_row["uf"], dtype=np.float32)[11, 6])
+        e0 = (np.log1p(cents) / 9.0).astype(np.float32) \
+            .astype(np.float16).astype(np.float32)
+        after = np.where(cents >= RECRUIT_COST,
+                         np.log1p(np.maximum(cents - RECRUIT_COST, 0.0)) / 9.0,
+                         np.nan)
+        e30 = after.astype(np.float32).astype(np.float16).astype(np.float32)
+        ok &= (e0 == uf11) | (e30 == uf11)
+    return cents[ok]
+
+
+def expand_candidate_batch(feats, arms, root_idx, K):
+    """Decoder batch for the given roots, one row per candidate slot,
+    with the action-effect-derived feature components RECOMPUTED per
+    candidate (r4 X01).
+
+    The record's uf/mf/legal describe the LOGGED action's prefix
+    (cnet2_build drove cnet2_feat.Prefix with the played action). The
+    components that depend on the prefix ACTIONS are exactly:
+      mf[s][m][0]  min(reserved[DEST[pos_s, m]], 2) / 2   (occupancy)
+      uf[s][6]     log1p(cash_s) / 9                      (budget)
+      uf[s][7]     slots_s / 10                           (budget)
+      uf[s][8]     min(plants_s, 3) / 3                   (plants)
+      legal[s>=10] cash_s >= RECRUIT_COST and slots_s > 0 (legality)
+    where cash_s / slots_s / plants_s / reserved are the Prefix state
+    after the candidate's own actions at slots < s (Prefix.advance:
+    a worker reserves its destination cell; a planter staying on a
+    cell with no own tree / own base / enemy base counts a plant; a
+    base recruit reserves its cell, costs RECRUIT_COST cash and one
+    slot). Everything else in uf/mf/legal depends only on the root
+    observation and the slot index -- Prefix.undecided included: it
+    is decremented per processed slot, never by an action -- so the
+    stored values are already correct for every candidate and are
+    copied through.
+
+    The root cash enters through the record's own encodings:
+    uf[*][6] before any base slot is scal[2] verbatim, and the only
+    place an exact cash is needed is the second base slot after a
+    candidate recruit the logged action did not make (legality
+    threshold cash >= 2 * RECRUIT_COST, and the uf cash column).
+    There the cash is recovered as the set of 2-decimal values
+    reproducing every scal cash encoding (_root_cash_set): an empty
+    set, or a set split across the legality threshold, refuses the
+    run naming the root; a set split only across an f16 bucket of the
+    uf value itself contributes the bucket-median cash and is counted
+    in stats (the value is then within one f16 ulp of the truth).
+
+    Returns (batch, rep, stats). Raises SystemExit naming the root /
+    candidate when a candidate's chosen base action is illegal under
+    its own recomputed prefix -- the teacher certifies candidates
+    legal under their own prefix, so a violation means the record
+    disagrees with the environment transition."""
+    import cnet2_feat as F
+    root_idx = np.asarray(root_idx)
+    B = len(root_idx)
+    M = B * K
+    rep = np.repeat(root_idx, K)
+    b = {}
+    for k in feats:
+        if k in ("gid", "step"):
+            continue
+        b[k] = np.asarray(feats[k])[rep]
+    arm_rows = np.asarray(arms)[root_idx].reshape(M, arms.shape[2]) \
+        .astype(np.int64)
+    b["y"] = arm_rows
+    uf = np.array(b["uf"], dtype=np.float32)
+    mf = np.array(b["mf"], dtype=np.float32)
+    legal = np.array(b["legal"], dtype=bool)
+    tok_pos = np.asarray(feats["tok_pos"])[rep].astype(np.int64)
+    tok_kind = np.asarray(feats["tok_kind"])[rep].astype(np.int64)
+    tok_mask = np.asarray(feats["tok_mask"])[rep].astype(bool)
+    scal = np.asarray(feats["scal"], dtype=np.float64)[rep]
+    maps = np.asarray(feats["maps"])[rep]
+    gid = np.asarray(feats["gid"])[rep]
+    step = np.asarray(feats["step"])[rep]
+    own_base = maps[:, 14] > 0
+    en_base = maps[:, 15] > 0
+    own_tree = maps[:, 16] > 0
+    valid = tok_mask[:, :F.OWN]
+    slots_root = 10 - tok_mask[:, :10].sum(axis=1)
+    rows = np.arange(M)
+    stats = {"cash_recovery_roots": set(), "cash_ulp_roots": set()}
+    cash_sets = {}
+
+    def die(m, s, what):
+        raise SystemExit(
+            f"k0_distill features: root {int(rep[m])} (game {int(gid[m])} "
+            f"step {int(step[m])}) candidate {int(m) % K}: {what}; the "
+            f"record disagrees with the environment transition "
+            f"(cnet2_feat.Prefix); refusing to train")
+
+    def cash_set_for(m):
+        r = int(rep[m])
+        if r not in cash_sets:
+            cash_sets[r] = _root_cash_set(
+                {"scal": feats["scal"][r], "maps": feats["maps"][r],
+                 "uf": feats["uf"][r], "tok_mask": feats["tok_mask"][r]})
+        return cash_sets[r]
+
+    # Root-state uf columns (candidate-invariant before any base
+    # advance): the cash encoding is scal[2] verbatim; the free-slot
+    # count at slots <= 10 is the root's.
+    for s in range(F.OWN):
+        v = valid[:, s]
+        if v.any():
+            uf[v, s, 6] = scal[v, 2]
+            if s < 11:
+                uf[v, s, 7] = slots_root[v] / 10.0
+
+    reserved = np.zeros((M, F.N), dtype=np.float64)
+    plants = np.zeros(M, dtype=np.float64)
+    bit10 = np.zeros(M, dtype=bool)
+    for s in range(F.OWN):
+        v = valid[:, s]
+        if not v.any():
+            continue
+        pos_s = tok_pos[:, s]
+        # plants column: Prefix state BEFORE this slot's advance.
+        uf[v, s, 8] = np.minimum(plants[v], 3.0) / 3.0
+        # reserved (occupancy) component of the move features.
+        if s < 10:
+            dest = F.DEST[pos_s]
+            mf[v, s, :, 0] = np.minimum(
+                reserved[rows[:, None], dest][v], 2.0) / 2.0
+        else:
+            mf[v, s, 1, 0] = np.minimum(reserved[v, pos_s[v]], 2.0) / 2.0
+            mf[v, s, 2, 0] = mf[v, s, 1, 0]
+            # base-slot legality under the candidate's own prefix
+            if s == 10:
+                ok = (scal[:, 12] >= 0.5) & (slots_root > 0)
+            else:
+                slots_11 = slots_root - bit10.astype(np.int64)
+                ok = np.zeros(M, dtype=bool)
+                nb = ~bit10
+                ok[nb] = (scal[nb, 12] >= 0.5) & (slots_11[nb] > 0)
+                uf[v, s, 7] = slots_11[v] / 10.0
+                for m in rows[bit10 & v]:
+                    cs = cash_set_for(int(m))
+                    if cs.size == 0:
+                        die(int(m), s,
+                            "the record's scal cash encodings are "
+                            "mutually inconsistent (no 2-decimal cash "
+                            "reproduces them), so the budget state "
+                            "after the candidate's base recruit cannot "
+                            "be recomputed")
+                    over = cs >= 2.0 * RECRUIT_COST
+                    if bool(over.any()) and not bool(over.all()):
+                        die(int(m), s,
+                            "the root cash is underdetermined across "
+                            "the post-recruit legality threshold, so "
+                            "the candidate's base legality cannot be "
+                            "recomputed exactly")
+                    ok[m] = bool(over.all()) and slots_11[m] > 0
+                    stats["cash_recovery_roots"].add(int(rep[m]))
+                    vals = {float(np.float16(np.float32(
+                        math.log1p(c - RECRUIT_COST) / 9.0))) for c in cs}
+                    if len(vals) > 1:
+                        stats["cash_ulp_roots"].add(int(rep[m]))
+                    c_star = float(cs[len(cs) // 2])
+                    uf[m, s, 6] = math.log1p(c_star - RECRUIT_COST) / 9.0
+            legal[v, s] = np.stack(
+                [np.ones(int(v.sum()), bool), ok[v], ok[v],
+                 np.zeros(int(v.sum()), bool),
+                 np.zeros(int(v.sum()), bool)], axis=1)
+            chosen = arm_rows[:, s]
+            bad = v & (chosen >= 0) & ~legal[rows, s, np.clip(chosen, 0, 4)]
+            if bad.any():
+                m = int(rows[bad][0])
+                die(m, s, f"base action {int(chosen[m])} is illegal "
+                          f"under the candidate's own recomputed prefix")
+        # Prefix.advance(s, arm[s]) for the valid rows.
+        a_s = arm_rows[:, s]
+        if s < 10:
+            dest1 = F.DEST[pos_s, np.clip(a_s, 0, 4)]
+            np.add.at(reserved, (rows[v], dest1[v]), 1.0)
+            clear = ~(own_tree[rows, pos_s] | own_base[rows, pos_s]
+                      | en_base[rows, pos_s])
+            plants = plants + np.where(
+                v & (tok_kind[:, s] == 1) & (a_s == 0) & clear, 1.0, 0.0)
+        else:
+            rec = v & (a_s > 0)
+            np.add.at(reserved, (rows[rec], pos_s[rec]), 1.0)
+            if s == 10:
+                bit10 = rec
+    # Final self-consistency: at every valid slot the candidate's
+    # chosen action must be unmasked by the legality the decoder will
+    # actually apply under the candidate's own prefix (recomputed at
+    # the base slots above, the record's own rows elsewhere).
+    legal_chosen = legal[rows[:, None], np.arange(F.OWN)[None, :],
+                         np.clip(arm_rows, 0, 4)]
+    bad = valid & (arm_rows >= 0) & ~legal_chosen
+    if bad.any():
+        m, s = (int(x) for x in np.argwhere(bad)[0])
+        die(m, int(s), f"action {int(arm_rows[m, s])} at slot {int(s)} "
+                       f"is masked by the legality the decoder applies "
+                       f"under the candidate's own prefix")
+    b["uf"] = _f16q(uf)
+    b["mf"] = _f16q(mf)
+    b["legal"] = legal
+    return b, rep, stats
+
+
 def frozen_snapshot(net, prefixes=FROZEN_PREFIXES):
     """{name: cpu tensor clone} for every parameter under the frozen
     prefixes -- the publish gate's reference."""
@@ -652,17 +931,17 @@ def main():
     n_arms = ds["n_arms"]
     target_t = target
 
+    feat_stats = {"cash_recovery_roots": set(), "cash_ulp_roots": set()}
+
     def expanded_batch(root_idx):
         """Root rows repeated once per candidate slot (fixed K, padded
         candidates masked downstream), y = the candidate arms -- each
-        candidate is teacher-forced under its OWN prefix."""
-        rep = np.repeat(np.asarray(root_idx), K)
-        b = {}
-        for k in feats:
-            if k in ("gid", "step"):
-                continue
-            b[k] = np.asarray(feats[k])[rep]
-        b["y"] = arms_t[np.asarray(root_idx)].reshape(-1, arms_t.shape[2])
+        candidate is teacher-forced under its OWN prefix, with the
+        action-effect-derived features recomputed for that prefix
+        (expand_candidate_batch, r4 X01)."""
+        b, rep, stats = expand_candidate_batch(feats, arms_t, root_idx, K)
+        for key in feat_stats:
+            feat_stats[key].update(stats[key])
         return T.to_dev(b, aug=False), rep
 
     def forward_terms(root_idx):
@@ -703,6 +982,11 @@ def main():
                 p.detach().cpu().numpy(), init_snap[n].numpy()))
         prov = dict(eff["k0_distill_effective"])
         prov["updates_done"] = int(updates)
+        prov["candidate_features"] = {
+            "recompute": "action-effect-derived components rebuilt per "
+                         "candidate (r4 X01)",
+            "cash_recovery_roots": len(feat_stats["cash_recovery_roots"]),
+            "cash_ulp_roots": len(feat_stats["cash_ulp_roots"])}
         prov["frozen_check"] = {"frozen_params": frozen_names, "moved": [],
                                 "bitwise_identical_to_parent": True}
         prov["trainable_moved"] = moved_trainable
@@ -732,9 +1016,12 @@ def main():
                 break
             idx = perm[a0:a0 + args.bs]
             loss, ce_root, kl_root, _ = forward_terms(idx)
-            for nm, tv in (("total", loss),):
+            for nm, tv in (("total", loss), ("ce_root_max", ce_root.max()),
+                           ("kl_root_max", kl_root.max())):
                 if not bool(torch.isfinite(tv.detach()).all()):
                     die_nonfinite(f"loss:{nm}", float(tv.detach()))
+                if abs(float(tv.detach())) > MAX_LOSS:
+                    die_nonfinite(f"loss:{nm}:magnitude", float(tv.detach()))
             opt.zero_grad(set_to_none=True)
             loss.backward()
             for nm, p in net.named_parameters():
@@ -760,6 +1047,9 @@ def main():
             if args.save_every and updates_done % args.save_every == 0 \
                     and updates_done < args.max_updates:
                 save_checkpoint(updates_done)
+    emit({"candidate_features": {
+        "cash_recovery_roots": len(feat_stats["cash_recovery_roots"]),
+        "cash_ulp_roots": len(feat_stats["cash_ulp_roots"])}})
     save_checkpoint(updates_done)
     emit({"done": {"updates": updates_done, "elapsed_s": round(time.time() - t0, 2)}})
     log.close()
