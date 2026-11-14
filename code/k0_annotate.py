@@ -743,6 +743,21 @@ def publish(out_dir, plan, shard_metas):
                     _die(f"publish: published generation {gen_id} in "
                          f"{gen_dir!r} differs from the inputs being "
                          f"published; refusing to overwrite it")
+                # The published meta.json's ACTUAL bytes must match
+                # the manifest seal before the generation may be
+                # reused and the pointer moved to it (X05: core
+                # equality only proves the manifest RECORDED the right
+                # meta hash -- a meta.json corrupted on disk after
+                # publication would otherwise be reused as-is and the
+                # pointer flipped onto a generation consumers then
+                # refuse).
+                meta_p = os.path.join(gen_dir, "meta.json")
+                if not os.path.exists(meta_p) \
+                        or _sha256_file(meta_p) != old.get("meta_sha256"):
+                    _die(f"publish: published generation {gen_id} "
+                         f"meta.json in {gen_dir!r} does not match "
+                         f"its manifest seal; refusing to reuse it or "
+                         f"move the pointer to it")
                 for k, info in old["fields"].items():
                     p = os.path.join(gen_dir, info["file"])
                     if not os.path.exists(p) or os.path.getsize(p) != info["bytes"] \
