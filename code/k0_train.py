@@ -101,6 +101,12 @@ Numeric protection & recovery (spec S19 standard, in code):
      skips the completed batches of the current epoch, consuming exactly
      the batch sequence the uninterrupted run would have consumed
      (same --bs and root set, as the update counter already presumes).
+  P5 resume learning rate: the checkpoint's optimizer state is loaded
+     for its moments, but its stored lr does not survive a resume --
+     --lr is applied to the param groups right after load_state_dict,
+     and every lr the run logs (the effective config, the per-step
+     lines) is read back from the optimizer itself, so the recorded
+     value is the effective value by construction.
 
 Data: --data is a cnet2_build dataset directory with a sealed generation
 (legacy flat datasets are refused: K0 needs the generation id for the
@@ -455,7 +461,20 @@ def main():
         u_head.load_state_dict(ck["u_head"])
         death_head.load_state_dict(ck["death_head"])
         opt.load_state_dict(ck["opt"])
+        # P5: load_state_dict restores the checkpoint's param_groups, lr
+        # included -- an explicit --lr on the resume command line was
+        # silently discarded while every log line kept printing it (a run
+        # recorded .01 and optimized at the checkpoint's .001). The CLI
+        # value is the caller's intent: apply it to every group. The
+        # moments still come from the checkpoint; only the rate is the
+        # caller's.
+        for _g in opt.param_groups:
+            _g["lr"] = args.lr
         updates_done = int(ck["updates"])
+    # The lr every record below carries is read back from the optimizer
+    # itself, so the recorded value is the effective value by
+    # construction, on the fresh path (== args.lr) and on resume alike.
+    eff_lr = float(opt.param_groups[0]["lr"])
 
     # ---- effective config: one JSON line, first in the log ----
     eff = {"k0_effective": {
@@ -467,7 +486,7 @@ def main():
         "aux": {"dir": aux_dir, "sidecar_format": sc.get("format"), "lineage": sc.get("lineage")},
         "seed": args.seed, "route": args.aux_route, "lambda_death": args.lambda_death,
         "freeze_backbone": bool(args.freeze_backbone),
-        "lr": args.lr, "bs": args.bs, "max_updates": args.max_updates,
+        "lr": eff_lr, "bs": args.bs, "max_updates": args.max_updates,
         "games_in_dataset": len(meta["games"]), "games_present": int(len(gids_present)),
         "games_used": int(len(games_used)), "max_games": args.max_games,
         "roots": int(len(roots)), "u_nan_unusable_rows": n_u_nan,
@@ -617,7 +636,7 @@ def main():
                   "loss": {"anchor": float(l_anchor.detach()), "u": float(l_u.detach()),
                            "death": float(l_death.detach()), "total": float(total.detach())},
                   "denominators": {"anchor_slots": n_anchor, "u_roots": n_u, "death_entries": n_d},
-                  "grad_backbone": g_bb, "lr": args.lr, "elapsed_s": round(time.time() - t0, 2)})
+                  "grad_backbone": g_bb, "lr": eff_lr, "elapsed_s": round(time.time() - t0, 2)})
             if args.save_every and updates_done % args.save_every == 0 and updates_done < args.max_updates:
                 save_checkpoint(updates_done)
         skip_batches = 0
