@@ -165,6 +165,25 @@ def _comp(st, p):
 NSTEPS = int(os.environ.get("EVAL_STEPS", "299"))   # R01: a full game is 299 transitions (the original's episodeSteps=300 counts the initial state: the last agent call sees obs step 298 and the final state is step 299). 100 = opening exam: stop at step 100, margin = cash difference then
 
 
+
+# F4_SUPPLEMENT_20261114 (strategy-group acceptance condition on the F4
+# fix): the F09 gate totals (a_errors / b_errors in play_game) sum EVERY
+# *_errors key in last_stats, but a_stats / b_stats show only the
+# whitelist below -- a future *_errors key would be counted by the gate
+# yet invisible in the classified summary, and a FAIL would be
+# misdiagnosed. _stats_with_residual therefore adds a computed
+# "other_errors" key to each side's stats: (sum of all *_errors values)
+# minus (sum of the whitelisted *_errors values present). Display only:
+# it feeds no gate and changes no existing key or total.
+_STATS_WHITELIST = ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1", "pa_moves", "pa_errors", "mac_cap", "mac_stop", "mac_price", "mac_push", "lp", "seq_changed", "pb_skip", "fix_dropped", "pk_in", "pk_cut", "pk_rep", "pk_rep_plant3", "pk_rep_cash", "bk_in", "bk_cut", "shallow", "sims", "rounds", "sims_steps", "cb", "cb_seen", "cb_ok", "cb_errors", "se", "se_seen", "se_ok", "se_none", "se_errors", "se_lat", "ms_steps", "px", "px_errors", "opl", "opl_errors", "tg", "rg", "share_saved")
+
+def _stats_with_residual(stats, ls):
+    total = sum(v for k, v in ls.items() if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float)))
+    shown = sum(v for k, v in stats.items() if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float)))
+    out = dict(stats)
+    out["other_errors"] = total - shown
+    return out
+
 def play_game(task):
     tag, a_file, b_file, seed, a_side = task
     random.seed(rng_seed(seed, a_side))
@@ -527,8 +546,8 @@ def play_game(task):
                                     late30_eh=late30_eh if q == a_side else None)
                          for side, q in (("pol", a_side), ("opp", 1 - a_side))},
         "a_errors": sum(v for k, v in (getattr(fa, "last_stats", None) or {}).items() if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float))),
-        "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
-                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1", "pa_moves", "pa_errors", "mac_cap", "mac_stop", "mac_price", "mac_push", "lp", "seq_changed", "pb_skip", "fix_dropped", "pk_in", "pk_cut", "pk_rep", "pk_rep_plant3", "pk_rep_cash", "bk_in", "bk_cut", "shallow", "sims", "rounds", "sims_steps", "cb", "cb_seen", "cb_ok", "cb_errors", "se", "se_seen", "se_ok", "se_none", "se_errors", "se_lat", "ms_steps", "px", "px_errors", "opl", "opl_errors", "tg", "rg", "share_saved")},
+        "a_stats": _stats_with_residual({k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
+                    if k in _STATS_WHITELIST}, (getattr(fa, "last_stats", None) or {})),
         # F4 (Codex round-3): the opponent's last_stats (fb) were never read,
         # so an opponent whose internals degraded to a fallback played the
         # whole exam with zero trace and could silently inflate the margin.
@@ -536,8 +555,8 @@ def play_game(task):
         # (same error-key sum, same stats whitelist) so bigeval can record
         # and gate the opponent side symmetrically.
         "b_errors": sum(v for k, v in (getattr(fb, "last_stats", None) or {}).items() if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float))),
-        "b_stats": {k: v for k, v in (getattr(fb, "last_stats", None) or {}).items()
-                    if k in ("searched", "changed", "shallow", "aborted", "rounds", "sims", "errors", "root_errors", "mnp", "eh", "eh_edge", "eh_heavy", "eh_alt", "cc_2to1", "cc_0to1", "pa_moves", "pa_errors", "mac_cap", "mac_stop", "mac_price", "mac_push", "lp", "seq_changed", "pb_skip", "fix_dropped", "pk_in", "pk_cut", "pk_rep", "pk_rep_plant3", "pk_rep_cash", "bk_in", "bk_cut", "shallow", "sims", "rounds", "sims_steps", "cb", "cb_seen", "cb_ok", "cb_errors", "se", "se_seen", "se_ok", "se_none", "se_errors", "se_lat", "ms_steps", "px", "px_errors", "opl", "opl_errors", "tg", "rg", "share_saved")},
+        "b_stats": _stats_with_residual({k: v for k, v in (getattr(fb, "last_stats", None) or {}).items()
+                    if k in _STATS_WHITELIST}, (getattr(fb, "last_stats", None) or {})),
         "ledger_pol": led[a_side], "ledger_opp": led[1 - a_side],
         "comp": {str(k): v for k, v in comp.items()},
     }
