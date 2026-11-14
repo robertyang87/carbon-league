@@ -1227,6 +1227,13 @@ def _selection_open(sel, out):
     return d
 
 
+# W03: plain-import-frozen examiner dependencies, name -> (md5,
+# snapshot path), registered by _selection_snapshot_deps and
+# enforced in the forked game workers by
+# _selection_enforce_frozen_imports.
+_SELECTION_FROZEN_IMPORTS = {}
+
+
 def _selection_snapshot_deps(origin_path, raw, snap_dir):
     """Freeze the examiner's sibling dependencies (V06): modules it imports
     that resolve to files sitting next to the ORIGINAL examiner file, plus
@@ -1277,7 +1284,17 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
     and the dep records {path_rewrites, snapshot_md5} alongside the md5 of
     its original bytes. Absolute paths in any other shape (computed,
     candidate lists) die by name even in dependencies.
-"""
+
+    sys.modules (W03): a dependency frozen for a plain `import name` can
+    still be substituted at runtime if sys.modules already holds a
+    different module under that name -- selection games run in forked
+    workers that inherit this process's module table. The freeze
+    therefore audits every import-frozen name: a name already bound to
+    bytes other than the frozen ones dies by name (module + existing
+    __file__); a name bound to identical bytes or not yet bound is
+    recorded in the dep entry ("sys_modules") and registered for the
+    worker-side guard _selection_enforce_frozen_imports, which loads the
+    frozen bytes under the plain name before any selection game."""
     import ast as _ast
     import re as _re
     origin_dir = os.path.dirname(os.path.abspath(origin_path))
@@ -2039,6 +2056,33 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
     freeze_dynloads(src, origin_file, 0, (origin_file,))
     freeze_data(src, origin_file, 0, (origin_file,))
 
+    # W03: audit sys.modules for every plain-import-frozen name and
+    # register the frozen bindings for the worker-side guard. A name
+    # already bound to different bytes makes the freeze a fiction -- the
+    # forked game workers inherit this process's module table -- so it
+    # dies here, before any training happens.
+    for d in deps:
+        name = d.get("import_name")
+        if not name:
+            continue
+        m = sys.modules.get(name)
+        if m is None:
+            d["sys_modules"] = "absent"
+        else:
+            f = getattr(m, "__file__", None)
+            if f and os.path.isfile(f) and _selection_md5(f) == d["md5"]:
+                d["sys_modules"] = "same-bytes"
+            else:
+                raise SystemExit(
+                    f"selection: sys.modules[{name!r}] is already bound to "
+                    f"{f!r}, whose bytes do not match the frozen dependency "
+                    f"{d['file']} (md5 {d['md5']}); a plain import of "
+                    f"{name!r} during selection would execute the "
+                    "already-loaded module instead of the frozen copy -- "
+                    "refusing to run selection against a substitutable "
+                    "examiner")
+        _SELECTION_FROZEN_IMPORTS[name] = (
+            d["md5"], os.path.abspath(os.path.join(snap_dir, d["file"])))
     return deps
 
 
@@ -2046,18 +2090,30 @@ def _selection_freeze_examiner(sel):
     """Write the frozen examiner snapshot into the selection dir (V06) and
     point all execution at it. sel['examiner'] keeps naming the ORIGIN file
     for provenance; sel['examiner_exec'] is what games actually load, and
-    its bytes are the ones sel['examiner_md5'] was computed from."""
+    its bytes are the ones sel['examiner_md5'] was computed from.
+
+    The snapshot keeps the examiner's ORIGINAL basename (W11): the shared
+    eval loader dispatches on it -- a file whose name starts with
+    "policy_" is built via make_agent(), everything else via the
+    module-level agent -- so renaming the snapshot to a fixed name would
+    silently change how a policy_* examiner is constructed. The one
+    exception is a pathological dep that itself freezes under the
+    examiner's basename (a dep importing the examiner by name); then the
+    historical fixed name is used rather than clobbering either file."""
     if sel.get("_examiner_bytes") is None:
         return                      # hand-built sel dicts (unit probes): no freeze
     raw = sel["_examiner_bytes"]
     ext = os.path.splitext(sel["examiner"])[1] or ".py"
-    snap = os.path.join(sel["dir"], "examiner_snapshot" + ext)
+    deps = _selection_snapshot_deps(sel["examiner"], raw, sel["dir"]) if ext == ".py" else []
+    snap_name = os.path.basename(sel["examiner"])
+    if any(d["file"] == snap_name for d in deps):
+        snap_name = "examiner_snapshot" + ext
+    snap = os.path.join(sel["dir"], snap_name)
     with open(snap, "wb") as fh:
         fh.write(raw)
-    deps = _selection_snapshot_deps(sel["examiner"], raw, sel["dir"]) if ext == ".py" else []
     sel["examiner_exec"] = snap
     sel["examiner_snapshot_deps"] = deps
-    sel["public"]["examiner_snapshot"] = os.path.basename(snap)
+    sel["public"]["examiner_snapshot"] = snap_name
     sel["public"]["examiner_deps"] = deps
 
 
@@ -2113,7 +2169,59 @@ def _selection_policy_file(sel, cand_npz, ep, force_form=None):
     return proxy, "naked-proxy"
 
 
+def _selection_enforce_frozen_imports():
+    """W03 worker-side guard: before a selection game, every dependency
+    the freezer registered for a plain `import name` must resolve to the
+    frozen bytes in THIS process. Game workers are forked from the
+    training process and inherit its sys.modules, so a name bound after
+    the freeze -- or bound all along to a same-named module elsewhere --
+    would silently substitute the frozen copy. A name bound to identical
+    bytes (wherever the file sits) is fine; a name bound to anything else
+    kills the game loudly by name; an unbound name is loaded from its
+    snapshot path under its plain name (spec load, __file__ verified to
+    be the snapshot copy) so the examiner's own imports find the frozen
+    module first."""
+    if not _SELECTION_FROZEN_IMPORTS:
+        return
+    import importlib.util as _ilu
+    for name, (md5, snap_path) in sorted(_SELECTION_FROZEN_IMPORTS.items()):
+        m = sys.modules.get(name)
+        if m is not None:
+            f = getattr(m, "__file__", None)
+            if f and os.path.abspath(f) == os.path.abspath(snap_path):
+                continue            # the frozen copy itself, already loaded
+            if f and os.path.isfile(f) and _selection_md5(f) == md5:
+                continue            # identical bytes under another path
+            raise RuntimeError(
+                f"selection: sys.modules[{name!r}] is bound to {f!r}, not "
+                f"the frozen examiner dependency {snap_path!r} (md5 {md5}) "
+                "-- refusing to play a selection game against a substituted "
+                "dependency")
+        spec = _ilu.spec_from_file_location(
+            name, snap_path,
+            submodule_search_locations=[os.path.dirname(snap_path)]
+            if os.path.basename(snap_path) == "__init__.py" else None)
+        mod = _ilu.module_from_spec(spec)
+        sys.modules[name] = mod
+        try:
+            spec.loader.exec_module(mod)
+        except BaseException as e:
+            sys.modules.pop(name, None)
+            raise RuntimeError(
+                f"selection: frozen examiner dependency {name!r} failed to "
+                f"load from its snapshot {snap_path!r}: {e!r} -- refusing to "
+                "play a selection game against an unloadable dependency")
+        if os.path.abspath(getattr(mod, "__file__", "") or "") != \
+                os.path.abspath(snap_path):
+            sys.modules.pop(name, None)
+            raise RuntimeError(
+                f"selection: frozen examiner dependency {name!r} loaded "
+                f"from {getattr(mod, '__file__', None)!r}, not its snapshot "
+                f"{snap_path!r} -- refusing to play a selection game")
+
+
 def _selection_play(task):
+    _selection_enforce_frozen_imports()
     import eval_v53
     return eval_v53.play_game(task)
 
