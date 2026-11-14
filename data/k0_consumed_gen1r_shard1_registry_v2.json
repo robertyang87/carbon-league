@@ -1,0 +1,2030 @@
+{
+ "header": {
+  "version": 2,
+  "purpose": "Condition E registry: gen1r shard1 games registered as K0-annotation-consumed before the Stage B formal split is cut",
+  "ruling": "K0 round-2 ruling condition E (reports/K0_ROUND2_RULING_20261114.md, commit 907c1059); design ruling 4438b4ab/f08b266f, supplements 714f2699/0dac1a76",
+  "rule": "these game ids may only fall on the train side or be excluded; they must never enter the test partition of the Stage B formal split",
+  "supersedes": {
+   "path": "/home/arm/junyang/carbon/data/k0_consumed_gen1r_shard1_registry.json",
+   "md5": "7801a6d20f3311b9edc29f08283f662e",
+   "bytes": 29710,
+   "note": "v1 is kept byte-identical for history. Per r4 item X10 it must not be cited as evidence again; cite this v2 instead."
+  },
+  "defect_fixed": "r4 X10: v1 replay_id degenerate (200/200 'selfplay' -- the generator's constant document id, not a per-game identifier) and no per-entry content hash.",
+  "replay_id_definition": "replay_id is the replay file stem 'selfplay-<game>'. The replay document's own id field is the constant 'selfplay' (kept verbatim in id_field_in_replay); the per-game discriminator inside the document is result.open_seed, read back from every replay file at build time and equal to game and to the index open_seed.",
+  "content_hash_definition": "sha256/md5/bytes are computed over the stored .json.gz file bytes at build time; sha256 is asserted equal to the shard index's recorded sha256 for all 200 entries.",
+  "registered_at_v1": "2026-11-14T15:47:23+08:00",
+  "built_at": "2026-11-14T16:45:47+08:00",
+  "built_by": "DGX line (X10 owner per strategy-group r4 disposition, forwarded by the war room 2026-11-14)",
+  "builder": "/home/arm/junyang/build_registry_v2.py",
+  "source_index": "/home/arm/junyang/carbon/data/gen1r_shard1/index.json",
+  "source_index_md5": "150700ee7d78593c75c4461deca07486",
+  "generation_identity": {
+   "weights_md5": "06a03d9cfeec239af3065a49fefec382",
+   "config_hash": "2b6504b124bab476e0f5fd1452d1db471fb258cd4a4c39e7eb24269402af6398"
+  },
+  "count": 200
+ },
+ "games": [
+  {
+   "game": 994400,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994400.json.gz",
+   "replay_id": "selfplay-994400",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994400,
+   "sha256": "55d713d64c002d6c204988280804da47b96c979464f4ae9740b2676338581436",
+   "md5": "6ed2623ea5102e477a373ebc22791564",
+   "bytes": 226125
+  },
+  {
+   "game": 994401,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994401.json.gz",
+   "replay_id": "selfplay-994401",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994401,
+   "sha256": "866a8ce7cc7125af8962e51f6db7b1a41686c3c13dbab35b2cec0c653a66baf5",
+   "md5": "6607fe5e71c69135787c28ffbdb61b12",
+   "bytes": 229043
+  },
+  {
+   "game": 994402,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994402.json.gz",
+   "replay_id": "selfplay-994402",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994402,
+   "sha256": "0712618c577d99eaa170b0faea279cc588ec89985f66849b5f431dab1b49d41f",
+   "md5": "7244d2b69a36bbda9cd1f12116f35d8a",
+   "bytes": 224010
+  },
+  {
+   "game": 994403,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994403.json.gz",
+   "replay_id": "selfplay-994403",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994403,
+   "sha256": "275d0c2dab97e13a9f613756c977cfe5ca40306f7447d847436ffd08e59204cf",
+   "md5": "e62829cb7d5c49683fc8b0b4b4b95012",
+   "bytes": 233705
+  },
+  {
+   "game": 994404,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994404.json.gz",
+   "replay_id": "selfplay-994404",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994404,
+   "sha256": "3cc7984b5ff49d9a0cf187ebaed509b5323d42a951e21b2234e30994e56650cd",
+   "md5": "3b12d31adc2c493ca08f089d0d0c81b6",
+   "bytes": 228195
+  },
+  {
+   "game": 994405,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994405.json.gz",
+   "replay_id": "selfplay-994405",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994405,
+   "sha256": "238305a1493a5868124dd7ce65a20a779d99a2f4eb31c442197dcf76f84cc9cc",
+   "md5": "9293882989e62e9b8e935f66721c1796",
+   "bytes": 229310
+  },
+  {
+   "game": 994406,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994406.json.gz",
+   "replay_id": "selfplay-994406",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994406,
+   "sha256": "95de1feb535cf46129f870e8d88126420f0a6c2827f953577869bf9912af1ada",
+   "md5": "fa573469fae457665a306db371f3703f",
+   "bytes": 241737
+  },
+  {
+   "game": 994407,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994407.json.gz",
+   "replay_id": "selfplay-994407",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994407,
+   "sha256": "d75b4a4e1ead77c850e5cd5d62c397712db562e20b70b9fdeeb5772a3ec038bd",
+   "md5": "1ad84fd225dbf827d688c8818c0f2e19",
+   "bytes": 226161
+  },
+  {
+   "game": 994408,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994408.json.gz",
+   "replay_id": "selfplay-994408",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994408,
+   "sha256": "10a42790256eb9e2ef3f6b9f6e58218a525993cddb2c471e74a90054f533e1f6",
+   "md5": "b547b0803969903c4527ec95db590d61",
+   "bytes": 224605
+  },
+  {
+   "game": 994409,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994409.json.gz",
+   "replay_id": "selfplay-994409",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994409,
+   "sha256": "0c0af3f9a2ddb42c134a71cbba6c52cd88ca0d1b8876555d86c00c442c44d5a5",
+   "md5": "83a65862047177d6a4c99333b8433779",
+   "bytes": 226295
+  },
+  {
+   "game": 994410,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994410.json.gz",
+   "replay_id": "selfplay-994410",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994410,
+   "sha256": "07d207f7582dc6bc867cd3212cd709303546c77546b124d3cf20ce7af658e936",
+   "md5": "da2cb01932aa8631f87be51e14f281bf",
+   "bytes": 221840
+  },
+  {
+   "game": 994411,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994411.json.gz",
+   "replay_id": "selfplay-994411",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994411,
+   "sha256": "2112e32db69628045c0f2458a4423757642169361c0331fcf10b69980eea81b4",
+   "md5": "dc1f1072785f54ad0714921864d0a008",
+   "bytes": 241352
+  },
+  {
+   "game": 994412,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994412.json.gz",
+   "replay_id": "selfplay-994412",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994412,
+   "sha256": "cc69631fbff375c87e6fe8fc95eb0522c85ce37d8475bf7569ccfe1c6a9f86ce",
+   "md5": "d8723bd73da4f61b477cea2cc1dd4e25",
+   "bytes": 223572
+  },
+  {
+   "game": 994413,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994413.json.gz",
+   "replay_id": "selfplay-994413",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994413,
+   "sha256": "e359c2ccee2d16945b01e7e5d4228a5e32dcd83f122e7a43511007581e060f58",
+   "md5": "99282dac95477692357ebd1feb6966c9",
+   "bytes": 224641
+  },
+  {
+   "game": 994414,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994414.json.gz",
+   "replay_id": "selfplay-994414",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994414,
+   "sha256": "e90579e0bf65b432dfebb6a3eca1b57969c13f20e4a5c15b298e6d1aa714a599",
+   "md5": "32f6c83e60c5290af8b66578a01eb030",
+   "bytes": 238274
+  },
+  {
+   "game": 994415,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994415.json.gz",
+   "replay_id": "selfplay-994415",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994415,
+   "sha256": "696bd7daad671c4ef38f9c36b0cf4c23bb2ce8ea2997a515b2194aee6ef435a2",
+   "md5": "5e9d3414079f957593601f9e7ec4550e",
+   "bytes": 234495
+  },
+  {
+   "game": 994416,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994416.json.gz",
+   "replay_id": "selfplay-994416",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994416,
+   "sha256": "16044e05a7e259ff61dfed51b9c86cc1afae381260723f52b7a724355a337cd6",
+   "md5": "4a43a4b2b05e02f8b58bbd920e9b9a7f",
+   "bytes": 232307
+  },
+  {
+   "game": 994417,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994417.json.gz",
+   "replay_id": "selfplay-994417",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994417,
+   "sha256": "73318e520fcb5bf40b39576c7d3511ce48a436218b9bbb188b89a464964f1862",
+   "md5": "bf480bcf7872db9beaa203c894db2d7f",
+   "bytes": 218692
+  },
+  {
+   "game": 994418,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994418.json.gz",
+   "replay_id": "selfplay-994418",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994418,
+   "sha256": "e62c3704d47f08764d18bb085a4bbd1dc6e5cf2a5cdd35fec22f66e0f60d8eaf",
+   "md5": "bee780dddd6ebd1227afdaf435d1c4a0",
+   "bytes": 224452
+  },
+  {
+   "game": 994419,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994419.json.gz",
+   "replay_id": "selfplay-994419",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994419,
+   "sha256": "b462a6fa623e49cfbc5f72fa8d37a313d93081cfdb260deb83ee55beb7159d8d",
+   "md5": "b140ccfb548d3a920fa98f8b272cd37f",
+   "bytes": 223098
+  },
+  {
+   "game": 994420,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994420.json.gz",
+   "replay_id": "selfplay-994420",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994420,
+   "sha256": "ccff54a62f3f8d8e3c4b2f5368d5341f33e3af5d74794c368b82d11aec9810f8",
+   "md5": "49368af633e9e11b78b24dc9dc9af4e2",
+   "bytes": 229487
+  },
+  {
+   "game": 994421,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994421.json.gz",
+   "replay_id": "selfplay-994421",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994421,
+   "sha256": "7691bab6443e35023ddaefb96d51ff6f9eecbe868578eb2e7a79957427cd5401",
+   "md5": "48391c22e6adc401592e9a47eae6d285",
+   "bytes": 229803
+  },
+  {
+   "game": 994422,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994422.json.gz",
+   "replay_id": "selfplay-994422",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994422,
+   "sha256": "35e90652e3c4fcf082003127ec9d9fd3811415cef1e6b0b04384cab7111726bc",
+   "md5": "b4cafd38993ab3ea14b7981f9406cb40",
+   "bytes": 223991
+  },
+  {
+   "game": 994423,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994423.json.gz",
+   "replay_id": "selfplay-994423",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994423,
+   "sha256": "0266a6bbdfad09de7658cb2ac96b790a4520fe90d1dacbfeac9a0596d04e638c",
+   "md5": "68e6102e0075766c0aecdd89fa3e381e",
+   "bytes": 227175
+  },
+  {
+   "game": 994424,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994424.json.gz",
+   "replay_id": "selfplay-994424",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994424,
+   "sha256": "a37ad5e7b00dc2451cb59df9d1aa532b1ae51dfff07130095b56d71eda0348bd",
+   "md5": "a94976876248ab47604ed780c49c881b",
+   "bytes": 226157
+  },
+  {
+   "game": 994425,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994425.json.gz",
+   "replay_id": "selfplay-994425",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994425,
+   "sha256": "3fbf0fabb3824d4fb64afa662dc0101267114aee7b0e9ccd05a77e5b7b58b8dc",
+   "md5": "3793b4f70ad0c213eb3e47f47118d371",
+   "bytes": 231558
+  },
+  {
+   "game": 994426,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994426.json.gz",
+   "replay_id": "selfplay-994426",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994426,
+   "sha256": "3a9cb8f0fb624a61d54f47fa07641eeb2dc86de205e0e18fc7a7e2e7d67eec25",
+   "md5": "f6ca96d5f5ca3682e5213e4116a0c77b",
+   "bytes": 240812
+  },
+  {
+   "game": 994427,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994427.json.gz",
+   "replay_id": "selfplay-994427",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994427,
+   "sha256": "5321db8e86e2cfd93b8a5de29734bbf4b5dd88e97ba39af9d41d1799b831c4b0",
+   "md5": "1e53e3376fbfe0f53b67990baf23720d",
+   "bytes": 219508
+  },
+  {
+   "game": 994428,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994428.json.gz",
+   "replay_id": "selfplay-994428",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994428,
+   "sha256": "44a71f48434ed2dede7179695553dab1ab0fb41c5b35a2bbd893505cdb9fa467",
+   "md5": "0346731eba96015054d0c7fb71db37c0",
+   "bytes": 237724
+  },
+  {
+   "game": 994429,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994429.json.gz",
+   "replay_id": "selfplay-994429",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994429,
+   "sha256": "3692041bed21eead37c74af2599219fbfad09e2459d6c941758606d791b4880a",
+   "md5": "6e7a142af2fd5eefbcb3024f903870b9",
+   "bytes": 230987
+  },
+  {
+   "game": 994430,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994430.json.gz",
+   "replay_id": "selfplay-994430",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994430,
+   "sha256": "0af090c11ffa099a9b9e23e22be779186fd260ad65cf9705b35bbe5fd9ed472d",
+   "md5": "d0781d247e03ba7fc81b3ad0a0f553c1",
+   "bytes": 229115
+  },
+  {
+   "game": 994431,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994431.json.gz",
+   "replay_id": "selfplay-994431",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994431,
+   "sha256": "577f7b9345f0773c3bb25bf44eac4229b6c059e04603651809669419281bb28a",
+   "md5": "60851ea98ac03926cb245080939e99bc",
+   "bytes": 212999
+  },
+  {
+   "game": 994432,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994432.json.gz",
+   "replay_id": "selfplay-994432",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994432,
+   "sha256": "88b0a19fa8eb27ca6767398d5790641c63ae048d438cae0be1034a24b84e1edd",
+   "md5": "12974c48372836c5184f5f769b6b3c60",
+   "bytes": 228951
+  },
+  {
+   "game": 994433,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994433.json.gz",
+   "replay_id": "selfplay-994433",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994433,
+   "sha256": "57eac80c819959d4cea19a3aaac60c63a2412708ae0e1908b7d8d051c8f38391",
+   "md5": "75813e55ebddc093395d7330b7bdeb17",
+   "bytes": 236190
+  },
+  {
+   "game": 994434,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994434.json.gz",
+   "replay_id": "selfplay-994434",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994434,
+   "sha256": "7ee053b43461faf79061173a428be77b65243a99d8e354cfa0a8411f7d5ba0eb",
+   "md5": "6afae7d762aa7bf404a6ce01f9b323e0",
+   "bytes": 224507
+  },
+  {
+   "game": 994435,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994435.json.gz",
+   "replay_id": "selfplay-994435",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994435,
+   "sha256": "63d7aa30413938fe1eb07d17ab5a380f3e4e5d6a51647e632fdec1be8c98c0f3",
+   "md5": "311075fcfc2ad317925baacfe693ed8c",
+   "bytes": 233682
+  },
+  {
+   "game": 994436,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994436.json.gz",
+   "replay_id": "selfplay-994436",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994436,
+   "sha256": "a5e5bca8a316207683db27a0a226ab7be1119d1131e31af751f78b6974d8fcbc",
+   "md5": "8bfe449d0e8e1a59420d453c2ed47a48",
+   "bytes": 228107
+  },
+  {
+   "game": 994437,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994437.json.gz",
+   "replay_id": "selfplay-994437",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994437,
+   "sha256": "b1fd3470500807c10385154323d766ec6f6fd74a5a90b70ed626045d178fd059",
+   "md5": "92a93e2bec6414e2af35076d65b9bd66",
+   "bytes": 224232
+  },
+  {
+   "game": 994438,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994438.json.gz",
+   "replay_id": "selfplay-994438",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994438,
+   "sha256": "14bebd88d6cd7a771b7d9e68e9d94afb61fa9c34157c359509b2e06317f7b2fe",
+   "md5": "c54364b99662a54c858e57dd9ce06863",
+   "bytes": 222442
+  },
+  {
+   "game": 994439,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994439.json.gz",
+   "replay_id": "selfplay-994439",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994439,
+   "sha256": "8e1584d542710c4ea1648bd93d63ff4a1334b98bb4433cb6c189f995b95eff26",
+   "md5": "8009becd887e707b214d2eaf2f475cbb",
+   "bytes": 233180
+  },
+  {
+   "game": 994440,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994440.json.gz",
+   "replay_id": "selfplay-994440",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994440,
+   "sha256": "f8ce5de71b5929c55d74152c6b9533f9cd85a863f29f6ed2a5c329692fb6a3a0",
+   "md5": "978a195befcc3b2daa5a7a0960f08277",
+   "bytes": 244501
+  },
+  {
+   "game": 994441,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994441.json.gz",
+   "replay_id": "selfplay-994441",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994441,
+   "sha256": "66003a4b1f165c1278e6b607c511cd479eda5ac62af3d62d40a94094ac4beea3",
+   "md5": "625c02acde723ce3cd3fced6a21875d8",
+   "bytes": 228855
+  },
+  {
+   "game": 994442,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994442.json.gz",
+   "replay_id": "selfplay-994442",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994442,
+   "sha256": "1fd7e19a3cbf5184dc687e33ff578a80e2965ab6b8d6cd932b7ba725c431700b",
+   "md5": "ebc12055aeb371d6f2c303ef8d19ed7d",
+   "bytes": 235158
+  },
+  {
+   "game": 994443,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994443.json.gz",
+   "replay_id": "selfplay-994443",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994443,
+   "sha256": "457b3f15051b9f0273be2a3e5c9006fa39a331490b8611f26360feee19e043c1",
+   "md5": "923ebc12bf4616ae0afb756b00599b8d",
+   "bytes": 222999
+  },
+  {
+   "game": 994444,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994444.json.gz",
+   "replay_id": "selfplay-994444",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994444,
+   "sha256": "8bb520771b77ad59f69fb1354b4f8729c73dd657ef6fb4ca7ac10de8abd01635",
+   "md5": "86568c46d7dfd13d3d070f3f4e5742b5",
+   "bytes": 236680
+  },
+  {
+   "game": 994445,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994445.json.gz",
+   "replay_id": "selfplay-994445",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994445,
+   "sha256": "47722934e08e575cab677729d6496ac3f755a4884e74fe91d5cc1ece9c5a67b8",
+   "md5": "bab74b68a46b5e2156eba6345d6170f0",
+   "bytes": 230498
+  },
+  {
+   "game": 994446,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994446.json.gz",
+   "replay_id": "selfplay-994446",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994446,
+   "sha256": "424d1e34d33a3a0a4649f6a9d2b92be35a1bb3bac6af9c928affa3f7812c91d8",
+   "md5": "9598bd5c8baeda5c1cc3e4a7eaf3d5d1",
+   "bytes": 214807
+  },
+  {
+   "game": 994447,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994447.json.gz",
+   "replay_id": "selfplay-994447",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994447,
+   "sha256": "c90dac0154c588e91d6b63f6e9d2a7972e64ab4cf668d26b5d63bd3e6b273a07",
+   "md5": "f2cfe0e5f796df392ec23da7395b3fac",
+   "bytes": 239548
+  },
+  {
+   "game": 994448,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994448.json.gz",
+   "replay_id": "selfplay-994448",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994448,
+   "sha256": "7bb0b803cc2def6ce1fb158f2bc327abad6015c6ac2f8b8283c7d660b93cb7e4",
+   "md5": "994aabfb6f50f3c655a89dadc0551d31",
+   "bytes": 224834
+  },
+  {
+   "game": 994449,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994449.json.gz",
+   "replay_id": "selfplay-994449",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994449,
+   "sha256": "bd95153bf3faa8c3c74d5eb239c05771d595f9953acbdf82703803042cb2b0e3",
+   "md5": "0a0cd05b320ef91859fb2fe1cb70b01a",
+   "bytes": 228721
+  },
+  {
+   "game": 994450,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994450.json.gz",
+   "replay_id": "selfplay-994450",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994450,
+   "sha256": "47b58b7558c8bab4f4153f0951d7722beba63a0b6e5c13562ccade7bcaf0b410",
+   "md5": "e842f9def2e520e47ae890a03cb92307",
+   "bytes": 235239
+  },
+  {
+   "game": 994451,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994451.json.gz",
+   "replay_id": "selfplay-994451",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994451,
+   "sha256": "4631cc29f2a2e3b88ecc0605af47be89f1c478bf7d9e53bfce356c18083c613c",
+   "md5": "80291f8f9558ecda391479e32eb0c4db",
+   "bytes": 241362
+  },
+  {
+   "game": 994452,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994452.json.gz",
+   "replay_id": "selfplay-994452",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994452,
+   "sha256": "8236f2905b9e9b6266467bd2a17213fb07056fb326f7a3ae6e1bb47d9ae4d704",
+   "md5": "d6545aba34163916b49cc3f1908de17a",
+   "bytes": 234866
+  },
+  {
+   "game": 994453,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994453.json.gz",
+   "replay_id": "selfplay-994453",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994453,
+   "sha256": "d190b5b6e3fc65bc71bea77f0efc23e4e1cb3ec8c2f044e0ba67b90b16ccf114",
+   "md5": "ff4f7a093e9e62910e3741c8650276cd",
+   "bytes": 231488
+  },
+  {
+   "game": 994454,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994454.json.gz",
+   "replay_id": "selfplay-994454",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994454,
+   "sha256": "a2c3c7d9cb824f18994349c0f5dd1f64952f76471fabe3d1ee0d3c5a2bf296aa",
+   "md5": "b53079e9a2df1f44d6db23415fbaf605",
+   "bytes": 228476
+  },
+  {
+   "game": 994455,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994455.json.gz",
+   "replay_id": "selfplay-994455",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994455,
+   "sha256": "5996b3adcc32424f084acfba1a5c6bab329ae966ef32a18885151d56a8d26612",
+   "md5": "6cdb4b7e5206e68b97375d2c9517f36a",
+   "bytes": 226762
+  },
+  {
+   "game": 994456,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994456.json.gz",
+   "replay_id": "selfplay-994456",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994456,
+   "sha256": "d910ab1c898ce30cd1c2418fd534ee1048d27cef4c8eed67d168c33fb89ee06a",
+   "md5": "f8333138d383cded1a0b41084580f43b",
+   "bytes": 225568
+  },
+  {
+   "game": 994457,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994457.json.gz",
+   "replay_id": "selfplay-994457",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994457,
+   "sha256": "1e5a79e55a00402dd923af83276d0c7943fa48e806d4618ac621b02792807b10",
+   "md5": "26374b784b33a7d68e2af341d6d61d94",
+   "bytes": 232023
+  },
+  {
+   "game": 994458,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994458.json.gz",
+   "replay_id": "selfplay-994458",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994458,
+   "sha256": "8a5f3d0e863af30ffeda928b1d9c099d453bbb49ab5fd5e103e50f437e681df8",
+   "md5": "37cc5fff306486038c4bd8d84df7d583",
+   "bytes": 235778
+  },
+  {
+   "game": 994459,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994459.json.gz",
+   "replay_id": "selfplay-994459",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994459,
+   "sha256": "b7c32f4ab6f4754a3be76e467bf9fe767ac5a17ff23152438f0f0647b1f5d4cd",
+   "md5": "26e29d21c627384dd460ac23ceed63a9",
+   "bytes": 227492
+  },
+  {
+   "game": 994460,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994460.json.gz",
+   "replay_id": "selfplay-994460",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994460,
+   "sha256": "4ece56a92c46da32cef6acdc1abfb2590c21949430ba0c1e3970827753fc6893",
+   "md5": "356ca5f1c20794613df2a61cb9a31755",
+   "bytes": 222295
+  },
+  {
+   "game": 994461,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994461.json.gz",
+   "replay_id": "selfplay-994461",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994461,
+   "sha256": "b7fde4ea2543d342477a555636a963984661e864f43321ae72cc2c2f26d2fda6",
+   "md5": "a68fe9d656c58199199c328a8a75f9e0",
+   "bytes": 231441
+  },
+  {
+   "game": 994462,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994462.json.gz",
+   "replay_id": "selfplay-994462",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994462,
+   "sha256": "9415d5c8bc968bba981ba55f1027d6d7570bbb77d059f0f31b936cb7c3fbf8cb",
+   "md5": "d86f265707c024a54bbf3b787ffe37a7",
+   "bytes": 226218
+  },
+  {
+   "game": 994463,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994463.json.gz",
+   "replay_id": "selfplay-994463",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994463,
+   "sha256": "c3a3bda831894dcad06e87cb3994b99638091620ef6f21507482585443e4613d",
+   "md5": "3800de8c3294fece524a95236823dc81",
+   "bytes": 232006
+  },
+  {
+   "game": 994464,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994464.json.gz",
+   "replay_id": "selfplay-994464",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994464,
+   "sha256": "87956be5213af058d96cb9f812e8e867a1e1715ba3f11c82330bd54af6e22e6d",
+   "md5": "5d261ddff5f7bb25bb9216132f7c24bd",
+   "bytes": 230841
+  },
+  {
+   "game": 994465,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994465.json.gz",
+   "replay_id": "selfplay-994465",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994465,
+   "sha256": "c9aed04079797cc2f67feb5191936d57ea1836d47e2a05df845bf5b320bce77a",
+   "md5": "330042b934836f46a14fac7ca7db46e7",
+   "bytes": 235510
+  },
+  {
+   "game": 994466,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994466.json.gz",
+   "replay_id": "selfplay-994466",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994466,
+   "sha256": "1f4f1ad1709fb6331143a06a7ad069c4b67a010e5977ae8951e2ceff9db150c7",
+   "md5": "e67d4500ee0bb0070a6a696164bc6e2c",
+   "bytes": 234165
+  },
+  {
+   "game": 994467,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994467.json.gz",
+   "replay_id": "selfplay-994467",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994467,
+   "sha256": "202c9b012053fcf28c5f1f851e0697e4f742d2ba3deecc5bb52f481d8e4d21c5",
+   "md5": "c88a75ccf1efc785dc27d4096985f003",
+   "bytes": 233200
+  },
+  {
+   "game": 994468,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994468.json.gz",
+   "replay_id": "selfplay-994468",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994468,
+   "sha256": "2ec4897eecdb8f1378dd0bf50d93e544cddc86a8638e35efb3819c68607d7456",
+   "md5": "7340e957a0f5a5e793790368440e71f0",
+   "bytes": 231083
+  },
+  {
+   "game": 994469,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994469.json.gz",
+   "replay_id": "selfplay-994469",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994469,
+   "sha256": "85e18f446793822c31d72cd78fafd672b5ef7814239bd3cf4b847c39af2d1d1f",
+   "md5": "019f36b2a2251f221a2d50903b4ac187",
+   "bytes": 244190
+  },
+  {
+   "game": 994470,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994470.json.gz",
+   "replay_id": "selfplay-994470",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994470,
+   "sha256": "c8d9294ace95d40078f6598d366c00e15a7c215f56ff62bd37e56b131251d399",
+   "md5": "d5e0348644e4f379d788bdf9d393d875",
+   "bytes": 225353
+  },
+  {
+   "game": 994471,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994471.json.gz",
+   "replay_id": "selfplay-994471",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994471,
+   "sha256": "561c4679aaafc56999df5480915b1447fafd76d847efb03e9260267304aa9ddb",
+   "md5": "a198cf09a3db668e41b70778c6afd3bd",
+   "bytes": 216626
+  },
+  {
+   "game": 994472,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994472.json.gz",
+   "replay_id": "selfplay-994472",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994472,
+   "sha256": "bcc5b40143c202af7c62e6748e652cd8f84437227c8e98b76c156fa565f33ab7",
+   "md5": "a550573e86aacaa95e25cbc534741e43",
+   "bytes": 230284
+  },
+  {
+   "game": 994473,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994473.json.gz",
+   "replay_id": "selfplay-994473",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994473,
+   "sha256": "5dbd931324916b5b9213f779b28c89c01e788fa090013b40980fc96ae8b86c2c",
+   "md5": "7c1cb650459be3629cc0c76cd52f2313",
+   "bytes": 230592
+  },
+  {
+   "game": 994474,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994474.json.gz",
+   "replay_id": "selfplay-994474",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994474,
+   "sha256": "cb162ccea572b52357c24aea10f586ef034dc5880f6ae9eca71bf38433601c25",
+   "md5": "9c10433d83ed18e2e6cb74d973aee3f0",
+   "bytes": 234756
+  },
+  {
+   "game": 994475,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994475.json.gz",
+   "replay_id": "selfplay-994475",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994475,
+   "sha256": "3b819eac3fdf484406b3d4503a291b92a5b7d42f71318c40516548971219281e",
+   "md5": "1950e60cacb1eaf8de1f55ae729f01c4",
+   "bytes": 234175
+  },
+  {
+   "game": 994476,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994476.json.gz",
+   "replay_id": "selfplay-994476",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994476,
+   "sha256": "0fa227fe79e37ee6b821f5d4dfc8178812500ef8b389ba8c3909b15b1efdfd91",
+   "md5": "33dd6af1f52b4a5fd116936351740d4f",
+   "bytes": 228695
+  },
+  {
+   "game": 994477,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994477.json.gz",
+   "replay_id": "selfplay-994477",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994477,
+   "sha256": "b64757b769874870eab1571e73ba2bebb0d863674986153f5de397e2950c0e44",
+   "md5": "ad1650a364063f34c22873a1b97704be",
+   "bytes": 229259
+  },
+  {
+   "game": 994478,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994478.json.gz",
+   "replay_id": "selfplay-994478",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994478,
+   "sha256": "dfdcb03de1bbb166bd1165148424c603f92a168db51d7f71ed4ecb7b35e8a299",
+   "md5": "0da3b9ae07c76c77ddacf1b72a9071ed",
+   "bytes": 229795
+  },
+  {
+   "game": 994479,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994479.json.gz",
+   "replay_id": "selfplay-994479",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994479,
+   "sha256": "72099621a93765fa1778141b96abc5ad1286051aedb8a9958c56d2cdcf719ee3",
+   "md5": "974bafda58e3a9470d3db8836a8a9afe",
+   "bytes": 230514
+  },
+  {
+   "game": 994480,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994480.json.gz",
+   "replay_id": "selfplay-994480",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994480,
+   "sha256": "72d5296f9e93f8751af5369321179d1130cf13399c0f2dc0292d3c18bfa8dab5",
+   "md5": "476a731307001002149c66ed31d713c3",
+   "bytes": 239436
+  },
+  {
+   "game": 994481,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994481.json.gz",
+   "replay_id": "selfplay-994481",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994481,
+   "sha256": "3f327873947851cd4345cce2c347d7fb0151996d983913b21d41b96f7ecc05db",
+   "md5": "ea0be4decf579daf9fc6fb31fca8135e",
+   "bytes": 234462
+  },
+  {
+   "game": 994482,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994482.json.gz",
+   "replay_id": "selfplay-994482",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994482,
+   "sha256": "ca6a2fcd8902464dfd389aeaf9bc6df975e79497b01597bbf9c1b1a9a7e02f56",
+   "md5": "422eee9d9a6c15c1082e22350a85107f",
+   "bytes": 225578
+  },
+  {
+   "game": 994483,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994483.json.gz",
+   "replay_id": "selfplay-994483",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994483,
+   "sha256": "ece68a4ac3e4b46128c1216440eff199006ace91432e967fd9b53bbbbeefba5e",
+   "md5": "e324b004741e21ee38362f6dff93e908",
+   "bytes": 235840
+  },
+  {
+   "game": 994484,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994484.json.gz",
+   "replay_id": "selfplay-994484",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994484,
+   "sha256": "3c2fc5cbff4088a9a53e3a983e2f821895655a3cc3d31f4e9f96c7512c9685d4",
+   "md5": "dd12538995f27e3abe47f65bb7a79cbb",
+   "bytes": 229672
+  },
+  {
+   "game": 994485,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994485.json.gz",
+   "replay_id": "selfplay-994485",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994485,
+   "sha256": "ef72cfbec24198089b9a2d89520d74042c917d35cbe5a5ac762323dfdd77146d",
+   "md5": "b94b6ae96d896ec721717b28f4b10789",
+   "bytes": 232268
+  },
+  {
+   "game": 994486,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994486.json.gz",
+   "replay_id": "selfplay-994486",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994486,
+   "sha256": "230f68718f9860d15be900184c8fc8a2968072dbab057e96d3c56117f65d7f9a",
+   "md5": "18c5d736d4aa40c35a54995deae18c88",
+   "bytes": 231178
+  },
+  {
+   "game": 994487,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994487.json.gz",
+   "replay_id": "selfplay-994487",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994487,
+   "sha256": "e5db87be9575186c992d4e5f31dc6cddb111391ebe6bfd68ea572564addc892a",
+   "md5": "db81d6c0bd366e2a77708d55a6650356",
+   "bytes": 225104
+  },
+  {
+   "game": 994488,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994488.json.gz",
+   "replay_id": "selfplay-994488",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994488,
+   "sha256": "fd42dc6b2e35935939a0ec608a21f81c780173095a7007d369a5d92084aba87b",
+   "md5": "84503c2030acdb4f752b61711f65a737",
+   "bytes": 234324
+  },
+  {
+   "game": 994489,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994489.json.gz",
+   "replay_id": "selfplay-994489",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994489,
+   "sha256": "964c6e3dd994309a2b55ecfd57375662923b9f738c4627c46c295102ceb41d81",
+   "md5": "c9101e427ea6373d07217fe6a13b769a",
+   "bytes": 234330
+  },
+  {
+   "game": 994490,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994490.json.gz",
+   "replay_id": "selfplay-994490",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994490,
+   "sha256": "ee19d0f891fe0b829382e77ee1235ee571a6f2d1b945920a9b74e609cba8e05b",
+   "md5": "d19b3127ebc7ad8f3c9c5340bc318ff0",
+   "bytes": 226020
+  },
+  {
+   "game": 994491,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994491.json.gz",
+   "replay_id": "selfplay-994491",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994491,
+   "sha256": "87150282fa509bf190394c497537cef2409b40a7d6307227133a8775e777a7e9",
+   "md5": "7dab360beb72da72fb915fcbd446f2b8",
+   "bytes": 230630
+  },
+  {
+   "game": 994492,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994492.json.gz",
+   "replay_id": "selfplay-994492",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994492,
+   "sha256": "2592e9933bdcfc07012c4f8fe5c9f6ea09971e8b34f55cba6b4b660bed4e706c",
+   "md5": "24fe41583323629ea875330d17580f79",
+   "bytes": 236885
+  },
+  {
+   "game": 994493,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994493.json.gz",
+   "replay_id": "selfplay-994493",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994493,
+   "sha256": "89805cc8587b24d250eef753c5b23b8652ce3b75454892a11bcfa0e85ee0da0a",
+   "md5": "ee71057f59dd143ded7b54866e39763f",
+   "bytes": 232777
+  },
+  {
+   "game": 994494,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994494.json.gz",
+   "replay_id": "selfplay-994494",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994494,
+   "sha256": "d51e2e1639c2f129ebcb502381fafa876aa656213fb92065f400476fd547a3b2",
+   "md5": "bad83d9676c8f10c8d5a5255bf6ad622",
+   "bytes": 229354
+  },
+  {
+   "game": 994495,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994495.json.gz",
+   "replay_id": "selfplay-994495",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994495,
+   "sha256": "adee493e5e1a37932ff315acdd139e7e70d33ead11b6ad90c58db242c5d20a57",
+   "md5": "d838c9a6f5a8c782613e01e3695e3e70",
+   "bytes": 231963
+  },
+  {
+   "game": 994496,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994496.json.gz",
+   "replay_id": "selfplay-994496",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994496,
+   "sha256": "8c58bc811afccae2f52373d667b517fac6e55cd5cf95ca7b87afed0240ddfb1e",
+   "md5": "11ffb75998ab5309cfc457f75c46b63b",
+   "bytes": 232661
+  },
+  {
+   "game": 994497,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994497.json.gz",
+   "replay_id": "selfplay-994497",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994497,
+   "sha256": "2170961e16fe28fd4bb5c22a6944318914a82286131766791f6a58e68201f625",
+   "md5": "ae7e856e3368fb41db478a435afdd8ba",
+   "bytes": 216509
+  },
+  {
+   "game": 994498,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994498.json.gz",
+   "replay_id": "selfplay-994498",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994498,
+   "sha256": "c960e9564147fe416d5fc36508bbd35b0b00161e9ea14b5cebe7088393d80fed",
+   "md5": "06cb239f2be34024ee2f9db88b01c8fb",
+   "bytes": 232815
+  },
+  {
+   "game": 994499,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994499.json.gz",
+   "replay_id": "selfplay-994499",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994499,
+   "sha256": "7360af1d4e15f4b9798c38669bda105844cb08214590548ee578b8d752a0ab84",
+   "md5": "9a04890b79c2ee05e8699e050126b294",
+   "bytes": 226034
+  },
+  {
+   "game": 994500,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994500.json.gz",
+   "replay_id": "selfplay-994500",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994500,
+   "sha256": "5f87f3e2570829a2a46d79700580cba348028bec40e44a3a09433bcd5b75963d",
+   "md5": "730fb88ae411def9fa7ece8f7d2bc79e",
+   "bytes": 227418
+  },
+  {
+   "game": 994501,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994501.json.gz",
+   "replay_id": "selfplay-994501",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994501,
+   "sha256": "f72213ab32c5e6ef5cb92d3cb806e5dee6b00d093b04a62cd0c8171ace5a3f36",
+   "md5": "95b399a391ed3f1850ef19282776609f",
+   "bytes": 227919
+  },
+  {
+   "game": 994502,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994502.json.gz",
+   "replay_id": "selfplay-994502",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994502,
+   "sha256": "f65ff643fe676878b26413b866fdf9ea488e8c40c038767e25311f3ced20397a",
+   "md5": "d47df370319f5d3a47d7728278ba511f",
+   "bytes": 239078
+  },
+  {
+   "game": 994503,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994503.json.gz",
+   "replay_id": "selfplay-994503",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994503,
+   "sha256": "f3b5b04d2501d248ac5991a52011124ea0c1e16a36632077f7fbab9b679ed350",
+   "md5": "bec714d11b12d6d5d8be6b16c86ad878",
+   "bytes": 224363
+  },
+  {
+   "game": 994504,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994504.json.gz",
+   "replay_id": "selfplay-994504",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994504,
+   "sha256": "b9dd5392a3608ecdbce15496c7468d3cb77b8cf2d4fa9888cff30bbe98a2e3b9",
+   "md5": "68d6862304bd1440ed4245068357c3b9",
+   "bytes": 226120
+  },
+  {
+   "game": 994505,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994505.json.gz",
+   "replay_id": "selfplay-994505",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994505,
+   "sha256": "2384b4a9104cdb8e739d66b9d71a03f2ff9d1bd7ac57a48acf85c0460868d636",
+   "md5": "a3d7989e4ccd2cb57a5c5d51d7cad67c",
+   "bytes": 226835
+  },
+  {
+   "game": 994506,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994506.json.gz",
+   "replay_id": "selfplay-994506",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994506,
+   "sha256": "89a3805365203d8cff8b2fed819f319b284485862d1aceb5d53d1361a6534d1e",
+   "md5": "51750e08f44b86cb30c7e0cd450976f4",
+   "bytes": 231207
+  },
+  {
+   "game": 994507,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994507.json.gz",
+   "replay_id": "selfplay-994507",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994507,
+   "sha256": "f8f090d5774b85de36c93c4d74bd7aa2bdd62f255ce28b123c3b23a6f42b164d",
+   "md5": "2585d5bb0a798a653d3ef043f5ec1817",
+   "bytes": 232272
+  },
+  {
+   "game": 994508,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994508.json.gz",
+   "replay_id": "selfplay-994508",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994508,
+   "sha256": "f9d9a5ec01b4c7c873826d4a3f55d85d893e6c889779ea2375da1cc257ed6034",
+   "md5": "9cfb5fdec7d51472dd2d0cce3cf47bb0",
+   "bytes": 229096
+  },
+  {
+   "game": 994509,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994509.json.gz",
+   "replay_id": "selfplay-994509",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994509,
+   "sha256": "fe698dbea6c2b402db7c58d7babf5acbcf0e37b3450591bc494995b05ef6734e",
+   "md5": "5044c33439e33d7f6b94958b40ffd8e8",
+   "bytes": 220725
+  },
+  {
+   "game": 994510,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994510.json.gz",
+   "replay_id": "selfplay-994510",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994510,
+   "sha256": "6af72699a7eb0d0e2554ab4abd97d09a16acc217e7a31072ae9fa461f92ce9fd",
+   "md5": "d19496b67628fa66209957aa7f545ac2",
+   "bytes": 232310
+  },
+  {
+   "game": 994511,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994511.json.gz",
+   "replay_id": "selfplay-994511",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994511,
+   "sha256": "8837cd6fe2d0f3c384d434f99cc0637595d4606f498428741074715963aa35c4",
+   "md5": "454c0551e30958a3695cea8bbca5f2bb",
+   "bytes": 216051
+  },
+  {
+   "game": 994512,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994512.json.gz",
+   "replay_id": "selfplay-994512",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994512,
+   "sha256": "050301383856c8a0c2267f7298135a68b17491adc252af19a8679aa4e5eefa16",
+   "md5": "2f9e4983019839998b323af21a1e9f09",
+   "bytes": 235139
+  },
+  {
+   "game": 994513,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994513.json.gz",
+   "replay_id": "selfplay-994513",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994513,
+   "sha256": "04238def08bc693d5f656a53fcddd96c3c9b1887113b3a1e6e9e9d920763ffcd",
+   "md5": "5e6ce691b886d68942ab9c1c8024a5a2",
+   "bytes": 233956
+  },
+  {
+   "game": 994514,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994514.json.gz",
+   "replay_id": "selfplay-994514",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994514,
+   "sha256": "b75859fd066cbec0c76f2eebcb55e2c0b59f10f5ed47b657457e7c3f3d2bb20d",
+   "md5": "d48f7c349bb34539ed1b6b52548195b4",
+   "bytes": 228403
+  },
+  {
+   "game": 994515,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994515.json.gz",
+   "replay_id": "selfplay-994515",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994515,
+   "sha256": "cd16893dc445cd890fe946edfd1b71885395b6d38a4543f95f0939aecfef28d9",
+   "md5": "b4cef769f380308a03b02a4a85d1e4d5",
+   "bytes": 237320
+  },
+  {
+   "game": 994516,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994516.json.gz",
+   "replay_id": "selfplay-994516",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994516,
+   "sha256": "93487a979791e38f3765a889c5a77a3cd7ee8ea2ec589b2d8471ef50681dfd7a",
+   "md5": "821790a510413437a342ff2c75deb750",
+   "bytes": 228036
+  },
+  {
+   "game": 994517,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994517.json.gz",
+   "replay_id": "selfplay-994517",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994517,
+   "sha256": "a7bc079137feac3394dbb06eb5fc71ae588adf4a8229cdc43ef4d48c0a06850b",
+   "md5": "9950545c719cafa23c3f3af8f389e6d9",
+   "bytes": 229669
+  },
+  {
+   "game": 994518,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994518.json.gz",
+   "replay_id": "selfplay-994518",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994518,
+   "sha256": "768b3cf3477e3f90d34d58cf465855e54301d7541e8a7dd16fd1f775875bd7f3",
+   "md5": "80ec64952a04adb6199de3dbdb2892dc",
+   "bytes": 226108
+  },
+  {
+   "game": 994519,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994519.json.gz",
+   "replay_id": "selfplay-994519",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994519,
+   "sha256": "b4c760fb099a3db51cf8b81e9e910e3c212bb870fc916eca5826851df5d04ac0",
+   "md5": "d4abdd673aad15e7637d32162330e4cc",
+   "bytes": 232570
+  },
+  {
+   "game": 994520,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994520.json.gz",
+   "replay_id": "selfplay-994520",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994520,
+   "sha256": "47c902d8151d5648b46da2f9da3bc1be13dccf9ee66b8f6b7b0bbe15ce493161",
+   "md5": "36ed3d5e8b0a8545f339474ab1bc9242",
+   "bytes": 217401
+  },
+  {
+   "game": 994521,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994521.json.gz",
+   "replay_id": "selfplay-994521",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994521,
+   "sha256": "9efe386886684099241e806ae44d9c767a6e9fdc38041447462dc784c1772d40",
+   "md5": "a2513cfcfecfb87818c38bc13ab064d6",
+   "bytes": 225275
+  },
+  {
+   "game": 994522,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994522.json.gz",
+   "replay_id": "selfplay-994522",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994522,
+   "sha256": "eda042b11dbbbcec58297ca08dbe6102180ba0de3be3c9c8efcaeffd4871b405",
+   "md5": "172be6f52e66d5e02a94a2c0398238b9",
+   "bytes": 225748
+  },
+  {
+   "game": 994523,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994523.json.gz",
+   "replay_id": "selfplay-994523",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994523,
+   "sha256": "5227c68a754cbff65cea76cb07de3af69f3de91a586749c808213e45c4450bd8",
+   "md5": "945e67adb4e06e9fcc77b542548a7fff",
+   "bytes": 225985
+  },
+  {
+   "game": 994524,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994524.json.gz",
+   "replay_id": "selfplay-994524",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994524,
+   "sha256": "2d4a63f1f90b985f25ee6116a3b53624e5acf56d60aa61a91933359dc103d4f3",
+   "md5": "7a21e5e6be8baab670a9e8dd1a849327",
+   "bytes": 232408
+  },
+  {
+   "game": 994525,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994525.json.gz",
+   "replay_id": "selfplay-994525",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994525,
+   "sha256": "6d6f4284485da341e65dc34f2187882328322b924d67d7f313a52f72e50ae338",
+   "md5": "81f618b7ed9ba13d0f4b42a8221576d4",
+   "bytes": 230320
+  },
+  {
+   "game": 994526,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994526.json.gz",
+   "replay_id": "selfplay-994526",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994526,
+   "sha256": "392e94d40ed5ff1a7bc6673e0bc20cc106b407aaa7b76282488f3b72c920a802",
+   "md5": "9a371ba9a5bfdbbd4eeffb1cf63dbb36",
+   "bytes": 232379
+  },
+  {
+   "game": 994527,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994527.json.gz",
+   "replay_id": "selfplay-994527",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994527,
+   "sha256": "49c4f2aee0274f407b1244092d664d8fa2e5f0e48a7998e60888bb4def0ba6e6",
+   "md5": "f8881b9fba9b6270ff7d5fa7423afcd4",
+   "bytes": 226737
+  },
+  {
+   "game": 994528,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994528.json.gz",
+   "replay_id": "selfplay-994528",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994528,
+   "sha256": "872def34e5d9197f50493fa551d450c91b577f906585f746de831ceb06dae10e",
+   "md5": "84b334a483b7d3b17b09d15225b4d416",
+   "bytes": 240027
+  },
+  {
+   "game": 994529,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994529.json.gz",
+   "replay_id": "selfplay-994529",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994529,
+   "sha256": "5d06397a2f46f5dc28f7c487033a7fd4897a4a3f12407a1fc77e88f11b6159cc",
+   "md5": "ffcf5ac9d91da1a4e35870e007a5a181",
+   "bytes": 235197
+  },
+  {
+   "game": 994530,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994530.json.gz",
+   "replay_id": "selfplay-994530",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994530,
+   "sha256": "3f7589fb13d0360477a7d76fd8c1d2f64a874cf72238fbc91326586b299b2320",
+   "md5": "7578b260bdb0d611e34589f8d679365f",
+   "bytes": 226140
+  },
+  {
+   "game": 994531,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994531.json.gz",
+   "replay_id": "selfplay-994531",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994531,
+   "sha256": "abda4ed5da18a921ae4f782b9dbe8bf6b7f626920e50fd6166acdb4dfbb183b7",
+   "md5": "354c39671524558910227800c6f654e4",
+   "bytes": 227034
+  },
+  {
+   "game": 994532,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994532.json.gz",
+   "replay_id": "selfplay-994532",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994532,
+   "sha256": "0e73fe9f408d45f870ee46647a14a354728bf0ebc1900faa87f27c83a81c984f",
+   "md5": "abd59cb2faaf13fdc399b45f2ae13350",
+   "bytes": 230137
+  },
+  {
+   "game": 994533,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994533.json.gz",
+   "replay_id": "selfplay-994533",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994533,
+   "sha256": "5267ee0443e53bdd004b8e8176e65d0b8323c7d189778b52f5e243a98b96f105",
+   "md5": "17b523b42d86efffe8d0faf73eab829f",
+   "bytes": 230811
+  },
+  {
+   "game": 994534,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994534.json.gz",
+   "replay_id": "selfplay-994534",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994534,
+   "sha256": "8783c55c316f3e4df9dc11c65b3d9397733a2afb190db50c2e8dcde2d390762b",
+   "md5": "d93cb523f5d0b89a1af0da9dfb02a215",
+   "bytes": 234953
+  },
+  {
+   "game": 994535,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994535.json.gz",
+   "replay_id": "selfplay-994535",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994535,
+   "sha256": "a20bd6e2a28951860be4e4e517f5ecde30d4a3a53e1495a8e03266b33e6381d7",
+   "md5": "3e79bcdb59cde02cdd604477c3418c13",
+   "bytes": 228086
+  },
+  {
+   "game": 994536,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994536.json.gz",
+   "replay_id": "selfplay-994536",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994536,
+   "sha256": "315491c10025bfd6cac0186c0ffbefb8d58a7af5102d0fc4e3dfa1ead9a3b167",
+   "md5": "859125486a24cbf1e2c870ae49eee172",
+   "bytes": 241323
+  },
+  {
+   "game": 994537,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994537.json.gz",
+   "replay_id": "selfplay-994537",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994537,
+   "sha256": "b778af34f37ab6a850c4501d1652b940c1d61141d55425cc9a772edaac006cef",
+   "md5": "9aa75572e07b6b920a5be3981f8436e0",
+   "bytes": 237717
+  },
+  {
+   "game": 994538,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994538.json.gz",
+   "replay_id": "selfplay-994538",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994538,
+   "sha256": "c927dff54ba3bea9e5124a89b94da7effe103b731007a5cf22adb2a13f910fb2",
+   "md5": "78865affdb0a07881c77fe6e89ed7573",
+   "bytes": 230547
+  },
+  {
+   "game": 994539,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994539.json.gz",
+   "replay_id": "selfplay-994539",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994539,
+   "sha256": "8699107f2df09d4c6f612092e8d59c0e781ca777da512984723964bb00431f79",
+   "md5": "391a282572f4864897b5edeeefe3fbd8",
+   "bytes": 218838
+  },
+  {
+   "game": 994540,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994540.json.gz",
+   "replay_id": "selfplay-994540",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994540,
+   "sha256": "0040435fb170728004c524563233c1d56ce41adea15f02041d7ec0739fca3d5a",
+   "md5": "10e7bf563ede8e576cc5ead1471cb8b4",
+   "bytes": 234050
+  },
+  {
+   "game": 994541,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994541.json.gz",
+   "replay_id": "selfplay-994541",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994541,
+   "sha256": "a402a6218c64ef2ed2d53c662fe556d62ca34b82e83f93ff957afb6ab5712582",
+   "md5": "a52c037f104df858a919d41919cf0860",
+   "bytes": 226857
+  },
+  {
+   "game": 994542,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994542.json.gz",
+   "replay_id": "selfplay-994542",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994542,
+   "sha256": "7b9f4e9724d034e245930b4eb0a5417d39695c69be14d3bc8c45ffaacf61e3f4",
+   "md5": "e94373aef48572267afa2a6f8d13d547",
+   "bytes": 232590
+  },
+  {
+   "game": 994543,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994543.json.gz",
+   "replay_id": "selfplay-994543",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994543,
+   "sha256": "e344556ff0037dbf9f0d76f4fd2fceb41358d5dedd93a3c0f0f291603281bd91",
+   "md5": "eebc809f25059f27e7c32079823b86e1",
+   "bytes": 227587
+  },
+  {
+   "game": 994544,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994544.json.gz",
+   "replay_id": "selfplay-994544",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994544,
+   "sha256": "4737f76ea03bffc424f81d61e54692e833ae3b2c78e41148bc6c6ce3fc8b90c6",
+   "md5": "402920cee1418ed5435379a0fbc64289",
+   "bytes": 227426
+  },
+  {
+   "game": 994545,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994545.json.gz",
+   "replay_id": "selfplay-994545",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994545,
+   "sha256": "05f52c0a28f6ac3fedb793d845ee232e5ac68bd90aa5009bb9bb8fd8a360e3b9",
+   "md5": "e31427f83533b8d069c1444f65f9ce95",
+   "bytes": 229286
+  },
+  {
+   "game": 994546,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994546.json.gz",
+   "replay_id": "selfplay-994546",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994546,
+   "sha256": "d412fed76e2065364b53f5c046cda605c6b9d05d04a96d5a37c02f2614a45154",
+   "md5": "593527346012966f8bab92380de09f52",
+   "bytes": 239663
+  },
+  {
+   "game": 994547,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994547.json.gz",
+   "replay_id": "selfplay-994547",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994547,
+   "sha256": "3a3932ba1ec6ddf426507bd39d385b3c2566ec00bb30ffaf492acc77185ef640",
+   "md5": "6f8f1714ca652b895b7125491d6b7b80",
+   "bytes": 238474
+  },
+  {
+   "game": 994548,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994548.json.gz",
+   "replay_id": "selfplay-994548",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994548,
+   "sha256": "822c48672d01b33c2e3b23e6ee7ea81b7c89e4f6f0d0f1f8908c44151a5d8ec3",
+   "md5": "209c9a6cb8bf41dc1bca9a3f7ade42be",
+   "bytes": 233426
+  },
+  {
+   "game": 994549,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994549.json.gz",
+   "replay_id": "selfplay-994549",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994549,
+   "sha256": "34fed6d0a14754b5a63d04d116b3467ea9ec39b9950df928720849960a7b4bf9",
+   "md5": "c92dab3fbaaef6d7c70193025e72035d",
+   "bytes": 235540
+  },
+  {
+   "game": 994550,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994550.json.gz",
+   "replay_id": "selfplay-994550",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994550,
+   "sha256": "20f79f56188e6cbfdd865e87b34c613b542b33be74639942e3295a76795f265e",
+   "md5": "c965583adb1526159d709f42c65f8122",
+   "bytes": 234947
+  },
+  {
+   "game": 994551,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994551.json.gz",
+   "replay_id": "selfplay-994551",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994551,
+   "sha256": "b567feab1761c34a0bee461782c137378422002ec20842ab9e2f8996e52daeef",
+   "md5": "20a3ae9cb8c64514f5c031add7aa30a9",
+   "bytes": 227596
+  },
+  {
+   "game": 994552,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994552.json.gz",
+   "replay_id": "selfplay-994552",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994552,
+   "sha256": "ef245653c15dd0cd2871961a6b96e5c4888a6e341e87f31ee21670bc7a8595ef",
+   "md5": "4f3c8b9e354c3c4d15936a5c5d220a26",
+   "bytes": 237508
+  },
+  {
+   "game": 994553,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994553.json.gz",
+   "replay_id": "selfplay-994553",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994553,
+   "sha256": "1feac4d141e731f60728252d2f7b256c6e8204e5a836a5c3def0e6e3c2121475",
+   "md5": "bf8be5ff83288e1254198e9e52763010",
+   "bytes": 228793
+  },
+  {
+   "game": 994554,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994554.json.gz",
+   "replay_id": "selfplay-994554",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994554,
+   "sha256": "7fcc39e2571a874a0a5dae9e18e59af425b2059139c8fb47b831affae2564751",
+   "md5": "2adbc8346894e9a230c961a8cba104f0",
+   "bytes": 230556
+  },
+  {
+   "game": 994555,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994555.json.gz",
+   "replay_id": "selfplay-994555",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994555,
+   "sha256": "b68ba27cfcd9423b398c4c96a7312d2249ecbc41f9fb5b36ee72182ed8129a3c",
+   "md5": "f79c26131ddbc3de365f3858f1d20f6f",
+   "bytes": 221559
+  },
+  {
+   "game": 994556,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994556.json.gz",
+   "replay_id": "selfplay-994556",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994556,
+   "sha256": "99a0f9091804311111a8d2269cb6e6ac72c847e3e8a4f3453cce05d8d36b7857",
+   "md5": "e3da843b0dc43ad12458d7d579afc0aa",
+   "bytes": 222300
+  },
+  {
+   "game": 994557,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994557.json.gz",
+   "replay_id": "selfplay-994557",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994557,
+   "sha256": "f4c8f599652aae28a83a83e470643e1cb3787c0958ae0991529c5cabafad5b8f",
+   "md5": "79e77616ccab87a87c86f4979f03a6df",
+   "bytes": 237514
+  },
+  {
+   "game": 994558,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994558.json.gz",
+   "replay_id": "selfplay-994558",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994558,
+   "sha256": "3123aba5d09eec5f6233fe3f82c7d5ced8e3e3013f180fe1fe1e7850c28a742e",
+   "md5": "2f699e70985f187ca58b077d60606272",
+   "bytes": 238839
+  },
+  {
+   "game": 994559,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994559.json.gz",
+   "replay_id": "selfplay-994559",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994559,
+   "sha256": "c8a7f08ffcedb94317f67170c3b7cbd665a34dd2c829b4b67eb59288e778cdec",
+   "md5": "9d8ef50452bb2898582a47cc1834dfbd",
+   "bytes": 228442
+  },
+  {
+   "game": 994560,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994560.json.gz",
+   "replay_id": "selfplay-994560",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994560,
+   "sha256": "8f3c67af4cc5cacf04e7882b15e74917ec610c9f3fa11f5b9f5b78514ddbbf48",
+   "md5": "17d7a835c613e7e33a04c25c2a0eb225",
+   "bytes": 224231
+  },
+  {
+   "game": 994561,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994561.json.gz",
+   "replay_id": "selfplay-994561",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994561,
+   "sha256": "0f5d6113ffc5383c397949c8f72005222b53a262520e4023de814f3888542c1a",
+   "md5": "2121d5da25dd6094806f50847ad7ebb9",
+   "bytes": 220311
+  },
+  {
+   "game": 994562,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994562.json.gz",
+   "replay_id": "selfplay-994562",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994562,
+   "sha256": "ec2adea5be4b2f0dab24d8718a5159f61e3fc6343129701b430fc90bddd9ac41",
+   "md5": "8da91944750d96d0857616868fc4078f",
+   "bytes": 227373
+  },
+  {
+   "game": 994563,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994563.json.gz",
+   "replay_id": "selfplay-994563",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994563,
+   "sha256": "b4c4e289f64119ada3ca20bfff9c25a6fde4bc71ce77e950fd250309bfbced6e",
+   "md5": "a2ecef152402a8bbc8e1140df11be594",
+   "bytes": 220240
+  },
+  {
+   "game": 994564,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994564.json.gz",
+   "replay_id": "selfplay-994564",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994564,
+   "sha256": "8640801a72f3ddaca0c80921c9d81dd0cee26c6516158ecf49a008a14ece5ca7",
+   "md5": "b28f7cc9a742f181b9c6587e9fb585f8",
+   "bytes": 227794
+  },
+  {
+   "game": 994565,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994565.json.gz",
+   "replay_id": "selfplay-994565",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994565,
+   "sha256": "0dd203b0629767ba62196ad8d8b35a032592a08222df1507c2dee6c58dd6d0c1",
+   "md5": "390617a09e2d3c19281ecb7152dc70dd",
+   "bytes": 228121
+  },
+  {
+   "game": 994566,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994566.json.gz",
+   "replay_id": "selfplay-994566",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994566,
+   "sha256": "fade48db3df0d30dd5e764ad24045ef0c6695aac52e9a62dc2cb2c14d43ce45b",
+   "md5": "ced64bc83d3a132d9c665855f3994b94",
+   "bytes": 219645
+  },
+  {
+   "game": 994567,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994567.json.gz",
+   "replay_id": "selfplay-994567",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994567,
+   "sha256": "5d12f0ab5a8e4369bd07c2395f4b7feea1a4b02d96161477ad2f4d20f0a7c6a5",
+   "md5": "68b164f10fe7056c1d6ea2cec36f60a6",
+   "bytes": 214319
+  },
+  {
+   "game": 994568,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994568.json.gz",
+   "replay_id": "selfplay-994568",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994568,
+   "sha256": "b324a9f0ef31364ebac72b0163a463d16cc7a08b64dc2ba8d23ce7b682d72e08",
+   "md5": "23089614507d735a7ad708f00aa606b3",
+   "bytes": 232541
+  },
+  {
+   "game": 994569,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994569.json.gz",
+   "replay_id": "selfplay-994569",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994569,
+   "sha256": "021c01036dc63dccefc4ec29ffb862ab680e030b6e2888517ab3d75b2319803c",
+   "md5": "2fd67004dc2323d8e0618b31517d00d6",
+   "bytes": 231661
+  },
+  {
+   "game": 994570,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994570.json.gz",
+   "replay_id": "selfplay-994570",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994570,
+   "sha256": "de22943db4deba80807826a927e4383f433608d24dd21f7be4cf60ed6cd7e6a2",
+   "md5": "26d9bec8063deac0ee7f824b72c43dce",
+   "bytes": 226810
+  },
+  {
+   "game": 994571,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994571.json.gz",
+   "replay_id": "selfplay-994571",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994571,
+   "sha256": "978c61b22a938b94eb6dd6b0c0473c087ec735417aa3a441871cb0b6977e2633",
+   "md5": "3352eaf2bfdd2500ca85354ab2833926",
+   "bytes": 235389
+  },
+  {
+   "game": 994572,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994572.json.gz",
+   "replay_id": "selfplay-994572",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994572,
+   "sha256": "cb6a15f36764945012ec14acdf6b9a651dc7a149ce3aa9514f1bc2982e16f159",
+   "md5": "571896e4528fbbe1d63a2808b4cb3db8",
+   "bytes": 229650
+  },
+  {
+   "game": 994573,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994573.json.gz",
+   "replay_id": "selfplay-994573",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994573,
+   "sha256": "74f91a39d0ceba3bb6f80aafdfe92915023df9a21f5523883ef13d7545b4753f",
+   "md5": "5020821ad2937c7d27752917076e0a53",
+   "bytes": 240911
+  },
+  {
+   "game": 994574,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994574.json.gz",
+   "replay_id": "selfplay-994574",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994574,
+   "sha256": "be2709094d32fb4831e351ba59b0ba12020c43e71c7ddaf12fb640eedd6221a9",
+   "md5": "c1e032ddd8183f0b7ed807f55ae65450",
+   "bytes": 240104
+  },
+  {
+   "game": 994575,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994575.json.gz",
+   "replay_id": "selfplay-994575",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994575,
+   "sha256": "9fd04370f3abdc256f65ce3adea441e400a198844a010242880ab0175dbd603e",
+   "md5": "245049c725a286b5dcb914b672131601",
+   "bytes": 235658
+  },
+  {
+   "game": 994576,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994576.json.gz",
+   "replay_id": "selfplay-994576",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994576,
+   "sha256": "44914059231f72a85f7d562703e0ada8ad258bab8eda771f84cda3a9deccaf53",
+   "md5": "a74a07398dab75d1b7212a26267c8cd6",
+   "bytes": 229077
+  },
+  {
+   "game": 994577,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994577.json.gz",
+   "replay_id": "selfplay-994577",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994577,
+   "sha256": "fcf92ec0d34e1707b19c30b20d07adf738aa566902d595ead5fede5a0ea1dd8b",
+   "md5": "cd8ffdd1463571612c774e41ab279a12",
+   "bytes": 234707
+  },
+  {
+   "game": 994578,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994578.json.gz",
+   "replay_id": "selfplay-994578",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994578,
+   "sha256": "b24231ebf351ff3401aa200c217fcb5731044a4f0c456a17474323607d073016",
+   "md5": "2f5cd83110d15aa77645e9aff036a3a7",
+   "bytes": 227633
+  },
+  {
+   "game": 994579,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994579.json.gz",
+   "replay_id": "selfplay-994579",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994579,
+   "sha256": "8d9599599a8d2db2baba29d2a9146a0bd121e03820ff2fca63702005aa166b83",
+   "md5": "d6129edf159c5585a20e6b0d1e642957",
+   "bytes": 229622
+  },
+  {
+   "game": 994580,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994580.json.gz",
+   "replay_id": "selfplay-994580",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994580,
+   "sha256": "e7cf048aaf6e9122b440e051782eb1b5e10df2d2ef020052d794b40c9b499e80",
+   "md5": "1a90974c2b7ab3caf70d52372e4a20a1",
+   "bytes": 227665
+  },
+  {
+   "game": 994581,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994581.json.gz",
+   "replay_id": "selfplay-994581",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994581,
+   "sha256": "34292eb3d7f9166b259cae5f671f19ad64b4af8c29182c2fa7c10d7ad51b4f92",
+   "md5": "a5068500efaba703e7697bd98603136c",
+   "bytes": 226441
+  },
+  {
+   "game": 994582,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994582.json.gz",
+   "replay_id": "selfplay-994582",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994582,
+   "sha256": "bf7168ca48fc55810343b1bd262454b56d7fa2461abcc86e9bdcd51eb8af4217",
+   "md5": "e272c98497bd791af4de0c8f3d3f93c6",
+   "bytes": 228289
+  },
+  {
+   "game": 994583,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994583.json.gz",
+   "replay_id": "selfplay-994583",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994583,
+   "sha256": "0efb89fb090fc021cda5d4fd59592845b8ce2ee1d1a1bc9222bdaac9aaec6eff",
+   "md5": "8f721fbac1db131a972a7dc3f3560a1b",
+   "bytes": 241380
+  },
+  {
+   "game": 994584,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994584.json.gz",
+   "replay_id": "selfplay-994584",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994584,
+   "sha256": "42d02955936ff9c191ea591b0a086992440409826a5f57d5686d1c1c806bb4c5",
+   "md5": "9b4708889b5532717bc8851c51563498",
+   "bytes": 234144
+  },
+  {
+   "game": 994585,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994585.json.gz",
+   "replay_id": "selfplay-994585",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994585,
+   "sha256": "5cc0877d37a75f63c039e400eed0c1535a771ab2e5bc821889e0e15ef86f2bf4",
+   "md5": "978c406cefeb7b0fc267de706bf09d7f",
+   "bytes": 227851
+  },
+  {
+   "game": 994586,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994586.json.gz",
+   "replay_id": "selfplay-994586",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994586,
+   "sha256": "cec51c63a3999671bc274921a18c7903034fadc74df66db13a75138956ac07f5",
+   "md5": "a2fc2caecfcfbf1eedaca64eba5554ab",
+   "bytes": 232216
+  },
+  {
+   "game": 994587,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994587.json.gz",
+   "replay_id": "selfplay-994587",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994587,
+   "sha256": "b357568ec128cce5e87d6d616ddbfa2e1bb290abbc19e59829050c58d24e032d",
+   "md5": "2dbff3e67448db90bfce039816cf5445",
+   "bytes": 228724
+  },
+  {
+   "game": 994588,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994588.json.gz",
+   "replay_id": "selfplay-994588",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994588,
+   "sha256": "5fde116d17511d551e2ef41d5aa9e4ed8a3eb97e872fb9541ec44bb3d3b9c377",
+   "md5": "2b9633a63bb7e3bbb876145eb4d65309",
+   "bytes": 233157
+  },
+  {
+   "game": 994589,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994589.json.gz",
+   "replay_id": "selfplay-994589",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994589,
+   "sha256": "17739696b317239f54e6ac23aac789c36e6ec79221c53f2ee00e05050065fe0c",
+   "md5": "8abd726722fae9be418edd1233faae4e",
+   "bytes": 236739
+  },
+  {
+   "game": 994590,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994590.json.gz",
+   "replay_id": "selfplay-994590",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994590,
+   "sha256": "8b64d15a9d71f37bc1c670cc60bb009e4ac2c0e500ed386bef755df432183d65",
+   "md5": "7a61782512c73d2a77626ff38f01841f",
+   "bytes": 232209
+  },
+  {
+   "game": 994591,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994591.json.gz",
+   "replay_id": "selfplay-994591",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994591,
+   "sha256": "69ea1d5b04fdf115aed464f65ee29262529bdd5f9c5e00a43e86dadae2c6136c",
+   "md5": "cace83a4d87fab28873ae2a3087f6479",
+   "bytes": 236688
+  },
+  {
+   "game": 994592,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994592.json.gz",
+   "replay_id": "selfplay-994592",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994592,
+   "sha256": "9d799cb4119cd5b42d8c0ec6705049ea56176dc8bb60289e0a704e249ac062e2",
+   "md5": "c352d4d052eb13bb601202db0a5f9f73",
+   "bytes": 227608
+  },
+  {
+   "game": 994593,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994593.json.gz",
+   "replay_id": "selfplay-994593",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994593,
+   "sha256": "4050c78fe9d72f64213ef51339d43c1cec82a1ed727c5fb41d8fade34dad1c1e",
+   "md5": "2b6cc9881229e446b2546cb64e22f0fd",
+   "bytes": 221726
+  },
+  {
+   "game": 994594,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994594.json.gz",
+   "replay_id": "selfplay-994594",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994594,
+   "sha256": "ae692e51c34d8f136d2f633b3e1899842d3c7c6efd1149e348db8cff908ef6c5",
+   "md5": "1661583a2693da3c312552b7580e5b76",
+   "bytes": 226708
+  },
+  {
+   "game": 994595,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994595.json.gz",
+   "replay_id": "selfplay-994595",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994595,
+   "sha256": "5579c84618cc304b59c55f1196a1881a60d7194bcf40ce8863232cde843a2fdd",
+   "md5": "e4c209c547f9b4e498061420da344957",
+   "bytes": 218693
+  },
+  {
+   "game": 994596,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994596.json.gz",
+   "replay_id": "selfplay-994596",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994596,
+   "sha256": "336d79664c69d0869dcac6a4c7c60870be938d4184c5268379512858319b4441",
+   "md5": "a04609da22645e99255b332ff7338940",
+   "bytes": 226872
+  },
+  {
+   "game": 994597,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994597.json.gz",
+   "replay_id": "selfplay-994597",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994597,
+   "sha256": "2b7cd1f69e6a23b266d8df64cae7c3d8b73183d7af0dbb513d37079e31c3504a",
+   "md5": "b3aa923af973ca1a40085513a9f46694",
+   "bytes": 236846
+  },
+  {
+   "game": 994598,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994598.json.gz",
+   "replay_id": "selfplay-994598",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994598,
+   "sha256": "5ec7d149bfcd67febc974b62951d35bff34b51b1dc98480912916a8d079f6c7d",
+   "md5": "007eaa064b9b6c7a06f0ad28aacf274c",
+   "bytes": 231895
+  },
+  {
+   "game": 994599,
+   "file": "/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994599.json.gz",
+   "replay_id": "selfplay-994599",
+   "id_field_in_replay": "selfplay",
+   "open_seed": 994599,
+   "sha256": "cba062a00d3fc4d09ab41667f4d1992045e393d08ab701c1e4684e2fb698247d",
+   "md5": "4d2711986ae77f6c9600fb496e178b0a",
+   "bytes": 227576
+  }
+ ]
+}
