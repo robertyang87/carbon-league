@@ -1232,18 +1232,338 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
     that resolve to files sitting next to the ORIGINAL examiner file, plus
     literal-named data files it references there -- all copied byte-exact
     into the snapshot dir and recorded as {file, md5}. Returns the
-    provenance list. Dynamic code loading relative to __file__ cannot be
-    enumerated, so it dies by name: an examiner whose execution inputs
+    provenance list.
+
+    Dynamic code loads (spec_from_file_location / SourceFileLoader) are
+    enumerated statically (V06 freezer fix): a load whose path expression
+    reduces to a literal file in the SAME directory as the loading file --
+    anchored on __file__ (os.path.join(os.path.dirname(__file__), "x.py"),
+    a module-level name bound to such an expression, Path(__file__).parent
+    / "x.py", ...) -- is frozen like any other sibling dep, recursively
+    (dynamic chains are depth-capped and cycles die by name). A name bound
+    by an exists-guarded for-loop over a literal tuple of candidate paths
+    (the production examiner's shape) resolves to the first candidate that
+    exists; that candidate must still be a same-directory file. A load
+    whose path cannot be reduced that way (runtime-computed, cwd-relative
+    bare literal, escaping the loading file's directory, or a target that
+    does not exist) dies by name: an examiner whose execution inputs
     cannot be frozen may not be stamped as the fixed examiner."""
     import ast as _ast
     import re as _re
     origin_dir = os.path.dirname(os.path.abspath(origin_path))
+    origin_file = os.path.abspath(origin_path)
     src = raw.decode("utf-8", "replace")
-    if "__file__" in src and ("spec_from_file_location" in src or "exec_module" in src):
-        raise SystemExit("selection: the examiner loads code dynamically relative to __file__; "
-                         "its execution inputs cannot be frozen into the selection snapshot -- "
-                         "refusing to run selection against an unbindable examiner")
     deps, seen = [], set()
+    MAX_DYN_DEPTH = 8
+
+    # -- static path-expression evaluation -------------------------------
+    # A path expression evaluates to one of:
+    #   ("lit", s)   a bare string literal (anchoring unknown)
+    #   ("file",)    __file__ of the file being scanned
+    #   ("dir",)     os.path.dirname(__file__) of that file, as a string
+    #   ("path", ap) a fully resolved absolute path
+    #   ("pfile",)   Path(__file__)
+    #   ("pdir",)    Path(__file__).parent
+    #   ("oneof", fs) a name bound by an exists-guarded for-loop over a
+    #                 literal tuple of path expressions; fs are the
+    #                 per-candidate forms (None = not reducible)
+    #   None         not statically reducible
+    def eval_path(node, scopes, cur_file):
+        cur_dir = os.path.dirname(cur_file)
+        if isinstance(node, _ast.Constant):
+            return ("lit", node.value) if isinstance(node.value, str) else None
+        if isinstance(node, _ast.Name):
+            if node.id == "__file__":
+                return ("file",)
+            for sc in scopes:
+                if node.id in sc:
+                    return sc[node.id]
+            return None
+        if isinstance(node, _ast.Attribute):
+            if node.attr == "parent":
+                v = eval_path(node.value, scopes, cur_file)
+                if v == ("pfile",):
+                    return ("pdir",)
+                if v and v[0] == "path":
+                    return ("path", os.path.dirname(v[1]))
+            return None
+        if isinstance(node, _ast.BinOp):
+            if isinstance(node.op, _ast.Div):
+                left = eval_path(node.left, scopes, cur_file)
+                right = eval_path(node.right, scopes, cur_file)
+                if right and right[0] == "lit":
+                    if left == ("pdir",):
+                        return ("path", os.path.join(cur_dir, right[1]))
+                    if left and left[0] == "path":
+                        return ("path", os.path.join(left[1], right[1]))
+                return None
+            if isinstance(node.op, _ast.Add):
+                left = eval_path(node.left, scopes, cur_file)
+                right = eval_path(node.right, scopes, cur_file)
+                base = None
+                if left == ("dir",):
+                    base = cur_dir
+                elif left and left[0] == "path":
+                    base = left[1]
+                if base is not None and right and right[0] == "lit":
+                    return ("path", os.path.normpath(base + right[1]))
+                return None
+            return None
+        if isinstance(node, _ast.Call):
+            fn = node.func
+            if isinstance(fn, _ast.Name) and fn.id == "str" and len(node.args) == 1:
+                v = eval_path(node.args[0], scopes, cur_file)
+                if v == ("pfile",):
+                    return ("file",)
+                if v == ("pdir",):
+                    return ("dir",)
+                return v
+            if isinstance(fn, _ast.Name) and fn.id == "Path" and len(node.args) == 1:
+                v = eval_path(node.args[0], scopes, cur_file)
+                if v == ("file",):
+                    return ("pfile",)
+                if v == ("dir",):
+                    return ("pdir",)
+                if v and v[0] == "path":
+                    return ("path", v[1])
+                if v and v[0] == "lit" and os.path.isabs(v[1]):
+                    return ("path", v[1])
+                return None
+            if isinstance(fn, _ast.Attribute) and len(node.args) == 1:
+                if fn.attr == "dirname":
+                    v = eval_path(node.args[0], scopes, cur_file)
+                    if v == ("file",):
+                        return ("dir",)
+                    if v and v[0] == "path":
+                        return ("path", os.path.dirname(v[1]))
+                    if v and v[0] == "lit" and os.path.isabs(v[1]):
+                        return ("path", os.path.dirname(v[1]))
+                    return None
+                if fn.attr in ("abspath", "realpath", "normpath"):
+                    v = eval_path(node.args[0], scopes, cur_file)
+                    if v == ("file",):
+                        return ("path", cur_file)
+                    if v == ("dir",):
+                        return ("path", cur_dir)
+                    if v and v[0] == "path":
+                        return ("path", os.path.normpath(v[1]))
+                    if v and v[0] == "lit" and os.path.isabs(v[1]):
+                        return ("path", os.path.normpath(v[1]))
+                    return None
+                if fn.attr == "with_name":
+                    v = eval_path(fn.value, scopes, cur_file)
+                    r = eval_path(node.args[0], scopes, cur_file)
+                    if r and r[0] == "lit":
+                        if v == ("pfile",):
+                            return ("path", os.path.join(cur_dir, r[1]))
+                        if v and v[0] == "path":
+                            return ("path", os.path.join(os.path.dirname(v[1]), r[1]))
+                    return None
+            if isinstance(fn, _ast.Attribute) and fn.attr == "join" and node.args:
+                parts = []
+                for a in node.args:
+                    v = eval_path(a, scopes, cur_file)
+                    if v is None:
+                        return None
+                    if v in (("dir",), ("pdir",)):
+                        parts.append(cur_dir)
+                    elif v in (("file",), ("pfile",)):
+                        parts.append(cur_file)
+                    elif v[0] in ("path", "lit"):
+                        parts.append(v[1])
+                    else:
+                        return None
+                return ("path", os.path.normpath(os.path.join(*parts)))
+            return None
+        return None
+
+    def collect_bindings(stmts, base_scopes, cur_file):
+        """Single-assignment names in stmts (module level or one function
+        body; never descending into nested def/class), with values that
+        statically evaluate as path expressions. Resolved to a fixpoint.
+        Also binds names assigned by an exists-guarded for-loop over a
+        literal tuple of candidate paths to a ("oneof", ...) form."""
+        assigns, counts, multis = {}, {}, {}
+
+        def loop_guarded(for_node, var):
+            for sub in _ast.walk(for_node):
+                if isinstance(sub, _ast.If) and isinstance(sub.test, _ast.Call) \
+                        and sub.test.args and isinstance(sub.test.args[0], _ast.Name) \
+                        and sub.test.args[0].id == var:
+                    f = sub.test.func
+                    if (isinstance(f, _ast.Attribute) and f.attr == "exists") or \
+                            (isinstance(f, _ast.Name) and f.id == "exists"):
+                        if any(isinstance(x, _ast.Break) for x in _ast.walk(sub)):
+                            return True
+            return False
+
+        def harvest(node):
+            if isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef,
+                                 _ast.ClassDef, _ast.Lambda)):
+                return
+            tgt = None
+            if isinstance(node, _ast.Assign) and len(node.targets) == 1 \
+                    and isinstance(node.targets[0], _ast.Name):
+                tgt, val = node.targets[0].id, node.value
+            elif isinstance(node, _ast.AnnAssign) and isinstance(node.target, _ast.Name) \
+                    and node.value is not None:
+                tgt, val = node.target.id, node.value
+            if tgt is not None:
+                counts[tgt] = counts.get(tgt, 0) + 1
+                assigns.setdefault(tgt, val)
+            if isinstance(node, _ast.For) and isinstance(node.target, _ast.Name) \
+                    and isinstance(node.iter, (_ast.Tuple, _ast.List)) and node.iter.elts:
+                var = node.target.id
+                counts[var] = counts.get(var, 0) + 1
+                if loop_guarded(node, var):
+                    multis.setdefault(var, list(node.iter.elts))
+            for ch in _ast.iter_child_nodes(node):
+                harvest(ch)
+
+        for st in stmts:
+            harvest(st)
+        bound = {}
+        pending = {nm: v for nm, v in assigns.items() if counts.get(nm) == 1}
+        for _ in range(len(pending) + 1):
+            progressed = False
+            for nm, vnode in pending.items():
+                if nm in bound:
+                    continue
+                v = eval_path(vnode, [bound] + list(base_scopes), cur_file)
+                if v is not None:
+                    bound[nm] = v
+                    progressed = True
+            if not progressed:
+                break
+        for nm, elts in multis.items():
+            if counts.get(nm) == 1 and nm not in bound:
+                bound[nm] = ("oneof", [eval_path(e, [bound] + list(base_scopes),
+                                                 cur_file) for e in elts])
+        return bound
+
+    def resolve_dyn_target(v, cur_file, fname):
+        cur_dir = os.path.dirname(cur_file)
+        who = f"selection: {os.path.basename(cur_file)}: dynamic load via {fname}"
+        if v is None:
+            raise SystemExit(f"{who} has a path that is not statically reducible to a "
+                             "__file__-anchored literal file (variable or runtime-computed "
+                             "path); its execution inputs cannot be frozen -- refusing to "
+                             "run selection against an unbindable examiner")
+        if v[0] == "oneof":
+            # Exists-guarded candidate list: the runtime loads the FIRST
+            # candidate that exists. Mirror that choice exactly; a
+            # candidate the scan cannot reduce, or an existing candidate
+            # that is not a same-directory file, makes the load unbindable.
+            for cand in v[1]:
+                if cand is None or cand[0] not in ("path", "lit", "file", "pfile"):
+                    raise SystemExit(f"{who} may load a candidate path that is not "
+                                     "statically reducible to a __file__-anchored "
+                                     "literal file; its execution inputs cannot be "
+                                     "frozen -- refusing to run selection against an "
+                                     "unbindable examiner")
+                if cand[0] == "path":
+                    ap = cand[1]
+                elif cand[0] == "lit":
+                    if not os.path.isabs(cand[1]):
+                        raise SystemExit(f"{who} may load the bare relative candidate "
+                                         f"{cand[1]!r}, which resolves against the "
+                                         "process cwd at runtime; it cannot be "
+                                         "frozen -- refusing to run selection")
+                    ap = os.path.normpath(cand[1])
+                else:
+                    ap = cur_file
+                if os.path.isfile(ap):
+                    if os.path.dirname(ap) != cur_dir:
+                        raise SystemExit(f"{who} resolves to {ap}, outside the loading "
+                                         f"file's directory {cur_dir}; only "
+                                         "same-directory literal targets can be frozen "
+                                         "-- refusing to run selection against an "
+                                         "unbindable examiner")
+                    return ap
+                if os.path.exists(ap):
+                    raise SystemExit(f"{who} may load {ap}, which exists but is not a "
+                                     "file; its execution inputs cannot be frozen -- "
+                                     "refusing to run selection")
+            raise SystemExit(f"{who}: none of the candidate paths exists; its execution "
+                             "inputs cannot be frozen -- refusing to run selection "
+                             "against an unbindable examiner")
+        if v[0] == "lit":
+            if not os.path.isabs(v[1]):
+                raise SystemExit(f"{who} uses the bare relative path {v[1]!r}, which resolves "
+                                 "against the process cwd at runtime, not the loading file's "
+                                 "directory; it cannot be frozen -- refusing to run selection "
+                                 "against an unbindable examiner")
+            ap = os.path.normpath(v[1])
+        elif v[0] == "path":
+            ap = v[1]
+        elif v in (("file",), ("pfile",)):
+            ap = cur_file
+        else:
+            raise SystemExit(f"{who} names a directory, not a file; its execution inputs "
+                             "cannot be frozen -- refusing to run selection")
+        if os.path.dirname(ap) != cur_dir:
+            raise SystemExit(f"{who} resolves to {ap}, outside the loading file's directory "
+                             f"{cur_dir}; only same-directory literal targets can be frozen "
+                             "-- refusing to run selection against an unbindable examiner")
+        if not os.path.isfile(ap):
+            raise SystemExit(f"{who} resolves to {ap}, which does not exist; its execution "
+                             "inputs cannot be frozen -- refusing to run selection")
+        return ap
+
+    def scan_dynloads(code, cur_file):
+        """Absolute paths of every dynamically loaded code file in `code`
+        whose load is __file__-anchored and same-directory; dies by name on
+        anything else. exec_module/load_module with no file-spec creation
+        in the same file also dies: the spec's origin cannot be known."""
+        if not any(s in code for s in ("spec_from_file_location", "SourceFileLoader",
+                                       "exec_module", "load_module")):
+            return []           # no dynamic-load machinery anywhere in the file
+        try:
+            tree = _ast.parse(code)
+        except SyntaxError:
+            return []
+        module_bindings = collect_bindings(tree.body, [], cur_file)
+        targets, saw_spec, saw_exec = [], False, []
+
+        def visit(node, scopes):
+            nonlocal saw_spec
+            if isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+                local = collect_bindings(node.body, scopes, cur_file)
+                for ch in _ast.iter_child_nodes(node):
+                    visit(ch, [local] + scopes)
+                return
+            if isinstance(node, _ast.Call):
+                fn = node.func
+                fname = fn.attr if isinstance(fn, _ast.Attribute) else \
+                    (fn.id if isinstance(fn, _ast.Name) else None)
+                if fname in ("spec_from_file_location", "SourceFileLoader"):
+                    saw_spec = True
+                    pnode = node.args[1] if len(node.args) >= 2 else None
+                    if pnode is None:
+                        kw = "location" if fname == "spec_from_file_location" else "path"
+                        for k in node.keywords:
+                            if k.arg == kw:
+                                pnode = k.value
+                    if pnode is None:
+                        raise SystemExit(f"selection: {os.path.basename(cur_file)}: dynamic "
+                                         f"load via {fname} passes no path argument; its "
+                                         "execution inputs cannot be frozen -- refusing "
+                                         "to run selection")
+                    targets.append(resolve_dyn_target(
+                        eval_path(pnode, scopes, cur_file), cur_file, fname))
+                elif fname in ("exec_module", "load_module"):
+                    saw_exec.append(fname)
+            for ch in _ast.iter_child_nodes(node):
+                visit(ch, scopes)
+
+        visit(tree, [module_bindings])
+        if saw_exec and not saw_spec:
+            raise SystemExit(f"selection: {os.path.basename(cur_file)} calls "
+                             f"{saw_exec[0]} without creating its spec from a file path "
+                             "in the same file; the loaded code's origin cannot be "
+                             "enumerated -- refusing to run selection against an "
+                             "unbindable examiner")
+        return targets
 
     def scan_imports(code):
         names = []
@@ -1265,7 +1585,21 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
                     names.append(node.args[0].value.split(".")[0])
         return names
 
-    def add_file(srcpath, arc):
+    def freeze_dynloads(code, cur_file, dyn_depth, stack):
+        for target in scan_dynloads(code, cur_file):
+            if target in stack:
+                chain = " -> ".join(os.path.basename(p) for p in stack + (target,))
+                raise SystemExit(f"selection: dynamic-load cycle ({chain}); the examiner's "
+                                 "execution inputs cannot be frozen -- refusing to run "
+                                 "selection against an unbindable examiner")
+            if dyn_depth + 1 > MAX_DYN_DEPTH:
+                raise SystemExit(f"selection: dynamic-load chain exceeds depth "
+                                 f"{MAX_DYN_DEPTH} at {os.path.basename(target)} (loaded "
+                                 f"from {os.path.basename(cur_file)}); refusing to run "
+                                 "selection against an unbindable examiner")
+            add_file(target, os.path.relpath(target, origin_dir), dyn_depth + 1, stack)
+
+    def add_file(srcpath, arc, dyn_depth=0, stack=()):
         if srcpath in seen:
             return
         seen.add(srcpath)
@@ -1277,16 +1611,19 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
             fh.write(data)
         deps.append({"file": arc, "md5": hashlib.md5(data).hexdigest()})
         if srcpath.endswith(".py"):
-            resolve_from(scan_imports(data.decode("utf-8", "replace")),
-                           [os.path.dirname(srcpath), origin_dir])
+            code = data.decode("utf-8", "replace")
+            resolve_from(scan_imports(code),
+                         [os.path.dirname(srcpath), origin_dir],
+                         dyn_depth, stack + (srcpath,))
+            freeze_dynloads(code, srcpath, dyn_depth, stack + (srcpath,))
 
-    def resolve_from(names, dirs):
+    def resolve_from(names, dirs, dyn_depth=0, stack=()):
         for name in sorted(set(names)):
             for base in dirs:
                 cand = os.path.join(base, name + ".py")
                 pkg = os.path.join(base, name, "__init__.py")
                 if os.path.isfile(cand):
-                    add_file(cand, os.path.relpath(cand, origin_dir))
+                    add_file(cand, os.path.relpath(cand, origin_dir), dyn_depth, stack)
                     break
                 if os.path.isfile(pkg):
                     pkgdir = os.path.join(base, name)
@@ -1294,10 +1631,12 @@ def _selection_snapshot_deps(origin_path, raw, snap_dir):
                         for fn in files:
                             if fn.endswith(".py"):
                                 p = os.path.join(root, fn)
-                                add_file(p, os.path.relpath(p, origin_dir))
+                                add_file(p, os.path.relpath(p, origin_dir),
+                                         dyn_depth, stack)
                     break
 
-    resolve_from(scan_imports(src), [origin_dir])
+    resolve_from(scan_imports(src), [origin_dir], 0, (origin_file,))
+    freeze_dynloads(src, origin_file, 0, (origin_file,))
     for lit in sorted(set(_re.findall(r"[\"']([A-Za-z0-9_.\-]+\.(?:npz|json|bin|txt|csv))[\"']", src))):
         p = os.path.join(origin_dir, lit)
         if os.path.isfile(p):
