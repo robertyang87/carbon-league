@@ -80,8 +80,13 @@ def main():
     # every logit with inf/NaN and the "greedy" policy collapses to
     # argmax over NaNs (all-STAY). temp > 0 passes through verbatim.
     eff_temp = 1.0 if a.temp <= 0 else a.temp
+    # V04: the evaluated net is not the trainer's learner. primary_role="eval"
+    # keeps CNET2_TEMP_KIND (inherited from a trainer env) from silently
+    # replacing the CLI temperature for sampling; the trainer's own tasks
+    # omit the key and keep role="learner" (R04, by design).
     tasks = [{"adapter": a.adapter, "wkey": os.path.abspath(a.w), "games": [(o, a.seed0 + j, s)],
-              "temp": eff_temp, "greedy": a.temp <= 0, "record": False, "rng_seed": j * 2 + s}
+              "temp": eff_temp, "greedy": a.temp <= 0, "record": False, "rng_seed": j * 2 + s,
+              "primary_role": "eval"}
              for o in a.opps.split(",") for j in range(a.pairs) for s in (0, 1)]
     t0 = time.time()
     with mp.get_context("spawn").Pool(a.workers) as pool:
@@ -94,7 +99,14 @@ def main():
     with open(a.log, "a") as f:
         for o, s in summarize(by).items():
             row = {"tag": a.tag, "w": a.w, "opp": o, **s,
-                   "seed0": a.seed0, "wall_s": round(time.time() - t0), "t": time.time()}
+                   "seed0": a.seed0, "wall_s": round(time.time() - t0), "t": time.time(),
+                   # V04: the effective temperature is part of the reading's
+                   # identity -- record what was asked, what was played, and
+                   # whether a per-kind env was present (post-fix it no
+                   # longer governs eval; the flag keeps the exposure
+                   # visible in the row instead of silent).
+                   "temp_cli": a.temp, "temp_eff": eff_temp, "greedy": a.temp <= 0,
+                   "temp_kind_env": bool(os.environ.get("CNET2_TEMP_KIND"))}
             f.write(json.dumps(row) + "\n")
             print(json.dumps(row), flush=True)
 
