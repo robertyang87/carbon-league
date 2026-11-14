@@ -1,0 +1,92 @@
+{
+ "exam": "n1r_vs_echo3_head_to_head",
+ "matchup": "n1r (m3n1 ep19 int8 pack, submission candidate) vs Echo3 (m3s2r1 int8 pack, ladder #11)",
+ "seed_domain": [
+  989000,
+  989199
+ ],
+ "n": 200,
+ "harness_md5": "354bcd1bc2dc8bc188c813f53d28c893",
+ "machine": "spot-29 (100.65.8.27)",
+ "run_start": "2026-11-14 18:10:44 CST",
+ "run_done": "2026-11-14 18:13:07 CST",
+ "wall_seconds": 143,
+ "packs": {
+  "n1r": {
+   "source": "branch cnet2-search-v12:data/packs/n1r_int8.py (= main same blob 009fda45)",
+   "md5": "ba7f84c3652ea2cd14a2243f2b1eace2",
+   "bytes": 4579266
+  },
+  "echo3": {
+   "source": "main:code/packs/echo3_int8.py (blob 97ccdff1)",
+   "md5": "7b7620499411a088cf4dc17c0e929bd7",
+   "bytes": 4576790
+  }
+ },
+ "deployment_form": "packs as submitted, CONF unchanged (SEARCH=False)",
+ "smoke": {
+  "tag": "n1r_echo3_smoke",
+  "n": 2,
+  "seeds": [
+   989000,
+   989001
+  ],
+  "err": 0,
+  "snapshot_commit": "b77f6942"
+ },
+ "result_n1r": {
+  "wins": 81,
+  "losses": 119,
+  "draws": 0,
+  "mean_margin": -218.77,
+  "margin_se": 50.3,
+  "mean_u": 0.4286,
+  "mean_u_cluster_ci95_bootstrap": [
+   0.3857,
+   0.4719
+  ],
+  "bootstrap_B": 20000,
+  "p_boot_u_ge_0.5": 0.00095
+ },
+ "result_echo3": {
+  "wins": 119,
+  "losses": 81,
+  "draws": 0,
+  "mean_margin": 218.77,
+  "mean_u": 0.5714
+ },
+ "seat_split_n1r": {
+  "seat0": {
+   "n": 100,
+   "wins": 45,
+   "mean_margin": -172.45,
+   "mean_u": 0.4572
+  },
+  "seat1": {
+   "n": 100,
+   "wins": 36,
+   "mean_margin": -265.08,
+   "mean_u": 0.3999
+  }
+ },
+ "launcher_summary": {
+  "wins": 81,
+  "mean": -219,
+  "se": 50,
+  "lo2se": -319,
+  "worst": -2849,
+  "worst_ms": 130.0,
+  "err": 0,
+  "FAIL": false
+ },
+ "u_field_max_dev": 0.0,
+ "archive": {
+  "branch": "sync/h29",
+  "path": "synced/h29/bigeval_live/n1r_echo3.jsonl",
+  "md5": "d49854e2e5ff82c9c7c17bf2067ea50d",
+  "archive_readback_match": true,
+  "final_snapshot_commit": "480bffc8",
+  "bytes": 892571
+ },
+ "seed_history": "992000-992199 rejected (gen1_shard0 selfplay seeds); 988000-988199 rejected (K0 production used 988000-988127, gen-79edff94); 989000-989199 confirmed by war room 18:08"
+}
