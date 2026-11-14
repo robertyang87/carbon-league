@@ -56,6 +56,43 @@ step usable by extract_scene (step < len(steps)-1), game id matches
 the replay file name, no duplicate (game, step, me). The root-set
 identity (roots_sha256 over {game, step, me, replay_md5}) is recorded
 in the header and in every row.
+
+Finite gates (X07): corrupt inputs must die, never measure as if
+healthy. Weights pass a full finite check at load (die naming the
+file and the tensor); root scene features are finite-checked per
+root; every produced U is finite-checked per arm, and every row is
+re-checked before aggregation. Before these gates, a checkpoint
+with NaN/Inf tensors measured "normally" through the real CLI:
+paired against itself its du is exactly 0 and its U is a finite,
+plausible number -- indistinguishable from a healthy same-weights
+run -- and against a healthy parent it fabricated a clean-looking
+nonzero delta_u. The gates check only; they touch no numerics.
+The same discipline applies DURING inference: every step's policy
+logits and value must be finite or the root's measurement is
+rejected on the spot (see _greedy_checked) -- a corruption that
+surfaces only in the inference outputs, with labels and even the
+final U bit-identical to the healthy run, is otherwise invisible
+to every output-side check.
+
+Identity binding (X04): a weights file is read ONCE. run_duel
+hashes the captured bytes for the header/rows, and the workers
+parse exactly those bytes -- there is no second, by-path read for
+a swap to slip between identity and consumption (record A, measure
+B is structurally impossible, not merely checked for). Replays
+are bound the same way: load_roots reads each replay once (md5,
+first-terminal and length all derive from that single read) and
+scene extraction consumes those captured bytes, materialized
+under the original basename in a per-process scratch dir --
+extract_scene reads only spec["path"], so the scratch path IS
+the consumption binding. Before this, validating a root set and
+then swapping a replay file changed the measured scene (cash and
+all) while the rows kept the pre-swap roots_sha256.
+
+One game, one content (X08): every root of a game must bind the
+same replay_md5. The manifest check alone (basename == game id,
+cache keyed by path) used to accept two different files named for
+the same game and cluster their roots into a single "game";
+identical bytes at different paths remain allowed.
 """
 
 import argparse
@@ -63,10 +100,12 @@ import ast
 import copy
 import gzip
 import hashlib
+import io
 import json
 import math
 import os
 import sys
+import tempfile
 import types
 
 # Single-threaded BLAS per process (same posture as the gate).
@@ -188,8 +227,32 @@ SOURCE_MD5 = {"stage1_teacher_gate": _file_md5(GATE_SRC),
               "stage0_teacher": _file_md5(TEACHER_SRC)}
 
 
+def _greedy_checked(pol, guard, feat, x, teacher, stats, where):
+    """The gate's _guarded_greedy expanded inline, with the X07
+    inference gate between act and apply: THIS step's policy logits
+    and value must be finite, else the measurement is rejected on
+    the spot. The expansion is call-for-call identical (act,
+    reset_step, apply -- same objects, same order), so numerics are
+    unchanged; only the check is added. The check is not redundant
+    with the load gate: a single NaN head bias poisons the base
+    slots' logits rows while the returned labels -- and, in the
+    measured case, the final U itself -- stay plausible or even
+    bit-identical to the healthy run, so no output-side check can
+    see it. Only the inference surface can."""
+    labels, logits, value = pol.act(x, feat.aux, teacher=teacher)
+    if not (np.isfinite(logits).all() and math.isfinite(value)):
+        bad = int(logits.size - np.isfinite(logits).sum())
+        raise SystemExit(
+            f"k0_duel: {where}: non-finite policy output at inference "
+            f"(logits non-finite elements: {bad}, value: {value!r}): "
+            f"corrupt inference must not be measured")
+    guard.reset_step()
+    return guard.apply(x, feat.aux, np.asarray(labels, dtype=np.int64),
+                       logits, pol, feat.own_uid, teacher, stats)
+
+
 def continue_game_2pol(pol_me, pol_opp, scene, cont_seed, teacher_style=2,
-                       stats=None):
+                       stats=None, where="continuation"):
     """Bare-net continuation of `scene` to terminal; U from the root
     seat. Line-mapped adaptation of the gate's continue_game bare path
     (see module docstring): the only change is per-seat policies --
@@ -198,7 +261,10 @@ def continue_game_2pol(pol_me, pol_opp, scene, cont_seed, teacher_style=2,
     first_labels is always None, as in the gate's greedy-arm call.
     cont_seed is threaded for caliber parity with the gate du call
     shape; on the bare path it is numerically inert, exactly as in the
-    gate's greedy arm."""
+    gate's greedy arm. The greedy step itself is the gate's
+    _guarded_greedy expanded inline (see _greedy_checked) so the X07
+    inference gate can sit between act and apply; the terminal-U
+    equivalence fixture proves the expansion is value-identical."""
     stats = stats if stats is not None else {}
     me = scene["me"]
     pols = {me: pol_me, 1 - me: pol_opp}
@@ -224,9 +290,10 @@ def continue_game_2pol(pol_me, pol_opp, scene, cont_seed, teacher_style=2,
                   for seat in (0, 1)}
         acts = {}
         for seat in (0, 1):
-            acts[seat] = _guarded_greedy(pols[seat], guards[seat],
-                                         feats[seat], xs[seat],
-                                         teacher_style, stats)
+            acts[seat] = _greedy_checked(
+                pols[seat], guards[seat], feats[seat], xs[seat],
+                teacher_style, stats,
+                f"{where} seat {seat} step {step_no}")
         pre = sim.get_state()
         sim.step(feats[0].to_actions(np.asarray(acts[0], dtype=np.int64)),
                  feats[1].to_actions(np.asarray(acts[1], dtype=np.int64)))
@@ -235,19 +302,65 @@ def continue_game_2pol(pol_me, pol_opp, scene, cont_seed, teacher_style=2,
                           episode_steps=int(CFG.get("episodeSteps", 300)))
 
 
+def _read_weights_bytes(path):
+    """The single read of a weights file (X04): every later use --
+    md5 identity, finite gate, worker consumption -- works from
+    these captured bytes, never from a second by-path read."""
+    if not os.path.isfile(path):
+        raise SystemExit(f"k0_duel: weights file not found: {path}")
+    with open(path, "rb") as fh:
+        return fh.read()
+
+
+def _policy_from_bytes(path, blob):
+    """Parse captured weights bytes behind the X07 finite gate: the
+    bytes must parse as an npz of tensors and EVERY floating tensor
+    must be entirely finite -- a single NaN/Inf element dies here,
+    naming the file and the tensor, before the corrupt checkpoint
+    can be measured as if healthy. Non-numeric entries (e.g. the
+    string `meta`) are metadata, not weights, and pass. Checks only:
+    the CachePolicy receives exactly the tensors np.load produced.
+    `path` is carried for die messages; the bytes are the input."""
+    try:
+        tensors = dict(np.load(io.BytesIO(blob)))
+    except Exception as exc:
+        raise SystemExit(f"k0_duel: weights file {path} unreadable: "
+                         f"{type(exc).__name__}: {exc}")
+    if not tensors:
+        raise SystemExit(f"k0_duel: weights file {path} holds no tensors")
+    for name in sorted(tensors):
+        arr = tensors[name]
+        if arr.dtype.kind in "fc":
+            bad = int(arr.size - np.isfinite(arr).sum())
+            if bad:
+                raise SystemExit(
+                    f"k0_duel: weights file {path} tensor {name!r} has "
+                    f"{bad} non-finite element(s) (NaN/Inf): corrupt "
+                    f"weights must not be measured")
+    return CachePolicy(tensors)
+
+
 def _load_policy(path):
-    return CachePolicy(dict(np.load(path)))
+    return _policy_from_bytes(path, _read_weights_bytes(path))
 
 
 def load_roots(manifest_path, step_min, step_max):
     """Load and hard-validate the root manifest. Returns (specs,
-    roots_sha256). Every spec gains ft / n_steps / replay_md5."""
+    roots_sha256, replay_blobs). Every spec gains ft / n_steps /
+    replay_md5; replay_blobs maps each unique replay path to the
+    exact bytes that were validated (X04: scene extraction later
+    consumes these bytes, never a second by-path read). One game id
+    must bind ONE replay content (X08): two paths carrying the same
+    game with different bytes die here; identical bytes at different
+    paths are allowed."""
     with open(manifest_path) as fh:
         raw = json.load(fh)
     if not isinstance(raw, list) or not raw:
         raise SystemExit("k0_duel: roots manifest must be a non-empty list")
     specs, seen = [], set()
     game_info = {}
+    replay_blobs = {}
+    game_binding = {}
     for i, s in enumerate(raw):
         try:
             game, path = str(s["game"]), str(s["path"])
@@ -271,11 +384,21 @@ def load_roots(manifest_path, step_min, step_max):
             raise SystemExit(f"k0_duel: duplicate root {key}")
         seen.add(key)
         if path not in game_info:
-            with gzip.open(path) as fh:
-                d = json.load(fh)
+            with open(path, "rb") as fh:
+                blob = fh.read()
+            replay_md5 = hashlib.md5(blob).hexdigest()
+            d = json.loads(gzip.decompress(blob))
             ft, _cause = first_terminal_step(d["steps"])
-            game_info[path] = (ft, len(d["steps"]), md5_of(path))
+            game_info[path] = (ft, len(d["steps"]), replay_md5)
+            replay_blobs[path] = blob
         ft, n_steps, replay_md5 = game_info[path]
+        bound = game_binding.setdefault(game, (replay_md5, path))
+        if bound[0] != replay_md5:
+            raise SystemExit(
+                f"k0_duel: game {game!r} is bound to two different "
+                f"replay contents: {bound[1]} (md5 {bound[0]}) vs "
+                f"{path} (md5 {replay_md5}): one game id must bind "
+                f"one replay content (X08)")
         if step >= ft:
             raise SystemExit(
                 f"k0_duel: root #{i} step {step} >= first terminal {ft} "
@@ -291,27 +414,78 @@ def load_roots(manifest_path, step_min, step_max):
                    key=lambda r: (r["game"], r["step"], r["me"]))
     roots_sha = hashlib.sha256(json.dumps(
         canon, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-    return specs, roots_sha
+    return specs, roots_sha, replay_blobs
 
 
 _W = {}
 
 
-def _init_worker(student_path, parent_path):
-    _W["pol_student"] = _load_policy(student_path)
-    _W["pol_parent"] = _load_policy(parent_path)
+def _init_worker(student, parent, replay_blobs=None):
+    # Each arm arrives as (path, bytes): the worker parses the exact
+    # bytes run_duel hashed (X04), never a fresh by-path read.
+    _W["pol_student"] = _policy_from_bytes(*student)
+    _W["pol_parent"] = _policy_from_bytes(*parent)
+    # Replay binding (X04): materialize the validated replay bytes
+    # under their original basenames in a per-process scratch dir;
+    # extract_scene (which reads only spec["path"]) then consumes
+    # exactly the content load_roots hashed and validated. Scratch
+    # volume is one copy per unique replay per process -- set
+    # TMPDIR to disk for very large root sets.
+    scratch = {}
+    if replay_blobs:
+        tmp = tempfile.mkdtemp(prefix="k0_duel_replays_")
+        for path, blob in replay_blobs.items():
+            sp = os.path.join(tmp, os.path.basename(path))
+            with open(sp, "wb") as fh:
+                fh.write(blob)
+            scratch[path] = sp
+    _W["replay_scratch"] = scratch
+
+
+def _check_scene_finite(spec, scene):
+    """X07 backstop for the feature surface: the root seat and the
+    opponent seat step-0 feature tensors must be finite. (Later-step
+    features are produced by the driver's own featurizer from sim
+    state; the per-arm U gate below backstops the whole path.)"""
+    for side in ("x_me", "x_opp"):
+        x = scene[side]
+        if not isinstance(x, dict):
+            continue
+        for k in sorted(x):
+            v = x[k]
+            if (isinstance(v, np.ndarray) and v.dtype.kind in "fc"
+                    and not np.isfinite(v).all()):
+                raise SystemExit(
+                    f"k0_duel: root {spec['game']}@{spec['step']} "
+                    f"feature {side}.{k} has non-finite element(s): "
+                    f"corrupt scene features must not be measured")
 
 
 def _duel_task(task):
     spec, cfg = task
-    scene = extract_scene(spec)
+    scratch = _W.get("replay_scratch") or {}
+    if spec["path"] not in scratch:
+        raise SystemExit(
+            f"k0_duel: root {spec['game']}@{spec['step']} replay "
+            f"{spec['path']} is not content-bound (no validated bytes "
+            f"in this worker): refusing to extract by path (X04)")
+    scene = extract_scene(dict(spec, path=scratch[spec["path"]]))
+    _check_scene_finite(spec, scene)
     seed = cfg["seed_cont"] + spec["step"]
+    where = f"root {spec['game']}@{spec['step']}"
     u_parent = continue_game_2pol(_W["pol_parent"], _W["pol_parent"],
                                   scene, seed,
-                                  teacher_style=cfg["teacher_style"])
+                                  teacher_style=cfg["teacher_style"],
+                                  where=f"{where} parent-arm")
     u_student = continue_game_2pol(_W["pol_student"], _W["pol_parent"],
                                    scene, seed,
-                                   teacher_style=cfg["teacher_style"])
+                                   teacher_style=cfg["teacher_style"],
+                                   where=f"{where} student-arm")
+    for arm, u in (("parent", u_parent), ("student", u_student)):
+        if not math.isfinite(u):
+            raise SystemExit(
+                f"k0_duel: root {spec['game']}@{spec['step']} produced "
+                f"non-finite U on the {arm} arm: {u!r}")
     return {"game": spec["game"], "step": spec["step"], "me": spec["me"],
             "seat": spec["me"], "ft": spec["ft"],
             "u_student": u_student, "u_parent": u_parent,
@@ -322,22 +496,43 @@ def _duel_task(task):
 
 
 def run_duel(student_path, parent_path, specs, roots_sha256,
-             seed_cont=995400, teacher_style=2, workers=1):
+             seed_cont=995400, teacher_style=2, workers=1,
+             replay_blobs=None):
+    if replay_blobs is None:
+        raise SystemExit(
+            "k0_duel: run_duel requires the replay_blobs returned by "
+            "load_roots: scene extraction must consume the validated "
+            "replay bytes, not a by-path re-read (X04)")
+    for s in specs:
+        if s["path"] not in replay_blobs:
+            raise SystemExit(
+                f"k0_duel: root {s['game']}@{s['step']} replay "
+                f"{s['path']} has no validated bytes in replay_blobs "
+                f"(X04)")
+    student_blob = _read_weights_bytes(student_path)
+    parent_blob = _read_weights_bytes(parent_path)
     cfg = {"seed_cont": seed_cont, "teacher_style": teacher_style,
-           "student_md5": md5_of(student_path),
-           "parent_md5": md5_of(parent_path),
+           "student_md5": hashlib.md5(student_blob).hexdigest(),
+           "parent_md5": hashlib.md5(parent_blob).hexdigest(),
            "roots_sha256": roots_sha256}
     tasks = [(s, cfg) for s in specs]
+    arms = ((student_path, student_blob), (parent_path, parent_blob))
     if workers and workers > 1:
         from concurrent.futures import ProcessPoolExecutor
         with ProcessPoolExecutor(max_workers=workers,
                                  initializer=_init_worker,
-                                 initargs=(student_path,
-                                           parent_path)) as ex:
+                                 initargs=(*arms, replay_blobs)) as ex:
             rows = list(ex.map(_duel_task, tasks))
     else:
-        _init_worker(student_path, parent_path)
+        _init_worker(*arms, replay_blobs)
         rows = [_duel_task(t) for t in tasks]
+    for r in rows:
+        for k in ("u_student", "u_parent", "du"):
+            if not math.isfinite(r[k]):
+                raise SystemExit(
+                    f"k0_duel: row {r['game']}@{r['step']} has "
+                    f"non-finite {k}: {r[k]!r}; refusing to aggregate "
+                    f"or write corrupt measurements")
     stats = cluster_stats(rows, "du")
     blo, bhi = cluster_bootstrap_ci(rows, seed_cont, "du")
     return {"kind": "k0_duel_result", "version": 1,
@@ -367,10 +562,12 @@ def main():
     ap.add_argument("--teacher-style", type=int, default=2)
     ap.add_argument("--workers", type=int, default=1)
     a = ap.parse_args()
-    specs, roots_sha = load_roots(a.roots, a.step_min, a.step_max)
+    specs, roots_sha, replay_blobs = load_roots(a.roots, a.step_min,
+                                                a.step_max)
     result = run_duel(a.student, a.parent, specs, roots_sha,
                       seed_cont=a.seed_cont,
-                      teacher_style=a.teacher_style, workers=a.workers)
+                      teacher_style=a.teacher_style, workers=a.workers,
+                      replay_blobs=replay_blobs)
     result["window"] = {"step_min": a.step_min, "step_max": a.step_max}
     _atomic_dump(_sanitize(result), a.out)
     s = result["summary"]
