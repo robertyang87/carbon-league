@@ -6,6 +6,12 @@ independent and understating the SE by up to sqrt(2) (section 20 R2:
 the independent unit is the seed). The SE now runs over per-seed
 cluster means, and rows carry n_seeds alongside n.
 
+Emission caliber (Codex re-review item 3): with a single seed the
+clustered SE is inestimable and the summary rows must emit se/se_u as
+null -- never 0.0, which falsely claims a zero-width interval on data
+that visibly disperses (the helper returns None; the emission layer
+must not convert it). Mirrors stage1_teacher_gate's None for n < 2.
+
 Run: python test_clustered_se.py  (from code/, or an acceptance tree)
 """
 import os
@@ -58,6 +64,20 @@ def main():
     se1, n1 = PT._clustered_se([(7, 5.0), (7, -5.0)])
     check("a single seed cluster yields no SE (None), never an iid fallback",
           se1 is None and n1 == 1)
+
+    # Emission layer (item 3): a single seed's summary row must carry
+    # se/se_u as None (JSON null = inestimable), not 0.0 -- even though
+    # the two seats visibly disperse (iid se of [100, -50] is ~75).
+    import json as _json
+    res1 = [{"games": [{"opp": "X", "seed": 7, "margin": 100.0},
+                       {"opp": "X", "seed": 7, "margin": -50.0}]}]
+    row1 = PT.summarize_eval(85, res1)[0]
+    check("trainer emission: single-seed se and se_u are None, never 0.0",
+          row1["n_seeds"] == 1 and row1["se"] is None and row1["se_u"] is None
+          and '"se": null' in _json.dumps(row1))
+    srow1 = EV.summarize({"X": [(7, 100.0), (7, -50.0)]})["X"]
+    check("standalone emission: single-seed se is None while se_iid shows dispersion",
+          srow1["n_seeds"] == 1 and srow1["se"] is None and srow1["se_iid"] > 0.0)
 
     print(f"==== {sum(RES)}/{len(RES)} checks passed ====", flush=True)
     return 0 if all(RES) else 1
