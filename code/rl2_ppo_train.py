@@ -97,6 +97,10 @@ def parse():
       help="utility critic source: auto uses init for a fresh run, or a checkpoint declaring U/utility training; "
            "checkpoint explicitly accepts a legacy checkpoint's critic provenance; init explicitly resets the "
            "complete separate critic and its optimizer after resume (never just a head on a different trunk)")
+    a("--allow-u-mode-problems", action="store_true",
+      help="F6: launch although u_mode_check() reports a Terminal-U contract problem (gamma/rscale != 1, shaping "
+           "terms, utility head without --reward u). Without this flag such a launch is refused; with it the "
+           "problems and the override are recorded in effective_params.json")
     a("--win-bonus", type=float, default=0.1)
     a("--c-dep", type=float, default=0.0)
     a("--c-lost", type=float, default=0.0)
@@ -247,9 +251,11 @@ def u_mode_check(args):
     1/5000) a 299-step game discounts the terminal reward to 0.995**298 =
     0.22 of its value at the first decision and scales it by 2e-4 -- the
     critic would then be fitting something that is not U. Returns a list of
-    problems (empty = consistent); main() prints them loudly and records
-    them in effective_params.json. Not a refusal: a staged switch may pass
-    through intermediate values deliberately."""
+    problems (empty = consistent). The refusal lives in u_mode_gate()
+    (F6): main() refuses a launch with problems unless the deliberate
+    --allow-u-mode-problems override is given (a staged switch may pass
+    through intermediate values); either way they are recorded in
+    effective_params.json."""
     probs = []
     if args.reward == "u":
         if abs(args.gamma - 1.0) > 1e-12:
@@ -261,6 +267,19 @@ def u_mode_check(args):
             probs.append("c_dep/c_lost are ignored in u mode (no shaping terms)")
     if args.value_head == "utility" and args.reward != "u":
         probs.append("--value-head utility without --reward u: the utility head is an E[U] readout")
+    return probs
+
+
+def u_mode_gate(args):
+    """F6: launch refusal for the Terminal-U contract. Returns the problem
+    list when the launch may proceed (empty, or non-empty under the
+    explicit --allow-u-mode-problems override); raises SystemExit naming
+    every problem otherwise. Called before anything is loaded or written."""
+    probs = u_mode_check(args)
+    if probs and not getattr(args, "allow_u_mode_problems", False):
+        raise SystemExit("Terminal-U launch contract violated; refusing to start:\n  - "
+                         + "\n  - ".join(probs)
+                         + "\n(pass --allow-u-mode-problems to launch anyway; the override is recorded)")
     return probs
 
 
@@ -477,6 +496,7 @@ def _select_remote_files(names, cur_it, max_stale):
 
 def main():
     args = parse()
+    _u_probs = u_mode_gate(args)          # F6: refuse before any load / write
     args.out = os.path.abspath(args.out)
     # R03: resolve built-in defaults for the None-sentinel hyper-parameters (see parse()).
     lr0 = 1e-5 if args.lr is None else args.lr
@@ -611,7 +631,8 @@ def main():
                    (float(hopt.param_groups[0]["lr"]) if hopt is not None else None),
             "kl_coef": float(kl_coef), "resumed_from": args.resume, "it0": it0,
             "reward": args.reward, "gamma": args.gamma, "rscale": args.rscale,
-            "value_head": args.value_head, "u_mode_problems": u_mode_check(args),
+            "value_head": args.value_head, "u_mode_problems": _u_probs,
+            "u_mode_override": bool(_u_probs) and bool(args.allow_u_mode_problems),
             "utility_provenance": utility_plan, "critic_warmup_iters": warm_iters}
     _eff["resume_warmup_completed"] = warm_done
     _eff["resume_warmup_counts_as_iteration"] = False
