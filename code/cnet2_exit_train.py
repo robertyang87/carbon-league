@@ -12,6 +12,7 @@ env: BC_INIT (warm start npz), BC_BS 512, BC_LR 3e-4, EX_MIX 0.5, EX_CH_W 3, EX_
      BC_MAXSTEPS, EX_STEPS_PER_EPOCH (default: one pass over the search train set)
 """
 import hashlib
+import io
 import json
 import os
 import sys
@@ -49,7 +50,24 @@ def _sha256_path(p):
 _EXIT_ROW_KEYS = ("n_rows", "rows", "num_rows", "total_rows", "row_count", "n")
 
 
-def load_exit(dirn):
+def load_exit(src):
+    # Consumption is single-read (X04 same-class addition): `src` is
+    # the bundle resolve_exit_arg returns. For a sealed generation the
+    # bundle carries the exact bytes _verify_exit_generation certified
+    # (field bytes + meta bytes); for a legacy flat directory each
+    # field file is read exactly once here and both the identity hash
+    # and the parsed array derive from that one read. Nothing is
+    # re-opened by path after its hash is taken, so the bytes trained
+    # on are the bytes the identity record (and, for sealed products,
+    # the manifest) certifies -- a file swapped after verification can
+    # no longer be trained on under the verified identity. Tradeoff:
+    # arrays are materialised in memory instead of mmap'd; the finite
+    # scan below already touched every float page under mmap, and
+    # training gathers rows across the whole set, so residency matches
+    # actual use.
+    if isinstance(src, str):
+        src = {"dir": src, "meta_raw": None, "field_bytes": None}
+    dirn = src["dir"]
     keys = list(FIELDS) + list(EXTRA)
     # D1 (Grok review, P1): the exit half of this trainer used to np.load
     # every flat file bare -- no row cross-check, no finite scan, no
@@ -57,12 +75,28 @@ def load_exit(dirn):
     # through cnet2_train.load's full gate stack. The checks below are
     # the trainer-side minimum for the flat exit format (the exit data
     # product itself carries no generation/manifest): identity hashes
-    # of the exact bytes on disk, a field row-count cross-check, and a
+    # of the exact bytes consumed, a field row-count cross-check, and a
     # finite scan, all before anything trains on the data.
-    meta_raw = open(os.path.join(dirn, "meta.json"), "rb").read()
+    if src.get("meta_raw") is not None:
+        meta_raw = src["meta_raw"]
+    else:
+        meta_raw = open(os.path.join(dirn, "meta.json"), "rb").read()
     meta = json.loads(meta_raw)
-    field_sha = {k: _sha256_path(os.path.join(dirn, k + ".npy")) for k in keys}
-    D = {k: np.load(os.path.join(dirn, k + ".npy"), mmap_mode="r") for k in keys}
+    verified = src.get("field_bytes")
+    field_sha = {}
+    D = {}
+    for k in keys:
+        if verified is not None:
+            if k not in verified:
+                raise SystemExit(
+                    f"sealed exit generation in {dirn!r} is missing the "
+                    f"verified bytes of field {k!r}; refusing to train")
+            raw = verified[k]
+        else:
+            with open(os.path.join(dirn, k + ".npy"), "rb") as fh:
+                raw = fh.read()
+        field_sha[k] = hashlib.sha256(raw).hexdigest()
+        D[k] = np.load(io.BytesIO(raw))
     # Row-count cross-check: every field must agree with the row count
     # meta declares (when meta carries one) and with every other field;
     # a torn or mixed flat directory dies here, naming the field.
@@ -210,36 +244,50 @@ def _verify_exit_generation(gen_dir, ptr):
             f"exit manifest self-seal mismatch in {gen_dir!r}: manifest content does not "
             f"match its self_sha256; refusing to train")
     meta_p = os.path.join(gen_dir, "meta.json")
-    if not os.path.exists(meta_p) or _sha256_path(meta_p) != man.get("meta_sha256"):
+    if not os.path.exists(meta_p):
         raise SystemExit(
             f"exit generation meta seal mismatch in {gen_dir!r}: meta.json does not match "
             f"manifest meta_sha256; refusing to train")
+    # Single-read verification (X04 same-class addition): every file
+    # is read exactly once; the seal checks run over those bytes, and
+    # the SAME bytes are returned in the bundle for load_exit to
+    # consume. Verification no longer certifies one read of a path and
+    # lets the trainer train on a later re-read of it.
+    meta_raw = open(meta_p, "rb").read()
+    if hashlib.sha256(meta_raw).hexdigest() != man.get("meta_sha256"):
+        raise SystemExit(
+            f"exit generation meta seal mismatch in {gen_dir!r}: meta.json does not match "
+            f"manifest meta_sha256; refusing to train")
+    field_bytes = {}
     for k in sorted(man.get("fields", {})):
         info = man["fields"][k]
         p = os.path.join(gen_dir, info["file"])
         if not os.path.exists(p):
             raise SystemExit(
                 f"exit generation file missing: field {k!r} ({p!r}); refusing to train")
-        if os.path.getsize(p) != info["bytes"]:
+        raw = open(p, "rb").read()
+        if len(raw) != info["bytes"]:
             raise SystemExit(
                 f"exit generation file size mismatch: field {k!r} has "
-                f"{os.path.getsize(p)} bytes, manifest declares {info['bytes']}; "
+                f"{len(raw)} bytes, manifest declares {info['bytes']}; "
                 f"refusing to train")
-        if _sha256_path(p) != info["sha256"]:
+        if hashlib.sha256(raw).hexdigest() != info["sha256"]:
             raise SystemExit(
                 f"exit generation file hash mismatch: field {k!r} ({info['file']}); "
                 f"refusing to train")
-        rows = int(np.load(p, mmap_mode="r").shape[0])
+        rows = int(np.load(io.BytesIO(raw)).shape[0])
         if rows != info["rows"]:
             raise SystemExit(
                 f"exit generation file row mismatch: field {k!r} has {rows} rows, "
                 f"manifest declares {info['rows']}; refusing to train")
+        field_bytes[k] = raw
     print(json.dumps({"exit_data_sealed": {
         "generation": man.get("generation"), "dir": gen_dir,
         "format": man.get("format"),
         "files_verified": len(man.get("fields", {})),
     }}), flush=True)
-    return gen_dir
+    return {"dir": gen_dir, "meta_raw": meta_raw,
+            "field_bytes": field_bytes}
 
 
 def resolve_exit_arg(arg):
@@ -268,7 +316,7 @@ def resolve_exit_arg(arg):
         "note": "no manifest/current pointer: unsealed legacy exit product, "
                 "loading under transition gates (named per D1 spec)",
     }}), flush=True)
-    return arg
+    return {"dir": arg, "meta_raw": None, "field_bytes": None}
 
 
 def batch_np(Dbc, ibc, Dex, iex):
