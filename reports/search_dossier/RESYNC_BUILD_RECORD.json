@@ -1,0 +1,308 @@
+{
+ "basis": [
+  "reports/search_dossier/REVIEW_SEARCH_IMPLEMENTATION_R2_20261116.md S7 (R2-09, R2-10)",
+  "reports/search_dossier/RULING_R2_20261116.md S5 batch 3",
+  "reports/search_dossier/RULING_R2_ADDENDUM_20261116.md (R2-10 delivery condition)"
+ ],
+ "behavior_probes": {
+  "ab_cmp_h1": {
+   "setup": "seed 7000, pack seat 0 vs baseline package, diag variants on the delivery build chain",
+   "budget_2_5": {
+    "identical_steps": "0-13 action streams byte-identical",
+    "first_divergence": "step 14: old pack deadline-aborted that call (completed 0, leaf 0), new pack completed and changed - envelope-boundary jitter class, not semantics",
+    "old_totals": {
+     "calls": 271,
+     "completed": 232,
+     "changed": 113,
+     "leaf": 928,
+     "aborts": {
+      "deadline": 38,
+      "single_call_overrun": 1
+     }
+    },
+    "new_totals": {
+     "calls": 256,
+     "completed": 210,
+     "changed": 82,
+     "leaf": 840,
+     "aborts": {
+      "deadline": 32,
+      "budget_gate": 14
+     },
+     "note": "budget_gate = C_hi admission, absent in the fork; registered caliber addition"
+    }
+   },
+   "budget_30": {
+    "aborts": "none on either side (old 255/255 completed, new 263/263)",
+    "identical_steps": "0-13 action streams byte-identical",
+    "first_divergence": "step 14, classified by root replay as the mandated R2-09 prior-truncation fix: 5 post-dedup candidates; fork generation-order keep [0,1,2,3] with cand[3] (prior -70.02, lowest) guard-vetoed -> 3 evaluated = old trace leaf_calls 3; resync prior-order keep [0,1,2,4] dropping the lowest-prior candidate, keeping cand[4] DOWN (prior -58.44, highest) -> 4 evaluated = new trace leaf_calls 4; winner cand[4]",
+    "verdict": "CMP_H=1 behavior identical except the two registered corrections (prior truncation, C_hi admission); no unclassified divergence; all later divergences are downstream of the step-14 trajectory split"
+   }
+  },
+  "h2_continuation_guards": {
+   "full_game_budget_6_seed_7100": {
+    "frame_counts": {
+     "continuation": 2,
+     "screen": 729,
+     "production": 300,
+     "other": 0
+    },
+    "note": "continuation 2 = exactly one H=2 rollout (2 seats x 1 continuation step); cmp_guard_rewrites 0, errors 0"
+   },
+   "harvested_root_budget_30": {
+    "guard_delta": {
+     "continuation": 8,
+     "screen": 3
+    },
+    "leaf_calls_delta": 8,
+    "depth_hist_delta": {
+     "2": 1
+    },
+    "aborts_delta": {},
+    "action": "DOWN candidate (same as the H1 result at this root)"
+   }
+  },
+  "c_hi_vm_scale_trap": {
+   "finding": "on this VM (pre-cmp ~2.2 s/step) the first deadline-killed round pollutes the (K,H) cost samples (sample = whole-call time / leaf calls, recorded after every call - the frozen harness real_env records samples the same unconditional way), after which C_hi admission self-locks: BUDGET=6.0 game: 1 completed, 242 budget_gate; BUDGET=3.5 game: 1 completed, 224 budget_gate + 8 deadline",
+   "production_form_counter_evidence": "CMP_H=1 at BUDGET=30: 263 calls, zero gates, zero aborts",
+   "disposition": "caliber-inherent at VM cost scale, unchanged in this batch (frozen-caliber fidelity); venue re-measurement at S2 / production timing certification"
+  },
+  "anytime_retention": {
+   "method": "harvested root (seed 7000 step 14); agent warmed with CMP_H=1 along the recorded trajectory, live cfg flipped to CMP_H=2 with shrunk BUDGET for the root call only",
+   "rungs": [
+    {
+     "budget": 12.0,
+     "completed_delta": 1,
+     "depth_hist_delta": {
+      "1": 1
+     },
+     "changed_delta": 1,
+     "leaf_delta": 5,
+     "aborts_delta": {
+      "single_call_overrun": 1
+     },
+     "continuation_delta": 4,
+     "action": "H1 result (DOWN candidate) retained"
+    },
+    {
+     "budget": 16.0,
+     "completed_delta": 1,
+     "depth_hist_delta": {
+      "1": 1
+     },
+     "changed_delta": 1,
+     "leaf_delta": 6,
+     "aborts_delta": {
+      "single_call_overrun": 1
+     },
+     "continuation_delta": 6,
+     "action": "H1 result (DOWN candidate) retained"
+    },
+    {
+     "budget": 20.0,
+     "completed_delta": 1,
+     "depth_hist_delta": {
+      "1": 1
+     },
+     "changed_delta": 1,
+     "leaf_delta": 7,
+     "aborts_delta": {
+      "single_call_overrun": 1
+     },
+     "continuation_delta": 8,
+     "action": "H1 result (DOWN candidate) retained"
+    }
+   ],
+   "diag_budget_30_jitter_instance": {
+    "wall_s": 31.02,
+    "leaf_delta": 7,
+    "depth_hist_delta": {
+     "1": 1
+    },
+    "aborts_delta": {
+     "single_call_overrun": 1
+    },
+    "action": "H1 result retained"
+   },
+   "kernel_level": "generator self-proof 7/7 + embedded-module suite cases"
+  },
+  "telemetry_through_pack": {
+   "game": "BUDGET=2.5 diag, seed 7000",
+   "template_cmp_stats_equals_inner": true,
+   "last_stats_cmp_calls": 256,
+   "live_cmp_stats_calls": 256,
+   "old_pack_last_stats_cmp": null,
+   "snapshot_keys": [
+    "abort_reasons",
+    "phase_cost_accum_s",
+    "total_cost_accum_s"
+   ],
+   "note": "cmp_guard_errors / cmp_guard_rewrites follow the pack counter convention (key appears on first increment); both were 0 in this game"
+  },
+  "lost_probes": "CMP_H=2 / BUDGET=20 full-game probe lost twice to runtime restarts (writes only at game end); not rerun - H>=2 evidence rests on the BUDGET=6.0 full game frame counts + harvested-root deterministic probes"
+ },
+ "certify": {
+  "caliber": "this VM, certify_pack fc33be6c + eval_v53 45792dfb, seeds 986500/986501, 2 games vs Master2 2aebfbc1",
+  "new_pack": {
+   "game_wall_s": [
+    831,
+    822
+   ],
+   "games": "2/2 complete 299 steps, internal errors 0",
+   "gates_fail": [
+    "step_hard_le_limit",
+    "slow_count_le_limit",
+    "overage_pool_le_limit"
+   ],
+   "gates_pass": [
+    "init_le_limit",
+    "game_wall_le_limit",
+    "internal_errors_zero",
+    "identity_three_way",
+    "child_exit_clean"
+   ],
+   "init_s": [
+    2.04,
+    1.53
+   ],
+   "overall": "FAIL (timing gates only, VM-bound)",
+   "peak_rss_mib": 128.1,
+   "step_max_ms": [
+    4269.7,
+    3910.0
+   ],
+   "step_mean_ms": [
+    2207.6,
+    2172.4
+   ]
+  },
+  "note": "timing gates fail identically on the control at this VM caliber (step mean ~2s vs deployment caliber); production-form timing certification re-runs at the venue (C1, S2 caliber) at subject freeze per RULING_R2, not claimed from this VM",
+  "old_pack_control": {
+   "game_wall_s": [
+    766,
+    832
+   ],
+   "games": "2/2 complete 299 steps, internal errors 0",
+   "gates_fail": [
+    "step_hard_le_limit",
+    "slow_count_le_limit",
+    "overage_pool_le_limit"
+   ],
+   "gates_pass": [
+    "init_le_limit",
+    "game_wall_le_limit",
+    "internal_errors_zero",
+    "identity_three_way",
+    "child_exit_clean"
+   ],
+   "init_s": [
+    1.4,
+    1.29
+   ],
+   "overall": "FAIL (identical gate pattern)",
+   "peak_rss_mib": 128.0,
+   "step_max_ms": [
+    3741.7,
+    5165.9
+   ],
+   "step_mean_ms": [
+    2044.1,
+    2200.2
+   ]
+  }
+ },
+ "date": "2026-11-16",
+ "frozen_baselines": {
+  "cnet2_search base (code md5)": "94f7fb6438bb7577b141e388f068e122",
+  "comparator.py": "53e5c1a1dd6ccc1a1f3343a47fc9b589",
+  "leaf_adapters.py": "a5852c73f7187bb3e179428a81a6fba9",
+  "real_env.py": "f9bfacb72e112859459a57aceebbbf46",
+  "segment-0 outputs replaced": {
+   "cnet2_search_cmp.py": "664744efb27cb8d47f888add77d6ffe4",
+   "code/cnet2_comparator.py (fork)": "ad3ec3e467ba5010ca76fbcbf47984ea",
+   "echo4_search_int8.py": "be96d457c8c6d5a5da41dea861e4639d (9030752 B, blob fd45f35b13e1827a794e47aec4708ceee92043b8)"
+  },
+  "telemetry.py": "91a7121f02bc848045a5dcae9554ec0e"
+ },
+ "kernel": {
+  "generator": "make_comparator.py (md5 f22e7f325f8d2b8bc4a572ee0ac12004)",
+  "method": "mechanical assembly of the three frozen prototype sources; no hand-written fork; regeneration byte-equality is the sync gate (verified)",
+  "module": "cnet2_comparator.py",
+  "module_bytes": 23572,
+  "module_md5": "385190bd2f59d90f4e68a0d2dc6091a1",
+  "self_proof": {
+   "adapter_finiteness_before_tanh": "PASS",
+   "anytime_retains_previous_round": "PASS",
+   "c_hi_admission_and_cold_start": "PASS",
+   "deadline_abs_no_topup": "PASS",
+   "finiteness_gate_inf_nan": "PASS",
+   "kernel_decide_and_decide_multi_present": "PASS",
+   "phase_and_total_telemetry": "PASS"
+  }
+ },
+ "pack": {
+  "build_chain": {
+   "control_rebuild": "old modules + staged packer reproduces the current package byte-for-byte except exactly the one template forwarding line (diff verified)",
+   "packer": "cnet2_search_pack.py staged build form, md5 a1382d0ede6e7fac7e605231f214f13b (repo code-route 5b00e76a lineage + MODS-5 delta + template cmp_stats forwarding line)",
+   "quantizer": "cnet2_pack.py pinned 119e9bb9bf8413685b87721cff8cfe18, untouched",
+   "weights_npz": "ckpt20_q8_from_echo4.npz md5 3faf30a13379a155900438f95929e54e, both slots"
+  },
+  "bytes": 9041707,
+  "conf": "byte-identical literal to the current package (SEARCH=True, ROLL=self, GUARD=True, GUARD_NARROW=True, MODE=sweep, MIX=False, TEACHER=2, TEACHER_LATE=2, LATE_STEP=240, BUDGET=0.7, HARD=0.85, ABORT_DL=0.95, START_DL=None, CMP_H=1); SEARCH/CMP-related CONF differences vs current package: none",
+  "dedup_route_b": "NOT folded in: dedup regression not fully landed (A/B chain outputs and regression_evidence.json missing in switch/dedup/); non-deduped build per task instruction, route B folds in at the production-registration rebuild",
+  "embedded_src_md5": {
+   "cnet2_comparator": "385190bd2f59d90f4e68a0d2dc6091a1",
+   "cnet2_feat": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search": "c3222eea76ea9d42c160626c2e239ca0",
+   "fastsim": "aefe6c83826efae4de83bef8c643c80b"
+  },
+  "file": "echo4_search_int8_resync.py (local deliverable; registration is the strategy group's act at delivery)",
+  "git_blob_sha1": "c932a0cfdd041d9dbb2cd1a17a55713d7ee29522",
+  "md5": "cba5923c13fd629208a4991811723980",
+  "sha256": "0117eae8313c7bfc8e7c8ade00ba75486ebf1f2388fc9d9e9909cb8ba035c069",
+  "size_limit_ok": true,
+  "telemetry": {
+   "error_key_rename": "cmp_guard_err -> cmp_guard_errors (*_errors aggregation convention); continuation rewrites counted separately as cmp_guard_rewrites",
+   "eval_consumption": "agent.last_stats[\"cmp\"] (any build of this pack) or agent.cmp_stats.snapshot() (live channel on the constructed agent)",
+   "stats_mirror": "stats[\"cmp\"] = cmp_stats.snapshot() after every record_decision; crosses the boundary inside agent.last_stats (template forwards _AG.stats)",
+   "template_forwarding": "agent.cmp_stats = getattr(_AG, \"cmp_stats\", None) after the last_stats line"
+  }
+ },
+ "record": "R2 batch 3: kernel resync + telemetry through the pack + verify-pack closure prep",
+ "search_successor": {
+  "bytes": 131590,
+  "diff_vs_base": "+342 -95 lines, 16 hunks, only the 9 header-listed changes",
+  "file": "cnet2_search_cmp2.py",
+  "generator": "make_search_cmp2.py (md5 81f2d981fa8352423fdccf77c9e945bd)",
+  "md5": "c3222eea76ea9d42c160626c2e239ca0",
+  "r2_09_fixes": [
+   "candidate truncation by prior lg0 order (real_env._gen_candidates_raw formula)",
+   "H>=2 continuation per-seat guards, split sources (real_env rollout semantics, R2-01-fixed)",
+   "leaf dispatch by terminal kind: extinct -> F01 nested leaf w/ pre-step cash; time -> F04 real terminal cash",
+   "C_hi bucketed by (n_candidates, horizon), bucket max / global max / None cold start",
+   "single absolute monotonic deadline anchored at _inner entry, passed as deadline_abs"
+  ]
+ },
+ "staged_authoritative_tree": {
+  "files": {
+   "code/cnet2_comparator.py": "385190bd2f59d90f4e68a0d2dc6091a1",
+   "code/cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "code/cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "code/cnet2_search.py": "c3222eea76ea9d42c160626c2e239ca0",
+   "code/cnet2_search_pack.py": "a1382d0ede6e7fac7e605231f214f13b",
+   "code/fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "code/packs/cnet2_pack.py": "18bf47b76a642aea2fd565ed9ed971f7 (repo current, unmodified)",
+   "code/packs/cnet2_search_pack.py": "453f543a609328bd387171800b4cac9c (MODS extended to five + template forwarding)"
+  },
+  "location": "local only: ~/workspace/search-group/resync/auth_tree/ (NOT pushed to repo code/ slots)",
+  "verify_pack": "PASS (exit 0, ok=true, mismatches [], all five embedded == authoritative); control: current package vs staged tree FAILs with mismatches exactly [cnet2_comparator, cnet2_search]"
+ },
+ "suites_on_embedded_modules": {
+  "method": "embedded five sources extracted from the finished pack; prototype names bound via import-path shims to the embedded cnet2_comparator; frozen harness files unmodified (real_env f9bfacb7, s1_battery2 fc9d3557, pack_bridge 19871b42, smoke_real_s1 2425f340, s1_verify3 17310cc1)",
+  "tests_r2_fix.py": "11/11 PASS",
+  "tests_s1.py": "7/7 PASS",
+  "tests_s1_fix.py": "15/15 PASS",
+  "tests_s1_fix_r2.py": "10/10 PASS"
+ }
+}
