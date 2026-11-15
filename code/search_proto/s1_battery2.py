@@ -9,16 +9,22 @@ expect_met 全灭也照样输出 BATTERY: PASS、退出 0。本版把正式判�
   A1 完成比较 > 0（completed_comparisons 总和与完成根数均 > 0）
   A2 正例全过（expect_changed=True 的构造例 expect_met 必须全 True）
   A3 反例不取（expect_changed=False 的构造例 expect_met 必须全 True）
-  A4 选中精确最优（每例 chosen_is_settlement_best 必须为 True）
-  A5 叶↔结算误差阈内（leaf_vs_settlement_max_abs_err ≤ 1e-6，逐例）
+  A4 选中精确最优（正典比较例 chosen_is_settlement_best 全 True；
+     R2-05：分母＝正典名单，缺例/缺字段不许消失在分母外）
+  A5 叶↔结算误差阈内（leaf_vs_settlement_max_abs_err 须 finite 且
+     0≤v≤1e-6，逐正典例；R2-05：NaN/负误差不得过）
   A6 权威终局一致性（结算按权威终局口径产出：SI01 修复已落地，
      fixture 按权威终局重做——298 根逐候选独立真跑一步到终态
      step299 对账、297 根 H=2 推进冻结于 299 并断言零越界策略
-     调用、299/300/灭绝根入口拒绝记账；口径标记 authoritative）
-  A7 最低根数/局数（根 ≥ 40、局 ≥ 3，注册电池规模口径）
-  A8 中止与异常为 0（中止根、守卫异常、构造例 error/exception、
-     续弈 exception 均为 0）
-  A9 证据自描述（run_id/源码 md5 集/包 md5/CONF 快照/fixture 身份齐备）
+     调用、299/300/灭绝根入口拒绝记账；R2-05：逐例核实质字段，
+     不只信 meta 口径字符串）
+  A7 最低根数/局数（根 ≥ 40、局 ≥ 3；R2-05：从 roots 逐根重算
+     唯一根/局数，不信 summary）
+  A8 中止与异常为 0（中止根、B 腿 abort_reason、守卫异常、构造例
+     error/exception、续弈 exception 均为 0；R2-05：B 腿中止必扫，
+     超时回退不得冒充成功负例）
+  A9 证据自描述（源码 md5 集/包 md5/CONF 快照/fixture 身份齐备
+     且与在案用例名一致；R2-05：核实质字段，不只信元数据 boolean）
 
 模式：
   formal（默认）：断言全 PASS 才退出 0；FAIL 退出 2；未验退出 3。
@@ -127,16 +133,25 @@ def _sha256_json(obj) -> str:
     return hashlib.sha256(blob).hexdigest()
 
 
+# fixture 身份覆盖的全部构造参数（R2-05 P3）：旧版只取 case/
+# expect_changed/spec，改 step 298→100 或 seat 0→1 身份不变；且
+# items 里 bool(expect_changed) 把 None（拒绝例）与 False 压成同
+# 值。本版逐键取原值、缺失键以哨兵标记——None/False/缺失三者两两
+# 可区分，任一构造参数变化都改身份。
+_IDENTITY_KEYS = ("case", "expect_changed", "kind", "step", "root_step",
+                  "me", "seat", "key_uid", "geometry", "cash", "workers",
+                  "carbon_cells", "spec", "design", "design_note")
+_IDENTITY_ABSENT = "__ABSENT__"
+
+
 def fixture_identity(cases_meta, seed0, collection_params):
-    """cases_meta: [{case, expect_changed, spec|identity_fields}]。"""
+    """cases_meta: 构造例定义 dict（含上列任一构造参数）。"""
     items = []
     for c in cases_meta:
-        ident = {k: c[k] for k in ("case", "expect_changed")
-                 if k in c}
-        if "spec" in c:
-            ident["spec"] = c["spec"]
-        items.append({"case": c["case"],
-                      "expect_changed": bool(c["expect_changed"]),
+        ident = {k: (c[k] if k in c else _IDENTITY_ABSENT)
+                 for k in _IDENTITY_KEYS}
+        items.append({"case": c.get("case"),
+                      "expect_changed": c.get("expect_changed"),
                       "identity_sha256": _sha256_json(ident)})
     return {"seed0": seed0, "collection_params": collection_params,
             "part_b_cases": items}
@@ -149,17 +164,104 @@ def atomic_write_json(path, doc):
     os.replace(tmp, path)
 
 
-# ---------------- 正式断言 ----------------
+# ---------------- 正式断言（R2-05 加固） ----------------
+# 正典用例名单：与 run_live 的构造一一对应（8 权威终局比较例＋
+# B9 灭绝∩到时＋5 入口拒绝例）。判读器按此名单校验：缺例、重名、
+# 名单外用例、缺必需字段一律显形，不许缺字段用例消失在分母外。
+CANONICAL_PART_B = {}
+for _step in (298, 297):
+    for _seat in (0, 1):
+        CANONICAL_PART_B[f"B_capture_step{_step}_seat{_seat}"] = ("compare", True)
+        CANONICAL_PART_B[f"B_deposit_step{_step}_seat{_seat}"] = ("compare", False)
+CANONICAL_PART_B["B9_extinct_time_coincide"] = ("b9", False)
+for _step in (299, 300):
+    for _seat in (0, 1):
+        CANONICAL_PART_B[f"REJ_step{_step}_seat{_seat}"] = ("rejection", None)
+CANONICAL_PART_B["REJ_extinct_step100_seat0"] = ("rejection", None)
+
+_REQUIRED_FIELDS = {
+    "compare": ("expect_changed", "expect_met", "abort_reason",
+                "chosen_is_settlement_best",
+                "leaf_vs_settlement_max_abs_err", "settlement_rule",
+                "settlement_source", "terminal_freeze", "root_step",
+                "me", "key_uid"),
+    "b9": ("expect_changed", "expect_met", "abort_reason",
+           "leaf_vs_settlement_max_abs_err", "f01_expected_leaf",
+           "suicidal_terminal", "settlement_rule", "root_step",
+           "me", "key_uid"),
+    "rejection": ("kind", "expect_changed", "rejected",
+                  "decide_returned_none", "settlement_rule",
+                  "root_step", "me"),
+}
+
+
+def _is_md5(v):
+    return (isinstance(v, str) and len(v) == 32
+            and all(ch in "0123456789abcdef" for ch in v.lower()))
+
+
 def evaluate_formal(summary, roots, part_b, verification, meta):
     """返回逐项断言 [{id, name, status, detail}]，status ∈ PASS/FAIL/未验。
 
-    meta: {settlement_rule, evidence_meta_complete}
+    R2-05 加固口径：先整档校验（正典名单/唯一身份/必需字段）再计
+    算判据；A8 扫 B 腿 abort_reason（超时回退不得冒充成功负例）；
+    A5 误差须 finite 且 0<=v<=tol；A7 从 roots 逐根重算唯一根/局
+    数（不信 summary）；A6/A9 核实质字段（逐例 settlement_rule/
+    结算来源/冻结探针、源码 md5 集/包 md5/CONF 快照/fixture 身份
+    与在案用例名一致），不只信口径字符串与元数据 boolean。
+    meta: {settlement_rule, source_md5s, pack_md5, conf_snapshot,
+    fixture_identity}（run_live/run_replay 由证据本体填充）。
     """
     A = []
 
     def add(aid, name, status, detail):
         A.append({"id": aid, "name": name, "status": status,
                   "detail": detail})
+
+    # ---- 整档校验：正典名单＋唯一身份＋必需字段 ---------------------
+    by_name, dup_names, unknown_names = {}, [], []
+    for c in part_b:
+        if not isinstance(c, dict) or "case" not in c:
+            unknown_names.append(repr(c)[:40])
+            continue
+        nm = c["case"]
+        if nm in by_name:
+            dup_names.append(nm)
+        else:
+            by_name[nm] = c
+        if nm not in CANONICAL_PART_B:
+            unknown_names.append(nm)
+    missing_cases = [n for n in CANONICAL_PART_B if n not in by_name]
+    missing_fields = {}
+    for nm, (kind, _exp) in CANONICAL_PART_B.items():
+        c = by_name.get(nm)
+        if c is not None:
+            miss = [f for f in _REQUIRED_FIELDS[kind] if f not in c]
+            if miss:
+                missing_fields[nm] = miss
+    structural = []
+    if missing_cases:
+        structural.append(f"正典用例缺失 {missing_cases}")
+    if dup_names:
+        structural.append(f"用例重名 {dup_names}")
+    if unknown_names:
+        structural.append(f"名单外用例 {unknown_names}")
+    if missing_fields:
+        structural.append(f"必需字段缺失 {missing_fields}")
+
+    def canon(kind_want, expect_want):
+        return [by_name[n] for n, (k, e) in CANONICAL_PART_B.items()
+                if k in kind_want and e is expect_want and n in by_name]
+
+    def case_bad(c):
+        """比较例未达：异常在案、带中止回退、expect 未如实达成、
+        或记录的 expect_changed 与正典不符。"""
+        kind, exp = CANONICAL_PART_B[c["case"]]
+        return ("error" in c or "exception" in c
+                or c.get("abort_reason") is not None
+                or c.get("expect_met") is not True
+                or c.get("expect_changed") is not exp
+                or c["case"] in missing_fields)
 
     total_cc = sum(r.get("completed_comparisons", 0) for r in roots)
     completed_roots = sum(1 for r in roots
@@ -168,64 +270,127 @@ def evaluate_formal(summary, roots, part_b, verification, meta):
         "PASS" if (total_cc > 0 and completed_roots > 0) else "FAIL",
         f"completed_comparisons 总和={total_cc}，完成根={completed_roots}")
 
-    def cases_with(expect):
-        return [c for c in part_b if c.get("expect_changed") is expect]
-
-    def case_bad(c):
-        return ("error" in c or "exception" in c
-                or c.get("expect_met") is not True)
-
-    pos = cases_with(True)
+    pos_names = [n for n, (k, e) in CANONICAL_PART_B.items()
+                 if k in ("compare", "b9") and e is True]
+    pos = canon(("compare", "b9"), True)
     bad_pos = [c["case"] for c in pos if case_bad(c)]
+    miss_pos = [n for n in pos_names if n not in by_name]
     add("A2", "正例 expect_met 全过",
-        "FAIL" if (not pos or bad_pos) else "PASS",
-        f"正例 {len(pos)} 例，未达：{bad_pos if bad_pos else '无'}"
-        + ("（无正例在案）" if not pos else ""))
+        "FAIL" if (miss_pos or bad_pos) else "PASS",
+        f"正典正例 {len(pos_names)} 例，未达：{bad_pos if bad_pos else '无'}"
+        + (f"；缺失：{miss_pos}" if miss_pos else ""))
 
-    neg = cases_with(False)
+    neg_names = [n for n, (k, e) in CANONICAL_PART_B.items()
+                 if k in ("compare", "b9") and e is False]
+    neg = canon(("compare", "b9"), False)
     bad_neg = [c["case"] for c in neg if case_bad(c)]
+    miss_neg = [n for n in neg_names if n not in by_name]
     add("A3", "反例不取（expect_met 全过）",
-        "FAIL" if (not neg or bad_neg) else "PASS",
-        f"反例 {len(neg)} 例，未达：{bad_neg if bad_neg else '无'}"
-        + ("（无反例在案）" if not neg else ""))
+        "FAIL" if (miss_neg or bad_neg) else "PASS",
+        f"正典反例 {len(neg_names)} 例，未达：{bad_neg if bad_neg else '无'}"
+        + (f"；缺失：{miss_neg}" if miss_neg else ""))
 
-    best_flags = [(c["case"], c.get("chosen_is_settlement_best"))
-                  for c in part_b if "chosen_is_settlement_best" in c]
-    bad_best = [n for n, v in best_flags if v is not True]
-    if not best_flags:
-        add("A4", "选中精确最优", "未验", "无任何构造例记录该字段")
-    else:
-        add("A4", "选中精确最优",
-            "FAIL" if bad_best else "PASS",
-            f"记录 {len(best_flags)} 例，未达：{bad_best if bad_best else '无'}")
+    cmp_names = [n for n, (k, e) in CANONICAL_PART_B.items()
+                 if k == "compare"]
+    bad_best = []
+    for nm in cmp_names:
+        c = by_name.get(nm)
+        if c is None or nm in missing_fields \
+                or c.get("chosen_is_settlement_best") is not True:
+            bad_best.append(nm)
+    add("A4", "选中精确最优",
+        "FAIL" if bad_best else "PASS",
+        f"正典比较例 {len(cmp_names)} 例（分母固定，不随字段在场与否"
+        f"增减），未达：{bad_best if bad_best else '无'}")
 
-    errs = [(c["case"], c["leaf_vs_settlement_max_abs_err"])
-            for c in part_b if "leaf_vs_settlement_max_abs_err" in c]
-    bad_err = [(n, v) for n, v in errs if v is None or v > LEAF_SETTLE_TOL]
-    if not errs:
-        add("A5", "叶↔结算误差阈内", "未验", "无任何构造例记录误差字段")
-    else:
-        add("A5", "叶↔结算误差阈内",
-            "FAIL" if bad_err else "PASS",
-            f"记录 {len(errs)} 例，tol={LEAF_SETTLE_TOL}，超阈：{bad_err}")
+    err_names = [n for n, (k, e) in CANONICAL_PART_B.items()
+                 if k in ("compare", "b9")]
+    bad_err = []
+    for nm in err_names:
+        c = by_name.get(nm)
+        if c is None or nm in missing_fields:
+            bad_err.append((nm, "缺例/缺字段"))
+            continue
+        v = c.get("leaf_vs_settlement_max_abs_err")
+        if isinstance(v, bool) or not isinstance(v, (int, float)) \
+                or not np.isfinite(v) or v < 0 or v > LEAF_SETTLE_TOL:
+            bad_err.append((nm, v))
+    add("A5", "叶↔结算误差阈内",
+        "FAIL" if bad_err else "PASS",
+        f"正典 {len(err_names)} 例，tol={LEAF_SETTLE_TOL}，须 finite 且 "
+        f"0<=v<=tol，超阈/无效：{bad_err if bad_err else '无'}")
 
+    # A6：核实质字段，不只信 meta 口径字符串。
+    a6_problems = []
+    any_rule_field = any("settlement_rule" in c for c in by_name.values())
+    for nm, (kind, _exp) in CANONICAL_PART_B.items():
+        c = by_name.get(nm)
+        if c is None:
+            continue
+        if c.get("settlement_rule") != AUTHORITATIVE_SETTLEMENT_RULE:
+            a6_problems.append(
+                f"{nm} settlement_rule={c.get('settlement_rule')!r}")
+        if kind == "compare":
+            want_src = ("independent_step_to_299"
+                        if int(c.get("root_step", 0)) >= 298
+                        else "rollout_terminal_frozen_299")
+            if c.get("settlement_source") != want_src:
+                a6_problems.append(
+                    f"{nm} settlement_source={c.get('settlement_source')!r}"
+                    f"（须 {want_src}）")
+            tf = c.get("terminal_freeze")
+            if not isinstance(tf, dict) or tf.get("ok") is not True \
+                    or tf.get("h3_final_step") != real_env.TERMINAL_STEP:
+                a6_problems.append(f"{nm} 终局冻结探针未合 {tf!r}")
+        elif kind == "b9":
+            st = c.get("suicidal_terminal")
+            if not isinstance(st, dict) \
+                    or st.get("step_count") != real_env.TERMINAL_STEP \
+                    or st.get("terminal_kind") != "extinct":
+                a6_problems.append(f"{nm} 灭绝终局字段未合 {st!r}")
+            if c.get("f01_expected_leaf") != -102.0:
+                a6_problems.append(
+                    f"{nm} f01_expected_leaf={c.get('f01_expected_leaf')!r}")
+        elif kind == "rejection":
+            if c.get("rejected") is not True \
+                    or c.get("decide_returned_none") is not True:
+                a6_problems.append(f"{nm} 入口拒绝未如实记账")
     rule = meta.get("settlement_rule")
-    add("A6", "权威终局一致性",
-        "PASS" if rule == AUTHORITATIVE_SETTLEMENT_RULE else "未验",
-        f"在案结算口径={rule!r}；权威口径须为 "
-        f"{AUTHORITATIVE_SETTLEMENT_RULE!r}（SI01：根/结算时间轴须按 "
-        "step298 最后有效动作、终态 step299 重做后才可签）")
+    if rule is not None and rule != AUTHORITATIVE_SETTLEMENT_RULE:
+        a6_problems.append(f"meta 口径字符串 {rule!r} 与权威口径不符")
+    if a6_problems:
+        a6_status = "FAIL"
+    elif missing_cases or not any_rule_field:
+        a6_status = "未验"
+    else:
+        a6_status = "PASS"
+    add("A6", "权威终局一致性", a6_status,
+        ("；".join(a6_problems) if a6_problems else
+         ("逐例实质字段核合（settlement_rule/结算来源/冻结探针/灭绝"
+          "恒等/拒绝记账），权威口径 " + AUTHORITATIVE_SETTLEMENT_RULE)
+         if a6_status == "PASS" else
+         "正典用例缺失或无逐例结算字段在案，实质无从核（旧包回放）"))
 
-    total_roots = summary.get("total_roots", len(roots))
-    games = summary.get("games_played")
+    # A7：从 roots 逐根重算唯一根/局数，不信 summary。
+    root_ids = [(r.get("game"), r.get("seat"), r.get("step"))
+                for r in roots if isinstance(r, dict)]
+    id_complete = len(root_ids) == len(roots) and all(
+        v is not None for t in root_ids for v in t)
+    uniq_roots = len(set(root_ids)) if id_complete else 0
+    uniq_games = len({t[0] for t in root_ids}) if id_complete else 0
     add("A7", "最低根数/局数达标",
-        "PASS" if (total_roots >= MIN_ROOTS_FORMAL
-                   and (games or 0) >= MIN_GAMES_FORMAL) else "FAIL",
-        f"根 {total_roots}（须 ≥{MIN_ROOTS_FORMAL}），"
-        f"局 {games}（须 ≥{MIN_GAMES_FORMAL}）")
+        "PASS" if (id_complete and uniq_roots >= MIN_ROOTS_FORMAL
+                   and uniq_games >= MIN_GAMES_FORMAL) else "FAIL",
+        f"逐根重算：唯一根 {uniq_roots}（须 ≥{MIN_ROOTS_FORMAL}），"
+        f"局 {uniq_games}（须 ≥{MIN_GAMES_FORMAL}）；summary 自报根 "
+        f"{summary.get('total_roots')}、局 {summary.get('games_played')}"
+        + ("；根记录缺 game/seat/step 身份字段" if not id_complete else ""))
 
     abort_roots = [r for r in roots if r.get("abort_reason")]
-    b_exc = [c["case"] for c in part_b if "error" in c or "exception" in c]
+    b_aborts = [(c["case"], c.get("abort_reason")) for c in part_b
+                if isinstance(c, dict) and c.get("abort_reason") is not None]
+    b_exc = [c["case"] for c in part_b
+             if isinstance(c, dict) and ("error" in c or "exception" in c)]
     v_exc = [i for i, v in enumerate(verification)
              if isinstance(v, dict) and "exception" in v]
     guard_exc = summary.get("guard_exceptions_total")
@@ -234,6 +399,8 @@ def evaluate_formal(summary, roots, part_b, verification, meta):
         problems.append(f"中止根 {summary['aborted_roots']}")
     if abort_roots:
         problems.append(f"根级 abort_reason 非空 {len(abort_roots)}")
+    if b_aborts:
+        problems.append(f"B 腿中止 {b_aborts}")
     if guard_exc:
         problems.append(f"守卫异常 {guard_exc}")
     if b_exc:
@@ -244,11 +411,49 @@ def evaluate_formal(summary, roots, part_b, verification, meta):
         "FAIL" if problems else "PASS",
         "；".join(problems) if problems else "中止/守卫异常/构造异常/续弈异常均 0")
 
-    add("A9", "证据自描述齐备",
-        "PASS" if meta.get("evidence_meta_complete") else "未验",
-        "run_id/源码 md5 集/包 md5/CONF 快照/fixture 身份须随证据包同行；"
-        + ("本包齐备" if meta.get("evidence_meta_complete")
-           else "来源证据缺上述字段（旧包回放）"))
+    # A9：核实质字段，不只信元数据 boolean。
+    src_md5s = meta.get("source_md5s")
+    pack_md5 = meta.get("pack_md5")
+    conf_snap = meta.get("conf_snapshot")
+    fix_id = meta.get("fixture_identity")
+    a9_detail_bits = []
+    a9_ok = True
+    a9_absent = False
+    if not isinstance(src_md5s, dict) or not src_md5s \
+            or not all(_is_md5(v) for v in src_md5s.values()):
+        a9_ok, a9_absent = False, True
+        a9_detail_bits.append("源码 md5 集缺失/格式不合")
+    if not _is_md5(pack_md5):
+        a9_ok, a9_absent = False, True
+        a9_detail_bits.append("包 md5 缺失/格式不合")
+    if not isinstance(conf_snap, dict) or not conf_snap:
+        a9_ok, a9_absent = False, True
+        a9_detail_bits.append("CONF 快照缺失")
+    fix_names = None
+    if isinstance(fix_id, dict) and isinstance(fix_id.get("part_b_cases"), list):
+        fix_names = [it.get("case") for it in fix_id["part_b_cases"]
+                     if isinstance(it, dict)]
+    a9_mismatch = False
+    if fix_names is None:
+        a9_ok, a9_absent = False, True
+        a9_detail_bits.append("fixture 身份缺失")
+    elif sorted(fix_names) != sorted(by_name) \
+            or len(fix_names) != len(set(fix_names)):
+        # 字段在场但与在案用例对不上：实质不一致，FAIL 不作未验。
+        a9_ok, a9_mismatch = False, True
+        a9_detail_bits.append(
+            f"fixture 身份用例名与在案用例不一致（fixture "
+            f"{len(fix_names)} 名 vs 在案 {len(by_name)} 名）")
+    if a9_ok:
+        a9_status = "PASS"
+    elif a9_mismatch:
+        a9_status = "FAIL"
+    else:
+        a9_status = "未验"
+    add("A9", "证据自描述齐备", a9_status,
+        "源码 md5 集/包 md5/CONF 快照/fixture 身份（与在案用例名一"
+        "致）须随证据包同行；" + ("本包实质字段齐备且一致" if a9_ok
+                                else "；".join(a9_detail_bits)))
 
     return A
 
@@ -853,8 +1058,12 @@ def run_live(mode):
             "墙钟为本 VM 共享 CPU 参考值，不作部署口径",
         ],
     }
+    fix_id = fixture_identity(case_defs, b1.SEED0, collection_params)
     meta = {"settlement_rule": SETTLEMENT_RULE,
-            "evidence_meta_complete": True}
+            "source_md5s": source_md5s(),
+            "pack_md5": pack_md5,
+            "conf_snapshot": conf_snapshot,
+            "fixture_identity": fix_id}
     assertions = evaluate_formal(summary, roots, b_results,
                                  verifications, meta)
     verdict = verdict_of(assertions)
@@ -876,8 +1085,7 @@ def run_live(mode):
                     "基线步耗 alone 0.42–0.69 s；本趟以 run_budget_s 跑"
                     "采集，部署口径考位复验归 S2，本包计时数不作部署证据",
         },
-        "fixture_identity": fixture_identity(case_defs, b1.SEED0,
-                                             collection_params),
+        "fixture_identity": fix_id,
         "settlement_rule": SETTLEMENT_RULE,
         "summary": summary, "roots": roots, "part_b": b_results,
         "verification": verifications,
@@ -895,7 +1103,10 @@ def run_replay(old_path):
     part_b = old.get("part_b", [])
     verification = old.get("verification", [])
     meta = {"settlement_rule": old.get("settlement_rule"),
-            "evidence_meta_complete": False}
+            "source_md5s": old.get("source_md5s"),
+            "pack_md5": (old.get("pack") or {}).get("md5"),
+            "conf_snapshot": old.get("conf_snapshot"),
+            "fixture_identity": old.get("fixture_identity")}
     assertions = evaluate_formal(summary, roots, part_b,
                                  verification, meta)
     verdict = verdict_of(assertions)
