@@ -111,7 +111,7 @@ def main():
         sim.reset(seed=SEED0 + g)
         while sim.step_count < 300 and len(elapsed_roots) < ROOTS_TARGET:
             obs0 = sim.obs(0)
-            harness.begin_step()
+            harness.begin_step(obs0)
             t0 = time.perf_counter()
             a0 = agent0(obs0)
             base_cost = time.perf_counter() - t0
