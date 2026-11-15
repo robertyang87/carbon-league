@@ -1,0 +1,80 @@
+MARKER=DGXSTATUS20261115_1343 START 2026-11-15 13:44:03 CST
+spark-29db
+ 13:44:03 up 25 days, 18:48, 5753 users,  load average: 87.61, 67.94, 51.52
+--- nvidia-smi ---
+96 %, [N/A], [N/A], 49
+--- load ---
+87.61 67.94 51.52 64/1269 1845848
+--- duel/training processes ---
+1605013    12:54:39  0.0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/k0_calib_driver.py
+1822104       47:06  104 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz --flatten-q --kl-beta 1.0 --lr 0.0002 --bs 256 --max-updates 400 --seed 7 --device cuda
+--- git fetch/pull/checkout processes ---
+NO_GIT_PROC
+--- k0_calib duels dir ---
+total 11868
+drwxrwxr-x 2 arm arm    4096 2026-11-15 12:56 .
+drwxrwxr-x 4 arm arm    4096 2026-11-15 12:56 ..
+-rw-rw-r-- 1 arm arm 4044214 2026-11-15 04:34 lr0.0002_s100_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4046164 2026-11-15 08:31 lr0.0002_s200_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4047451 2026-11-15 12:56 lr0.0005_s100_b1_seed7.json
+--- duel log mtimes ---
+ls: cannot access '/home/arm/junyang/k0_calib/duels/*.log': No such file or directory
+-rw-rw-r-- 1 arm arm   5226 2026-11-15 12:56 /home/arm/junyang/k0_calib/driver.log
+-rw-rw-r-- 1 arm arm    173 2026-11-15 04:34 /home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm    174 2026-11-15 08:31 /home/arm/junyang/k0_calib/duel_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm    174 2026-11-15 12:56 /home/arm/junyang/k0_calib/duel_lr0.0005_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47643 2026-11-15 01:11 /home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  93503 2026-11-15 05:06 /home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm 132651 2026-11-15 13:44 /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47483 2026-11-15 08:47 /home/arm/junyang/k0_calib/train_lr0.0005_s100_b1_seed7.log
+--- corpus counts ---
+m3s2_corpus index= 118 replays= 118
+carago_corpus index= 182 replays= 183
+fable_corpus index= 181 replays= 182
+ds_carago meta= {'total': 54418}
+ds_fable meta= {'total': 54119}
+--- repo HEAD vs remote ---
+f82191eb151c19abf7f15fa087d679e55fa02ef5
+60713c92f8485b53bf7e2d6cc6a6504a2f9c8295	HEAD
+--- recent file changes (last 60 min, excl logs) ---
+--- tailscale status ---
+100.84.148.73    dgx-spark            robertyang.ustb@  linux  -                                             
+100.65.8.27      carbon-spot-29       robertyang.ustb@  linux  offline, last seen 11h ago                    
+100.119.67.98    carbon-spot-34       robertyang.ustb@  linux  -                                             
+100.109.129.68   carbon-spot-35       robertyang.ustb@  linux  -                                             
+100.124.249.102  codex-environment-1  robertyang.ustb@  linux  -                                             
+100.79.251.87    gpu-l20-6            robertyang.ustb@  linux  -                                             
+100.78.149.20    mac-studio           robertyang.ustb@  macOS  -                                             
+100.92.70.87     muse                 robertyang.ustb@         active; relay "nyc", tx 36784528 rx 52687792  
+100.104.105.100  radxa-orion-o6       robertyang.ustb@  linux  -                                             
+--- spot-32 relay-key ssh (read-only probe; relay key HARD-CODED, never default key) ---
+ssh: connect to host 100.95.45.69 port 22: Connection timed out
+MARKER-END DGXSTATUS20261115_1343
+--- distill train progress (appended) ---
+ls: cannot access '/home/arm/junyang/k0_calib/*distill*': No such file or directory
+-rw-rw-r-- 1 arm arm  47643 2026-11-15 01:11 /home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  93503 2026-11-15 05:06 /home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm 133109 2026-11-15 13:44 /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47483 2026-11-15 08:47 /home/arm/junyang/k0_calib/train_lr0.0005_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm 133109 Nov 15 13:44 /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r-- 1 arm arm   5226 Nov 15 12:56 /home/arm/junyang/k0_calib/driver.log
+-rw-rw-r-- 1 arm arm    174 Nov 15 12:56 /home/arm/junyang/k0_calib/duel_lr0.0005_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47483 Nov 15 08:47 /home/arm/junyang/k0_calib/train_lr0.0005_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm    174 Nov 15 08:31 /home/arm/junyang/k0_calib/duel_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm  93503 Nov 15 05:06 /home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm    173 Nov 15 04:34 /home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47643 Nov 15 01:11 /home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+== /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r-- 1 arm arm 133109 2026-11-15 13:44 /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+== /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r-- 1 arm arm 133109 2026-11-15 13:44 /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+--- latest duel cell json ---
+-rw-rw-r-- 1 arm arm 4047451 Nov 15 12:56 /home/arm/junyang/k0_calib/duels/lr0.0005_s100_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4046164 Nov 15 08:31 /home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4044214 Nov 15 04:34 /home/arm/junyang/k0_calib/duels/lr0.0002_s100_b1_seed7.json
+--- distill train log tail (appended 1328) ---
+{"update": 284, "loss": {"total": 3.0323900134535267, "ce": 2.9456934733281863, "anchor_kl_weighted": 0.08669654012534037}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.08669654012534037, "p99": 0.2499237530375133}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "875f323fd2be0eaebee47f99a8d485e4a3427bbabd2386c1500e6be86fcd5fe7"}, "lr": 0.0002, "elapsed_s": 2792.0}
+{"update": 285, "loss": {"total": 3.127503395033488, "ce": 3.039287200264851, "anchor_kl_weighted": 0.08821619476863653}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.08821619476863653, "p99": 0.26912161089286063}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "a0575279575654e4079e21f5d2d44cdb44095b8b08193624ffcc28c0300f2bd1"}, "lr": 0.0002, "elapsed_s": 2801.58}
+{"update": 286, "loss": {"total": 3.052625660211384, "ce": 2.9584067908632465, "anchor_kl_weighted": 0.09421886934813728}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.09421886934813728, "p99": 0.35759131230163943}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "cdbf786249a9caf2fe839e27a8040af0d2a60c0af787146a24414f76e58cabc7"}, "lr": 0.0002, "elapsed_s": 2811.27}
+{"update": 287, "loss": {"total": 3.0581885398187425, "ce": 2.967129886727112, "anchor_kl_weighted": 0.0910586530916304}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.0910586530916304, "p99": 0.23482788788283307}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "a017eba3b35455a3f9fe0385c848861810449b313d4ec4b4ed1eaedb03897fdc"}, "lr": 0.0002, "elapsed_s": 2821.57}
+ls: cannot access '/home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz': No such file or directory

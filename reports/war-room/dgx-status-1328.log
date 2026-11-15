@@ -1,0 +1,61 @@
+DGXSTATUS1328A 13:29:33 CST
+spark-29db
+ 13:29:33 up 23 days, 18:33, 1893 users,  load average: 2.51, 3.10, 6.05
+/dev/nvme0n1p2  3.7T  1.7T  1.9T  47% /
+0 %, [N/A], 38, 3.96 W
+== TRAIN/GATE/DEPLOY PROCS ==
+ 580346       36:21 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 580368       36:21 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 580369       36:21 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 594445       05:31 bash deploy_stack.sh 100.98.67.20
+== GIT PROCS ==
+NO_GIT_PROC
+== DEPLOY STACK DETAIL ==
+ 594445       05:31 bash deploy_stack.sh 100.98.67.20
+total 1971176
+-rw-rw---- 1 arm arm       5979 Nov 13 12:26 README.md
+-rw-rw---- 1 arm arm       1317 Nov 13 11:25 golden.md5
+-rw-rw---- 1 arm arm       3397 Nov 13 11:25 deploy_stack.sh
+-rw-rw---- 1 arm arm       2665 Nov 13 11:25 bootstrap.sh
+== LAST_STATS VERIFY FIELD (repo tree is the live one) ==
+total 88
+-rw-rw-r-- 1 arm arm 83136 Nov 13 13:26 verify_search.jsonl
+/home/arm/junyang/carbon-repo/data/bigeval_live/verify_search.jsonl lines=34 mtime=2026-11-13 13:26:03
+-- margin rows --
+34
+{"seed": 993011, "side": 1, "margin": 181, "err": null, "t": "13:22:16", "serr": 0, "dep": 9689, "odep": 9664, "lost": 154, "olost": 608, "tinc": 3154, "otinc": 2985, "pspend": 1584, "opspend": 1600, "sspend": 300, "osspend": 180, "strand": 298.0, "ostrand": 21.3, "bk": 0, "lx": {"pol": {"col75": 9, "colsteps": 2215, "late15": 154.224, "late30": 0.0, "late30_self": 154.224, "late30_unknown": 0.0, 
+{"seed": 993012, "side": 0, "margin": 989, "err": null, "t": "13:25:47", "serr": 0, "dep": 8284, "odep": 8165, "lost": 38, "olost": 237, "tinc": 3442, "otinc": 2010, "pspend": 1408, "opspend": 796, "sspend": 100, "osspend": 120, "strand": 40.8, "ostrand": 21.0, "bk": 0, "lx": {"pol": {"col75": 9, "colsteps": 2255, "late15": 37.6551, "late30": 1.2765, "late30_self": 36.3786, "late30_unknown": 0.0, 
+{"seed": 993013, "side": 1, "margin": -1206, "err": null, "t": "13:26:03", "serr": 0, "dep": 7452, "odep": 7886, "lost": 157, "olost": 0, "tinc": 2825, "otinc": 3948, "pspend": 1320, "opspend": 1561, "sspend": 160, "osspend": 240, "strand": 5.6, "ostrand": 282.8, "bk": 0, "lx": {"pol": {"col75": 8, "colsteps": 2129, "late15": 156.66669, "late30": 45.3657, "late30_self": 111.30099, "late30_unknown"
+-- verify_search log tail --
+== HEAD ==
+main
+bb91be4b7b529bbf08d3a58c00f907bf1657d059
+bb91be4 corpus: hakimi3 0->70 replays (list 70; all verified gzip-loadable)
+a7ed8f9 fix(F05-gen): include per-game scores/margin/u + outcome class in generation key (label digest) -- label-only index edits now mint a new generation
+4d14eb3 corpus: m9xj460 12->27 replays (15 new, all verified gzip-loadable)
+## main
+ M data/bigeval.jsonl
+?? .venv
+?? code/katago_chain_draft.sh
+?? code/selfplay_gen.py
+015002e6922b2e2e6555685baa894d0d7acbd188	HEAD
+== CODE VERSION (a7ed8f95 check) ==
+3bb5857f833a94797ac6cdc2a5a28963  /home/arm/junyang/carbon-repo/code/cnet2_model
+95d2e29fbec8cfcebee57bf9bf0d25ed  /home/arm/junyang/carbon-repo/code/producer/se
+NO_CODE_VERSION_FILE
+== CORPORA ==
+m3s2_corpus replays: 118
+m3s2_corpus index: 118
+carago_corpus replays: 183
+carago_corpus index: 182
+fable_corpus replays: 182
+fable_corpus index: 181
+ds_carago games= 182
+ds_fable games= 181
+ds_m3s2 games= 118
+ds_gen1 games= 200
+== REPO CORPORA ==
+107
+27
+70
+DGXSTATUS1328A-END 13:29:37 CST

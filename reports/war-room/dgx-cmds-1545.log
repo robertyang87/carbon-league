@@ -1,0 +1,131 @@
+dispatched at 07:42:01
+CLAIMED run 43177181316 job 131044168042 status completed conclusion success
+ cn-shanghai
+2026-11-12T07:42:09.2288170Z ##[endgroup]
+2026-11-12T07:42:29.0884031Z InvokeId: t-sh072vbqipss4jk
+2026-11-12T07:42:29.0894610Z --- status=Success exit=0 ---
+2026-11-12T07:42:29.0904647Z DGXCMDS1545Y3R8 L20-BEGIN 2026-11-12 15:42:11 CST
+2026-11-12T07:42:29.0924625Z DGXCMDS1545Y3R8 DGX-BEGIN 2026-11-12 15:42:22 CST
+2026-11-12T07:42:29.0938046Z --- M3S2-SH-FULL ---
+2026-11-12T07:42:29.0954367Z #!/bin/bash
+2026-11-12T07:42:29.0960774Z # advice 05:45: Master3s2 solo replica once >=100 replays: m3s2r1 from N1 base (attention), control m3s2g1 from Grove1; teacher row 2, its own replays only; ship to h24
+2026-11-12T07:42:29.0983284Z cd ~/junyang/carbon/code; D=../data; L=$D/dq_logs
+2026-11-12T07:42:29.0992766Z R="ssh -i /home/arm/.ssh/id_ed25519_carbon_relay -o IdentitiesOnly=yes -o ConnectTimeout=20"
+2026-11-12T07:42:29.1004590Z until [ -f $D/m3s2_corpus/READY ]; do sleep 60; done
+2026-11-12T07:42:29.1024642Z for i in $(seq 1 240); do [ -f $L/m6n1.done ] && [ -f $L/n1r2.done ] && break; sleep 60; done
+2026-11-12T07:42:29.1035130Z ship() { md5sum $D/weights/cnet2_$1_ep19.npz >> $L/md5.txt; rsync -az -e "$R" $D/weights/cnet2_$1_ep19.npz root@47.117.16.90:/root/carbon/data/weights/cnet2_$1L.npz && $R root@47.117.16.90 "touch /root/carbon/data/weights/cnet2_$1L.npz.ok" </dev/null; echo DONE > $L/$1.done; }
+2026-11-12T07:42:29.1045419Z rm -rf $D/ds_m3s2; CNET2_TOP_TEACHERS="claude-AlphaCarbon-Master3s2@2" ../.venv/bin/python build_top.py $D/ds_m3s2 $D/m3s2_corpus > $L/build_m3s2.log 2>&1 || exit 1
+2026-11-12T07:42:29.1062713Z rm -rf $D/ds_m3s2/shards; ../.venv/bin/python set_uw.py $D/ds_m3s2 1 1 1 >> $L/build_m3s2.log
+2026-11-12T07:42:29.1064427Z export BC_DEVICE=cuda BC_RAM=1 BC_THREADS=5 BC_USE_W=1 BC_USE_UW=1 BC_BS=256 BC_SAVE_EPOCHS=1 BC_PCT=0.1 BC_LR=3e-4
+2026-11-12T07:42:29.1065820Z unset BC_AMP BC_CLIP BC_TRAIN_PREFIX BC_CACHE_TRUNK BC_SELF_KL BC_EXIT_W BC_AUX_W BC_COMPILE BC_CAR_KL
+2026-11-12T07:42:29.1068177Z ( BC_INIT=$D/weights/cnet2_arch_n1_last.npz ../.venv/bin/python cnet2_train.py $D/ds_m3s2 $D/weights/cnet2_m3s2r1.npz 20 "{\"C\":128,\"NB\":8,\"D\":128,\"ZI\":1,\"TA\":4,\"TNH\":4}" > $L/m3s2r1.log 2>&1 && ship m3s2r1 ) &
+2026-11-12T07:42:29.1070486Z ( BC_INIT=$D/weights/cnet2_b128m2t3.npz ../.venv/bin/python cnet2_train.py $D/ds_m3s2 $D/weights/cnet2_m3s2g1.npz 20 "{\"C\":128,\"NB\":8,\"D\":128}" > $L/m3s2g1.log 2>&1 && ship m3s2g1 ) &
+2026-11-12T07:42:29.1071792Z wait
+2026-11-12T07:42:29.1072509Z --- CODE-GREP-FIX-INDEX ---
+2026-11-12T07:42:29.1073068Z analyze_corpus_mirror.py
+2026-11-12T07:42:29.1073582Z corpus_batch1_run.py
+2026-11-12T07:42:29.1074360Z corpus_batch1_verify.py
+2026-11-12T07:42:29.1074912Z extract_bc_fixed.py
+2026-11-12T07:42:29.1075448Z fork_s4_campfix.py
+2026-11-12T07:42:29.1075954Z fork_v0_2_nocampfix.py
+2026-11-12T07:42:29.1076445Z ladder_corpus.py
+2026-11-12T07:42:29.1076907Z ladder.py
+2026-11-12T07:42:29.1077363Z ladder_report.py
+2026-11-12T07:42:29.1077867Z reference_ace_t87_fix4.py
+2026-11-12T07:42:29.1078425Z --- LADDER-CORPUS-GREP ---
+2026-11-12T07:42:29.1079805Z 8:目录结构：index.json（快照格式：id/game/order/scores/strategies/winner/steps/file）、leaderboard.json、
+2026-11-12T07:42:29.1080883Z 47:        return m, fn, len(json.load(gzip.open(path))["steps"]) - 1
+2026-11-12T07:42:29.1081784Z 64:    ip = os.path.join(outdir, "index.json")
+2026-11-12T07:42:29.1082747Z 65:    index = {(g["id"], g["game"]): g for g in (json.load(open(ip)) if os.path.exists(ip) else [])}
+2026-11-12T07:42:29.1084302Z 67:    rows = lb["strategies"] + lb.get("extra", [])
+2026-11-12T07:42:29.1085444Z 70:        rows += [s for s in ladder.request("/api/mine")["strategies"] if s["id"] not in {r["id"] for r in rows}]
+2026-11-12T07:42:29.1086813Z 87:        todo = [m for m in ms if m.get("state") == "done" and m.get("scores") and (m["id"], m["game"]) not in index]
+2026-11-12T07:42:29.1087960Z 89:            for m, fn, steps in ex.map(lambda m: fetch(outdir, m), todo):
+2026-11-12T07:42:29.1088798Z 90:                if isinstance(steps, str):
+2026-11-12T07:42:29.1089567Z 91:                    print(f"  {m['id']}-{m['game']}: {steps}", flush=True)
+2026-11-12T07:42:29.1090360Z 94:                index[(m["id"], m["game"])] = {
+2026-11-12T07:42:29.1091204Z 96:                    "winner": m.get("winner"), "steps": steps, "file": fn, "created": m.get("created"),
+2026-11-12T07:42:29.1092222Z 97:                    "strategies": {"a": {"id": sid, "name": m.get("name_a", name)},
+2026-11-12T07:42:29.1093228Z 101:                    json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
+2026-11-12T07:42:29.1094695Z 102:                    print(f"  已入库 {len(index)} 局（本轮新增 {new}）", flush=True)
+2026-11-12T07:42:29.1095670Z 105:        json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
+2026-11-12T07:42:29.1096662Z 106:    json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
+2026-11-12T07:42:29.1097653Z 107:    print(f"完成：共 {len(index)} 局，本轮新增 {new}", flush=True)
+2026-11-12T07:42:29.1098467Z 114:        i = a.index("--loop"); loop = int(a[i + 1]); del a[i:i + 2]
+2026-11-12T07:42:29.1099219Z --- LADDER-CORPUS-HEAD ---
+2026-11-12T07:42:29.1100206Z """把天梯上指定策略的对局 + 回放拉成「回放快照」同款目录，供 nn_build_bc / ladder_report 使用。
+2026-11-12T07:42:29.1100881Z 
+2026-11-12T07:42:29.1101316Z   python3 ladder_corpus.py OUT_DIR <名字前缀或策略ID>... [--loop 秒]
+2026-11-12T07:42:29.1101812Z 例：
+2026-11-12T07:42:29.1102424Z   python3 ladder_corpus.py ../data/ladder_corpus claude-AlphaCarbon AgyCarbon-Argon-Godslayer Codex-Carbon CarbonEdge
+2026-11-12T07:42:29.1103554Z   python3 ladder_corpus.py ../data/ladder_ours claude-opus55-cloud --loop 900    # 持续跟踪自家对局
+2026-11-12T07:42:29.1104464Z 
+2026-11-12T07:42:29.1105206Z 目录结构：index.json（快照格式：id/game/order/scores/strategies/winner/steps/file）、leaderboard.json、
+2026-11-12T07:42:29.1106353Z replays/<id>-<game>.json.gz。已下载的跳过；下载限速 ≤30 次/分钟（每次 2.1 s）。
+2026-11-12T07:42:29.1107446Z 需登录（cookie 由 ladder.py login 建立）。CORPUS_MIN_RATING=2150 只收高分版本。前缀按当前排行榜名字匹配（大小写敏感）。
+2026-11-12T07:42:29.1108425Z """
+2026-11-12T07:42:29.1108805Z import gzip, json, os, sys, threading, time
+2026-11-12T07:42:29.1109256Z from concurrent.futures import ThreadPoolExecutor
+2026-11-12T07:42:29.1109481Z 
+2026-11-12T07:42:29.1109568Z import ladder
+2026-11-12T07:42:29.1109691Z 
+2026-11-12T07:42:29.1109696Z 
+2026-11-12T07:42:29.1110009Z MIN_RATING = float(os.environ.get("CORPUS_MIN_RATING", "0"))   # 只收评分 >= 该值的前缀匹配策略
+2026-11-12T07:42:29.1110327Z 
+2026-11-12T07:42:29.1110330Z 
+2026-11-12T07:42:29.1110431Z _rl_lock = threading.Lock()
+2026-11-12T07:42:29.1110833Z _last = [0.0]
+2026-11-12T07:42:29.1110951Z 
+2026-11-12T07:42:29.1110954Z 
+2026-11-12T07:42:29.1111042Z def _rate_wait(gap=2.1):
+2026-11-12T07:42:29.1111354Z     """全局限速：两次下载起点间隔 >= gap 秒（≤30 次/分钟）。"""
+2026-11-12T07:42:29.1111626Z     with _rl_lock:
+2026-11-12T07:42:29.1111826Z         t = time.time()
+2026-11-12T07:42:29.1112049Z         if t < _last[0] + gap:
+2026-11-12T07:42:29.1112305Z             time.sleep(_last[0] + gap - t)
+2026-11-12T07:42:29.1112583Z         _last[0] = time.time()
+2026-11-12T07:42:29.1112738Z 
+2026-11-12T07:42:29.1112742Z 
+2026-11-12T07:42:29.1112831Z def fetch(outdir, m):
+2026-11-12T07:42:29.1113075Z     fn = f"replays/{m['id']}-{m['game']}.json.gz"
+2026-11-12T07:42:29.1113382Z     path = os.path.join(outdir, fn)
+2026-11-12T07:42:29.1113659Z     if not os.path.exists(path):
+2026-11-12T07:42:29.1114370Z         _rate_wait()
+2026-11-12T07:42:29.1114951Z         st, data = ladder.request(f"/data/{m['id']}/{m['game']}", raw=True, timeout=120)
+2026-11-12T07:42:29.1115429Z         if st != 200:
+2026-11-12T07:42:29.1115655Z             return m, fn, f"HTTP {st}"
+2026-11-12T07:42:29.1115930Z         if data[:2] != b"\x1f\x8b":
+2026-11-12T07:42:29.1116196Z             data = gzip.compress(data)
+2026-11-12T07:42:29.1116479Z         open(path + ".part", "wb").write(data)
+2026-11-12T07:42:29.1116780Z         os.replace(path + ".part", path)
+2026-11-12T07:42:29.1117035Z     try:
+2026-11-12T07:42:29.1117309Z         return m, fn, len(json.load(gzip.open(path))["steps"]) - 1
+2026-11-12T07:42:29.1117651Z     except Exception as e:
+2026-11-12T07:42:29.1117878Z         os.remove(path)
+2026-11-12T07:42:29.1118169Z         return m, fn, f"坏文件 {e}"
+2026-11-12T07:42:29.1118432Z --- MATCHES-FRESH-SAMPLE ---
+2026-11-12T07:42:29.1118670Z <class 'list'> 118
+2026-11-12T07:42:29.1119570Z {"id": "0efcfa1227b59fd7f89ee0c9b9ca9268", "state": "done", "created": 1794453057.2392976, "name_a": "AgyCarbon-P2C-Godslayer-CV", "name_b": "claude-AlphaCarbon-Master3s2", "game": 1, "scores": {"a": 8560.45, "b": 10811.13}, "winner": "b", "order": ["b", "a"]}
+2026-11-12T07:42:29.1120535Z --- ANY-FIX4-FILES ---
+2026-11-12T07:42:29.1120816Z /home/arm/junyang/carbon/code/submission_cnet2_m2t3BL.py
+2026-11-12T07:42:29.1121141Z DGXCMDS1545Y3R8 DGX-END
+2026-11-12T07:42:29.1121368Z DGXCMDS1545Y3R8 L20-END rc=0
+2026-11-12T07:42:29.1121534Z 
+2026-11-12T07:42:29.1339866Z Post job cleanup.
+2026-11-12T07:42:29.2393403Z [command]/usr/bin/git version
+2026-11-12T07:42:29.2484850Z git version 2.56.0
+2026-11-12T07:42:29.2558091Z Temporarily overriding HOME='/home/runner/work/_temp/4bad7d67-afa6-417c-8d92-c3730c43d5bc' before making global git config changes
+2026-11-12T07:42:29.2567389Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T07:42:29.2568626Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:42:29.2661195Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T07:42:29.2707799Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T07:42:29.3145575Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T07:42:29.3174567Z http.https://github.com/.extraheader
+2026-11-12T07:42:29.3189630Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T07:42:29.3258092Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T07:42:29.3785482Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T07:42:29.3838744Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T07:42:29.4370923Z Cleaning up orphan processes
+2026-11-12T07:42:29.4776280Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 57 claimed

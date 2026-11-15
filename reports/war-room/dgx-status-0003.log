@@ -1,0 +1,27 @@
+# DGX status trip 00:03 CST, 2026-11-14 (scheduled 23:58:09)
+Markers: DGXSTATUS2358A (23:59:52), C (00:00), D (00:01:08), F (00:02:52). All direct reads via Tailscale SSH arm@100.84.148.73.
+
+## DGX host
+- spark-29db, up 25 days 5:04, load 0.03/0.26/2.01 (falling)
+- GPU 0%, 36C; no annotate/gate_driver/git/rsync/rl2 processes
+- Construction gate fully exited: katago_probe_scratch/probe2/out_gate/{examples.json, results.jsonl, summary.json} all 23:39, gate.log 23:39:15. Idle = expected (distribution coordinator, awaiting merge/opening window).
+
+## K0 annotation (front-4) — MILESTONE
+- Total 124 -> 154/200
+- C2 92/92 COMPLETE: games 994508-994599 listed individually, no gaps. games_c2_full.json (19:34) + k0_annot_c2_full.meta present; progress.json heartbeat 00:01:41 fresh.
+- C1 62/108: games 994400-994461, no gaps. Wave 2 (994462-994507) 0 landed; first shard per corrected calibration ~00:21-00:28 (est). 200/200 est ~00:21-00:30 (est).
+- Counts are .npz only (files=64 C1 / 95 C2 include json/meta).
+
+## Repo lag
+- Local f82191eb, remote HEAD 0debc73c. GitHub API compare: behind 2, both newface-watch data commits (krypton-csplant 144->163, hakimi3pro 202->206). Code current.
+
+## Corpus / checkpoints (unchanged)
+- m3s2_corpus index 118 / replays 118; carago index 182 / replays 183; fable index 181 / replays 182
+- ds_carago total 54418 samples; ds_fable total 54119 samples
+- ckpt_85_frozen.npz md5 eb633ca99aca432e2f4c9265c368fda8, mtime 2026-11-14 06:50; ckpt_95.npz present at carbon-repo/data/weights/ (md5 not re-read this trip)
+
+## Corrections / notes
+- 23:44 report's "129/200" was wrong (json files counted); true value then was 124/200. Corrected in DGX side chat 23:47 and synced to war room this trip. C2 completion this trip is real progress, not a counting change.
+- Paths: k0_dist/returns is /home/arm/junyang/k0_dist/returns (NOT under carbon/); C1 progress files are progress_c1.json / progress_c1_wave2.json in returns/c1.
+- Lesson: read ds meta.json ["total"] only — first read this trip dumped the full 146KB meta.
+- Reports sent: periodic report to DGX side chat (ca3bf51b...) + sync to war room (9744a710...) re milestone + correction.

@@ -1,0 +1,28 @@
+GATE2-CHECK DGXSTATUS20261115_1358 (2026-11-15 14:00:33 CST, SSH-RC=0)
+Command: ls -la --time-style=long-iso /home/arm/junyang/katago_probe_scratch/gatesA/ ; tail -5 /home/arm/junyang/k0_calib/driver.log
+
+total 9028
+drwxrwxr-x 3 arm arm    4096 2026-11-15 13:26 .
+-rw-rw---- 1 arm arm 4576790 2026-11-15 13:25 echo3_ref.py
+-rw-rw---- 1 arm arm 4576789 2026-11-15 13:25 echo3_search_pack.py
+-rw-rw---- 1 arm arm    4978 2026-11-15 13:25 gate2_driver.py
+-rw-rw-r-- 1 arm arm     74 2026-11-15 13:26 gate2_load_before.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:59 gate2_log_0.txt
+-rw-rw-r-- 1 arm arm    137 2026-11-15 14:00 gate2_log_10.txt
+-rw-rw-r-- 1 arm arm    137 2026-11-15 13:59 gate2_log_11.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:46 gate2_log_1.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:45 gate2_log_2.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:55 gate2_log_3.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:59 gate2_log_4.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:59 gate2_log_5.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:59 gate2_log_6.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:59 gate2_log_7.txt
+-rw-rw-r-- 1 arm arm    165 2026-11-15 13:56 gate2_log_8.txt
+-rw-rw-r-- 1 arm arm    135 2026-11-15 13:59 gate2_log_9.txt
+-rw-rw---- 1 arm arm    3067 2026-11-15 13:44 gate5_driver.py
+
+driver.log tail:
+12:56:57 CELL DONE {"tag": "lr0.0005_s100_b1_seed7", "lr": 0.0005, "steps": 100, "beta": 1.0, "seed": 7, "delta_u": -0.00386801138058796, "ci95": [-0.011121720227244305, 0.0035743826803655647], "n_games": 50, "n_roots": 9900, "neutral": true}
+12:56:57 RUN k0_distill.py ... --out /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz --lr 0.0002 --max-updates 400 --seed 7 --device cuda
+
+Conclusion: gate2 12 drivers alive, per-worker gate2_log_*.txt updating (latest 14:00); final gate2_out_*.json not yet produced = not finished, not stuck.

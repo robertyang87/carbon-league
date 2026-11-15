@@ -1,0 +1,68 @@
+DGXSTATUS1243A 12:44:57 CST
+spark-29db
+ 12:44:57 up 23 days, 17:49, 1820 users,  load average: 0.28, 0.89, 1.58
+/dev/nvme0n1p2  3.7T  1.7T  1.9T  47% /
+0 %, [N/A], 36, 4.21 W
+== TRAIN ==
+NO_TRAIN_PROC
+== GIT ==
+NO_GIT_PROC
+== GATE PILOT ==
+ls: cannot access '/home/arm/junyang/carbon/gate_pilot*': No such file or directory
+/home/arm/junyang/carbon/data/gate_pilot_guided:
+total 8
+-rw-rw-r-- 1 arm arm 199 Nov 13 12:43 summary.json
+-rw-rw-r-- 1 arm arm 304 Nov 13 12:43 games.jsonl
+
+/home/arm/junyang/carbon/data/gate_pilot_greedy:
+total 8
+-rw-rw-r-- 1 arm arm 146 Nov 13 12:31 summary.json
+-rw-rw-r-- 1 arm arm 169 Nov 13 12:31 games.jsonl
+tail: cannot open '/home/arm/junyang/carbon/gate_pilot_guided.log' for reading: No such file or directory
+---
+ls: cannot access '/home/arm/junyang/carbon/*.log': No such file or directory
+== HEADS V2 ==
+-rw-rw-r-- 1 arm arm 13973080 Nov 13 12:35 /home/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz
+06a03d9cfeec239af3065a49fefec382  /home/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz
+EPOCH {"ep": 19, "train_l_u": 0.00583, "train_l_wdl": 0.0475, "train_l_m": 0.3043, "val_l_u": 0.00816, "val_wdl_acc": 0.9933, "val_margin_mae": 439.2, "val_u_calib_mean": -0.04223, "val_u_target_binned_resid": 0.04223, "val_u_calib_pred_binned": 0.04223, "val_u_calib_pred_bins": [[1, 0.2518, 0.9417, 0.0], [6, 0.3477, 0.9417, 0.0], [17, 0.4612, 0.9427, 0.0004], [31, 0.5523, 0.9292, 0.0049], [69, 0.6619, 0.9165, 0.0037], [232, 0.7584, 0.9107, 0.0021], [780, 0.8627, 0.9264, 0.001], [2153, 0.9325, 0.9381, 0.0005]], "val_u_range": [0.252, 0.974], "val_n": 3289, "s": 591}
+EPOCH {"ep": 20, "train_l_u": 0.00583, "train_l_wdl": 0.0475, "train_l_m": 0.3043, "val_l_u": 0.00817, "val_wdl_acc": 0.9933, "val_margin_mae": 439.2, "val_u_calib_mean": -0.04224, "val_u_target_binned_resid": 0.04224, "val_u_calib_pred_binned": 0.04224, "val_u_calib_pred_bins": [[1, 0.2517, 0.9417, 0.0], [6, 0.3476, 0.9417, 0.0], [17, 0.4612, 0.9427, 0.0004], [31, 0.5522, 0.9292, 0.0049], [69, 0.6618, 0.9165, 0.0037], [232, 0.7584, 0.9107, 0.0021], [781, 0.8627, 0.9264, 0.001], [2152, 0.9325, 0.9381, 0.0005]], "val_u_range": [0.252, 0.974], "val_n": 3289, "s": 620}
+TRAIN-DONE {"out": "/home/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz", "s": 620}
+== HEAD ==
+4f12f901f74ce3b0e7d3fea1465a655e0904de29
+4f12f90 runbook: F08 verify-pack publish gate + F04 certify contract notes (REVIEW_FULL follow-up)
+f0ed3e6 fix(F06-train): keep cached-trainer loss weights float32 + finiteness hard gate on w/uw load (REVIEW_FULL F06)
+433eaa4 fix(F11): selfplay data contract -- full_carbon supervision, terminal typing, atomic commit/recovery, policy-error accounting
+a9287a4ca3adf871651c74c6e05f350c07bcf1c7	HEAD
+== LAST_STATS ==
+14204f4 C01: sweep _search -- bypass MIN_DEPTH gate when all branches are exact terminals
+0f704a9 Review S5b: CachePolicy._sig covers all nine encode inputs (was missing tok_kind/tok_mask/tok_cargo/hist_cargo/hist_move)
+2e5ffca F03 (R12): cnet2_search OPEN_T sampled branch records st['T_now'] = T
+c43d08b F01 (R02): original terminal scoring in rollout and search leaf
+e3c8dd2 fix(search) R12: CachePolicy records an encode signature (teacher + maps/tok_pos/hist_cell/scal) and consumers use enc_for(x, T_now) -- after act_tta last_enc held the last symmetry view (0.587 measured encode divergence), and after epol/opol decodes it was stale; guard/_mcts/_search now always decode against the original-frame encoding of the current x
+== CORPORA WORKDIR ==
+m3s2_corpus replays: 118
+m3s2_corpus index: 118
+carago_corpus replays: 183
+carago_corpus index: 182
+fable_corpus replays: 182
+fable_corpus index: 181
+== DS META ==
+ds_carago: {"games": [{"file": "/home/arm/junyang/carbon/data/carago_corpus/replays/f7c05d17146cd947eb9b3369b9a6574b-1.json.gz", "key": "f7c05d17146cd947eb9b3369b9a6574b-1.json.gz", "names": ["Carago-V2\u5fae\u8
+ds_fable: {"games": [{"file": "/home/arm/junyang/carbon/data/fable_corpus/replays/eb1f496ec73c7a3f444d999f01a8eb3b-1.json.gz", "key": "eb1f496ec73c7a3f444d999f01a8eb3b-1.json.gz", "names": ["Fable5.2-Max-V5", "
+ds_m3s2: {"games": [{"file": "../data/m3s2_corpus/replays/342cccab5628cd1551eda7ce748e41ca-1.json.gz", "key": "342cccab5628cd1551eda7ce748e41ca-1.json.gz", "names": ["stephen-K4TacSearch-v1", "claude-AlphaCarb
+ds_gen1: {"games": [{"file": "/home/arm/junyang/carbon/data/gen1_shard0/replays/selfplay-992001.json.gz", "key": "selfplay-992001.json.gz", "names": ["m3s2r1", "m3s2r1"], "scores": [3370.59, 3370.59], "sides":
+== REPO DATA LITE-V7 / IT460 ==
+83
+12
+m9xj460_matches: 27
+== GOLDEN / DEPLOY ==
+total 1971176
+-rw-rw---- 1 arm arm       5979 Nov 13 12:26 README.md
+-rw-rw---- 1 arm arm       1317 Nov 13 11:25 golden.md5
+-rw-rw---- 1 arm arm       3397 Nov 13 11:25 deploy_stack.sh
+-rw-rw---- 1 arm arm       2665 Nov 13 11:25 bootstrap.sh
+-rw-rw-r-- 1 arm arm          5 Nov 13 11:21 tar.done
+-rw-rw-r-- 1 arm arm         96 Nov 13 11:21 tar.log
+-rw-rw-r-- 1 arm arm         33 Nov 13 11:21 exam_stack_golden.md5
+NO_DEPLOY_PROC
+DGXSTATUS1243A-END 12:45:00 CST

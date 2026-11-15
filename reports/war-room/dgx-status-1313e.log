@@ -1,0 +1,22 @@
+DGXSTATUS1313E 13:20:50 CST
+-- newest in bigeval_live --
+total 21132
+-rw-rw-r-- 1 arm arm       0 Nov 12 14:59 probegen.jsonl
+-rw-rw-r-- 1 arm arm  408668 Nov 11 13:04 ex1ex_cnet2_b128ex1gW05_s1_net.jsonl
+-rw-rw-r-- 1 arm arm  408444 Nov 11 13:02 ex1ex_cnet2_b128ex1gW05_cnet2_m2s2stand.jsonl
+-rw-rw-r-- 1 arm arm  407025 Nov 11 13:02 ex1ex_cnet2_b128ex1gW05_cnet2_m2so.jsonl
+-rw-rw-r-- 1 arm arm  407686 Nov 11 12:50 ex1ex_cnet2_b128ex1gB_s1_net.jsonl
+-- verify files anywhere under carbon/data --
+-- verify proc open regular files --
+l-wx------ 1 arm arm 64 Nov 13 13:20 1 -> /home/arm/junyang/verify_search.log
+l-wx------ 1 arm arm 64 Nov 13 13:20 2 -> /home/arm/junyang/verify_search.log
+l-wx------ 1 arm arm 64 Nov 13 13:20 3 -> /home/arm/junyang/carbon-repo/data/bigeval_live/verify_search.jsonl
+-- proc status + etime --
+    PID     ELAPSED CMD
+ 580346       27:38 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 580368       27:38 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 580369       27:38 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+-- repo bigeval.jsonl mtime + lines now --
+-rw-rw-r-- 1 arm arm 279863 Nov 13 13:19 /home/arm/junyang/carbon-repo/data/bigeval.jsonl
+96
+DGXSTATUS1313E-END

@@ -1,0 +1,79 @@
+dispatched at 17:17:11
+CLAIMED run 43190111844 job 131086979642 status completed conclusion success
+ cn-shanghai
+2026-11-12T09:17:19.0461202Z ##[endgroup]
+2026-11-12T09:17:32.7234732Z InvokeId: t-sh072vk846lh43k
+2026-11-12T09:17:32.7247210Z --- status=Success exit=0 ---
+2026-11-12T09:17:32.7257311Z DGXSTATUS1713B2K8 L20-BEGIN 2026-11-12 17:17:21 CST
+2026-11-12T09:17:32.7297074Z DGXSTATUS1713B2K8 DGX-BEGIN 2026-11-12 17:17:26 CST
+2026-11-12T09:17:32.7306945Z 0 %, 36
+2026-11-12T09:17:32.7316796Z NO-TRAIN-PROC
+2026-11-12T09:17:32.7336780Z == m7v2.log FULL ==
+2026-11-12T09:17:32.7356719Z M7V2K8R3 STAGE-BEGIN 2026-11-12 17:10:01 CST
+2026-11-12T09:17:32.7376416Z --- WAIT-CARAGO-R1 ---
+2026-11-12T09:17:32.7376977Z carago clear at wait-min 1
+2026-11-12T09:17:32.7387011Z 0 %, 36
+2026-11-12T09:17:32.7388577Z carago r1 ep19: {"ep": 19, "val": {"collector": 0.8978, "planter": 0.8841, "base": 0.9769, "all": 0.9086, "workers": 0.8936, "loss": 0.2352}, "train_pi": 0.1493, "s": 110}
+2026-11-12T09:17:32.7389873Z carago r1 best: best 0.9086
+2026-11-12T09:17:32.7390496Z carago g1 best: best 0.9101
+2026-11-12T09:17:32.7391419Z 82027e53f3b397307b2dfb41c003a7da  /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep19.npz
+2026-11-12T09:17:32.7392848Z 8f51fe9d3ca3270adbd6e758f5dab7ed  /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep19.npz
+2026-11-12T09:17:32.7393911Z --- SYNC-CORPUS ---
+2026-11-12T09:17:32.7394510Z repo HEAD: 62f8db7
+2026-11-12T09:17:32.7395098Z repo m7bs files: 142
+2026-11-12T09:17:32.7395744Z local replays before=102
+2026-11-12T09:17:32.7396724Z local replays after=142
+2026-11-12T09:17:32.7397379Z --- REBUILD-INDEX (ladder_corpus nested shape) ---
+2026-11-12T09:17:32.7398696Z load fail /home/arm/junyang/carbon/data/m7bs_matches.json [Errno 2] No such file or directory: '/home/arm/junyang/carbon/data/m7bs_matches.json'
+2026-11-12T09:17:32.7399938Z local matches: 0 repo matches: 107
+2026-11-12T09:17:32.7400697Z using matches: 107
+2026-11-12T09:17:32.7401260Z base index entries: 102
+2026-11-12T09:17:32.7401741Z teacher id: '67a89340f860f030de13ca23d350d203'
+2026-11-12T09:17:32.7402346Z orphan replay: 8dc47b4b925104e9ff6a5fabeb097c44-1.json.gz
+2026-11-12T09:17:32.7402986Z orphan replay: 179034f7b4b9004e17017e9856fdf155-1.json.gz
+2026-11-12T09:17:32.7403619Z orphan replay: 396d823ed7ed0acb6202298e69c78540-1.json.gz
+2026-11-12T09:17:32.7404257Z orphan replay: d8c678fc526b665b3da0b81a83b635d4-1.json.gz
+2026-11-12T09:17:32.7404895Z orphan replay: e9cef6e5fae02a3f15b7ae26aa8c39f4-1.json.gz
+2026-11-12T09:17:32.7405693Z index merged: base 102 added 5 missing replays 0 skipped no-order 0 orphans 35 FINAL 107
+2026-11-12T09:17:32.7406872Z index final entries: 107
+2026-11-12T09:17:32.7407356Z M7V2K8R3 FAIL index only 107 entries (<140)
+2026-11-12T09:17:32.7408075Z -rw-rw-r-- 1 arm arm 1401 2026-11-12_17:10:02 /home/arm/junyang/carbon/data/dq_logs/m7v2.log
+2026-11-12T09:17:32.7408795Z == m7bs_corpus counts ==
+2026-11-12T09:17:32.7409184Z replays=142
+2026-11-12T09:17:32.7409403Z index_entries= 107
+2026-11-12T09:17:32.7409622Z replays mtime<30min: 40
+2026-11-12T09:17:32.7409853Z replays mtime<120min: 40
+2026-11-12T09:17:32.7410076Z == ds_m7bs_v2 ==
+2026-11-12T09:17:32.7410279Z NO-DS-M7BS-V2-DIR
+2026-11-12T09:17:32.7410513Z == m7bs_v2 build/train logs anywhere ==
+2026-11-12T09:17:32.7411091Z -rw-rw-r-- 1 arm arm  315 2026-11-12_13:19:00 build_m7bs.log
+2026-11-12T09:17:32.7411460Z -rw-rw-r-- 1 arm arm 4605 2026-11-12_14:27:10 m7bsg1.log
+2026-11-12T09:17:32.7411843Z -rw-rw-r-- 1 arm arm  666 2026-11-12_13:20:56 m7bsg1.log.stale1320
+2026-11-12T09:17:32.7412275Z -rw-rw-r-- 1 arm arm 4640 2026-11-12_14:35:05 m7bsr1.log
+2026-11-12T09:17:32.7412645Z -rw-rw-r-- 1 arm arm  471 2026-11-12_13:20:53 m7bsr1.log.stale1320
+2026-11-12T09:17:32.7413003Z -rw-rw-r-- 1 arm arm 1401 2026-11-12_17:10:02 m7v2.log
+2026-11-12T09:17:32.7413557Z /home/arm/junyang/carbon/data/dq_logs/m7v2.log
+2026-11-12T09:17:32.7413875Z == any python/build proc etime ==
+2026-11-12T09:17:32.7414143Z 2594625 21-03:05:30 python3 -m agent_mcp
+2026-11-12T09:17:32.7414957Z 2596961 21-03:03:37 /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox/.venv/bin/python local_dev/scripts/vox_bridge.py --vox-dir /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox --net-audio 8769
+2026-11-12T09:17:32.7415748Z DGXSTATUS1713B2K8 DGX-END
+2026-11-12T09:17:32.7416866Z DGXSTATUS1713B2K8 L20-END rc=0
+2026-11-12T09:17:32.7417208Z 
+2026-11-12T09:17:32.7562623Z Post job cleanup.
+2026-11-12T09:17:32.8731640Z [command]/usr/bin/git version
+2026-11-12T09:17:32.8778917Z git version 2.56.0
+2026-11-12T09:17:32.8851373Z Temporarily overriding HOME='/home/runner/work/_temp/fae21414-7de1-4538-8784-fd3ff9b1f278' before making global git config changes
+2026-11-12T09:17:32.8868317Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T09:17:32.8869812Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T09:17:32.8949751Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T09:17:32.9035388Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T09:17:32.9450876Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T09:17:32.9512069Z http.https://github.com/.extraheader
+2026-11-12T09:17:32.9560123Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T09:17:32.9637851Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T09:17:33.0037273Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T09:17:33.0119998Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T09:17:33.0591825Z Cleaning up orphan processes
+2026-11-12T09:17:33.1120187Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 58 claimed

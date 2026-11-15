@@ -1,0 +1,131 @@
+dispatched at 15:59:34
+CLAIMED run 43179341127 job 131051236324 status completed conclusion success
+ cn-shanghai
+2026-11-12T07:59:42.6226781Z ##[endgroup]
+2026-11-12T08:00:08.4414620Z InvokeId: t-sh072vdavuudts0
+2026-11-12T08:00:08.4415685Z --- status=Success exit=0 ---
+2026-11-12T08:00:08.4416536Z DGXSTATUS1558Q9M4 L20-BEGIN 2026-11-12 15:59:44 CST
+2026-11-12T08:00:08.4417952Z --- L20-WEIGHTS-MD5 ---
+2026-11-12T08:00:08.4418883Z b6db08c9b076257c54817377bb93130d  /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T08:00:08.4420900Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T08:00:08.4422388Z 2c8ca0ae7266a6c0a41bf3b8ba7f723b  /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T08:00:08.4423548Z --- DGX (via ssh) ---
+2026-11-12T08:00:08.4424310Z DGXSTATUS1558Q9M4 DGX-BEGIN 2026-11-12 15:59:58 CST
+2026-11-12T08:00:08.4425173Z spark-29db
+2026-11-12T08:00:08.4425937Z  15:59:58 up 22 days, 21:04, 649 users,  load average: 2.72, 0.72, 3.41
+2026-11-12T08:00:08.4426918Z 96 %, [N/A], [N/A], 42
+2026-11-12T08:00:08.4427611Z --- PROC-TRAIN ---
+2026-11-12T08:00:08.4429533Z  125877       00:21 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_carago /home/arm/junyang/carbon/data/weights/cnet2_caragor1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T08:00:08.4432384Z  125878       00:21 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_carago /home/arm/junyang/carbon/data/weights/cnet2_caragog1.npz 20 {"C":128,"NB":8,"D":128}
+2026-11-12T08:00:08.4434127Z --- ALL-PYTHON ---
+2026-11-12T08:00:08.4436162Z  125877       00:21 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_carago /home/arm/junyang/carbon/data/weights/cnet2_caragor1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T08:00:08.4439628Z  125878       00:21 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_carago /home/arm/junyang/carbon/data/weights/cnet2_caragog1.npz 20 {"C":128,"NB":8,"D":128}
+2026-11-12T08:00:08.4441339Z 2594625 21-01:48:02 python3 -m agent_mcp
+2026-11-12T08:00:08.4443867Z 2596961 21-01:46:09 /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox/.venv/bin/python local_dev/scripts/vox_bridge.py --vox-dir /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox --net-audio 8769
+2026-11-12T08:00:08.4445388Z --- PROBE-LEFTOVER ---
+2026-11-12T08:00:08.4446120Z NO-PROBE-PROC
+2026-11-12T08:00:08.4446848Z --- GIT-LEFTOVER (any fetch/pull/checkout alive >5min = ANOMALY) ---
+2026-11-12T08:00:08.4447736Z NO-GIT-PROC
+2026-11-12T08:00:08.4448292Z --- REPO-HEAD-VS-REMOTE ---
+2026-11-12T08:00:08.4449150Z fatal: not a git repository (or any of the parent directories): .git
+2026-11-12T08:00:08.4450252Z remote cnet2-search-v12: fatal: 'origin' does not appear to be a git repository
+2026-11-12T08:00:08.4451657Z fatal: Could not read from remote repository.
+2026-11-12T08:00:08.4452215Z 
+2026-11-12T08:00:08.4452663Z Please make sure you have the correct access rights
+2026-11-12T08:00:08.4453474Z and the repository exists.
+2026-11-12T08:00:08.4454163Z LSREMOTE-FAILED
+2026-11-12T08:00:08.4454747Z --- STAGE-LOGS ---
+2026-11-12T08:00:08.4455668Z -rw-rw-r-- 1 arm arm 1434 2026-11-12_15:52:06 /home/arm/junyang/carbon/data/dq_logs/stage1.log
+2026-11-12T08:00:08.4456931Z -rw-rw-r-- 1 arm arm 1709 2026-11-12_15:59:56 /home/arm/junyang/carbon/data/dq_logs/stage2.log
+2026-11-12T08:00:08.4457936Z NO-STAGE-LOGS
+2026-11-12T08:00:08.4458521Z == build_carago.log HEAD (traceback hunt) ==
+2026-11-12T08:00:08.4459887Z {'teachers': {2: 'Carago-V2微调'}}
+2026-11-12T08:00:08.4461066Z {"games": 182, "samples": 54418, "val_games": 16, "teacher_sides": {"Carago-V2\u5fae\u8c03": 182}}
+2026-11-12T08:00:08.4462968Z {'rows': 54418, 'planter_tokens': 136243, 'car_tokens': 358161, 'base_tokens': 108836, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T08:00:08.4464073Z == build_carago.log TAIL ==
+2026-11-12T08:00:08.4464821Z {'teachers': {2: 'Carago-V2微调'}}
+2026-11-12T08:00:08.4465707Z {"games": 182, "samples": 54418, "val_games": 16, "teacher_sides": {"Carago-V2\u5fae\u8c03": 182}}
+2026-11-12T08:00:08.4467399Z {'rows': 54418, 'planter_tokens': 136243, 'car_tokens': 358161, 'base_tokens': 108836, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T08:00:08.4468682Z == build_fable.log TAIL ==
+2026-11-12T08:00:08.4469573Z {'teachers': {2: 'Fable5.2-Max-V5'}}
+2026-11-12T08:00:08.4470468Z {"games": 181, "samples": 54119, "val_games": 20, "teacher_sides": {"Fable5.2-Max-V5": 181}}
+2026-11-12T08:00:08.4472234Z {'rows': 54119, 'planter_tokens': 103475, 'car_tokens': 388281, 'base_tokens': 108238, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T08:00:08.4473483Z --- DS-DIRS ---
+2026-11-12T08:00:08.4474043Z == ds_carago
+2026-11-12T08:00:08.4474840Z -rw-rw-r-- 1 arm arm 77280 2026-11-12_15:59:37 /home/arm/junyang/carbon/data/ds_carago/meta.json
+2026-11-12T08:00:08.4475810Z 1.2G	/home/arm/junyang/carbon/data/ds_carago
+2026-11-12T08:00:08.4476388Z == ds_fable
+2026-11-12T08:00:08.4477139Z -rw-rw-r-- 1 arm arm 75185 2026-11-12_15:59:56 /home/arm/junyang/carbon/data/ds_fable/meta.json
+2026-11-12T08:00:08.4478131Z 1.2G	/home/arm/junyang/carbon/data/ds_fable
+2026-11-12T08:00:08.4478798Z --- CARAGO-TRAIN-LOGS ---
+2026-11-12T08:00:08.4479522Z == /home/arm/junyang/carbon/data/dq_logs/caragor1.log
+2026-11-12T08:00:08.4480745Z -rw-rw-r-- 1 arm arm 252 2026-11-12_15:59:41 /home/arm/junyang/carbon/data/dq_logs/caragor1.log
+2026-11-12T08:00:08.4482277Z {"train": 49634, "val": 4784, "params": 3480130, "cfg": {"C": 128, "NB": 8, "D": 128, "NH": 4, "L": 2, "E": 32, "G": 8, "ZI": 1, "TA": 4, "TNH": 4}, "bs": 256, "steps_per_epoch": 193}
+2026-11-12T08:00:08.4483649Z {"ep": 0, "i": 0, "pi": 0.3201, "v": 0.0536, "aux": 0.0431, "s": 2}
+2026-11-12T08:00:08.4484498Z == /home/arm/junyang/carbon/data/dq_logs/caragog1.log
+2026-11-12T08:00:08.4485793Z -rw-rw-r-- 1 arm arm 223 2026-11-12_15:59:41 /home/arm/junyang/carbon/data/dq_logs/caragog1.log
+2026-11-12T08:00:08.4487219Z {"train": 49634, "val": 4784, "params": 2946610, "cfg": {"C": 128, "NB": 8, "D": 128, "NH": 4, "L": 2, "E": 32, "G": 8}, "bs": 256, "steps_per_epoch": 193}
+2026-11-12T08:00:08.4488370Z {"ep": 0, "i": 0, "pi": 0.3235, "v": 0.0498, "aux": 0.043, "s": 2}
+2026-11-12T08:00:08.4489006Z --- M7BS-LOGS-TAIL ---
+2026-11-12T08:00:08.4489655Z == /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T08:00:08.4490884Z -rw-rw-r-- 1 arm arm 4640 2026-11-12_14:35:05 /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T08:00:08.4492432Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8081, "base": 0.9518, "all": 0.8604, "workers": 0.8401, "loss": 0.3679}, "train_pi": 0.2468, "s": 50}
+2026-11-12T08:00:08.4493554Z best 0.8629
+2026-11-12T08:00:08.4494146Z == /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T08:00:08.4495096Z -rw-rw-r-- 1 arm arm 4605 2026-11-12_14:27:10 /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T08:00:08.4496526Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8107, "base": 0.9501, "all": 0.8606, "workers": 0.8408, "loss": 0.3581}, "train_pi": 0.2716, "s": 57}
+2026-11-12T08:00:08.4497675Z best 0.8615
+2026-11-12T08:00:08.4498225Z --- WEIGHTS-NEWEST-ALL ---
+2026-11-12T08:00:08.4498759Z total 7836796
+2026-11-12T08:00:08.4499411Z -rw-rw-r-- 1 arm arm        0 Nov 12 15:59 cnet2_caragor1_log.jsonl
+2026-11-12T08:00:08.4500271Z -rw-rw-r-- 1 arm arm        0 Nov 12 15:59 cnet2_caragog1_log.jsonl
+2026-11-12T08:00:08.4501441Z -rw-r--r-- 1 arm arm 13968960 Nov 12 15:06 cnet2_distill_r1_fromstudio.npz
+2026-11-12T08:00:08.4502374Z -rw-r--r-- 1 arm arm 11821004 Nov 12 14:42 cnet2_distill_g1_fromstudio.npz
+2026-11-12T08:00:08.4503214Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:35 cnet2_m7bsr1_ep19.npz
+2026-11-12T08:00:08.4503955Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:35 cnet2_m7bsr1_last.npz
+2026-11-12T08:00:08.4504998Z -rw-rw-r-- 1 arm arm     3079 Nov 12 14:35 cnet2_m7bsr1_log.jsonl
+2026-11-12T08:00:08.4506051Z 93061c69d6bc7f9f3d0468f60ce54974  /home/arm/junyang/carbon/data/weights/cnet2_distill_r1_fromstudio.npz
+2026-11-12T08:00:08.4507401Z 6c3885c6ed801c7a435b88961ac8fb64  /home/arm/junyang/carbon/data/weights/cnet2_distill_g1_fromstudio.npz
+2026-11-12T08:00:08.4508373Z --- DQ-LOGS-NEWEST ---
+2026-11-12T08:00:08.4508888Z total 132
+2026-11-12T08:00:08.4509368Z -rw-rw-r-- 1 arm arm 1709 Nov 12 15:59 stage2.log
+2026-11-12T08:00:08.4510299Z -rw-rw-r-- 1 arm arm  293 Nov 12 15:59 build_fable.log
+2026-11-12T08:00:08.4511538Z -rw-rw-r-- 1 arm arm  252 Nov 12 15:59 caragor1.log
+2026-11-12T08:00:08.4512343Z -rw-rw-r-- 1 arm arm  223 Nov 12 15:59 caragog1.log
+2026-11-12T08:00:08.4513091Z -rw-rw-r-- 1 arm arm  299 Nov 12 15:59 build_carago.log
+2026-11-12T08:00:08.4513835Z -rw-rw-r-- 1 arm arm 1434 Nov 12 15:52 stage1.log
+2026-11-12T08:00:08.4514529Z -rw-rw-r-- 1 arm arm 4640 Nov 12 14:35 m7bsr1.log
+2026-11-12T08:00:08.4515253Z --- CARAGO-FABLE-CORPUS ---
+2026-11-12T08:00:08.4515798Z == carago_corpus
+2026-11-12T08:00:08.4516324Z replays=183
+2026-11-12T08:00:08.4516939Z index_entries= 182
+2026-11-12T08:00:08.4518359Z first_strategies= {"a": {"id": "a2670aef3ae1823aa2532fca9edb1c3e", "name": "Carago-V2微调"}, "b": {"id": "", "name": "Krypton-M2BC3s2-v1"}}
+2026-11-12T08:00:08.4519580Z == fable_corpus
+2026-11-12T08:00:08.4520141Z replays=182
+2026-11-12T08:00:08.4520835Z index_entries= 181
+2026-11-12T08:00:08.4522010Z first_strategies= {"a": {"id": "2b4b44fd148fa7fdaa53bb0d110ae705", "name": "Fable5.2-Max-V5"}, "b": {"id": "", "name": "AgyCarbon-Light-Godslayer-II"}}
+2026-11-12T08:00:08.4523279Z --- REPLAYS-M3S2 ---
+2026-11-12T08:00:08.4523880Z index_entries= 118
+2026-11-12T08:00:08.4524381Z replays_dir_count=118
+2026-11-12T08:00:08.4525020Z --- RECENTLY-MODIFIED-UNDER-DATA (30min) ---
+2026-11-12T08:00:08.4526025Z /home/arm/junyang/carbon/data/carago_corpus/replays/9e14712b473451aa68b7f4537ae6a426-1.json.gz
+2026-11-12T08:00:08.4527478Z /home/arm/junyang/carbon/data/carago_corpus/replays/4f8276bb480b9f9b17a38891a981f106-1.json.gz
+2026-11-12T08:00:08.4528766Z /home/arm/junyang/carbon/data/carago_corpus/replays/bdc7fe01ed87441f4131ea77a0780465-1.json.gz
+2026-11-12T08:00:08.4530115Z /home/arm/junyang/carbon/data/carago_corpus/replays/c63d472beffa75bfd70fa3bdc76b466c-1.json.gz
+2026-11-12T08:00:08.4531673Z /home/arm/junyang/carbon/data/carago_corpus/replays/d8a3917ff129d0fc35609fdbe9a6659f-1.json.gz
+2026-11-12T08:00:08.4532999Z /home/arm/junyang/carbon/data/carago_corpus/replays/2fbc548be13c9af713809190745538da-1.json.gz
+2026-11-12T08:00:08.4534331Z /home/arm/junyang/carbon/data/carago_corpus/replays/8f6ca17d0294c3ffdcaef804532523da-1.json.gz
+2026-11-12T08:00:08.4535723Z /home/arm/junyang/carbon/data/carago_corpus/replays/c6cc6b1866c9e2977dc2b36f388cb603-1.json.gz
+2026-11-12T08:00:08.4536937Z /home/arm/junyang/carbon/data/carago_corpus/replays/a4111a02e47fef6b540010b1e8a62b66-1.json.gz
+2026-11-12T08:00:08.4538194Z /home/arm/junyang/carbon/data/carago_corpus/replays/0e170b98278eb4d4ee41e091de9481cb-1.json.gz
+2026-11-12T08:00:08.4539456Z /home/arm/junyang/carbon/data/carago_corpus/replays/4f0c910ad6e81a6ce72e646191bbe143-1.json.gz
+2026-11-12T08:00:08.4540977Z /home/arm/junyang/carbon/data/carago_corpus/replays/d08bb4c7948aca98c6bb857061a58ed2-1.json.gz
+2026-11-12T08:00:08.4542269Z /home/arm/junyang/carbon/data/carago_corpus/replays/254717cb8de05b250565c9aaa20c8e71-1.json.gz
+2026-11-12T08:00:08.4543455Z /home/arm/junyang/carbon/data/carago_corpus/replays/a0c9e443bf8cb2f04461d6237c841fdd-1.json.gz
+2026-11-12T08:00:08.4544692Z /home/arm/junyang/carbon/data/carago_corpus/replays/5ed73570c4626296b5efcaab394956bc-1.json.gz
+2026-11-12T08:00:08.4545922Z /home/arm/junyang/carbon/data/carago_corpus/replays/20859449f4e090f8a0c8660322fa25ae-1.json.gz
+2026-11-12T08:00:08.4547172Z /home/arm/junyang/carbon/data/carago_corpus/replays/6d9aee1e30d3f805a3407f2ca99b2a49-1.json.gz
+2026-11-12T08:00:08.4548622Z /home/arm/junyang/carbon/data/carago_corpus/replays/2689b96ca46661b44933b281dda6b3b2-1.json.gz
+2026-11-12T08:00:08.4549881Z /home/arm/junyang/carbon/data/carago_corpus/replays/10eb1dff90bfafca285a4146944ead24-1.json.gz
+2026-11-12T08:00:08.4551462Z /home/arm/junyang/carbon/d
+elapsed 60 claimed

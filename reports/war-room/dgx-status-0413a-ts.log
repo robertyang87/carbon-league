@@ -1,0 +1,12 @@
+# DGX 直读日志 2026-11-15 04:13 CST（标记 DGXSTATUS0413A/B）
+- 直读窗口：04:13:52–04:14 左右，SSH-RC=0（两趟；首趟 k0_calib 路径误写 carbon/data，纠正后复核）。
+- hostname spark-29db，uptime 25 天 9:18，load 约 20.01/20.09/20.12。
+- 标定段一第 1 格 duel 在跑：主进程 1613140 etime 03:02:48（01:11:03 开跑，已跑约 183 分钟），20 workers（1613141–1613160）各约 99.3–99.5% CPU；k0_calib_driver 1605013 etime 03:24:27 在册。
+- duels/ 仍空，duel 日志 0 字节（mtime 01:11 不变），driver.log 止于 01:11 的 duel 启动行；按作战室口径完赛才写出、无中间信号，零产出属预期形态，不判卡住；速率仍未校准。
+- 第 1 格训练已完工：/home/arm/junyang/k0_calib/cells/lr0.0002_s100_b1_seed7.npz 13,994,760 B，md5 165a1c5c01da576901f4112b00294b34，mtime 01:11:01 不变；.complete.json＋.log.jsonl 在位。
+- GPU 0%、40°C、显存 [N/A]——duel 为 CPU 阶段，属预期。
+- 仓库：本地 HEAD f82191eb 不变；远端 HEAD 0ea095ca（04:13 直读 ls-remote；04:00 为 8074ea20，其后 04:01:07 又有 82e553a1，远端一小时内至少推进三步）；本地落后主线约 60 个 commit（04:00 趟 API 实算）且仍在扩大，精确数未重算。无 git 残留进程。
+- 语料未变：m3s2 118/118、carago 182/183、fable 181/182；ds_carago total 54,418、ds_fable total 54,119。
+- 作战室侧新动态（转述）：C3 复核 spot-29（lastSeen 冻结 02:05 CST）与 spot-31（冻结 03:38:39 CST）均已失联，考场机队现为 0 台；C3 按常设补机规先补 1 台 spot-32 保底，请作战室铸 Tailscale bootstrap auth key。L20 主臂 it=4 落地（KL 0.0208，低于 0.03 带，等策略组裁），it=5 进行中；本 VM 约 04:01 第三次被替换。
+- 下一里程碑：第 1 格 duel 落盘（无预计时间，速率未校准）。
+- 本趟无 DGX 线新里程碑/异常/卡点，未另给作战室发同步。

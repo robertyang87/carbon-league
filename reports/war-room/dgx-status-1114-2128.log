@@ -1,0 +1,136 @@
+MARK_DGXSTATUS2128A 2026-11-14 21:30:09 CST
+MARK_DGXSTATUS2128A
+spark-29db
+ 21:30:37 up 25 days,  2:34, 4791 users,  load average: 0.33, 0.26, 0.68
+0 %, [N/A], 36
+---PROCS---
+1471171       30:04 rsync --server -logDtpRe.LsfxCIvu --partial . /home/arm/junyang/l20_ppo_u_archive_20261114/run_dir/
+1471172       30:04 rsync --server -logDtpRe.LsfxCIvu --partial . /home/arm/junyang/l20_ppo_u_archive_20261114/run_dir/
+2594625 23-07:18:41 python3 -m agent_mcp
+---K0RETURNS---
+c1:
+total 16
+drwxr-xr-x 2 arm arm 4096 Nov 14 19:31 .
+drwxrwxr-x 4 arm arm 4096 Nov 14 19:06 ..
+-rw-r--r-- 1 arm arm 6457 Nov 14 19:29 progress_c1.json
+c2:
+total 28
+drwxrwxr-x 2 arm arm 4096 Nov 14 19:34 .
+drwxrwxr-x 4 arm arm 4096 Nov 14 19:06 ..
+-rw-r--r-- 1 arm arm 1949 Nov 14 19:34 games_c2_full.json
+-rw-r--r-- 1 arm arm  179 Nov 14 19:34 k0_annot_c2_full.meta
+-rw-r--r-- 1 arm arm 9157 Nov 14 21:29 progress.json
+c1-progress:
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8544b78e51d16aa7660bc47b",
+   "stage0_teacher.py": "c6ade5ced42e2c54a77c1499163aa151",
+   "stage1_tea
+c2-progress:
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8544b78e51d16aa7660bc47b",
+   "stage0_teacher.py": "c6ade5ced42e2c54a77c1499163aa151",
+   "stage1_tea
+---ARCHIVE---
+332
+3773992913
+0
+ls: cannot access '/home/arm/junyang/l20_ppo_u_archive_20261114/MANIFEST_full_series.md5': No such file or directory
+total 2557492
+-rw------- 1 arm arm 33030144 Nov 14 21:30 .state_pre_klfix_it10.pt.L3DMuF
+drwxrws--- 4 arm arm     4096 Nov 14 21:29 .
+drwxrwxr-x 5 arm arm     4096 Nov 14 21:00 ..
+-rw-r--r-- 1 arm arm  1050524 Nov 14 16:00 snipe_n1.log
+---REPO---
+1d57e67
+46a92db5
+---CORPORA---
+m3s2 replays=118
+m3s2 index=118
+carago replays=183
+carago index=182
+fable replays=182
+fable index=181
+---DSMETA---
+ds_carago 54418
+ds_fable 54119
+MARK_DGXSTATUS2128B
+DGX SSH-RC=0
+=== C1 spot29 ===
+MARK_C1K02128
+iZuf63wxob7kzgyxkel2nlZ
+ 21:31:04 up 1 day, 23:02,  3 users,  load average: 62.41, 62.39, 62.31
+62.41 62.39 62.31 64/1050 111380
+---PROCS---
+ 105045    02:01:30 bash -c rm -rf /root/carbon/k0annot/out_timing /root/carbon/k0annot/wave1_end.txt; cd /root/carbon/k0annot && setsid nohup ./run_full.sh /root/carbon/k0annot/games_wave1_c1.json wave1 > wave1_launch.log 2>&1 & sleep 10; echo "annotate procs: $(pgrep -cf "k0_annotate[.]py")"; ps -eo pid,ppid,pgid,args | grep "k0_annotate[.]py" | head -3
+ 105050    02:01:30 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+ 105052    02:01:27 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+annotate-count: 64
+---SHARDS-C1---
+0
+---PROGRESS---
+
+---END-C1---
+C1 SSH-RC=0
+=== C2 spot31 ===
+MARK_C2K02128
+iZuf6023700gydxbxk4zl6Z
+ 21:31:18 up 1 day,  9:11,  3 users,  load average: 62.23, 62.27, 62.30
+62.23 62.27 62.30 63/1055 47115
+---PROCS---
+  45462    01:57:16 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45467    01:57:12 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45468    01:57:12 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+annotate-count: 63
+---SHARDS-C2---
+0
+total 24
+drwxr-xr-x  3 root root 4096 Nov 14 19:34 .
+drwxrwxr-x 13 1000 1000 4096 Nov 14 19:34 ..
+-rw-r--r--  1 root root 9157 Nov 14 19:34 progress.json
+drwxr-xr-x  2 root root 4096 Nov 14 19:34 shards
+---PROGRESS---
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8544b78e51d16aa7660bc47b",
+   "stage0_teacher.py": "c6ade5ced42e2c54a77c1499163aa151",
+   "stage1_teacher_gate.py": "e922d9d890c3e1eff6643e947289acb0"
+  },
+  "config_sha256": "9a2b2440e9267680c9b27a1d51a50db9cacdbd04582ae101ef54abaa86d8d10c",
+  "games_sha256": "2c87b4956617ec98862514e173b7441476c9a5b929d54907dd057b47a58c0c76",
+  "pi0": 1.0,
+  "pi1": 1.0,
+  "replay_sha256": {
+   "selfplay-994508": "f9d9a5ec01b4c7c873826d4a3f55d85d893e6c889779ea2375da1cc257ed6034",
+   "selfplay-994509": "fe698dbea6
+---END-C2---
+C2 SSH-RC=0
+
+## 结论（21:28 趟，标记 DGXSTATUS2128A–C）
+- DGX 本机：无训练进程，GPU 0%、36°C，load 0.33。空闲属预期（代码冻结待 Claude 三修复 diff；K0 标注在 C1/C2 跑，不占 DGX GPU）。
+- K0 仍 0 分片（机上直读 21:31–21:32）：C1 64 进程/load 62.41/etime 02:01:30，出目录 /root/carbon/k0annot/out_timing/shards/ 0 件，progress.json games 0（mtime 19:29）；C2 63 进程/load 62.23/etime 01:57:16，shards 0，progress.json games 0（mtime 19:34）。Worker CPU 时间约 2 小时/进程——全速在算，非卡死。注意：C1 出目录是 k0annot/out_timing（21:03 探针与本趟首探用的 /root/carbon/data/k0_annot_c1 路径在 C1 上不存在，补读已纠正）。
+- 速率翻案（本趟核实）：C1 线复测已写入 AGENTS.md——Δrchar 与单局 .gz 大小逐字对合（994400 局 226,125 B、994401 局 229,043 B），指纹「一次整局读」单位本身准，盲点只在每根读几遍；真实约 57–60 秒/根（估计），约定盘 30.0/35.4 的两倍。定盘速率被证伪。首片落盘前一切速率估计均标「未校准」，首片落盘时间才是真校准点。
+- 估计更新：首片 C1 约 22:00–22:15（按 19:18 裁定的单局墙时 2.5–2.75 小时估计）/ DGX 线保守口径约 22:40（估计）；全量（两波）顺延至凌晨（估计）；原 23:15 作废。21:34 交叉窗上界将至仍 0 片——未判卡住（进程全速），但已越过定盘估计点 1.5 小时以上。
+- L20 归档传输进行中：332 件 / 3,773,992,913 B（21:16 为 282 件 / 2.82GB，+50 件 / +约 958MB，约 14 分钟）；rsync server 双进程 etime 30:04（约 21:00 起连续会话）；正在写 .state_pre_klfix_it10.pt（mtime 21:30）。ckpt_0* 仍 0，MANIFEST_full_series.md5 未到——未到全序检查点。作战室 21:23 称 L20 侧 21:21 无发送进程——DGX 侧收包仍在进行，供 L20 线对照。
+- 仓库：本地 1d57e67，远端 46a92db5（21:19 时为 d0e27804；新推进为 newface-watch krypton-cloudsearch 125→152，GitHub API 直读），落后 3 个提交（3334faa8、d0e27804、46a92db5），已知、不阻塞。无 git fetch/pull 残留进程。
+- 旧语料未变：m3s2 118/118；carago 183/182；fable 182/181；ds meta 54418/54119。
+- 口径差异（vs 作战室 21:23 同步趟）：① 完工估计 23:15 作废（见上）；② C1 首片 21:34 上界将至仍 0 片；③ L20 归档 DGX 侧未停滞；④ main 已推进至 46a92db5。已另发作战室简短同步。

@@ -1,0 +1,25 @@
+# DGX 状态汇报 2026-11-14 21:58 CST（直读 21:58:20–21:59:23，标记 DGXSTATUS2158A–B）
+
+## 直读结果（Tailscale SSH，arm@100.84.148.73）
+- DGX 本机 spark-29db：up 25 天，load 0.33，GPU 0%、36°C，428 进程；无训练进程（k0_annotate/rl2_ppo/train 均无），空闲属预期（DGX 现为分发协调）。
+- 无 git fetch/pull/checkout 残留进程。
+- K0 前置④ returns：
+  - C1：returns/c1 62 npz（994400–994461）＋ progress_c1.json，progress games 62/62 done，mtime 21:51:08。第一波已回传 DGX（上趟还在机上）。
+  - C2：returns/c2 62 npz，progress games 62/62 done，progress.json mtime 21:58:22（新鲜）。
+  - 第二波：C1 994462+ 0 件、C2 994570+ 0 件——刚开跑，符合单局约 2 小时 20 分墙时。
+- 仓库：本地 1d57e67 vs 远端 7f97a4f8（N2 已落 main，远端自上趟 46a92db5 推进），仍落后、已知、不阻塞；未 fetch，未数精确落后数。
+- 语料未变：m3s2 index 118 / replays 118；carago index 182 / replays 183；fable index 181 / replays 182；ds_carago total 54418；ds_fable total 54119。
+
+## 转述（作战室/L20 线）
+- K0 首片验收双 PASS（DGX 线 21:54–22:03 回执，已发作战室）：C1/C2 各验首片，身份七件＋config 9a2b2440＋权重 06a03d9c＋seed/窗口/π 全合；C1 第二波 46 局（994462–994507）已放行；C2 余 30 局自动接续。
+- 速率真校准约 43–45 秒/根；全量 200 局完工估计约 00:15–00:30（估计）。
+- L20 归档已闭合（L20 线 21:49/21:54 回执）：412 件 / 4,762,467,704 B，三批清单读回 OK=164/33/215，MISMATCH 0。L20 现做 B 代码刷新（cnet2_build e0051524、rl2_ppo_train 2c8262fb），md5 读回待回报。
+- Studio 正式 q 闸在跑（21:51–21:55 同步趟转述）：PID 72804，约 21.1%。
+
+## 口径对照
+- 与作战室最新口径一致，无差异。C1 62 片回传 DGX 已另发作战室简短同步。
+
+## 已发
+- DGX 边聊定期汇报；作战室简短同步（C1 62 片回传 DGX）。
+- 本日志：~/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files/dgx-status-1114-2158.log
+- 记忆追加：~/memory/2026-11-14.md

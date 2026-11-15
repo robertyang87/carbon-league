@@ -1,0 +1,45 @@
+DGXSTATUS20261115_0913 — direct read via Tailscale ssh arm@100.84.148.73, 2026-11-15 09:14:02 CST, SSH-RC=0
+Probe script: ~/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files/dgx-status-20261115_0913.sh
+
+MARKER=DGXSTATUS20261115_0913 START 2026-11-15 09:14:02 CST
+spark-29db
+ 09:14:02 up 25 days, 14:18, 5487 users,  load average: 20.66, 20.22, 18.04
+--- nvidia-smi ---
+0 %, [N/A], [N/A], 40
+--- load ---
+20.66 20.22 18.04 21/992 1746770
+--- duel/training processes ---
+1605013    08:24:38  0.0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/k0_calib_driver.py
+1739205       26:41  0.3 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0005_s100_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0005_s100_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+1739213-1739232 (20 workers) 26:38 ~99.2-99.7% CPU each, same k0_duel.py command
+--- git fetch/pull/checkout processes ---
+NO_GIT_PROC
+--- k0_calib duels dir ---
+total 7912
+-rw-rw-r-- 1 arm arm 4044214 2026-11-15 04:34 lr0.0002_s100_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4046164 2026-11-15 08:31 lr0.0002_s200_b1_seed7.json
+(no lr0.0005_s100 output yet)
+--- duel log mtimes ---
+/home/arm/junyang/k0_calib/driver.log 4496 B 2026-11-15 08:47
+/home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log 173 B 04:34
+/home/arm/junyang/k0_calib/duel_lr0.0002_s200_b1_seed7.log 174 B 08:31
+/home/arm/junyang/k0_calib/duel_lr0.0005_s100_b1_seed7.log 0 B 08:47
+/home/arm/junyang/k0_calib/train_lr0.0005_s100_b1_seed7.log 47483 B 08:47
+--- corpus counts ---
+m3s2_corpus index=118 replays=118
+carago_corpus index=182 replays=183
+fable_corpus index=181 replays=182
+ds_carago meta total=54418
+ds_fable meta total=54119
+--- repo HEAD vs remote ---
+local HEAD f82191eb151c19abf7f15fa087d679e55fa02ef5
+remote HEAD 68d94e97d3652a20fe5469ac70f26a47041b2e38 (was 4957c458 at 08:59 trip)
+--- recent file changes (last 60 min, excl logs) ---
+15 files under /home/arm/junyang/carbon-repo/data/m9xj600_corpus/*.json.gz
+--- tailscale status ---
+dgx-spark 100.84.148.73 online
+carbon-spot-29 offline, last seen 7h ago
+carbon-spot-32 100.95.45.69 offline, last seen 24m ago (~08:50)
+--- spot-32 relay-key ssh (relay key HARD-CODED, never default key) ---
+ssh: connect to host 100.95.45.69 port 22: Connection timed out
+MARKER-END DGXSTATUS20261115_0913

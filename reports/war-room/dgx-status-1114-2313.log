@@ -1,0 +1,25 @@
+# DGX 状态汇报 2026-11-14 23:13 CST（直读 23:16:04–23:17:12，标记 DGXSTATUS2313A/B/C/D）
+
+## 直读结果（Tailscale SSH，arm@100.84.148.73）
+- DGX 本机 spark-29db：up 25 天 4:20，load 0.01–0.15，GPU 0%、35°C（nvidia-smi memory.used 显 [N/A]，GB10 口径旧例）；无训练进程、无 git fetch/pull/checkout 残留、无 rsync（pgrep 带括号口径零命中，rc=1）。空闲属预期（分发协调，不跑标注）。
+- **仓库滞后重现（本趟变化）**：本地 HEAD 7d3ca16c9686d4fae398bfd9db52428a8c818687，`git ls-remote origin main` = 3be858ccd2faae3039e804c7974f914cf020b188；GitHub API compare（只读，额度余 4752/5000）确认落后 **11 笔**，均为 newface-watch 数据提交（22:56 批：m3s3z 158→163、hakimi3pro 196→199、k4v3 254→255、lite-v8 274→276、fable 322→323、krypton-search256 160→168、krypton-prosearch 181→191、krypton-search256-v2 114→117、krypton-cloudsearch 189→206、krypton-csplant 121→144、k4v2 347→348），无代码改动。上一趟 23:02 核验时 lag 为 0。
+- K0 前置④ returns（/home/arm/junyang/k0_dist/returns/）：C1 62 npz、C2 62 npz——仍只有第一波，合计 124/200；C1 wave2 progress games {}、mtime 21:59:36 未变、0 done；C2 progress.json mtime 23:14:53 新鲜、大小 18706 未变、仍 62 done 62——心跳活、无新片。C1 第二波 0 片属预期（单局墙时约 2 小时 20 分量级，首片未到点，C1 22:59 回执原话）。完工估计约 00:15–00:30（估计，按 43–45 秒/根真校准，不变；C1 回执约 00:25、C2 回执约 00:15）。
+- 未跟踪 ckpt 两件未变（本趟纠正路径：位于 carbon-repo/data/weights/，非 carbon/data/weights/）：ckpt_85_frozen.npz（06:50，13,972,532 B，md5 eb633ca99aca432e2f4c9265c368fda8）、ckpt_95.npz（15:19，同大小，md5 9ece5a33cdc6bc6730c5136d48976a07）。
+- 语料未变：m3s2 index 118 / replays 118；carago index 182 / replays 183；fable index 181 / replays 182；ds meta games 182/181（与 index 一致）。
+- it74 两块仍 200/200 在盘（carbon/data/bigeval_live/，非此前误写的 data/ 根）；配对表事已于 20:38 裁定闭环，不再列为缺件。
+
+## 转述（作战室最新口径）
+- **死线令（23:13，本对话新收）**：所有者定死线 2026-11-15 23:12 前产出一版 KataGo 方式、实测超越 Echo3 的版本。窗口序：标注合并＋join＋σ̂ 报告照旧先行（约 00:30）→ KataGo 探针②场升为第一优先（价值叶 vs 启发式叶，985000–985199，工程组构造闸过后开）→ pull0045 后移。若价值叶胜出：候选包对 Echo3 直打场用 986000–986199（缓冲段，作战室已分配），C1/C2 分担放大验证＋1.5 核计时实测。C1 的 M3s3z 桥检参数仍在合并后给，不变。
+- 所有者 23:12–23:13 在作战室另令：目标明日此时一版超越 Echo3 的版本、走 KataGo 方式；计划须一直滚动、至少覆盖未来 24 小时，并附应急预案。
+- L20 第 0 步（作战室 v82，22:50，转述）：M2_B 22:49 时 629/2000（约 114 局/分钟，估计约 23:01 完）、随后 Echo2 批，三批估计约 23:20 全完——本趟时刻按该速率应已完，无更新直读，仍为转述。
+- Studio 正式 q 闸健康，约 25–26%，完工估计 11-15 约 13:00–14:30（估计）不变（v81，22:33）。
+- C1/C2 22:59 回执：C1 第二波 46 局在跑（PGID 112734），下一活 M3s3z 桥检场；C2 在算 30 局，下一活总账交棒（估计约 00:15）后切 N2 生产树。
+
+## 口径对照
+- 与作战室最新口径一致，无冲突。唯一变化（仓库 lag 0→11）已另发作战室简短同步。
+- DGX 队列现行序（死线令后）：标注收齐（124/200）→ 合并 → 生产 join → σ̂ 预跑/N 锁报告（约 00:30）→ KataGo 探针②/③ → pull0045。队列非空而 DGX 空闲属计划待命（分发协调），不按「GPU 在空等」异常报。
+
+## 已发
+- DGX 边聊定期汇报（本趟终讯）；作战室简短同步（仓库滞后 11 笔）。
+- 本日志：~/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files/dgx-status-1114-2313.log
+- 记忆追加：~/memory/2026-11-14.md

@@ -1,0 +1,121 @@
+MARK_DGXSTATUS2143A 2026-11-14 21:44:50 CST
+MARK_DGXSTATUS2143A
+spark-29db
+ 21:45:05 up 25 days,  2:49, 4807 users,  load average: 0.31, 0.20, 0.36
+0 %, [N/A], 36
+---PROCS---
+1487490       08:58 rsync --server -logDtpRe.LsfxCIvu --partial . /home/arm/junyang/l20_ppo_u_archive_20261114/run_dir/
+1487491       08:55 rsync --server -logDtpRe.LsfxCIvu --partial . /home/arm/junyang/l20_ppo_u_archive_20261114/run_dir/
+2594625 23-07:33:09 python3 -m agent_mcp
+---K0RETURNS---
+c1:
+total 16
+drwxr-xr-x 2 arm arm 4096 Nov 14 19:31 .
+drwxrwxr-x 4 arm arm 4096 Nov 14 19:06 ..
+-rw-r--r-- 1 arm arm 6457 Nov 14 19:29 progress_c1.json
+c2:
+total 28
+drwxrwxr-x 2 arm arm 4096 Nov 14 19:34 .
+drwxrwxr-x 4 arm arm 4096 Nov 14 19:06 ..
+-rw-r--r-- 1 arm arm 1949 Nov 14 19:34 games_c2_full.json
+-rw-r--r-- 1 arm arm  179 Nov 14 19:34 k0_annot_c2_full.meta
+-rw-r--r-- 1 arm arm 9157 Nov 14 21:43 progress.json
+c1-progress-mtime:
+2026-11-14 19:29:37.024016205 +0800
+c2-progress-mtime:
+2026-11-14 21:43:44.930291366 +0800
+---ARCHIVE---
+343
+4712726278
+0
+ls: cannot access '/home/arm/junyang/l20_ppo_u_archive_20261114/MANIFEST_full_series.md5': No such file or directory
+total 3474240
+-rw------- 1 arm arm 63176704 Nov 14 21:45 .state_pre_vhead_it78.pt.tfl9dU
+drwxrws--- 4 arm arm    12288 Nov 14 21:44 .
+drwxrwxr-x 5 arm arm     4096 Nov 14 21:00 ..
+-rw-r--r-- 1 arm arm  1050524 Nov 14 16:00 snipe_n1.log
+---REPO---
+1d57e67
+46a92db5
+---CORPORA---
+m3s2 replays=118
+m3s2 index=118
+carago replays=183
+carago index=182
+fable replays=182
+fable index=181
+---DSMETA---
+ds_carago 54418
+ds_fable 54119
+MARK_DGXSTATUS2143B
+DGX SSH-RC=0
+=== C1 spot29 ===
+MARK_C1K02143
+iZuf63wxob7kzgyxkel2nlZ
+ 21:45:20 up 1 day, 23:16,  2 users,  load average: 62.71, 62.53, 62.38
+62.71 62.53 62.38 63/1048 111983
+---PROCS---
+ 105045    02:15:46 bash -c rm -rf /root/carbon/k0annot/out_timing /root/carbon/k0annot/wave1_end.txt; cd /root/carbon/k0annot && setsid nohup ./run_full.sh /root/carbon/k0annot/games_wave1_c1.json wave1 > wave1_launch.log 2>&1 & sleep 10; echo "annotate procs: $(pgrep -cf "k0_annotate[.]py")"; ps -eo pid,ppid,pgid,args | grep "k0_annotate[.]py" | head -3
+ 105050    02:15:46 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+ 105052    02:15:43 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+annotate-count: 64
+---SHARDS-C1---
+0
+total 20
+drwxr-xr-x 3 root root 4096 Nov 14 19:29 .
+drwxr-xr-x 4 root root 4096 Nov 14 19:31 ..
+-rw-r--r-- 1 root root 6457 Nov 14 19:29 progress.json
+drwxr-xr-x 2 root root 4096 Nov 14 19:29 shards
+---PROGRESS---
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8544b78e51d16aa7660bc47b",
+   "stage0_teacher.py": "c6ade5ced42e2c54a77c1499163aa151",
+   "stage1_tea
+---END-C1---
+C1 SSH-RC=0
+=== C2 spot31 ===
+MARK_C2K02143
+iZuf6023700gydxbxk4zl6Z
+ 21:45:36 up 1 day,  9:25,  3 users,  load average: 62.46, 62.54, 62.42
+62.46 62.54 62.42 63/1062 48207
+---PROCS---
+  45462    02:11:34 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45467    02:11:30 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45468    02:11:30 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+annotate-count: 63
+---SHARDS-C2---
+0
+total 24
+drwxr-xr-x  3 root root 4096 Nov 14 19:34 .
+drwxrwxr-x 14 1000 1000 4096 Nov 14 21:41 ..
+-rw-r--r--  1 root root 9157 Nov 14 19:34 progress.json
+drwxr-xr-x  2 root root 4096 Nov 14 19:34 shards
+---PROGRESS---
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8544b78e51d16aa7660bc47b",
+   "stage0_teacher.py": "c6ade5ced42e2c54a77c1499163aa151",
+   "stage1_tea
+---END-C2---
+C2 SSH-RC=0
+
+## 结论（21:43 趟，标记 DGXSTATUS2143A–C，直读 21:45:05–21:45:36）
+- DGX 本机：无训练进程，GPU 0%、36°C，load 0.31。空闲属预期（K0 标注在 C1/C2 跑，不占 DGX GPU）。
+- K0 仍 0 分片（机上直读）：C1 64 进程/load 62.71/etime 02:15:46，out_timing/shards 0，progress games 0（mtime 19:29 未变）；C2 63 进程/load 62.46/etime 02:11:34，shards 0，games 0。Worker 全速在算，非卡死。首片估计不变（C1 约 22:40 保守口径/C1 线 22:48、C2 约 22:45，估计；全量约 00:15–02:35/约 02:00，估计），首片落盘前速率仍标「未校准」。
+- L20 归档传输：新 rsync 会话（PID 1487490/1487491，etime 约 9 分钟，约 21:36 起；上一会话 1471171/2 已结束），343 件 / 4,712,726,278 B（21:30 为 332 件 / 3.77GB，+11 件 / +约 939MB，约 15 分钟）；正在写 .state_pre_vhead_it78.pt（mtime 21:45）。ckpt_0* 仍 0，MANIFEST_full_series.md5 未到——未到全序检查点。传输仍在继续，会话已换过一轮。
+- 仓库：本地 1d57e67，远端 46a92db5，未变，仍落后 3 个提交，已知、不阻塞。无 git fetch/pull 残留进程。
+- 旧语料未变：m3s2 118/118；carago 183/182；fable 182/181；ds meta 54418/54119。
+- 口径对照：作战室最新口径为 21:23 同步趟＋21:28 本线同步；本趟无新口径差异。变化（rsync 会话换新＋归档继续增长）已另发作战室简短同步。

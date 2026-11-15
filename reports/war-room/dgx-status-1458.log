@@ -1,0 +1,104 @@
+dispatched at 15:00:10
+CLAIMED run 43172049111 job 131027436898 status completed conclusion success
+ cn-shanghai
+2026-11-12T07:00:19.4897655Z ##[endgroup]
+2026-11-12T07:00:32.7407468Z InvokeId: t-sh072v806dlo64g
+2026-11-12T07:00:32.7422452Z --- status=Success exit=0 ---
+2026-11-12T07:00:32.7430686Z DGXSTATUS1458QZ9P L20-BEGIN 2026-11-12 15:00:21 CST
+2026-11-12T07:00:32.7451718Z --- L20-WEIGHTS ---
+2026-11-12T07:00:32.7482115Z -rw-r--r-- 1 root root 13968972 2026-11-12_14:51:49 /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T07:00:32.7483578Z -rw-r--r-- 1 root root 11821004 2026-11-12_14:58:00 /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T07:00:32.7502165Z -rw-r--r-- 1 root root 13968972 2026-11-12_14:51:52 /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T07:00:32.7515180Z --- L20-WEIGHTS-MD5 ---
+2026-11-12T07:00:32.7521803Z b6db08c9b076257c54817377bb93130d  /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T07:00:32.7522827Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T07:00:32.7523813Z 2c8ca0ae7266a6c0a41bf3b8ba7f723b  /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T07:00:32.7524577Z --- L20-RSYNC-SCP ---
+2026-11-12T07:00:32.7525399Z  150212       14:09 scp -i /root/.ssh/dgx_access -o IdentitiesOnly=yes /tmp/vfy2.sh arm@10.211.43.155:/tmp/vfy2.sh
+2026-11-12T07:00:32.7526353Z DGXSTATUS1458QZ9P DGX-BEGIN 2026-11-12 15:00:27 CST
+2026-11-12T07:00:32.7526890Z spark-29db
+2026-11-12T07:00:32.7527391Z  15:00:27 up 22 days, 20:04, 612 users,  load average: 284.82, 93.78, 33.59
+2026-11-12T07:00:32.7528000Z 0 %, [N/A], [N/A], 37
+2026-11-12T07:00:32.7528382Z --- PROC ---
+2026-11-12T07:00:32.7528753Z   99500       17:38 bash /tmp/ship_m7bs.sh
+2026-11-12T07:00:32.7562825Z  103651       07:06 scp -i /home/arm/.ssh/id_ed25519_carbon_relay -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep19.npz root@10.211.43.94:/root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T07:00:32.7564638Z --- ALL-PYTHON ---
+2026-11-12T07:00:32.7565427Z  106157       01:25 timeout 330 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7566642Z  106158       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7567793Z  106159       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7568959Z  106160       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7570108Z  106161       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7571686Z  106162       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7572891Z  106163       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7574052Z  106164       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7575237Z  106165       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7576421Z  106166       01:25 ../.venv/bin/python bigeval.py exp/probe_n1r.py exp/probe_n1r.py 777000 400 probegen
+2026-11-12T07:00:32.7577265Z --- SCP-SHIP ---
+2026-11-12T07:00:32.7577706Z   99500       17:38 bash /tmp/ship_m7bs.sh
+2026-11-12T07:00:32.7579478Z  103651       07:06 scp -i /home/arm/.ssh/id_ed25519_carbon_relay -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep19.npz root@10.211.43.94:/root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T07:00:32.7588349Z --- M7BS-LOGS-TAIL ---
+2026-11-12T07:00:32.7588858Z == /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T07:00:32.7589686Z -rw-rw-r-- 1 arm arm 4640 2026-11-12_14:35:05 /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T07:00:32.7590531Z {"ep": 18, "i": 0, "pi": 0.2683, "v": 0.0208, "aux": 0.0364, "s": 1}
+2026-11-12T07:00:32.7592229Z {"ep": 18, "val": {"collector": 0.8488, "planter": 0.808, "base": 0.9517, "all": 0.8602, "workers": 0.8399, "loss": 0.3679}, "train_pi": 0.2513, "s": 50}
+2026-11-12T07:00:32.7593374Z {"ep": 19, "i": 0, "pi": 0.2479, "v": 0.0265, "aux": 0.047, "s": 0}
+2026-11-12T07:00:32.7594486Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8081, "base": 0.9518, "all": 0.8604, "workers": 0.8401, "loss": 0.3679}, "train_pi": 0.2468, "s": 50}
+2026-11-12T07:00:32.7595492Z best 0.8629
+2026-11-12T07:00:32.7595932Z == /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T07:00:32.7596741Z -rw-rw-r-- 1 arm arm 4605 2026-11-12_14:27:10 /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T07:00:32.7597867Z {"ep": 18, "i": 0, "pi": 0.2961, "v": 0.0219, "aux": 0.0353, "s": 1}
+2026-11-12T07:00:32.7598965Z {"ep": 18, "val": {"collector": 0.8491, "planter": 0.8104, "base": 0.9501, "all": 0.8605, "workers": 0.8406, "loss": 0.3579}, "train_pi": 0.2748, "s": 57}
+2026-11-12T07:00:32.7600013Z {"ep": 19, "i": 0, "pi": 0.2731, "v": 0.0276, "aux": 0.0463, "s": 1}
+2026-11-12T07:00:32.7601307Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8107, "base": 0.9501, "all": 0.8606, "workers": 0.8408, "loss": 0.3581}, "train_pi": 0.2716, "s": 57}
+2026-11-12T07:00:32.7602292Z best 0.8615
+2026-11-12T07:00:32.7602676Z --- WEIGHTS-NEWEST-ALL ---
+2026-11-12T07:00:32.7603119Z total 7823152
+2026-11-12T07:00:32.7603663Z -rw-r--r-- 1 arm arm 11821004 Nov 12 14:42 cnet2_distill_g1_fromstudio.npz
+2026-11-12T07:00:32.7604465Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:35 cnet2_m7bsr1_ep19.npz
+2026-11-12T07:00:32.7605201Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:35 cnet2_m7bsr1_last.npz
+2026-11-12T07:00:32.7605954Z -rw-rw-r-- 1 arm arm     3079 Nov 12 14:35 cnet2_m7bsr1_log.jsonl
+2026-11-12T07:00:32.7606666Z -rw-rw-r-- 1 arm arm 13968968 Nov 12 14:34 cnet2_m7bsr1_ep18.npz
+2026-11-12T07:00:32.7607374Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:33 cnet2_m7bsr1_ep17.npz
+2026-11-12T07:00:32.7608098Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:32 cnet2_m7bsr1_ep16.npz
+2026-11-12T07:00:32.7608783Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:31 cnet2_m7bsr1_ep15.npz
+2026-11-12T07:00:32.7609469Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:30 cnet2_m7bsr1_ep14.npz
+2026-11-12T07:00:32.7610118Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:30 cnet2_m7bsr1_ep13.npz
+2026-11-12T07:00:32.7610791Z -rw-rw-r-- 1 arm arm 13968964 Nov 12 14:29 cnet2_m7bsr1_ep12.npz
+2026-11-12T07:00:32.7611857Z --- DISTILL-G1-MD5 ---
+2026-11-12T07:00:32.7612622Z 6c3885c6ed801c7a435b88961ac8fb64  /home/arm/junyang/carbon/data/weights/cnet2_distill_g1_fromstudio.npz
+2026-11-12T07:00:32.7613483Z --- DQ-LOGS-NEWEST ---
+2026-11-12T07:00:32.7613885Z total 108
+2026-11-12T07:00:32.7614335Z -rw-rw-r-- 1 arm arm 4640 Nov 12 14:35 m7bsr1.log
+2026-11-12T07:00:32.7614893Z -rw-rw-r-- 1 arm arm 4605 Nov 12 14:27 m7bsg1.log
+2026-11-12T07:00:32.7615440Z -rw-rw-r-- 1 arm arm    5 Nov 12 13:55 m3s2r1.done
+2026-11-12T07:00:32.7615990Z -rw-rw-r-- 1 arm arm  428 Nov 12 13:55 md5.txt
+2026-11-12T07:00:32.7616538Z -rw-rw-r-- 1 arm arm 4639 Nov 12 13:55 m3s2r1.log
+2026-11-12T07:00:32.7617114Z -rw-rw-r-- 1 arm arm    5 Nov 12 13:46 m3s2g1.done
+2026-11-12T07:00:32.7617698Z -rw-rw-r-- 1 arm arm 4598 Nov 12 13:46 m3s2g1.log
+2026-11-12T07:00:32.7618237Z --- DATA-DIR-NEWEST ---
+2026-11-12T07:00:32.7618641Z total 1100
+2026-11-12T07:00:32.7619063Z drwxrwxr-x 2 arm arm  4096 Nov 12 14:59 bigeval_live
+2026-11-12T07:00:32.7619661Z drwxr-xr-x 2 arm arm 36864 Nov 12 14:42 weights
+2026-11-12T07:00:32.7620229Z drwxrwxr-x 2 arm arm  4096 Nov 12 14:07 dq_logs
+2026-11-12T07:00:32.7620763Z drwxrwxr-x 3 arm arm  4096 Nov 12 13:45 ds_distill
+2026-11-12T07:00:32.7621796Z drwxrwxr-x 2 arm arm  4096 Nov 12 13:22 ds_m3s2
+2026-11-12T07:00:32.7622360Z drwxr-xr-x 3 arm arm  4096 Nov 12 13:21 m3s2_corpus
+2026-11-12T07:00:32.7622911Z -rw-rw-r-- 1 arm arm     0 Nov 12 13:21 m3s2.out
+2026-11-12T07:00:32.7623424Z -rw-rw-r-- 1 arm arm   226 Nov 12 13:21 m7bs.out
+2026-11-12T07:00:32.7623959Z drwxrwxr-x 3 arm arm  4096 Nov 12 13:19 ds_m7bs
+2026-11-12T07:00:32.7624505Z drwxrwxr-x 3 arm arm  4096 Nov 12 13:18 m7bs_corpus
+2026-11-12T07:00:32.7625072Z drwxrwxr-x 2 arm arm  4096 Nov 12 06:56 ds_m3s142
+2026-11-12T07:00:32.7625803Z --- REPLAYS ---
+2026-11-12T07:00:32.7626167Z index_entries= 118
+2026-11-12T07:00:32.7626527Z replays_dir_count=118
+2026-11-12T07:00:32.7626916Z DGXSTATUS1458QZ9P DGX-END
+2026-11-12T07:00:32.7627321Z DGXSTATUS1458QZ9P L20-END rc=0
+2026-11-12T07:00:32.7627588Z 
+2026-11-12T07:00:32.7884728Z Post job cleanup.
+2026-11-12T07:00:32.8921833Z [command]/usr/bin/git version
+2026-11-12T07:00:32.8992611Z git version 2.56.0
+2026-11-12T07:00:32.9095255Z Temporarily overriding HOME='/home/runner/work/_temp/02824846-cfab-48e9-aeb0-ab3b67e35337' before making global git config changes
+2026-11-12T07:00:32.9121990Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T07:00:32.9131785Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:00:32.9171952Z [command]/usr/bi
+elapsed 56 claimed

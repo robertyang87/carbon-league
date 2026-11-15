@@ -1,0 +1,83 @@
+MARKER=DGXSTATUS20261115_1358 START 2026-11-15 13:59:40 CST
+spark-29db
+ 13:59:40 up 25 days, 19:04, 5769 users,  load average: 82.23, 65.45, 60.41
+--- nvidia-smi ---
+96 %, [N/A], [N/A], 49
+--- load ---
+82.23 65.45 60.41 49/1256 1851619
+--- duel/training processes ---
+1605013    13:10:16  0.0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/k0_calib_driver.py
+1822104    01:02:43  104 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz --flatten-q --kl-beta 1.0 --lr 0.0002 --bs 256 --max-updates 400 --seed 7 --device cuda
+--- git fetch/pull/checkout processes ---
+NO_GIT_PROC
+--- k0_calib duels dir ---
+total 11868
+drwxrwxr-x 2 arm arm    4096 2026-11-15 12:56 .
+drwxrwxr-x 4 arm arm    4096 2026-11-15 12:56 ..
+-rw-rw-r-- 1 arm arm 4044214 2026-11-15 04:34 lr0.0002_s100_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4046164 2026-11-15 08:31 lr0.0002_s200_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4047451 2026-11-15 12:56 lr0.0005_s100_b1_seed7.json
+--- duel log mtimes ---
+ls: cannot access '/home/arm/junyang/k0_calib/duels/*.log': No such file or directory
+-rw-rw-r-- 1 arm arm   5226 2026-11-15 12:56 /home/arm/junyang/k0_calib/driver.log
+-rw-rw-r-- 1 arm arm    173 2026-11-15 04:34 /home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm    174 2026-11-15 08:31 /home/arm/junyang/k0_calib/duel_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm    174 2026-11-15 12:56 /home/arm/junyang/k0_calib/duel_lr0.0005_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47643 2026-11-15 01:11 /home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  93503 2026-11-15 05:06 /home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm 176724 2026-11-15 13:59 /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47483 2026-11-15 08:47 /home/arm/junyang/k0_calib/train_lr0.0005_s100_b1_seed7.log
+--- corpus counts ---
+m3s2_corpus index= 118 replays= 118
+carago_corpus index= 182 replays= 183
+fable_corpus index= 181 replays= 182
+ds_carago meta= {'total': 54418}
+ds_fable meta= {'total': 54119}
+--- repo HEAD vs remote ---
+f82191eb151c19abf7f15fa087d679e55fa02ef5
+8b5130b407263bd8df69766c24f34d19279be9a7	HEAD
+--- recent file changes (last 60 min, excl logs) ---
+--- tailscale status ---
+100.84.148.73    dgx-spark            robertyang.ustb@  linux  -                                             
+100.65.8.27      carbon-spot-29       robertyang.ustb@  linux  offline, last seen 11h ago                    
+100.119.67.98    carbon-spot-34       robertyang.ustb@  linux  -                                             
+100.109.129.68   carbon-spot-35       robertyang.ustb@  linux  -                                             
+100.124.249.102  codex-environment-1  robertyang.ustb@  linux  -                                             
+100.79.251.87    gpu-l20-6            robertyang.ustb@  linux  -                                             
+100.78.149.20    mac-studio           robertyang.ustb@  macOS  -                                             
+100.92.70.87     muse                 robertyang.ustb@         active; relay "nyc", tx 56987408 rx 53450240  
+100.104.105.100  radxa-orion-o6       robertyang.ustb@  linux  -                                             
+--- spot-32 relay-key ssh (read-only probe; relay key HARD-CODED, never default key) ---
+ssh: connect to host 100.95.45.69 port 22: Connection timed out
+MARKER-END DGXSTATUS20261115_1358
+--- distill train progress (appended) ---
+ls: cannot access '/home/arm/junyang/k0_calib/*distill*': No such file or directory
+-rw-rw-r-- 1 arm arm  47643 2026-11-15 01:11 /home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  93503 2026-11-15 05:06 /home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm 177184 2026-11-15 13:59 /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47483 2026-11-15 08:47 /home/arm/junyang/k0_calib/train_lr0.0005_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm 177184 Nov 15 13:59 /home/arm/junyang/k0_calib/train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r-- 1 arm arm   5226 Nov 15 12:56 /home/arm/junyang/k0_calib/driver.log
+-rw-rw-r-- 1 arm arm    174 Nov 15 12:56 /home/arm/junyang/k0_calib/duel_lr0.0005_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47483 Nov 15 08:47 /home/arm/junyang/k0_calib/train_lr0.0005_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm    174 Nov 15 08:31 /home/arm/junyang/k0_calib/duel_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm  93503 Nov 15 05:06 /home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm    173 Nov 15 04:34 /home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm  47643 Nov 15 01:11 /home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+--- latest duel cell json ---
+-rw-rw-r-- 1 arm arm 4047451 Nov 15 12:56 /home/arm/junyang/k0_calib/duels/lr0.0005_s100_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4046164 Nov 15 08:31 /home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4044214 Nov 15 04:34 /home/arm/junyang/k0_calib/duels/lr0.0002_s100_b1_seed7.json
+--- distill train log tail (appended 1328) ---
+{"update": 380, "loss": {"total": 3.0393115955993615, "ce": 2.9426204085032763, "anchor_kl_weighted": 0.09669118709608486}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.09669118709608486, "p99": 0.2864010528126919}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "2d95b7c0cd718ec7848b516da7e84255c7b2e353e09523e4da4aebab72d63e52"}, "lr": 0.0002, "elapsed_s": 3725.24}
+{"update": 381, "loss": {"total": 2.963949295020539, "ce": 2.8789654979504404, "anchor_kl_weighted": 0.0849837970700987}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.0849837970700987, "p99": 0.25112859120156844}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "aa3a9bb3f38203bd05878ac51700f27d858450dee56e193c50fd4e7e4ebe2440"}, "lr": 0.0002, "elapsed_s": 3734.82}
+{"update": 382, "loss": {"total": 3.0692922335974835, "ce": 2.981603621008224, "anchor_kl_weighted": 0.08768861258925947}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.08768861258925947, "p99": 0.2460908045441957}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "e2aa0e6be203d18ca38207a6d01fdbbbc3cfaf71d8951c1e467ec6a1b23f8941"}, "lr": 0.0002, "elapsed_s": 3744.58}
+{"update": 383, "loss": {"total": 3.0450527830181526, "ce": 2.9577124204004894, "anchor_kl_weighted": 0.08734036261766306}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.08734036261766306, "p99": 0.2587191571009564}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "970b302fc0bd2b85d8fcaa29378c28b94cb07ed6f2f75915ca57400b38c42f5b"}, "lr": 0.0002, "elapsed_s": 3754.22}
+ls: cannot access '/home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz': No such file or directory
+--- gate2 drivers (appended) ---
+12
+1835208       33:24  148 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 0 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_0.json
+1835209       33:24  149 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 1 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_1.json
+1835210       33:24  149 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 2 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_2.json
+--- distill proc (appended) ---
+1822104    01:02:56  104 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz --flatten-q --kl-beta 1.0 --lr 0.0002 --bs 256 --max-updates 400 --seed 7 --device cuda

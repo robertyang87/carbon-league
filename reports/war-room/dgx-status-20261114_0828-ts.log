@@ -1,0 +1,16 @@
+# DGX 状态汇报 · 2026-11-14 08:28 趟（标记 DGXSTATUS0828 / B/C/D/E/F）
+- 直读：Tailscale SSH 六趟，08:28:54–约 08:31，全部 rc=0。
+- 里程碑：K0 全批 128 局已完成。
+  - k0_launch.py full，PID 1057885，约 08:07:35 启动，08:24:34 落盘完毕（约 17 分钟墙钟）。
+  - /home/arm/junyang/k0_full_driver.log：K0_FULL_RC 0；/home/arm/junyang/k0_full.log：K0LAUNCH-DONE phase=full rc=0。
+  - SPGEN-RESULT（续产 120 局）：games 120，wall_s 704.4，total_wall_s 1019.8，10.22 局/分钟，mean_steps 299.0，mean_margin 123.3，mean_u 0.5511，errors []，identity_mismatches 0，mirror share 0.0。
+  - 产物：data/k0_a1/replays/ 128 件（988000–988127），index.json 128 条，全部 terminal；identity 与切片一致（weights b6db08c9…、producer bd62ead9…、fastsim aefe6c83…、config 7ddd411e…）。
+  - 进程已全部退出；load 1.80/21.19/30.31（15 分钟均值仍在回落）；GPU 0%/36°C。
+  - 订正上趟估计：08:16 趟外推的「106 分钟、09:54 落盘」作废——实测全批约 17 分钟，作战室 08:23 直读的纠正（replays 91、index 64/128）得到本趟终态证实。
+- Git 对照：本地 clone d72e1de9（main，K0 基线，纯祖先，merge_base 即自身）；远端 HEAD 已进到 267e78bb（cnet2_train meta seal，继 7dc838e2 之后 +1）；API compare：本地落后 19 个 commit（上趟 18 个）。窗口冻结，按住不动。工作树干净（仅未跟踪 .venv 与 code/katago_chain_draft.sh）。
+- 无残留：无 git fetch/pull/checkout 进程，无 rsync，无 spawn_main。
+- 语料未变：工作目录 replays m3s2 118、carago 183、fable 182；ds_carago 54,418、ds_fable 54,119。
+- it85 未变：code/exp/it85.py 6bd5cc5a…、data/weights/ckpt_85_frozen.npz 13,972,532 B（06:50）。
+- 对照作战室（转述）：K0 之后排队三处语料直拉（hakimi3pro 缺 24→147、fable6 缺 31→188、k4v2 缺 200→304）与成对刷盘三件（bigeval 354bcd1b＋eval_v53 45792dfb＋certify 2593efcf）现已满足「K0 数据回执交出后接」的触发条件，执行归作战室。
+- 下一里程碑：建集＋打标＋--verify＋数据回执；其后排队项由作战室驱动。
+- 已发：DGX 边聊定期汇报；作战室简短同步（里程碑）。

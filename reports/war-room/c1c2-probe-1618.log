@@ -1,0 +1,97 @@
+C1C2PROBE1618 PROBE-BEGIN 2026-11-14 16:20:32 CST
+--- spot-29 100.65.8.27 ---
+iZuf63wxob7kzgyxkel2nlZ
+ 16:20:36 up 1 day, 17:52,  2 users,  load average: 54.57, 26.40, 10.84
+54.57 26.40 10.84 63/1052 98675
+== exam procs ==
+  98434       01:09 /root/carbon/.venv/bin/python code/bigeval.py exp/m3s2r1_base.py exp/m3s2g1_base.py 990000 200 probe_base_g1
+  98436       01:09 /root/carbon/.venv/bin/python code/bigeval.py exp/m3s2r1_base.py exp/m3s2g1_base.py 990000 200 probe_base_g1
+  98437       01:09 /root/carbon/.venv/bin/python code/bigeval.py exp/m3s2r1_base.py exp/m3s2g1_base.py 990000 200 probe_base_g1
+  98438       01:09 /root/carbon/.venv/bin/python code/bigeval.py exp/m3s2r1_base.py exp/m3s2g1_base.py 990000 200 probe_base_g1
+  98439       01:09 /root/carbon/.venv/bin/python code/bigeval.py exp/m3s2r1_base.py exp/m3s2g1_base.py 990000 200 probe_base_g1
+  98440       01:09 /root/carbon/.venv/bin/python code/bigeval.py exp/m3s2r1_base.py exp/m3s2g1_base.py 990000 200 probe_base_g1
+  98441       01:09 /root/carbon/.venv/bin/python code/bigeval.py exp/m3s2r1_base.py exp/m3s2g1_base.py 990000 200 probe_base_g1
+  98442       01:09 /root/carbon/.venv/bin/python code/bigeval.py exp/m3s2r1_base.py exp/m3s2g1_base.py 990000 200 probe_base_g1
+== bigeval_live recent ==
+total 25372
+-rw-r--r-- 1 root root 551128 Nov 14 16:20 probe_base_g1.jsonl
+-rw-r--r-- 1 root root 891365 Nov 14 16:19 probe_it95_g1.jsonl
+-rw-r--r-- 1 root root   8811 Nov 14 16:16 probebase_smoke.jsonl
+-rw-r--r-- 1 root root   8892 Nov 14 16:15 probe_smoke.jsonl
+-rw-r--r-- 1 root root 881696 Nov 14 15:31 it95base_m2.jsonl
+-rw-r--r-- 1 root root 883336 Nov 14 15:30 it95_m2.jsonl
+-rw-r--r-- 1 root root   8824 Nov 14 15:27 it95base_smoke.jsonl
+-rw-r--r-- 1 root root   8919 Nov 14 15:26 it95_smoke.jsonl
+-rw-r--r-- 1 root root 881691 Nov 14 12:23 a4r1_base_m2.jsonl
+-rw-r--r-- 1 root root 882313 Nov 14 12:22 a4r1_a4_m2.jsonl
+-rw-r--r-- 1 root root   8825 Nov 14 12:19 a4r1_base_smoke.jsonl
+== jsonl line counts ==
+/root/carbon/data/bigeval_live/m9xj570wr1_echo2.jsonl 200 2026-11-13 21:28:44
+/root/carbon/data/bigeval_live/m9xj570wr1_m2.jsonl 200 2026-11-13 21:26:44
+/root/carbon/data/bigeval_live/m9xj570wr1_smoke_echo2.jsonl 2 2026-11-13 21:22:32
+/root/carbon/data/bigeval_live/m9xj570wr1_smoke.jsonl 2 2026-11-13 21:22:05
+/root/carbon/data/bigeval_live/probe_base_g1.jsonl 124 2026-11-14 16:20:32
+/root/carbon/data/bigeval_live/probebase_smoke.jsonl 2 2026-11-14 16:16:18
+/root/carbon/data/bigeval_live/probe_it95_g1.jsonl 200 2026-11-14 16:19:26
+/root/carbon/data/bigeval_live/probe_smoke.jsonl 2 2026-11-14 16:15:51
+/root/carbon/data/bigeval_live/s29deploy_smoke.jsonl 2 2026-11-13 02:39:11
+/root/carbon/data/bigeval_live/snap_70_m2.jsonl 200 2026-11-13 19:37:48
+/root/carbon/data/bigeval_live/snap_70_smoke.jsonl 2 2026-11-13 19:33:58
+/root/carbon/data/bigeval_live/spot29_smoke.jsonl 2 2026-11-12 22:46:32
+== it95 pack presence ==
+-rw-r----- 1 root root 4598510 Nov 14 15:25 /root/carbon/code/exp/it95.py
+== probe tag files ==
+total 516
+drwxr-xr-x 2 root root   4096 Nov 14 16:19 bigeval_live
+-rw-r--r-- 1 root root   1582 Nov 14 16:19 probe-exam.log
+-rw-r--r-- 1 root root   1582 Nov 14 16:19 probe-exam.out
+-rw-r--r-- 1 root root 269551 Nov 14 16:19 bigeval.jsonl
+-rwxr-x--x 1 root root    794 Nov 14 16:17 probe-exam.sh
+-rw-r--r-- 1 root root   2307 Nov 14 16:16 probe-smoke.log
+-rw-r--r-- 1 root root   2386 Nov 14 15:31 it95-exam-driver.log
+spot-29 SSH-RC=0
+--- spot-31 100.98.67.20 ---
+iZuf6023700gydxbxk4zl6Z
+ 16:20:40 up 1 day,  4:00,  1 user,  load average: 0.00, 0.00, 0.50
+0.00 0.00 0.50 1/990 40878
+== exam procs ==
+  40875       00:00 bash -c hostname; uptime; cat /proc/loadavg; echo "== exam procs =="; ps -eo pid,etime,args | grep -E "[b]igeval|[e]val_v53|[s]naploop|[q]_gate" | head -8; echo "== bigeval_live recent =="; ls -lt /root/carbon/data/bigeval_live/ 2>/dev/null | head -12; echo "== jsonl line counts =="; for f in /root/carbon/data/bigeval_live/*.jsonl; do [ -e "$f" ] && echo "$f $(wc -l < "$f") $(stat -c %y "$f" | cut -d. -f1)"; done | tail -12; echo "== it95 pack presence =="; ls -l /root/carbon/data/weights/*it95* /root/carbon/code/exp/*it95* 2>/dev/null; find /root/carbon -maxdepth 3 -name "*9e16085a*" 2>/dev/null | head -5; echo "== probe tag files =="; ls -lt /root/carbon/data/ 2>/dev/null | head -8
+== bigeval_live recent ==
+total 15644
+-rw-r--r-- 1 root root 889710 Nov 14 15:33 m3s2r1_echo2_base95.jsonl
+-rw-r--r-- 1 root root 888609 Nov 14 15:30 it95_echo2.jsonl
+-rw-r--r-- 1 root root   8961 Nov 14 15:27 it95_smoke.jsonl
+-rw-r--r-- 1 root root 798110 Nov 14 07:14 m3s2r1_echo2_base.jsonl
+-rw-r--r-- 1 root root 879185 Nov 14 07:10 it85_echo2.jsonl
+-rw-r--r-- 1 root root 839661 Nov 14 00:38 snap_70_echo2_newsim.jsonl
+-rw-r--r-- 1 root root   8343 Nov 14 00:36 snap_70_ab_smoke.jsonl
+-rw-r--r-- 1 root root 839662 Nov 13 19:34 snap_70_echo2.jsonl
+-rw-r--r-- 1 root root   8342 Nov 13 19:32 snap_70_smoke.jsonl
+-rw-r--r-- 1 root root 835297 Nov 13 19:15 m9xj570g1_echo2.jsonl
+-rw-r--r-- 1 root root 835305 Nov 13 19:13 m9xj570g1_m2.jsonl
+== jsonl line counts ==
+/root/carbon/data/bigeval_live/m9xj320g1_m2.jsonl 200 2026-11-13 15:01:01
+/root/carbon/data/bigeval_live/m9xj320r1_echo2.jsonl 200 2026-11-13 14:59:42
+/root/carbon/data/bigeval_live/m9xj320r1_m2.jsonl 200 2026-11-13 14:57:42
+/root/carbon/data/bigeval_live/m9xj320wr1_echo2.jsonl 200 2026-11-13 15:06:21
+/root/carbon/data/bigeval_live/m9xj320wr1_m2.jsonl 200 2026-11-13 15:04:21
+/root/carbon/data/bigeval_live/m9xj570g1_echo2.jsonl 200 2026-11-13 19:15:35
+/root/carbon/data/bigeval_live/m9xj570g1_m2.jsonl 200 2026-11-13 19:13:57
+/root/carbon/data/bigeval_live/m9xj570g1_smoke.jsonl 2 2026-11-13 19:12:21
+/root/carbon/data/bigeval_live/snap_70_ab_smoke.jsonl 2 2026-11-14 00:36:25
+/root/carbon/data/bigeval_live/snap_70_echo2.jsonl 200 2026-11-13 19:34:47
+/root/carbon/data/bigeval_live/snap_70_echo2_newsim.jsonl 200 2026-11-14 00:38:31
+/root/carbon/data/bigeval_live/snap_70_smoke.jsonl 2 2026-11-13 19:32:35
+== it95 pack presence ==
+-rw-r----- 1 root root 4598510 Nov 14 15:25 /root/carbon/code/exp/it95.py
+== probe tag files ==
+total 500
+-rw-r--r-- 1 root root    465 Nov 14 15:33 it95_chain.out
+-rw-r--r-- 1 root root 133955 Nov 14 15:33 bigeval.jsonl
+-rw-r--r-- 1 root root    728 Nov 14 15:33 m3s2r1_echo2_base95.launcher.log
+drwxr-xr-x 2 root root   4096 Nov 14 15:30 bigeval_live
+-rw-r--r-- 1 root root    320 Nov 14 15:30 m3s2r1_echo2_base95.err.log
+-rw-r--r-- 1 root root    717 Nov 14 15:30 it95_echo2.launcher.log
+-rw-r--r-- 1 root root    309 Nov 14 15:28 it95_echo2.err.log
+spot-31 SSH-RC=0
+C1C2PROBE1618 PROBE-END 2026-11-14 16:20:40 CST

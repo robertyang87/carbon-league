@@ -1,0 +1,121 @@
+DGXSTATUS1328D 13:31:36 CST
+== deploy_stack.sh ==
+#!/bin/bash
+# deploy_stack.sh - run FROM DGX, as user arm.
+#
+# Purpose: turn a bootstrapped replacement spot into an exam-ready machine:
+#   1. Push the golden stack tarball (built from spot-30's /root/carbon) to
+#      the new machine over the tailnet, using DGX's carbon_relay key (the
+#      new machine authorized its pubkey in bootstrap.sh).
+#   2. Extract it to /root/carbon on the target.
+#   3. Verify the manifest: venv python imports numpy, and the three harness
+#      files match the known-good md5s measured on spot-30 (2026-11-13).
+#   4. Print EXAM-READY on success; fail loudly otherwise.
+#
+# Usage: bash deploy_stack.sh <new-machine-tailnet-ipv4>
+set -euo pipefail
+
+TARGET="${1:?usage: deploy_stack.sh <new-machine-tailnet-ipv4>}"
+GOLDEN="/home/arm/junyang/golden/exam_stack_golden.tar.zst"
+KEY="${HOME}/.ssh/id_ed25519_carbon_relay"
+SSH_OPTS="-i ${KEY} -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=20 -o StrictHostKeyChecking=accept-new"
+
+fail() { echo "DEPLOY-FAIL: $*" >&2; exit 1; }
+
+[ -s "${GOLDEN}" ] || fail "golden tarball missing or empty: ${GOLDEN}"
+[ -r "${KEY}" ] || fail "relay key not readable: ${KEY}"
+
+# Integrity of the golden image before it leaves DGX.
+if [ -f "${GOLDEN%.tar.zst}.md5" ]; then
+  want="$(cat "${GOLDEN%.tar.zst}.md5" | tr -d ' \n')"
+  got="$(md5sum "${GOLDEN}" | awk '{print $1}')"
+  [ "${want}" = "${got}" ] || fail "golden tarball md5 mismatch (sidecar ${want} != actual ${got})"
+  echo "golden md5 verified: ${got}"
+fi
+zstd -t -q "${GOLDEN}" || fail "golden tarball fails zstd integrity test"
+
+echo "pushing golden tarball to root@${TARGET} ..."
+# shellcheck disable=SC2086
+scp ${SSH_OPTS} "${GOLDEN}" "root@${TARGET}:/root/exam_stack_golden.tar.zst" \
+  || fail "scp to ${TARGET} failed"
+
+echo "extracting to /root/carbon on ${TARGET} ..."
+# shellcheck disable=SC2086
+ssh ${SSH_OPTS} "root@${TARGET}" '
+  set -e
+  if command -v zstd >/dev/null 2>&1; then
+    zstd -dc /root/exam_stack_golden.tar.zst | tar -xf - -C /root
+  else
+    echo "NO_ZSTD_ON_TARGET"
+    exit 42
+  fi
+' || {
+  rc=$?
+  if [ "${rc}" = "42" ]; then
+    echo "target has no zstd; falling back to DGX-side decompression stream..."
+    # shellcheck disable=SC2086
+    zstd -dc "${GOLDEN}" | ssh ${SSH_OPTS} "root@${TARGET}" 'tar -xf - -C /root' \
+      || fail "streamed extraction failed"
+  else
+    fail "extraction on target failed (rc=${rc})"
+  fi
+}
+
+echo "verifying manifest on ${TARGET} ..."
+# shellcheck disable=SC2086
+ssh ${SSH_OPTS} "root@${TARGET}" '
+  set -u
+  fail=0
+  /root/carbon/.venv/bin/python -c "import numpy; print(\"numpy\", numpy.__version__)" \
+    || { echo "MANIFEST-FAIL: venv python cannot import numpy"; fail=1; }
+  check() {
+    want="$1"; path="$2"
+    got="$(md5sum "${path}" 2>/dev/null | awk "{print \$1}")"
+    if [ "${got}" = "${want}" ]; then
+      echo "ok ${path} ${got}"
+    else
+      echo "MANIFEST-FAIL: ${path} md5 ${got:-missing} != ${want}"
+      fail=1
+    fi
+  }
+  check aa4c5bb63c879caffeb33b0b25c498d7 /root/carbon/code/eval_v53.py
+  check 3547eb6abba5083c5aaa2645fcbf2a47 /root/carbon/code/bigeval.py
+  check 14230fa124e0a9b90d59d6df03c6765a /root/carbon/code/cnet2_search.py
+  [ -d /root/carbon/data/weights ] || { echo "MANIFEST-FAIL: data/weights missing"; fail=1; }
+  exit ${fail}
+' || fail "manifest verification failed on ${TARGET}"
+
+echo "EXAM-READY"
+echo "target: root@${TARGET} (stack at /root/carbon)"
+== carbon-a7ed8f95 ==
+total 108
+drwxrwxr-x  2 arm arm  4096 Nov 13 13:24 tools
+drwxrwxr-x  5 arm arm  4096 Nov 13 13:24 reports
+drwxrwxr-x 24 arm arm 20480 Nov 13 13:24 data
+drwxrwxr-x 12 arm arm 20480 Nov 13 13:24 code
+-rw-rw-r--  1 arm arm 41915 Nov 13 13:24 MANIFEST.md
+-rw-rw-r--  1 arm arm 11957 Nov 13 13:24 README.md
+== files modified after 13:24 ==
+/home/arm/junyang
+/home/arm/junyang/carbon-a7ed8f95
+/home/arm/junyang/carbon-a7ed8f95/README.md
+/home/arm/junyang/carbon-a7ed8f95/.gitignore
+/home/arm/junyang/carbon-a7ed8f95/reports
+/home/arm/junyang/carbon-a7ed8f95/reports/casec_design.md
+/home/arm/junyang/carbon-a7ed8f95/reports/s3_phase2_report.md
+/home/arm/junyang/carbon-a7ed8f95/reports/katago_architecture_design.md
+/home/arm/junyang/carbon-a7ed8f95/reports/REVIEW_FIXES_20261113.md
+/home/arm/junyang/carbon-a7ed8f95/reports/alpha_analysis.md
+/home/arm/junyang/carbon-a7ed8f95/reports/policy_v0_6_report.md
+/home/arm/junyang/carbon-a7ed8f95/reports/v53_tuning_report.md
+/home/arm/junyang/carbon-a7ed8f95/reports/bc_shadow_report.md
+/home/arm/junyang/carbon-a7ed8f95/reports/designs
+/home/arm/junyang/carbon-a7ed8f95/reports/policy_raid_v0_1_report.md
+/home/arm/junyang/carbon-a7ed8f95/reports/guard_steal_report.md
+/home/arm/junyang/carbon-a7ed8f95/reports/runbook_m3s_wholenet.md
+/home/arm/junyang/carbon-a7ed8f95/reports/v16_candidate.md
+/home/arm/junyang/carbon-a7ed8f95/reports/policy_v0_1_report.md
+/home/arm/junyang/carbon-a7ed8f95/reports/bc_shadow_deepseek_report.md
+== verify_search.log size ==
+-rw-rw-r-- 1 arm arm 0 Nov 13 12:53 /home/arm/junyang/verify_search.log
+DGXSTATUS1328D-END 13:31:36 CST

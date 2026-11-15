@@ -1,0 +1,93 @@
+dispatched at 15:29:49
+CLAIMED run 43175671554 job 131039241897 status completed conclusion success
+ cn-shanghai
+2026-11-12T07:29:56.2194198Z ##[endgroup]
+2026-11-12T07:30:09.8653521Z InvokeId: t-sh072vana0s34lc
+2026-11-12T07:30:09.8661580Z --- status=Success exit=0 ---
+2026-11-12T07:30:09.8671656Z DGXSTATUS1528M4P9 L20-BEGIN 2026-11-12 15:29:58 CST
+2026-11-12T07:30:09.8708760Z --- L20-WEIGHTS-MD5 ---
+2026-11-12T07:30:09.8709748Z b6db08c9b076257c54817377bb93130d  /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T07:30:09.8731708Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T07:30:09.8732799Z 2c8ca0ae7266a6c0a41bf3b8ba7f723b  /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T07:30:09.8749614Z --- DGX-DISTILL-R1-MD5 (via ssh, expect 93061c69d6bc7f9f3d0468f60ce54974 per Studio original) ---
+2026-11-12T07:30:09.8771496Z DGXSTATUS1528M4P9 DGX-BEGIN 2026-11-12 15:30:04 CST
+2026-11-12T07:30:09.8781344Z spark-29db
+2026-11-12T07:30:09.8792626Z  15:30:04 up 22 days, 20:34, 633 users,  load average: 0.25, 1.62, 21.90
+2026-11-12T07:30:09.8797795Z 0 %, [N/A], [N/A], 37
+2026-11-12T07:30:09.8798453Z --- PROC-TRAIN ---
+2026-11-12T07:30:09.8801640Z NO-TRAIN-PROC
+2026-11-12T07:30:09.8802564Z --- ALL-PYTHON ---
+2026-11-12T07:30:09.8803253Z 2594625 21-01:18:08 python3 -m agent_mcp
+2026-11-12T07:30:09.8804994Z 2596961 21-01:16:15 /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox/.venv/bin/python local_dev/scripts/vox_bridge.py --vox-dir /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox --net-audio 8769
+2026-11-12T07:30:09.8806802Z --- PROBE-LEFTOVER ---
+2026-11-12T07:30:09.8807476Z NO-PROBE-PROC
+2026-11-12T07:30:09.8808193Z --- M7BS-LOGS-TAIL ---
+2026-11-12T07:30:09.8808844Z == /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T07:30:09.8809735Z -rw-rw-r-- 1 arm arm 4640 2026-11-12_14:35:05 /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T07:30:09.8811326Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8081, "base": 0.9518, "all": 0.8604, "workers": 0.8401, "loss": 0.3679}, "train_pi": 0.2468, "s": 50}
+2026-11-12T07:30:09.8812277Z best 0.8629
+2026-11-12T07:30:09.8812685Z == /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T07:30:09.8813458Z -rw-rw-r-- 1 arm arm 4605 2026-11-12_14:27:10 /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T07:30:09.8814665Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8107, "base": 0.9501, "all": 0.8606, "workers": 0.8408, "loss": 0.3581}, "train_pi": 0.2716, "s": 57}
+2026-11-12T07:30:09.8815530Z best 0.8615
+2026-11-12T07:30:09.8815744Z --- WEIGHTS-NEWEST-ALL ---
+2026-11-12T07:30:09.8815986Z total 7836796
+2026-11-12T07:30:09.8816290Z -rw-r--r-- 1 arm arm 13968960 Nov 12 15:06 cnet2_distill_r1_fromstudio.npz
+2026-11-12T07:30:09.8816768Z -rw-r--r-- 1 arm arm 11821004 Nov 12 14:42 cnet2_distill_g1_fromstudio.npz
+2026-11-12T07:30:09.8817213Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:35 cnet2_m7bsr1_ep19.npz
+2026-11-12T07:30:09.8817609Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:35 cnet2_m7bsr1_last.npz
+2026-11-12T07:30:09.8817998Z -rw-rw-r-- 1 arm arm     3079 Nov 12 14:35 cnet2_m7bsr1_log.jsonl
+2026-11-12T07:30:09.8818654Z -rw-rw-r-- 1 arm arm 13968968 Nov 12 14:34 cnet2_m7bsr1_ep18.npz
+2026-11-12T07:30:09.8819062Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 14:33 cnet2_m7bsr1_ep17.npz
+2026-11-12T07:30:09.8819625Z 93061c69d6bc7f9f3d0468f60ce54974  /home/arm/junyang/carbon/data/weights/cnet2_distill_r1_fromstudio.npz
+2026-11-12T07:30:09.8820342Z 6c3885c6ed801c7a435b88961ac8fb64  /home/arm/junyang/carbon/data/weights/cnet2_distill_g1_fromstudio.npz
+2026-11-12T07:30:09.8821230Z --- DQ-LOGS-NEWEST ---
+2026-11-12T07:30:09.8821606Z total 108
+2026-11-12T07:30:09.8822306Z -rw-rw-r-- 1 arm arm 4640 Nov 12 14:35 m7bsr1.log
+2026-11-12T07:30:09.8822855Z -rw-rw-r-- 1 arm arm 4605 Nov 12 14:27 m7bsg1.log
+2026-11-12T07:30:09.8823398Z -rw-rw-r-- 1 arm arm    5 Nov 12 13:55 m3s2r1.done
+2026-11-12T07:30:09.8823951Z -rw-rw-r-- 1 arm arm  428 Nov 12 13:55 md5.txt
+2026-11-12T07:30:09.8824477Z -rw-rw-r-- 1 arm arm 4639 Nov 12 13:55 m3s2r1.log
+2026-11-12T07:30:09.8824895Z --- DATA-DIR-NEWEST ---
+2026-11-12T07:30:09.8825118Z total 1100
+2026-11-12T07:30:09.8825346Z drwxr-xr-x 2 arm arm 36864 Nov 12 15:06 weights
+2026-11-12T07:30:09.8825676Z drwxrwxr-x 2 arm arm  4096 Nov 12 14:59 bigeval_live
+2026-11-12T07:30:09.8825999Z drwxrwxr-x 2 arm arm  4096 Nov 12 14:07 dq_logs
+2026-11-12T07:30:09.8826306Z drwxrwxr-x 3 arm arm  4096 Nov 12 13:45 ds_distill
+2026-11-12T07:30:09.8826614Z drwxrwxr-x 2 arm arm  4096 Nov 12 13:22 ds_m3s2
+2026-11-12T07:30:09.8826930Z drwxr-xr-x 3 arm arm  4096 Nov 12 13:21 m3s2_corpus
+2026-11-12T07:30:09.8827261Z -rw-rw-r-- 1 arm arm     0 Nov 12 13:21 m3s2.out
+2026-11-12T07:30:09.8827575Z -rw-rw-r-- 1 arm arm   226 Nov 12 13:21 m7bs.out
+2026-11-12T07:30:09.8827878Z drwxrwxr-x 3 arm arm  4096 Nov 12 13:19 ds_m7bs
+2026-11-12T07:30:09.8828187Z drwxrwxr-x 3 arm arm  4096 Nov 12 13:18 m7bs_corpus
+2026-11-12T07:30:09.8828501Z drwxrwxr-x 2 arm arm  4096 Nov 12 06:56 ds_m3s142
+2026-11-12T07:30:09.8828809Z -rw-rw-r-- 1 arm arm     0 Nov 12 06:56 dq.out
+2026-11-12T07:30:09.8829118Z drwxr-xr-x 3 arm arm  4096 Nov 12 06:55 m3s_now
+2026-11-12T07:30:09.8829434Z drwxrwxr-x 2 arm arm  4096 Nov 12 01:26 solo_logs
+2026-11-12T07:30:09.8829724Z --- CARAGO-SEARCH ---
+2026-11-12T07:30:09.8829952Z carago-find-done
+2026-11-12T07:30:09.8830166Z fable-find-done
+2026-11-12T07:30:09.8830446Z --- REPLAYS ---
+2026-11-12T07:30:09.8831237Z index_entries= 118
+2026-11-12T07:30:09.8831503Z replays_dir_count=118
+2026-11-12T07:30:09.8831737Z DGXSTATUS1528M4P9 DGX-END
+2026-11-12T07:30:09.8831980Z DGXSTATUS1528M4P9 L20-END rc=0
+2026-11-12T07:30:09.8832144Z 
+2026-11-12T07:30:09.9035734Z Post job cleanup.
+2026-11-12T07:30:10.0026983Z [command]/usr/bin/git version
+2026-11-12T07:30:10.0131356Z git version 2.56.0
+2026-11-12T07:30:10.0218113Z Temporarily overriding HOME='/home/runner/work/_temp/9dfd2f68-0a7c-470a-bccd-2b20b57161cf' before making global git config changes
+2026-11-12T07:30:10.0230077Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T07:30:10.0231963Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:30:10.0301227Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T07:30:10.0402401Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T07:30:10.0859861Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T07:30:10.0882171Z http.https://github.com/.extraheader
+2026-11-12T07:30:10.0951707Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T07:30:10.1051855Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T07:30:10.1755312Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T07:30:10.1793680Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T07:30:10.2438122Z Cleaning up orphan processes
+2026-11-12T07:30:10.2804784Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 55 claimed

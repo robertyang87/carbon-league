@@ -1,0 +1,32 @@
+DGXSTATUS1228C 12:35:56 CST
+== HEADS V2 REAL LOG ==
+EPOCH {"ep": 18, "train_l_u": 0.00584, "train_l_wdl": 0.0476, "train_l_m": 0.3045, "val_l_u": 0.00817, "val_wdl_acc": 0.9933, "val_margin_mae": 439.0, "val_u_calib_mean": -0.04234, "val_u_target_binned_resid": 0.04234, "val_u_calib_pred_binned": 0.04234, "val_u_calib_pred_bins": [[1, 0.2519, 0.9417, 0.0], [6, 0.3477, 0.9417, 0.0], [17, 0.4612, 0.9427, 0.0004], [31, 0.5523, 0.9292, 0.0049], [70, 0.6624, 0.9167, 0.0036], [231, 0.7586, 0.9106, 0.0021], [782, 0.8626, 0.9263, 0.001], [2151, 0.9324, 0.9381, 0.0005]], "val_u_range": [0.252, 0.974], "val_n": 3289, "s": 560}
+EPOCH {"ep": 19, "train_l_u": 0.00583, "train_l_wdl": 0.0475, "train_l_m": 0.3043, "val_l_u": 0.00816, "val_wdl_acc": 0.9933, "val_margin_mae": 439.2, "val_u_calib_mean": -0.04223, "val_u_target_binned_resid": 0.04223, "val_u_calib_pred_binned": 0.04223, "val_u_calib_pred_bins": [[1, 0.2518, 0.9417, 0.0], [6, 0.3477, 0.9417, 0.0], [17, 0.4612, 0.9427, 0.0004], [31, 0.5523, 0.9292, 0.0049], [69, 0.6619, 0.9165, 0.0037], [232, 0.7584, 0.9107, 0.0021], [780, 0.8627, 0.9264, 0.001], [2153, 0.9325, 0.9381, 0.0005]], "val_u_range": [0.252, 0.974], "val_n": 3289, "s": 591}
+EPOCH {"ep": 20, "train_l_u": 0.00583, "train_l_wdl": 0.0475, "train_l_m": 0.3043, "val_l_u": 0.00817, "val_wdl_acc": 0.9933, "val_margin_mae": 439.2, "val_u_calib_mean": -0.04224, "val_u_target_binned_resid": 0.04224, "val_u_calib_pred_binned": 0.04224, "val_u_calib_pred_bins": [[1, 0.2517, 0.9417, 0.0], [6, 0.3476, 0.9417, 0.0], [17, 0.4612, 0.9427, 0.0004], [31, 0.5522, 0.9292, 0.0049], [69, 0.6618, 0.9165, 0.0037], [232, 0.7584, 0.9107, 0.0021], [781, 0.8627, 0.9264, 0.001], [2152, 0.9325, 0.9381, 0.0005]], "val_u_range": [0.252, 0.974], "val_n": 3289, "s": 620}
+TRAIN-DONE {"out": "/home/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz", "s": 620}
+    PID     ELAPSED CMD
+-rw-rw-r-- 1 arm arm 13973080 Nov 13 12:35 cnet2_m3s2r1_heads_v2.npz
+== GATE PILOT ==
+{"seed": 993901, "mode": "greedy", "margin": 44.21, "win": true, "wall_s": 4.3, "teacher_ms_mean": null}
+GATE-SUMMARY {"tag": "pilot_greedy_e2", "mode": "greedy", "opp": "echo2", "seed0": 993901, "n": 1, "want": 1, "wins": 1, "mean": 44.2, "se": null, "errors": 0}
+-rw-rw-r-- 1 arm arm 265 Nov 13 12:31 /home/arm/junyang/gate_pilot_greedy.log
+-rw-rw-r-- 1 arm arm   0 Nov 13 12:31 /home/arm/junyang/gate_pilot_guided.log
+ 569750       04:18 /home/arm/junyang/carbon/.venv/bin/python stage0_guided_match.py --weights /home/arm/junyang/s26stage/data/weights/cnet2_m3s2r1L.npz --opponent echo2 --mode guided --seed0 993900 --n 1 --workers 1 --max-steps 40 --out /home/arm/junyang/carbon/data/gate_pilot_guided --tag pilot_guided_e2
+ 569753       04:18 /home/arm/junyang/carbon/.venv/bin/python stage0_guided_match.py --weights /home/arm/junyang/s26stage/data/weights/cnet2_m3s2r1L.npz --opponent echo2 --mode guided --seed0 993900 --n 1 --workers 1 --max-steps 40 --out /home/arm/junyang/carbon/data/gate_pilot_guided --tag pilot_guided_e2
+== GEN1 TRAIN-DONE LINES ==
+{"ep": 2, "val": {"collector": 0.8953, "planter": 0.8777, "base": 0.9577, "all": 0.9036, "workers": 0.8905, "loss": 0.2328}, "train_pi": 0.2166, "s": 250}
+best 0.9036
+{"ep": 2, "val": {"collector": 0.9278, "planter": 0.9214, "base": 0.9709, "all": 0.9348, "workers": 0.9261, "loss": 0.1561}, "train_pi": 0.1523, "s": 222}
+best 0.9348
+== LAST_STATS FIX COMMIT? ==
+1e48c64 v16b online fix, datasets v9-v11, planter/tree metrics, endgame multi-key search, Master-line switch, DAgger probe
+d2cd532 v16 search tooling: fixed-count search variants, per-game search/ledger stats, stand-in v2 builders, v8 dataset
+0b7a988 data: pull M7Bs-b010 replays via ladder API into data/m7bs_corpus
+== M9XJ460 ==
+12
+m9xj460_matches_entries= 27
+NO_M9XJ460_WORKDIR
+== UNINDEXED EXTRAS ==
+carago_corpus extra= ['c6cc6b1866c9e2977dc2b36f388cb603-1.json.gz'] missing_from_disk= []
+fable_corpus extra= ['14f6f8d303aec586a790b71ffee44d2b-1.json.gz'] missing_from_disk= []
+DGXSTATUS1228C-END 12:35:56 CST

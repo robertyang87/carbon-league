@@ -1,0 +1,12 @@
+# DGX 直读记录 · 2026-11-14 08:13 趟（标记 DGXSTATUS0813）
+- 通道：Tailscale SSH 直读 arm@100.84.148.73（spark-29db），4 趟 SSH 均 rc=0，时间 08:14:51–08:17:52 CST
+- 主机：up 24d 13:19，load 54.93/46.96/29.89；GPU 0%/39°C（自弈为 CPU 计算，属预期）
+- K0 全批已启动（相对上趟 08:07:31「尚未启动」的变化）：k0_launch.py full，PID 1057885/PGID 1057885（setsid 独立进程组），etime 08:59（08:16:34 读）→ 启动约 08:07:35；selfplay_gen.py workers 56，seed0 988000–seed1 988128，max-games 128，max-seconds 86400；日志 k0_full_driver.log（stdout/stderr，尾空）＋ k0_full.log（仅 launch 行）
+- K0 产物：replays 仍 8 局（988000–988007，mtime 08:05:28–29），index.json 8 条；全批启动后约 9 分钟尚无新文件——切片 8 局亦是结束时 2 秒内批量落盘，属已知形态，非卡住
+- 速率外推（估计）：切片 8 局墙钟约 6.6 分钟（07:58:51→08:05:29）；全批 128 局约 106 分钟，估计 09:54 前后落盘（若只计余下 120 局则约 09:47）
+- Git：本地 clone 仍 d72e1de9（K0 基线 ✓）；远端 HEAD 已进到 7dc838e2（certify 新版提交，与作战室口径一致）；API compare：本地落后远端 18 个 commit（上趟报 8 个、远端当时 47854413；其间又进了 10 批）；窗口内冻结、按住不动
+- 无 git fetch/pull/checkout 进程，无 rsync，spawn_main 0
+- 语料未变：工作目录 replays m3s2 118、carago 183、fable 182；ds_carago total 54,418、ds_fable total 54,119（meta 11-12 15:59）
+- it85 未变：it85.py md5 6bd5cc5a…（carbon-repo/code/exp/it85.py）；ckpt_85_frozen.npz 13,972,532 B，mtime 11-14 06:50
+- 作战室对照（转述）：certify 新版已入 main（2593efcf，commit 7dc838e2）；成对刷盘（bigeval 354bcd1b＋eval_v53 45792dfb）与三处语料直拉（hakimi3pro 缺 24→147、fable6 缺 31→188、k4v2 缺 200→304）均排队在 K0 窗口/回执之后；本趟未收到无执行人的执行令信号
+- 下一里程碑：K0 全批 128 局落盘 → 建集＋打标＋--verify＋数据回执

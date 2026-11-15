@@ -1,0 +1,75 @@
+dispatched at 15:57:23
+CLAIMED run 43179080927 job 131050363432 status completed conclusion success
+FULL LOG SAVED goals/carbon-league-large-file-leaderboard-challenge/hidden_files/buildlog-full.log chars 19887
+ cn-shanghai
+2026-11-12T07:57:32.4627954Z ##[endgroup]
+2026-11-12T07:57:56.5715523Z InvokeId: t-sh072vd3w72nhts
+2026-11-12T07:57:56.5735159Z --- status=Success exit=0 ---
+2026-11-12T07:57:56.5755184Z BUILOG16A L20-BEGIN 2026-11-12 15:57:34 CST
+2026-11-12T07:57:56.5774925Z BUILOG16A DGX-BEGIN 2026-11-12 15:57:50 CST
+2026-11-12T07:57:56.5794907Z --- BUILD-CARAGO-LOG-HEAD ---
+2026-11-12T07:57:56.5807431Z {'teachers': {2: 'Carago-V2微调'}}
+2026-11-12T07:57:56.5808213Z Traceback (most recent call last):
+2026-11-12T07:57:56.5811620Z   File "/home/arm/junyang/carbon/code/build_top.py", line 33, in <module>
+2026-11-12T07:57:56.5812773Z     B.main(sys.argv[1], sys.argv[2:])
+2026-11-12T07:57:56.5813505Z   File "/home/arm/junyang/carbon/code/cnet2_build.py", line 253, in main
+2026-11-12T07:57:56.5814692Z     games = scan(dirs, weighted=weighted)
+2026-11-12T07:57:56.5815604Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T07:57:56.5816493Z   File "/home/arm/junyang/carbon/code/cnet2_build.py", line 225, in scan
+2026-11-12T07:57:56.5817338Z     names = [g["strategies"][order[s]]["name"] for s in (0, 1)]
+2026-11-12T07:57:56.5817975Z              ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+2026-11-12T07:57:56.5818595Z TypeError: string indices must be integers, not 'str'
+2026-11-12T07:57:56.5819216Z Traceback (most recent call last):
+2026-11-12T07:57:56.5819867Z   File "/home/arm/junyang/carbon/code/set_uw.py", line 14, in <module>
+2026-11-12T07:57:56.5820989Z     kind = np.load(os.path.join(ds, "tok_kind.npy"), mmap_mode="r"); y = np.load(os.path.join(ds, "y.npy"), mmap_mode="r")
+2026-11-12T07:57:56.5822066Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T07:57:56.5823290Z   File "/home/arm/junyang/carbon/.venv/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 454, in load
+2026-11-12T07:57:56.5824548Z     fid = stack.enter_context(open(os.fspath(file), "rb"))
+2026-11-12T07:57:56.5825275Z                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T07:57:56.5826222Z FileNotFoundError: [Errno 2] No such file or directory: '/home/arm/junyang/carbon/data/ds_carago/tok_kind.npy'
+2026-11-12T07:57:56.5827196Z --- BUILD-FABLE-LOG-HEAD ---
+2026-11-12T07:57:56.5827787Z {'teachers': {2: 'Fable5.2-Max-V5'}}
+2026-11-12T07:57:56.5828375Z Traceback (most recent call last):
+2026-11-12T07:57:56.5829050Z   File "/home/arm/junyang/carbon/code/build_top.py", line 33, in <module>
+2026-11-12T07:57:56.5830027Z     B.main(sys.argv[1], sys.argv[2:])
+2026-11-12T07:57:56.5830777Z   File "/home/arm/junyang/carbon/code/cnet2_build.py", line 253, in main
+2026-11-12T07:57:56.5831644Z     games = scan(dirs, weighted=weighted)
+2026-11-12T07:57:56.5832791Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T07:57:56.5833665Z   File "/home/arm/junyang/carbon/code/cnet2_build.py", line 225, in scan
+2026-11-12T07:57:56.5834696Z     names = [g["strategies"][order[s]]["name"] for s in (0, 1)]
+2026-11-12T07:57:56.5835414Z              ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+2026-11-12T07:57:56.5836111Z TypeError: string indices must be integers, not 'str'
+2026-11-12T07:57:56.5836790Z Traceback (most recent call last):
+2026-11-12T07:57:56.5837506Z   File "/home/arm/junyang/carbon/code/set_uw.py", line 14, in <module>
+2026-11-12T07:57:56.5838888Z     kind = np.load(os.path.join(ds, "tok_kind.npy"), mmap_mode="r"); y = np.load(os.path.join(ds, "y.npy"), mmap_mode="r")
+2026-11-12T07:57:56.5839882Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T07:57:56.5840900Z   File "/home/arm/junyang/carbon/.venv/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 454, in load
+2026-11-12T07:57:56.5841840Z     fid = stack.enter_context(open(os.fspath(file), "rb"))
+2026-11-12T07:57:56.5842536Z                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T07:57:56.5843498Z FileNotFoundError: [Errno 2] No such file or directory: '/home/arm/junyang/carbon/data/ds_fable/tok_kind.npy'
+2026-11-12T07:57:56.5844672Z --- MY-INDEX-FIRST-ENTRY ---
+2026-11-12T07:57:56.5846910Z {"id": "f7c05d17146cd947eb9b3369b9a6574b", "game": 1, "order": ["a", "b"], "scores": {"a": 11084.31, "b": 10190.19}, "winner": "a", "steps": 299, "file": "replays/f7c05d17146cd947eb9b3369b9a6574b-1.json.gz", "created": 1794463588.4429352, "strategies": {"a": "Carago-V2微调", "b": "Krypton-M2BC3s2-v1"}}
+2026-11-12T07:57:56.5848932Z --- CORPUS-DIR-LISTING ---
+2026-11-12T07:57:56.5849371Z index.json
+2026-11-12T07:57:56.5849778Z replays
+2026-11-12T07:57:56.5850185Z BUILOG16A DGX-END
+2026-11-12T07:57:56.5850636Z BUILOG16A SSH_RC=0 L20-END
+2026-11-12T07:57:56.5850982Z 
+2026-11-12T07:57:56.5994614Z Post job cleanup.
+2026-11-12T07:57:56.7055062Z [command]/usr/bin/git version
+2026-11-12T07:57:56.7125322Z git version 2.56.0
+2026-11-12T07:57:56.7199138Z Temporarily overriding HOME='/home/runner/work/_temp/51853cbd-bdbd-493c-ba06-c473a863cc4b' before making global git config changes
+2026-11-12T07:57:56.7224969Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T07:57:56.7245185Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:57:56.7289662Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T07:57:56.7386040Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T07:57:56.7722513Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T07:57:56.7761237Z http.https://github.com/.extraheader
+2026-11-12T07:57:56.7806780Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T07:57:56.7936050Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T07:57:56.8385454Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T07:57:56.8489194Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T07:57:56.8843260Z Cleaning up orphan processes
+2026-11-12T07:57:56.9173159Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 61 claimed

@@ -1,0 +1,149 @@
+MARK_DGXSTATUS2213A 2026-11-14 22:14:43 CST
+MARK_DGXSTATUS2213A
+spark-29db
+ 22:14:47 up 25 days,  3:19, 4953 users,  load average: 0.28, 0.20, 0.21
+0 %, [N/A], 35
+---PROCS---
+2594625 23-08:02:51 python3 -m agent_mcp
+---K0RETURNS---
+c1 npz:
+62
+c2 npz:
+62
+c1 progress:
+{
+ "games": {
+  "selfplay-994400": {
+   "n_roots": 198,
+   "shard_sha256": "6d99dc35e4d89935f0aee1ed5d759b03156990f4181c414b353da40394974ca3",
+   "status": "done"
+  },
+  "selfplay-994401": {
+   "n_roots": 198,
+   "shard_sha256": "10c826e1b29e5ee32928f855ea184c6ad70a4162930776121ce324d027a32be0",
+   
+c1 wave2 progress:
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8
+c2 progress:
+{
+ "games": {
+  "selfplay-994508": {
+   "n_roots": 198,
+   "shard_sha256": "a7c7925e62996729c862cbfb39726dfbae691221bf468838764b13613367504d",
+   "status": "done"
+  },
+  "selfplay-994509": {
+   "n_roots": 198,
+   "shard_sha256": "8bff116eeb683ed05d1390c4b916c11b4969f8b1d1b5c4fd2f3b3e03bca72bee",
+   
+newest c1:
+/home/arm/junyang/k0_dist/returns/c1/selfplay-994404.npz
+/home/arm/junyang/k0_dist/returns/c1/selfplay-994449.npz
+/home/arm/junyang/k0_dist/returns/c1/selfplay-994406.npz
+newest c2:
+/home/arm/junyang/k0_dist/returns/c2/selfplay-994567.npz
+/home/arm/junyang/k0_dist/returns/c2/selfplay-994566.npz
+/home/arm/junyang/k0_dist/returns/c2/selfplay-994564.npz
+---ARCHIVE---
+422
+4801311528
+98
+/home/arm/junyang/l20_ppo_u_archive_20261114/MANIFEST_full_series.md5
+---REPO---
+4b1b354
+36e156a6
+---CORPORA---
+m3s2 replays=118
+m3s2 index=118
+carago replays=183
+carago index=182
+fable replays=182
+fable index=181
+---DSMETA---
+ds_carago 54418
+ds_fable 54119
+---EXAMINER---
+master2_src.py:
+/home/arm/junyang/carbon/code/exp/master2_src.py
+echo2.py:
+-rw-r--r-- 1 arm arm 763 Nov 12 16:55 /home/arm/junyang/s26stage/code/exp/echo2.py
+15b6d754e6e21de33870074d3983a16f  /home/arm/junyang/s26stage/code/exp/echo2.py
+m3w5L npz:
+82fde46b2633950d3cbb29e8cacbfdc2  /home/arm/junyang/s26stage/data/weights/cnet2_m3w5L.npz
+bh 2aebfbc1 grep (bigeval_live summaries, max 20 lines):
+MARK_DGXSTATUS2213B
+DGX SSH-RC=0
+=== C1 spot29 ===
+MARK_C1K02213
+iZuf63wxob7kzgyxkel2nlZ
+ 22:14:54 up 1 day, 23:46,  2 users,  load average: 46.20, 44.47, 41.24
+46.20 44.47 41.24 47/1048 113985
+---PROCS---
+ 112732       15:20 bash -c chmod +x /root/carbon/k0annot/run_wave2.sh; /root/carbon/.venv/bin/python -c " import json g = json.load(open(\"/root/carbon/k0annot/games_wave2_c1.json\"))[\"games\"] print(len(g), g[0], g[-1]) "; cd /root/carbon/k0annot && setsid ./run_wave2.sh /root/carbon/k0annot/games_wave2_c1.json wave2 > wave2_launch.log 2>&1 & sleep 20; SPID=$(pgrep -f "run_wave2[.]sh" | head -1); MAIN=$(pgrep -f "k0_annotate[.]py.*out_wave2" | head -1); echo "script=$SPID main=$MAIN pgid=$(ps -o pgid= -p $MAIN | tr -d " ") procs=$(pgrep -cf "k0_annotate[.]py")"; /root/carbon/.venv/bin/python -c " import json p = json.load(open(\"/root/carbon/k0annot/out_wave2/progress.json\")) i = p[\"identity\"] print(\"config\", i[\"config_sha256\"][:16], \"weights\", i[\"weights_md5\"][:8], \"games done\", len(p.get(\"games\", {}))) "
+ 112737       15:20 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave2_c1.json --out /root/carbon/k0annot/out_wave2 --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+ 112738       15:17 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave2_c1.json --out /root/carbon/k0annot/out_wave2 --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+annotate-count: 64
+---SHARDS-C1---
+0
+total 20
+drwxr-xr-x 3 root root 4096 Nov 14 21:59 .
+drwxr-xr-x 5 root root 4096 Nov 14 22:01 ..
+-rw-r--r-- 1 root root 5017 Nov 14 21:59 progress.json
+drwxr-xr-x 2 root root 4096 Nov 14 21:59 shards
+---PROGRESS---
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8544b78e51d16aa7660bc47b",
+   "stage0_teacher.py": "c6ade5ced42e2c54a77c1499163aa151",
+   "stage1_tea
+---END-C1---
+C1 SSH-RC=0
+=== C2 spot31 ===
+MARK_C2K02213
+iZuf6023700gydxbxk4zl6Z
+ 22:14:58 up 1 day,  9:54,  3 users,  load average: 30.00, 30.43, 38.08
+30.00 30.43 38.08 31/1057 50391
+---PROCS---
+  45462    02:40:56 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45467    02:40:52 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45468    02:40:52 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+annotate-count: 63
+---SHARDS-C2---
+62
+total 32
+drwxr-xr-x  3 root root  4096 Nov 14 21:54 .
+drwxrwxr-x 14 1000 1000  4096 Nov 14 21:41 ..
+-rw-r--r--  1 root root 18706 Nov 14 21:54 progress.json
+drwxr-xr-x  2 root root  4096 Nov 14 21:54 shards
+---PROGRESS---
+{
+ "games": {
+  "selfplay-994508": {
+   "n_roots": 198,
+   "shard_sha256": "a7c7925e62996729c862cbfb39726dfbae691221bf468838764b13613367504d",
+   "status": "done"
+  },
+  "selfplay-994509": {
+   "n_roots": 198,
+   "shard_sha256": "8bff116eeb683ed05d1390c4b916c11b4969f8b1d1b5c4fd2f3b3e03bca72bee",
+   "status": "done"
+  },
+  "selfplay-994510": {
+   "n_roots": 198,
+   "shard_sha256": "b762776c5b6b19c0
+---END-C2---
+C2 SSH-RC=0

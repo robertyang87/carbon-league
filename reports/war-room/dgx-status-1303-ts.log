@@ -1,0 +1,87 @@
+DGXSTATUS11141303 PROBE-BEGIN 2026-11-14 05:06:00 UTC
+=== A system/gpu/procs ===
+DGXSTATUS11141303A
+spark-29db
+ 13:06:04 up 24 days, 18:10, 3690 users,  load average: 0.01, 0.06, 0.34
+0 %, [N/A], 37
+-- procs:
+1201081       00:00 zsh -c echo DGXSTATUS11141303A; hostname; uptime; nvidia-smi --query-gpu=utilization.gpu,memory.used,temperature.gpu --format=csv,noheader; echo "-- procs:"; ps -eo pid,etime,args | grep -E "[a]4_select|[t]rain|[s]creen|[k]0_|spawn_main|[g]it (fetch|pull|merge|checkout)" | head -20; echo "-- spawn_main count:"; pgrep -f "spawn_mai[n]" | wc -l; echo "-- git procs:"; ps -eo pid,etime,args | grep -E "[g]it (fetch|pull|merge|checkout|stash)" || echo NO-GIT-PROC; echo "-- top cpu:"; ps -eo pid,etime,%cpu,args --sort=-%cpu | head -8
+1201087 441077234-00:18:40 grep -E [a]4_select|[t]rain|[s]creen|[k]0_|spawn_main|[g]it (fetch|pull|merge|checkout)
+-- spawn_main count:
+1
+-- git procs:
+NO-GIT-PROC
+-- top cpu:
+    PID     ELAPSED %CPU COMMAND
+   1570 24-18:10:10  2.0 [nvidia-modeset/kthread_q]
+   4227 24-18:09:42  0.9 /home/arm/.jishushell/bin/nomad agent -config=/home/arm/.jishushell/nomad/nomad.hcl
+   2528 24-18:09:55  0.9 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+  11281 24-18:05:06  0.7 Xvnc :1 -geometry 1600x900 -depth 24 -rfbport 5901 -rfbauth /home/arm/.vnc/pupper_passwd -SecurityTypes VncAuth -AlwaysShared -nolisten tcp
+   3943 24-18:09:47  0.6 /usr/local/lib/jishudb/jishudb
+ 498856  1-02:50:19  0.5 /usr/sbin/tailscaled --state=/var/lib/tailscale/tailscaled.state --socket=/run/tailscale/tailscaled.sock --port=41641
+      1 24-18:10:24  0.5 /sbin/init splash
+A SSH-RC=0
+=== B repo HEAD (ls-remote only, no fetch) ===
+DGXSTATUS11141303B
+1d57e6711c46c9d5ec1db5573fe0a11188451a58
+-- status:
+ M code/certify_pack.py
+ M data/bigeval.jsonl
+?? .venv
+?? code/katago_chain_draft.sh
+?? code/selfplay_gen.py
+-- remote HEAD live:
+10907a81d1da339b9fdda90abe9d1690d3233d27
+-- remote main live:
+10907a81d1da339b9fdda90abe9d1690d3233d27
+B SSH-RC=0
+=== C corpora ===
+DGXSTATUS11141303C
+-- data/m3s2_corpus:
+118
+118
+-- data/carago_corpus:
+183
+182
+-- data/fable_corpus:
+182
+181
+-- data/fable6_corpus:
+0
+index.json MISSING
+-- ds_carago total:
+54418
+-- ds_fable total:
+54119
+C SSH-RC=0
+=== D four packs ===
+DGXSTATUS11141303D
+cc2ea7d60ac005731431da675d99d6f3  /home/arm/junyang/carbon-repo/code/exp/m3s2g1_a4.py
+bb997d7137395e6e66f7b03134d96897  /home/arm/junyang/carbon-repo/code/exp/m3s2g1_base.py
+4a85855ba8878ec79d8c820f87e418cb  /home/arm/junyang/carbon-repo/code/exp/m3s2r1_a4.py
+11d8005930b298290c2e150949349647  /home/arm/junyang/carbon-repo/code/exp/m3s2r1_base.py
+-rw-rw-r-- 1 arm arm 3728377 Nov 14 11:53 /home/arm/junyang/carbon-repo/code/exp/m3s2g1_a4.py
+-rw-rw-r-- 1 arm arm 3728418 Nov 14 11:56 /home/arm/junyang/carbon-repo/code/exp/m3s2g1_base.py
+-rw-rw-r-- 1 arm arm 4598113 Nov 14 12:12 /home/arm/junyang/carbon-repo/code/exp/m3s2r1_a4.py
+-rw-rw-r-- 1 arm arm 4598094 Nov 14 12:12 /home/arm/junyang/carbon-repo/code/exp/m3s2r1_base.py
+-- new exp files since 12:58:
+-- new files home maxdepth2 since 12:58:
+D SSH-RC=0
+DGXSTATUS11141303 PROBE-END 2026-11-14 05:06:18 UTC
+
+=== VERIFICATION SUPPLEMENT (same trip, separate ssh calls, marker DGXSTATUS11141303) ===
+- spawn_main clean re-check (own ssh call, bracketed pattern only): 0, NONE
+  (main probe section A showed 1 = self-match: the probe shell's own cmdline contained
+  literal "spawn_main" in its grep pattern; clean call confirms 0 real workers)
+- fable6 reconciliation: /home/arm/junyang/carbon-repo/data/fable6_corpus (flat dir, no replays/ subdir,
+  no index.json) = 225 .json.gz files; newest mtimes Nov 14 12:31-12:32 (before 12:58 read) -> unchanged
+- m3s2 152 = carbon-repo/data/m3s2_matches.json length 152 (ladder清单, closed 2026-11-12);
+  on-disk corpus carbon/data/m3s2_corpus replays 118 / index 118 / matches_fresh.json 118 -> unchanged vs 12:28
+- fable 292 = carbon-repo/data/fable_corpus flat dir, 292 .json.gz files, no index.json;
+  on-disk corpus carbon/data/fable_corpus replays 182 / index 181, all files 183 -> unchanged vs 12:28
+  (repo fable_matches.json = 304, carbon/data fable_matches.json = 181; neither is the 292 figure)
+- carago 183 = carbon/data/carago_corpus replays 183 (index 182, carago_matches.json 182) -> unchanged vs 12:28
+- ds_m3s2 meta total = 35282 (extra, not in brief)
+- git status (observed, no prior baseline to compare): M code/certify_pack.py, M data/bigeval.jsonl,
+  ?? .venv, ?? code/katago_chain_draft.sh, ?? code/selfplay_gen.py; NO git fetch/pull/checkout processes
+- remote main HEAD now 10907a81 (was 71bb9071 at 12:28) - remote advanced, local stays pinned 1d57e671 per order

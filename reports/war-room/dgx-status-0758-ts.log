@@ -1,0 +1,59 @@
+# DGX 直读记录 · 2026-11-14 07:58–08:07 CST（dgx-status-report，标记 DGXSTATUS0758/A–F）
+# 通道：Tailscale SSH arm@100.84.148.73，SSH rc=0；只读，未改任何文件/进程。
+
+## 机器（08:01:11 直读）
+- hostname spark-29db；uptime 24 天 13:05；load 51.20 / 21.19 / 7.98（K0 切片 56 worker 在跑所致）
+- GPU 0%、37–39°C（自弈为 CPU 计算，属预期）；无 git fetch/pull/clone 进程；无 rsync；spawn_main 计数 0（fork 制 worker）
+
+## K0 生产（数据源 A 路 128 局）——本趟里程碑：计速切片已完成
+- 规格文件机上在位：/home/arm/junyang/k0-production-spec.md md5 878f1bc09059ad6f81b682e3e7a0d7b5，20,061 B，07:56（终版，与作战室补发一致）
+- 启动：k0_launch.py slice，PID 1054018 / PGID 1054018（setsid 独立进程组），2026-11-14 07:58:51 CST
+- producer：code/producer/selfplay_gen.py，--weights /home/arm/junyang/s26stage/data/weights/cnet2_m3s2r1L.npz
+  --seed0 988000 --seed1 988008 --out /home/arm/junyang/carbon/data/k0_a1 --workers 56 --name m3s2r1
+  --open-t 1.0 --open-steps 50 --open-seed 988 --max-games 128 --max-seconds 86400
+- 预检核验（直读）：权重 md5 b6db08c9b076257c54817377bb93130d ✓（13,968,972 B）；
+  producer md5 bd62ead949c93d70afaa7dc10b9d5e8e ✓；build 8598f26de678450a2dd24e308107416e ✓
+  （producer 在 carbon-repo 内，不在 carbon 工作目录——08:02 首探按错路径，补读纠正）
+- 切片结果（08:05 落盘，k0_slice.log / k0_slice_driver.log）：
+  SPGEN-RESULT：games 8，wall_s 37.7，total_wall_s 398.8，games_per_min 12.74，
+  mean_steps 299.0，mean_margin 198.8，mean_u 0.5202，workers 56，cpu_seconds 1241.9，
+  eff_cores 32.95，errors []，budget_hit null，stub false，adopted 0，identity_mismatches 0
+  identity.code_md5：selfplay_gen bd62ead9、eval_v53 4426e12d、fastsim aefe6c83、
+  cnet2_search 94f7fb64、cnet2_feat 2a45b08b、cnet2_np d8c15ad4；allow_mirror false，
+  mirror_signature_share 0.0；weights_md5 b6db08c9
+  K0LAUNCH-DONE phase=slice rc=0；K0_SLICE_RC 0
+- 产物：data/k0_a1/replays/selfplay-988000..988007.json.gz（8 件，各约 222 KB），
+  index.json 8 条（13,019 B），identity.json 996 B
+- 外推（估计）：按 wall_s 37.7s 外推全批 128 局约 10 分钟；按 total_wall_s 398.8s（含启动）
+  外推约 106 分钟；两种口径均 ≤2 小时门限 → 续产条件成立
+- 08:07:31 直读：切片进程已全部退出，续产 120 局（988008–988127）尚未启动；
+  执行代理下一动作待下一趟核验
+
+## 仓库（carbon-repo，main）
+- 本地 HEAD d72e1de93cac20fdd48a07e2fc3132ce9046e771（"tests: split-mode remote file selection fixtures"）
+- 远端 main 4785441327c0dafc211e579da6999991255d7fbd（ls-remote 08:01；批三头 "tests: effective_params env record fixtures"）
+- API compare（robertyang87/carbon-league，core 余量未单独查）：本地落后 8 个 commit（批三），
+  ahead 0；窗口内代码冻结，按住不动
+- 口径订正：07:47 汇报称本地 2523235、落后 393——该读数是 07:44 时的；line3 ff（2523235→4d5ab97a，
+  07:50:50 完工）与 batch2 ff（4d5ab97a→d72e1de9，07:55:50 完工）在其后落地，现本地为 d72e1de9，
+  与 K0 规格基线一致
+- git status：M data/bigeval.jsonl（已知脏文件）；untracked .venv、code/katago_chain_draft.sh、
+  code/selfplay_gen.py、data/bigeval_live/（均为旧有）；origin/main 本地引用 6a3bd204 为旧值
+
+## 语料与 it85（未变）
+- 仓库 data/ 平铺：m3s2 152、carago 183、fable 292
+- 工作目录 replays：m3s2 118、carago 183、fable 182
+- ds_carago meta total 54418、ds_fable meta total 54119，mtime 均为 11-12 15:59
+- index.json 条数本趟未重读（07:47：m3s2 118、carago 182、fable 181；replays 件数未变）
+- it85：code/exp/it85.py md5 6bd5cc5aa85ca90cb5426b545b7a9d84；data/weights/ckpt_85_frozen.npz 13,972,532 B（06:50）
+- 三家语料入仓 ALL_DONE 回执仍未确认；本趟 main 新头为批三测试提交，非入仓
+
+## 对照作战室（转述）
+- K0 正式生产令执行中（唯一执行人＝DGX 线执行代理）；规格终版 878f1bc0 已换传机上
+- it85 正式裁决：不过线（Master2 ΔU +0.0255，CI 下界差 0.010；Echo2 −0.0913 真实回退；合并 −0.0329），
+  照 §17 推进 it95——已在 07:47 轮次同步过，本趟不重复
+- 批三已入 main（代码轮 11 件全部落地）；拾取基准已转 L20（it95 边界）
+- 无口径差异（除已订正的 07:47 本地 HEAD 旧读数外）；本趟里程碑已另发作战室简短同步
+
+## 下一里程碑
+- 续产 120 局启动与否（下一趟核验）；全批完成后建集＋打标＋--verify＋数据回执

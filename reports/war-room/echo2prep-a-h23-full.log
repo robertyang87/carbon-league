@@ -1,0 +1,710 @@
+﻿2026-11-12T08:48:55.6003073Z Current runner version: '2.338.2'
+2026-11-12T08:48:55.6031228Z ##[group]Runner Image Provisioner
+2026-11-12T08:48:55.6032384Z Hosted Compute Agent
+2026-11-12T08:48:55.6033122Z Version: 20261028.624
+2026-11-12T08:48:55.6033826Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T08:48:55.6034855Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T08:48:55.6035669Z Worker ID: {cef2406b-1196-42f2-a230-5b84fae0f102}
+2026-11-12T08:48:55.6036647Z Region: centralus
+2026-11-12T08:48:55.6037389Z Cloud: Azure
+2026-11-12T08:48:55.6038049Z ##[endgroup]
+2026-11-12T08:48:55.6039949Z ##[group]Operating System
+2026-11-12T08:48:55.6040733Z Ubuntu
+2026-11-12T08:48:55.6041469Z 24.04.5
+2026-11-12T08:48:55.6041945Z LTS
+2026-11-12T08:48:55.6042413Z ##[endgroup]
+2026-11-12T08:48:55.6043009Z ##[group]Runner Image
+2026-11-12T08:48:55.6043618Z Image: ubuntu-24.04
+2026-11-12T08:48:55.6044179Z Version: 20261101.360.1
+2026-11-12T08:48:55.6045358Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T08:48:55.6046774Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T08:48:55.6047617Z ##[endgroup]
+2026-11-12T08:48:55.6048663Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T08:48:55.6050611Z Contents: read
+2026-11-12T08:48:55.6051272Z Metadata: read
+2026-11-12T08:48:55.6051788Z ##[endgroup]
+2026-11-12T08:48:55.6053693Z Secret source: Actions
+2026-11-12T08:48:55.6054569Z Cache mode: write
+2026-11-12T08:48:55.6055681Z Prepare workflow directory
+2026-11-12T08:48:55.6444763Z Prepare all required actions
+2026-11-12T08:48:55.6503202Z Getting action download info
+2026-11-12T08:48:55.9082161Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T08:48:56.1202189Z Complete job name: run
+2026-11-12T08:48:56.2027512Z ##[group]Run actions/checkout@v4
+2026-11-12T08:48:56.2028304Z with:
+2026-11-12T08:48:56.2028721Z   repository: robertyang87/carbon-league
+2026-11-12T08:48:56.2032453Z   token: ***
+2026-11-12T08:48:56.2032843Z   ssh-strict: true
+2026-11-12T08:48:56.2033227Z   ssh-user: git
+2026-11-12T08:48:56.2033610Z   persist-credentials: true
+2026-11-12T08:48:56.2034115Z   clean: true
+2026-11-12T08:48:56.2034500Z   sparse-checkout-cone-mode: true
+2026-11-12T08:48:56.2034946Z   fetch-depth: 1
+2026-11-12T08:48:56.2035316Z   fetch-tags: false
+2026-11-12T08:48:56.2035694Z   show-progress: true
+2026-11-12T08:48:56.2036086Z   lfs: false
+2026-11-12T08:48:56.2036454Z   submodules: false
+2026-11-12T08:48:56.2036846Z   set-safe-directory: true
+2026-11-12T08:48:56.2037272Z   allow-unsafe-pr-checkout: false
+2026-11-12T08:48:56.2037929Z ##[endgroup]
+2026-11-12T08:48:56.4320788Z Syncing repository: robertyang87/carbon-league
+2026-11-12T08:48:56.4329977Z ##[group]Getting Git version info
+2026-11-12T08:48:56.4348931Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T08:48:56.4352501Z [command]/usr/bin/git version
+2026-11-12T08:48:56.4461106Z git version 2.56.0
+2026-11-12T08:48:56.4534542Z ##[endgroup]
+2026-11-12T08:48:56.4571303Z Temporarily overriding HOME='/home/runner/work/_temp/aefd76c9-bef2-4dca-8ec7-661a70aef689' before making global git config changes
+2026-11-12T08:48:56.4573996Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:48:56.4614048Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:48:56.4618328Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T08:48:56.4620986Z ##[group]Initializing the repository
+2026-11-12T08:48:56.4622363Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:48:56.4711235Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T08:48:56.4713171Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T08:48:56.4740442Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T08:48:56.4765773Z hint: call:
+2026-11-12T08:48:56.4766663Z hint:
+2026-11-12T08:48:56.4768009Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T08:48:56.4774785Z hint:
+2026-11-12T08:48:56.4776232Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T08:48:56.4800180Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T08:48:56.4801571Z hint:
+2026-11-12T08:48:56.4802279Z hint: 	git branch -m <name>
+2026-11-12T08:48:56.4803085Z hint:
+2026-11-12T08:48:56.4804143Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T08:48:56.4806010Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T08:48:56.4850464Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T08:48:56.4856177Z ##[endgroup]
+2026-11-12T08:48:56.4857592Z ##[group]Disabling automatic garbage collection
+2026-11-12T08:48:56.4858302Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T08:48:56.4880477Z ##[endgroup]
+2026-11-12T08:48:56.4881182Z ##[group]Setting up auth
+2026-11-12T08:48:56.4882080Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:48:56.5083975Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:48:56.5593871Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:48:56.5598070Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T08:48:56.5776059Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T08:48:56.5814023Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T08:48:56.6675326Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T08:48:56.6677859Z ##[endgroup]
+2026-11-12T08:48:56.6678782Z ##[group]Fetching the repository
+2026-11-12T08:48:56.6680435Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +261a8e1946afc502e06de2b8fa15ab4708e486e2:refs/remotes/origin/main
+2026-11-12T08:48:58.3982283Z From https://github.com/robertyang87/carbon-league
+2026-11-12T08:48:58.3983745Z  * [new ref]         261a8e1946afc502e06de2b8fa15ab4708e486e2 -> origin/main
+2026-11-12T08:48:58.3986921Z ##[endgroup]
+2026-11-12T08:48:58.3988194Z ##[group]Determining the checkout info
+2026-11-12T08:48:58.3989822Z ##[endgroup]
+2026-11-12T08:48:58.3992704Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T08:48:58.4075355Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T08:48:58.4116172Z ##[group]Checking out the ref
+2026-11-12T08:48:58.4130154Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T08:48:58.7294601Z Switched to a new branch 'main'
+2026-11-12T08:48:58.7340017Z branch 'main' set up to track 'origin/main'.
+2026-11-12T08:48:58.7341531Z ##[endgroup]
+2026-11-12T08:48:58.7482456Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T08:48:58.7541278Z 261a8e1946afc502e06de2b8fa15ab4708e486e2
+2026-11-12T08:48:58.7865173Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKIyBSdW5zIG9uIGgyMyB2aWEgY2xvdWQgYXNzaXN0YW50LiBSRUFEIE9OTFk6IEUwIHByZS1maWVsZCBhbGl2ZW5lc3MgKyBFY2hvMiBhcnRpZmFjdCBodW50LgpNQVJLPSJFQ0hPMlBSRVBLN1FYMjMiCmVjaG8gIk1BUktFUiAkTUFSSyBTVEFSVCIKZGF0ZSAnKyVGICVUICVaJzsgaG9zdG5hbWUKZWNobyAiLS0tIEJJR0VWQUwgUFJPQ1MgLS0tIgpwcyBhdXggfCBncmVwIC1pIGJpZ2V2YWwgfCBncmVwIC12IGdyZXAKZWNobyAiLS0tIEUwUFJFIExJVkUgQ09VTlQgMSAtLS0iCnRpbWVvdXQgMzAgd2MgLWwgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubApzbGVlcCAyNQplY2hvICItLS0gRTBQUkUgTElWRSBDT1VOVCAyICgrMjVzKSAtLS0iCnRpbWVvdXQgMzAgd2MgLWwgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubAp0aW1lb3V0IDMwIHRhaWwgLTEgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubAplY2hvICItLS0gRklORCBFQ0hPIC0tLSIKdGltZW91dCA2MCBmaW5kIC9yb290L2NhcmJvbiAtaW5hbWUgJyplY2hvKicgMj4vZGV2L251bGwKZWNobyAiLS0tIEVYUCBMSVNUIC0tLSIKbHMgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwLwplY2hvICItLS0gRUNIT19FMC5QWSAoaWYgcHJlc2VudCkgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL2VjaG9fZTAucHkgMj4vZGV2L251bGwgfHwgZWNobyBOT19FQ0hPX0UwX09OX0gyMwplY2hvICItLS0gV0VJR0hUUyBMUyAtLS0iCmxzIC1sYSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzLyB8IGhlYWQgLTYwCmVjaG8gIi0tLSBQQUNLUyBMUyAtLS0iCmxzIC1sYSAvcm9vdC9jYXJib24vZGF0YS9wYWNrcy8gMj4vZGV2L251bGwKZWNobyAiLS0tIEVDSE8gTUQ1IC0tLSIKdGltZW91dCA2MCBmaW5kIC9yb290L2NhcmJvbiAtaW5hbWUgJyplY2hvKicgLXR5cGUgZiAtZXhlYyBtZDVzdW0ge30gXDsgMj4vZGV2L251bGwKZWNobyAiLS0tIE0zUzJSMSBGSU5BTCBXRUlHSFRTIE9OIEgyMz8gLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3MycjFMLm5weiAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PX0ZJTkFMX1IxX09OX0gyMwpscyAtbGEgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJyMS5weSAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PX00zUzJSMV9XUkFQUEVSX09OX0gyMwpscyAtbGEgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJyMXByZS5weSAyPi9kZXYvbnVsbAplY2hvICJNQVJLRVIgJE1BUksgRU5EIgo=" ]; then
+2026-11-12T08:48:58.7939832Z [36;1mif [ -n "IyEvYmluL2Jhc2gKIyBSdW5zIG9uIGgyMyB2aWEgY2xvdWQgYXNzaXN0YW50LiBSRUFEIE9OTFk6IEUwIHByZS1maWVsZCBhbGl2ZW5lc3MgKyBFY2hvMiBhcnRpZmFjdCBodW50LgpNQVJLPSJFQ0hPMlBSRVBLN1FYMjMiCmVjaG8gIk1BUktFUiAkTUFSSyBTVEFSVCIKZGF0ZSAnKyVGICVUICVaJzsgaG9zdG5hbWUKZWNobyAiLS0tIEJJR0VWQUwgUFJPQ1MgLS0tIgpwcyBhdXggfCBncmVwIC1pIGJpZ2V2YWwgfCBncmVwIC12IGdyZXAKZWNobyAiLS0tIEUwUFJFIExJVkUgQ09VTlQgMSAtLS0iCnRpbWVvdXQgMzAgd2MgLWwgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubApzbGVlcCAyNQplY2hvICItLS0gRTBQUkUgTElWRSBDT1VOVCAyICgrMjVzKSAtLS0iCnRpbWVvdXQgMzAgd2MgLWwgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubAp0aW1lb3V0IDMwIHRhaWwgLTEgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubAplY2hvICItLS0gRklORCBFQ0hPIC0tLSIKdGltZW91dCA2MCBmaW5kIC9yb290L2NhcmJvbiAtaW5hbWUgJyplY2hvKicgMj4vZGV2L251bGwKZWNobyAiLS0tIEVYUCBMSVNUIC0tLSIKbHMgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwLwplY2hvICItLS0gRUNIT19FMC5QWSAoaWYgcHJlc2VudCkgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL2VjaG9fZTAucHkgMj4vZGV2L251bGwgfHwgZWNobyBOT19FQ0hPX0UwX09OX0gyMwplY2hvICItLS0gV0VJR0hUUyBMUyAtLS0iCmxzIC1sYSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzLyB8IGhlYWQgLTYwCmVjaG8gIi0tLSBQQUNLUyBMUyAtLS0iCmxzIC1sYSAvcm9vdC9jYXJib24vZGF0YS9wYWNrcy8gMj4vZGV2L251bGwKZWNobyAiLS0tIEVDSE8gTUQ1IC0tLSIKdGltZW91dCA2MCBmaW5kIC9yb290L2NhcmJvbiAtaW5hbWUgJyplY2hvKicgLXR5cGUgZiAtZXhlYyBtZDVzdW0ge30gXDsgMj4vZGV2L251bGwKZWNobyAiLS0tIE0zUzJSMSBGSU5BTCBXRUlHSFRTIE9OIEgyMz8gLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3MycjFMLm5weiAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PX0ZJTkFMX1IxX09OX0gyMwpscyAtbGEgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJyMS5weSAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PX00zUzJSMV9XUkFQUEVSX09OX0gyMwpscyAtbGEgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJyMXByZS5weSAyPi9kZXYvbnVsbAplY2hvICJNQVJLRVIgJE1BUksgRU5EIgo=" ]; then[0m
+2026-11-12T08:48:58.8018239Z [36;1m  python3 tools/acs_runcommand.py "i-uf65ykinp4dvkirzk7q4" --b64 "IyEvYmluL2Jhc2gKIyBSdW5zIG9uIGgyMyB2aWEgY2xvdWQgYXNzaXN0YW50LiBSRUFEIE9OTFk6IEUwIHByZS1maWVsZCBhbGl2ZW5lc3MgKyBFY2hvMiBhcnRpZmFjdCBodW50LgpNQVJLPSJFQ0hPMlBSRVBLN1FYMjMiCmVjaG8gIk1BUktFUiAkTUFSSyBTVEFSVCIKZGF0ZSAnKyVGICVUICVaJzsgaG9zdG5hbWUKZWNobyAiLS0tIEJJR0VWQUwgUFJPQ1MgLS0tIgpwcyBhdXggfCBncmVwIC1pIGJpZ2V2YWwgfCBncmVwIC12IGdyZXAKZWNobyAiLS0tIEUwUFJFIExJVkUgQ09VTlQgMSAtLS0iCnRpbWVvdXQgMzAgd2MgLWwgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubApzbGVlcCAyNQplY2hvICItLS0gRTBQUkUgTElWRSBDT1VOVCAyICgrMjVzKSAtLS0iCnRpbWVvdXQgMzAgd2MgLWwgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubAp0aW1lb3V0IDMwIHRhaWwgLTEgL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL20zczJyMXByZV9lMC5qc29ubAplY2hvICItLS0gRklORCBFQ0hPIC0tLSIKdGltZW91dCA2MCBmaW5kIC9yb290L2NhcmJvbiAtaW5hbWUgJyplY2hvKicgMj4vZGV2L251bGwKZWNobyAiLS0tIEVYUCBMSVNUIC0tLSIKbHMgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwLwplY2hvICItLS0gRUNIT19FMC5QWSAoaWYgcHJlc2VudCkgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL2VjaG9fZTAucHkgMj4vZGV2L251bGwgfHwgZWNobyBOT19FQ0hPX0UwX09OX0gyMwplY2hvICItLS0gV0VJR0hUUyBMUyAtLS0iCmxzIC1sYSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzLyB8IGhlYWQgLTYwCmVjaG8gIi0tLSBQQUNLUyBMUyAtLS0iCmxzIC1sYSAvcm9vdC9jYXJib24vZGF0YS9wYWNrcy8gMj4vZGV2L251bGwKZWNobyAiLS0tIEVDSE8gTUQ1IC0tLSIKdGltZW91dCA2MCBmaW5kIC9yb290L2NhcmJvbiAtaW5hbWUgJyplY2hvKicgLXR5cGUgZiAtZXhlYyBtZDVzdW0ge30gXDsgMj4vZGV2L251bGwKZWNobyAiLS0tIE0zUzJSMSBGSU5BTCBXRUlHSFRTIE9OIEgyMz8gLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3MycjFMLm5weiAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PX0ZJTkFMX1IxX09OX0gyMwpscyAtbGEgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJyMS5weSAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PX00zUzJSMV9XUkFQUEVSX09OX0gyMwpscyAtbGEgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJyMXByZS5weSAyPi9kZXYvbnVsbAplY2hvICJNQVJLRVIgJE1BUksgRU5EIgo="[0m
+2026-11-12T08:48:58.8051471Z [36;1melse[0m
+2026-11-12T08:48:58.8051775Z [36;1m  python3 tools/acs_runcommand.py "i-uf65ykinp4dvkirzk7q4" "hostname && uptime"[0m
+2026-11-12T08:48:58.8052123Z [36;1mfi[0m
+2026-11-12T08:48:58.8078081Z shell: /usr/bin/bash -e {0}
+2026-11-12T08:48:58.8078364Z env:
+2026-11-12T08:48:58.8079178Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T08:48:58.8079544Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T08:48:58.8079774Z   ACS_REGION: cn-shanghai
+2026-11-12T08:48:58.8079970Z ##[endgroup]
+2026-11-12T08:49:30.3503135Z InvokeId: t-sh072vhp42s5hj4
+2026-11-12T08:49:30.3519763Z --- status=Success exit=0 ---
+2026-11-12T08:49:30.3520738Z MARKER ECHO2PREPK7QX23 START
+2026-11-12T08:49:30.3525561Z 2026-11-12 16:49:00 CST
+2026-11-12T08:49:30.3549500Z iZuf65ykinp4dvkirzk7q4Z
+2026-11-12T08:49:30.3569402Z --- BIGEVAL PROCS ---
+2026-11-12T08:49:30.3571306Z root      115105  0.0  0.0   7048  3472 ?        Ss   13:48   0:00 bash -c EVO_WORKERS=7 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/opp_master2r.py 995000 200 m3s2r1pre_m2 >> /root/carbon/data/m3s2r1pre_cal.out 2>&1; EVO_WORKERS=7 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0 >> /root/carbon/data/m3s2r1pre_cal.out 2>&1; echo CAL_ALL_DONE >> /root/carbon/data/m3s2r1pre_cal.out
+2026-11-12T08:49:30.3589802Z root      117514  0.0  0.0 172580 16876 ?        Sl   15:54   0:00 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:49:30.3609830Z root      117515  916  0.4 3215396 528320 ?      Rl   15:54 501:59 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:49:30.3629985Z root      117516  913  0.3 3195604 508484 ?      Rl   15:54 500:41 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:49:30.3631165Z root      117517  910  0.4 3215388 528308 ?      Rl   15:54 498:46 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:49:30.3632277Z root      117518  910  0.4 3207000 519916 ?      Rl   15:54 498:40 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:49:30.3634277Z root      117519  916  0.4 3204024 516920 ?      Rl   15:54 501:53 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:49:30.3635527Z root      117520  909  0.3 3195680 508676 ?      Rl   15:54 498:24 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:49:30.3636999Z root      117521  910  0.4 3204068 516988 ?      Rl   15:54 499:02 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:49:30.3637890Z --- E0PRE LIVE COUNT 1 ---
+2026-11-12T08:49:30.3638415Z 56 /root/carbon/data/bigeval_live/m3s2r1pre_e0.jsonl
+2026-11-12T08:49:30.3639129Z --- E0PRE LIVE COUNT 2 (+25s) ---
+2026-11-12T08:49:30.3639689Z 56 /root/carbon/data/bigeval_live/m3s2r1pre_e0.jsonl
+2026-11-12T08:49:30.3652649Z {"seed": 995254, "side": 0, "margin": 780, "err": null, "t": "16:48:29", "serr": 0, "dep": 7251, "odep": 7584, "lost": 104, "olost": 225, "tinc": 4718, "otinc": 3170, "pspend": 2100, "opspend": 1756, "sspend": 220, "osspend": 160, "strand": 95.3, "ostrand": 144.4, "bk": 0, "lx": {"pol": {"col75": 8, "colsteps": 1898, "late15": 104.47949999999999, "late30": 104.47949999999999, "late30_self": 0.0, "late30_unknown": 0.0, "lost_enemy": 104.47949999999999, "lost_self": 0.0, "lost_unknown": 0.0, "treesteps": 1694, "tree50": 7, "tree100": 11, "trees": [7, 4, 11, 5, 4, 5], "pla_rec": 17, "pdist": 187, "pdist_n": 35, "col_etree8": 143, "cc100_sum": 5564.489999999999, "cc100_n": 105, "haul100": 1669.3469999999998, "colsteps100": 529, "rec259_275": 0, "rec276": 3, "haul240": 1918.9492638000004, "rec60_c": 10, "rec60_p": 5, "dep100": 1434.636686038202, "dep240": 4964.821535892085, "pet_sum": 3234, "pet_n": 767, "pla_dead": 13, "pla_dead0": 3, "cash100": 1358.42, "cargo100": 234.7, "pc4_sum": 6120.962999999999, "pc4_n": 35, "sc4_sum": 786.07, "sc4_n": 11, "pd_clash_move": 7, "pd_clash_stay": 5, "pd_owncar": 0, "pd_ecar": 1, "pd_other": 0, "life50_sum": 250, "life50_n": 5, "cargo240": 566.7, "cargo270": 477.1, "dep270": 6083.480533246107, "lost240": 104.47949999999999, "gain240": 0.0, "tax240": 0.0, "lost240_self": 0.0, "ts3": [485, 720, 489], "pl3": [15, 11, 9], "sz3": [3, 3, 5], "dep200": 3748.258660892084, "cash200": 4521.53, "cargo200": 554.6, "camp100": 40, "stall_max": 0, "stall_run": 0, "_dprev": 7250.755404317342, "wait6": 95, "haul_all": 7459.712125859995, "gain_all": 0.0, "tax_all": 9.177413999999999, "tax_onT": 0.0, "e_prec25": 3, "e_palive25": 3, "e_pdead30": 2, "e_pdead0_30": 1, "e_cash25": 32.72, "e_cash40": 59.77, "e_clost30": 0, "e_first_tree": 7, "e_trees50": 7, "e_unseen20": 37, "e_unseen30": 13, "plants": 35, "pla_ok": 14, "pla_succ": 46, "planted": 35, "seized": 11, "life_sum": 1409, "life_n": 35, "late30_eh": 0}, "opp": {"col75": 8, "colsteps": 2174, "late15": 225.1422, "late30": 95.31119999999999, "late30_self": 129.83100000000002, "late30_unknown": 0.0, "lost_enemy": 95.31119999999999, "lost_self": 129.83100000000002, "lost_unknown": 0.0, "treesteps": 1280, "tree50": 4, "tree100": 2, "trees": [4, 5, 2, 4, 4, 9], "pla_rec": 12, "pdist": 143, "pdist_n": 27, "col_etree8": 228, "cc100_sum": 5939.6050000000005, "cc100_n": 111, "haul100": 1751.3375529599996, "colsteps100": 573, "rec259_275": 0, "rec276": 3, "haul240": 2894.6832210000007, "rec60_c": 10, "rec60_p": 5, "dep100": 1549.9199428613845, "dep240": 4480.780161159424, "pet_sum": 1811, "pet_n": 541, "pla_dead": 12, "pla_dead0": 1, "cash100": 1305.27, "cargo100": 198.9, "pc4_sum": 4417.522999999999, "pc4_n": 27, "sc4_sum": 404.796, "sc4_n": 8, "pd_clash_move": 9, "pd_clash_stay": 3, "pd_owncar": 0, "pd_ecar": 0, "pd_other": 0, "life50_sum": 217, "life50_n": 6, "cargo240": 365.2, "cargo270": 767.9, "dep270": 5549.120137459425, "lost240": 95.31119999999999, "gain240": 104.47949999999999, "tax240": 20.90838444, "lost240_self": 129.83100000000002, "ts3": [320, 324, 636], "pl3": [9, 6, 12], "sz3": [1, 6, 1], "dep200": 3791.7614560298252, "cash200": 3256.03, "cargo200": 230.1, "camp100": 18, "stall_max": 0, "stall_run": 0, "_dprev": 7584.513087459424, "wait6": 37, "haul_all": 7798.729713959997, "gain_all": 104.47949999999999, "tax_all": 78.95987964000001, "tax_onT": 0.705984, "e_prec25": 2, "e_palive25": 2, "e_pdead30": 2, "e_pdead0_30": 0, "e_cash25": 26.37, "e_cash40": 47.46, "e_clost30": 0, "e_first_tree": 16, "e_trees50": 4, "e_unseen20": 10, "e_unseen30": 10, "plants": 27, "pla_ok": 11, "pla_succ": 35, "planted": 27, "seized": 8, "life_sum": 1039, "life_n": 27, "late30_eh": null}}, "wms": 1223.0, "ms": 850.83}
+2026-11-12T08:49:30.3682584Z --- FIND ECHO ---
+2026-11-12T08:49:30.3683155Z /root/carbon/code/exp/echo_p4.py
+2026-11-12T08:49:30.3683625Z /root/carbon/code/exp/echo_p2.py
+2026-11-12T08:49:30.3683953Z /root/carbon/code/exp/echo_p3.py
+2026-11-12T08:49:30.3684550Z /root/carbon/code/exp/__pycache__/echo_e0.cpython-312.pyc
+2026-11-12T08:49:30.3685063Z /root/carbon/code/exp/__pycache__/echo_p2.cpython-312.pyc
+2026-11-12T08:49:30.3685533Z /root/carbon/code/exp/__pycache__/echo_p3.cpython-312.pyc
+2026-11-12T08:49:30.3686248Z /root/carbon/code/exp/__pycache__/echo_p4.cpyth2_m2v2stand_s.py
+2026-11-12T08:49:30.3686661Z cnet2_mfitus.py
+2026-11-12T08:49:30.3686914Z cnet2_mm_27.py
+2026-11-12T08:49:30.3687155Z cnet2_mm_47.py
+2026-11-12T08:49:30.3687407Z cnet2_mm_all4.py
+2026-11-12T08:49:30.3687652Z cnet2_pgate.py
+2026-11-12T08:49:30.3687885Z cnet2_rlg.py
+2026-11-12T08:49:30.3688119Z cnet2_s64.py
+2026-11-12T08:49:30.3688358Z cnet2_s64_rulesp.py
+2026-11-12T08:49:30.3688640Z cnet2_s64_rules.py
+2026-11-12T08:49:30.3689121Z cnet2_s64_t0.py
+2026-11-12T08:49:30.3689390Z cnet2_s64_t0_rules_packed.py
+2026-11-12T08:49:30.3689685Z cnet2_s64_t0_rulesp.py
+2026-11-12T08:49:30.3689953Z cnet2_s64_t0_rules.py
+2026-11-12T08:49:30.3690239Z cnet2_s64_t0_rules_q8.py
+2026-11-12T08:49:30.3690526Z cnet2_s64_t0_rules_v10rec.py
+2026-11-12T08:49:30.3690805Z cnet2_search_a1.py
+2026-11-12T08:49:30.3691017Z cnet2_search_b30.py
+2026-11-12T08:49:30.3691237Z cnet2_search_b60.py
+2026-11-12T08:49:30.3691441Z cnet2_search_cut_a.py
+2026-11-12T08:49:30.3691614Z cnet2_search_cut_b.py
+2026-11-12T08:49:30.3691783Z cnet2_search_cut_c.py
+2026-11-12T08:49:30.3691967Z cnet2_search_final_packed.py
+2026-11-12T08:49:30.3692172Z cnet2_search_ma.py
+2026-11-12T08:49:30.3692339Z cnet2_search_mbc.py
+2026-11-12T08:49:30.3692510Z cnet2_search_mb.py
+2026-11-12T08:49:30.3692676Z cnet2_search_mbr.py
+2026-11-12T08:49:30.3692854Z cnet2_search_mbt_packed.py
+2026-11-12T08:49:30.3693052Z cnet2_search_mbt.py
+2026-11-12T08:49:30.3693222Z cnet2_search_mc.py
+2026-11-12T08:49:30.3693394Z cnet2_search_mfhc_packed.py
+2026-11-12T08:49:30.3693586Z cnet2_search_mfhc.py
+2026-11-12T08:49:30.3693756Z cnet2_search_mfhg.py
+2026-11-12T08:49:30.3693935Z cnet2_search_mfh.py
+2026-11-12T08:49:30.3694103Z cnet2_search_mfhx.py
+2026-11-12T08:49:30.3694276Z cnet2_search_mfx50.py
+2026-11-12T08:49:30.3694457Z cnet2_search_mfxg.py
+2026-11-12T08:49:30.3694631Z cnet2_search_mfxH.py
+2026-11-12T08:49:30.3694835Z cnet2_search_mfxn_end.py
+2026-11-12T08:49:30.3695087Z cnet2_search_mfxn_packed.py
+2026-11-12T08:49:30.3695279Z cnet2_search_mfxn.py
+2026-11-12T08:49:30.3695455Z cnet2_search_mfx.py
+2026-11-12T08:49:30.3695631Z cnet2_search_opp_b160.py
+2026-11-12T08:49:30.3695821Z cnet2_search_parity.py
+2026-11-12T08:49:30.3696002Z cnet2_search_t0.py
+2026-11-12T08:49:30.3696170Z cnet2_smoke.py
+2026-11-12T08:49:30.3696348Z cnet2_soup4g.py
+2026-11-12T08:49:30.3696521Z cnet2_style_t0.py
+2026-11-12T08:49:30.3696699Z cnet2_style_t2.py
+2026-11-12T08:49:30.3696866Z cnet2_style_t3.py
+2026-11-12T08:49:30.3697213Z cnet2_style_t4.py
+2026-11-12T08:49:30.3697444Z cnet2_v10s57_240.py
+2026-11-12T08:49:30.3697615Z cnet2_v11s57_240.py
+2026-11-12T08:49:30.3697803Z cnet2_v12g_packed.py
+2026-11-12T08:49:30.3697983Z cnet2_v12g_pcap.py
+2026-11-12T08:49:30.3698154Z cnet2_v12g.py
+2026-11-12T08:49:30.3698326Z cnet2_v12_shend.py
+2026-11-12T08:49:30.3698495Z cnet2_v12_shield.py
+2026-11-12T08:49:30.3698670Z cnet2_v18k2.py
+2026-11-12T08:49:30.3699097Z cnet2_v18k3.py
+2026-11-12T08:49:30.3699374Z cnet2_v5t5g.py
+2026-11-12T08:49:30.3699620Z cnet2_v5t6g.py
+2026-11-12T08:49:30.3699847Z cnet2_v5t7g.py
+2026-11-12T08:49:30.3700080Z cnet2_v6s57_200.py
+2026-11-12T08:49:30.3700324Z cnet2_v6s57_220.py
+2026-11-12T08:49:30.3700558Z cnet2_v6s57_230.py
+2026-11-12T08:49:30.3700717Z cnet2_v6s57_240.py
+2026-11-12T08:49:30.3700878Z cnet2_v6s57_250.py
+2026-11-12T08:49:30.3701037Z cnet2_v6s57_260.py
+2026-11-12T08:49:30.3701195Z cnet2_v6s57_270.py
+2026-11-12T08:49:30.3701366Z cnet2_v6t3g.py
+2026-11-12T08:49:30.3701697Z cnet2_v6t5g.py
+2026-11-12T08:49:30.3701859Z cnet2_v6t6g.py
+2026-11-12T08:49:30.3702013Z cnet2_v6t7g.py
+2026-11-12T08:49:30.3702170Z cnet2_v7s57_230.py
+2026-11-12T08:49:30.3702339Z cnet2_v7s57_240.py
+2026-11-12T08:49:30.3702498Z cnet2_v7s_mfxc.py
+2026-11-12T08:49:30.3702667Z cnet2_v7s_mfxn8_r10.py
+2026-11-12T08:49:30.3702839Z cnet2_v7s_mfxn8_r4.py
+2026-11-12T08:49:30.3703018Z cnet2_v7s_mfxn8_r6.py
+2026-11-12T08:49:30.3703191Z cnet2_v7s_mfxn.py
+2026-11-12T08:49:30.3703357Z cnet2_v7s_mfxn_r4.py
+2026-11-12T08:49:30.3703629Z cnet2_v7s_mfxn_r6.py
+2026-11-12T08:49:30.3703795Z cnet2_v7t5g.py
+2026-11-12T08:49:30.3703995Z cnet2_v7t7g.py
+2026-11-12T08:49:30.3704160Z cnet2_v8s57_240.py
+2026-11-12T08:49:30.3704322Z cnet2_v9s57_240.py
+2026-11-12T08:49:30.3704487Z cnet2_wsstand.py
+2026-11-12T08:49:30.3704655Z echo_e0.py
+2026-11-12T08:49:30.3704810Z echo_p2.py
+2026-11-12T08:49:30.3704965Z echo_p3.py
+2026-11-12T08:49:30.3705117Z echo_p4.py
+2026-11-12T08:49:30.3705271Z fx20_m2t3A.py
+2026-11-12T08:49:30.3705427Z fx20_m2t3O.py
+2026-11-12T08:49:30.3705599Z fx20_SEK05.py
+2026-11-12T08:49:30.3705756Z fx20_UNI.py
+2026-11-12T08:49:30.3705914Z fx20_UNISEK.py
+2026-11-12T08:49:30.3706069Z fx_awr1.py
+2026-11-12T08:49:30.3706222Z fx_echoQ3.py
+2026-11-12T08:49:30.3706385Z fx_m2t3CB.py
+2026-11-12T08:49:30.3706541Z fx_m2t3IM.py
+2026-11-12T08:49:30.3706701Z fx_m2t3IT.py
+2026-11-12T08:49:30.3706858Z fx_m2t3L240.py
+2026-11-12T08:49:30.3707012Z fx_m2t3L260.py
+2026-11-12T08:49:30.3707176Z fx_m2t3L265.py
+2026-11-12T08:49:30.3707329Z fx_m2t3L270.py
+2026-11-12T08:49:30.3707488Z fx_m2t3L275.py
+2026-11-12T08:49:30.3707657Z fx_m2t3L280.py
+2026-11-12T08:49:30.3707814Z fx_m2t3NS.py
+2026-11-12T08:49:30.3707981Z fx_m2t3OPAB.py
+2026-11-12T08:49:30.3708140Z fx_m2t3OPA.py
+2026-11-12T08:49:30.3708302Z fx_m2t3OPB10.py
+2026-11-12T08:49:30.3708468Z fx_m2t3OPB.py
+2026-11-12T08:49:30.3708623Z fx_m2t3O.py
+2026-11-12T08:49:30.3708785Z fx_m2t3PXd.py
+2026-11-12T08:49:30.3709137Z fx_m2t3PXg.py
+2026-11-12T08:49:30.3709299Z fx_m2t3PXs.py
+2026-11-12T08:49:30.3709457Z fx_m2t3RS6.py
+2026-11-12T08:49:30.3709620Z fx_m2t3RS7.py
+2026-11-12T08:49:30.3709787Z fx_m2t3RS8.py
+2026-11-12T08:49:30.3709943Z fx_m2t3S12q2.py
+2026-11-12T08:49:30.3710118Z fx_m2t3S20cb100.py
+2026-11-12T08:49:30.3710294Z fx_m2t3S20cb150.py
+2026-11-12T08:49:30.3710454Z fx_m2t3S20cbn.py
+2026-11-12T08:49:30.3710631Z fx_m2t3S20d.py
+2026-11-12T08:49:30.3710795Z fx_m2t3S20e.py
+2026-11-12T08:49:30.3710956Z fx_m2t3S20H5.py
+2026-11-12T08:49:30.3777577Z fx_m2t3S20m.py
+2026-11-12T08:49:30.3777925Z fx_m2t3S20n.py
+2026-11-12T08:49:30.3778126Z fx_m2t3S20.py
+2026-11-12T08:49:30.3778299Z fx_m2t3S20q3m.py
+2026-11-12T08:49:30.3778470Z fx_m2t3S20q3.py
+2026-11-12T08:49:30.3778635Z fx_m2t3S30.py
+2026-11-12T08:49:30.3778805Z fx_m2t3S40BrS.py
+2026-11-12T08:49:30.3779428Z fx_m2t3S40K1.py
+2026-11-12T08:49:30.3779643Z fx_m2t3S40K2.py
+2026-11-12T08:49:30.3779852Z fx_m2t3S40K3.py
+2026-11-12T08:49:30.3780061Z fx_m2t3S40.py
+2026-11-12T08:49:30.3780262Z fx_m2t3S50n.py
+2026-11-12T08:49:30.3780473Z fx_m2t3S80.py
+2026-11-12T08:49:30.3780673Z fx_m2t3SEc.py
+2026-11-12T08:49:30.3780886Z fx_m2t3SE.py
+2026-11-12T08:49:30.3781127Z fx_m2t3SEt.py
+2026-11-12T08:49:30.3781364Z fx_m2t3SEv.py
+2026-11-12T08:49:30.3781608Z fx_m2t3SEw.py
+2026-11-12T08:49:30.3781866Z fx_m2t3U6B25.py
+2026-11-12T08:49:30.3782137Z fx_RGB.py
+2026-11-12T08:49:30.3782350Z fx_TAB.py
+2026-11-12T08:49:30.3782541Z fx_TGA.py
+2026-11-12T08:49:30.3782780Z fx_U6S0.py
+2026-11-12T08:49:30.3783030Z fx_U6S2.py
+2026-11-12T08:49:30.3783280Z g1_net.py
+2026-11-12T08:49:30.3783507Z g1_pure.py
+2026-11-12T08:49:30.3783738Z h1_cm1.py
+2026-11-12T08:49:30.3783932Z h1_cm2.py
+2026-11-12T08:49:30.3784127Z h1r_100.py
+2026-11-12T08:49:30.3784314Z h1r_60.py
+2026-11-12T08:49:30.3784506Z knob_us_factory.py
+2026-11-12T08:49:30.3784728Z m2bot.py
+2026-11-12T08:49:30.3784943Z m3s2g1.py
+2026-11-12T08:49:30.3785147Z m3s2r1pre.py
+2026-11-12T08:49:30.3785368Z master2_src.py
+2026-11-12T08:49:30.3785570Z mfit_dg5.py
+2026-11-12T08:49:30.3785776Z mfit_dir_dg5.py
+2026-11-12T08:49:30.3785987Z mfit_e0.py
+2026-11-12T08:49:30.3786181Z mfit_e1.py
+2026-11-12T08:49:30.3786805Z mfit_t8.py
+2026-11-12T08:49:30.3787032Z nn_alpha2_v1.py
+2026-11-12T08:49:30.3787273Z nn_bc_w48_v1_final.py
+2026-11-12T08:49:30.3787516Z nn_master64.py
+2026-11-12T08:49:30.3787743Z nn_rl3_last.py
+2026-11-12T08:49:30.3787975Z nn_shadow_alpha_v1.py
+2026-11-12T08:49:30.3788227Z nn_shadow_master_v1.py
+2026-11-12T08:49:30.3788490Z nn_shadow_master_v2.py
+2026-11-12T08:49:30.3788746Z nn_v9net_check.py
+2026-11-12T08:49:30.3789165Z nn_value_v1.py
+2026-11-12T08:49:30.3789435Z nn_wide64_alpha.py
+2026-11-12T08:49:30.3789990Z opp_1cz_v5.py
+2026-11-12T08:49:30.3790228Z opp_1cz_v9.py
+2026-11-12T08:49:30.3790460Z opp_m3echo.py
+2026-11-12T08:49:30.3790699Z opp_m6r.py
+2026-11-12T08:49:30.3790952Z opp_master2r.py
+2026-11-12T08:49:30.3791212Z opp_master2r.py.keep
+2026-11-12T08:49:30.3791475Z opp_w3b.py
+2026-11-12T08:49:30.3791705Z opp_wb532.py
+2026-11-12T08:49:30.3791945Z par_ref.py
+2026-11-12T08:49:30.3792186Z __pycache__
+2026-11-12T08:49:30.3792419Z rl2_it20.py
+2026-11-12T08:49:30.3792659Z rl2_it30.py
+2026-11-12T08:49:30.3792927Z ropen_cal2_c150_t100_f0_m13.py
+2026-11-12T08:49:30.3793239Z ropen_cal2_c150_t100_f0_m16.py
+2026-11-12T08:49:30.3793546Z ropen_cal2_c150_t100_f1_m13.py
+2026-11-12T08:49:30.3793843Z ropen_cal2_c150_t100_f1_m16.py
+2026-11-12T08:49:30.3794129Z ropen_cal2_c150_t130_f0_m13.py
+2026-11-12T08:49:30.3794409Z ropen_cal2_c150_t130_f0_m16.py
+2026-11-12T08:49:30.3794713Z ropen_cal2_c150_t130_f1_m13.py
+2026-11-12T08:49:30.3794995Z ropen_cal2_c150_t130_f1_m16.py
+2026-11-12T08:49:30.3795287Z ropen_cal2_c300_t100_f0_m13.py
+2026-11-12T08:49:30.3795607Z ropen_cal2_c300_t100_f0_m16.py
+2026-11-12T08:49:30.3795900Z ropen_cal2_c300_t100_f1_m13.py
+2026-11-12T08:49:30.3796145Z ropen_cal2_c300_t100_f1_m16.py
+2026-11-12T08:49:30.3796459Z ropen_cal2_c300_t130_f0_m13.py
+2026-11-12T08:49:30.3796737Z ropen_cal2_c300_t130_f0_m16.py
+2026-11-12T08:49:30.3797013Z ropen_cal2_c300_t130_f1_m13.py
+2026-11-12T08:49:30.3797286Z ropen_cal2_c300_t130_f1_m16.py
+2026-11-12T08:49:30.3797583Z ropen_cal_c0_m13_s0_p0_e0.py
+2026-11-12T08:49:30.3797875Z ropen_cal_c0_m13_s0_p0_e1.py
+2026-11-12T08:49:30.3798081Z ropen_cal_c0_m13_s0_p1_e0.py
+2026-11-12T08:49:30.3798281Z ropen_cal_c0_m13_s0_p1_e1.py
+2026-11-12T08:49:30.3798480Z ropen_cal_c0_m13_s40_p0_e0.py
+2026-11-12T08:49:30.3798675Z ropen_cal_c0_m13_s40_p0_e1.py
+2026-11-12T08:49:30.3799045Z ropen_cal_c0_m13_s40_p1_e0.py
+2026-11-12T08:49:30.3799249Z ropen_cal_c0_m13_s40_p1_e1.py
+2026-11-12T08:49:30.3799439Z ropen_cal_c0_m_s0_p0_e0.py
+2026-11-12T08:49:30.3799636Z ropen_cal_c0_m_s0_p0_e1.py
+2026-11-12T08:49:30.3799829Z ropen_cal_c0_m_s0_p1_e0.py
+2026-11-12T08:49:30.3800008Z ropen_cal_c0_m_s0_p1_e1.py
+2026-11-12T08:49:30.3800194Z ropen_cal_c0_m_s40_p0_e0.py
+2026-11-12T08:49:30.3800398Z ropen_cal_c0_m_s40_p0_e1.py
+2026-11-12T08:49:30.3800583Z ropen_cal_c0_m_s40_p1_e0.py
+2026-11-12T08:49:30.3800763Z ropen_cal_c0_m_s40_p1_e1.py
+2026-11-12T08:49:30.3800952Z ropen_cal_c150_m13_s0_p0_e0.py
+2026-11-12T08:49:30.3801146Z ropen_cal_c150_m13_s0_p0_e1.py
+2026-11-12T08:49:30.3801432Z ropen_cal_c150_m13_s0_p1_e0.py
+2026-11-12T08:49:30.3801619Z ropen_cal_c150_m13_s0_p1_e1.py
+2026-11-12T08:49:30.3801809Z ropen_cal_c150_m13_s40_p0_e0.py
+2026-11-12T08:49:30.3802008Z ropen_cal_c150_m13_s40_p0_e1.py
+2026-11-12T08:49:30.3802214Z ropen_cal_c150_m13_s40_p1_e0.py
+2026-11-12T08:49:30.3802416Z ropen_cal_c150_m13_s40_p1_e1.py
+2026-11-12T08:49:30.3802608Z ropen_cal_c150_m_s0_p0_e0.py
+2026-11-12T08:49:30.3802807Z ropen_cal_c150_m_s0_p0_e1.py
+2026-11-12T08:49:30.3802992Z ropen_cal_c150_m_s0_p1_e0.py
+2026-11-12T08:49:30.3803188Z ropen_cal_c150_m_s0_p1_e1.py
+2026-11-12T08:49:30.3803379Z ropen_cal_c150_m_s40_p0_e0.py
+2026-11-12T08:49:30.3803572Z ropen_cal_c150_m_s40_p0_e1.py
+2026-11-12T08:49:30.3803765Z ropen_cal_c150_m_s40_p1_e0.py
+2026-11-12T08:49:30.3803955Z ropen_cal_c150_m_s40_p1_e1.py
+2026-11-12T08:49:30.3804151Z ropen_cal_c300_m13_s0_p0_e0.py
+2026-11-12T08:49:30.3804344Z ropen_cal_c300_m13_s0_p0_e1.py
+2026-11-12T08:49:30.3804530Z ropen_cal_c300_m13_s0_p1_e0.py
+2026-11-12T08:49:30.3804712Z ropen_cal_c300_m13_s0_p1_e1.py
+2026-11-12T08:49:30.3805090Z ropen_cal_c300_m13_s40_p0_e0.py
+2026-11-12T08:49:30.3805296Z ropen_cal_c300_m13_s40_p0_e1.py
+2026-11-12T08:49:30.3805485Z ropen_cal_c300_m13_s40_p1_e0.py
+2026-11-12T08:49:30.3805669Z ropen_cal_c300_m13_s40_p1_e1.py
+2026-11-12T08:49:30.3805860Z ropen_cal_c300_m_s0_p0_e0.py
+2026-11-12T08:49:30.3806055Z ropen_cal_c300_m_s0_p0_e1.py
+2026-11-12T08:49:30.3806242Z ropen_cal_c300_m_s0_p1_e0.py
+2026-11-12T08:49:30.3806429Z ropen_cal_c300_m_s0_p1_e1.py
+2026-11-12T08:49:30.3806715Z ropen_cal_c300_m_s40_p0_e0.py
+2026-11-12T08:49:30.3806903Z ropen_cal_c300_m_s40_p0_e1.py
+2026-11-12T08:49:30.3807096Z ropen_cal_c300_m_s40_p1_e0.py
+2026-11-12T08:49:30.3807281Z ropen_cal_c300_m_s40_p1_e1.py
+2026-11-12T08:49:30.3807467Z ropen_dg5_c2.py
+2026-11-12T08:49:30.3807636Z ropen_dg5_f14t100.py
+2026-11-12T08:49:30.3807814Z ropen_dg5_f14t60.py
+2026-11-12T08:49:30.3807988Z ropen_dg5_f8t100.py
+2026-11-12T08:49:30.3808155Z ropen_dg5_f8t60.py
+2026-11-12T08:49:30.3808323Z ropen_dg5.py
+2026-11-12T08:49:30.3808489Z ropen_dg5_s3.py
+2026-11-12T08:49:30.3808653Z ropen_dg5_s4.py
+2026-11-12T08:49:30.3808962Z ropen_dg5_v2b.py
+2026-11-12T08:49:30.3809181Z ropen_dg5_v2.py
+2026-11-12T08:49:30.3809344Z ropen_dg5_v3n.py
+2026-11-12T08:49:30.3809507Z ropen_dg5_v3.py
+2026-11-12T08:49:30.3809673Z ropen_dg5_v3r.py
+2026-11-12T08:49:30.3809841Z ropen_dg5_v3s.py
+2026-11-12T08:49:30.3810002Z ropen_dg5_v4c.py
+2026-11-12T08:49:30.3810158Z ropen_dg5_v4.py
+2026-11-12T08:49:30.3810340Z ropen_g_s0_p0_e0_m13_t60.py
+2026-11-12T08:49:30.3810549Z ropen_g_s0_p0_e0_m13_t80.py
+2026-11-12T08:49:30.3810734Z ropen_g_s0_p0_e0_m_t60.py
+2026-11-12T08:49:30.3810924Z ropen_g_s0_p0_e0_m_t80.py
+2026-11-12T08:49:30.3811101Z ropen_g_s0_p0_e1_m13_t60.py
+2026-11-12T08:49:30.3811285Z ropen_g_s0_p0_e1_m13_t80.py
+2026-11-12T08:49:30.3811470Z ropen_g_s0_p0_e1_m_t60.py
+2026-11-12T08:49:30.3811646Z ropen_g_s0_p0_e1_m_t80.py
+2026-11-12T08:49:30.3811824Z ropen_g_s0_p1_e0_m13_t60.py
+2026-11-12T08:49:30.3812006Z ropen_g_s0_p1_e0_m13_t80.py
+2026-11-12T08:49:30.3812191Z ropen_g_s0_p1_e0_m_t60.py
+2026-11-12T08:49:30.3812381Z ropen_g_s0_p1_e0_m_t80.py
+2026-11-12T08:49:30.3812558Z ropen_g_s0_p1_e1_m13_t60.py
+2026-11-12T08:49:30.3812735Z ropen_g_s0_p1_e1_m13_t80.py
+2026-11-12T08:49:30.3812912Z ropen_g_s0_p1_e1_m_t60.py
+2026-11-12T08:49:30.3813095Z ropen_g_s0_p1_e1_m_t80.py
+2026-11-12T08:49:30.3813279Z ropen_g_s40_p0_e0_m13_t60.py
+2026-11-12T08:49:30.3813487Z ropen_g_s40_p0_e0_m13_t80.py
+2026-11-12T08:49:30.3813674Z ropen_g_s40_p0_e0_m_t60.py
+2026-11-12T08:49:30.3813857Z ropen_g_s40_p0_e0_m_t80.py
+2026-11-12T08:49:30.3814051Z ropen_g_s40_p0_e1_m13_t60.py
+2026-11-12T08:49:30.3814239Z ropen_g_s40_p0_e1_m13_t80.py
+2026-11-12T08:49:30.3814426Z ropen_g_s40_p0_e1_m_t60.py
+2026-11-12T08:49:30.3814612Z ropen_g_s40_p0_e1_m_t80.py
+2026-11-12T08:49:30.3814801Z ropen_g_s40_p1_e0_m13_t60.py
+2026-11-12T08:49:30.3814984Z ropen_g_s40_p1_e0_m13_t80.py
+2026-11-12T08:49:30.3815168Z ropen_g_s40_p1_e0_m_t60.py
+2026-11-12T08:49:30.3815346Z ropen_g_s40_p1_e0_m_t80.py
+2026-11-12T08:49:30.3815530Z ropen_g_s40_p1_e1_m13_t60.py
+2026-11-12T08:49:30.3815721Z ropen_g_s40_p1_e1_m13_t80.py
+2026-11-12T08:49:30.3815902Z ropen_g_s40_p1_e1_m_t60.py
+2026-11-12T08:49:30.3816082Z ropen_g_s40_p1_e1_m_t80.py
+2026-11-12T08:49:30.3816254Z ropen_m2r.py
+2026-11-12T08:49:30.3816418Z ropen_v17d2.py
+2026-11-12T08:49:30.3816595Z ropen_v17d2_v2b.py
+2026-11-12T08:49:30.3816764Z ropen_v17d2_v2.py
+2026-11-12T08:49:30.3816934Z s1_net.py
+2026-11-12T08:49:30.3817086Z s2_a.py
+2026-11-12T08:49:30.3817237Z s2_b.py
+2026-11-12T08:49:30.3817392Z s2c1z.py
+2026-11-12T08:49:30.3817549Z s2c1z_t.py
+2026-11-12T08:49:30.3817700Z s2_c.py
+2026-11-12T08:49:30.3817842Z s2_d.py
+2026-11-12T08:49:30.3817977Z s2_e.py
+2026-11-12T08:49:30.3818129Z s2_f.py
+2026-11-12T08:49:30.3818269Z s2_g.py
+2026-11-12T08:49:30.3818408Z s2_h8.py
+2026-11-12T08:49:30.3818551Z s2_h.py
+2026-11-12T08:49:30.3818694Z s2_off.py
+2026-11-12T08:49:30.3819018Z s2opp_alpha2.py
+2026-11-12T08:49:30.3819206Z s2_template.txt
+2026-11-12T08:49:30.3819366Z sb30.py
+2026-11-12T08:49:30.3819512Z spar_tf2.py
+2026-11-12T08:49:30.3819790Z spar_tf3.py
+2026-11-12T08:49:30.3819965Z submission_cnet2_awr1_nc.py
+2026-11-12T08:49:30.3820165Z submission_cnet2_awr1.py
+2026-11-12T08:49:30.3820362Z submission_cnet2_awr1r.py
+2026-11-12T08:49:30.3820559Z submission_cnet2_m2t3BC.py
+2026-11-12T08:49:30.3820763Z submission_cnet2_m2t3BL2.py
+2026-11-12T08:49:30.3820957Z submission_cnet2_m2t3BL2S.py
+2026-11-12T08:49:30.3821159Z submission_cnet2_m2t3BLN.py
+2026-11-12T08:49:30.3821353Z submission_cnet2_m2t3BL.py
+2026-11-12T08:49:30.3821647Z submission_cnet2_m2t3Bq.py
+2026-11-12T08:49:30.3821847Z submission_cnet2_m2t3BrA.py
+2026-11-12T08:49:30.3822037Z submission_cnet2_m2t3BrK.py
+2026-11-12T08:49:30.3822238Z submission_cnet2_m2t3BrL260.py
+2026-11-12T08:49:30.3822447Z submission_cnet2_m2t3BrL265.py
+2026-11-12T08:49:30.3822645Z submission_cnet2_m2t3BrL275.py
+2026-11-12T08:49:30.3822849Z submission_cnet2_m2t3BrL280.py
+2026-11-12T08:49:30.3823045Z submission_cnet2_m2t3Br_log.py
+2026-11-12T08:49:30.3823241Z submission_cnet2_m2t3BrL.py
+2026-11-12T08:49:30.3823443Z submission_cnet2_m2t3BrO.py
+2026-11-12T08:49:30.3823639Z submission_cnet2_m2t3Br.py
+2026-11-12T08:49:30.3823830Z submission_cnet2_m2t3BrS.py
+2026-11-12T08:49:30.3824023Z submission_cnet2_m2t3BrU6.py
+2026-11-12T08:49:30.3824230Z submission_cnet2_m2t3BrU6S.py
+2026-11-12T08:49:30.3824432Z submission_cnet2_m2t3BrUK.py
+2026-11-12T08:49:30.3824631Z submission_cnet2_m2t3BrU.py
+2026-11-12T08:49:30.3824824Z submission_cnet2_m2t3BW.py
+2026-11-12T08:49:30.3825014Z submission_cnet2_m2tA.py
+2026-11-12T08:49:30.3825212Z submission_cnet2_m2tB.py
+2026-11-12T08:49:30.3825402Z submission_cnet2_m2tBr.py
+2026-11-12T08:49:30.3825600Z submission_cnet2_m3w3L_l2.py
+2026-11-12T08:49:30.3825794Z submission_cnet2_v11b.py
+2026-11-12T08:49:30.3825982Z submission_cnet2_v11.py
+2026-11-12T08:49:30.3826170Z submission_cnet2_v12.py
+2026-11-12T08:49:30.3826448Z submission_cnet2_v13.py
+2026-11-12T08:49:30.3826631Z submission_cnet2_v14p.py
+2026-11-12T08:49:30.3826822Z submission_cnet2_v14.py
+2026-11-12T08:49:30.3827022Z submission_cnet2_v15.py
+2026-11-12T08:49:30.3827203Z submission_cnet2_v16b.py
+2026-11-12T08:49:30.3827391Z submission_cnet2_v16s_f16nc.py
+2026-11-12T08:49:30.3827595Z submission_cnet2_v16s_f16nc_st.py
+2026-11-12T08:49:30.3827813Z submission_cnet2_v16s_mixnc.py
+2026-11-12T08:49:30.3828026Z submission_cnet2_v16s_nocap.py
+2026-11-12T08:49:30.3828224Z submission_cnet2_v16s.py
+2026-11-12T08:49:30.3828420Z submission_cnet2_v17c_nc.py
+2026-11-12T08:49:30.3828622Z submission_cnet2_v17d2_nc.py
+2026-11-12T08:49:30.3829024Z submission_cnet2_v17d2.py
+2026-11-12T08:49:30.3829231Z submission_cnet2_v17d2r.py
+2026-11-12T08:49:30.3829437Z submission_cnet2_v17dg5_nc.py
+2026-11-12T08:49:30.3829635Z submission_cnet2_v17pt_nc.py
+2026-11-12T08:49:30.3829831Z submission_cnet2_v17.py
+2026-11-12T08:49:30.3830029Z submission_cnet2_v17tb_nc.py
+2026-11-12T08:49:30.3830225Z submission_cnet2_v17te_nc.py
+2026-11-12T08:49:30.3830415Z submission_cnet2_v17t_nc.py
+2026-11-12T08:49:30.3830610Z submission_cnet2_v18a_nc.py
+2026-11-12T08:49:30.3830813Z submission_cnet2_v18b_nc.py
+2026-11-12T08:49:30.3831002Z submission_cnet2_v18cc_nc.py
+2026-11-12T08:49:30.3831194Z submission_cnet2_v18c_nc.py
+2026-11-12T08:49:30.3831382Z submission_cnet2_v18e_nc.py
+2026-11-12T08:49:30.3831578Z submission_cnet2_v18lb100_nc.py
+2026-11-12T08:49:30.3831787Z submission_cnet2_v18lb_nc.py
+2026-11-12T08:49:30.3831978Z submission_cnet2_v18lk_nc.py
+2026-11-12T08:49:30.3832170Z submission_cnet2_v18lr_nc.py
+2026-11-12T08:49:30.3832358Z submission_cnet2_v19a_nc.py
+2026-11-12T08:49:30.3832554Z submission_cnet2_v19b_nc.py
+2026-11-12T08:49:30.3832753Z submission_cnet2_v19br_nc.py
+2026-11-12T08:49:30.3832946Z submission_cnet2_v19p2_nc.py
+2026-11-12T08:49:30.3833141Z submission_cnet2_v19pd2_nc.py
+2026-11-12T08:49:30.3833338Z submission_cnet2_v19pd_nc.py
+2026-11-12T08:49:30.3833538Z submission_cnet2_v19pk2_nc.py
+2026-11-12T08:49:30.3833736Z submission_cnet2_v19pk_nc.py
+2026-11-12T08:49:30.3833935Z submission_cnet2_v19pp_nc.py
+2026-11-12T08:49:30.3834126Z submission_cnet2_v19pp.py
+2026-11-12T08:49:30.3834444Z submission_cnet2_v19pq7_nc.py
+2026-11-12T08:49:30.3834654Z submission_cnet2_v19pq_nc.py
+2026-11-12T08:49:30.3834847Z submission_cnet2_v19pq.py
+2026-11-12T08:49:30.3835039Z submission_cnet2_v19sd.py
+2026-11-12T08:49:30.3835225Z submission_cnet2_v19tc2_nc.py
+2026-11-12T08:49:30.3835419Z submission_cnet2_v19tc_nc.py
+2026-11-12T08:49:30.3835619Z submission_nn_v10.py
+2026-11-12T08:49:30.3835799Z submission_nn_v9.py
+2026-11-12T08:49:30.3835979Z submission_s2d.py
+2026-11-12T08:49:30.3836247Z submission_s2f.py
+2026-11-12T08:49:30.3836414Z submission_s2h.py
+2026-11-12T08:49:30.3836609Z --- ECHO_E0.PY (if present) ---
+2026-11-12T08:49:30.3837035Z """E0 = Echo1 (W3L) pure net, row 2 all game, no MACRO -- fixed-config agent file for head-to-head exams (both sides in one process)."""
+2026-11-12T08:49:30.3837463Z import os, sys
+2026-11-12T08:49:30.3837755Z _C = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, _C)
+2026-11-12T08:49:30.3838104Z import cnet2_search as _S
+2026-11-12T08:49:30.3838483Z CONF = {'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'OPEN_T': 0.0, 'OPEN_STEPS': 0,
+2026-11-12T08:49:30.3839070Z         'OPEN_KINDS': None, 'OPEN_SEED': 0, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 240}
+2026-11-12T08:49:30.3839466Z _W = os.path.join(_C, "..", "data", "weights", "cnet2_m3w3L.npz"); _AG = None
+2026-11-12T08:49:30.3839781Z def agent(observation, configuration):
+2026-11-12T08:49:30.3839999Z     global _AG
+2026-11-12T08:49:30.3840203Z     if _AG is None or observation["step"] == 0:
+2026-11-12T08:49:30.3840466Z         _AG = _S.make_search_agent(CONF, weights=_W)
+2026-11-12T08:49:30.3840729Z     return _AG(observation, configuration)
+2026-11-12T08:49:30.3840951Z --- WEIGHTS LS ---
+2026-11-12T08:49:30.3841127Z total 1501832
+2026-11-12T08:49:30.3841324Z drwxr-xr-x  2  501 staff    12288 Nov 12 16:35 .
+2026-11-12T08:49:30.3841580Z drwxr-xr-x 12 root root     12288 Nov 12 13:48 ..
+2026-11-12T08:49:30.3841915Z -rw-rw-r--  1  501 staff 11821144 Nov 10 00:47 cnet2_b128awr_r1.npz
+2026-11-12T08:49:30.3842229Z -rw-rw-r--  1  501 staff 11821092 Nov 10 01:28 cnet2_b128awr_r2.npz
+2026-11-12T08:49:30.3842519Z -rw-rw-r--  1  501 staff 11821092 Nov 10 03:04 cnet2_b128awr_r3.npz
+2026-11-12T08:49:30.3842825Z -rw-r--r--  1  501 staff 11821000 Nov  9 05:18 cnet2_b128dg1_last.npz
+2026-11-12T08:49:30.3843142Z -rw-r--r--  1  501 staff      309 Nov  9 05:18 cnet2_b128dg1_log.jsonl
+2026-11-12T08:49:30.3843444Z -rw-r--r--  1  501 staff 11821136 Nov  9 05:18 cnet2_b128dg1.npz
+2026-11-12T08:49:30.3843772Z -rw-r--r--  1  501 staff 11820996 Nov  9 07:25 cnet2_b128dg2_last.npz
+2026-11-12T08:49:30.3844081Z -rw-r--r--  1  501 staff      310 Nov  9 07:25 cnet2_b128dg2_log.jsonl
+2026-11-12T08:49:30.3844384Z -rw-r--r--  1  501 staff 11821136 Nov  9 07:25 cnet2_b128dg2.npz
+2026-11-12T08:49:30.3844681Z -rw-r--r--  1  501 staff 11821000 Nov  9 08:48 cnet2_b128dg3_last.npz
+2026-11-12T08:49:30.3844974Z -rw-r--r--  1  501 staff      467 Nov  9 08:48 cnet2_b128dg3_log.jsonl
+2026-11-12T08:49:30.3845272Z -rw-r--r--  1  501 staff 11821140 Nov  9 08:48 cnet2_b128dg3.npz
+2026-11-12T08:49:30.3845586Z -rw-r--r--  1  501 staff 11821000 Nov  9 11:17 cnet2_b128dg4_last.npz
+2026-11-12T08:49:30.3845883Z -rw-r--r--  1  501 staff      312 Nov  9 11:17 cnet2_b128dg4_log.jsonl
+2026-11-12T08:49:30.3846173Z -rw-r--r--  1  501 staff 11821140 Nov  9 11:17 cnet2_b128dg4.npz
+2026-11-12T08:49:30.3846471Z -rw-rw-r--  1  501 staff 11820996 Nov  9 15:36 cnet2_b128dg5_ep0.npz
+2026-11-12T08:49:30.3846793Z -rw-rw-r--  1  501 staff 11821000 Nov  9 17:18 cnet2_b128dg5_ep3.npz
+2026-11-12T08:49:30.3847111Z -rw-rw-r--  1  501 staff 11820996 Nov  9 17:52 cnet2_b128dg5_ep5.npz
+2026-11-12T08:49:30.3847404Z -rw-rw-r--  1  501 staff 11820996 Nov  9 21:15 cnet2_b128dg6_ep2.npz
+2026-11-12T08:49:30.3847714Z -rw-rw-r--  1  501 staff 11821136 Nov  9 21:15 cnet2_b128dg6.npz
+2026-11-12T08:49:30.3848017Z -rw-rw-r--  1  501 staff 11820996 Nov  9 22:30 cnet2_b128dg7_ep2.npz
+2026-11-12T08:49:30.3848521Z -rw-rw-r--  1  501 staff 11821136 Nov  9 22:30 cnet2_b128dg7.npz
+2026-11-12T08:49:30.3848917Z -rw-rw-r--  1  501 staff 11821000 Nov  9 19:31 cnet2_b128dm2_ep1.npz
+2026-11-12T08:49:30.3849214Z -rw-r--r--  1  501 staff 11820996 Nov  7 10:00 cnet2_b128_ep4.npz
+2026-11-12T08:49:30.3849509Z -rw-r--r--  1  501 staff 11821112 Nov  7 10:15 cnet2_b128_ep7.npz
+2026-11-12T08:49:30.3849791Z -rw-r--r--  1  501 staff 11821116 Nov  7 10:44 cnet2_b128_f16.npz
+2026-11-12T08:49:30.3850078Z -rw-r--r--  1  501 staff 11820992 Nov  7 10:44 cnet2_b128_last.npz
+2026-11-12T08:49:30.3850486Z -rw-r--r--  1  501 staff     2155 Nov  7 10:44 cnet2_b128_log.jsonl
+2026-11-12T08:49:30.3850790Z -rw-rw-r--  1  501 staff 11821140 Nov  9 22:42 cnet2_b128m2so.npz
+2026-11-12T08:49:30.3851074Z -rw-rw-r--  1  501 staff 11821144 Nov 10 05:20 cnet2_b128m2t3.npz
+2026-11-12T08:49:30.3851359Z -rw-rw-r--  1  501 staff 11821140 Nov 10 02:50 cnet2_b128m2t.npz
+2026-11-12T08:49:30.3851662Z -rw-r--r--  1  501 staff     1338 Nov 11 13:08 cnet2_b128m3s1PB_log.jsonl
+2026-11-12T08:49:30.3851984Z -rw-r--r--  1  501 staff 11821088 Nov 11 13:08 cnet2_b128m3s1PB.npz
+2026-11-12T08:49:30.3852295Z -rw-r--r--  1  501 staff     1337 Nov 11 13:07 cnet2_b128m3s1P_log.jsonl
+2026-11-12T08:49:30.3852630Z -rw-r--r--  1  501 staff 11821084 Nov 11 13:07 cnet2_b128m3s1P.npz
+2026-11-12T08:49:30.3852938Z -rw-r--r--  1  501 staff     1337 Nov 11 14:00 cnet2_b128m3s2a_log.jsonl
+2026-11-12T08:49:30.3853233Z -rw-r--r--  1  501 staff 11821084 Nov 11 14:00 cnet2_b128m3s2a.npz
+2026-11-12T08:49:30.3853552Z -rw-r--r--  1  501 staff     1335 Nov 11 14:04 cnet2_b128m3s3all_log.jsonl
+2026-11-12T08:49:30.3853878Z -rw-r--r--  1  501 staff 11821092 Nov 11 14:04 cnet2_b128m3s3all.npz
+2026-11-12T08:49:30.3854191Z -rw-r--r--  1  501 staff 11821000 Nov 11 14:08 cnet2_b128m3s3allw_last.npz
+2026-11-12T08:49:30.3854509Z -rw-r--r--  1  501 staff 11821000 Nov 11 14:11 cnet2_b128m3s3allwL.npz
+2026-11-12T08:49:30.3854835Z -rw-r--r--  1  501 staff      463 Nov 11 14:08 cnet2_b128m3s3allw_log.jsonl
+2026-11-12T08:49:30.3855153Z -rw-r--r--  1  501 staff 11821144 Nov 11 14:08 cnet2_b128m3s3allw.npz
+2026-11-12T08:49:30.3855480Z -rw-r--r--  1  501 staff     1337 Nov 11 14:04 cnet2_b128m3s3p42_log.jsonl
+2026-11-12T08:49:30.3855803Z -rw-r--r--  1  501 staff 11821092 Nov 11 14:04 cnet2_b128m3s3p42.npz
+2026-11-12T08:49:30.3856123Z -rw-rw-r--  1 1000  1000 11821000 Nov 11 17:05 cnet2_b128m3s89A.npz
+2026-11-12T08:49:30.3856434Z -rw-r--r--  1 root root         0 Nov 11 17:07 cnet2_b128m3s89A.npz.ok
+2026-11-12T08:49:30.3856742Z -rw-rw-r--  1 1000  1000 11821000 Nov 11 17:06 cnet2_b128m3s89L50.npz
+2026-11-12T08:49:30.3857055Z -rw-r--r--  1  501 staff     2685 Nov 11 13:05 cnet2_b128m3s_t_log.jsonl
+2026-11-12T08:49:30.3857369Z -rw-r--r--  1  501 staff 11821084 Nov 11 13:05 cnet2_b128m3s_t.npz
+2026-11-12T08:49:30.3857667Z -rw-r--r--  1  501 staff 11821116 Nov  7 10:44 cnet2_b128.npz
+2026-11-12T08:49:30.3857955Z -rw-r--r--  1  501 staff 11821116 Nov  7 11:12 cnet2_b128_q8.npz
+2026-11-12T08:49:30.3858256Z -rw-r--r--  1  501 staff 11821080 Nov 11 02:31 cnet2_b128sp1b.npz
+2026-11-12T08:49:30.3858561Z -rw-r--r--  1  501 staff 11821072 Nov 11 03:49 cnet2_b128sp1k30.npz
+2026-11-12T08:49:30.3858948Z -rw-r--r--  1  501 staff 11821072 Nov 11 02:16 cnet2_b128sp1_lr0.npz
+2026-11-12T08:49:30.3859247Z -rw-r--r--  1  501 staff 11821076 Nov 11 02:19 cnet2_b128sp1.npz
+2026-11-12T08:49:30.3859547Z -rw-r--r--  1  501 staff 11820996 Nov  9 02:22 cnet2_b128v10_last.npz
+2026-11-12T08:49:30.3859836Z --- PACKS LS ---
+2026-11-12T08:49:30.3860012Z total 8120
+2026-11-12T08:49:30.3860216Z drwxr-xr-x  3 root root    4096 Nov 12 06:59 .
+2026-11-12T08:49:30.3860472Z drwxr-xr-x 12 root root   12288 Nov 12 13:48 ..
+2026-11-12T08:49:30.3860742Z -rw-r--r--  1 root root 4579266 Nov 12 06:59 n1r_int8.py
+2026-11-12T08:49:30.3861050Z drwxr-xr-x  2 root root    4096 Nov 12 06:59 __pycache__
+2026-11-12T08:49:30.3861337Z -rw-r--r--  1 root root 3712453 Nov 12 01:31 snipe30_int8.py
+2026-11-12T08:49:30.3861585Z --- ECHO MD5 ---
+2026-11-12T08:49:30.3861946Z e210a9c0a38536ecf20596fd9d594a09  /root/carbon/code/exp/echo_p4.py
+2026-11-12T08:49:30.3862301Z 090874d32881c9ac8ce3bb0db258f062  /root/carbon/code/exp/echo_p2.py
+2026-11-12T08:49:30.3862637Z 13e4fb27ce0bc1f3b10623a6c47b272e  /root/carbon/code/exp/echo_p3.py
+2026-11-12T08:49:30.3863047Z 8434e8f99efe4c9ea22b19d0868a6c69  /root/carbon/code/exp/__pycache__/echo_e0.cpython-312.pyc
+2026-11-12T08:49:30.3863516Z c3b19ef026bf83ca607253257c0b1f9b  /root/carbon/code/exp/__pycache__/echo_p2.cpython-312.pyc
+2026-11-12T08:49:30.3863978Z e15870a8bc2f71aab6280c9123f0493d  /root/carbon/code/exp/__pycache__/echo_p3.cpython-312.pyc
+2026-11-12T08:49:30.3864548Z 1a7ce62c99206680b3ace4326ea0b412  /root/carbon/code/exp/__pycache__/echo_p4.cpython-312.pyc
+2026-11-12T08:49:30.3865024Z f6ec9a2ca2302b9879e432c1f0951642  /root/carbon/code/exp/__pycache__/opp_m3echo.cpython-312.pyc
+2026-11-12T08:49:30.3865440Z c969f7e7af94b3b8a2ea007044e80e00  /root/carbon/code/exp/echo_e0.py
+2026-11-12T08:49:30.3865802Z 60bdd31c0c477e3bc7cc95ac67eab7a3  /root/carbon/code/exp/fx_echoQ3.py
+2026-11-12T08:49:30.3866171Z 4e6b4ce5ea3bc1a09384987fe139cb55  /root/carbon/code/exp/opp_m3echo.py
+2026-11-12T08:49:30.3866569Z 5ec9a35fbad76addf5af443b120a608e  /root/carbon/data/e2w_cnet2_m3w4L_opp_m3echo.out
+2026-11-12T08:49:30.3866970Z 8a15a83ee1975b7ec2af138ddcfe811d  /root/carbon/data/lp_L2_opp_m3echo.out
+2026-11-12T08:49:30.3867381Z cee222e60c7a9895a877dae97fd14ba0  /root/carbon/data/bigeval_live/w5x_echoB.jsonl
+2026-11-12T08:49:30.3867790Z 215e73b9677b2e6618f67f0f732de031  /root/carbon/data/bigeval_live/w6x_echoB.jsonl
+2026-11-12T08:49:30.3868241Z 2d58849581cedd43f8977693a47aa588  /root/carbon/data/bigeval_live/e2w_cnet2_m3w5L_opp_m3echo.jsonl
+2026-11-12T08:49:30.3868690Z 64a84a33723b120f6ffb69f4e68de5b7  /root/carbon/data/bigeval_live/echo_m2r.jsonl
+2026-11-12T08:49:30.3869230Z 9b044049832b26b714b79af070bc90fd  /root/carbon/data/bigeval_live/e2w_cnet2_m3w4L_opp_m3echo.jsonl
+2026-11-12T08:49:30.3869695Z 426f8c74c49624da62919fa59e1667e9  /root/carbon/data/bigeval_live/pkn1r_echo_e0.jsonl
+2026-11-12T08:49:30.3870143Z 2b8e29a31e26722e96e12aa2a653f93b  /root/carbon/data/bigeval_live/hs_h2_opp_m3echo.jsonl
+2026-11-12T08:49:30.3870581Z e185d438e37c43126f07fd618c290e3e  /root/carbon/data/bigeval_live/j1b_opp_m3echo.jsonl
+2026-11-12T08:49:30.3871020Z 4cecd8a7ef929d86c1b9149c337200d9  /root/carbon/data/bigeval_live/pkn1r_opp_m3echo.jsonl
+2026-11-12T08:49:30.3871457Z ba58bc65af751178263f8ba420501cd7  /root/carbon/data/bigeval_live/j1ba_opp_m3echo.jsonl
+2026-11-12T08:49:30.3871884Z e33c7bbce25b696305ba8c408bfa80bf  /root/carbon/data/bigeval_live/e0x_echoB.jsonl
+2026-11-12T08:49:30.3872310Z e6ce5f94f768b801ed182c44897d3c98  /root/carbon/data/bigeval_live/hs_h1_opp_m3echo.jsonl
+2026-11-12T08:49:30.3872749Z 84815a3a803965e9b756b7a4c85098b1  /root/carbon/data/bigeval_live/ck30x_echo_e0.jsonl
+2026-11-12T08:49:30.3873176Z e5b51150bf16abd5e2c9b0fa7f8e71e8  /root/carbon/data/bigeval_live/j1a_opp_m3echo.jsonl
+2026-11-12T08:49:30.3873605Z 622d85d06b760ce69471b914dfa11cfc  /root/carbon/data/bigeval_live/ck30x_opp_m3echo.jsonl
+2026-11-12T08:49:30.3874044Z efc0b834d5dec67fe50a9d9a926833cb  /root/carbon/data/bigeval_live/nc_opp_m3echo.jsonl
+2026-11-12T08:49:30.3874486Z fb2179536d4a1f8afe04e27889d6d39c  /root/carbon/data/bigeval_live/echo_w3pack.jsonl
+2026-11-12T08:49:30.3874912Z 5012682f75c9df6d605276734809eaaa  /root/carbon/data/bigeval_live/w6_opp_m3echo.jsonl
+2026-11-12T08:49:30.3875343Z 6e5aa4e0baecf0c93d5d64b573839d28  /root/carbon/data/bigeval_live/j1ca_opp_m3echo.jsonl
+2026-11-12T08:49:30.3875781Z c62458788a06b302618a86c2b2d8704f  /root/carbon/data/bigeval_live/lp_L1_opp_m3echo.jsonl
+2026-11-12T08:49:30.3876220Z 65daa6708fbc3ff9d7ba33ed39930404  /root/carbon/data/bigeval_live/lp_L2_opp_m3echo.jsonl
+2026-11-12T08:49:30.3876647Z efd868c67459d4d91362959e461dbf13  /root/carbon/data/bigeval_live/echo_g1pure.jsonl
+2026-11-12T08:49:30.3877068Z 5a4a96be727ea7c20d5ed0f7ad97148a  /root/carbon/data/bigeval_live/j1c_opp_m3echo.jsonl
+2026-11-12T08:49:30.3877501Z 8a6dcba77db6155732e44246ac7d0e6d  /root/carbon/data/bigeval_live/hs_h3_opp_m3echo.jsonl
+2026-11-12T08:49:30.3878020Z 30db82222ffef6565cd3d502526b37bc  /root/carbon/data/pkn1r_echo_e0.out
+2026-11-12T08:49:30.3878401Z d5d8996b66c9699c83df831ba1e84fa6  /root/carbon/data/j1ca_opp_m3echo.out
+2026-11-12T08:49:30.3878769Z 208584777e2f5e2f2167e338c4af1be3  /root/carbon/data/hs_h3_opp_m3echo.out
+2026-11-12T08:49:30.3879229Z 6b026dbc4f9d5c257851ff2c2692017c  /root/carbon/data/nc_opp_m3echo.out
+2026-11-12T08:49:30.3879587Z 9ae90988be083750c3ff5ee49538932c  /root/carbon/data/ck30x_echo_e0.out
+2026-11-12T08:49:30.3880029Z 2d7542874672c318c3f960085e56dffd  /root/carbon/data/echo3.done
+2026-11-12T08:49:30.3880369Z 9009bbee64006bdecddb5665cef11ad3  /root/carbon/data/j1b_opp_m3echo.out
+2026-11-12T08:49:30.3880763Z e0a21094a4cdf0bf1bd2831488110492  /root/carbon/data/e2w_cnet2_m3w5L_opp_m3echo.out
+2026-11-12T08:49:30.3881156Z ace8347ca98cd261126217b24cea6197  /root/carbon/data/lp_L1_opp_m3echo.out
+2026-11-12T08:49:30.3881515Z 48f297faa3c027865623771eff903f8c  /root/carbon/data/j1c_opp_m3echo.out
+2026-11-12T08:49:30.3881883Z 1c70ca6fd5d52d25d20a5aa3fb80cbf5  /root/carbon/data/j1ba_opp_m3echo.out
+2026-11-12T08:49:30.3882249Z 2cbb77b339f4b13fd05b337826e792f5  /root/carbon/data/echo_g1pure.out
+2026-11-12T08:49:30.3882619Z 7bbc764129ec35c9dedb32d81695a239  /root/carbon/data/ck30x_opp_m3echo.out
+2026-11-12T08:49:30.3882986Z 764f5ded736948c3ddbf5e867756e597  /root/carbon/data/hs_h1_opp_m3echo.out
+2026-11-12T08:49:30.3883341Z bc3dc68fad848f3cadf34a95f339d4ff  /root/carbon/data/echo_w3pack.out
+2026-11-12T08:49:30.3883699Z 965e4ff473f2b7adb41409e8da253f53  /root/carbon/data/w6_opp_m3echo.out
+2026-11-12T08:49:30.3884052Z 6f62785a2a41267fcc25ec3e85072ac3  /root/carbon/data/echo_m2r.out
+2026-11-12T08:49:30.3884395Z 5e761b0ca49898ad0013b261f7684999  /root/carbon/data/pkn1r_opp_m3echo.out
+2026-11-12T08:49:30.3884755Z e05f2cab193d77201c3471f17f2d84f4  /root/carbon/data/hs_h2_opp_m3echo.out
+2026-11-12T08:49:30.3885115Z d852f87ab74662adb6e485b97141c17b  /root/carbon/data/j1a_opp_m3echo.out
+2026-11-12T08:49:30.3885432Z --- M3S2R1 FINAL WEIGHTS ON H23? ---
+2026-11-12T08:49:30.3885650Z NO_FINAL_R1_ON_H23
+2026-11-12T08:49:30.3885834Z NO_M3S2R1_WRAPPER_ON_H23
+2026-11-12T08:49:30.3886103Z -rw-r--r-- 1 root root 852 Nov 12 13:48 /root/carbon/code/exp/m3s2r1pre.py
+2026-11-12T08:49:30.3886403Z MARKER ECHO2PREPK7QX23 END
+2026-11-12T08:49:30.3886527Z 
+2026-11-12T08:49:30.3991719Z Post job cleanup.
+2026-11-12T08:49:30.4851960Z [command]/usr/bin/git version
+2026-11-12T08:49:30.4909980Z git version 2.56.0
+2026-11-12T08:49:30.4959197Z Temporarily overriding HOME='/home/runner/work/_temp/41144d7c-2b5a-434e-8f07-7f8c74621d18' before making global git config changes
+2026-11-12T08:49:30.4965694Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:49:30.4980965Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:49:30.5042460Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:49:30.5124253Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:49:30.5616386Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:49:30.5651896Z http.https://github.com/.extraheader
+2026-11-12T08:49:30.5711296Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T08:49:30.5734035Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T08:49:30.6046532Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T08:49:30.6090050Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T08:49:30.6458068Z Cleaning up orphan processes
+2026-11-12T08:49:30.6773654Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

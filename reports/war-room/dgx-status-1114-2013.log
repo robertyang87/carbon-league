@@ -1,0 +1,17 @@
+DGX 状态汇报 20:13 CST（直读 20:14:00-20:14:31，标记 DGXSTATUS2013QW8Z/B/C）
+来源：Tailscale 直读 arm@100.84.148.73（spark-29db），全程只读。
+
+【直读实测】
+- 主机：spark-29db，uptime 25 天 1 小时 18 分，load 110.51（19 个考试 worker 满载）；GPU GB10 0%、38°C（考试为 CPU 活，属预期）；无 git fetch/pull/checkout 残留。
+- it74 补测已开跑（最高优单链）：bigeval.py exp/it74.py exp/master2_src.py 996000 200 it74_master2，主进程 PID 1444674 + 18 worker，各 100% CPU，etime 约 1 分钟（20:14 读数）；逐局线 data/bigeval_live/it74_master2.jsonl 110,594 B、mtime 20:14 在增长——进程＋CPU＋输出文件三件套齐全，考试在跑。
+- it74 包已出（归档目录）：ckpt_74_export.npz 与 ckpt_74_export_q8.npz 各 13,972,532 B（20:07/20:08），it74.py 4,598,758 B（20:09）；另有 it74.py.VOID_plainpack_wrongformat（作废的错格式包）。
+- K0 标注回片：C1 returns/c1 仍只有 progress_c1.json（19:29），games {}，0 分片；C2 progress.json 新鲜 20:13（回传环活），games {}，0 分片；两机身份 config_sha256 9a2b2440 与定盘一致。首片估计 C1 约 21:08、C2 约 21:25（估计）。
+- L20 停点归档（DGX 侧）：203 件 / 1,761,254,314 B；ppo_attrib/value-diag/ 在盘，MANIFEST_value_diag.md5（19:56）在盘；全序 ckpt_0-95 仍未见落盘（按作战室口径，L20 补传在办）。
+- 仓库：本地 main 1d57e671（10:14）vs 远端 97ece4fe，落后已知、不阻塞 C1/C2（远端读数与 20:03 同步趟一致）。
+
+【转述作战室（非直读）】
+- 策略组三裁 20:04：研判 §1 验证成立、终审归因章重开重议（停线本身站立）；it96 预算终态核验取消，it74 补测代为终局数据；cnet2_build e0051524 / rl2_ppo_train 2c8262fb 验收 PASS，临时冻结解除。
+- 语料缺口越线（fable6 28 局、lite-v8 24 局）已排入 DGX 直拉队列，it74 两场之后再做。
+- Studio 正式 q 闸在跑（约 130/1072 根，ETA 带不变，中心约 11-15 14:30 估计）。
+
+【下一核对点】it74 对 Master2 场进度（下趟算逐局线速率再估完工）；C1 首片约 21:08、C2 首片约 21:25（估计）；L20 归档 ckpt_0-95 补传收尾。

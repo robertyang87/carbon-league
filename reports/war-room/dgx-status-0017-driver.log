@@ -1,0 +1,123 @@
+dispatched at 01:22:55
+trying run 43268746256 round 1 conclusion success
+  fetch attempt 1 error: Remote end closed connection without response
+  fetch attempt 2 error: Remote end closed connection without response
+  fetch attempt 3 error: Remote end closed connection without response
+  job 131359267667 log bytes=0
+trying run 43268706980 round 1 conclusion success
+  truncated attempt 1: got 15362 bytes
+  truncated attempt 2: got 15362 bytes
+  fetch attempt 3 error: Remote end closed connection without response
+  range tail: +26856 bytes from 15362
+  job 131359131731 log bytes=42218
+trying run 43268857514 round 1 conclusion success
+  truncated attempt 1: got 31746 bytes
+  truncated attempt 2: got 15362 bytes
+  truncated attempt 3: got 15362 bytes
+  range fetch error: Remote end closed connection without response
+  job 131359666490 log bytes=31746
+trying run 43268827853 round 1 conclusion success
+  job 131359559678 log bytes=24342
+CLAIMED run 43268827853 job 131359559678 conclusion success
+ cn-shanghai
+2026-11-12T17:23:17.1624644Z ##[endgroup]
+2026-11-12T17:23:30.8315245Z InvokeId: t-sh072wrkrbg98n4
+2026-11-12T17:23:30.8334910Z --- status=Success exit=0 ---
+2026-11-12T17:23:30.8354545Z DGXSTATUS0017A BEGIN 17:23:18
+2026-11-12T17:23:30.8374659Z DGXSTATUS0017A DGX spark-29db  01:23:23 up 23 days,  6:27, 1230 users,  load average: 0.05, 0.23, 0.92
+2026-11-12T17:23:30.8394238Z --PROC--
+2026-11-12T17:23:30.8414559Z --PROCBROAD--
+2026-11-12T17:23:30.8438506Z 2594625 21-11:11:27 python3 -m agent_mcp
+2026-11-12T17:23:30.8441604Z 2596961 21-11:09:34 /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox/.venv/bin/python local_dev/scripts/vox_bridge.py --vox-dir /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox --net-audio 8769
+2026-11-12T17:23:30.8442709Z --SMOKE--
+2026-11-12T17:23:30.8443777Z total 24
+2026-11-12T17:23:30.8444338Z -rw-rw-r-- 1 arm arm   244 1113_01:04 r12_final_summary.json
+2026-11-12T17:23:30.8444919Z -rw-rw-r-- 1 arm arm  1325 1113_01:04 r12_final.py
+2026-11-12T17:23:30.8445560Z -rw-rw-r-- 1 arm arm  1609 1113_01:04 smoke_final_summary.json
+2026-11-12T17:23:30.8446202Z -rw-rw-r-- 1 arm arm 10190 1113_01:01 smoke_final.py
+2026-11-12T17:23:30.8447013Z == /home/arm/junyang/carbon/data/smoke_pb_final/r12_final_summary.json
+2026-11-12T17:23:30.8447672Z {
+2026-11-12T17:23:30.8448265Z  "weights": "/home/arm/junyang/carbon/data/weights/cnet2_b128m2t3.npz",
+2026-11-12T17:23:30.8449092Z  "md5": "cd9240a6b5a9b7b10c0d1a772858c6b7",
+2026-11-12T17:23:30.8449598Z  "np_format": true,
+2026-11-12T17:23:30.8450231Z  "sig_mismatch_after_tta": true,
+2026-11-12T17:23:30.8450744Z  "diff_stale_view_vs_raw": 0.95326,
+2026-11-12T17:23:30.8451336Z  "diff_consumed_encfor_vs_raw": 0.0
+2026-11-12T17:23:30.8474946Z }
+2026-11-12T17:23:30.8494468Z == /home/arm/junyang/carbon/data/smoke_pb_final/smoke_final_summary.json
+2026-11-12T17:23:30.8495574Z {
+2026-11-12T17:23:30.8498392Z  "eps_steps": 300,
+2026-11-12T17:23:30.8499033Z  "weights": "/home/arm/junyang/carbon/data/weights/cnet2_b128m2t3.npz",
+2026-11-12T17:23:30.8499590Z  "bot": "/home/arm/junyang/carbon/code/exp/opp_1cz_v5.py",
+2026-11-12T17:23:30.8500084Z  "batches": {
+2026-11-12T17:23:30.8500387Z   "std": {
+2026-11-12T17:23:30.8500707Z    "n_records": 18,
+2026-11-12T17:23:30.8501006Z    "n_term": 0,
+2026-11-12T17:23:30.8501362Z    "all_len_ok": true,
+2026-11-12T17:23:30.8501704Z    "all_horizon_ok": true,
+2026-11-12T17:23:30.8502030Z    "max_dw_err": 2.8e-05,
+2026-11-12T17:23:30.8502357Z    "max_dm_err": 5.3e-05,
+2026-11-12T17:23:30.8502676Z    "ndec_actual": 5382,
+2026-11-12T17:23:30.8503062Z    "ndec_expected": 5382,
+2026-11-12T17:23:30.8503387Z    "ndec_ok": true,
+2026-11-12T17:23:30.8504081Z    "wall": 164.3
+2026-11-12T17:23:30.8504493Z   },
+2026-11-12T17:23:30.8504936Z   "ext": {
+2026-11-12T17:23:30.8505299Z    "n_records": 7,
+2026-11-12T17:23:30.8505694Z    "n_term": 3,
+2026-11-12T17:23:30.8506354Z    "all_len_ok": true,
+2026-11-12T17:23:30.8506735Z    "all_horizon_ok": true,
+2026-11-12T17:23:30.8507096Z    "max_dw_err": 1.5e-05,
+2026-11-12T17:23:30.8507418Z    "max_dm_err": 6.4e-05,
+2026-11-12T17:23:30.8507743Z    "ndec_actual": 1199,
+2026-11-12T17:23:30.8508063Z    "ndec_expected": 1
+2026-11-12T17:23:30.8508446Z --GPU--
+2026-11-12T17:23:30.8508731Z 0 %, [N/A], 37
+2026-11-12T17:23:30.8509026Z --GITRES--
+2026-11-12T17:23:30.8509315Z NOGIT
+2026-11-12T17:23:30.8509702Z --HEAD--
+2026-11-12T17:23:30.8510038Z HEAD 0f704a9 main
+2026-11-12T17:23:30.8510340Z REMOTE 09c87247 BEHIND 
+2026-11-12T17:23:30.8510650Z --WNEW--
+2026-11-12T17:23:30.8511197Z -rw-r--r-- 1 arm arm 13968968 1112_22:34 /home/arm/junyang/carbon/data/weights/cnet2_m9xj320wr1_fromstudio.npz
+2026-11-12T17:23:30.8511949Z -rw-rw-r-- 1 arm arm 13968964 1112_22:12 /home/arm/junyang/carbon/data/weights/cnet2_m9xj320r1_ep19.npz
+2026-11-12T17:23:30.8512673Z -rw-rw-r-- 1 arm arm 13968964 1112_22:12 /home/arm/junyang/carbon/data/weights/cnet2_m9xj320r1_last.npz
+2026-11-12T17:23:30.8513319Z -rw-rw-r-- 1 arm arm 13968972 1112_22:11 /home/arm/junyang/carbon/data/weights/cnet2_m9xj320r1_ep18.npz
+2026-11-12T17:23:30.8514080Z --CORPUS--
+2026-11-12T17:23:30.8514385Z m3s2_corpus idx=118
+2026-11-12T17:23:30.8514680Z  replays=118
+2026-11-12T17:23:30.8515068Z carago_corpus idx=182
+2026-11-12T17:23:30.8515478Z  replays=183
+2026-11-12T17:23:30.8515792Z fable_corpus idx=181
+2026-11-12T17:23:30.8516094Z  replays=182
+2026-11-12T17:23:30.8516368Z --DSMETA--
+2026-11-12T17:23:30.8516738Z ds_carago ?
+2026-11-12T17:23:30.8517020Z ds_fable ?
+2026-11-12T17:23:30.8517310Z --RECENT30M--
+2026-11-12T17:23:30.8517699Z /home/arm/junyang/carbon/data/smoke_pb_final/smoke_final_summary.json
+2026-11-12T17:23:30.8518206Z /home/arm/junyang/carbon/data/smoke_pb_final/r12_final.py
+2026-11-12T17:23:30.8518735Z /home/arm/junyang/carbon/data/smoke_pb_final/smoke_final.py
+2026-11-12T17:23:30.8519216Z /home/arm/junyang/carbon/data/smoke_pb_final/r12_final_summary.json
+2026-11-12T17:23:30.8519658Z --LOAD--
+2026-11-12T17:23:30.8519956Z 0.05 0.23 0.92 1/939 346562
+2026-11-12T17:23:30.8520339Z DGXSTATUS0017A END
+2026-11-12T17:23:30.8520667Z DGXSTATUS0017A END rc=0
+2026-11-12T17:23:30.8520875Z 
+2026-11-12T17:23:30.8657323Z Post job cleanup.
+2026-11-12T17:23:30.9666332Z [command]/usr/bin/git version
+2026-11-12T17:23:30.9751233Z git version 2.56.1
+2026-11-12T17:23:30.9831675Z Temporarily overriding HOME='/home/runner/work/_temp/fa777d8b-d6a7-4441-ad5b-6d910d216ed9' before making global git config changes
+2026-11-12T17:23:30.9854185Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T17:23:30.9877940Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T17:23:30.9921466Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T17:23:30.9966901Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T17:23:31.0288934Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T17:23:31.0352224Z http.https://github.com/.extraheader
+2026-11-12T17:23:31.0366160Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T17:23:31.0415276Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T17:23:31.0777595Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T17:23:31.0861792Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T17:23:31.1528414Z Cleaning up orphan processes
+2026-11-12T17:23:31.1855152Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 92 claimed

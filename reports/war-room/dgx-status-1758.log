@@ -1,0 +1,146 @@
+dispatched at 17:59:35
+CLAIMED run 43196338204 job 131108188652 status completed conclusion success
+ cn-shanghai
+2026-11-12T09:59:46.7437999Z ##[endgroup]
+2026-11-12T10:00:05.4949481Z InvokeId: t-sh072vo0ggusjk0
+2026-11-12T10:00:05.4950439Z --- status=Success exit=0 ---
+2026-11-12T10:00:05.4951694Z DGXSTATUS1758M7V2 L20-BEGIN 2026-11-12 17:59:48 CST
+2026-11-12T10:00:05.4952716Z --- L20-WEIGHTS-MD5 ---
+2026-11-12T10:00:05.4953574Z b6db08c9b076257c54817377bb93130d  /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T10:00:05.4954813Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T10:00:05.4955770Z 2c8ca0ae7266a6c0a41bf3b8ba7f723b  /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T10:00:05.4956411Z --- DGX (via ssh) ---
+2026-11-12T10:00:05.4956843Z DGXSTATUS1758M7V2 DGX-BEGIN 2026-11-12 17:59:54 CST
+2026-11-12T10:00:05.4957286Z spark-29db
+2026-11-12T10:00:05.4957749Z  17:59:54 up 22 days, 23:04, 849 users,  load average: 2.09, 2.07, 1.26
+2026-11-12T10:00:05.4958242Z 93 %, [N/A], [N/A], 45
+2026-11-12T10:00:05.4958847Z --- PROC-TRAIN ---
+2026-11-12T10:00:05.4959701Z  193396       06:47 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_m7bs_v2 /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T10:00:05.4960998Z  193397       06:47 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_m7bs_v2 /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2g1.npz 20 {"C":128,"NB":8,"D":128}
+2026-11-12T10:00:05.4962011Z --- ALL-PYTHON ---
+2026-11-12T10:00:05.4962867Z  193396       06:48 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_m7bs_v2 /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T10:00:05.4964355Z  193397       06:48 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_m7bs_v2 /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2g1.npz 20 {"C":128,"NB":8,"D":128}
+2026-11-12T10:00:05.4983556Z 2594625 21-03:47:58 python3 -m agent_mcp
+2026-11-12T10:00:05.4985592Z 2596961 21-03:46:05 /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox/.venv/bin/python local_dev/scripts/vox_bridge.py --vox-dir /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox --net-audio 8769
+2026-11-12T10:00:05.4990602Z --- TRAIN-PROC-CWD ---
+2026-11-12T10:00:05.4991388Z pid 193396 cwd=/home/arm/junyang/carbon/code
+2026-11-12T10:00:05.4992461Z pid 193397 cwd=/home/arm/junyang/carbon/code
+2026-11-12T10:00:05.4993105Z --- PROBE-LEFTOVER ---
+2026-11-12T10:00:05.4993737Z NO-PROBE-PROC
+2026-11-12T10:00:05.4994328Z --- GIT-LEFTOVER (any fetch/pull/checkout alive >5min = ANOMALY) ---
+2026-11-12T10:00:05.4997719Z NO-GIT-PROC
+2026-11-12T10:00:05.4998311Z --- SCP-RSYNC-SSHD ---
+2026-11-12T10:00:05.4998849Z   40675    07:08:06 sshd: arm [priv]
+2026-11-12T10:00:05.4999451Z   40875    07:07:50 sshd: arm@pts/0
+2026-11-12T10:00:05.5007774Z  195112       00:06 sshd: arm [priv]
+2026-11-12T10:00:05.5008464Z  195306       00:01 sshd: arm@notty
+2026-11-12T10:00:05.5009048Z --- REPO-HEAD-VS-REMOTE (carbon-repo, branch cnet2-search-v12) ---
+2026-11-12T10:00:05.5010058Z ca410e2851d8af0cfb66e914daa0ea1ae5fcca85
+2026-11-12T10:00:05.5010915Z ca410e2 2026-11-12 09:46:01 +0000 data: pull m6 replays via ladder API into data/m6_corpus
+2026-11-12T10:00:05.5011516Z cnet2-search-v12
+2026-11-12T10:00:05.5012437Z remote cnet2-search-v12: 1d543c8c2ea87ce0c77ecb40311643fe0a7ae57f	refs/heads/cnet2-search-v12
+2026-11-12T10:00:05.5013071Z --- M7BS-CORPUS ---
+2026-11-12T10:00:05.5013487Z m7bs replays=142
+2026-11-12T10:00:05.5014041Z -rw-rw-r-- 1 arm arm 55630 2026-11-12_17:52:59 /home/arm/junyang/carbon/data/m7bs_corpus/index.json
+2026-11-12T10:00:05.5014627Z NO-M7BS-MATCHES-OR-INDEX
+2026-11-12T10:00:05.5015091Z m7bs index_entries= 142
+2026-11-12T10:00:05.5015508Z --- M6-CORPUS (scout closed 17:46, 191/191) ---
+2026-11-12T10:00:05.5015956Z m6 replays=136
+2026-11-12T10:00:05.5016348Z total 64
+2026-11-12T10:00:05.5016777Z -rw-r--r-- 1 arm arm 52553 2026-11-11_23:58:30 index.json
+2026-11-12T10:00:05.5017328Z drwxr-xr-x 2 arm arm 12288 2026-11-11_23:58:30 replays
+2026-11-12T10:00:05.5017795Z --- DS-DIRS ---
+2026-11-12T10:00:05.5018187Z == ds_carago
+2026-11-12T10:00:05.5018793Z -rw-rw-r-- 1 arm arm 77280 2026-11-12_15:59:37 /home/arm/junyang/carbon/data/ds_carago/meta.json
+2026-11-12T10:00:05.5019483Z 1.2G	/home/arm/junyang/carbon/data/ds_carago
+2026-11-12T10:00:05.5020019Z == ds_fable
+2026-11-12T10:00:05.5020607Z -rw-rw-r-- 1 arm arm 75185 2026-11-12_15:59:56 /home/arm/junyang/carbon/data/ds_fable/meta.json
+2026-11-12T10:00:05.5021424Z 1.2G	/home/arm/junyang/carbon/data/ds_fable
+2026-11-12T10:00:05.5022179Z == ds_m7bs
+2026-11-12T10:00:05.5022802Z -rw-rw-r-- 1 arm arm 43348 2026-11-12_13:19:00 /home/arm/junyang/carbon/data/ds_m7bs/meta.json
+2026-11-12T10:00:05.5023537Z 636M	/home/arm/junyang/carbon/data/ds_m7bs
+2026-11-12T10:00:05.5024001Z == ds_m7bs_v2
+2026-11-12T10:00:05.5024575Z -rw-rw-r-- 1 arm arm 60693 2026-11-12_17:53:06 /home/arm/junyang/carbon/data/ds_m7bs_v2/meta.json
+2026-11-12T10:00:05.5025235Z 886M	/home/arm/junyang/carbon/data/ds_m7bs_v2
+2026-11-12T10:00:05.5026576Z --- M7BSV2-TRAIN-LOGS ---
+2026-11-12T10:00:05.5027219Z == /home/arm/junyang/carbon/data/dq_logs/m7bsv2r1.log
+2026-11-12T10:00:05.5027918Z -rw-rw-r-- 1 arm arm 694 2026-11-12_17:58:19 /home/arm/junyang/carbon/data/dq_logs/m7bsv2r1.log
+2026-11-12T10:00:05.5028709Z {"ep": 0, "i": 0, "pi": 0.4354, "v": 0.0561, "aux": 0.0515, "s": 2}
+2026-11-12T10:00:05.5029593Z {"ep": 0, "val": {"collector": 0.84, "planter": 0.7921, "base": 0.9379, "all": 0.8495, "workers": 0.8299, "loss": 0.3796}, "train_pi": 0.4156, "s": 157}
+2026-11-12T10:00:05.5030625Z {"ep": 1, "i": 0, "pi": 0.3946, "v": 0.0296, "aux": 0.0336, "s": 1}
+2026-11-12T10:00:05.5031527Z {"ep": 1, "val": {"collector": 0.8426, "planter": 0.7973, "base": 0.9436, "all": 0.8531, "workers": 0.833, "loss": 0.3684}, "train_pi": 0.3676, "s": 152}
+2026-11-12T10:00:05.5032854Z {"ep": 2, "i": 0, "pi": 0.3431, "v": 0.0292, "aux": 0.042, "s": 1}
+2026-11-12T10:00:05.5034751Z == /home/arm/junyang/carbon/data/dq_logs/m7bsv2g1.log
+2026-11-12T10:00:05.5035891Z -rw-rw-r-- 1 arm arm 1111 2026-11-12_17:58:40 /home/arm/junyang/carbon/data/dq_logs/m7bsv2g1.log
+2026-11-12T10:00:05.5036727Z {"ep": 2, "i": 0, "pi": 0.3562, "v": 0.0302, "aux": 0.0425, "s": 1}
+2026-11-12T10:00:05.5037675Z {"ep": 2, "val": {"collector": 0.8457, "planter": 0.7933, "base": 0.9418, "all": 0.8541, "workers": 0.8346, "loss": 0.3696}, "train_pi": 0.3566, "s": 84}
+2026-11-12T10:00:05.5038642Z {"ep": 3, "i": 0, "pi": 0.3518, "v": 0.0258, "aux": 0.0437, "s": 1}
+2026-11-12T10:00:05.5039463Z {"ep": 3, "val": {"collector": 0.8466, "planter": 0.801, "base": 0.9466, "all": 0.8568, "workers": 0.8369, "loss": 0.3625}, "train_pi": 0.3574, "s": 85}
+2026-11-12T10:00:05.5040333Z {"ep": 4, "i": 0, "pi": 0.3531, "v": 0.0298, "aux": 0.0403, "s": 1}
+2026-11-12T10:00:05.5040942Z == /home/arm/junyang/carbon/data/dq_logs/m7bsv2.log
+2026-11-12T10:00:05.5041491Z MISSING
+2026-11-12T10:00:05.5042127Z --- CARAGO/M7BS-OLD-LOGS ---
+2026-11-12T10:00:05.5042753Z == /home/arm/junyang/carbon/data/dq_logs/caragor1.log
+2026-11-12T10:00:05.5043417Z -rw-rw-r-- 1 arm arm 4655 2026-11-12_16:51:30 /home/arm/junyang/carbon/data/dq_logs/caragor1.log
+2026-11-12T10:00:05.5046028Z {"ep": 19, "val": {"collector": 0.8978, "planter": 0.8841, "base": 0.9769, "all": 0.9086, "workers": 0.8936, "loss": 0.2352}, "train_pi": 0.1493, "s": 110}
+2026-11-12T10:00:05.5046716Z best 0.9086
+2026-11-12T10:00:05.5047204Z == /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T10:00:05.5047850Z -rw-rw-r-- 1 arm arm 4640 2026-11-12_14:35:05 /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T10:00:05.5048704Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8081, "base": 0.9518, "all": 0.8604, "workers": 0.8401, "loss": 0.3679}, "train_pi": 0.2468, "s": 50}
+2026-11-12T10:00:05.5049430Z best 0.8629
+2026-11-12T10:00:05.5049848Z --- WEIGHTS-NEWEST-ALL ---
+2026-11-12T10:00:05.5050306Z total 8539984
+2026-11-12T10:00:05.5050734Z -rw-rw-r-- 1 arm arm 11821204 Nov 12 17:58 cnet2_m7bsv2g1.npz
+2026-11-12T10:00:05.5051321Z -rw-rw-r-- 1 arm arm 11820996 Nov 12 17:58 cnet2_m7bsv2g1_ep3.npz
+2026-11-12T10:00:05.5052186Z -rw-rw-r-- 1 arm arm 11820996 Nov 12 17:58 cnet2_m7bsv2g1_last.npz
+2026-11-12T10:00:05.5052706Z -rw-rw-r-- 1 arm arm      615 Nov 12 17:58 cnet2_m7bsv2g1_log.jsonl
+2026-11-12T10:00:05.5053243Z -rw-rw-r-- 1 arm arm 13969172 Nov 12 17:58 cnet2_m7bsv2r1.npz
+2026-11-12T10:00:05.5053790Z -rw-rw-r-- 1 arm arm 13968964 Nov 12 17:58 cnet2_m7bsv2r1_ep1.npz
+2026-11-12T10:00:05.5054346Z -rw-rw-r-- 1 arm arm 13968964 Nov 12 17:58 cnet2_m7bsv2r1_last.npz
+2026-11-12T10:00:05.5054899Z -rw-rw-r-- 1 arm arm      307 Nov 12 17:58 cnet2_m7bsv2r1_log.jsonl
+2026-11-12T10:00:05.5055420Z -rw-rw-r-- 1 arm arm 11821000 Nov 12 17:57 cnet2_m7bsv2g1_ep2.npz
+2026-11-12T10:00:05.5056024Z -rw-rw-r-- 1 arm arm 11821000 Nov 12 17:55 cnet2_m7bsv2g1_ep1.npz
+2026-11-12T10:00:05.5056566Z -rw-rw-r-- 1 arm arm 13968960 Nov 12 17:55 cnet2_m7bsv2r1_ep0.npz
+2026-11-12T10:00:05.5057173Z -rw-rw-r-- 1 arm arm 11821000 Nov 12 17:54 cnet2_m7bsv2g1_ep0.npz
+2026-11-12T10:00:05.5057710Z -rw-r--r-- 1 arm arm 11820996 Nov 12 17:20 cnet2_fable_g1_fromstudio.npz
+2026-11-12T10:00:05.5058266Z -rw-r--r-- 1 arm arm 13968972 Nov 12 17:20 cnet2_fable_r1_fromstudio.npz
+2026-11-12T10:00:05.5058834Z -rw-rw-r-- 1 arm arm 13969176 Nov 12 16:51 cnet2_caragor1.npz
+2026-11-12T10:00:05.5059565Z 8bec64d7618686f52f73d592e7099940  /home/arm/junyang/carbon/data/weights/cnet2_fable_r1_fromstudio.npz
+2026-11-12T10:00:05.5060448Z f4b0e9b4894e8f43e42b0db6796c2650  /home/arm/junyang/carbon/data/weights/cnet2_fable_g1_fromstudio.npz
+2026-11-12T10:00:05.5061095Z --- DQ-LOGS-NEWEST ---
+2026-11-12T10:00:05.5061559Z total 160
+2026-11-12T10:00:05.5062241Z -rw-rw-r-- 1 arm arm 1111 Nov 12 17:58 m7bsv2g1.log
+2026-11-12T10:00:05.5062767Z -rw-rw-r-- 1 arm arm  694 Nov 12 17:58 m7bsv2r1.log
+2026-11-12T10:00:05.5063308Z -rw-rw-r-- 1 arm arm 2143 Nov 12 17:58 m7v2fix.log
+2026-11-12T10:00:05.5063828Z -rw-rw-r-- 1 arm arm  315 Nov 12 17:53 build_m7bsv2.log
+2026-11-12T10:00:05.5064306Z -rw-rw-r-- 1 arm arm 1401 Nov 12 17:10 m7v2.log
+2026-11-12T10:00:05.5067519Z -rw-rw-r-- 1 arm arm 4655 Nov 12 16:51 caragor1.log
+2026-11-12T10:00:05.5068609Z -rw-rw-r-- 1 arm arm 4622 Nov 12 16:37 caragog1.log
+2026-11-12T10:00:05.5069087Z -rw-rw-r-- 1 arm arm 1709 Nov 12 15:59 stage2.log
+2026-11-12T10:00:05.5069621Z -rw-rw-r-- 1 arm arm  293 Nov 12 15:59 build_fable.log
+2026-11-12T10:00:05.5070138Z --- CARAGO-FABLE-CORPUS ---
+2026-11-12T10:00:05.5070595Z == carago_corpus
+2026-11-12T10:00:05.5071019Z replays=183
+2026-11-12T10:00:05.5079384Z index_entries= 182
+2026-11-12T10:00:05.5079865Z == fable_corpus
+2026-11-12T10:00:05.5080431Z replays=182
+2026-11-12T10:00:05.5080881Z index_entries= 181
+2026-11-12T10:00:05.5081206Z --- REPLAYS-M3S2 ---
+2026-11-12T10:00:05.5081595Z index_entries= 118
+2026-11-12T10:00:05.5082192Z replays_dir_count=118
+2026-11-12T10:00:05.5082534Z --- RECENTLY-MODIFIED-UNDER-DATA (30min) ---
+2026-11-12T10:00:05.5083015Z /home/arm/junyang/carbon/data/ds_m7bs_v2/uf.npy
+2026-11-12T10:00:05.5083455Z /home/arm/junyang/carbon/data/ds_m7bs_v2/legal.npy
+2026-11-12T10:00:05.5083913Z /home/arm/junyang/carbon/data/ds_m7bs_v2/maps.npy
+2026-11-12T10:00:05.5084263Z /home/arm/junyang/carbon/data/ds_m7bs_v2/value.npy
+2026-11-12T10:00:05.5084575Z /home/arm/junyang/carbon/data/ds_m7bs_v2/hist_move.npy
+2026-11-12T10:00:05.5085036Z /home/arm/junyang/carbon/data/ds_m7bs_v2/scal.npy
+2026-11-12T10:00:05.5085353Z /home/arm/junyang/carbon/data/ds_m7bs_v2/step.npy
+2026-11-12T10:00:05.5085672Z /home/arm/junyang/carbon/data/ds_m7bs_v2/tok_cargo.npy
+2026-11-12T10:00:05.5086001Z /home/arm/junyang/carbon/data/ds_m7bs_v2/hist_cargo.npy
+2026-11-12T10:00:05.5086640Z /home/arm/junyang/carbon/data/ds_m7bs_v2/meta.json
+2026-11-12T10:00:05.5086961Z /home/arm/junyang/carbon/data/ds_m7bs_v2/uw.npy
+2026-11-12T10:00:05.5087291Z /home/arm/junyang/carbon/data/ds_m7bs_v2/tok_mask.npy
+2026-11-12T10:00:05.5087607Z /home/arm/junyang/carbon/data/ds_m7bs_v2/mf.npy
+2026-11-12T10:00:05.5087920Z /home/arm/junyang/carbon/data/ds_m7bs
+elapsed 66 claimed

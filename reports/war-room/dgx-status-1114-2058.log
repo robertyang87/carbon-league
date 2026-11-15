@@ -1,0 +1,68 @@
+# DGX 状态汇报 20:58 趟直读日志
+- 直读时间：2026-11-14 20:59:42–21:00:1x CST
+- 标记：DGXSTATUS2058A/B（主探针）、C/D（新语料落点排查）、E/F（ds meta）、G/H（find 定位）、I/J（carbon-repo 计数）、K/L（扁平布局确认）
+- 通道：Tailscale 直读 ~/workspace/dgx.sh（arm@100.84.148.73），云助手未用
+
+## 主探针输出（逐字）
+```
+MARK_DGXSTATUS2058A
+spark-29db
+ 20:59:42 up 25 days,  2:04, 4739 users,  load average: 0.03, 0.17, 3.79
+0 %, [N/A], 36
+---PROCS---
+NOPROCS
+---PULLLOGS---
+krypton-cloudsearch: want=125 have=125 new=125 missing=0 bad=0
+krypton-cloudsearch: manifest /home/arm/junyang/krypton_cloudsearch/pull0042_krypton-cloudsearch-v1.manifest entries=125
+ALL_DONE
++ /usr/bin/python3 code/ladder.py replays /home/arm/junyang/k4v3/k4v3_matches.json data/k4v3_corpus
+新下载 22 局 -> data/k4v3_corpus
+k4v3: want=251 have=251 new=22 missing=0 bad=0
+k4v3: manifest /home/arm/junyang/k4v3/pull0044_k4v3.manifest entries=251
+ALL_DONE
+/home/arm/junyang/pull0030.log
+/home/arm/junyang/pull0039_0042.log
+/home/arm/junyang/pull0043_0044.log
+---CORPORA---
+m3s2_corpus replays=118 index=118
+carago_corpus replays=183 index=182
+fable_corpus replays=182 index=181
+fable6_corpus replays=0 index=NA
+lite-v8_corpus replays=0 index=NA
+krypton-search256-v2_corpus replays=0 index=NA
+krypton-cloudsearch_corpus replays=0 index=NA
+krypton_prosearch_corpus replays=0 index=NA
+k4v3_corpus replays=0 index=NA
+---DS---
+ds_carago NA
+ds_fable NA
+---K0---
+progress_c1.json
+games_c2_full.json
+k0_annot_c2_full.meta
+progress.json
+2026-11-14 19:29:37.024016205 +0800 /home/arm/junyang/k0_dist/returns/c1/progress_c1.json
+2026-11-14 20:59:32.075226918 +0800 /home/arm/junyang/k0_dist/returns/c2/progress.json
+---ARCHIVE---
+206
+1763078928
+---REPO---
+1d57e67
+44a851d7
+MARK_DGXSTATUS2058B
+```
+
+## 新语料落点排查（结论）
+- 旧口径（carbon/data/<corpus>/replays + index.json）对六个新库全为 0/NA —— 不是缺失，是布局不同。
+- 六库实际落点：/home/arm/junyang/carbon-repo/data/<corpus>/，扁平 .json.gz、无 replays/ 子目录、无 index.json；文件数与 manifest 逐项一致：
+  fable6_corpus 256、lite-v8_corpus 268、krypton-search256-v2_corpus 105、krypton-cloudsearch_corpus 125、krypton-prosearch_corpus 158、k4v3_corpus 251。
+- 同名旧拷贝另见 carbon-a7ed8f95/data/ 与 ff_blockers_backup_20261114/data/（快照/备份，非本批落点）。
+- ds meta：ds_carago/meta.json 与 ds_fable/meta.json 键为 games/total/teachers；total=54418 / 54119（本趟未重读 games 键）。
+
+## 结论
+- pull0039–0044 全部 ALL_DONE；DGX 现无 pull/bigeval/ladder/git 进程，GPU 0%、36°C，load 0.03。
+- K0 仍 0 分片；C2 progress.json 20:59:32 新鲜（仅清单同步），C1 仍 19:29；首片估计 C1 约 21:08、C2 约 21:25 未到时点。
+- L20 归档 206 件 / 1,763,078,928 B（20:28 为 205 件 / 1,762,191,586 B；31 分钟 +1 件、约 +0.9MB，速率慢于 20:48 同步趟「约 80 分钟」估计的隐含速率；余 9 件 / 约 1.27GB，按本趟实测速率约需 2 小时以上——估计，仅报数，请作战室/L20 线核对）。
+- 仓库本地 1d57e67 vs 远端 44a851d7（it74 入仓提交），落后已知、不阻塞；无 git 残留进程。
+- 旧语料未变：m3s2 118/118；carago 183/182；fable 182/181。
+- 里程碑：pull0043/0044 完工已同步作战室（简短同步）；定期汇报发 DGX 边聊。

@@ -1,0 +1,104 @@
+DGXSTATUS1228A 12:31:47 CST
+spark-29db
+ 12:31:47 up 23 days, 17:36, 1808 users,  load average: 2.29, 1.32, 2.24
+/dev/nvme0n1p2  3.7T  1.7T  1.9T  47% /
+79 %, [N/A], 43, 11.67 W
+== TRAIN ==
+ 566235       06:38 /home/arm/junyang/carbon/.venv/bin/python stage0_train_heads.py /home/arm/junyang/carbon/data/ds_m3s2 /home/arm/junyang/s26stage/data/weights/cnet2_m3s2r1L.npz /home/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz 20
+== GIT ==
+NO_GIT_PROC
+== GEN1 LOGS ==
+ls: cannot access '/home/arm/junyang/carbon/dq_logs/': No such file or directory
+tail: cannot open '/home/arm/junyang/carbon/dq_logs/gen1g1.log' for reading: No such file or directory
+---
+tail: cannot open '/home/arm/junyang/carbon/dq_logs/gen1r1.log' for reading: No such file or directory
+== GEN1 WEIGHTS ==
+total 10621252
+-rw-rw-r-- 1 arm arm 13973272 Nov 13 12:14 cnet2_gen1r1.npz
+-rw-rw-r-- 1 arm arm 13973076 Nov 13 12:14 cnet2_gen1r1_ep2.npz
+-rw-rw-r-- 1 arm arm 13973076 Nov 13 12:14 cnet2_gen1r1_last.npz
+-rw-rw-r-- 1 arm arm      463 Nov 13 12:14 cnet2_gen1r1_log.jsonl
+-rw-rw-r-- 1 arm arm 13973072 Nov 13 12:11 cnet2_gen1r1_ep1.npz
+-rw-rw-r-- 1 arm arm 11825304 Nov 13 12:09 cnet2_gen1g1.npz
+-rw-rw-r-- 1 arm arm 11825108 Nov 13 12:09 cnet2_gen1g1_ep2.npz
+== HEAD ==
+4f12f901f74ce3b0e7d3fea1465a655e0904de29
+4f12f90 runbook: F08 verify-pack publish gate + F04 certify contract notes (REVIEW_FULL follow-up)
+f0ed3e6 fix(F06-train): keep cached-trainer loss weights float32 + finiteness hard gate on w/uw load (REVIEW_FULL F06)
+433eaa4 fix(F11): selfplay data contract -- full_carbon supervision, terminal typing, atomic commit/recovery, policy-error accounting
+2703dc24f3d18c351f35623e1bd22fa6cf738884	HEAD
+== LAST_STATS ==
+496:    eh_act = set(map(tuple, (getattr(fa, "last_stats", None) or {}).get("eh_act", [])))
+529:        "a_errors": sum(v for k, v in (getattr(fa, "last_stats", None) or {}).items() if (k == "errors" or k.endswith("_errors")) and isinstance(v, (int, float))),
+530:        "a_stats": {k: v for k, v in (getattr(fa, "last_stats", None) or {}).items()
+14204f4 C01: sweep _search -- bypass MIN_DEPTH gate when all branches are exact terminals
+0f704a9 Review S5b: CachePolicy._sig covers all nine encode inputs (was missing tok_kind/tok_mask/tok_cargo/hist_cargo/hist_move)
+2e5ffca F03 (R12): cnet2_search OPEN_T sampled branch records st['T_now'] = T
+c43d08b F01 (R02): original terminal scoring in rollout and search leaf
+e3c8dd2 fix(search) R12: CachePolicy records an encode signature (teacher + maps/tok_pos/hist_cell/scal) and consumers use enc_for(x, T_now) -- after act_tta last_enc held the last symmetry view (0.587 measured encode divergence), and after epol/opol decodes it was stale; guard/_mcts/_search now always decode against the original-frame encoding of the current x
+== CORPORA WORKDIR ==
+m3s2_corpus replays: 118
+m3s2_corpus index: 118
+carago_corpus replays: 183
+carago_corpus index: 182
+fable_corpus replays: 182
+fable_corpus index: 181
+== DS META ==
+ds_carago: {"games": [{"file": "/home/arm/junyang/carbon/data/carago_corpus/replays/f7c05d17146cd947eb9b3369b9a6574b-1.json.gz", "key": "f7c05d17146cd947eb9b3369b9a6574b-1.json.gz", "names": ["Carago-V2\u5fae\u8
+ds_fable: {"games": [{"file": "/home/arm/junyang/carbon/data/fable_corpus/replays/eb1f496ec73c7a3f444d999f01a8eb3b-1.json.gz", "key": "eb1f496ec73c7a3f444d999f01a8eb3b-1.json.gz", "names": ["Fable5.2-Max-V5", "
+ds_m3s2: {"games": [{"file": "../data/m3s2_corpus/replays/342cccab5628cd1551eda7ce748e41ca-1.json.gz", "key": "342cccab5628cd1551eda7ce748e41ca-1.json.gz", "names": ["stephen-K4TacSearch-v1", "claude-AlphaCarb
+ds_gen1: {"games": [{"file": "/home/arm/junyang/carbon/data/gen1_shard0/replays/selfplay-992001.json.gz", "key": "selfplay-992001.json.gz", "names": ["m3s2r1", "m3s2r1"], "scores": [3370.59, 3370.59], "sides":
+== REPO DATA ==
+ablR.json
+ablT.json
+ablV02nodef.json
+ablV02noseize.json
+alpha_analysis_data.json
+awr_finish.sh
+awr_round_multi.sh
+awr_round.sh
+awr_signal.py
+batchA.log
+batchB2.log
+batchB3.log
+batchB.log
+batchC.log
+batchD2.log
+batchD.log
+batchF2.log
+batchF.log
+bc2_train_metrics.json
+bc_calibration.json
+bc_train_metrics.json
+belief_mae_results.json
+bigeval.jsonl
+bk_check.py
+build_dagger2.log
+build_dagger.log
+build_distill2.log
+build_distill.log
+build_shard0.log
+build_shard1.log
+calibrate_base_v2.log
+calibrate_worker_v2.log
+cap_probe.py
+carago1_corpus
+carago1_matches.json
+carago_corpus
+carago_matches.json
+census_ids.json
+census_probe2.log
+census_probe.log
+== LITE-V7 / IT460 ==
+83
+NO_IT460_DIR
+== GOLDEN / DEPLOY ==
+total 1971176
+-rw-rw---- 1 arm arm       5979 Nov 13 12:26 README.md
+-rw-rw---- 1 arm arm       1317 Nov 13 11:25 golden.md5
+-rw-rw---- 1 arm arm       3397 Nov 13 11:25 deploy_stack.sh
+-rw-rw---- 1 arm arm       2665 Nov 13 11:25 bootstrap.sh
+-rw-rw-r-- 1 arm arm          5 Nov 13 11:21 tar.done
+-rw-rw-r-- 1 arm arm         96 Nov 13 11:21 tar.log
+-rw-rw-r-- 1 arm arm         33 Nov 13 11:21 exam_stack_golden.md5
+DGXSTATUS1228A-END 12:31:50 CST

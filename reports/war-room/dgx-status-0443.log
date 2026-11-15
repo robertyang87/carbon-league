@@ -1,0 +1,27 @@
+# DGX 直读日志 · 2026-11-14 04:44 CST（趟次 0443）
+标记：DGXSTATUS0443 / DGXSTATUS0443B，SSH rc=0（Tailscale 直读 arm@100.84.148.73）
+
+## 直读原始要点
+- hostname: spark-29db；up 24 天 9:48；load 0.03/0.10/0.08
+- GPU: 0%, 显存 N/A（驱动口径）, 35°C
+- 进程：仅 agent_mcp（22-14:32）、vox_bridge（22-14:30）、gitlab-runner（5-08:49）；无训练/建集/拉取进程；无 git fetch/pull/checkout 残留
+- 本地 HEAD: 2523235bab4859102d837eecb0fec0d4de00b4c4（carbon-repo，main）
+- 远端 HEAD（ls-remote）: 656f06161d2f4f84e8d18530222a2a4865f2d5e1
+- API compare：本地落后 main 184 个 commit（04:20 趟为 41），ahead 0；新增约 143 笔基本为三家语料逐件入仓提交（k4v3 58 + fable6 52 + hakimi3pro 23 = 133），全数据、无代码
+
+## Lite-V8 直拉（作战室 04:33 令，唯一执行人 DGX 线）
+- pull_litev8.log：start 04:41:44，done 04:42:53；清单 185 局（令里 184，拉取时涨 1）；新下载 23 件 -> carbon-repo/data/lite-v8_corpus；files=185
+- manifest：/home/arm/junyang/pull0030_lite-v8_gap.manifest，185 行，mtime 04:43
+- 盘内：lite-v8_corpus 185 件，全为 .gz；最新 3 件 mtime 04:42
+- 04:44 复查无拉取进程在跑
+- 坏文件数：日志未明示；verify_litev8.py 已落 04:43，以执行代理回执为准
+
+## 语料（repo/data 正典根）
+- k4v3 158、fable6 157、hakimi3pro 123、m3s2 152、carago 183、fable 292、m3s3z 101、lite-v8 162→185
+
+## 下一里程碑
+- Lite-V8 入仓（作战室 API 线按 manifest）；it85 估计约 06:30（作战室修正口径，含 warmup 42 分钟），DGX 无派活
+
+## 发出
+- DGX 边聊定期汇报 submission b8049cf7-ea13-4bb2-95c9-81745816bda0
+- 作战室简短同步 submission bd3dd68a-57fc-4b44-b7e0-58128759a056

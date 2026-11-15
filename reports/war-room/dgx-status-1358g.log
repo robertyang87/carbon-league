@@ -1,0 +1,40 @@
+DGXSTATUS1358G 14:05:25 CST
+MARK-DGXSTATUS1358G
+96 %, [N/A], 43, 11.16 W
+---TRAIN-PS---
+ 611063       02:17 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_lite_v7 /home/arm/junyang/carbon/data/weights/cnet2_lite_v7r1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+ 611064       02:17 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_lite_v7 /home/arm/junyang/carbon/data/weights/cnet2_lite_v7g1.npz 20 {"C":128,"NB":8,"D":128}
+---BUILD-LOGS---
+== /home/arm/junyang/carbon/data/dq_logs/build_lite_v7.log
+2026-11-13 14:03:15.239710014 +0800 459 bytes
+{'teachers': {2: 'RyanX-AIPowercore-Lite-V7'}}
+{"games": 129, "samples": 38571, "val_games": 16, "teacher_sides": {"RyanX-AIPowercore-Lite-V7": 129}, "cfg_fp": "db220ee3631f3490", "generation": "gen-296af892911aaa0f"}
+{'derived_layer': 'cnet2-derived/1', 'base_generation': 'gen-296af892911aaa0f'}
+{'rows': 38571, 'planter_tokens': 83035, 'car_tokens': 257413, 'base_tokens': 77142, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+== /home/arm/junyang/carbon/data/dq_logs/lite_v7r1.log
+2026-11-13 14:03:19.869714806 +0800 728 bytes
+{"weight_gate": {"w_max": 1.0, "uw_max": 1.0, "prod_max": 1.0, "prod_mean": 1.0, "prod_n": 462852}, "data": "/home/arm/junyang/carbon/data/ds_lite_v7"}
+{"derived_layer_check": {"mode": "verified", "generation": "gen-296af892911aaa0f", "files": ["w.npy", "uw.npy"]}, "data": "/home/arm/junyang/carbon/data/ds_lite_v7"}
+{"init_new_layers": 6}
+{"train": 33787, "val": 4784, "params": 3480775, "cfg": {"C": 128, "NB": 8, "D": 128, "NH": 4, "L": 2, "E": 32, "G": 8, "ZI": 1, "TA": 4, "TNH": 4}, "bs": 256, "steps_per_epoch": 131}
+{"ep": 0, "i": 0, "pi": 0.6562, "v": 0.0575, "aux": 0.0443, "s": 2}
+== /home/arm/junyang/carbon/data/dq_logs/lite_v7g1.log
+2026-11-13 14:04:29.961794473 +0800 922 bytes
+{"init_new_layers": 6}
+{"train": 33787, "val": 4784, "params": 2947255, "cfg": {"C": 128, "NB": 8, "D": 128, "NH": 4, "L": 2, "E": 32, "G": 8}, "bs": 256, "steps_per_epoch": 131}
+{"ep": 0, "i": 0, "pi": 0.6569, "v": 0.0515, "aux": 0.0441, "s": 2}
+{"ep": 0, "val": {"collector": 0.8028, "planter": 0.7631, "base": 0.9339, "all": 0.8186, "workers": 0.7926, "loss": 0.4644}, "train_pi": 0.5622, "s": 72}
+{"ep": 1, "i": 0, "pi": 0.4627, "v": 0.0479, "aux": 0.0565, "s": 1}
+== /home/arm/junyang/carbon/data/dq_logs/replica_chain_lite_v7.log
+2026-11-13 14:05:20.799859962 +0800 1850 bytes
+-rw-rw-r-- 1 arm arm 11825108 2026-11-13_14:04:29 /home/arm/junyang/carbon/data/weights/cnet2_lite_v7g1_ep0.npz
+-rw-rw-r-- 1 arm arm 11825108 2026-11-13_14:04:29 /home/arm/junyang/carbon/data/weights/cnet2_lite_v7g1_last.npz
+counts: replays=129 matches=129 index=129 dataset_games=129
+ep0 lines: r1=1 g1=2
+REPLICA-CHAIN[lite_v7] LAUNCH-OK + ATTESTED -- executor complete ONLY in this sense; training itself continues to ep19 2026-11-13 14:05:20 CST
+---DS-INDEX-DIRS---
+129
+---END-G---
+zsh:1: no matches found: /home/arm/junyang/carbon/data/lite_v7_index*
+rcG=0
+DGXSTATUS1358G-END 14:05:32 CST

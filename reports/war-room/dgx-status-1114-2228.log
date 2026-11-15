@@ -1,0 +1,25 @@
+# DGX 状态汇报 2026-11-14 22:28 CST（直读 22:28:34–22:30:00，标记 DGXSTATUS2228A–D）
+
+## 直读结果（Tailscale SSH，arm@100.84.148.73）
+- DGX 本机 spark-29db：up 25 天，load 0.08，GPU 0%、36°C，422 进程；无训练进程（k0_annotate/rl2_ppo/bigeval 均无），空闲属预期（分发协调，不跑标注）。
+- 无 git fetch/pull/checkout 残留进程。
+- **仓库滞后已清零（本趟里程碑）**：carbon-repo 本地 HEAD **36e156a6**，`git ls-remote origin main` 同为 36e156a6——与远端一致，落后 0。22:15 趟的 150 commit 滞后已由 DGX 线 280 秒重拉＋ff 闭合。工作树：M data/bigeval.jsonl（实况追加流，预期）；未跟踪 .venv、code/katago_chain_draft.sh、code/selfplay_gen.py、data/bigeval_live/。
+- K0 前置④ returns（正确路径 /home/arm/junyang/k0_dist/returns/；上趟日志未记路径，本趟补记）：
+  - C1：62 npz（末件 selfplay-994461，第一波 994400–994461 全数在位）；progress_c1.json mtime 21:51:08 未变；progress_c1_wave2.json `"games": {}`——第二波 46 局 0 片。
+  - C2：62 npz（末件 selfplay-994569，第一波 994508–994569 全数在位）；progress.json mtime 22:28:34 新鲜但件数未变——无新片落盘；第二波 30 局 0 片。
+  - 第二波首片仍按单局约 2 小时 20 分墙时，预计约 00:15–00:30（估计）才见片；全量完工估计约 00:15–00:30（估计，按 43–45 秒/根真校准重算，不变）。
+- 语料未变：m3s2 index 118 / replays 118；carago index 182 / replays 183；fable index 181 / replays 182；ds_carago total 54418；ds_fable total 54119（ds 在 /home/arm/junyang/carbon/data/ds_carago|ds_fable/meta.json，本趟补记路径）。
+- 探针：本趟直读未复核 DGX 线 r4 八件 md5（DGX 线 22:2x 更正回执已逐件验过，全合；本趟只直读验了 HEAD 对齐）。
+
+## 转述（作战室/L20 线）
+- 作战室已收 DGX 更正回执并确认「验收 ≠ 入仓」撤回、不向策略组提请；ff 目标以拉到时最新头为准。
+- C2 已独立复核 N2 两件（k0_train 97feaa35、cnet2_train 4fab3672），暂存区仍保留已验收基线 4d5b3b67／5310439c。
+- L20 C 探针已开跑（PID 72853，首行 seed 996004 已落盘），P1 完自动接 P2，约 30–45 分钟（估计）。
+
+## 口径对照
+- 与作战室最新口径一致，无冲突。仓库滞后清零（HEAD＝远端 36e156a6）已另发作战室简短同步。
+
+## 已发
+- DGX 边聊定期汇报（本趟终讯）；作战室简短同步（仓库滞后清零）。
+- 本日志：~/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files/dgx-status-1114-2228.log
+- 记忆追加：~/memory/2026-11-14.md

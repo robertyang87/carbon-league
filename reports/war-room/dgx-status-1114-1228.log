@@ -1,0 +1,28 @@
+# DGX 状态直读日志 2026-11-14 12:28 CST
+标记：DGXSTATUS11141228（单段 SSH 直读，12:29:01 认领）
+通道：Tailscale 直读 arm@100.84.148.73（ssh -i /home/hatch/.ssh/id_ed25519，egress proxy :3130）
+
+## 直读结果
+- hostname: spark-29db；uptime 24 天 17:33；load 0.03/0.09/3.24（15 分钟 3.24 为已停 driver 残留，12:13 的 8.48 继续衰减）
+- GPU：利用率 0%，温度 36°C；显存本趟读回 [N/A]（nvidia-smi memory.used 字段，非异常；利用率 0%＋温度正常）
+- 进程：无训练/选模/git fetch-pull-checkout 进程；spawn_main 0（括号口径）；在册仅 gitlab-runner（5 天）、agent_mcp、vox_bridge（均为常驻非训练进程）
+- 四包 md5 盘上验合（与作战室期望值逐字合）：
+  - m3s2g1_a4.py cc2ea7d60ac005731431da675d99d6f3，3,728,377 B，11:53
+  - m3s2g1_base.py bb997d7137395e6e66f7b03134d96897，3,728,418 B，11:56
+  - m3s2r1_a4.py 4a85855ba8878ec79d8c820f87e418cb，4,598,113 B，12:12
+  - m3s2r1_base.py 11d8005930b298290c2e150949349647，4,598,094 B，12:12
+- 语料（与 12:13 趟完全一致，无变化）：
+  - m3s2 index 118 / replays 118；carago index 182 / replays 183；fable index 181 / replays 182
+  - ds_carago total 54418；ds_fable total 54119
+- 仓库：本地 HEAD 1d57e671（按令钉住，未变）；ls-remote HEAD 已由 9d5a76af（12:13）前进至 71bb9071；12:13 时落后 45 个 commit，远端又前进、落后数只增不减（按令只用 ls-remote＋rev-parse，未 fetch，未算精确数）；无 git fetch/pull/checkout 残留进程
+
+## 作战室口径对照（转述，非直读）
+- A4 g1 臂裁决已出：ep17 不采纳（ΔU −0.0236，聚类 CI95 [−0.0627, +0.0156]），g1 臂关闭，现役不动，ep14 本轮不补跑
+- r1 配对两场已自动接档：场一 200 行已归档，场二 12:22:55 快照 62/200（C1 spot-29）
+- v3 全量 pilot 在 Studio 跑（~12:10 开跑，完工估计约 15:30–15:40）；L20 it92 进行中
+- main 前进：29019a71 @12:06:54（V03 fix），与本趟 ls-remote 71bb9071 一致为远端继续前进
+
+## 结论
+DGX 打包待命，常态，无变化、无异常、无口径差异。DGX 无派工在队，GPU 空闲属常态。
+下一里程碑（转述）：C1 r1 两场完赛后作战室复算配对 ΔU 出 r1 采纳裁决；DGX 继续打包待命。
+本趟纯常态定期汇报，按口径不发作战室同步。

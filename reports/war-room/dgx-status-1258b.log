@@ -1,0 +1,51 @@
+DGXSTATUS1258B 13:02:01 CST
+== GATE STOP EVIDENCE ==
+FIELD-START guided master2 2026-11-13 12:46:38 CST
+
+{"tag": "h2h_m2t3Br_v16b", "a": "exp/submission_cnet2_m2t3Br.py", "b": "exp/submission_cnet2_v16b.py", "seed0": 998000, "n": 100, "err": 0, "wins": 72, "mean": 377, "se": 78, "lo2se": 220, "worst": -2083, "worst_ms": 1709.0, "dep": [8937, 8646], "tree": [2591, 2435], "deathcargo": [239, 226], "plant
+{"tag": "h2h_m2t3Br_v16b", "WARN_SEARCH_NEVER_CHANGED": 22, "of": 100}
+{"tag": "h2h_m2t3Br_v17", "a": "exp/submission_cnet2_m2t3Br.py", "b": "exp/submission_cnet2_v17.py", "seed0": 998000, "n": 100, "err": 0, "wins": 63, "mean": 211, "se": 84, "lo2se": 44, "worst": -2360, "worst_ms": 2054.0, "dep": [8775, 8741], "tree": [2681, 2329], "deathcargo": [278, 198], "plants":
+{"tag": "h2h_m2t3Br_v17", "WARN_SEARCH_NEVER_CHANGED": 28, "of": 100}
+{"tag": "h2h_m2t3BW_m2t3Br", "a": "exp/submission_cnet2_m2t3BW.py", "b": "exp/submission_cnet2_m2t3Br.py", "seed0": 998000, "n": 200, "err": 0, "wins": 80, "mean": -46, "se": 82, "lo2se": -209, "worst": -2014, "worst_ms": 2209.0, "dep": [8479, 8335], "tree": [2396, 2695], "deathcargo": [272, 283], "
+{"tag": "h2h_m2t3BW_m2t3Br", "WARN_SEARCH_NEVER_CHANGED": 25, "of": 200}
+total 16
+drwxrwxr-x   2 arm arm  4096 Nov 13 12:46 .
+drwxrwxr-x 119 arm arm 12288 Nov 13 12:46 ..
+-rw-rw-r--   1 arm arm     0 Nov 13 12:46 games.jsonl
+== GEN1 ROUND2 LOG ==
+processes:
+ 547819       02:05 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_gen1 /home/arm/junyang/carbon/data/weights/cnet2_gen1r1.npz 3 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+ 547820       02:05 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_gen1 /home/arm/junyang/carbon/data/weights/cnet2_gen1g1.npz 3 {"C":128,"NB":8,"D":128}
+gpu:
+96 %, [N/A], 44
+logs:
+-rw-rw-r-- 1 arm arm 247 2026-11-13_11:57:32 /home/arm/junyang/carbon/data/dq_logs/gen1g1.log
+-rw-rw-r-- 1 arm arm 277 2026-11-13_11:57:33 /home/arm/junyang/carbon/data/dq_logs/gen1r1.log
+weights:
+counts: replays=200 matches=-1 index=200 dataset_games=200
+ep0 lines: r1=1 g1=1
+KATAGO-CHAIN[gen1] LAUNCH-OK + ATTESTED -- executor complete ONLY in this sense; training itself continues to ep2 2026-11-13 11:59:33 CST
+== VERIFY FIELD PROGRESS ==
+total 21132
+-rw-rw-r-- 1 arm arm       0 Nov 12 14:59 probegen.jsonl
+-rw-rw-r-- 1 arm arm  408668 Nov 11 13:04 ex1ex_cnet2_b128ex1gW05_s1_net.jsonl
+-rw-rw-r-- 1 arm arm  408444 Nov 11 13:02 ex1ex_cnet2_b128ex1gW05_cnet2_m2s2stand.jsonl
+-rw-rw-r-- 1 arm arm  407025 Nov 11 13:02 ex1ex_cnet2_b128ex1gW05_cnet2_m2so.jsonl
+-rw-rw-r-- 1 arm arm  407686 Nov 11 12:50 ex1ex_cnet2_b128ex1gB_s1_net.jsonl
+-rw-rw-r-- 1 arm arm  407302 Nov 11 12:43 ex1ex_cnet2_b128ex1gB_cnet2_m2so.jsonl
+-rw-rw-r-- 1 arm arm  408704 Nov 11 12:43 ex1ex_cnet2_b128ex1gB_cnet2_m2s2stand.jsonl
+-rw-rw-r-- 1 arm arm 0 Nov 13 12:53 /home/arm/junyang/verify_search.log
+ 580346       08:49 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 580368       08:49 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 580369       08:49 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+== HEAD BEHIND ==
+fatal: Invalid revision range HEAD..fed5adc0768ca01505a5045b93bba4fb5616a44f
+fatal: bad object fed5adc0768ca01505a5045b93bba4fb5616a44f
+== DEPLOY EVIDENCE (files changed since 12:46) ==
+/home/arm/junyang/gate_fields.log
+/home/arm/junyang/run_gate_fields.sh
+/home/arm/junyang/verify_search.log
+NO_DEPLOY_PROC
+== GPU NOW ==
+0 %, [N/A], 38, 4.30 W
+DGXSTATUS1258B-END 13:02:01 CST

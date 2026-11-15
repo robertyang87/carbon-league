@@ -1,0 +1,160 @@
+DGXSTATUS2313 BEGIN 2026-11-13 23:17:33 CST
+--- A: HOST/GPU/PS ---
+spark-29db
+ 23:17:33 up 24 days,  4:21, 2580 users,  load average: 0.16, 0.08, 0.04
+0 %, [N/A], 37, 3.98 W
+--- TRAIN-PS ---
+NO-TRAIN-PROC
+--- ALL-PYTHON ---
+2594625 22-09:05:37 python3 -m agent_mcp
+2596961 22-09:03:44 /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox/.venv/bin/python local_dev/scripts/vox_bridge.py --vox-dir /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox --net-audio 8769
+--- GIT-RESIDUE ---
+NO-GIT-PROC
+--- B: HEAD-VS-REMOTE (main) ---
+main
+e20313d098a5b3ff14a83b872911a315c73ee63d
+e20313d 2026-11-13 23:07:43 +0800 docs(spec): SS16 acceptance verdict -- teacher v2 + mirror gates + PPO all PASS (independent Studio rerun, canonical weights)
+a4dd832 2026-11-13 22:45:59 +0800 feat(ppo): Terminal-U critic readout (--value-head utility) + launch-contract check (spec SS15 item 2)
+e1155fa 2026-11-13 22:45:59 +0800 fix(producer,build): mirror gates for same-weights self-play (spec SS14 items 1-2)
+12efae05b0d8d07b307b5c5da667a1ea96cbf6b6	refs/heads/main
+--- B2: WORKING TREE (read-only status, brush in progress?) ---
+ M data/bigeval.jsonl
+?? .venv
+?? code/katago_chain_draft.sh
+?? code/selfplay_gen.py
+?? data/bigeval_live/
+(end status)
+--- WAUX: WEIGHTS/LOG (by name) ---
+-rw-rw-r-- 1 arm arm    87566 2026-11-13_21:41:23 /home/arm/junyang/carbon/data/weights/cnet2_m9xj570waux1_auxheads.npz
+-rw-rw-r-- 1 arm arm 13973460 2026-11-13_21:41:23 /home/arm/junyang/carbon/data/weights/cnet2_m9xj570waux1_last.npz
+-rw-rw-r-- 1 arm arm      532 2026-11-13_21:41:23 /home/arm/junyang/carbon/data/weights/cnet2_m9xj570waux1_log.jsonl
+-rw-rw-r-- 1 arm arm 13973688 2026-11-13_21:41:23 /home/arm/junyang/carbon/data/weights/cnet2_m9xj570waux1.npz
+f7d37aa7ff41568b2920ac38905905b0  /home/arm/junyang/carbon/data/weights/cnet2_m9xj570waux1.npz
+9cb9189a057b279e271bbe9a8e3a40c1  /home/arm/junyang/carbon/data/weights/cnet2_m9xj570waux1_last.npz
+cebdd295fd812d358798f524cf0265fd  /home/arm/junyang/carbon/data/weights/cnet2_m9xj570waux1_auxheads.npz
+{"ep": 0, "val": {"collector": 0.8377, "planter": 0.7794, "base": 0.9404, "all": 0.8455, "changed_learned": 0.0, "changed_n": 0, "unchanged_kept": 0.998, "aux_die_bce": 0.5244, "aux_dep_l1": 0.4938, "aux_dw_l1": 0.0232}, "train_pi": 0.0, "s": 64, "train_kl": 2e-05}
+{"ep": 1, "val": {"collector": 0.8377, "planter": 0.7798, "base": 0.9406, "all": 0.8456, "changed_learned": 0.0, "changed_n": 0, "unchanged_kept": 0.9987, "aux_die_bce": 0.5034, "aux_dep_l1": 0.4504, "aux_dw_l1": 0.023}, "train_pi": 0.0, "s": 65, "train_kl": 2e-05}
+--- C: PACKS MD5 (by name, incl waux1) ---
+-rw-rw-r-- 1 arm arm 3730147 2026-11-13_23:14:36 /home/arm/junyang/carbon-repo/code/exp/m9xj570g1.py
+-rw-rw-r-- 1 arm arm 4599494 2026-11-13_23:14:36 /home/arm/junyang/carbon-repo/code/exp/m9xj570r1.py
+-rw-rw-r-- 1 arm arm 4600147 2026-11-13_23:14:36 /home/arm/junyang/carbon-repo/code/exp/m9xj570waux1.py
+-rw-rw-r-- 1 arm arm 4600048 2026-11-13_23:14:36 /home/arm/junyang/carbon-repo/code/exp/m9xj570wr1.py
+-rw-rw-r-- 1 arm arm 4598882 2026-11-13_23:14:36 /home/arm/junyang/carbon-repo/code/exp/snap_70.py
+9962e84aded27aa554b153a92fe8e9f5  /home/arm/junyang/carbon-repo/code/exp/m9xj570waux1.py
+a8d495da9810881bded510d24951fcc9  /home/arm/junyang/carbon-repo/code/exp/m9xj570wr1.py
+e64fdffb26004051d73af806a99ce80c  /home/arm/junyang/carbon-repo/code/exp/m9xj570r1.py
+e6e190a8f16250b1ffa45d5913d42d97  /home/arm/junyang/carbon-repo/code/exp/m9xj570g1.py
+--- C2: STAGEB FORMAL SPLIT (must NOT exist) ---
+ls: cannot access '/home/arm/junyang/carbon/data/stageB_split_N492.json': No such file or directory
+-rw-rw---- 1 arm arm 6099 2026-11-13_21:55:38 /home/arm/junyang/carbon/data/split_stageB_pool.py
+2075f4b88e7d0cb42cd95415071a5959  /home/arm/junyang/carbon/data/split_stageB_pool.py
+--- D: DISK ---
+/dev/nvme0n1p2  3.7T  1.7T  1.9T  47% /
+--- E: CORPUS-COUNTS ---
+m3s2_corpus replays=118
+carago_corpus replays=183
+fable_corpus replays=182
+m3s2_corpus/index.json: 118
+carago_corpus/index.json: 182
+fable_corpus/index.json: 181
+--- F: WR1 WEIGHTS/LOG ---
+-rw-rw-r-- 1 arm arm 13973080 2026-11-13_21:15:54 /home/arm/junyang/carbon/data/weights/cnet2_m9xj570wr1_last.npz
+-rw-rw-r-- 1 arm arm     3078 2026-11-13_21:15:54 /home/arm/junyang/carbon/data/weights/cnet2_m9xj570wr1_log.jsonl
+-rw-rw-r-- 1 arm arm 13973292 2026-11-13_21:02:46 /home/arm/junyang/carbon/data/weights/cnet2_m9xj570wr1.npz
+d8438da53709ebd2c754653c7c81f9d2  /home/arm/junyang/carbon/data/weights/cnet2_m9xj570wr1.npz
+44bf02d0e4f433913b3838e6aac8c0b9  /home/arm/junyang/carbon/data/weights/cnet2_m9xj570wr1_last.npz
+{"ep": 18, "val": {"collector": 0.8345, "planter": 0.7751, "base": 0.9436, "all": 0.8432, "workers": 0.8209, "loss": 0.4314}, "train_pi": 0.2296, "s": 59}
+{"ep": 19, "val": {"collector": 0.8342, "planter": 0.7757, "base": 0.9438, "all": 0.8432, "workers": 0.8209, "loss": 0.4322}, "train_pi": 0.2173, "s": 66}
+--- G: PRODUCER-GATE FILES (frozen expect dcaa2d89 / 07769df8; brushed expect 15d24544 / a3f16063) ---
+15d2454441fa93a2b15ed915059add6f  /home/arm/junyang/carbon-repo/code/producer/selfplay_gen.py
+a3f160636f7ea963b39c98b626bc6fc5  /home/arm/junyang/carbon-repo/code/cnet2_build.py
+-rw-rw-r-- 1 arm arm 69759 2026-11-13_23:14:36 /home/arm/junyang/carbon-repo/code/cnet2_build.py
+-rw-rw-r-- 1 arm arm 42114 2026-11-13_23:14:36 /home/arm/junyang/carbon-repo/code/producer/selfplay_gen.py
+--- G2: DS_GEN1 ISOLATION MARKS ---
+-rw-rw-r-- 1 arm arm 1637 2026-11-13_21:22:00 /home/arm/junyang/carbon/data/ds_gen1/USAGE_MARK.json
+-rw-rw-r-- 1 arm arm 1637 2026-11-13_21:22:00 /home/arm/junyang/carbon/data/gen1_shard0/USAGE_MARK.json
+62797b73c820e263390d3d5ee9f823f2  /home/arm/junyang/carbon/data/ds_gen1/USAGE_MARK.json
+62797b73c820e263390d3d5ee9f823f2  /home/arm/junyang/carbon/data/gen1_shard0/USAGE_MARK.json
+--- H: RECENT FILES (last 30 min) ---
+/home/arm/junyang/carbon-repo/code/exp/m9xj570waux1.py
+/home/arm/junyang/carbon-repo/code/exp/m9xj570wr1.py
+/home/arm/junyang/carbon-repo/code/exp/m9xj570r1.py
+/home/arm/junyang/carbon-repo/code/exp/snap_70.py
+/home/arm/junyang/carbon-repo/code/exp/m9xj570g1.py
+--- H2: RECENT FILES IN REPO (last 120 min, brush watch) ---
+/home/arm/junyang/carbon-repo/README.md
+/home/arm/junyang/carbon-repo/reports/STAGE1_TEACHER_GATES_20261113.md
+/home/arm/junyang/carbon-repo/reports/live/status.md
+/home/arm/junyang/carbon-repo/reports/live/packs_ledger.md
+/home/arm/junyang/carbon-repo/reports/live/exams.md
+/home/arm/junyang/carbon-repo/code/stage0_guided_match.py
+/home/arm/junyang/carbon-repo/code/rl2_ppo_cnet2.py
+/home/arm/junyang/carbon-repo/code/cnet2_build.py
+/home/arm/junyang/carbon-repo/code/rl2_ppo_train.py
+/home/arm/junyang/carbon-repo/code/stage1_teacher_gate.py
+/home/arm/junyang/carbon-repo/code/stage0_measure_teacher.py
+/home/arm/junyang/carbon-repo/code/__pycache__/stage0_guided_match.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/__pycache__/cnet2_build.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/__pycache__/stage0_teacher.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/__pycache__/rl2_ppo_cnet2.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/__pycache__/cnet2_np.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/__pycache__/stage0_measure_teacher.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/__pycache__/rl2_ppo_train.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/__pycache__/cnet2_search.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/__pycache__/stage1_teacher_gate.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/exp/m9xj570waux1.py
+/home/arm/junyang/carbon-repo/code/exp/m9xj570wr1.py
+/home/arm/junyang/carbon-repo/code/exp/m9xj570r1.py
+/home/arm/junyang/carbon-repo/code/exp/snap_70.py
+/home/arm/junyang/carbon-repo/code/exp/m9xj570g1.py
+/home/arm/junyang/carbon-repo/code/producer/selfplay_gen.py
+/home/arm/junyang/carbon-repo/code/producer/__pycache__/selfplay_gen.cpython-312.pyc
+/home/arm/junyang/carbon-repo/code/stage0_teacher.py
+/home/arm/junyang/carbon-repo/data/m3s3_matches.json
+/home/arm/junyang/carbon-repo/data/m3s3z_matches.json
+/home/arm/junyang/carbon-repo/data/gen1_shard0/USAGE_MARK.json
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/e48252a60f5a16aa7765bf2e00f7f564-1.json.gz
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/69d7b8b26a9211f532f9aabbe9b8d07d-1.json.gz
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/2c3a1edf322e03aed10e5e46a02a545d-1.json.gz
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/80f58d6428b9637e16ee80e4919bd53d-1.json.gz
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/9e8ed6ceaf2be95538e5dcba188adce4-1.json.gz
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/4941444c62017673474b721fba83cc33-1.json.gz
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/e16c2c999bf2d19e04501f1b3f74d19e-1.json.gz
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/f7d141cd125fdf0fde25d4fa6df3ddaf-1.json.gz
+/home/arm/junyang/carbon-repo/data/hakimi31_corpus/d7197f90e223a08f1fb36165375199f4-1.json.gz
+--- H3: /tmp PATCH SCRIPTS (frozen-gate archive source) ---
+-rw-rw-r-- 1 arm arm   344 2026-11-12_21:02:40 /tmp/agg.py
+-rw-rw-r-- 1 arm arm   751 2026-11-13_11:00:43 /tmp/append_keys.sh
+-rw-rw-r-- 1 arm arm  1741 2026-11-12_12:39:13 /tmp/apply_fix.py
+-rw-rw-r-- 1 arm arm  1078 2026-11-13_14:44:56 /tmp/build_hakimi3_index.py
+-rw-rw-r-- 1 arm arm  3267 2026-11-13_20:55:09 /tmp/build_m9xj570_w.py
+-rw-rw-r-- 1 arm arm   903 2026-11-13_23:14:23 /tmp/collide_check.py
+-rw-rw-r-- 1 arm arm   201 2026-11-13_23:14:36 /tmp/collide_clean.py
+-rw-r--r-- 1 arm arm  2676 2026-11-12_12:39:01 /tmp/dgx_apply.sh
+-rw-r--r-- 1 arm arm  1752 2026-11-12_12:25:03 /tmp/dgx_diag.sh
+-rw-r--r-- 1 arm arm   902 2026-11-12_12:40:04 /tmp/dgx_diff.py
+-rw-r--r-- 1 arm arm  1865 2026-11-12_12:58:27 /tmp/dgx_fix2.py
+-rw-r--r-- 1 arm arm  1789 2026-11-12_12:59:24 /tmp/dgx_fix3.py
+-rw-r--r-- 1 arm arm  2474 2026-11-12_13:12:51 /tmp/dgx_fix4.py
+-rw-r--r-- 1 arm arm   839 2026-11-12_13:46:37 /tmp/dgxfix.sh
+-rw-r--r-- 1 arm arm  4077 2026-11-12_13:18:42 /tmp/dgx_m7bs.sh
+-rw-r--r-- 1 arm arm   318 2026-11-12_13:58:18 /tmp/dgxm7.sh
+-rw-r--r-- 1 arm arm   675 2026-11-12_13:31:51 /tmp/dgxprobe.sh
+-rw-r--r-- 1 arm arm   344 2026-11-12_15:04:09 /tmp/dgxproc.sh
+-rw-r--r-- 1 arm arm  1384 2026-11-12_13:44:55 /tmp/dgxr1.sh
+-rw-r--r-- 1 arm arm   721 2026-11-12_13:21:04 /tmp/dgx_r3.sh
+(end tmp)
+--- I: TEACHER V2 LANDING CHECK (frozen v1.3 md5 77ba3677; brushed v2 md5 2c2541c6) ---
+2c2541c6304c3316186b5ce66a5aaeea  /home/arm/junyang/carbon-repo/code/stage0_teacher.py
+0
+4fafef1 2026-11-13 22:45:59 +0800 feat(teacher): v2 -- belief-sampled clones + inherited branch Feats (spec SS15 item 3, c1+c2)
+--- J: BRUSH 8-FILE MD5 (expect after brush: teacher 2c2541c6, gate dd921e57, guided ed43fda8, measure d0de8a12, build a3f16063, producer 15d24544, ppo_train 1f1430b4, ppo_cnet2 62a9adc7) ---
+2c2541c6304c3316186b5ce66a5aaeea  /home/arm/junyang/carbon-repo/code/stage0_teacher.py
+dd921e572223741d5fb28d0e59e8ebf6  /home/arm/junyang/carbon-repo/code/stage1_teacher_gate.py
+ed43fda8174df190159825c81a79208d  /home/arm/junyang/carbon-repo/code/stage0_guided_match.py
+d0de8a12faa9a728f2d34c0c7b37f70d  /home/arm/junyang/carbon-repo/code/stage0_measure_teacher.py
+a3f160636f7ea963b39c98b626bc6fc5  /home/arm/junyang/carbon-repo/code/cnet2_build.py
+15d2454441fa93a2b15ed915059add6f  /home/arm/junyang/carbon-repo/code/producer/selfplay_gen.py
+1f1430b47faa7f7d22414946a8d5ab53  /home/arm/junyang/carbon-repo/code/rl2_ppo_train.py
+62a9adc79069ca6dfa6f344a439a8310  /home/arm/junyang/carbon-repo/code/rl2_ppo_cnet2.py
+DGXSTATUS2313 END 2026-11-13 23:17:36 CST

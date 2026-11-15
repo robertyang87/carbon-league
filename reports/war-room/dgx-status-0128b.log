@@ -1,0 +1,82 @@
+DGXSTATUS0128B BEGIN 17:32:23
+--K0CALIB-TREE--
+total 1444
+drwxrwxr-x  4 arm arm    4096 Nov 15 01:11 .
+drwxrwxr-x 44 arm arm   12288 Nov 15 00:49 ..
+drwxrwxr-x  2 arm arm    4096 Nov 15 01:11 cells
+-rw-rw-r--  1 arm arm    1938 Nov 15 01:11 driver.log
+-rw-rw-r--  1 arm arm       0 Nov 15 01:11 duel_lr0.0002_s100_b1_seed7.log
+drwxrwxr-x  2 arm arm    4096 Nov 15 00:49 duels
+-rw-rw-r--  1 arm arm 1395900 Nov 15 00:54 roots_calib.json
+-rw-rw-r--  1 arm arm   47643 Nov 15 01:11 train_lr0.0002_s100_b1_seed7.log
+--CELLS-GRID1--
+-rw-rw-r-- 1 arm arm 13994760 Nov 15 01:11 /home/arm/junyang/k0_calib/cells/lr0.0002_s100_b1_seed7.npz
+-rw-rw-r-- 1 arm arm      227 Nov 15 01:11 /home/arm/junyang/k0_calib/cells/lr0.0002_s100_b1_seed7.npz.complete.json
+-rw-rw-r-- 1 arm arm    47643 Nov 15 01:11 /home/arm/junyang/k0_calib/cells/lr0.0002_s100_b1_seed7.npz.log.jsonl
+--DUELS-OUT--
+total 8
+drwxrwxr-x 2 arm arm 4096 Nov 15 00:49 .
+drwxrwxr-x 4 arm arm 4096 Nov 15 01:11 ..
+duel out json NOT YET PRESENT
+--DUEL-JSON-COUNT--
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/home/arm/junyang/k0_calib/duels/lr0.0002_s100_b1_seed7.json'
+--DRIVER-LOG--
+-rw-rw-r-- 1 arm arm  1938 Nov 15 01:11 /home/arm/junyang/k0_calib/driver.log
+-rw-rw-r-- 1 arm arm     0 Nov 15 01:11 /home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm 47643 Nov 15 01:11 /home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+00:54:43 production: replays=50 procs=no
+00:54:43 manifest: 9900 roots sha256=25f5bb7fe7e8dedb08a231d772f398bb42c2d714d7de813548b8590154b5a30b
+00:54:43 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/junyang/k0_calib/cells/lr0.0002_s100_b1_seed7.npz --flatten-q --kl-beta 1.0 --lr 0.0002 --bs 256 --max-updates 100 --seed 7 --device cuda
+01:11:03 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py
+01:11:03 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s100_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s100_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+(end driver.log tail)
+(end grid1 log tail)
+--FABLE-NEWEST--
+total 74192
+drwxrwxr-x 41 arm arm  20480 Nov 15 01:15 ..
+drwxrwxr-x  2 arm arm  28672 Nov 14 22:04 .
+-rw-rw-r--  1 arm arm 232629 Nov 14 22:04 d1e978996474043f74a6f00d3cc26fb1-1.json.gz
+-rw-rw-r--  1 arm arm 223758 Nov 14 22:04 dc96177b51e31fb139174e46de4f526e-1.json.gz
+-rw-rw-r--  1 arm arm 244544 Nov 14 22:04 ea8c3fa61b390190cd0b4cde115682b5-1.json.gz
+-rw-rw-r--  1 arm arm 243422 Nov 14 22:04 c446bcce1cdd4cbc15c92c579dd048c9-1.json.gz
+-rw-rw-r--  1 arm arm 235895 Nov 14 22:04 cc0b2e049e1ea4f6ac2cc8e0a354ea17-1.json.gz
+-rw-rw-r--  1 arm arm 236086 Nov 14 22:04 a82e00106c2f0825ee7651ac456009fc-1.json.gz
+-rw-rw-r--  1 arm arm 225837 Nov 14 22:04 acbbda5bfde3f25e1b7ecb5ca0a12f0d-1.json.gz
+-rw-rw-r--  1 arm arm 253500 Nov 14 22:04 af78d8e0a7844fe51fb707710bbf02cc-1.json.gz
+-rw-rw-r--  1 arm arm 235952 Nov 14 22:04 8417f4fe5bee81569408e3cc3ba93ad6-1.json.gz
+-rw-rw-r--  1 arm arm 241245 Nov 14 22:04 8f9775059f63ebd3f502793250920016-1.json.gz
+-rw-rw-r--  1 arm arm 228224 Nov 14 22:04 a46ccd04ac8847ba517123ad25982033-1.json.gz
+-rw-rw-r--  1 arm arm 249049 Nov 14 22:04 5752928dcc4469d01ff55a3d3e39e718-1.json.gz
+-rw-rw-r--  1 arm arm 236312 Nov 14 22:04 5c2911ae9850cd146bf931a54f7ceb17-1.json.gz
+-rw-rw-r--  1 arm arm 240673 Nov 14 22:04 65dd9ffbb4f0effd67e13d3a8c806dbc-1.json.gz
+-rw-rw-r--  1 arm arm 246455 Nov 14 22:04 73905f32a4344a4873e498656519845e-1.json.gz
+-rw-rw-r--  1 arm arm 249407 Nov 14 22:04 387608c80303cf4a6505dd0813a1cf86-1.json.gz
+-rw-rw-r--  1 arm arm 240952 Nov 14 22:04 3dbec962cabee443695115b1268ddfe3-1.json.gz
+-rw-rw-r--  1 arm arm 251372 Nov 14 22:04 3ec7e5e5227fe743194f279192b14a6d-1.json.gz
+-rw-rw-r--  1 arm arm 239910 Nov 14 22:04 381043f20c29eb758a4141c6beefc1e8-1.json.gz
+-rw-rw-r--  1 arm arm 245408 Nov 14 22:04 381115900c4ca0e14d47a3a0b523d595-1.json.gz
+-rw-rw-r--  1 arm arm 241697 Nov 14 22:04 1edba5d11f0f06c968b2adf4dfe93517-1.json.gz
+-rw-rw-r--  1 arm arm 250665 Nov 14 02:37 f7dedf80b082ccc3e4636e4b71a90ac1-1.json.gz
+--CARBON-WORKDIR-CORPUS--
+m3s2_corpus total=5
+m3s2_corpus gz=0
+m3s2_corpus index=118
+carago_corpus total=2
+carago_corpus gz=0
+carago_corpus index=182
+fable_corpus total=2
+fable_corpus gz=0
+fable_corpus index=181
+ds_carago meta=54418
+ds_fable meta=54119
+--HEAD-BEHIND--
+f82191eb151c19abf7f15fa087d679e55fa02ef5
+0
+fatal: git cat-file: could not get object info
+fatal: Invalid revision range HEAD..102dc97046009bcbd4e29e4f3981905f566670f1
+--GPU-MEM-RECHECK--
+0 %, [N/A], [N/A], 40
+DGXSTATUS0128B END
+DGXSTATUS0128B END rc=0

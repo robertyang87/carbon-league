@@ -1,0 +1,26 @@
+MARK DGXSTATUS1143B
+--- GEN1 LOGS ---
+--- 0) GENERATE (optional self-play shard refresh, ring 1) ---
+SPGEN-RESULT {"games": 36, "wall_s": 153.6, "total_wall_s": 228.7, "games_per_min": 14.07, "mean_steps": 299.0, "mean_margin": 0.0, "mean_u": 0.5, "workers": 18, "cpu_seconds": 5275.1, "eff_cores": 34.35, "errors": [], "budget_hit": "games", "stub": false, "weights": "/home/arm/junyang/s26stage/data/weights/cnet2_m3s2r1L.npz", "conf": {"ABORT_DL": 0.95, "BUDGET": 0.7, "GUARD": true, "GUARD_NARROW": true, "HARD": 0.85, "LATE_STEP": 240, "MIX": false, "MODE": "sweep", "ROLL": "self", "SEARCH": false, "START_DL": null, "TEACHER": 2, "TEACHER_LATE": 2}, "out": "/home/arm/junyang/carbon/data/gen1_shard0"}
+KATAGO-CHAIN[gen1] GENERATE done 2026-11-13 11:41:53 CST
+--- 1) WAIT-READY (file + no trainer running; network ops timeout-wrapped) ---
+KATAGO-CHAIN[gen1] READY at wait-min 1 2026-11-13 11:41:53 CST
+--- 2) COUNT ASSERTION: replays == matches == index (no orphans downstream) ---
+counts: replays=36 matches=-1 index=36 expected=200
+KATAGO-CHAIN[gen1] FAIL index=36 != EXPECTED=200 -- build NOT started 2026-11-13 11:41:53 CST
+--- 0) GENERATE (optional self-play shard refresh, ring 1) ---
+--- GEN1 OUTPUT ---
+2
+total 20
+drwxrwxr-x 2 arm arm  4096 2026-11-13 11:46:06.944611202 +0800 replays
+-rw-rw-r-- 1 arm arm 13016 2026-11-13 11:41:52.980275220 +0800 index.json
+json_files 1
+--- SNAPLOOP PRECISE ---
+NO_SNAPLOOP_PROC
+NO_S29_CARAGO
+--- REPO-SIDE NEW BATCHES ---
+repo/data/carago1_corpus files=120 index=NO_INDEX
+repo/data/godslayer_cvi_corpus files=100 index=NO_INDEX
+repo/data/m9xj320_corpus files=153 index=NO_INDEX
+repo/data/lite_v7_corpus files=83 index=NO_INDEX
+--- END DGXSTATUS1143B ---

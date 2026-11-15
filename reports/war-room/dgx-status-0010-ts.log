@@ -1,0 +1,85 @@
+DGXSTATUS0010A BEGIN 16:23:58
+DGXSTATUS0010A DGX spark-29db  00:24:03 up 24 days,  5:28, 2684 users,  load average: 0.20, 0.67, 2.34
+--PROC--
+--GPU--
+0 %, [N/A], 37
+--GITRES--
+NOGIT
+--HEAD--
+HEAD 4acbbae main
+REMOTE c5c4dd5b BEHIND NA-nolocalobj
+--CODEMD5--
+code/cnet2_build.py 3b99ae47
+code/producer/selfplay_gen.py 523963c2
+code/selfplay_gen.py 8aed7f48
+code/stage0_teacher.py c6ade5ce
+code/stage1_teacher_gate.py 4969a9fc
+code/rl2_ppo_train.py c27b7ea5
+--GEN1R--
+gen1r_shard0 idx=200
+ replays=200
+gen1r_shard1 idx=200
+ replays=200
+ds_gen1r_shard0 meta={'mirror_gate': {'selfplay_games': 200, 'mirrored_games': 0, 'share': 0.0, 'allowed': False}}
+
+ds_gen1r_shard1 meta=
+ds_gen1r_shard1 dir:
+data/ds_gen1r_shard1:
+generations
+shards
+
+data/ds_gen1r_shard1/generations:
+
+data/ds_gen1r_shard1/shards:
+_cfp.json
+selfplay-994400.npz
+selfplay-994401.npz
+selfplay-994402.npz
+selfplay-994403.npz
+chain.log tail:
+GEN1R-CHAIN SKIP shard0 receipt exists 2026-11-13 23:41:40 CST
+GEN1R-CHAIN BEGIN shard1 seeds [994400,994600) corpus=/home/arm/junyang/carbon/data/gen1r_shard1 ds=/home/arm/junyang/carbon/data/ds_gen1r_shard1 2026-11-13 23:41:40 CST
+GEN1R-CHAIN GEN-OK shard1 index=200 replays=200 2026-11-13 23:56:37 CST
+GEN1R-CHAIN FAIL shard1 build rc=1 (see gen1r_build_shard1.log) 2026-11-13 23:56:58 CST
+build_shard1.log tail:
+Traceback (most recent call last):
+  File "/home/arm/junyang/carbon-repo/code/build_top.py", line 33, in <module>
+    B.main(sys.argv[1], sys.argv[2:])
+  File "/home/arm/junyang/carbon-repo/code/cnet2_build.py", line 1193, in main
+    raise ValueError(
+ValueError: raw label alignment failed for selfplay-994577.json.gz
+--REPO-CORPUS--
+k4v3_corpus=100
+fable6_corpus=105
+m3s3z_corpus=73
+hakimi31_corpus=90
+hakimi3_corpus=132
+krypton_corpus=160
+
+--CORPUS--
+m3s2_corpus idx=118
+ replays=118
+carago_corpus idx=182
+ replays=183
+fable_corpus idx=181
+ replays=182
+--DSMETA--
+ds_carago ?
+ds_fable ?
+--RECENT30M--
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994566.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994576.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994564.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994589.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994571.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994598.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994592.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994575.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994591.json.gz
+/home/arm/junyang/carbon/data/gen1r_shard1/replays/selfplay-994587.json.gz
+--DISK--
+/dev/nvme0n1p2  3.7T  1.7T  1.9T  47% /
+--LOAD--
+0.20 0.67 2.34 1/972 864974
+DGXSTATUS0010A END
+DGXSTATUS0010A END rc=0

@@ -1,0 +1,65 @@
+MARK_DGXSTATUS2258A
+Sat Nov 14 11:02:39 PM CST 2026
+spark-29db
+ 23:02:39 up 25 days,  4:06, 5027 users,  load average: 0.17, 0.13, 0.09
+0 %, [N/A], 36
+1546502 zsh -c echo MARK_DGXSTATUS2258A; ... (self-match only: pgrep hit is this ssh command line itself, no real train/git/rsync process)
+7d3ca16c9686d4fae398bfd9db52428a8c818687
+7d3ca16c9686d4fae398bfd9db52428a8c818687	refs/heads/main
+ M data/bigeval.jsonl
+?? .venv
+?? code/katago_chain_draft.sh
+?? code/selfplay_gen.py
+?? data/bigeval_live/
+?? data/weights/ckpt_85_frozen.npz
+?? data/weights/ckpt_95.npz
+-rw-r----- 1 arm arm 13972532 Nov 14 06:50 data/weights/ckpt_85_frozen.npz
+-rw-r----- 1 arm arm 13972532 Nov 14 15:19 data/weights/ckpt_95.npz
+eb633ca99aca432e2f4c9265c368fda8  data/weights/ckpt_85_frozen.npz
+9ece5a33cdc6bc6730c5136d48976a07  data/weights/ckpt_95.npz
+62 (c1 npz)
+62 (c2 npz)
+-rw-r--r-- 1 arm arm 16006 Nov 14 21:51 /home/arm/junyang/k0_dist/returns/c1/progress_c1.json
+-rw-r--r-- 1 arm arm  5017 Nov 14 21:59 /home/arm/junyang/k0_dist/returns/c1/progress_c1_wave2.json
+-rw-r--r-- 1 arm arm 18706 Nov 14 23:00 /home/arm/junyang/k0_dist/returns/c2/progress.json
+c1 wave2 progress head: games {}, identity code_md5s 7 items, config_sha256 9a2b2440e9267680c9b27a1d5...
+m3s2 index 118
+carago index 182
+fable index 181
+m3s2 replays 118
+carago replays 183
+fable replays 182
+ds_carago meta head: {"games": [...]} (Carago-V2 vs Krypton-M2BC3s2-v1)
+ds_fable meta head: {"games": [...]} (Fable5.2-Max-V5 vs AgyCarbon-Light-Godslayer-II)
+    200 it74_master2.jsonl
+    200 it74_echo2.jsonl
+END_DGXSTATUS2258A
+
+MARK_DGXSTATUS2258B
+ds_carago meta games 182
+ds_fable meta games 181
+-rw-r--r-- 1 arm arm 18706 Nov 14 23:02 /home/arm/junyang/k0_dist/returns/c2/progress.json
+END_DGXSTATUS2258B
+
+# DGX 状态汇报 2026-11-14 22:58 CST（直读 23:02:39，标记 DGXSTATUS2258A/B）
+
+## 直读结果（Tailscale SSH，arm@100.84.148.73）
+- DGX 本机 spark-29db：up 25 天 4:06，load 0.17，GPU 0%、36°C；无训练进程、无 git fetch/pull/checkout 残留、无 rsync（pgrep 唯一命中是本趟 ssh 命令行自身的自匹配）。空闲属预期（分发协调，不跑标注）。
+- **仓库滞后已清零（本趟变化）**：本地 HEAD 现 7d3ca16c，与 `git ls-remote origin main` 逐字合，lag 0——作战室 22:50 的 fetch+ff 令已执行（22:45 趟时仍落后 11）。
+- K0 前置④ returns（/home/arm/junyang/k0_dist/returns/）：C1 62 npz、C2 62 npz——仍只有第一波；C1 wave2 progress games {}、mtime 21:59:36 未变；C2 progress.json mtime 23:02 新鲜、大小 18706 未变、仍 62 done 62——心跳活、无新片。第二波首片/全量完工估计约 00:15–00:30（估计，按 43–45 秒/根真校准，不变）。
+- 未跟踪 ckpt 两件未变：ckpt_85_frozen.npz（06:50，13,972,532 B，md5 eb633ca99aca432e2f4c9265c368fda8）、ckpt_95.npz（15:19，同大小，md5 9ece5a33cdc6bc6730c5136d48976a07）。
+- 语料未变：m3s2 index 118 / replays 118；carago index 182 / replays 183；fable index 181 / replays 182；ds meta games 182/181（与 index 一致；样本总数上一趟口径 54418/54119，语料未变故本趟未重算）。
+- it74 两块仍 200/200 在盘（20:21/20:33）；配对表事已于 20:38 裁定闭环，不再列为缺件。
+
+## 转述（作战室 v82，22:50）
+- L20 第 0 步：M2_A 已完（2000/2000，暂定校准 +369）；M2_B 22:49 时 629/2000（约 114 局/分钟，估计约 23:01 完）；随后 Echo2 批；三批估计约 23:20 全完。按该速率推算，本趟时刻 M2_B 应已接近完工——此句为推算、非直读。
+- Studio 正式 q 闸健康，约 26%，完工估计 11-15 约 14:30（估计）不变。
+- 天梯前十零变化，我方最高 Echo3 #11。零提交。
+
+## 口径对照
+- 与作战室最新口径一致，无冲突。唯一变化（仓库 lag 0）已另发作战室简短同步。
+
+## 已发
+- DGX 边聊定期汇报（本趟终讯）；作战室简短同步（仓库滞后清零）。
+- 本日志：~/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files/dgx-status-1114-2258.log
+- 记忆追加：~/memory/2026-11-14.md

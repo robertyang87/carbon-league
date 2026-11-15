@@ -1,0 +1,92 @@
+DGXSTATUS11141158 PROBE-BEGIN 2026-11-14 11:59:38 CST
+=== A system/gpu/procs ===
+DGXSTATUS11141158A
+spark-29db
+ 11:59:45 up 24 days, 17:04, 3656 users,  load average: 0.07, 1.60, 21.21
+0 %, [N/A], 36
+-- procs:
+1181635       00:00 zsh -c echo DGXSTATUS11141158A; hostname; uptime; nvidia-smi --query-gpu=utilization.gpu,memory.used,temperature.gpu --format=csv,noheader; echo "-- procs:"; ps -eo pid,etime,args | grep -E "[a]4_select|[t]rain|[s]creen|[k]0_|spawn_main|[g]it (fetch|pull|merge|checkout)" | head -20; echo "-- spawn_main count:"; pgrep -f "spawn_mai[n]" | wc -l; echo "-- git procs:"; ps -eo pid,etime,args | grep -E "[g]it (fetch|pull|merge|checkout|stash)" || echo NO-GIT-PROC; echo "-- bigeval:"; ls -l /home/arm/junyang/carbon-repo/data/bigeval.jsonl 2>&1; md5sum /home/arm/junyang/carbon-repo/data/bigeval.jsonl 2>&1
+1181641       00:00 grep -E [a]4_select|[t]rain|[s]creen|[k]0_|spawn_main|[g]it (fetch|pull|merge|checkout)
+-- spawn_main count:
+1
+-- git procs:
+NO-GIT-PROC
+-- bigeval:
+-rw-rw-r-- 1 arm arm 280753 Nov 14 10:36 /home/arm/junyang/carbon-repo/data/bigeval.jsonl
+bd779d9d46cd642b91490c372ec2c41c  /home/arm/junyang/carbon-repo/data/bigeval.jsonl
+A SSH-RC=0
+=== B repo HEAD (ls-remote only, no fetch) ===
+DGXSTATUS11141158B
+1d57e6711c46c9d5ec1db5573fe0a11188451a58
+-- status:
+ M code/certify_pack.py
+ M data/bigeval.jsonl
+?? .venv
+?? code/katago_chain_draft.sh
+?? code/selfplay_gen.py
+-- remote HEAD live:
+a76dfcbd151746ad59fd07736b53d3d36198fe4c
+-- remote main live:
+556176b0616bf5e59e697087afca807080194222
+-- local origin/main ref:
+72ce232839ab751675e14680331e4af0a836c27d
+-- behind vs live remote main (ls-remote sha):
+COUNT-FAILED
+B SSH-RC=0
+=== C corpora ===
+DGXSTATUS11141158C
+-- data/m3s2_corpus:
+118
+118
+-- data/carago_corpus:
+183
+182
+-- data/fable_corpus:
+182
+181
+-- ds_carago total:
+54418
+-- ds_fable total:
+54119
+C SSH-RC=0
+=== D delivered items re-verify (g1 packs + certify V09) ===
+DGXSTATUS11141158D
+-- exp packs:
+cc2ea7d60ac005731431da675d99d6f3  /home/arm/junyang/carbon-repo/code/exp/m3s2g1_a4.py
+bb997d7137395e6e66f7b03134d96897  /home/arm/junyang/carbon-repo/code/exp/m3s2g1_base.py
+-rw-rw-r-- 1 arm arm 3728377 Nov 14 11:53 /home/arm/junyang/carbon-repo/code/exp/m3s2g1_a4.py
+-rw-rw-r-- 1 arm arm 3728418 Nov 14 11:56 /home/arm/junyang/carbon-repo/code/exp/m3s2g1_base.py
+-- certify 3 places:
+1f4811b450d0c93417f6465c6835f215  /home/arm/junyang/carbon-repo/code/certify_pack.py
+1f4811b450d0c93417f6465c6835f215  /home/arm/junyang/carbon/code/certify_pack.py
+md5sum: /home/arm/junyang/carbon/s26stage/code/certify_pack.py: No such file or directory
+-- pack staging:
+119e9bb9bf8413685b87721cff8cfe18  /home/arm/junyang/a4_pack_stage/cnet2_pack.py
+48392e98c03f25a3a6f616561c8a072e  /home/arm/junyang/a4_pack_stage/cnet2_search_pack.py
+-- verify jsons:
+-rw-rw-r-- 1 arm arm 1098 Nov 14 11:53 /home/arm/junyang/m3s2g1_a4_verify.json
+-rw-rw-r-- 1 arm arm 1100 Nov 14 11:57 /home/arm/junyang/m3s2g1_base_verify.json
+D SSH-RC=0
+=== E A4 dir / r1 winner watch ===
+DGXSTATUS11141158E
+total 24
+drwxrwxr-x  3 arm arm  4096 Nov 14 11:36 .
+drwxrwxr-x 23 arm arm 12288 Nov 14 11:57 ..
+drwxrwxr-x  3 arm arm  4096 Nov 14 11:24 r1_sel
+-rw-rw-r--  1 arm arm   189 Nov 14 11:36 VOID_20261114_1136.txt
+-- any selection json:
+-- new files since 11:43 in home (maxdepth 2):
+/home/arm/junyang/m3s2g1_a4_verify.json
+/home/arm/junyang/m3s2g1_base_verify.json
+/home/arm/junyang/build_m3s2g1_base.py
+/home/arm/junyang/code_backup_pre_certify_v09_20261114/certify_pack.s26stage_code.py
+/home/arm/junyang/code_backup_pre_certify_v09_20261114/certify_pack.clone_code.py
+/home/arm/junyang/code_backup_pre_certify_v09_20261114/certify_pack.carbon_code.py
+/home/arm/junyang/__pycache__/build_m3s2g1_a4.cpython-312.pyc
+/home/arm/junyang/__pycache__/build_m3s2g1_base.cpython-312.pyc
+/home/arm/junyang/build_m3s2g1_a4.py
+-- a4 log tail:
+{"pack_chain": {"search_pack_file": "/home/arm/junyang/a4_pack_stage/cnet2_search_pack.py", "search_pack_md5": "48392e98c03f25a3a6f616561c8a072e", "pack_file": "/home/arm/junyang/a4_pack_stage/cnet2_pack.py", "pack_md5": "119e9bb9bf8413685b87721cff8cfe18"}}
+zsh:1: no matches found: /home/arm/junyang/a4_selection_20261114/*selection*.json
+E SSH-RC=0
+DGXSTATUS11141158 PROBE-END 2026-11-14 12:00:14 CST

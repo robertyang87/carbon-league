@@ -1,0 +1,37 @@
+DGXSTATUS2343B DGX spark-29db  00:02:20 up 24 days,  5:06, 2644 users,  load average: 0.12, 4.25, 7.65
+--PROC--
+--GPU--
+0 %, [N/A], 36
+--GITRES--
+NOGIT
+--HEAD--
+HEAD fd2e791 main
+REMOTE a502a13d BEHIND 
+--GEN1R--
+shard0 idx=200
+ replays=200
+shard1 idx=200
+ replays=200
+gen1r_gen_shard1.log tail:
+SPGEN-RESULT {"games": 200, "wall_s": 820.4, "total_wall_s": 896.4, "games_per_min": 14.63, "mean_steps": 299.0, "mean_margin": 32.1, "mean_u": 0.503, "workers": 18, "cpu_seconds": 78847.8, "eff_cores": 96.11, "errors": [], "budget_hit": "games", "stub": false, "adopted": 0, "identity_mismatches": 0, "identity": {"weights_md5": "06a03d9cfeec239af3065a49fefec382", "config_hash": "2b6504b124bab476e0f5fd1452d1db471fb258cd4a4c39e7eb24269402af6398", "config": {"ABORT_DL": 0.95, "BUDGET": 0.7, "GUARD": true, "GUARD_NARROW": true, "HARD": 0.85, "LATE_STEP": 240, "MIX": false, "MODE": "sweep", "OPEN_STEPS": 50, "OPEN_T": 1.0, "ROLL": "self", "SEARCH": false, "START_DL": null, "TEACHER": 2, "TEACHER_LATE": 2}, "names": ["m3s2r1", "m3s2r1"], "code_md5": {"eval_v53.py": "aa4c5bb63c879caffeb33b0b25c498d7", "fastsim.py": "aefe6c83826efae4de83bef8c643c80b", "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122", "selfplay_gen.py": "15d2454441fa93a2b15ed915059add6f"}, "diversity": {"mode": "open-sampling", "open_t": 1.0, "open_steps": 50, "open_kinds": null, "open_seed_base": 0, "open_seed_rule": "(open_seed_base * 1000003 + game_seed) mod 2^31", "allow_mirror": false}}, "diversity": {"mode": "open-sampling", "open_t": 1.0, "open_steps": 50, "open_kinds": null, "open_seed_base": 0, "open_seed_rule": "(open_seed_base * 1000003 + game_seed) mod 2^31", "allow_mirror": false}, "mirror_signature_games": 0, "mirror_signature_share": 0.0, "repaired_drops": 0, "weights": "/home/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz", "conf": {"ABORT_DL": 0.95, "BUDGET": 0.7, "GUARD": true, "GUARD_NARROW": true, "HARD": 0.85, "LATE_STEP": 240, "MIX": false, "MODE": "sweep", "OPEN_STEPS": 50, "OPEN_T": 1.0, "ROLL": "self", "SEARCH": false, "START_DL": null, "TEACHER": 2, "TEACHER_LATE": 2}, "out": "/home/arm/junyang/carbon/data/gen1r_shard1"}
+gen1r_chain.log tail:
+GEN1R-CHAIN BEGIN shard1 seeds [994400,994600) corpus=/home/arm/junyang/carbon/data/gen1r_shard1 ds=/home/arm/junyang/carbon/data/ds_gen1r_shard1 2026-11-13 23:41:40 CST
+GEN1R-CHAIN GEN-OK shard1 index=200 replays=200 2026-11-13 23:56:37 CST
+GEN1R-CHAIN FAIL shard1 build rc=1 (see gen1r_build_shard1.log) 2026-11-13 23:56:58 CST
+--PULL--
+k4v3_corpus replays=0
+fable6_corpus replays=0
+m3s3z_corpus replays=0
+hakimi31_corpus replays=0
+hakimi3_corpus replays=105
+krypton_corpus replays=0
+--CORPUS--
+m3s2_corpus idx=118
+ replays=118
+carago_corpus idx=182
+ replays=183
+fable_corpus idx=181
+ replays=182
+--LOAD--
+0.19 4.19 7.61 1/971 853648
+DGXSTATUS2343B END

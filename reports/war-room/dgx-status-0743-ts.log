@@ -1,0 +1,13 @@
+DGXSTATUS0743 / 0743B / 0743C — Sat 2026-11-14 07:44-07:47 CST, Tailscale SSH rc=0
+hostname spark-29db; uptime 24d 12h; load 0.09; GPU 0% / 38C (mem N/A)
+ps: no training, no git fetch/pull/checkout, no rsync. Long-lived only: gitlab-runner 5d, agent_mcp 22d, vox_bridge 22d.
+it85 (carbon-repo): code/exp/it85.py md5 6bd5cc5a... 4598446B 06:54; data/weights/ckpt_85_frozen.npz 13972532B 06:50. Unchanged.
+  NOTE: it85 files live under carbon-repo, NOT carbon work dir (first probe of this trip used wrong root; corrected in 0743B).
+repo corpus flat counts (unchanged): m3s2 152, carago 183, fable 292, hakimi3 168, fable6 184, hakimi3pro 144, k4v3 181, krypton 186
+work-dir replays: m3s2 118, carago 183, fable 182, hakimi3 105; index m3s2 118, carago 182, fable 181 (carago/fable replays = index+1, same as before, unverified)
+ds meta (mtime 11-12 15:59, unchanged): ds_carago 182 games / 54418 samples; ds_fable 181 games / 54119 samples
+git: local HEAD 2523235 (main); local origin/main ref stale 6a3bd204; remote main 4d5ab97a (07:44 ls-remote)
+API compare 2523235...4d5ab97a: local pure ancestor, behind_by 393 (was 383 @07:31, +10 from main advancing); head commit "tests: gate first-terminal bound fixtures (K0 FT equivalence, sampler bound, padding-row filter)" — K0/engineering, not 3-corpus ingress. Held per fleet decision.
+sync/h29 5d8ba2b3, sync/h31 9f907dce via API — unchanged, match C1/C2 receipts. NOTE: sync/h29/h31 refs do not exist locally on DGX (rev-parse fatal); they are API-side branches only.
+API core remaining 4739.
+War-room对照: it85双场已完赛待策略组判读 (C1 ΔU +0.0255 / C2 ΔU -0.0913); 三家语料入仓 ALL_DONE 回执仍未确认; K0 窗口仍排队. 无口径差异, 无异常, 纯常态汇报, 不发作战室.

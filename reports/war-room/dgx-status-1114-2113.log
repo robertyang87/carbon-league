@@ -1,0 +1,45 @@
+# DGX 状态汇报 21:13 趟直读日志
+- 直读时间：2026-11-14 21:16:27–21:17:37 CST
+- 标记：DGXSTATUS2113A/B（主探针）、C/D（ds meta 补读）
+- 通道：Tailscale 直读 ~/workspace/dgx.sh（arm@100.84.148.73），云助手未用
+
+## 主探针输出（逐字摘要）
+```
+MARK_DGXSTATUS2113A
+spark-29db
+ 21:16:27 up 25 days,  2:20, 4775 users,  load average: 0.09, 0.14, 1.36
+0 %, [N/A], 36
+---PROCS---
+1471171 15:54 rsync --server -logDtpRe.LsfxCIvu --partial . /home/arm/junyang/l20_ppo_u_archive_20261114/run_dir/
+1471172 15:53 rsync --server -logDtpRe.LsfxCIvu --partial . /home/arm/junyang/l20_ppo_u_archive_20261114/run_dir/
+2594625 23-07:04:31 python3 -m agent_mcp
+---K0---
+returns/c1/: progress_c1.json (6457 B, 2026-11-14 19:29) ——仅此一文件
+returns/c2/: games_c2_full.json (19:34), k0_annot_c2_full.meta (19:34), progress.json (9157 B, 21:15)
+c1 games_entries 0 mtime 1794655777 (19:29:37)
+c2 games_entries 0 mtime 1794662136 (21:15:36)
+---ARCHIVE---
+282 件
+2816006984 B
+ckpt_0* 计数 0
+MANIFEST_full_series.md5 不存在
+最新 5 件：it74.py 20:09、it74_master2.jsonl 20:22、it74_echo2.jsonl.VOID_missing_weights 20:23、it74_echo2.jsonl 20:34、run_dir/.ckpt_78.npz.FK9VfY 21:16
+---REPO---
+本地 1d57e6711c46c9d5ec1db5573fe0a11188451a58
+远端 d0e278042123899f16ce6ebc7f651477aba002d4
+---CORPORA---
+m3s2 replays=118 index=118
+carago replays=183 index=182
+fable replays=182 index=181
+ds_carago total 54418 / ds_fable total 54119（补读 DGXSTATUS2113C/D 确认）
+MARK_DGXSTATUS2113B
+```
+
+## 结论
+- DGX 本机：无训练进程，GPU 0%、36°C，load 0.09。空闲属预期（代码冻结待 Claude 三修复 diff；K0 标注在 C1/C2 跑，不占 DGX GPU）。
+- K0 仍 0 分片：C1 progress_c1.json 自 19:29 未变（47 分钟），首片估计约 21:08——本趟 21:16 已过估计点 8 分钟仍未落；C2 progress.json 21:15 新鲜（仅清单同步），games 仍 0。未判卡住（估计点刚过、标注粒度按局），下趟复核；作战室用户 21:13 问「c1c2 做完了么」——答案：没做完，C1 首片已过估计点。
+- L20 归档传输复活（本趟关键变化）：206 件/1,763,078,928 B（21:00）→ 282 件/2,816,006,984 B（21:16），16 分钟 +76 件、+约 1.05GB；rsync server 双进程在册（etime 约 16 分钟），最新临时文件 run_dir/.ckpt_78.npz.FK9VfY mtime 21:16（正在写）。上趟「按实测速率约需 2 小时以上」估计作废。仍未到全序检查点：ckpt_0* 计数 0，MANIFEST_full_series.md5 未到。
+- 仓库：本地 1d57e67 vs 远端 d0e27804，落后 2 个提交（3334faa8、d0e27804），已知、不阻塞。无 git fetch/pull 残留进程。agent_mcp（PID 2594625，etime 23 天）为常驻 MCP 服务，非训练。
+- 旧语料未变：m3s2 118/118；carago 183/182；fable 182/181；ds meta 54418/54119。
+- 转述（作战室 21:11）：Studio 线回执 q 闸正常，run 51972702 约 196/1072 根（18.3%），ETA 约 11-15 14:30（估计）；21:07 同步趟的 Studio SSH 重置告警已解除（系作战室侧出网代理问题，非 Studio 故障）。
+- 同步：里程碑（归档传输复活＋K0 首片过估计点）已同步作战室；定期汇报发 DGX 边聊。

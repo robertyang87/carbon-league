@@ -1,0 +1,93 @@
+DGXSTATUS0011A BEGIN 00:31:11
+spark-29db
+ 00:31:11 up 24 days,  5:35, 2689 users,  load average: 0.22, 0.20, 1.48
+--PROC--
+2594625 22-10:19:15 python3 -m agent_mcp
+--GPU--
+0 %, [N/A], 37
+--GITRES--
+NOGIT
+--HEAD--
+4acbbaeac9d3a678e69876178ebf3cd4b7a8423f
+main
+fc8c370146bbb3b345ada015dbacfaadecadfe6b	HEAD
+--CODEMD5--
+cnet2_build.py 3b99ae47
+producer/selfplay_gen.py 523963c2
+selfplay_gen.py 8aed7f48
+stage0_teacher.py c6ade5ce
+stage1_teacher_gate.py 4969a9fc
+rl2_ppo_train.py c27b7ea5
+--GEN1R--
+gen1r_shard0 idx=200
+ replays=200
+gen1r_shard1 idx=200
+ replays=200
+ds_gen1r_shard0 meta= {'selfplay_games': 200, 'mirrored_games': 0, 'share': 0.0, 'allowed': False}
+ds_gen1r_shard1 meta:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+generations
+shards
+chain.log tail:
+GEN1R-CHAIN FAIL shard0 acceptance check (see gen1r_check_shard0.log + receipt) 2026-11-13 23:38:05 CST
+GEN1R-CHAIN BEGIN shard0 seeds [994000,994200) corpus=/home/arm/junyang/carbon/data/gen1r_shard0 ds=/home/arm/junyang/carbon/data/ds_gen1r_shard0 2026-11-13 23:41:40 CST
+GEN1R-CHAIN SKIP shard0 receipt exists 2026-11-13 23:41:40 CST
+GEN1R-CHAIN BEGIN shard1 seeds [994400,994600) corpus=/home/arm/junyang/carbon/data/gen1r_shard1 ds=/home/arm/junyang/carbon/data/ds_gen1r_shard1 2026-11-13 23:41:40 CST
+GEN1R-CHAIN GEN-OK shard1 index=200 replays=200 2026-11-13 23:56:37 CST
+GEN1R-CHAIN FAIL shard1 build rc=1 (see gen1r_build_shard1.log) 2026-11-13 23:56:58 CST
+build_shard1.log tail:
+{'teachers': {2: 'm3s2r1'}}
+Traceback (most recent call last):
+  File "/home/arm/junyang/carbon-repo/code/build_top.py", line 33, in <module>
+    B.main(sys.argv[1], sys.argv[2:])
+  File "/home/arm/junyang/carbon-repo/code/cnet2_build.py", line 1193, in main
+    raise ValueError(
+ValueError: raw label alignment failed for selfplay-994577.json.gz
+compat shard1 log:
+-rw-rw-r-- 1 arm arm 468 Nov 14 00:20 data/dq_logs/gen1r_build_shard1_compat.log
+{'teachers': {2: 'm3s2r1'}}
+R08: build-config fingerprint changed (1e6d12be31abaee3 -> c5fa9c407e83deee); cached shards invalidated, rebuilding all
+Traceback (most recent call last):
+  File "/home/arm/junyang/carbon-repo/code/build_top.py", line 33, in <module>
+    B.main(sys.argv[1], sys.argv[2:])
+  File "/home/arm/junyang/carbon-repo/code/cnet2_build.py", line 1301, in main
+    raise ValueError(
+ValueError: raw label alignment failed for selfplay-994577.json.gz
+compat shard0 logs:
+-rw-rw-r-- 1 arm arm 351 Nov 14 00:15 data/dq_logs/gen1r_compat_shard0_b.log
+-rw-rw-r-- 1 arm arm 351 Nov 14 00:16 data/dq_logs/gen1r_compat_shard0_c.log
+-rw-rw-r-- 1 arm arm 351 Nov 14 00:14 data/dq_logs/gen1r_compat_shard0.log
+--REPO-CORPUS--
+k4v3_corpus=0
+fable6_corpus=0
+m3s3z_corpus=0
+hakimi31_corpus=0
+hakimi3_corpus=0
+krypton_corpus=0
+--CORPUS--
+m3s2_corpus idx=118
+ replays=118
+carago_corpus idx=182
+ replays=183
+fable_corpus idx=181
+ replays=182
+--DSMETA--
+ds_carago games= 182 samples= 54418
+ds_fable games= 181 samples= 54119
+--RECENT30M--
+data/ds_gen1r_shard1/shards/selfplay-994463.npz
+data/ds_gen1r_shard1/shards/selfplay-994580.npz
+data/ds_gen1r_shard1/shards/selfplay-994444.npz
+data/ds_gen1r_shard1/shards/selfplay-994443.npz
+data/ds_gen1r_shard1/shards/selfplay-994571.npz
+data/ds_gen1r_shard1/shards/selfplay-994421.npz
+data/ds_gen1r_shard1/shards/selfplay-994549.npz
+data/ds_gen1r_shard1/shards/selfplay-994590.npz
+data/ds_gen1r_shard1/shards/selfplay-994411.npz
+data/ds_gen1r_shard1/shards/selfplay-994567.npz
+--DISK--
+/dev/nvme0n1p2  3.7T  1.7T  1.9T  47% /
+--LOAD--
+0.28 0.21 1.47 1/965 867228
+DGXSTATUS0011A END rc=0

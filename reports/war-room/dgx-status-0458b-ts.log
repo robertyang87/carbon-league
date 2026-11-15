@@ -1,0 +1,80 @@
+DGXSTATUS0458B PROBE-BEGIN 2026-11-15 05:01:14 CST
+DGXSTATUS0458B DGX-BEGIN 2026-11-15 05:01:20 CST
+--- HOST ---
+spark-29db
+ 05:01:20 up 25 days, 10:05, 5382 users,  load average: 1.14, 1.16, 4.36
+--- GPU ---
+name, utilization.gpu [%], memory.used [MiB], memory.total [MiB], temperature.gpu
+NVIDIA GB10, 96 %, [N/A], [N/A], 47
+--- GRID2-TRAIN-PROC ---
+1671928       27:03  103 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet
+--- TRAIN-PID-1671928 ---
+    PID     ELAPSED %CPU COMMAND
+1671928       27:03  103 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet
+--- CALIB-DRIVER ---
+1605013    04:11:56  0.0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/k0_calib_driver.py
+--- K0-CALIB-DIR-RECENT ---
+total 1520
+-rw-rw-r-- 1 arm arm   78904 2026-11-15_05:01:17 train_lr0.0002_s200_b1_seed7.log
+drwxrwxr-x 2 arm arm    4096 2026-11-15_04:34:25 cells
+-rw-rw-r-- 1 arm arm    2668 2026-11-15_04:34:17 driver.log
+-rw-rw-r-- 1 arm arm     224 2026-11-15_04:34:17 ledger.jsonl
+-rw-rw-r-- 1 arm arm     173 2026-11-15_04:34:17 duel_lr0.0002_s100_b1_seed7.log
+drwxrwxr-x 2 arm arm    4096 2026-11-15_04:34:17 duels
+-rw-rw-r-- 1 arm arm   47643 2026-11-15_01:11:01 train_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm 1395900 2026-11-15_00:54:43 roots_calib.json
+--- CELLS-DIR ---
+total 13808
+-rw-rw-r-- 1 arm arm    78904 2026-11-15_05:01:17 lr0.0002_s200_b1_seed7.npz.log.jsonl
+-rw-rw-r-- 1 arm arm      227 2026-11-15_01:11:01 lr0.0002_s100_b1_seed7.npz.complete.json
+-rw-rw-r-- 1 arm arm    47643 2026-11-15_01:11:01 lr0.0002_s100_b1_seed7.npz.log.jsonl
+-rw-rw-r-- 1 arm arm 13994760 2026-11-15_01:11:01 lr0.0002_s100_b1_seed7.npz
+--- DUELS-DIR ---
+total 3952
+-rw-rw-r-- 1 arm arm 4044214 2026-11-15_04:34:17 lr0.0002_s100_b1_seed7.json
+--- DRIVER-LOG-TAIL ---
+00:54:43 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/juny
+01:11:03 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py
+01:11:03 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s100_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --root
+04:34:17 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py
+04:34:17 CELL DONE {"tag": "lr0.0002_s100_b1_seed7", "lr": 0.0002, "steps": 100, "beta": 1.0, "seed": 7, "delta_u": 0.005444971857481724, "ci95": [-0.0012790188433718626, 0.012534343174094182], "n_games": 50, "n_roots": 9900, "neutral": true}
+04:34:17 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/juny
+--- TRAIN-LOG-DISCOVER ---
+-rw-rw-r-- 1 arm arm 78904 2026-11-15_05:01:17 /home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm  2668 2026-11-15_04:34:17 /home/arm/junyang/k0_calib/driver.log
+-rw-rw-r-- 1 arm arm   173 2026-11-15_04:34:17 /home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm 47643 2026-11-15_01:11:01 /home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+--- S200-LOG-TAIL ---
+== /home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+{"update": 166, "loss": {"total": 3.0039284590610262, "ce": 2.9262320085834514, "anchor_kl_weighted": 0.07769645047757466}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.077696450
+{"update": 167, "loss": {"total": 3.018536817908359, "ce": 2.9298967451179223, "anchor_kl_weighted": 0.08864007279043651}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.0886400727
+{"update": 168, "loss": {"total": 3.0962622788454413, "ce": 3.0082435967683105, "anchor_kl_weighted": 0.08801868207713087}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.088018682
+{"update": 169, "loss": {"total": 3.0321784671536087, "ce": 2.9518122367303783, "anchor_kl_weighted": 0.08036623042323046}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.080366230
+--- CORPUS ---
+m3s2_corpus idx=118
+ replays=118
+carago_corpus idx=182
+ replays=183
+fable_corpus idx=181
+ replays=182
+--- DS-META ---
+ds_carago -rw-rw-r-- 1 arm arm 77280 1112_15:59 data/ds_carago/meta.json
+games=182 total=54418
+ds_fable -rw-rw-r-- 1 arm arm 75185 1112_15:59 data/ds_fable/meta.json
+games=181 total=54119
+--- GIT-RESIDUAL ---
+--- GIT-HEAD ---
+f82191eb
+90db838a11f4
+--- TAILNET-SPOT32 ---
+100.65.8.27      carbon-spot-29       robertyang.ustb@  linux  offline, last seen 2h ago                    
+100.95.45.69     carbon-spot-32       robertyang.ustb@  linux  -                                            
+--- EXAM-DEPLOY-PROCS ---
+--- RECENT-FILES-60M ---
+/home/arm/junyang/k0_calib/ledger.jsonl
+/home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log
+/home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+/home/arm/junyang/k0_calib/driver.log
+DGXSTATUS0458B DGX-END 2026-11-15 05:01:23 CST
+DGXSTATUS0458B SSH-RC=0
+DGXSTATUS0458B PROBE-END 2026-11-15 05:01:22 CST

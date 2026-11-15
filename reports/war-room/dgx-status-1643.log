@@ -1,0 +1,161 @@
+dispatched at 16:44:59
+CLAIMED run 43185498160 job 131071525169 status completed conclusion success
+ cn-shanghai
+2026-11-12T08:45:08.5204622Z ##[endgroup]
+2026-11-12T08:45:33.4652786Z InvokeId: t-sh072vhcsovhji8
+2026-11-12T08:45:33.4659912Z --- status=Success exit=0 ---
+2026-11-12T08:45:33.4670080Z DGXSTATUS1643Q8W2 L20-BEGIN 2026-11-12 16:45:10 CST
+2026-11-12T08:45:33.4689769Z --- L20-WEIGHTS-MD5 ---
+2026-11-12T08:45:33.4708582Z b6db08c9b076257c54817377bb93130d  /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T08:45:33.4729992Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T08:45:33.4730831Z 2c8ca0ae7266a6c0a41bf3b8ba7f723b  /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T08:45:33.4731658Z --- DGX (via ssh) ---
+2026-11-12T08:45:33.4732035Z DGXSTATUS1643Q8W2 DGX-BEGIN 2026-11-12 16:45:20 CST
+2026-11-12T08:45:33.4732437Z spark-29db
+2026-11-12T08:45:33.4732807Z  16:45:20 up 22 days, 21:49, 733 users,  load average: 1.78, 1.80, 2.38
+2026-11-12T08:45:33.4733260Z 96 %, [N/A], [N/A], 46
+2026-11-12T08:45:33.4733558Z --- PROC-TRAIN ---
+2026-11-12T08:45:33.4734503Z  125877       45:43 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_carago /home/arm/junyang/carbon/data/weights/cnet2_caragor1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T08:45:33.4735517Z --- ALL-PYTHON ---
+2026-11-12T08:45:33.4736437Z  125877       45:43 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_carago /home/arm/junyang/carbon/data/weights/cnet2_caragor1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T08:45:33.4737430Z 2594625 21-02:33:24 python3 -m agent_mcp
+2026-11-12T08:45:33.4738434Z 2596961 21-02:31:31 /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox/.venv/bin/python local_dev/scripts/vox_bridge.py --vox-dir /home/arm/pw-fresh/output/pupper_pi5_lite/native/vox --net-audio 8769
+2026-11-12T08:45:33.4739644Z --- TRAIN-PROC-CWD ---
+2026-11-12T08:45:33.4740024Z pid 125877 cwd=/home/arm/junyang/carbon/code
+2026-11-12T08:45:33.4740409Z --- PROBE-LEFTOVER ---
+2026-11-12T08:45:33.4740733Z NO-PROBE-PROC
+2026-11-12T08:45:33.4741165Z --- GIT-LEFTOVER (any fetch/pull/checkout alive >5min = ANOMALY) ---
+2026-11-12T08:45:33.4741643Z NO-GIT-PROC
+2026-11-12T08:45:33.4742024Z --- FABLE-PULL-SIDE (scp/rsync/sshd serving L20 pull?) ---
+2026-11-12T08:45:33.4742484Z   40675    05:53:32 sshd: arm [priv]
+2026-11-12T08:45:33.4742840Z   40875    05:53:16 sshd: arm@pts/0
+2026-11-12T08:45:33.4743214Z  151986       00:09 sshd: arm [priv]
+2026-11-12T08:45:33.4743558Z  152162       00:02 sshd: arm@notty
+2026-11-12T08:45:33.4744023Z --- REPO-HEAD-VS-REMOTE (carbon-repo, branch cnet2-search-v12) ---
+2026-11-12T08:45:33.4744769Z 62f8db71c7cefa290d020f4c50b6719c5e41bc5b
+2026-11-12T08:45:33.4750194Z 62f8db7 2026-11-12 15:52:07 +0800 data: archive matches of claude-opus55-cloud-v14p before retire decision (insurance, 2026-11-12)
+2026-11-12T08:45:33.4769781Z cnet2-search-v12
+2026-11-12T08:45:33.4782340Z remote cnet2-search-v12: 62f8db71c7cefa290d020f4c50b6719c5e41bc5b	refs/heads/cnet2-search-v12
+2026-11-12T08:45:33.4782994Z --- STAGE-LOGS ---
+2026-11-12T08:45:33.4783895Z -rw-rw-r-- 1 arm arm 1434 2026-11-12_15:52:06 /home/arm/junyang/carbon/data/dq_logs/stage1.log
+2026-11-12T08:45:33.4784656Z -rw-rw-r-- 1 arm arm 1709 2026-11-12_15:59:56 /home/arm/junyang/carbon/data/dq_logs/stage2.log
+2026-11-12T08:45:33.4785188Z NO-STAGE-LOGS
+2026-11-12T08:45:33.4785479Z == build_carago.log TAIL ==
+2026-11-12T08:45:33.4786436Z {'teachers': {2: 'Carago-V2微调'}}
+2026-11-12T08:45:33.4786911Z {"games": 182, "samples": 54418, "val_games": 16, "teacher_sides": {"Carago-V2\u5fae\u8c03": 182}}
+2026-11-12T08:45:33.4787843Z {'rows': 54418, 'planter_tokens': 136243, 'car_tokens': 358161, 'base_tokens': 108836, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T08:45:33.4788773Z == build_fable.log TAIL ==
+2026-11-12T08:45:33.4789111Z {'teachers': {2: 'Fable5.2-Max-V5'}}
+2026-11-12T08:45:33.4789729Z {"games": 181, "samples": 54119, "val_games": 20, "teacher_sides": {"Fable5.2-Max-V5": 181}}
+2026-11-12T08:45:33.4790582Z {'rows': 54119, 'planter_tokens': 103475, 'car_tokens': 388281, 'base_tokens': 108238, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T08:45:33.4791077Z --- DS-DIRS ---
+2026-11-12T08:45:33.4791270Z == ds_carago
+2026-11-12T08:45:33.4791578Z -rw-rw-r-- 1 arm arm 77280 2026-11-12_15:59:37 /home/arm/junyang/carbon/data/ds_carago/meta.json
+2026-11-12T08:45:33.4791948Z 1.2G	/home/arm/junyang/carbon/data/ds_carago
+2026-11-12T08:45:33.4792189Z == ds_fable
+2026-11-12T08:45:33.4792480Z -rw-rw-r-- 1 arm arm 75185 2026-11-12_15:59:56 /home/arm/junyang/carbon/data/ds_fable/meta.json
+2026-11-12T08:45:33.4792846Z 1.2G	/home/arm/junyang/carbon/data/ds_fable
+2026-11-12T08:45:33.4793088Z --- CARAGO-TRAIN-LOGS ---
+2026-11-12T08:45:33.4793321Z == /home/arm/junyang/carbon/data/dq_logs/caragor1.log
+2026-11-12T08:45:33.4793679Z -rw-rw-r-- 1 arm arm 3818 2026-11-12_16:44:39 /home/arm/junyang/carbon/data/dq_logs/caragor1.log
+2026-11-12T08:45:33.4794231Z {"ep": 12, "val": {"collector": 0.8959, "planter": 0.8802, "base": 0.9763, "all": 0.9065, "workers": 0.8911, "loss": 0.2341}, "train_pi": 0.1872, "s": 87}
+2026-11-12T08:45:33.4794720Z {"ep": 13, "i": 0, "pi": 0.1834, "v": 0.0313, "aux": 0.0413, "s": 0}
+2026-11-12T08:45:33.4795193Z {"ep": 13, "val": {"collector": 0.8963, "planter": 0.8843, "base": 0.9758, "all": 0.9076, "workers": 0.8926, "loss": 0.2319}, "train_pi": 0.1717, "s": 104}
+2026-11-12T08:45:33.4795652Z {"ep": 14, "i": 0, "pi": 0.1635, "v": 0.0292, "aux": 0.0498, "s": 0}
+2026-11-12T08:45:33.4796101Z {"ep": 14, "val": {"collector": 0.8971, "planter": 0.8841, "base": 0.9768, "all": 0.9082, "workers": 0.8931, "loss": 0.2349}, "train_pi": 0.1691, "s": 94}
+2026-11-12T08:45:33.4796559Z {"ep": 15, "i": 0, "pi": 0.1619, "v": 0.0273, "aux": 0.0386, "s": 1}
+2026-11-12T08:45:33.4797006Z {"ep": 15, "val": {"collector": 0.8974, "planter": 0.8841, "base": 0.9766, "all": 0.9083, "workers": 0.8933, "loss": 0.2329}, "train_pi": 0.1645, "s": 96}
+2026-11-12T08:45:33.4797471Z {"ep": 16, "i": 0, "pi": 0.1673, "v": 0.0281, "aux": 0.0505, "s": 1}
+2026-11-12T08:45:33.4797773Z == /home/arm/junyang/carbon/data/dq_logs/caragog1.log
+2026-11-12T08:45:33.4798160Z -rw-rw-r-- 1 arm arm 4622 2026-11-12_16:37:00 /home/arm/junyang/carbon/data/dq_logs/caragog1.log
+2026-11-12T08:45:33.4798753Z {"ep": 16, "val": {"collector": 0.899, "planter": 0.8827, "base": 0.9776, "all": 0.9091, "workers": 0.894, "loss": 0.2289}, "train_pi": 0.177, "s": 111}
+2026-11-12T08:45:33.4799481Z {"ep": 17, "i": 0, "pi": 0.1598, "v": 0.0306, "aux": 0.037, "s": 1}
+2026-11-12T08:45:33.4800132Z {"ep": 17, "val": {"collector": 0.8998, "planter": 0.8841, "base": 0.9776, "all": 0.9099, "workers": 0.8949, "loss": 0.2278}, "train_pi": 0.1694, "s": 114}
+2026-11-12T08:45:33.4800819Z {"ep": 18, "i": 0, "pi": 0.1693, "v": 0.0262, "aux": 0.0388, "s": 1}
+2026-11-12T08:45:33.4801560Z {"ep": 18, "val": {"collector": 0.9009, "planter": 0.8827, "base": 0.9771, "all": 0.9101, "workers": 0.8953, "loss": 0.2278}, "train_pi": 0.1691, "s": 112}
+2026-11-12T08:45:33.4802222Z {"ep": 19, "i": 0, "pi": 0.1734, "v": 0.0306, "aux": 0.0448, "s": 1}
+2026-11-12T08:45:33.4802803Z {"ep": 19, "val": {"collector": 0.9004, "planter": 0.8831, "base": 0.9772, "all": 0.9099, "workers": 0.8951, "loss": 0.2279}, "train_pi": 0.1673, "s": 112}
+2026-11-12T08:45:33.4803226Z best 0.9101
+2026-11-12T08:45:33.4803395Z best 0.9101
+2026-11-12T08:45:33.4803568Z --- M7BS-LOGS-TAIL ---
+2026-11-12T08:45:33.4803792Z == /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T08:45:33.4804151Z -rw-rw-r-- 1 arm arm 4640 2026-11-12_14:35:05 /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T08:45:33.4804781Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8081, "base": 0.9518, "all": 0.8604, "workers": 0.8401, "loss": 0.3679}, "train_pi": 0.2468, "s": 50}
+2026-11-12T08:45:33.4805188Z best 0.8629
+2026-11-12T08:45:33.4805393Z == /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T08:45:33.4805739Z -rw-rw-r-- 1 arm arm 4605 2026-11-12_14:27:10 /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T08:45:33.4806277Z {"ep": 19, "val": {"collector": 0.8491, "planter": 0.8107, "base": 0.9501, "all": 0.8606, "workers": 0.8408, "loss": 0.3581}, "train_pi": 0.2716, "s": 57}
+2026-11-12T08:45:33.4806689Z best 0.8615
+2026-11-12T08:45:33.4806875Z --- WEIGHTS-NEWEST-ALL ---
+2026-11-12T08:45:33.4807080Z total 8336368
+2026-11-12T08:45:33.4807311Z -rw-rw-r-- 1 arm arm 13969176 Nov 12 16:44 cnet2_caragor1.npz
+2026-11-12T08:45:33.4807635Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 16:44 cnet2_caragor1_ep15.npz
+2026-11-12T08:45:33.4807956Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 16:44 cnet2_caragor1_last.npz
+2026-11-12T08:45:33.4808275Z -rw-rw-r-- 1 arm arm     2473 Nov 12 16:44 cnet2_caragor1_log.jsonl
+2026-11-12T08:45:33.4808591Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 16:43 cnet2_caragor1_ep14.npz
+2026-11-12T08:45:33.4808897Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 16:41 cnet2_caragor1_ep13.npz
+2026-11-12T08:45:33.4809450Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 16:39 cnet2_caragor1_ep12.npz
+2026-11-12T08:45:33.4809808Z -rw-rw-r-- 1 arm arm 13968972 Nov 12 16:38 cnet2_caragor1_ep11.npz
+2026-11-12T08:45:33.4810129Z -rw-rw-r-- 1 arm arm 11821004 Nov 12 16:37 cnet2_caragog1_ep19.npz
+2026-11-12T08:45:33.4810435Z -rw-rw-r-- 1 arm arm 11821004 Nov 12 16:37 cnet2_caragog1_last.npz
+2026-11-12T08:45:33.4810744Z -rw-rw-r-- 1 arm arm     3094 Nov 12 16:37 cnet2_caragog1_log.jsonl
+2026-11-12T08:45:33.4811049Z -rw-rw-r-- 1 arm arm 13968968 Nov 12 16:36 cnet2_caragor1_ep10.npz
+2026-11-12T08:45:33.4811353Z -rw-rw-r-- 1 arm arm 11821208 Nov 12 16:35 cnet2_caragog1.npz
+2026-11-12T08:45:33.4811790Z 93061c69d6bc7f9f3d0468f60ce54974  /home/arm/junyang/carbon/data/weights/cnet2_distill_r1_fromstudio.npz
+2026-11-12T08:45:33.4812348Z 6c3885c6ed801c7a435b88961ac8fb64  /home/arm/junyang/carbon/data/weights/cnet2_distill_g1_fromstudio.npz
+2026-11-12T08:45:33.4812739Z --- DQ-LOGS-NEWEST ---
+2026-11-12T08:45:33.4812936Z total 136
+2026-11-12T08:45:33.4813146Z -rw-rw-r-- 1 arm arm 3818 Nov 12 16:44 caragor1.log
+2026-11-12T08:45:33.4813421Z -rw-rw-r-- 1 arm arm 4622 Nov 12 16:37 caragog1.log
+2026-11-12T08:45:33.4813687Z -rw-rw-r-- 1 arm arm 1709 Nov 12 15:59 stage2.log
+2026-11-12T08:45:33.4813952Z -rw-rw-r-- 1 arm arm  293 Nov 12 15:59 build_fable.log
+2026-11-12T08:45:33.4814239Z -rw-rw-r-- 1 arm arm  299 Nov 12 15:59 build_carago.log
+2026-11-12T08:45:33.4814502Z -rw-rw-r-- 1 arm arm 1434 Nov 12 15:52 stage1.log
+2026-11-12T08:45:33.4814755Z -rw-rw-r-- 1 arm arm 4640 Nov 12 14:35 m7bsr1.log
+2026-11-12T08:45:33.4814995Z --- CARAGO-FABLE-CORPUS ---
+2026-11-12T08:45:33.4815211Z == carago_corpus
+2026-11-12T08:45:33.4815391Z replays=183
+2026-11-12T08:45:33.4815574Z index_entries= 182
+2026-11-12T08:45:33.4816160Z first_strategies= {"a": {"id": "a2670aef3ae1823aa2532fca9edb1c3e", "name": "Carago-V2微调"}, "b": {"id": "", "name": "Krypton-M2BC3s2-v1"}}
+2026-11-12T08:45:33.4816628Z == fable_corpus
+2026-11-12T08:45:33.4816815Z replays=182
+2026-11-12T08:45:33.4816984Z index_entries= 181
+2026-11-12T08:45:33.4817419Z first_strategies= {"a": {"id": "2b4b44fd148fa7fdaa53bb0d110ae705", "name": "Fable5.2-Max-V5"}, "b": {"id": "", "name": "AgyCarbon-Light-Godslayer-II"}}
+2026-11-12T08:45:33.4818015Z --- REPLAYS-M3S2 ---
+2026-11-12T08:45:33.4818217Z index_entries= 118
+2026-11-12T08:45:33.4818400Z replays_dir_count=118
+2026-11-12T08:45:33.4818624Z --- RECENTLY-MODIFIED-UNDER-DATA (30min) ---
+2026-11-12T08:45:33.4818894Z /home/arm/junyang/carbon/data/dq_logs/caragor1.log
+2026-11-12T08:45:33.4819334Z /home/arm/junyang/carbon/data/dq_logs/caragog1.log
+2026-11-12T08:45:33.4819699Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1.npz
+2026-11-12T08:45:33.4820021Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep9.npz
+2026-11-12T08:45:33.4820456Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1_log.jsonl
+2026-11-12T08:45:33.4820791Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep12.npz
+2026-11-12T08:45:33.4821118Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep13.npz
+2026-11-12T08:45:33.4821429Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep11.npz
+2026-11-12T08:45:33.4821743Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep8.npz
+2026-11-12T08:45:33.4822052Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep17.npz
+2026-11-12T08:45:33.4822366Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep12.npz
+2026-11-12T08:45:33.4822676Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep4.npz
+2026-11-12T08:45:33.4822988Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep8.npz
+2026-11-12T08:45:33.4823296Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep16.npz
+2026-11-12T08:45:33.4823609Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1.npz
+2026-11-12T08:45:33.4823918Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep19.npz
+2026-11-12T08:45:33.4824228Z /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep15.npz
+2026-11-12T08:45:33.4891294Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep11.npz
+2026-11-12T08:45:33.4891844Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep6.npz
+2026-11-12T08:45:33.4892386Z /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep5.npz
+2026-11-12T08:45:33.4892854Z recent-find-done
+2026-11-12T08:45:33.4893203Z DGXSTATUS1643Q8W2 DGX-END
+2026-11-12T08:45:33.4893532Z DGXSTATUS1643Q8W2 L20-END rc=0
+2026-11-12T08:45:33.4893703Z 
+2026-11-12T08:45:33.4992940Z Post job cleanup.
+2026-11-12T08:45:33.5809728Z [command]/usr/bin/git version
+2026-11-12T08:45:33.5883747Z git version 2.56.0
+2026-11-12T08:45:33.5933034Z Temporarily overriding HOME='/home/runner/work/_temp/026bc85d-672b-4612-b7ba-c542c8e1f781' before making global git config changes
+2026-11-12T08:45:33.5933873Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:45:33.5934720Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:45:33.6000924Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:45
+elapsed 58 claimed
+driver-exit=0

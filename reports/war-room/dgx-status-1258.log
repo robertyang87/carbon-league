@@ -1,0 +1,107 @@
+DGXSTATUS1258A 13:00:43 CST
+spark-29db
+ 13:00:43 up 23 days, 18:05, 1849 users,  load average: 6.02, 13.97, 10.54
+/dev/nvme0n1p2  3.7T  1.7T  1.9T  47% /
+0 %, [N/A], 39, 4.23 W
+== TRAIN/GATE/DEPLOY PROCS ==
+ 580346       07:31 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 580368       07:31 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+ 580369       07:31 /home/arm/junyang/carbon/.venv/bin/python bigeval.py policy_verify_search.py /home/arm/junyang/s26stage/code/exp/echo2.py 993000 20 verify_search
+== GIT PROCS ==
+NO_GIT_PROC
+== GATE 400-GAME FIELD ==
+/home/arm/junyang/carbon/data/gate_pilot_guided:
+total 8
+-rw-rw-r-- 1 arm arm 199 Nov 13 12:43 summary.json
+-rw-rw-r-- 1 arm arm 304 Nov 13 12:43 games.jsonl
+
+/home/arm/junyang/carbon/data/gate_pilot_greedy:
+total 8
+-rw-rw-r-- 1 arm arm 146 Nov 13 12:31 summary.json
+-rw-rw-r-- 1 arm arm 169 Nov 13 12:31 games.jsonl
+{"tag": "pilot_guided_e2", "mode": "guided", "opp": "echo2", "seed0": 993900, "n": 1, "want": 1, "wins": 0, "mean": -48.0, "se": null, "errors": 0, "teacher_ms_mean": 17842.7, "teacher_agree": 0.575}
+-rw-rw-r-- 1 arm arm    51 Nov 13 12:46 gate_fields.log
+-rwxrwxr-x 1 arm arm   741 Nov 13 12:46 run_gate_fields.sh
+-rw-rw-r-- 1 arm arm   325 Nov 13 12:43 gate_pilot_guided.log
+-rw-rw-r-- 1 arm arm   265 Nov 13 12:31 gate_pilot_greedy.log
+-rw-rw-r-- 1 arm arm  2841 Nov 13 11:36 measure_teacher.log
+-rw-rw-r-- 1 arm arm   343 Nov 10 07:17 gate_whole.sh
+-rw-rw-r-- 1 arm arm   561 Nov 10 07:15 gate_late.sh
+-rw-rw-r-- 1 arm arm   352 Nov 10 07:10 gate_awr_dgx.sh
+/home/arm/junyang/carbon/data/gate_dgx.log
+/home/arm/junyang/carbon/data/gate_dgx_b.log
+/home/arm/junyang/gate_fields.log
+/home/arm/junyang/gate_pilot_greedy.log
+/home/arm/junyang/measure_teacher.log
+/home/arm/junyang/gate_pilot_guided.log
+== SPOT-31 DEPLOY ==
+total 1971176
+-rw-rw---- 1 arm arm       5979 Nov 13 12:26 README.md
+-rw-rw---- 1 arm arm       1317 Nov 13 11:25 golden.md5
+-rw-rw---- 1 arm arm       3397 Nov 13 11:25 deploy_stack.sh
+-rw-rw---- 1 arm arm       2665 Nov 13 11:25 bootstrap.sh
+-rw-rw-r-- 1 arm arm          5 Nov 13 11:21 tar.done
+-rw-rw-r-- 1 arm arm         96 Nov 13 11:21 tar.log
+-rw-rw-r-- 1 arm arm         33 Nov 13 11:21 exam_stack_golden.md5
+-rw-rw-r-- 1 arm arm     0 Nov 13 12:53 /home/arm/junyang/verify_search.log
+-rw-rw-r-- 1 arm arm    51 Nov 13 12:46 /home/arm/junyang/gate_fields.log
+-rw-rw-r-- 1 arm arm   325 Nov 13 12:43 /home/arm/junyang/gate_pilot_guided.log
+-rw-rw-r-- 1 arm arm 11512 Nov 13 12:35 /home/arm/junyang/train_heads_v2.log
+-rw-rw-r-- 1 arm arm   265 Nov 13 12:31 /home/arm/junyang/gate_pilot_greedy.log
+-rw-rw-r-- 1 arm arm  2235 Nov 13 11:59 /home/arm/junyang/katago_chain_gen1b.log
+-rw-rw-r-- 1 arm arm  1096 Nov 13 11:41 /home/arm/junyang/katago_chain_gen1.log
+-rw-rw-r-- 1 arm arm  2841 Nov 13 11:36 /home/arm/junyang/measure_teacher.log
+== LAST_STATS VERIFY FIELD ==
+total 1528
+drwxrwxr-x 2 arm arm  4096 Nov 13 12:46 gate_guided_master2
+drwxrwxr-x 2 arm arm  4096 Nov 13 12:43 gate_pilot_guided
+drwxr-xr-x 2 arm arm 40960 Nov 13 12:35 weights
+drwxrwxr-x 2 arm arm  4096 Nov 13 12:31 gate_pilot_greedy
+drwxrwxr-x 2 arm arm  4096 Nov 13 11:57 dq_logs
+drwxrwxr-x 3 arm arm  4096 Nov 13 11:57 ds_gen1
+drwxrwxr-x 3 arm arm  4096 Nov 13 11:41 gen1_shard0
+drwxrwxr-x 2 arm arm  4096 Nov 13 01:04 smoke_pb_final
+drwxrwxr-x 2 arm arm  4096 Nov 12 23:55 smoke_pb_2345
+drwxrwxr-x 2 arm arm  4096 Nov 12 22:38 attic
+-rw-rw-r-- 1 arm arm     5 Nov 12 21:50 m9xj320_chain.state
+-rw-rw-r-- 1 arm arm   491 Nov 12 21:50 M9XJ320_READY.txt
+-rw-rw-r-- 1 arm arm   527 Nov 12 21:50 m9xj320_manifest.json
+drwxrwxr-x 2 arm arm  4096 Nov 12 21:49 ds_m9xj320_w
+/home/arm/junyang/carbon/data/bigeval_live
+tail: cannot open '/home/arm/junyang/carbon/bigeval_live.jsonl' for reading: No such file or directory
+== GEN-1 ROUND 2 ==
+200
+gen1 index: 200
+-rw-rw-r-- 1 arm arm 2235 Nov 13 11:59 /home/arm/junyang/katago_chain_gen1b.log
+-rw-rw-r-- 1 arm arm 1096 Nov 13 11:41 /home/arm/junyang/katago_chain_gen1.log
+tail: cannot open '/home/arm/junyang/gen1b.log' for reading: No such file or directory
+== HEAD ==
+main
+15766a4f4bb63e10667b6ce3b9799f88c3a0c4d2
+15766a4 fix(K4): publish make_search_agent stats as agent.last_stats on every return (eval_v53 a_stats was always empty)
+031d46c 第7条 stage0_train_heads：优先消费 margin_raw/u_raw 精确标签（逐行 finite 选择），旧近似标签走 tanh 反推并在日志与产物 <out>.manifest.json 显式标 approx_labels=true+label_source；label_status 逐行计数 exact/approx/unusable；价值类损失（U/WDL/margin）按 mask 排除 unusable 行（WDL 目标同属结果监督一并 mask，判断见代码注释），policy/BC 损失不经本头不受影响；部分标签列存在即硬失败，禁止静默混用。
+9605b58 第4条-a+第7条 builder：①generation 护栏 assert_not_in_generation——builder 与后处理禁止写入 generations/gen-*；②派生层 register_derived 写 derived.json sidecar（format cnet2-derived/1：base gen、字段/dtype/行数/每文件 sha256/参数/时间），扁平 meta 声明 derived_layer，发布后按 hash 保留既有派生文件的原绑定；load_generation 只读 manifest 本体；③raw 精确标签贯通：新增 margin_raw/u_raw/outcome_type/label_status 四列（逐行与源对齐校验），outcome 三分 normal/fault_one_side/unusable——normal U=0.5·WDL+0.5·sigmoid(M/1000)、单边故障 U 只取 WDL、unusable 留 NaN 严禁补零；无 raw 旧语料不增列不伪造。
+06d8609 第4条-b producer 恢复身份块：每条 entry+replay+identity.json 记权重文件 md5、生成配置 hash、规则/代码 hash（eval_v53/fastsim/cnet2_search/selfplay_gen）；resume/reconcile 身份任一不符不 adopt/skip——在范围内按当前身份重生成、范围外硬错误；孤儿采纳同样验身份。修复验证中发现的 identity 只写 result 块导致孤儿采纳误判。
+43aa173 stage0: teacher quality-gate match driver (guided vs greedy, eval_v53 score rule) + evaluate_root returns arms
+## main
+ M data/bigeval.jsonl
+?? .venv
+?? code/katago_chain_draft.sh
+?? code/selfplay_gen.py
+?? data/bigeval_live/
+fed5adc0768ca01505a5045b93bba4fb5616a44f	HEAD
+== CORPORA ==
+m3s2_corpus replays: 118
+m3s2_corpus index: 118
+carago_corpus replays: 183
+carago_corpus index: 182
+fable_corpus replays: 182
+fable_corpus index: 181
+ds_carago games= 182
+ds_fable games= 181
+ds_m3s2 games= 118
+ds_gen1 games= 200
+== REPO DATA ==
+83
+12
+DGXSTATUS1258A-END 13:00:45 CST

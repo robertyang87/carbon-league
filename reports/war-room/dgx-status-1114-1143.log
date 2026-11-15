@@ -1,0 +1,75 @@
+DGXSTATUS11141143 PROBE-BEGIN 2026-11-14 11:44:31 CST
+=== A system/gpu/procs ===
+DGXSTATUS11141143A
+spark-29db
+ 11:44:36 up 24 days, 16:48, 3638 users,  load average: 0.11, 32.17, 56.19
+0 %, [N/A], 37
+-- procs:
+1175635       00:00 zsh -c echo DGXSTATUS11141143A; hostname; uptime; nvidia-smi --query-gpu=utilization.gpu,memory.used,temperature.gpu --format=csv,noheader; echo "-- procs:"; ps -eo pid,etime,args | grep -E "[a]4_select|[t]rain|[s]creen|[k]0_|spawn_main|[g]it (fetch|pull|merge|checkout)" | head -20; echo "-- spawn_main count:"; pgrep -f "spawn_mai[n]" | wc -l; echo "-- git procs:"; ps -eo pid,etime,args | grep -E "[g]it (fetch|pull|merge|checkout|stash)" || echo NO-GIT-PROC; echo "-- bigeval:"; ls -l /home/arm/junyang/carbon-repo/data/bigeval.jsonl 2>&1; md5sum /home/arm/junyang/carbon-repo/data/bigeval.jsonl 2>&1
+1175641       00:00 grep -E [a]4_select|[t]rain|[s]creen|[k]0_|spawn_main|[g]it (fetch|pull|merge|checkout)
+-- spawn_main count:
+1
+-- git procs:
+NO-GIT-PROC
+-- bigeval:
+-rw-rw-r-- 1 arm arm 280753 Nov 14 10:36 /home/arm/junyang/carbon-repo/data/bigeval.jsonl
+bd779d9d46cd642b91490c372ec2c41c  /home/arm/junyang/carbon-repo/data/bigeval.jsonl
+A SSH-RC=0
+=== B repo HEAD (ls-remote only, no fetch) ===
+DGXSTATUS11141143B
+1d57e6711c46c9d5ec1db5573fe0a11188451a58
+-- stash:
+0
+-- status:
+ M data/bigeval.jsonl
+?? .venv
+?? code/katago_chain_draft.sh
+?? code/selfplay_gen.py
+?? data/bigeval_live/
+-- remote ls-remote:
+b99970267d248c99a7dfafb57b13a05b2a32e41b
+-- behind count vs origin/main ref:
+14
+B SSH-RC=0
+=== C corpora ===
+DGXSTATUS11141143C
+-- data/m3s2_corpus:
+118
+118
+-- data/carago_corpus:
+183
+182
+-- data/fable_corpus:
+182
+181
+-- ds_carago total:
+54418
+-- ds_fable total:
+54119
+-- new files since 11:28 in home:
+/home/arm/junyang/a4_selection_20261114/VOID_20261114_1136.txt
+C SSH-RC=0
+=== D A4 packing-standby re-verify ===
+DGXSTATUS11141143D
+-- a4 dir:
+total 24
+drwxrwxr-x  3 arm arm  4096 Nov 14 11:36 .
+drwxrwxr-x 22 arm arm 12288 Nov 14 11:24 ..
+drwxrwxr-x  3 arm arm  4096 Nov 14 11:24 r1_sel
+-rw-rw-r--  1 arm arm   189 Nov 14 11:36 VOID_20261114_1136.txt
+-- VOID marker:
+VOID - war-room change order 2026-11-14 11:36: r1 A4 selection reassigned to Studio; DGX driver stopped mid-run.
+Partial results in this directory are NOT formal meta and must not be used.
+-- r1_sel:
+__pycache__
+selproxy_ep0.py
+-- any selection json:
+zsh:1: no matches found: /home/arm/junyang/a4_selection_20261114/*selection*.json
+-- pack staging:
+119e9bb9bf8413685b87721cff8cfe18  /home/arm/junyang/a4_pack_stage/cnet2_pack.py
+48392e98c03f25a3a6f616561c8a072e  /home/arm/junyang/a4_pack_stage/cnet2_search_pack.py
+-- a4 log tail:
+{"pack_chain": {"search_pack_file": "/home/arm/junyang/a4_pack_stage/cnet2_search_pack.py", "search_pack_md5": "48392e98c03f25a3a6f616561c8a072e", "pack_file": "/home/arm/junyang/a4_pack_stage/cnet2_pack.py", "pack_md5": "119e9bb9bf8413685b87721cff8cfe18"}}
+-rw-rw-r-- 1 arm arm 258 Nov 14 11:24 /home/arm/junyang/a4_select_20261114.log
+D SSH-RC=0
+DGXSTATUS11141143 PROBE-END 2026-11-14 11:44:51 CST

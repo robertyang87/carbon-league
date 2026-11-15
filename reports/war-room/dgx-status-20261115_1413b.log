@@ -1,0 +1,69 @@
+MARKER=DGXSTATUS20261115_1413B
+--- driver.log tail ---
+08:31:13 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/junyang/k0_calib/cells/lr0.0005_s100_b1_seed7.npz --flatten-q --kl-beta 1.0 --lr 0.0005 --bs 256 --max-updates 100 --seed 7 --device cuda
+08:47:21 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py
+08:47:21 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0005_s100_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0005_s100_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+12:56:57 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py
+12:56:57 CELL DONE {"tag": "lr0.0005_s100_b1_seed7", "lr": 0.0005, "steps": 100, "beta": 1.0, "seed": 7, "delta_u": -0.00386801138058796, "ci95": [-0.011121720227244305, 0.0035743826803655647], "n_games": 50, "n_roots": 9900, "neutral": true}
+12:56:57 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz --flatten-q --kl-beta 1.0 --lr 0.0002 --bs 256 --max-updates 400 --seed 7 --device cuda
+14:02:33 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py
+14:02:33 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s400_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+--- gate2 ps ---
+1835204       48:05  0.0 zsh -c cd /home/arm/junyang/katago_probe_scratch/gatesA && ./run_gate2.sh 12 && ls -la gate2_out_*.json | wc -l
+1835205       48:05  0.0 /bin/bash ./run_gate2.sh 12
+1835208       48:05  133 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 0 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_0.json
+1835209       48:05  133 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 1 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_1.json
+1835210       48:05  134 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 2 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_2.json
+1835211       48:05  134 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 3 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_3.json
+1835212       48:05  133 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 4 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_4.json
+1835213       48:05  133 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 5 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_5.json
+1835214       48:05  134 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 6 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_6.json
+1835215       48:05  133 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 7 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_7.json
+1835216       48:05  133 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 8 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_8.json
+1835217       48:05  134 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 9 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_9.json
+1835218       48:05  134 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 10 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_10.json
+1835219       48:05  133 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 11 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_11.json
+1849981       22:41  0.0 zsh -c cd /home/arm/junyang/katago_probe_scratch/gatesA; while [ $(ls gate2_out_*.json 2>/dev/null | wc -l) -lt 12 ]; do sleep 60; done; echo GATE2_ALL_12_LANDED; ls -la gate2_out_*.json
+--- gate2 files recent ---
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_2.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_5.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_10.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_7.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_load_before.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_6.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_4.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_driver.py
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_1.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_11.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_0.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_9.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_3.txt
+/home/arm/junyang/katago_probe_scratch/gatesA/__pycache__/gate2_driver.cpython-312.pyc
+/home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_8.txt
+--- gate2 log dirs ---
+total 1800
+drwxrwxr-x  4 arm arm    4096 2026-11-15 14:02 .
+drwxrwxr-x 50 arm arm   12288 2026-11-15 13:01 ..
+drwxrwxr-x  2 arm arm    4096 2026-11-15 14:02 cells
+-rw-rw-r--  1 arm arm    5775 2026-11-15 14:02 driver.log
+-rw-rw-r--  1 arm arm     173 2026-11-15 04:34 duel_lr0.0002_s100_b1_seed7.log
+-rw-rw-r--  1 arm arm     174 2026-11-15 08:31 duel_lr0.0002_s200_b1_seed7.log
+-rw-rw-r--  1 arm arm       0 2026-11-15 14:02 duel_lr0.0002_s400_b1_seed7.log
+-rw-rw-r--  1 arm arm     174 2026-11-15 12:56 duel_lr0.0005_s100_b1_seed7.log
+drwxrwxr-x  2 arm arm    4096 2026-11-15 12:56 duels
+-rw-rw-r--  1 arm arm     672 2026-11-15 12:56 ledger.jsonl
+-rw-rw-r--  1 arm arm 1395900 2026-11-15 00:54 roots_calib.json
+-rw-rw-r--  1 arm arm   47643 2026-11-15 01:11 train_lr0.0002_s100_b1_seed7.log
+-rw-rw-r--  1 arm arm   93503 2026-11-15 05:06 train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r--  1 arm arm  185358 2026-11-15 14:02 train_lr0.0002_s400_b1_seed7.log
+-rw-rw-r--  1 arm arm   47483 2026-11-15 08:47 train_lr0.0005_s100_b1_seed7.log
+--- duel json partial ---
+total 11868
+drwxrwxr-x 2 arm arm    4096 2026-11-15 12:56 .
+drwxrwxr-x 4 arm arm    4096 2026-11-15 14:02 ..
+-rw-rw-r-- 1 arm arm 4044214 2026-11-15 04:34 lr0.0002_s100_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4046164 2026-11-15 08:31 lr0.0002_s200_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4047451 2026-11-15 12:56 lr0.0005_s100_b1_seed7.json
+--- duel log size now ---
+-rw-rw-r-- 1 arm arm 0 2026-11-15 14:02 /home/arm/junyang/k0_calib/duel_lr0.0002_s400_b1_seed7.log
+MARKER-END

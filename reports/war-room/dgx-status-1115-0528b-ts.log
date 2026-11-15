@@ -1,0 +1,61 @@
+DGXSTATUS0528B2 PROBE-BEGIN 2026-11-15 05:31:01 CST
+DGXSTATUS0528B2 DGX-BEGIN 2026-11-15 05:31:07 CST
+--- k0_calib cells ---
+total 27492
+-rw-rw-r-- 1 arm arm      227 Nov 15 05:06 lr0.0002_s200_b1_seed7.npz.complete.json
+-rw-rw-r-- 1 arm arm    93503 Nov 15 05:06 lr0.0002_s200_b1_seed7.npz.log.jsonl
+-rw-rw-r-- 1 arm arm 13994760 Nov 15 05:06 lr0.0002_s200_b1_seed7.npz
+-rw-rw-r-- 1 arm arm      227 Nov 15 01:11 lr0.0002_s100_b1_seed7.npz.complete.json
+-rw-rw-r-- 1 arm arm    47643 Nov 15 01:11 lr0.0002_s100_b1_seed7.npz.log.jsonl
+-rw-rw-r-- 1 arm arm 13994760 Nov 15 01:11 lr0.0002_s100_b1_seed7.npz
+--- k0_calib duels ---
+total 3952
+-rw-rw-r-- 1 arm arm 4044214 Nov 15 04:34 lr0.0002_s100_b1_seed7.json
+--- s200 duel out file ---
+ls: cannot access '/home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json': No such file or directory
+NO_DUEL_OUT_YET
+--- driver proc ---
+/home/arm
+total 0
+lr-x------ 1 arm arm 64 Nov 15 05:31 0 -> /dev/null
+l-wx------ 1 arm arm 64 Nov 15 05:31 1 -> /home/arm/junyang/k0_calib/driver.log
+l-wx------ 1 arm arm 64 Nov 15 05:31 2 -> /home/arm/junyang/k0_calib/driver.log
+l-wx------ 1 arm arm 64 Nov 15 05:31 3 -> /home/arm/junyang/k0_calib/duel_lr0.0002_s200_b1_seed7.log
+--- k0_calib dir recent ---
+total 1532
+-rw-rw-r-- 1 arm arm    3217 Nov 15 05:06 driver.log
+-rw-rw-r-- 1 arm arm       0 Nov 15 05:06 duel_lr0.0002_s200_b1_seed7.log
+drwxrwxr-x 2 arm arm    4096 Nov 15 05:06 cells
+-rw-rw-r-- 1 arm arm   93503 Nov 15 05:06 train_lr0.0002_s200_b1_seed7.log
+-rw-rw-r-- 1 arm arm     224 Nov 15 04:34 ledger.jsonl
+-rw-rw-r-- 1 arm arm     173 Nov 15 04:34 duel_lr0.0002_s100_b1_seed7.log
+drwxrwxr-x 2 arm arm    4096 Nov 15 04:34 duels
+-rw-rw-r-- 1 arm arm   47643 Nov 15 01:11 train_lr0.0002_s100_b1_seed7.log
+-rw-rw-r-- 1 arm arm 1395900 Nov 15 00:54 roots_calib.json
+--- driver logs ---
+/home/arm/junyang/k0_calib/driver.log
+/home/arm/junyang/k0_calib/duel_lr0.0002_s200_b1_seed7.log
+/home/arm/junyang/k0_calib/train_lr0.0002_s200_b1_seed7.log
+/home/arm/junyang/k0_calib/duel_lr0.0002_s100_b1_seed7.log
+/home/arm/junyang/k0_calib/train_lr0.0002_s100_b1_seed7.log
+== /home/arm/junyang/k0_calib/driver.log 2026-11-15 05:06:16
+01:11:03 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s100_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s100_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+04:34:17 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py
+04:34:17 CELL DONE {"tag": "lr0.0002_s100_b1_seed7", "lr": 0.0002, "steps": 100, "beta": 1.0, "seed": 7, "delta_u": 0.005444971857481724, "ci95": [-0.0012790188433718626, 0.012534343174094182], "n_games": 50, "n_roots": 9900, "neutral": true}
+04:34:17 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/junyang/k0_calib/cells/lr0.0002_s200_b1_seed7.npz --flatten-q --kl-beta 1.0 --lr 0.0002 --bs 256 --max-updates 200 --seed 7 --device cuda
+05:06:16 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py
+05:06:16 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s200_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+== /home/arm/junyang/k0_calib/duel_lr0.0002_s200_b1_seed7.log 2026-11-15 05:06:16
+--- duel worker cpu ---
+1679761       24:51  0.3 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s200_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+1679762       24:48 99.5 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s200_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+1679763       24:48 99.6 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s200_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+21
+--- duel master etime now ---
+    PID     ELAPSED CMD
+1679761       24:51 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s200_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+    PID     ELAPSED CMD
+1605013    04:41:43 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/k0_calib_driver.py
+DGXSTATUS0528B2 DGX-END 2026-11-15 05:31:07 CST
+DGXSTATUS0528B2 SSH-RC=0
+DGXSTATUS0528B2 PROBE-END 2026-11-15 05:31:07 CST
