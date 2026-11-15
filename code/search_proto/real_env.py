@@ -638,7 +638,12 @@ class RealEnvSearch:
                     g_opp = self._opp_guard.copy()
                 else:
                     g_opp = inx.mod["BankruptcyGuard"](cfg)
-                    g_opp.prevw = {u for u in fop.own_uid if u is not None}
+                    # prevw 只取工人槽 [:10]，与 apply 的 cur 口径逐字
+                    # 对齐：own_uid 的 10/11 槽是招募中心，不是工人，
+                    # 混入 prevw 会在首次 apply 被误计为对手死亡
+                    # （实测凭空 +2、GUARD_NARROW 误触发）。
+                    g_opp.prevw = {u for u in fop.own_uid[:10]
+                                   if u is not None}
                 guards = (inx.guard.copy(), g_opp)
             self._last_rollout_guards = guards
             term_cash = list(s_.cash)     # F01：带入根步的 cash
