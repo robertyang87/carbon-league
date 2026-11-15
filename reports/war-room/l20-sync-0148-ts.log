@@ -1,0 +1,76 @@
+L20SYNC0148 PROBE-BEGIN 2026-11-14 01:55:51 CST
+L20SYNC0148 L20-BEGIN 2026-11-14 01:55:55 CST
+--- TRAINER-PROC ---
+  34214       28:45 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0
+--- SPAWN-MAIN-COUNT ---
+31
+  34225       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34226       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34227       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34228       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34229       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34230       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34231       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34232       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34233       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34234       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34235       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34236       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34237       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34238       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34239       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34240       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34241       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34242       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34243       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34244       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34245       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34246       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34247       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34248       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34249       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34250       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34251       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34252       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34253       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34254       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+  34255       28:43 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd
+--- GPU ---
+pid, used_gpu_memory [MiB]
+34214, 378 MiB
+34225, 1718 MiB
+memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+2110 MiB, 46068 MiB, 8 %
+--- LOG-SIZE-MTIME ---
+16944 /root/carbon/data/rl3/snipe_n1.log
+-rw-r--r-- 1 root root 985953 Nov 14 01:25 /root/carbon/data/rl3/snipe_n1.log
+2026-11-14 01:25:51 CST
+2026-11-14 01:55:56 CST
+--- JSONERR-COUNT ---
+4
+--- TRACEBACK-COUNT ---
+989
+--- LOG-TAIL-12 ---
+  File "/root/carbon/code/rl2_ppo_train.py", line 486, in main
+    league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
+                                                           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 3 (char 2)
+--- TRAIN-JSONL ---
+79 /root/carbon/data/rl3/snipe_n1/train.jsonl
+{"it": 79, "t": 1794587547, "games": 4252, "srv": {"req": 10878, "pos": 31072, "fwd": 751, "t_fwd": 30.32, "pos_per_fwd": 41.4, "models": 12, "servers": 1}, "dec": 1270294, "units": 14062272, "roll_s": 2202.4, "upd_s": 582.1, "buf_s": 1.5, "pre_s": 302.4, "games_per_min": 115.8, "dec_per_s": 576.8, 
+--- ROLLBACK-STATUS ---
+  33515       40:32 bash -c md5sum /root/carbon/data/rl3/state_rollbackup.py; cd /root/carbon/data/rl3 && nohup /root/carbon/.venv/bin/python state_rollbackup.p
+  33517       40:32 /root/carbon/.venv/bin/python state_rollbackup.py
+01:15:23 WATCHER_START s19 rolling state backup (from it81)
+-rw-r--r-- 1 root root 82607619 Nov 14 00:32 /root/carbon/data/rl3/snipe_n1/state_last.pt
+L20SYNC0148 L20-END 2026-11-14 01:55:56 CST
+L20SYNC0148 SSH-RC=0
+L20SYNC0148 PROBE-END 2026-11-14 01:55:55 CST

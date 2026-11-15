@@ -1,0 +1,208 @@
+log len: 49508
+nl
+2026-11-12T08:41:40.9917841Z + tail -10
+2026-11-12T08:41:40.9918234Z {"it": 0, "opp": "exp/opp_master2r.py", "n": 64, "wins": 60, "mean": 1011.4, "se": 89.4, "t": 1794458553.671161}
+2026-11-12T08:41:40.9918831Z {"it": 0, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 49, "mean": 388.4, "se": 107.3, "t": 1794458553.6711898}
+2026-11-12T08:41:40.9919407Z {"it": 5, "opp": "exp/opp_master2r.py", "n": 64, "wins": 59, "mean": 1088.6, "se": 92.4, "t": 1794462997.287793}
+2026-11-12T08:41:40.9919984Z {"it": 5, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 44, "mean": 391.3, "se": 79.2, "t": 1794462997.2878213}
+2026-11-12T08:41:40.9920564Z {"it": 15, "opp": "exp/opp_master2r.py", "n": 64, "wins": 56, "mean": 1014.5, "se": 102.0, "t": 1794472596.5231662}
+2026-11-12T08:41:40.9921145Z {"it": 15, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 50, "mean": 627.4, "se": 96.1, "t": 1794472596.5232165}
+2026-11-12T08:41:40.9921582Z + echo -- EVAL lines in log --
+2026-11-12T08:41:40.9921846Z -- EVAL lines in log --
+2026-11-12T08:41:40.9922121Z + grep -n EVAL /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:41:40.9922418Z + tail -20
+2026-11-12T08:41:40.9922797Z 2:EVAL {"it": 0, "opp": "exp/opp_master2r.py", "n": 64, "wins": 60, "mean": 1011.4, "se": 89.4, "t": 1794458553.671161}
+2026-11-12T08:41:40.9923419Z 3:EVAL {"it": 0, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 49, "mean": 388.4, "se": 107.3, "t": 1794458553.6711898}
+2026-11-12T08:41:40.9924228Z 11:EVAL {"it": 5, "opp": "exp/opp_master2r.py", "n": 64, "wins": 59, "mean": 1088.6, "se": 92.4, "t": 1794462997.287793}
+2026-11-12T08:41:40.9924850Z 12:EVAL {"it": 5, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 44, "mean": 391.3, "se": 79.2, "t": 1794462997.2878213}
+2026-11-12T08:41:40.9925482Z 1499:EVAL {"it": 15, "opp": "exp/opp_master2r.py", "n": 64, "wins": 56, "mean": 1014.5, "se": 102.0, "t": 1794472596.5231662}
+2026-11-12T08:41:40.9926150Z 1500:EVAL {"it": 15, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 50, "mean": 627.4, "se": 96.1, "t": 1794472596.5232165}
+2026-11-12T08:41:40.9926726Z + echo -- log mtime/size --
+2026-11-12T08:41:40.9926969Z -- log mtime/size --
+2026-11-12T08:41:40.9927214Z + ls -l /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:41:40.9927963Z -rw-r--r-- 1 root root 91466 Nov 12 16:36 /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:41:40.9928416Z + date -r /root/carbon/data/rl3/snipe_n1.log +%F %T %Z
+2026-11-12T08:41:40.9928727Z 2026-11-12 16:36:36 CST
+2026-11-12T08:41:40.9928967Z + echo -- traceback count+last --
+2026-11-12T08:41:40.9929248Z -- traceback count+last --
+2026-11-12T08:41:40.9929536Z + grep -c Traceback /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:41:40.9929836Z 87
+2026-11-12T08:41:40.9930063Z + grep -n Traceback /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:41:40.9930361Z + tail -3
+2026-11-12T08:41:40.9930579Z 1446:Traceback (most recent call last):
+2026-11-12T08:41:40.9930865Z 1464:Traceback (most recent call last):
+2026-11-12T08:41:40.9931143Z 1480:Traceback (most recent call last):
+2026-11-12T08:41:40.9931452Z + echo -- traceback exception types in new block --
+2026-11-12T08:41:40.9931799Z -- traceback exception types in new block --
+2026-11-12T08:41:40.9932146Z + grep -n -A3 Traceback /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:41:40.9932461Z + tail -40
+2026-11-12T08:41:40.9932644Z --
+2026-11-12T08:41:40.9932847Z 1362:Traceback (most recent call last):
+2026-11-12T08:41:40.9933249Z 1363-  File "/usr/lib/python3.12/multiprocessing/pool.py", line 131, in worker
+2026-11-12T08:41:40.9933656Z 1364-    put((job, i, result))
+2026-11-12T08:41:40.9934025Z 1365-  File "/usr/lib/python3.12/multiprocessing/queues.py", line 399, in put
+2026-11-12T08:41:40.9934395Z --
+2026-11-12T08:41:40.9934608Z 1378:Traceback (most recent call last):
+2026-11-12T08:41:40.9935011Z 1379-  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+2026-11-12T08:41:40.9935412Z 1380-    self.run()
+2026-11-12T08:41:40.9935735Z 1381-  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+2026-11-12T08:41:40.9936106Z --
+2026-11-12T08:41:40.9936350Z 1396:Traceback (most recent call last):
+2026-11-12T08:41:40.9936724Z 1397-  File "/usr/lib/python3.12/multiprocessing/pool.py", line 131, in worker
+2026-11-12T08:41:40.9937100Z 1398-    put((job, i, result))
+2026-11-12T08:41:40.9937673Z 1399-  File "/usr/lib/python3.12/multiprocessing/queues.py", line 399, in put
+2026-11-12T08:41:40.9938057Z --
+2026-11-12T08:41:40.9938255Z 1412:Traceback (most recent call last):
+2026-11-12T08:41:40.9938657Z 1413-  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+2026-11-12T08:41:40.9939052Z 1414-    self.run()
+2026-11-12T08:41:40.9939366Z 1415-  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+2026-11-12T08:41:40.9939738Z --
+2026-11-12T08:41:40.9939934Z 1430:Traceback (most recent call last):
+2026-11-12T08:41:40.9940306Z 1431-  File "/usr/lib/python3.12/multiprocessing/pool.py", line 131, in worker
+2026-11-12T08:41:40.9940683Z 1432-    put((job, i, result))
+2026-11-12T08:41:40.9941035Z 1433-  File "/usr/lib/python3.12/multiprocessing/queues.py", line 399, in put
+2026-11-12T08:41:40.9941403Z --
+2026-11-12T08:41:40.9941607Z 1446:Traceback (most recent call last):
+2026-11-12T08:41:40.9942003Z 1447-  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+2026-11-12T08:41:40.9942403Z 1448-    self.run()
+2026-11-12T08:41:40.9942721Z 1449-  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+2026-11-12T08:41:41.0015520Z --
+2026-11-12T08:41:41.0016287Z 1464:Traceback (most recent call last):
+2026-11-12T08:41:41.0017094Z 1465-  File "/usr/lib/python3.12/multiprocessing/pool.py", line 131, in worker
+2026-11-12T08:41:41.0018254Z 1466-    put((job, i, result))
+2026-11-12T08:41:41.0019060Z 1467-  File "/usr/lib/python3.12/multiprocessing/queues.py", line 399, in put
+2026-11-12T08:41:41.0019733Z --
+2026-11-12T08:41:41.0020112Z 1480:Traceback (most recent call last):
+2026-11-12T08:41:41.0020874Z 1481-  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+2026-11-12T08:41:41.0022005Z 1482-    self.run()
+2026-11-12T08:41:41.0022645Z 1483-  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+2026-11-12T08:41:41.0023393Z + echo -- log tail 15 --
+2026-11-12T08:41:41.0023822Z -- log tail 15 --
+2026-11-12T08:41:41.0024265Z + tail -15 /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:41:41.0024837Z     put((job, i, (False, wrapped)))
+2026-11-12T08:41:41.0025509Z   File "/usr/lib/python3.12/multiprocessing/queues.py", line 399, in put
+2026-11-12T08:41:41.0026221Z     self._writer.send_bytes(obj)
+2026-11-12T08:41:41.0026942Z   File "/usr/lib/python3.12/multiprocessing/connection.py", line 200, in send_bytes
+2026-11-12T08:41:41.0028074Z     self._send_bytes(m[offset:offset + size])
+2026-11-12T08:41:41.0028866Z   File "/usr/lib/python3.12/multiprocessing/connection.py", line 420, in _send_bytes
+2026-11-12T08:41:41.0029647Z     self._send(header)
+2026-11-12T08:41:41.0030288Z   File "/usr/lib/python3.12/multiprocessing/connection.py", line 384, in _send
+2026-11-12T08:41:41.0031042Z     n = write(self._handle, buf)
+2026-11-12T08:41:41.0031553Z         ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T08:41:41.0032030Z BrokenPipeError: [Errno 32] Broken pipe
+2026-11-12T08:41:41.0036458Z {"it": 15, "t": 1794471762, "games": 4717, "srv": {"req": 23747, "pos": 155104, "fwd": 1615, "t_fwd": 29.94, "pos_per_fwd": 96.0, "models": 5, "servers": 1}, "dec": 1415100, "units": 15618582, "roll_s": 404.7, "upd_s": 750.5, "buf_s": 1.5, "pre_s": 381.9, "games_per_min": 699.3, "dec_per_s": 3496.3, "pol_s": 8899.8, "opp_s": 1925.0, "pl": 0.0127, "vl": 0.0026, "ent": 0.558, "kl": 0.1056, "kl_coef": 0.1, "clipfrac": 0.157, "gnorm": 11.738, "dlogp": -0.0215, "warm": false, "adv_std": 0.0517, "v_mean": 0.04, "margin": {"SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [29, 1218, 603], "SELF": [0, 1434, 714], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [442, 687, 492], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [140, 795, 462], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [574, 583, 447]}, "winrate": 0.576, "planted": {"SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [27.0, 28.7], "SELF": [27.5, 27.5], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.4, 24.2], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.1, 29.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.3, 23.3]}, "buf_mb": 15080.7, "rss_mb": 30607, "workers_rss_mb": 13478}
+2026-11-12T08:41:41.0044058Z {"it": 16, "t": 1794472596, "games": 4648, "srv": {"req": 30054, "pos": 185718, "fwd": 2849, "t_fwd": 29.9, "pos_per_fwd": 65.2, "models": 6, "servers": 1}, "dec": 1394400, "units": 15387722, "roll_s": 896.1, "upd_s": 688.6, "buf_s": 1.5, "pre_s": 314.2, "games_per_min": 311.2, "dec_per_s": 1556.1, "pol_s": 18212.5, "opp_s": 7313.0, "pl": 0.0156, "vl": 0.0026, "ent": 0.561, "kl": 0.1046, "kl_coef": 0.1, "clipfrac": 0.176, "gnorm": 11.466, "dlogp": -0.0273, "warm": false, "adv_std": 0.0507, "v_mean": 0.034, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [509, 546, 391], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [429, 725, 513], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [-11, 1239, 640], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [200, 842, 501], "SELF": [0, 1296, 644]}, "winrate": 0.579, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [30.9, 23.7], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.2, 24.4], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [26.9, 28.9], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.2, 29.3], "SELF": [27.5, 27.5]}, "buf_mb": 14860.1, "rss_mb": 31769, "workers_rss_mb": 14858}
+2026-11-12T08:41:41.0048293Z EVAL {"it": 15, "opp": "exp/opp_master2r.py", "n": 64, "wins": 56, "mean": 1014.5, "se": 102.0, "t": 1794472596.5231662}
+2026-11-12T08:41:41.0048926Z EVAL {"it": 15, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 50, "mean": 627.4, "se": 96.1, "t": 1794472596.5232165}
+2026-11-12T08:41:41.0049529Z + echo -- config --
+2026-11-12T08:41:41.0049756Z -- config --
+2026-11-12T08:41:41.0050007Z + cat /root/carbon/data/rl3/snipe_n1/config.json
+2026-11-12T08:41:41.0050297Z {
+2026-11-12T08:41:41.0050488Z  "adapter": "cnet2",
+2026-11-12T08:41:41.0050755Z  "init": "/root/carbon/data/weights/cnet2_m3n1L.npz",
+2026-11-12T08:41:41.0051057Z  "ref": null,
+2026-11-12T08:41:41.0051296Z  "out": "/root/carbon/data/rl3/snipe_n1",
+2026-11-12T08:41:41.0051584Z  "iters": 1000000,
+2026-11-12T08:41:41.0051812Z  "minutes": 1000000000.0,
+2026-11-12T08:41:41.0052039Z  "workers": 30,
+2026-11-12T08:41:41.0052239Z  "games": 4000,
+2026-11-12T08:41:41.0052441Z  "lockstep": 16,
+2026-11-12T08:41:41.0052643Z  "overlap": 1,
+2026-11-12T08:41:41.0052845Z  "device": "cuda",
+2026-11-12T08:41:41.0053044Z  "temp": 1.0,
+2026-11-12T08:41:41.0053236Z  "lr": 1e-05,
+2026-11-12T08:41:41.0053425Z  "vlr": 0.0003,
+2026-11-12T08:41:41.0053617Z  "epochs": 1,
+2026-11-12T08:41:41.0053810Z  "mb": 768,
+2026-11-12T08:41:41.0053994Z  "clip": 0.2,
+2026-11-12T08:41:41.0054190Z  "ratio": "joint",
+2026-11-12T08:41:41.0054387Z  "vf": 0.5,
+2026-11-12T08:41:41.0054572Z  "ent": 0.001,
+2026-11-12T08:41:41.0054765Z  "kl": 0.1,
+2026-11-12T08:41:41.0054952Z  "kl_target": 0.0,
+2026-11-12T08:41:41.0055151Z  "gclip": 1.0,
+2026-11-12T08:41:41.0055346Z  "gamma": 0.995,
+2026-11-12T08:41:41.0055538Z  "lam": 0.95,
+2026-11-12T08:41:41.0055742Z  "rscale": 0.000333,
+2026-11-12T08:41:41.0055952Z  "reward": "worth",
+2026-11-12T08:41:41.0056159Z  "win_bonus": 0.1,
+2026-11-12T08:41:41.0056362Z  "c_dep": 0.0,
+2026-11-12T08:41:41.0056556Z  "c_lost": 0.0,
+2026-11-12T08:41:41.0056753Z  "shape_iters": 200,
+2026-11-12T08:41:41.0056961Z  "sep_value": 1,
+2026-11-12T08:41:41.0057154Z  "vwarm": 3,
+2026-11-12T08:41:41.0058207Z  "pool": "[[\"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2\", 1.0], [\"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2\", 0.5], [\"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2\", 0.5]]",
+2026-11-12T08:41:41.0059030Z  "snap_every": 10,
+2026-11-12T08:41:41.0059250Z  "snap_prior": 1.0,
+2026-11-12T08:41:41.0059487Z  "max_snaps": 2,
+2026-11-12T08:41:41.0059717Z  "pfsp": 1.0,
+2026-11-12T08:41:41.0059924Z  "ckpt_every": 1,
+2026-11-12T08:41:41.0060125Z  "eval_every": 5,
+2026-11-12T08:41:41.0060317Z  "eval_pairs": 32,
+2026-11-12T08:41:41.0060581Z  "eval_opps": "exp/opp_master2r.py,exp/opp_m3echo.py",
+2026-11-12T08:41:41.0060898Z  "eval_seed0": 980000,
+2026-11-12T08:41:41.0061116Z  "seed0": 3000000,
+2026-11-12T08:41:41.0061312Z  "amp": 0,
+2026-11-12T08:41:41.0061509Z  "pre_mb": 4096,
+2026-11-12T08:41:41.0061710Z  "server": 1,
+2026-11-12T08:41:41.0061906Z  "self_prior": 0.5,
+2026-11-12T08:41:41.0062183Z  "resume": "/root/carbon/data/rl3/snipe_n1/state_last.pt",
+2026-11-12T08:41:41.0062496Z  "remote": null,
+2026-11-12T08:41:41.0062693Z  "dec_frac": 0.25,
+2026-11-12T08:41:41.0062883Z  "max_stale": 2
+2026-11-12T08:41:41.0063080Z }+ echo -- go file --
+2026-11-12T08:41:41.0063291Z -- go file --
+2026-11-12T08:41:41.0063498Z + ls -l /tmp/n1_pool_go.txt
+2026-11-12T08:41:41.0063831Z ls: cannot access '/tmp/n1_pool_go.txt': No such file or directory
+2026-11-12T08:41:41.0064178Z + echo -- state_last --
+2026-11-12T08:41:41.0064398Z -- state_last --
+2026-11-12T08:41:41.0064643Z + ls -l /root/carbon/data/rl3/snipe_n1/state_last.pt
+2026-11-12T08:41:41.0065096Z -rw-r--r-- 1 root root 82595743 Nov 12 16:36 /root/carbon/data/rl3/snipe_n1/state_last.pt
+2026-11-12T08:41:41.0065584Z + ls -l /root/carbon/data/rl3/snipe_n1/state_pre_klfix2_it14.pt
+2026-11-12T08:41:41.0066241Z -rw-r--r-- 1 root root 82595743 Nov 12 16:03 /root/carbon/data/rl3/snipe_n1/state_pre_klfix2_it14.pt
+2026-11-12T08:41:41.0066704Z + echo == N1WATCH-1640B7E2 END ==
+2026-11-12T08:41:41.0066
+960Z == N1WATCH-1640B7E2 END ==
+2026-11-12T08:41:41.0067222Z + echo -- residual ssh/scp/sftp/git procs --
+2026-11-12T08:41:41.0067805Z -- residual ssh/scp/sftp/git procs --
+2026-11-12T08:41:41.0068095Z + ps -eo pid,etime,args
+2026-11-12T08:41:41.0068340Z + grep -E ssh|scp|sftp|git
+2026-11-12T08:41:41.0068574Z + grep -v grep
+2026-11-12T08:41:41.0069018Z   16744    23:47:09 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+2026-11-12T08:41:41.0069396Z + echo -- last4 ckpt mtime --
+2026-11-12T08:41:41.0069645Z -- last4 ckpt mtime --
+2026-11-12T08:41:41.0072044Z + ls -td /root/carbon/data/rl3/snipe_n1/ckpt_1.npz /root/carbon/data/rl3/snipe_n1/ckpt_10.npz /root/carbon/data/rl3/snipe_n1/ckpt_11.npz /root/carbon/data/rl3/snipe_n1/ckpt_12.npz /root/carbon/data/rl3/snipe_n1/ckpt_13.npz /root/carbon/data/rl3/snipe_n1/ckpt_14.npz /root/carbon/data/rl3/snipe_n1/ckpt_15.npz /root/carbon/data/rl3/snipe_n1/ckpt_16.npz /root/carbon/data/rl3/snipe_n1/ckpt_2.npz /root/carbon/data/rl3/snipe_n1/ckpt_3.npz /root/carbon/data/rl3/snipe_n1/ckpt_4.npz /root/carbon/data/rl3/snipe_n1/ckpt_5.npz /root/carbon/data/rl3/snipe_n1/ckpt_6.npz /root/carbon/data/rl3/snipe_n1/ckpt_7.npz /root/carbon/data/rl3/snipe_n1/ckpt_8.npz /root/carbon/data/rl3/snipe_n1/ckpt_9.npz /root/carbon/data/rl3/snipe_n1/ckpt_last.npz
+2026-11-12T08:41:41.0074436Z + head -4
+2026-11-12T08:41:41.0074630Z + read d
+2026-11-12T08:41:41.0074882Z + stat -c %y %n /root/carbon/data/rl3/snipe_n1/ckpt_last.npz
+2026-11-12T08:41:41.0075320Z 2026-11-12 16:36:36.285380449 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_last.npz
+2026-11-12T08:41:41.0075691Z + read d
+2026-11-12T08:41:41.0075937Z + stat -c %y %n /root/carbon/data/rl3/snipe_n1/ckpt_16.npz
+2026-11-12T08:41:41.0076351Z 2026-11-12 16:36:36.254379538 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_16.npz
+2026-11-12T08:41:41.0076704Z + read d
+2026-11-12T08:41:41.0076949Z + stat -c %y %n /root/carbon/data/rl3/snipe_n1/ckpt_15.npz
+2026-11-12T08:41:41.0077368Z 2026-11-12 16:22:42.015873845 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_15.npz
+2026-11-12T08:41:41.0077976Z + read d
+2026-11-12T08:41:41.0078219Z + stat -c %y %n /root/carbon/data/rl3/snipe_n1/ckpt_14.npz
+2026-11-12T08:41:41.0078625Z 2026-11-12 16:03:11.567525654 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_14.npz
+2026-11-12T08:41:41.0078986Z + read d
+2026-11-12T08:41:41.0079178Z + echo -- snap list --
+2026-11-12T08:41:41.0079403Z -- snap list --
+2026-11-12T08:41:41.0079630Z + ls -lt /root/carbon/data/rl3/snipe_n1/
+2026-11-12T08:41:41.0079898Z + grep -i snap
+2026-11-12T08:41:41.0080106Z + head -5
+2026-11-12T08:41:41.0080347Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 snap_10.npz
+2026-11-12T08:41:41.0080580Z 
+2026-11-12T08:41:41.0204610Z Post job cleanup.
+2026-11-12T08:41:41.1208916Z [command]/usr/bin/git version
+2026-11-12T08:41:41.1274906Z git version 2.56.0
+2026-11-12T08:41:41.1368028Z Temporarily overriding HOME='/home/runner/work/_temp/d15f78d2-4d76-40d2-bb7e-97d80c603495' before making global git config changes
+2026-11-12T08:41:41.1388377Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:41:41.1393942Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:41:41.1488534Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:41:41.1588792Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:41:41.2320253Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:41:41.2388160Z http.https://github.com/.extraheader
+2026-11-12T08:41:41.2428327Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T08:41:41.2528756Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only -
+---LOG-END---

@@ -1,0 +1,43 @@
+L20SYNC0126X7Q2 PROBE-BEGIN 2026-11-14 01:29:43 CST
+L20SYNC0126X7Q2 L20-BEGIN 2026-11-14 01:29:47 CST
+--- TRAINER-PROC ---
+  34214       02:36 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 768 --pre-mb 4096 --rscale 1.0 --gamma 1.0 --ckpt-every 1 --snap-every 10 --max-snaps 2 --eval-every 5 --eval-pairs 32 --eval-opps exp/opp_master2r.py,exp/opp_m3echo.py --lr 1e-5 --kl 0.15 --init /root/carbon/data/weights/cnet2_m3n1L.npz --games 4000 --out /root/carbon/data/rl3/snipe_n1 --resume /root/carbon/data/rl3/snipe_n1/state_last.pt --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2", 1.0], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudio.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260r1.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260g1.npz#T2", 0.25], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2r1.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2g1.npz#T2", 0.25], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_caragor1_ep19.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj320r1.npz#T2", 0.5]] --value-head utility --utility-source checkpoint --resume-vwarm 1
+--- WATCHDOG-33517 ---
+    PID     ELAPSED COMMAND
+  33517       14:23 /root/carbon/.venv/bin/python state_rollbackup.py
+--- ORPHAN-SPAWN-MAIN ---
+    PID     ELAPSED COMMAND
+ORPHANS-GONE
+--- SPAWN-MAIN-COUNT ---
+31
+--- GPU-PROCS ---
+pid, used_gpu_memory [MiB]
+34214, 378 MiB
+34225, 1698 MiB
+--- GPU-MEM ---
+memory.used [MiB], memory.total [MiB]
+2090 MiB, 46068 MiB
+--- RELAUNCH-SCRIPT-ON-L20 ---
+ls: cannot access '/root/carbon/relaunch_it79.py': No such file or directory
+ls: cannot access '/root/carbon/code/relaunch_it79.py': No such file or directory
+--- TRAIN-JSONL ---
+79 /root/carbon/data/rl3/snipe_n1/train.jsonl
+{"it": 79, "t": 1794587547, "games": 4252, "srv": {"req": 10878, "pos": 31072, "fwd": 751, "t_fwd": 30.32, "pos_per_fwd": 41.4, "models": 12, "servers": 1}, "dec": 1270294, "units": 14062272, "roll_s"
+--- LOG-MTIME-OOM-TB ---
+-rw-r--r-- 1 root root 985953 Nov 14 01:25 /root/carbon/data/rl3/snipe_n1.log
+2026-11-14 01:25:51 CST
+1
+989
+--- LOG-TAIL-5 ---
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 3 (char 2)
+--- STATE-LAST ---
+ls: cannot access '/root/carbon/data/rl3/snipe_n1/*.prev*': No such file or directory
+-rw-r--r-- 1 root root 82607619 Nov 14 00:32 /root/carbon/data/rl3/snipe_n1/state_last.pt
+01:15:23 WATCHER_START s19 rolling state backup (from it81)
+L20SYNC0126X7Q2 L20-END 2026-11-14 01:29:47 CST
+L20SYNC0126X7Q2 SSH-RC=0
+L20SYNC0126X7Q2 PROBE-END 2026-11-14 01:29:46 CST

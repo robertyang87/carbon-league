@@ -1,0 +1,310 @@
+﻿2026-11-12T12:28:32.8751249Z Current runner version: '2.338.2'
+2026-11-12T12:28:32.8831170Z ##[group]Runner Image Provisioner
+2026-11-12T12:28:32.8853562Z Hosted Compute Agent
+2026-11-12T12:28:32.8854861Z Version: 20261028.624
+2026-11-12T12:28:32.8855999Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T12:28:32.8857491Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T12:28:32.8858953Z Worker ID: {e3e35e90-0565-4173-8426-ed8cfea330ed}
+2026-11-12T12:28:32.8860398Z Region: eastus
+2026-11-12T12:28:32.8861783Z Cloud: Azure
+2026-11-12T12:28:32.8862831Z ##[endgroup]
+2026-11-12T12:28:32.8865279Z ##[group]Operating System
+2026-11-12T12:28:32.8866699Z Ubuntu
+2026-11-12T12:28:32.8867693Z 24.04.5
+2026-11-12T12:28:32.8868853Z LTS
+2026-11-12T12:28:32.8870495Z ##[endgroup]
+2026-11-12T12:28:32.8892042Z ##[group]Runner Image
+2026-11-12T12:28:32.8893494Z Image: ubuntu-24.04
+2026-11-12T12:28:32.8894638Z Version: 20261101.360.1
+2026-11-12T12:28:32.8897070Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T12:28:32.8899905Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T12:28:32.8902099Z ##[endgroup]
+2026-11-12T12:28:32.8904272Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T12:28:32.8907923Z Contents: read
+2026-11-12T12:28:32.8909035Z Metadata: read
+2026-11-12T12:28:32.8910161Z ##[endgroup]
+2026-11-12T12:28:32.8916109Z Secret source: Actions
+2026-11-12T12:28:32.8917909Z Cache mode: write
+2026-11-12T12:28:32.8919608Z Prepare workflow directory
+2026-11-12T12:28:32.9835482Z Prepare all required actions
+2026-11-12T12:28:32.9908652Z Getting action download info
+2026-11-12T12:28:33.1938786Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T12:28:33.4033047Z Complete job name: run
+2026-11-12T12:28:33.5040667Z ##[group]Run actions/checkout@v4
+2026-11-12T12:28:33.5042465Z with:
+2026-11-12T12:28:33.5043350Z   repository: robertyang87/carbon-league
+2026-11-12T12:28:33.5051631Z   token: ***
+2026-11-12T12:28:33.5052515Z   ssh-strict: true
+2026-11-12T12:28:33.5053366Z   ssh-user: git
+2026-11-12T12:28:33.5054243Z   persist-credentials: true
+2026-11-12T12:28:33.5055206Z   clean: true
+2026-11-12T12:28:33.5056121Z   sparse-checkout-cone-mode: true
+2026-11-12T12:28:33.5057087Z   fetch-depth: 1
+2026-11-12T12:28:33.5057923Z   fetch-tags: false
+2026-11-12T12:28:33.5058782Z   show-progress: true
+2026-11-12T12:28:33.5059650Z   lfs: false
+2026-11-12T12:28:33.5060384Z   submodules: false
+2026-11-12T12:28:33.5061059Z   set-safe-directory: true
+2026-11-12T12:28:33.5061982Z   allow-unsafe-pr-checkout: false
+2026-11-12T12:28:33.5062940Z ##[endgroup]
+2026-11-12T12:28:33.8373273Z Syncing repository: robertyang87/carbon-league
+2026-11-12T12:28:33.8377223Z ##[group]Getting Git version info
+2026-11-12T12:28:33.8378728Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T12:28:33.8380730Z [command]/usr/bin/git version
+2026-11-12T12:28:33.9610445Z git version 2.56.0
+2026-11-12T12:28:33.9662766Z ##[endgroup]
+2026-11-12T12:28:33.9670270Z Temporarily overriding HOME='/home/runner/work/_temp/683c42a8-5827-4471-a507-27a386855150' before making global git config changes
+2026-11-12T12:28:33.9673710Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T12:28:33.9676817Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:28:33.9680824Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T12:28:33.9683499Z ##[group]Initializing the repository
+2026-11-12T12:28:33.9685047Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:28:33.9686952Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T12:28:33.9688912Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T12:28:33.9690805Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T12:28:33.9693099Z hint: call:
+2026-11-12T12:28:33.9693989Z hint:
+2026-11-12T12:28:33.9695047Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T12:28:33.9696335Z hint:
+2026-11-12T12:28:33.9697538Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T12:28:33.9699424Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T12:28:33.9700972Z hint:
+2026-11-12T12:28:33.9702348Z hint: 	git branch -m <name>
+2026-11-12T12:28:33.9703655Z hint:
+2026-11-12T12:28:33.9705511Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T12:28:33.9741490Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T12:28:33.9750672Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T12:28:33.9760334Z ##[endgroup]
+2026-11-12T12:28:33.9762963Z ##[group]Disabling automatic garbage collection
+2026-11-12T12:28:33.9764652Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T12:28:33.9768103Z ##[endgroup]
+2026-11-12T12:28:33.9769939Z ##[group]Setting up auth
+2026-11-12T12:28:33.9774046Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T12:28:33.9799166Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T12:28:34.0117892Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T12:28:34.0170292Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T12:28:34.0537254Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T12:28:34.0587556Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T12:28:34.0860878Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T12:28:34.0920744Z ##[endgroup]
+2026-11-12T12:28:34.0922452Z ##[group]Fetching the repository
+2026-11-12T12:28:34.0957846Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +261a8e1946afc502e06de2b8fa15ab4708e486e2:refs/remotes/origin/main
+2026-11-12T12:28:35.3785320Z From https://github.com/robertyang87/carbon-league
+2026-11-12T12:28:35.3793351Z  * [new ref]         261a8e1946afc502e06de2b8fa15ab4708e486e2 -> origin/main
+2026-11-12T12:28:35.3797476Z ##[endgroup]
+2026-11-12T12:28:35.3799033Z ##[group]Determining the checkout info
+2026-11-12T12:28:35.3800481Z ##[endgroup]
+2026-11-12T12:28:35.3805494Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T12:28:35.3872561Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T12:28:35.3917157Z ##[group]Checking out the ref
+2026-11-12T12:28:35.3922253Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T12:28:35.7595842Z Switched to a new branch 'main'
+2026-11-12T12:28:35.7655119Z branch 'main' set up to track 'origin/main'.
+2026-11-12T12:28:35.7659532Z ##[endgroup]
+2026-11-12T12:28:35.7754023Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T12:28:35.7784788Z 261a8e1946afc502e06de2b8fa15ab4708e486e2
+2026-11-12T12:28:35.8099555Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKIyBMb2NhdGUgY25ldDJfbTdic3IxTC5ucHogKG9yIGFueSBtN2JzIHdlaWdodCkgb24gREdYIGFuZCBvbiBMMjAgKHJlYWQtb25seSBsaXN0aW5ncykuCiMgTWFya2VyOiBNN0ZJTkQyMDMwRyAoY2xhaW0gb25seSBvdXRwdXQgY29udGFpbmluZyB0aGlzIG1hcmtlcikKTUFSSz1NN0ZJTkQyMDMwRwplY2hvICIke01BUkt9X0JFR0lOICQoZGF0ZSAnKyVGICVUICVaJykiCmVjaG8gIi0tLSBMMjAgbG9jYWwgd2VpZ2h0cyAobTdicykgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIG03YnMgfHwgZWNobyBOT05FX09OX0wyMF9XRUlHSFRTCm1kNXN1bSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX203YnNyMUwubnB6IDI+JjEKdGltZW91dCAtayAzMCA0MjAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIGFybUAxMC4yMTEuNDMuMTU1ICdiYXNoIC1zJyA8PCdER1hFT0YnCmVjaG8gIk03RklORDIwMzBHIERHWC1CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIgpob3N0bmFtZQplY2hvICItLS0gZmluZCAqbTdicyogdW5kZXIgL2hvbWUvYXJtIC0tLSIKdGltZW91dCAxMjAgZmluZCAvaG9tZS9hcm0gLWluYW1lICcqbTdicyonIDI+L2Rldi9udWxsIHwgaGVhZCAtNjAKZWNobyAiLS0tIHdlaWdodHMgZGlycyBtNyBncmVwIC0tLSIKbHMgL2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIG03IHx8IGVjaG8gTk9ORV9DQVJCT05fV0VJR0hUUwpscyAvaG9tZS9hcm0vanVueWFuZy9zMjZzdGFnZS9kYXRhL3dlaWdodHMvIDI+L2Rldi9udWxsIHwgZ3JlcCAtaSBtNyB8fCBlY2hvIE5PTkVfUzI2U1RBR0UKbHMgL2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uLXJlcG8vZGF0YS93ZWlnaHRzLyAyPi9kZXYvbnVsbCB8IGdyZXAgLWkgbTcgfHwgZWNobyBOT05FX1JFUE9fV0VJR0hUUwplY2hvICJNN0ZJTkQyMDMwRyBER1gtRU5EIgpER1hFT0YKZWNobyAiJHtNQVJLfV9FTkQgcmM9JD8iCg==" ]; then
+2026-11-12T12:28:35.8141960Z [36;1mif [ -n "IyEvYmluL2Jhc2gKIyBMb2NhdGUgY25ldDJfbTdic3IxTC5ucHogKG9yIGFueSBtN2JzIHdlaWdodCkgb24gREdYIGFuZCBvbiBMMjAgKHJlYWQtb25seSBsaXN0aW5ncykuCiMgTWFya2VyOiBNN0ZJTkQyMDMwRyAoY2xhaW0gb25seSBvdXRwdXQgY29udGFpbmluZyB0aGlzIG1hcmtlcikKTUFSSz1NN0ZJTkQyMDMwRwplY2hvICIke01BUkt9X0JFR0lOICQoZGF0ZSAnKyVGICVUICVaJykiCmVjaG8gIi0tLSBMMjAgbG9jYWwgd2VpZ2h0cyAobTdicykgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIG03YnMgfHwgZWNobyBOT05FX09OX0wyMF9XRUlHSFRTCm1kNXN1bSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX203YnNyMUwubnB6IDI+JjEKdGltZW91dCAtayAzMCA0MjAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIGFybUAxMC4yMTEuNDMuMTU1ICdiYXNoIC1zJyA8PCdER1hFT0YnCmVjaG8gIk03RklORDIwMzBHIERHWC1CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIgpob3N0bmFtZQplY2hvICItLS0gZmluZCAqbTdicyogdW5kZXIgL2hvbWUvYXJtIC0tLSIKdGltZW91dCAxMjAgZmluZCAvaG9tZS9hcm0gLWluYW1lICcqbTdicyonIDI+L2Rldi9udWxsIHwgaGVhZCAtNjAKZWNobyAiLS0tIHdlaWdodHMgZGlycyBtNyBncmVwIC0tLSIKbHMgL2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIG03IHx8IGVjaG8gTk9ORV9DQVJCT05fV0VJR0hUUwpscyAvaG9tZS9hcm0vanVueWFuZy9zMjZzdGFnZS9kYXRhL3dlaWdodHMvIDI+L2Rldi9udWxsIHwgZ3JlcCAtaSBtNyB8fCBlY2hvIE5PTkVfUzI2U1RBR0UKbHMgL2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uLXJlcG8vZGF0YS93ZWlnaHRzLyAyPi9kZXYvbnVsbCB8IGdyZXAgLWkgbTcgfHwgZWNobyBOT05FX1JFUE9fV0VJR0hUUwplY2hvICJNN0ZJTkQyMDMwRyBER1gtRU5EIgpER1hFT0YKZWNobyAiJHtNQVJLfV9FTkQgcmM9JD8iCg==" ]; then[0m
+2026-11-12T12:28:35.8184652Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" --b64 "IyEvYmluL2Jhc2gKIyBMb2NhdGUgY25ldDJfbTdic3IxTC5ucHogKG9yIGFueSBtN2JzIHdlaWdodCkgb24gREdYIGFuZCBvbiBMMjAgKHJlYWQtb25seSBsaXN0aW5ncykuCiMgTWFya2VyOiBNN0ZJTkQyMDMwRyAoY2xhaW0gb25seSBvdXRwdXQgY29udGFpbmluZyB0aGlzIG1hcmtlcikKTUFSSz1NN0ZJTkQyMDMwRwplY2hvICIke01BUkt9X0JFR0lOICQoZGF0ZSAnKyVGICVUICVaJykiCmVjaG8gIi0tLSBMMjAgbG9jYWwgd2VpZ2h0cyAobTdicykgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIG03YnMgfHwgZWNobyBOT05FX09OX0wyMF9XRUlHSFRTCm1kNXN1bSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX203YnNyMUwubnB6IDI+JjEKdGltZW91dCAtayAzMCA0MjAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIGFybUAxMC4yMTEuNDMuMTU1ICdiYXNoIC1zJyA8PCdER1hFT0YnCmVjaG8gIk03RklORDIwMzBHIERHWC1CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIgpob3N0bmFtZQplY2hvICItLS0gZmluZCAqbTdicyogdW5kZXIgL2hvbWUvYXJtIC0tLSIKdGltZW91dCAxMjAgZmluZCAvaG9tZS9hcm0gLWluYW1lICcqbTdicyonIDI+L2Rldi9udWxsIHwgaGVhZCAtNjAKZWNobyAiLS0tIHdlaWdodHMgZGlycyBtNyBncmVwIC0tLSIKbHMgL2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIG03IHx8IGVjaG8gTk9ORV9DQVJCT05fV0VJR0hUUwpscyAvaG9tZS9hcm0vanVueWFuZy9zMjZzdGFnZS9kYXRhL3dlaWdodHMvIDI+L2Rldi9udWxsIHwgZ3JlcCAtaSBtNyB8fCBlY2hvIE5PTkVfUzI2U1RBR0UKbHMgL2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uLXJlcG8vZGF0YS93ZWlnaHRzLyAyPi9kZXYvbnVsbCB8IGdyZXAgLWkgbTcgfHwgZWNobyBOT05FX1JFUE9fV0VJR0hUUwplY2hvICJNN0ZJTkQyMDMwRyBER1gtRU5EIgpER1hFT0YKZWNobyAiJHtNQVJLfV9FTkQgcmM9JD8iCg=="[0m
+2026-11-12T12:28:35.8206305Z [36;1melse[0m
+2026-11-12T12:28:35.8206828Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" "hostname && uptime"[0m
+2026-11-12T12:28:35.8207274Z [36;1mfi[0m
+2026-11-12T12:28:35.8231993Z shell: /usr/bin/bash -e {0}
+2026-11-12T12:28:35.8232303Z env:
+2026-11-12T12:28:35.8232785Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T12:28:35.8233212Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T12:28:35.8233483Z   ACS_REGION: cn-shanghai
+2026-11-12T12:28:35.8233726Z ##[endgroup]
+2026-11-12T12:28:55.7126633Z InvokeId: t-sh072w1aeh4vkzk
+2026-11-12T12:28:55.7127664Z --- status=Success exit=0 ---
+2026-11-12T12:28:55.7128723Z M7FIND2030G_BEGIN 2026-11-12 20:28:38 CST
+2026-11-12T12:28:55.7129576Z --- L20 local weights (m7bs) ---
+2026-11-12T12:28:55.7130352Z -rw-r--r-- 1 root root  11821004 Nov 12 15:05 cnet2_m7bsg1L.npz
+2026-11-12T12:28:55.7131238Z -rw-r--r-- 1 root root  13968972 Nov 12 14:51 cnet2_m7bsr1L.npz
+2026-11-12T12:28:55.7132580Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T12:28:55.7133713Z M7FIND2030G DGX-BEGIN 2026-11-12 20:28:51 CST
+2026-11-12T12:28:55.7134404Z spark-29db
+2026-11-12T12:28:55.7134988Z --- find *m7bs* under /home/arm ---
+2026-11-12T12:28:55.7135729Z /home/arm/junyang/carbon/code/m7bs.sh
+2026-11-12T12:28:55.7136524Z /home/arm/junyang/carbon/data/ds_m7bs_v2
+2026-11-12T12:28:55.7137314Z /home/arm/junyang/carbon/data/ds_m7bs
+2026-11-12T12:28:55.7138116Z /home/arm/junyang/carbon/data/m7bs_corpus
+2026-11-12T12:28:55.7138950Z /home/arm/junyang/carbon/data/m7bs_matches.json
+2026-11-12T12:28:55.7139822Z /home/arm/junyang/carbon/data/m7bs.out
+2026-11-12T12:28:55.7140680Z /home/arm/junyang/carbon/data/dq_logs/m7bsv2r1.log
+2026-11-12T12:28:55.7141956Z /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log.stale1320
+2026-11-12T12:28:55.7142924Z /home/arm/junyang/carbon/data/dq_logs/build_m7bsv2.log
+2026-11-12T12:28:55.7143762Z /home/arm/junyang/carbon/data/dq_logs/m7bsr1.log
+2026-11-12T12:28:55.7144583Z /home/arm/junyang/carbon/data/dq_logs/m7bsv2g1.log
+2026-11-12T12:28:55.7145389Z /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log
+2026-11-12T12:28:55.7146252Z /home/arm/junyang/carbon/data/dq_logs/m7bsg1.log.stale1320
+2026-11-12T12:28:55.7147137Z /home/arm/junyang/carbon/data/dq_logs/build_m7bs.log
+2026-11-12T12:28:55.7148016Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep4.npz
+2026-11-12T12:28:55.7148956Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_ep11.npz
+2026-11-12T12:28:55.7149904Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_last.npz
+2026-11-12T12:28:55.7150827Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_ep2.npz
+2026-11-12T12:28:55.7152074Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_last.npz
+2026-11-12T12:28:55.7152927Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep0.npz
+2026-11-12T12:28:55.7153808Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_log.jsonl.stale1320
+2026-11-12T12:28:55.7154697Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2g1.npz
+2026-11-12T12:28:55.7155496Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep4.npz
+2026-11-12T12:28:55.7156329Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2g1_ep4.npz
+2026-11-12T12:28:55.7157148Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_ep9.npz
+2026-11-12T12:28:55.7157974Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep15.npz
+2026-11-12T12:28:55.7158780Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep1.npz
+2026-11-12T12:28:55.7159627Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep12.npz
+2026-11-12T12:28:55.7160992Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_log.jsonl.stale1320
+2026-11-12T12:28:55.7162200Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2g1_ep10.npz
+2026-11-12T12:28:55.7163085Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep14.npz
+2026-11-12T12:28:55.7164008Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep7.npz
+2026-11-12T12:28:55.7164968Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep1.npz.stale1320
+2026-11-12T12:28:55.7165954Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep12.npz
+2026-11-12T12:28:55.7167199Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1.npz.stale1320
+2026-11-12T12:28:55.7168194Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2g1_ep14.npz
+2026-11-12T12:28:55.7169156Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep17.npz
+2026-11-12T12:28:55.7170146Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep0.npz.stale1320
+2026-11-12T12:28:55.7171113Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep5.npz
+2026-11-12T12:28:55.7172260Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep3.npz
+2026-11-12T12:28:55.7173064Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_log.jsonl
+2026-11-12T12:28:55.7174016Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_ep12.npz
+2026-11-12T12:28:55.7174936Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_ep17.npz
+2026-11-12T12:28:55.7175893Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep17.npz
+2026-11-12T12:28:55.7176841Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep11.npz
+2026-11-12T12:28:55.7177870Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep6.npz
+2026-11-12T12:28:55.7178843Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_ep16.npz
+2026-11-12T12:28:55.7179817Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_log.jsonl
+2026-11-12T12:28:55.7180753Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep19.npz
+2026-11-12T12:28:55.7181903Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2g1_ep16.npz
+2026-11-12T12:28:55.7182994Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep15.npz
+2026-11-12T12:28:55.7184098Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2g1_log.jsonl
+2026-11-12T12:28:55.7185173Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_ep10.npz
+2026-11-12T12:28:55.7186163Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep18.npz
+2026-11-12T12:28:55.7187233Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1.npz.stale1320
+2026-11-12T12:28:55.7188359Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1.npz
+2026-11-12T12:28:55.7189519Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsg1_last.npz.stale1320
+2026-11-12T12:28:55.7190821Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1.npz
+2026-11-12T12:28:55.7192267Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1_ep18.npz
+2026-11-12T12:28:55.7193333Z /home/arm/junyang/carbon/data/weights/cnet2_m7bsr1_ep10.npz
+2026-11-12T12:28:55.7194218Z --- weights dirs m7 grep ---
+2026-11-12T12:28:55.7194860Z cnet2_m7bsg1_ep0.npz
+2026-11-12T12:28:55.7195462Z cnet2_m7bsg1_ep0.npz.stale1320
+2026-11-12T12:28:55.7196043Z cnet2_m7bsg1_ep10.npz
+2026-11-12T12:28:55.7196634Z cnet2_m7bsg1_ep11.npz
+2026-11-12T12:28:55.7197235Z cnet2_m7bsg1_ep12.npz
+2026-11-12T12:28:55.7197962Z cnet2_m7bsg1_ep13.npz
+2026-11-12T12:28:55.7198527Z cnet2_m7bsg1_ep14.npz
+2026-11-12T12:28:55.7199112Z cnet2_m7bsg1_ep15.npz
+2026-11-12T12:28:55.7199698Z cnet2_m7bsg1_ep16.npz
+2026-11-12T12:28:55.7200311Z cnet2_m7bsg1_ep17.npz
+2026-11-12T12:28:55.7200907Z cnet2_m7bsg1_ep18.npz
+2026-11-12T12:28:55.7201719Z cnet2_m7bsg1_ep19.npz
+2026-11-12T12:28:55.7202285Z cnet2_m7bsg1_ep1.npz
+2026-11-12T12:28:55.7202825Z cnet2_m7bsg1_ep1.npz.stale1320
+2026-11-12T12:28:55.7203444Z cnet2_m7bsg1_ep2.npz
+2026-11-12T12:28:55.7204007Z cnet2_m7bsg1_ep3.npz
+2026-11-12T12:28:55.7204564Z cnet2_m7bsg1_ep4.npz
+2026-11-12T12:28:55.7205116Z cnet2_m7bsg1_ep5.npz
+2026-11-12T12:28:55.7205685Z cnet2_m7bsg1_ep6.npz
+2026-11-12T12:28:55.7206264Z cnet2_m7bsg1_ep7.npz
+2026-11-12T12:28:55.7206827Z cnet2_m7bsg1_ep8.npz
+2026-11-12T12:28:55.7207375Z cnet2_m7bsg1_ep9.npz
+2026-11-12T12:28:55.7207970Z cnet2_m7bsg1_last.npz
+2026-11-12T12:28:55.7208811Z cnet2_m7bsg1_last.npz.stale1320
+2026-11-12T12:28:55.7209492Z cnet2_m7bsg1_log.jsonl
+2026-11-12T12:28:55.7210080Z cnet2_m7bsg1_log.jsonl.stale1320
+2026-11-12T12:28:55.7210717Z cnet2_m7bsg1.npz
+2026-11-12T12:28:55.7211291Z cnet2_m7bsg1.npz.stale1320
+2026-11-12T12:28:55.7212216Z cnet2_m7bsr1_ep0.npz
+2026-11-12T12:28:55.7212862Z cnet2_m7bsr1_ep0.npz.stale1320
+2026-11-12T12:28:55.7213694Z cnet2_m7bsr1_ep10.npz
+2026-11-12T12:28:55.7214373Z cnet2_m7bsr1_ep11.npz
+2026-11-12T12:28:55.7215052Z cnet2_m7bsr1_ep12.npz
+2026-11-12T12:28:55.7216044Z cnet2_m7bsr1_ep13.npz
+2026-11-12T12:28:55.7216700Z cnet2_m7bsr1_ep14.npz
+2026-11-12T12:28:55.7217369Z cnet2_m7bsr1_ep15.npz
+2026-11-12T12:28:55.7218073Z cnet2_m7bsr1_ep16.npz
+2026-11-12T12:28:55.7218750Z cnet2_m7bsr1_ep17.npz
+2026-11-12T12:28:55.7219458Z cnet2_m7bsr1_ep18.npz
+2026-11-12T12:28:55.7220156Z cnet2_m7bsr1_ep19.npz
+2026-11-12T12:28:55.7220781Z cnet2_m7bsr1_ep1.npz
+2026-11-12T12:28:55.7221686Z cnet2_m7bsr1_ep2.npz
+2026-11-12T12:28:55.7222439Z cnet2_m7bsr1_ep3.npz
+2026-11-12T12:28:55.7222998Z cnet2_m7bsr1_ep4.npz
+2026-11-12T12:28:55.7223550Z cnet2_m7bsr1_ep5.npz
+2026-11-12T12:28:55.7224083Z cnet2_m7bsr1_ep6.npz
+2026-11-12T12:28:55.7224621Z cnet2_m7bsr1_ep7.npz
+2026-11-12T12:28:55.7225150Z cnet2_m7bsr1_ep8.npz
+2026-11-12T12:28:55.7225666Z cnet2_m7bsr1_ep9.npz
+2026-11-12T12:28:55.7226157Z cnet2_m7bsr1_last.npz
+2026-11-12T12:28:55.7226669Z cnet2_m7bsr1_last.npz.stale1320
+2026-11-12T12:28:55.7227211Z cnet2_m7bsr1_log.jsonl
+2026-11-12T12:28:55.7227725Z cnet2_m7bsr1_log.jsonl.stale1320
+2026-11-12T12:28:55.7228377Z cnet2_m7bsr1.npz
+2026-11-12T12:28:55.7228879Z cnet2_m7bsr1.npz.stale1320
+2026-11-12T12:28:55.7229405Z cnet2_m7bsv2g1_ep0.npz
+2026-11-12T12:28:55.7229906Z cnet2_m7bsv2g1_ep10.npz
+2026-11-12T12:28:55.7230415Z cnet2_m7bsv2g1_ep11.npz
+2026-11-12T12:28:55.7230922Z cnet2_m7bsv2g1_ep12.npz
+2026-11-12T12:28:55.7231632Z cnet2_m7bsv2g1_ep13.npz
+2026-11-12T12:28:55.7232184Z cnet2_m7bsv2g1_ep14.npz
+2026-11-12T12:28:55.7232692Z cnet2_m7bsv2g1_ep15.npz
+2026-11-12T12:28:55.7233300Z cnet2_m7bsv2g1_ep16.npz
+2026-11-12T12:28:55.7233800Z cnet2_m7bsv2g1_ep17.npz
+2026-11-12T12:28:55.7234297Z cnet2_m7bsv2g1_ep18.npz
+2026-11-12T12:28:55.7234815Z cnet2_m7bsv2g1_ep19.npz
+2026-11-12T12:28:55.7235357Z cnet2_m7bsv2g1_ep1.npz
+2026-11-12T12:28:55.7235886Z cnet2_m7bsv2g1_ep2.npz
+2026-11-12T12:28:55.7236398Z cnet2_m7bsv2g1_ep3.npz
+2026-11-12T12:28:55.7236892Z cnet2_m7bsv2g1_ep4.npz
+2026-11-12T12:28:55.7237617Z cnet2_m7bsv2g1_ep5.npz
+2026-11-12T12:28:55.7238115Z cnet2_m7bsv2g1_ep6.npz
+2026-11-12T12:28:55.7238621Z cnet2_m7bsv2g1_ep7.npz
+2026-11-12T12:28:55.7239115Z cnet2_m7bsv2g1_ep8.npz
+2026-11-12T12:28:55.7239630Z cnet2_m7bsv2g1_ep9.npz
+2026-11-12T12:28:55.7240136Z cnet2_m7bsv2g1_last.npz
+2026-11-12T12:28:55.7240691Z cnet2_m7bsv2g1_log.jsonl
+2026-11-12T12:28:55.7241237Z cnet2_m7bsv2g1.npz
+2026-11-12T12:28:55.7242038Z cnet2_m7bsv2r1_ep0.npz
+2026-11-12T12:28:55.7242686Z cnet2_m7bsv2r1_ep10.npz
+2026-11-12T12:28:55.7243297Z cnet2_m7bsv2r1_ep11.npz
+2026-11-12T12:28:55.7243933Z cnet2_m7bsv2r1_ep12.npz
+2026-11-12T12:28:55.7244598Z cnet2_m7bsv2r1_ep13.npz
+2026-11-12T12:28:55.7245212Z cnet2_m7bsv2r1_ep14.npz
+2026-11-12T12:28:55.7245809Z cnet2_m7bsv2r1_ep15.npz
+2026-11-12T12:28:55.7246399Z cnet2_m7bsv2r1_ep16.npz
+2026-11-12T12:28:55.7246991Z cnet2_m7bsv2r1_ep17.npz
+2026-11-12T12:28:55.7247576Z cnet2_m7bsv2r1_ep18.npz
+2026-11-12T12:28:55.7248192Z cnet2_m7bsv2r1_ep19.npz
+2026-11-12T12:28:55.7248819Z cnet2_m7bsv2r1_ep1.npz
+2026-11-12T12:28:55.7249428Z cnet2_m7bsv2r1_ep2.npz
+2026-11-12T12:28:55.7339019Z cnet2_m7bsv2r1_ep3.npz
+2026-11-12T12:28:55.7339444Z cnet2_m7bsv2r1_ep4.npz
+2026-11-12T12:28:55.7339833Z cnet2_m7bsv2r1_ep5.npz
+2026-11-12T12:28:55.7340210Z cnet2_m7bsv2r1_ep6.npz
+2026-11-12T12:28:55.7340570Z cnet2_m7bsv2r1_ep7.npz
+2026-11-12T12:28:55.7340941Z cnet2_m7bsv2r1_ep8.npz
+2026-11-12T12:28:55.7341266Z cnet2_m7bsv2r1_ep9.npz
+2026-11-12T12:28:55.7342899Z cnet2_m7bsv2r1_last.npz
+2026-11-12T12:28:55.7343386Z cnet2_m7bsv2r1_log.jsonl
+2026-11-12T12:28:55.7343863Z cnet2_m7bsv2r1.npz
+2026-11-12T12:28:55.7344615Z NONE_S26STAGE
+2026-11-12T12:28:55.7345013Z NONE_REPO_WEIGHTS
+2026-11-12T12:28:55.7345434Z M7FIND2030G DGX-END
+2026-11-12T12:28:55.7345808Z M7FIND2030G_END rc=0
+2026-11-12T12:28:55.7346030Z 
+2026-11-12T12:28:55.7484054Z Post job cleanup.
+2026-11-12T12:28:55.8517426Z [command]/usr/bin/git version
+2026-11-12T12:28:55.8598222Z git version 2.56.0
+2026-11-12T12:28:55.8642813Z Temporarily overriding HOME='/home/runner/work/_temp/8b880926-63a7-48bd-900f-62a0b4951c86' before making global git config changes
+2026-11-12T12:28:55.8669727Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T12:28:55.8682520Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:28:55.8752492Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T12:28:55.8823082Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T12:28:55.9202715Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T12:28:55.9242332Z http.https://github.com/.extraheader
+2026-11-12T12:28:55.9285647Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T12:28:55.9288638Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T12:28:55.9772487Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T12:28:55.9789235Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T12:28:56.0240545Z Cleaning up orphan processes
+2026-11-12T12:28:56.0711617Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

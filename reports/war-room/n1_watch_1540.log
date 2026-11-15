@@ -1,0 +1,237 @@
+MARKER N1WATCH-1540A7B3
+DISPATCH None
+RUN 43177210073 queued 2026-11-12T07:42:15Z
+POLL queued None +4s
+POLL completed success +25s
+FINAL completed success
+JOB 131044256153 run success
+===== LOGS BEGIN =====
+﻿2026-11-12T07:42:19.9917110Z Current runner version: '2.338.2'
+2026-11-12T07:42:19.9965935Z ##[group]Runner Image Provisioner
+2026-11-12T07:42:19.9967994Z Hosted Compute Agent
+2026-11-12T07:42:19.9969360Z Version: 20261028.624
+2026-11-12T07:42:19.9970616Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T07:42:19.9972155Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T07:42:19.9973486Z Worker ID: {5ec772b4-7107-4333-a253-0cad0d41232d}
+2026-11-12T07:42:19.9974774Z Region: westus2
+2026-11-12T07:42:19.9975943Z Cloud: Azure
+2026-11-12T07:42:19.9977362Z ##[endgroup]
+2026-11-12T07:42:19.9980069Z ##[group]Operating System
+2026-11-12T07:42:19.9981174Z Ubuntu
+2026-11-12T07:42:19.9982044Z 24.04.5
+2026-11-12T07:42:19.9983070Z LTS
+2026-11-12T07:42:19.9984154Z ##[endgroup]
+2026-11-12T07:42:19.9985371Z ##[group]Runner Image
+2026-11-12T07:42:19.9986845Z Image: ubuntu-24.04
+2026-11-12T07:42:19.9987922Z Version: 20261101.360.1
+2026-11-12T07:42:19.9990404Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T07:42:19.9993288Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T07:42:19.9995076Z ##[endgroup]
+2026-11-12T07:42:19.9997382Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T07:42:20.0000392Z Contents: read
+2026-11-12T07:42:20.0001537Z Metadata: read
+2026-11-12T07:42:20.0002701Z ##[endgroup]
+2026-11-12T07:42:20.0006123Z Secret source: Actions
+2026-11-12T07:42:20.0008362Z Cache mode: write
+2026-11-12T07:42:20.0009572Z Prepare workflow directory
+2026-11-12T07:42:20.0620910Z Prepare all required actions
+2026-11-12T07:42:20.0696564Z Getting action download info
+2026-11-12T07:42:20.4168380Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T07:42:20.6954561Z Complete job name: run
+2026-11-12T07:42:20.8418334Z ##[group]Run actions/checkout@v4
+2026-11-12T07:42:20.8419565Z with:
+2026-11-12T07:42:20.8420467Z   repository: robertyang87/carbon-league
+2026-11-12T07:42:20.8428843Z   token: ***
+2026-11-12T07:42:20.8429568Z   ssh-strict: true
+2026-11-12T07:42:20.8430134Z   ssh-user: git
+2026-11-12T07:42:20.8430592Z   persist-credentials: true
+2026-11-12T07:42:20.8431108Z   clean: true
+2026-11-12T07:42:20.8431567Z   sparse-checkout-cone-mode: true
+2026-11-12T07:42:20.8432112Z   fetch-depth: 1
+2026-11-12T07:42:20.8432557Z   fetch-tags: false
+2026-11-12T07:42:20.8433013Z   show-progress: true
+2026-11-12T07:42:20.8433478Z   lfs: false
+2026-11-12T07:42:20.8433910Z   submodules: false
+2026-11-12T07:42:20.8434387Z   set-safe-directory: true
+2026-11-12T07:42:20.8434919Z   allow-unsafe-pr-checkout: false
+2026-11-12T07:42:20.8435882Z ##[endgroup]
+2026-11-12T07:42:21.2855299Z Syncing repository: robertyang87/carbon-league
+2026-11-12T07:42:21.3016011Z ##[group]Getting Git version info
+2026-11-12T07:42:21.3050446Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T07:42:21.3097166Z [command]/usr/bin/git version
+2026-11-12T07:42:21.3136619Z git version 2.56.0
+2026-11-12T07:42:21.3197976Z ##[endgroup]
+2026-11-12T07:42:21.3242089Z Temporarily overriding HOME='/home/runner/work/_temp/d91cbf7c-76ba-493c-9419-223d20cb0f1f' before making global git config changes
+2026-11-12T07:42:21.3257772Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T07:42:21.3268910Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:42:21.3371105Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T07:42:21.3403085Z ##[group]Initializing the repository
+2026-11-12T07:42:21.3404725Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:42:21.3449963Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T07:42:21.3467798Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T07:42:21.3482108Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T07:42:21.3484567Z hint: call:
+2026-11-12T07:42:21.3547264Z hint:
+2026-11-12T07:42:21.3567445Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T07:42:21.3587248Z hint:
+2026-11-12T07:42:21.3588845Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T07:42:21.3607726Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T07:42:21.3612863Z hint:
+2026-11-12T07:42:21.3637654Z hint: 	git branch -m <name>
+2026-11-12T07:42:21.3657325Z hint:
+2026-11-12T07:42:21.3677752Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T07:42:21.3726179Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T07:42:21.3756852Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T07:42:21.3761424Z ##[endgroup]
+2026-11-12T07:42:21.3763392Z ##[group]Disabling automatic garbage collection
+2026-11-12T07:42:21.3765136Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T07:42:21.3769559Z ##[endgroup]
+2026-11-12T07:42:21.3771532Z ##[group]Setting up auth
+2026-11-12T07:42:21.3773430Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T07:42:21.3779409Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T07:42:21.3910126Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T07:42:21.3973223Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T07:42:21.4328083Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T07:42:21.4370293Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T07:42:21.4640178Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T07:42:21.4692823Z ##[endgroup]
+2026-11-12T07:42:21.4695198Z ##[group]Fetching the repository
+2026-11-12T07:42:21.4705828Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +2c2398162e791b99f07300f96ccda8519f1c3417:refs/remotes/origin/main
+2026-11-12T07:42:22.8612546Z From https://github.com/robertyang87/carbon-league
+2026-11-12T07:42:22.8615185Z  * [new ref]         2c2398162e791b99f07300f96ccda8519f1c3417 -> origin/main
+2026-11-12T07:42:22.8619545Z ##[endgroup]
+2026-11-12T07:42:22.8621297Z ##[group]Determining the checkout info
+2026-11-12T07:42:22.8622985Z ##[endgroup]
+2026-11-12T07:42:22.8625948Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T07:42:22.8694569Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T07:42:22.8744888Z ##[group]Checking out the ref
+2026-11-12T07:42:22.8748981Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T07:42:23.2471027Z Switched to a new branch 'main'
+2026-11-12T07:42:23.2497064Z branch 'main' set up to track 'origin/main'.
+2026-11-12T07:42:23.2520692Z ##[endgroup]
+2026-11-12T07:42:23.2627292Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T07:42:23.2657163Z 2c2398162e791b99f07300f96ccda8519f1c3417
+2026-11-12T07:42:23.3015530Z ##[group]Run if [ -n "ZWNobyBOMVdBVENILTE1NDBBN0IzOyBkYXRlICcrTDIwICVGICVUICVaJwplY2hvICc9PSB3ZWlnaHRzID09JzsgbHMgLWx0IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvIHwgaGVhZCAtMjAKZWNobyAnPT0gbWQ1IGtub3duIHBvb2wgd2VpZ2h0cyA9PSc7IG1kNXN1bSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX20zczJyMUwubnB6IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTdic3IxTC5ucHogL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tN2JzZzFMLm5weiAyPiYxCmVjaG8gJz09IHByb2MgPT0nOyBwZ3JlcCAtYWYgInJsMy9zbmlwZV9uMSIgfHwgZWNobyBOT19QUk9DCmVjaG8gJz09IGdwdSA9PSc7IG52aWRpYS1zbWkgLS1xdWVyeS1ncHU9dXRpbGl6YXRpb24uZ3B1LG1lbW9yeS51c2VkIC0tZm9ybWF0PWNzdixub2hlYWRlcgplY2hvICc9PSBzbmlwZSBkaXIgPT0nOyBscyAtbHQgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xLyB8IGhlYWQgLTI1CmVjaG8gJz09IGxhc3Q0IGNrcHQgPT0nOyBscyAtdGQgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL2NrcHRfKiAyPi9kZXYvbnVsbCB8IGhlYWQgLTQgfCB3aGlsZSByZWFkIGQ7IGRvIHN0YXQgLWMgJyV5ICVuJyAiJGQiOyBkb25lCmVjaG8gJz09IHRyYWluLmpzb25sIGFsbCByb3dzID09JzsgcHl0aG9uMyAtYyAiCmltcG9ydCBqc29uCmZvciBsaW5lIGluIG9wZW4oJy9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS90cmFpbi5qc29ubCcpOgogICAgbGluZT1saW5lLnN0cmlwKCkKICAgIGlmIG5vdCBsaW5lOiBjb250aW51ZQogICAgdHJ5OiByPWpzb24ubG9hZHMobGluZSkKICAgIGV4Y2VwdCBFeGNlcHRpb246IHByaW50KCdCQURMSU5FJywgbGluZVs6MTIwXSk7IGNvbnRpbnVlCiAgICBwcmludCh7azogci5nZXQoaykgZm9yIGsgaW4gKCdpdCcsJ3ByZV9zJywndXBkX3MnLCd3aW5yYXRlJywna2wnLCdkbG9ncCcsJ2tsX2NvZWYnLCdhbXAnKX0pCiIKZWNobyAnPT0gdHJhaW4uanNvbmwgdGFpbCA9PSc7IHRhaWwgLTMgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL3RyYWluLmpzb25sCmVjaG8gJz09IEVWQUwgbGluZXMgPT0nOyBncmVwIC1FICdFVkFMJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvc25pcGVfbjEubG9nIHwgdGFpbCAtMTIKZWNobyAnPT0gdHJhY2ViYWNrIGNvdW50ID09JzsgZ3JlcCAtYyBUcmFjZWJhY2sgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL3NuaXBlX24xLmxvZyB8fCBlY2hvIDAKZWNobyAnPT0gbG9nIHRhaWwgPT0nOyB0YWlsIC01IC9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS9zbmlwZV9uMS5sb2c7IHN0YXQgLWMgJ2xvZyBtdGltZSAleSBzaXplICVzJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvc25pcGVfbjEubG9nCmVjaG8gJz09IHBvb2wgZ28gZmxhZyA9PSc7IGxzIC1sIC90bXAvbjFfcG9vbF9nby50eHQgMj4mMQplY2hvICc9PSBsZWFndWUvbGl2ZSA9PSc7IHN0YXQgLWMgJyV5ICVuJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvbGVhZ3VlLmpzb24gL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL2xpdmUuanNvbiAyPiYxCmVjaG8gTjFXQVRDSC0xNTQwQTdCMy1FTkQK" ]; then
+2026-11-12T07:42:23.3111464Z [36;1mif [ -n "ZWNobyBOMVdBVENILTE1NDBBN0IzOyBkYXRlICcrTDIwICVGICVUICVaJwplY2hvICc9PSB3ZWlnaHRzID09JzsgbHMgLWx0IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvIHwgaGVhZCAtMjAKZWNobyAnPT0gbWQ1IGtub3duIHBvb2wgd2VpZ2h0cyA9PSc7IG1kNXN1bSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX20zczJyMUwubnB6IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTdic3IxTC5ucHogL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tN2JzZzFMLm5weiAyPiYxCmVjaG8gJz09IHByb2MgPT0nOyBwZ3JlcCAtYWYgInJsMy9zbmlwZV9uMSIgfHwgZWNobyBOT19QUk9DCmVjaG8gJz09IGdwdSA9PSc7IG52aWRpYS1zbWkgLS1xdWVyeS1ncHU9dXRpbGl6YXRpb24uZ3B1LG1lbW9yeS51c2VkIC0tZm9ybWF0PWNzdixub2hlYWRlcgplY2hvICc9PSBzbmlwZSBkaXIgPT0nOyBscyAtbHQgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xLyB8IGhlYWQgLTI1CmVjaG8gJz09IGxhc3Q0IGNrcHQgPT0nOyBscyAtdGQgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL2NrcHRfKiAyPi9kZXYvbnVsbCB8IGhlYWQgLTQgfCB3aGlsZSByZWFkIGQ7IGRvIHN0YXQgLWMgJyV5ICVuJyAiJGQiOyBkb25lCmVjaG8gJz09IHRyYWluLmpzb25sIGFsbCByb3dzID09JzsgcHl0aG9uMyAtYyAiCmltcG9ydCBqc29uCmZvciBsaW5lIGluIG9wZW4oJy9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS90cmFpbi5qc29ubCcpOgogICAgbGluZT1saW5lLnN0cmlwKCkKICAgIGlmIG5vdCBsaW5lOiBjb250aW51ZQogICAgdHJ5OiByPWpzb24ubG9hZHMobGluZSkKICAgIGV4Y2VwdCBFeGNlcHRpb246IHByaW50KCdCQURMSU5FJywgbGluZVs6MTIwXSk7IGNvbnRpbnVlCiAgICBwcmludCh7azogci5nZXQoaykgZm9yIGsgaW4gKCdpdCcsJ3ByZV9zJywndXBkX3MnLCd3aW5yYXRlJywna2wnLCdkbG9ncCcsJ2tsX2NvZWYnLCdhbXAnKX0pCiIKZWNobyAnPT0gdHJhaW4uanNvbmwgdGFpbCA9PSc7IHRhaWwgLTMgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL3RyYWluLmpzb25sCmVjaG8gJz09IEVWQUwgbGluZXMgPT0nOyBncmVwIC1FICdFVkFMJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvc25pcGVfbjEubG9nIHwgdGFpbCAtMTIKZWNobyAnPT0gdHJhY2ViYWNrIGNvdW50ID09JzsgZ3JlcCAtYyBUcmFjZWJhY2sgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL3NuaXBlX24xLmxvZyB8fCBlY2hvIDAKZWNobyAnPT0gbG9nIHRhaWwgPT0nOyB0YWlsIC01IC9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS9zbmlwZV9uMS5sb2c7IHN0YXQgLWMgJ2xvZyBtdGltZSAleSBzaXplICVzJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvc25pcGVfbjEubG9nCmVjaG8gJz09IHBvb2wgZ28gZmxhZyA9PSc7IGxzIC1sIC90bXAvbjFfcG9vbF9nby50eHQgMj4mMQplY2hvICc9PSBsZWFndWUvbGl2ZSA9PSc7IHN0YXQgLWMgJyV5ICVuJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvbGVhZ3VlLmpzb24gL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL2xpdmUuanNvbiAyPiYxCmVjaG8gTjFXQVRDSC0xNTQwQTdCMy1FTkQK" ]; then[0m
+2026-11-12T07:42:23.3212157Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" --b64 "ZWNobyBOMVdBVENILTE1NDBBN0IzOyBkYXRlICcrTDIwICVGICVUICVaJwplY2hvICc9PSB3ZWlnaHRzID09JzsgbHMgLWx0IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvIHwgaGVhZCAtMjAKZWNobyAnPT0gbWQ1IGtub3duIHBvb2wgd2VpZ2h0cyA9PSc7IG1kNXN1bSAvcm9vdC9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX20zczJyMUwubnB6IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTdic3IxTC5ucHogL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tN2JzZzFMLm5weiAyPiYxCmVjaG8gJz09IHByb2MgPT0nOyBwZ3JlcCAtYWYgInJsMy9zbmlwZV9uMSIgfHwgZWNobyBOT19QUk9DCmVjaG8gJz09IGdwdSA9PSc7IG52aWRpYS1zbWkgLS1xdWVyeS1ncHU9dXRpbGl6YXRpb24uZ3B1LG1lbW9yeS51c2VkIC0tZm9ybWF0PWNzdixub2hlYWRlcgplY2hvICc9PSBzbmlwZSBkaXIgPT0nOyBscyAtbHQgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xLyB8IGhlYWQgLTI1CmVjaG8gJz09IGxhc3Q0IGNrcHQgPT0nOyBscyAtdGQgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL2NrcHRfKiAyPi9kZXYvbnVsbCB8IGhlYWQgLTQgfCB3aGlsZSByZWFkIGQ7IGRvIHN0YXQgLWMgJyV5ICVuJyAiJGQiOyBkb25lCmVjaG8gJz09IHRyYWluLmpzb25sIGFsbCByb3dzID09JzsgcHl0aG9uMyAtYyAiCmltcG9ydCBqc29uCmZvciBsaW5lIGluIG9wZW4oJy9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS90cmFpbi5qc29ubCcpOgogICAgbGluZT1saW5lLnN0cmlwKCkKICAgIGlmIG5vdCBsaW5lOiBjb250aW51ZQogICAgdHJ5OiByPWpzb24ubG9hZHMobGluZSkKICAgIGV4Y2VwdCBFeGNlcHRpb246IHByaW50KCdCQURMSU5FJywgbGluZVs6MTIwXSk7IGNvbnRpbnVlCiAgICBwcmludCh7azogci5nZXQoaykgZm9yIGsgaW4gKCdpdCcsJ3ByZV9zJywndXBkX3MnLCd3aW5yYXRlJywna2wnLCdkbG9ncCcsJ2tsX2NvZWYnLCdhbXAnKX0pCiIKZWNobyAnPT0gdHJhaW4uanNvbmwgdGFpbCA9PSc7IHRhaWwgLTMgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL3RyYWluLmpzb25sCmVjaG8gJz09IEVWQUwgbGluZXMgPT0nOyBncmVwIC1FICdFVkFMJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvc25pcGVfbjEubG9nIHwgdGFpbCAtMTIKZWNobyAnPT0gdHJhY2ViYWNrIGNvdW50ID09JzsgZ3JlcCAtYyBUcmFjZWJhY2sgL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL3NuaXBlX24xLmxvZyB8fCBlY2hvIDAKZWNobyAnPT0gbG9nIHRhaWwgPT0nOyB0YWlsIC01IC9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS9zbmlwZV9uMS5sb2c7IHN0YXQgLWMgJ2xvZyBtdGltZSAleSBzaXplICVzJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvc25pcGVfbjEubG9nCmVjaG8gJz09IHBvb2wgZ28gZmxhZyA9PSc7IGxzIC1sIC90bXAvbjFfcG9vbF9nby50eHQgMj4mMQplY2hvICc9PSBsZWFndWUvbGl2ZSA9PSc7IHN0YXQgLWMgJyV5ICVuJyAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvbGVhZ3VlLmpzb24gL3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xL2xpdmUuanNvbiAyPiYxCmVjaG8gTjFXQVRDSC0xNTQwQTdCMy1FTkQK"[0m
+2026-11-12T07:42:23.3259894Z [36;1melse[0m
+2026-11-12T07:42:23.3260266Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" "hostname && uptime"[0m
+2026-11-12T07:42:23.3260708Z [36;1mfi[0m
+2026-11-12T07:42:23.3284399Z shell: /usr/bin/bash -e {0}
+2026-11-12T07:42:23.3284698Z env:
+2026-11-12T07:42:23.3285157Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T07:42:23.3285514Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T07:42:23.3285780Z   ACS_REGION: cn-shanghai
+2026-11-12T07:42:23.3286021Z ##[endgroup]
+2026-11-12T07:42:30.4549229Z InvokeId: t-sh072vbr950lts0
+2026-11-12T07:42:30.4550188Z --- status=Success exit=0 ---
+2026-11-12T07:42:30.4550973Z N1WATCH-1540A7B3
+2026-11-12T07:42:30.4551625Z L20 2026-11-12 15:42:25 CST
+2026-11-12T07:42:30.4552267Z == weights ==
+2026-11-12T07:42:30.4552793Z total 258720
+2026-11-12T07:42:30.4553465Z -rw-r--r-- 1 root root  11821004 Nov 12 15:05 cnet2_m7bsg1L.npz
+2026-11-12T07:42:30.4554326Z -rw-r--r-- 1 root root  13968972 Nov 12 14:51 cnet2_m7bsr1L.npz
+2026-11-12T07:42:30.4555149Z -rw-r--r-- 1 root root  13968972 Nov 12 14:51 cnet2_m3s2r1L.npz
+2026-11-12T07:42:30.4555957Z -rw-r--r-- 1 root root  11821004 Nov 12 06:58 cnet2_m6r1L.npz
+2026-11-12T07:42:30.4557033Z -rw-r--r-- 1 root root  13968972 Nov 12 06:58 cnet2_m3n1L.npz
+2026-11-12T07:42:30.4558285Z -rw-rw-r-- 1  501 root  11821004 Nov 11 23:10 cnet2_top_j1L.npz
+2026-11-12T07:42:30.4559141Z -rw-rw-r-- 1 1000  1000 11821000 Nov 11 17:33 cnet2_m3w3L.npz
+2026-11-12T07:42:30.4559939Z -rw-rw-r-- 1 1000  1000 11821000 Nov 11 17:33 cnet2_m3w2L.npz
+2026-11-12T07:42:30.4560678Z -rw-rw-r-- 1 1000  1000 11821004 Nov 11 17:33 cnet2_m3w1L.npz
+2026-11-12T07:42:30.4561465Z -rw-rw-r-- 1  501 staff 11821144 Nov 10 05:20 cnet2_b128m2t3.npz
+2026-11-12T07:42:30.4562276Z -rw-rw-r-- 1  501 staff 11821144 Nov 10 00:47 cnet2_b128awr_r1.npz
+2026-11-12T07:42:30.4563433Z -rw-rw-r-- 1  501 staff 11821140 Nov  9 22:42 cnet2_b128m2so.npz
+2026-11-12T07:42:30.4564206Z -rw-r--r-- 1  501 staff  3394044 Nov  8 22:07 cnet2_s64v8.npz
+2026-11-12T07:42:30.4564989Z -rw-r--r-- 1  501 staff 11821132 Nov  8 21:36 cnet2_m2s2stand.npz
+2026-11-12T07:42:30.4565848Z -rw-r--r-- 1  501 staff 11821112 Nov  8 14:26 cnet2_b128v7.npz
+2026-11-12T07:42:30.4567024Z -rw-r--r-- 1  501 staff 11821128 Nov  8 13:09 cnet2_m2sstand.npz
+2026-11-12T07:42:30.4567938Z -rw-r--r-- 1  501 staff 11821124 Nov  8 11:19 cnet2_b128v6.npz
+2026-11-12T07:42:30.4568816Z -rw-r--r-- 1  501 staff 11821124 Nov  8 08:21 cnet2_b128v5.npz
+2026-11-12T07:42:30.4569692Z -rw-r--r-- 1  501 staff 11821124 Nov  7 23:33 cnet2_m2stand.npz
+2026-11-12T07:42:30.4570509Z == md5 known pool weights ==
+2026-11-12T07:42:30.4571386Z b6db08c9b076257c54817377bb93130d  /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T07:42:30.4572484Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T07:42:30.4573627Z 2c8ca0ae7266a6c0a41bf3b8ba7f723b  /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T07:42:30.4574498Z == proc ==
+2026-11-12T07:42:30.4578979Z 151573 ../.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward worth --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 768 --pre-mb 4096 --rscale 3.33e-4 --ckpt-every 1 --snap-every 10 --max-snaps 2 --eval-every 5 --eval-pairs 32 --eval-opps exp/opp_master2r.py,exp/opp_m3echo.py --lr 1e-5 --kl 0.10 --init /root/carbon/data/weights/cnet2_m3n1L.npz --games 4000 --out /root/carbon/data/rl3/snipe_n1 --resume /root/carbon/data/rl3/snipe_n1/state_last.pt --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2", 1.0], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2", 0.5]]
+2026-11-12T07:42:30.4583683Z == gpu ==
+2026-11-12T07:42:30.4584291Z 100 %, 25298 MiB
+2026-11-12T07:42:30.4584956Z == snipe dir ==
+2026-11-12T07:42:30.4585587Z total 366012
+2026-11-12T07:42:30.4586539Z -rw-r--r-- 1 root root 82595743 Nov 12 15:33 state_last.pt
+2026-11-12T07:42:30.4587433Z -rw-r--r-- 1 root root 13968424 Nov 12 15:33 ckpt_last.npz
+2026-11-12T07:42:30.4588287Z -rw-r--r-- 1 root root 13968424 Nov 12 15:33 ckpt_12.npz
+2026-11-12T07:42:30.4589096Z -rw-r--r-- 1 root root      736 Nov 12 15:33 league.json
+2026-11-12T07:42:30.4589904Z -rw-r--r-- 1 root root    13583 Nov 12 15:33 train.jsonl
+2026-11-12T07:42:30.4590726Z drwxr-xr-x 2 root root     4096 Nov 12 15:33 live
+2026-11-12T07:42:30.4591524Z -rw-r--r-- 1 root root 13968424 Nov 12 15:19 ckpt_11.npz
+2026-11-12T07:42:30.4592335Z -rw-r--r-- 1 root root     1223 Nov 12 15:00 config.json
+2026-11-12T07:42:30.4593210Z -rw-r--r-- 1 root root 82595743 Nov 12 14:57 state_pre_klfix_it10.pt
+2026-11-12T07:42:30.4594114Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 eval_w_10.npz
+2026-11-12T07:42:30.4594929Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 ckpt_10.npz
+2026-11-12T07:42:30.4595731Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 snap_10.npz
+2026-11-12T07:42:30.4596942Z -rw-r--r-- 1 root root 13968420 Nov 12 14:42 ckpt_9.npz
+2026-11-12T07:42:30.4597761Z -rw-r--r-- 1 root root 13968420 Nov 12 14:27 ckpt_8.npz
+2026-11-12T07:42:30.4598569Z -rw-r--r-- 1 root root 13968420 Nov 12 14:12 ckpt_7.npz
+2026-11-12T07:42:30.4599380Z -rw-r--r-- 1 root root      449 Nov 12 13:56 eval.jsonl
+2026-11-12T07:42:30.4600172Z -rw-r--r-- 1 root root 13968420 Nov 12 13:56 ckpt_6.npz
+2026-11-12T07:42:30.4601217Z -rw-r--r-- 1 root root 13968420 Nov 12 13:43 ckpt_5.npz
+2026-11-12T07:42:30.4602063Z -rw-r--r-- 1 root root 13968420 Nov 12 13:23 ckpt_4.npz
+2026-11-12T07:42:30.4602876Z -rw-r--r-- 1 root root 13968420 Nov 12 13:08 ckpt_3.npz
+2026-11-12T07:42:30.4603676Z -rw-r--r-- 1 root root 13968420 Nov 12 12:54 ckpt_2.npz
+2026-11-12T07:42:30.4604453Z -rw-r--r-- 1 root root 13968420 Nov 12 12:42 ckpt_1.npz
+2026-11-12T07:42:30.4605202Z == last4 ckpt ==
+2026-11-12T07:42:30.4605970Z 2026-11-12 15:33:13.705763990 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_last.npz
+2026-11-12T07:42:30.4607543Z 2026-11-12 15:33:13.684763373 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_12.npz
+2026-11-12T07:42:30.4608682Z 2026-11-12 15:19:17.123175525 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_11.npz
+2026-11-12T07:42:30.4609897Z 2026-11-12 14:57:33.872861242 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_10.npz
+2026-11-12T07:42:30.4610920Z == train.jsonl all rows ==
+2026-11-12T07:42:30.4611973Z {'it': 1, 'pre_s': 384.5, 'upd_s': 637.3, 'winrate': 0.617, 'kl': 0.0, 'dlogp': 0.0, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4613116Z {'it': 2, 'pre_s': 364.9, 'upd_s': 625.3, 'winrate': 0.612, 'kl': 0.0, 'dlogp': 0.0, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4614419Z {'it': 3, 'pre_s': 388.4, 'upd_s': 660.2, 'winrate': 0.586, 'kl': 0.0, 'dlogp': -0.0, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4615748Z {'it': 4, 'pre_s': 399.5, 'upd_s': 805.7, 'winrate': 0.58, 'kl': 0.0325, 'dlogp': -0.0326, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4617546Z {'it': 5, 'pre_s': 408.4, 'upd_s': 807.5, 'winrate': 0.595, 'kl': 0.0555, 'dlogp': -0.0227, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4618921Z {'it': 6, 'pre_s': 335.3, 'upd_s': 732.3, 'winrate': 0.592, 'kl': 0.0596, 'dlogp': -0.0286, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4620189Z {'it': 7, 'pre_s': 363.0, 'upd_s': 771.6, 'winrate': 0.602, 'kl': 0.073, 'dlogp': -0.0307, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4621503Z {'it': 8, 'pre_s': 361.6, 'upd_s': 767.3, 'winrate': 0.605, 'kl': 0.0761, 'dlogp': -0.0333, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4622820Z {'it': 9, 'pre_s': 375.8, 'upd_s': 801.4, 'winrate': 0.586, 'kl': 0.0874, 'dlogp': -0.0346, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4624116Z {'it': 10, 'pre_s': 367.6, 'upd_s': 783.3, 'winrate': 0.582, 'kl': 0.0921, 'dlogp': -0.0367, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4625419Z {'it': 11, 'pre_s': 376.0, 'upd_s': 746.8, 'winrate': 0.577, 'kl': 0.1089, 'dlogp': -0.0229, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4626998Z {'it': 12, 'pre_s': 330.1, 'upd_s': 698.1, 'winrate': 0.579, 'kl': 0.1114, 'dlogp': -0.0296, 'kl_coef': 0.05, 'amp': None}
+2026-11-12T07:42:30.4628153Z == train.jsonl tail ==
+2026-11-12T07:42:30.4633979Z {"it": 10, "t": 1794466654, "games": 5193, "srv": {"req": 25881, "pos": 213353, "fwd": 2471, "t_fwd": 29.85, "pos_per_fwd": 86.3, "models": 9, "servers": 1}, "dec": 1557900, "units": 17214365, "roll_s": 920.1, "upd_s": 783.3, "buf_s": 1.6, "pre_s": 367.6, "games_per_min": 338.6, "dec_per_s": 1693.2, "pol_s": 19582.1, "opp_s": 6689.2, "pl": 0.0233, "vl": 0.0028, "ent": 0.548, "kl": 0.0921, "kl_coef": 0.05, "clipfrac": 0.199, "gnorm": 11.795, "dlogp": -0.0367, "warm": false, "adv_std": 0.0542, "v_mean": 0.075, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [185, 1302, 766], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [430, 996, 702], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [434, 509, 363], "SELF": [0, 2386, 1192]}, "winrate": 0.582, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.8, 28.8], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.1, 24.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.4, 23.5], "SELF": [28.1, 28.1]}, "buf_mb": 16602.5, "rss_mb": 40696, "workers_rss_mb": 17386}
+2026-11-12T07:42:30.4647423Z {"it": 11, "t": 1794467957, "games": 4683, "srv": {"req": 30621, "pos": 214560, "fwd": 2235, "t_fwd": 29.88, "pos_per_fwd": 96.0, "models": 5, "servers": 1}, "dec": 1404900, "units": 15497607, "roll_s": 356.6, "upd_s": 746.8, "buf_s": 1.5, "pre_s": 376.0, "games_per_min": 788.0, "dec_per_s": 3939.9, "pol_s": 7978.5, "opp_s": 1396.0, "pl": 0.0154, "vl": 0.0026, "ent": 0.566, "kl": 0.1089, "kl_coef": 0.05, "clipfrac": 0.159, "gnorm": 11.613, "dlogp": -0.0229, "warm": false, "adv_std": 0.0511, "v_mean": 0.076, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [409, 1081, 769], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [-1, 1438, 713], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [499, 328, 249], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [198, 470, 291], "SELF": [0, 1366, 680]}, "winrate": 0.577, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.1, 24.0], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [27.9, 28.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.9, 22.7], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [26.2, 28.7], "SELF": [28.0, 28.0]}, "buf_mb": 14972.0, "rss_mb": 30392, "workers_rss_mb": 13484}
+2026-11-12T07:42:30.4660189Z {"it": 12, "t": 1794468794, "games": 4713, "srv": {"req": 27842, "pos": 195688, "fwd": 2675, "t_fwd": 29.9, "pos_per_fwd": 73.2, "models": 5, "servers": 1}, "dec": 1413900, "units": 15600043, "roll_s": 885.1, "upd_s": 698.1, "buf_s": 1.5, "pre_s": 330.1, "games_per_min": 319.5, "dec_per_s": 1597.4, "pol_s": 18049.7, "opp_s": 7300.8, "pl": 0.0188, "vl": 0.0025, "ent": 0.571, "kl": 0.1114, "kl_coef": 0.05, "clipfrac": 0.183, "gnorm": 11.782, "dlogp": -0.0296, "warm": false, "adv_std": 0.0506, "v_mean": 0.066, "margin": {"SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [22, 1397, 709], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [186, 463, 275], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [399, 1134, 823], "SELF": [0, 1426, 711], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [466, 293, 212]}, "winrate": 0.579, "planted": {"SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [28.2, 27.8], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [26.5, 28.3], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.3, 23.9], "SELF": [28.1, 28.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.6, 23.7]}, "buf_mb": 15067.9, "rss_mb": 32223, "workers_rss_mb": 14137}
+2026-11-12T07:42:30.4669069Z == EVAL lines ==
+2026-11-12T07:42:30.4669852Z grep: /root/carbon/data/rl3/snipe_n1/snipe_n1.log: No such file or directory
+2026-11-12T07:42:30.4670675Z == traceback count ==
+2026-11-12T07:42:30.4671459Z grep: /root/carbon/data/rl3/snipe_n1/snipe_n1.log: No such file or directory
+2026-11-12T07:42:30.4672293Z 0
+2026-11-12T07:42:30.4672781Z == log tail ==
+2026-11-12T07:42:30.4673684Z tail: cannot open '/root/carbon/data/rl3/snipe_n1/snipe_n1.log' for reading: No such file or directory
+2026-11-12T07:42:30.4674970Z stat: cannot statx '/root/carbon/data/rl3/snipe_n1/snipe_n1.log': No such file or directory
+2026-11-12T07:42:30.4675937Z == pool go flag ==
+2026-11-12T07:42:30.4676872Z ls: cannot access '/tmp/n1_pool_go.txt': No such file or directory
+2026-11-12T07:42:30.4677699Z == league/live ==
+2026-11-12T07:42:30.4678409Z 2026-11-12 15:33:13.664762785 +0800 /root/carbon/data/rl3/snipe_n1/league.json
+2026-11-12T07:42:30.4679525Z stat: cannot statx '/root/carbon/data/rl3/snipe_n1/live.json': No such file or directory
+2026-11-12T07:42:30.4680461Z N1WATCH-1540A7B3-END
+2026-11-12T07:42:30.4680875Z 
+2026-11-12T07:42:30.4925048Z Post job cleanup.
+2026-11-12T07:42:30.5949950Z [command]/usr/bin/git version
+2026-11-12T07:42:30.6037406Z git version 2.56.0
+2026-11-12T07:42:30.6103808Z Temporarily overriding HOME='/home/runner/work/_temp/b68d892e-087d-41e5-8cf4-423868fe6100' before making global git config changes
+2026-11-12T07:42:30.6105258Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T07:42:30.6106746Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:42:30.6190361Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T07:42:30.6250952Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T07:42:30.6634155Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T07:42:30.6717131Z http.https://github.com/.extraheader
+2026-11-12T07:42:30.6775950Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T07:42:30.6832148Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T07:42:30.7253511Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T07:42:30.7303895Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T07:42:30.7755979Z Cleaning up orphan processes
+2026-11-12T07:42:30.8221626Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+===== LOGS END =====

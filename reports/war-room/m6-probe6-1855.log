@@ -1,0 +1,159 @@
+dispatched at 10:58:56
+CLAIMED run 43205106557 job 131138200774 status completed conclusion success
+ cn-shanghai
+2026-11-12T10:59:03.8741149Z ##[endgroup]
+2026-11-12T10:59:29.0376461Z InvokeId: t-sh072vtautn9f5s
+2026-11-12T10:59:29.0384750Z --- status=Success exit=0 ---
+2026-11-12T10:59:29.0400275Z M6PRB61855K3 L20-BEGIN 2026-11-12 18:59:05 CST
+2026-11-12T10:59:29.0424760Z M6PRB61855K3 DGX-BEGIN 2026-11-12 18:59:17 CST
+2026-11-12T10:59:29.0425605Z #!/bin/bash
+2026-11-12T10:59:29.0430758Z # M7Bs v2 retrain FIX (runs ON DGX, detached): repo matches list refreshed to
+2026-11-12T10:59:29.0454894Z # full 142 (API re-pull, committed); rebuild index (must be exactly 142),
+2026-11-12T10:59:29.0471240Z # ds_m7bs_v2, dual-arm train, wait completion, report final numbers.
+2026-11-12T10:59:29.0481285Z # Marker: M7V2FX7Q2
+2026-11-12T10:59:29.0494682Z MARK=M7V2FX7Q2
+2026-11-12T10:59:29.0514878Z D=/home/arm/junyang/carbon/data
+2026-11-12T10:59:29.0525040Z C=/home/arm/junyang/carbon/code
+2026-11-12T10:59:29.0540390Z R=/home/arm/junyang/carbon-repo
+2026-11-12T10:59:29.0555130Z echo "$MARK STAGE-BEGIN $(date '+%F %T %Z')"
+2026-11-12T10:59:29.0556133Z cd $C || { echo "$MARK FAIL cd code"; exit 1; }
+2026-11-12T10:59:29.0556754Z 
+2026-11-12T10:59:29.0557151Z echo '--- WAIT-CARAGO-R1 ---'
+2026-11-12T10:59:29.0558549Z CARAGO_OK=0
+2026-11-12T10:59:29.0559228Z for i in $(seq 1 45); do
+2026-11-12T10:59:29.0560271Z   if ! pgrep -f 'cnet2_train[.]py' >/dev/null 2>&1 && [ -f $D/weights/cnet2_caragor1_ep19.npz ]; then
+2026-11-12T10:59:29.0561492Z     CARAGO_OK=1; echo "carago clear at wait-min $i"; break
+2026-11-12T10:59:29.0562329Z   fi
+2026-11-12T10:59:29.0562894Z   sleep 60
+2026-11-12T10:59:29.0563438Z done
+2026-11-12T10:59:29.0564268Z if [ "$CARAGO_OK" != 1 ]; then
+2026-11-12T10:59:29.0565028Z   echo "$MARK FAIL carago not clear after 45min"
+2026-11-12T10:59:29.0566287Z   pgrep -af 'cnet2_train[.]py' || echo NO-TRAIN-PROC
+2026-11-12T10:59:29.0567181Z   ls -la $D/weights/cnet2_caragor1_ep19.npz 2>&1
+2026-11-12T10:59:29.0567955Z   exit 1
+2026-11-12T10:59:29.0568536Z fi
+2026-11-12T10:59:29.0569405Z nvidia-smi --query-gpu=utilization.gpu,temperature.gpu --format=csv,noheader
+2026-11-12T10:59:29.0570615Z echo "carago r1 ep19: $(grep -h '"ep": 19' $D/dq_logs/caragor1.log 2>/dev/null | tail -1)"
+2026-11-12T10:59:29.0571847Z echo "carago r1 best: $(grep -h '^best' $D/dq_logs/caragor1.log 2>/dev/null | tail -1)"
+2026-11-12T10:59:29.0573005Z echo "carago g1 best: $(grep -h '^best' $D/dq_logs/caragog1.log 2>/dev/null | tail -1)"
+2026-11-12T10:59:29.0574444Z md5sum $D/weights/cnet2_caragor1_ep19.npz $D/weights/cnet2_caragog1_ep19.npz 2>&1
+2026-11-12T10:59:29.0575315Z 
+2026-11-12T10:59:29.0575660Z echo '--- PULL-REPO ---'
+2026-11-12T10:59:29.0576429Z echo "repo HEAD before: $(git -C $R rev-parse --short HEAD 2>/dev/null)"
+2026-11-12T10:59:29.0577359Z timeout 120 git -C $R pull --ff-only 2>&1 | tail -3
+2026-11-12T10:59:29.0578275Z echo "repo HEAD after: $(git -C $R rev-parse --short HEAD 2>/dev/null)"
+2026-11-12T10:59:29.0579594Z echo "remote HEAD: $(timeout 60 git -C $R ls-remote origin cnet2-search-v12 2>/dev/null | awk '{print $1}')"
+2026-11-12T10:59:29.0580553Z 
+2026-11-12T10:59:29.0580905Z echo '--- SYNC-CORPUS ---'
+2026-11-12T10:59:29.0581598Z mkdir -p $D/m7bs_corpus/replays
+2026-11-12T10:59:29.0582386Z REPO_N=$(ls $R/data/m7bs_corpus/*.json.gz 2>/dev/null | wc -l)
+2026-11-12T10:59:29.0583185Z echo "repo m7bs files: $REPO_N"
+2026-11-12T10:59:29.0584303Z echo -n 'local replays before='; ls $D/m7bs_corpus/replays/*.json.gz 2>/dev/null | wc -l
+2026-11-12T10:59:29.0585396Z cp -n $R/data/m7bs_corpus/*.json.gz $D/m7bs_corpus/replays/ 2>/dev/null
+2026-11-12T10:59:29.0586415Z echo -n 'local replays after='; ls $D/m7bs_corpus/replays/*.json.gz | wc -l
+2026-11-12T10:59:29.0587352Z cp $R/data/m7bs_matches.json $D/m7bs_matches.json
+2026-11-12T10:59:29.0588608Z ../.venv/bin/python -c 'import json,sys; print("local matches after copy:", len(json.load(open(sys.argv[1]))))' "$D/m7bs_matches.json"
+2026-11-12T10:59:29.0589693Z 
+2026-11-12T10:59:29.0590121Z echo '--- REBUILD-INDEX (ladder_corpus nested shape) ---'
+2026-11-12T10:59:29.0590884Z ../.venv/bin/python - <<'PYEOF'
+2026-11-12T10:59:29.0591514Z import json, gzip, os, glob
+2026-11-12T10:59:29.0592121Z D = '/home/arm/junyang/carbon/data'
+2026-11-12T10:59:29.0592748Z R = '/home/arm/junyang/carbon-repo'
+2026-11-12T10:59:29.0593454Z TNAME = 'RyanX-AIPowercore-M7Bs-b010'
+2026-11-12T10:59:29.0594411Z def load(p):
+2026-11-12T10:59:29.0594847Z     try:
+2026-11-12T10:59:29.0595200Z         return json.load(open(p))
+2026-11-12T10:59:29.0595668Z     except Exception as e:
+2026-11-12T10:59:29.0596115Z         print('load fail', p, e); return []
+2026-11-12T10:59:29.0596616Z lm = load(f'{D}/m7bs_matches.json')
+2026-11-12T10:59:29.0597092Z rm = load(f'{R}/data/m7bs_matches.json')
+2026-11-12T10:59:29.0597698Z print('local matches:', len(lm), 'repo matches:', len(rm))
+2026-11-12T10:59:29.0598290Z matches = lm if len(lm) >= len(rm) else rm
+2026-11-12T10:59:29.0598794Z print('using matches:', len(matches))
+2026-11-12T10:59:29.0599282Z base = load(f'{D}/m7bs_corpus/index.json')
+2026-11-12T10:59:29.0599799Z print('base index entries:', len(base))
+2026-11-12T10:59:29.0600519Z assert isinstance(base[0]['strategies'], dict), 'base strategies not nested'
+2026-11-12T10:59:29.0601184Z tid = ''
+2026-11-12T10:59:29.0601595Z for e in base:
+2026-11-12T10:59:29.0601808Z     for s in ('a', 'b'):
+2026-11-12T10:59:29.0602059Z         if e['strategies'][s]['name'] == TNAME:
+2026-11-12T10:59:29.0602363Z             tid = e['strategies'][s]['id']
+2026-11-12T10:59:29.0602622Z             break
+2026-11-12T10:59:29.0602816Z     if tid:
+2026-11-12T10:59:29.0602997Z         break
+2026-11-12T10:59:29.0603211Z print('teacher id:', repr(tid))
+2026-11-12T10:59:29.0603471Z have = {(e['id'], e['game']) for e in base}
+2026-11-12T10:59:29.0604194Z entries = list(base)
+2026-11-12T10:59:29.0604633Z added, missing, skipped = 0, 0, 0
+2026-11-12T10:59:29.0605069Z for m in matches:
+2026-11-12T10:59:29.0605450Z     key = (m['id'], m['game'])
+2026-11-12T10:59:29.0605847Z     if key in have:
+2026-11-12T10:59:29.0606194Z         continue
+2026-11-12T10:59:29.0606562Z     fn = f"{m['id']}-{m['game']}.json.gz"
+2026-11-12T10:59:29.0607077Z     path = f'{D}/m7bs_corpus/replays/{fn}'
+2026-11-12T10:59:29.0607598Z     if not os.path.exists(path):
+2026-11-12T10:59:29.0608048Z         missing += 1
+2026-11-12T10:59:29.0608407Z         continue
+2026-11-12T10:59:29.0608748Z     if m.get('order') is None:
+2026-11-12T10:59:29.0609159Z         skipped += 1
+2026-11-12T10:59:29.0609502Z         continue
+2026-11-12T10:59:29.0609868Z     with gzip.open(path, 'rt') as f:
+2026-11-12T10:59:29.0610328Z         rep = json.load(f)
+2026-11-12T10:59:29.0610709Z     def side(name):
+2026-11-12T10:59:29.0611192Z         return {'id': tid if name == TNAME else '', 'name': name}
+2026-11-12T10:59:29.0611838Z     e = {'id': m['id'], 'game': m['game'], 'order': m['order'],
+2026-11-12T10:59:29.0612434Z          'scores': m['scores'], 'winner': m.get('winner'),
+2026-11-12T10:59:29.0613042Z          'steps': len(rep['steps']) - 1, 'file': f'replays/{fn}',
+2026-11-12T10:59:29.0613657Z          'created': m.get('created'),
+2026-11-12T10:59:29.0614741Z          'strategies': {'a': side(m['name_a']), 'b': side(m['name_b'])}}
+2026-11-12T10:59:29.0615396Z     entries.append(e)
+2026-11-12T10:59:29.0615868Z     have.add(key)
+2026-11-12T10:59:29.0616241Z     added += 1
+2026-11-12T10:59:29.0616595Z orphans = []
+2026-11-12T10:59:29.0617084Z for p in glob.glob(f'{D}/m7bs_corpus/replays/*.json.gz'):
+2026-11-12T10:59:29.0617695Z     fn = os.path.basename(p)
+2026-11-12T10:59:29.0618188Z     mid, g = fn[:-len('.json.gz')].rsplit('-', 1)
+2026-11-12T10:59:29.0618739Z     if (mid, int(g)) not in have:
+2026-11-12T10:59:29.0619201Z         orphans.append(fn)
+2026-11-12T10:59:29.0619666Z print('orphan replays:', len(orphans))
+2026-11-12T10:59:29.0620180Z for fn in sorted(orphans):
+2026-11-12T10:59:29.0620598Z     print('orphan:', fn)
+2026-11-12T10:59:29.0621258Z json.dump(entries, open(f'{D}/m7bs_corpus/index.json', 'w'), ensure_ascii=False)
+2026-11-12T10:59:29.0622663Z print('index merged: base', len(base), 'added', added, 'missing replays', missing, 'skipped no-order', skipped, 'orphans', len(orphans), 'FINAL', len(entries))
+2026-11-12T10:59:29.0623797Z PYEOF
+2026-11-12T10:59:29.0624885Z FINAL_N=$(../.venv/bin/python -c 'import json,sys; print(len(json.load(open(sys.argv[1]))))' "$D/m7bs_corpus/index.json")
+2026-11-12T10:59:29.0625850Z echo "index final entries: $FINAL_N"
+2026-11-12T10:59:29.0626620Z if [ "$FINAL_N" -ne 142 ]; then echo "$MARK FAIL index $FINAL_N entries (need exactly 142)"; exit 1; fi
+2026-11-12T10:59:29.0627266Z 
+2026-11-12T10:59:29.0627419Z echo '--- BUILD-DS-M7BSV2 ---'
+2026-11-12T10:59:29.0627836Z rm -rf $D/ds_m7bs_v2
+2026-11-12T10:59:29.0629028Z CNET2_TOP_TEACHERS="RyanX-AIPowercore-M7Bs-b010@2" ../.venv/bin/python build_top.py $D/ds_m7bs_v2 $D/m7bs_corpus > $D/dq_logs/build_m7bsv2.log 2>&1; echo "build_m7bsv2_rc=$?"
+2026-11-12T10:59:29.0630491Z ../.venv/bin/python set_uw.py $D/ds_m7bs_v2 1 1 1 >> $D/dq_logs/build_m7bsv2.log 2>&1
+2026-11-12T10:59:29.0631349Z # NOTE: build log's last lines include a ~40KB single-line games dump; cut
+2026-11-12T10:59:29.0632256Z # each line so the stage log stays greppable (the giant line previously hid
+2026-11-12T10:59:29.0633271Z # the FAIL line from the driver's 5000-char claim window).
+2026-11-12T10:59:29.0634178Z tail -4 $D/dq_logs/build_m7bsv2.log | cut -c1-300
+2026-11-12T10:59:29.0634877Z # NOTE (2026-11-12 fix): meta.json "games" is the LIST of 142 game dicts,
+2026-11-12T10:59:29.0635708Z # not the integer 142. The old gate printed the whole list repr and always
+2026-11-12T10:59:29.0636558Z # failed ("FAIL dataset games=[{...}] (need 142)") even though the dataset
+2026-11-12T10:59:29.0637212Z M6PRB61855K3 DGX-END
+2026-11-12T10:59:29.0637595Z M6PRB61855K3 L20-END rc=0
+2026-11-12T10:59:29.0638062Z 
+2026-11-12T10:59:29.0874950Z Post job cleanup.
+2026-11-12T10:59:29.1894991Z [command]/usr/bin/git version
+2026-11-12T10:59:29.1974688Z git version 2.56.0
+2026-11-12T10:59:29.2055603Z Temporarily overriding HOME='/home/runner/work/_temp/36bedd10-4f5e-4eeb-94f9-ec80fd473e8d' before making global git config changes
+2026-11-12T10:59:29.2065295Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T10:59:29.2085538Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T10:59:29.2090843Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T10:59:29.2206971Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T10:59:29.2558609Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T10:59:29.2639224Z http.https://github.com/.extraheader
+2026-11-12T10:59:29.2646182Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T10:59:29.2731354Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T10:59:29.3465557Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T10:59:29.3553213Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T10:59:29.4226185Z Cleaning up orphan processes
+2026-11-12T10:59:29.4578739Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 52 claimed

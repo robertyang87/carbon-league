@@ -1,0 +1,32 @@
+L20SYNC1433 PROBE-BEGIN 2026-11-14 14:35:43 CST
+L20SYNC1433 L20-BEGIN 2026-11-14 14:35:48 CST
+--- TRAINER-PROC ---
+  52296    03:13:19 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 768 --pre-mb 4096 --rscale 1.0 --gamma 1
+--- SPAWN-MAIN-COUNT ---
+31
+--- GPU ---
+memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+8040 MiB, 46068 MiB, 25 %
+--- GPU-COMPUTE-APPS ---
+pid, used_gpu_memory [MiB]
+52296, 6304 MiB
+52305, 1722 MiB
+--- TRAIN-JSONL ---
+94 /root/carbon/data/rl3/snipe_n1/train.jsonl
+{"it": 93, "t": 1794634202, "games": 4217, "srv": {"req": 13762, "pos": 37457, "fwd": 864, "t_fwd": 30.26, "pos_per_fwd": 43.4, "models": 12, "servers": 1}, "dec": 1260883, "units": 13945446, "roll_s": 2460.7, "upd_s": 579.3, "buf_s": 1.5, "pre_s": 297.7, "games_per_min": 102.8, "dec_per_s": 512.4, "pol_s": 32816.3, "opp_s": 35115.2, "pl": 0.0134, "vl": 0.0121, "ent": 0.587, "kl": 0.1058, "kl_coef
+{"it": 94, "t": 1794636609, "games": 4229, "srv": {"req": 16037, "pos": 43288, "fwd": 917, "t_fwd": 29.99, "pos_per_fwd": 47.2, "models": 12, "servers": 1}, "dec": 1263961, "units": 13984910, "roll_s": 2407.0, "upd_s": 578.8, "buf_s": 1.5, "pre_s": 297.1, "games_per_min": 105.4, "dec_per_s": 525.1, "pol_s": 33043.3, "opp_s": 33705.8, "pl": 0.0168, "vl": 0.0125, "ent": 0.589, "kl": 0.1031, "kl_coef
+--- STATE-LAST-MTIME ---
+-rw------- 1 root root 82603818 Nov 14 14:10 /root/carbon/data/rl3/snipe_n1/state_last.pt
+2026-11-14 14:35:48 CST
+--- LOG-MTIME ---
+-rw-r--r-- 1 root root 1043896 Nov 14 14:10 /root/carbon/data/rl3/snipe_n1.log
+2026-11-14 14:35:48 CST
+--- LOG-TAIL-3 ---
+{"it": 92, "t": 1794631740, "games": 4225, "srv": {"req": 14045, "pos": 37778, "fwd": 849, "t_fwd": 30.45, "pos_per_fwd": 44.5, "models": 12, "servers": 1}, "dec": 1262457, "units": 13964201, "roll_s": 2073.0, "upd_s": 578.2, "buf_s": 1.5, "pre_s": 296.0, "games_per_min": 122.3, "dec_per_s": 609.0, "pol_s": 28430.7, "opp_s": 27760.7, "pl": 0.0101, "vl": 0.0121, "ent": 0.587, "kl": 0.1084, "kl_coef
+{"it": 93, "t": 1794634202, "games": 4217, "srv": {"req": 13762, "pos": 37457, "fwd": 864, "t_fwd": 30.26, "pos_per_fwd": 43.4, "models": 12, "servers": 1}, "dec": 1260883, "units": 13945446, "roll_s": 2460.7, "upd_s": 579.3, "buf_s": 1.5, "pre_s": 297.7, "games_per_min": 102.8, "dec_per_s": 512.4, "pol_s": 32816.3, "opp_s": 35115.2, "pl": 0.0134, "vl": 0.0121, "ent": 0.587, "kl": 0.1058, "kl_coef
+{"it": 94, "t": 1794636609, "games": 4229, "srv": {"req": 16037, "pos": 43288, "fwd": 917, "t_fwd": 29.99, "pos_per_fwd": 47.2, "models": 12, "servers": 1}, "dec": 1263961, "units": 13984910, "roll_s": 2407.0, "upd_s": 578.8, "buf_s": 1.5, "pre_s": 297.1, "games_per_min": 105.4, "dec_per_s": 525.1, "pol_s": 33043.3, "opp_s": 33705.8, "pl": 0.0168, "vl": 0.0125, "ent": 0.589, "kl": 0.1031, "kl_coef
+--- TRACEBACK-COUNT ---
+989
+L20SYNC1433 L20-END 2026-11-14 14:35:48 CST
+L20SYNC1433 SSH-RC=0
+L20SYNC1433 PROBE-END 2026-11-14 14:35:47 CST

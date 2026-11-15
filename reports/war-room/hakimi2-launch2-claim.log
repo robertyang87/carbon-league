@@ -1,0 +1,107 @@
+run=43272417220 job=131372096278 conclusion=success (late read-back, driver missed on seen_runs bug)
+﻿2026-11-12T17:43:28.5882082Z Current runner version: '2.338.2'
+2026-11-12T17:43:28.5906950Z ##[group]Runner Image Provisioner
+2026-11-12T17:43:28.5907674Z Hosted Compute Agent
+2026-11-12T17:43:28.5908274Z Version: 20261103.629
+2026-11-12T17:43:28.5908830Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-12T17:43:28.5909525Z Build Date: 2026-11-03T17:26:59Z
+2026-11-12T17:43:28.5910150Z Worker ID: {03ac724d-ff8f-4cdb-88e6-b23b4b063af6}
+2026-11-12T17:43:28.5910727Z Region: westus3
+2026-11-12T17:43:28.5911286Z Cloud: Azure
+2026-11-12T17:43:28.5911785Z ##[endgroup]
+2026-11-12T17:43:28.5913313Z ##[group]Operating System
+2026-11-12T17:43:28.5913923Z Ubuntu
+2026-11-12T17:43:28.5914393Z 24.04.5
+2026-11-12T17:43:28.5915077Z LTS
+2026-11-12T17:43:28.5915601Z ##[endgroup]
+2026-11-12T17:43:28.5916184Z ##[group]Runner Image
+2026-11-12T17:43:28.5916726Z Image: ubuntu-24.04
+2026-11-12T17:43:28.5917221Z Version: 20261111.370.1
+2026-11-12T17:43:28.5918346Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T17:43:28.5919606Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+2026-11-12T17:43:28.5920418Z ##[endgroup]
+2026-11-12T17:43:28.5921386Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T17:43:28.5923167Z Contents: read
+2026-11-12T17:43:28.5923753Z Metadata: read
+2026-11-12T17:43:28.5924307Z ##[endgroup]
+2026-11-12T17:43:28.5926566Z Secret source: Actions
+2026-11-12T17:43:28.5927462Z Cache mode: write
+2026-11-12T17:43:28.5928121Z Prepare workflow directory
+2026-11-12T17:43:28.6233043Z Prepare all required actions
+2026-11-12T17:43:28.6283681Z Getting action download info
+2026-11-12T17:43:28.9121978Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T17:43:29.1678592Z Complete job name: run
+2026-11-12T17:43:29.2551701Z ##[group]Run actions/checkout@v4
+2026-11-12T17:43:29.2552432Z with:
+2026-11-12T17:43:29.2552854Z   repository: robertyang87/carbon-league
+2026-11-12T17:43:29.2555921Z   token: ***
+2026-11-12T17:43:29.2556320Z   ssh-strict: true
+2026-11-12T17:43:29.2556713Z   ssh-user: git
+2026-11-12T17:43:29.2557114Z   persist-credentials: true
+2026-11-12T17:43:29.2557567Z   clean: true
+2026-11-12T17:43:29.2557967Z   sparse-checkout-cone-mode: true
+2026-11-12T17:43:29.2558408Z   fetch-depth: 1
+2026-11-12T17:43:29.2558787Z   fetch-tags: false
+2026-11-12T17:43:29.2559183Z   show-progress: true
+2026-11-12T17:43:29.2559578Z   lfs: false
+2026-11-12T17:43:29.2559948Z   submodules: false
+2026-11-12T17:43:29.2560340Z   set-safe-directory: true
+2026-11-12T17:43:29.2560774Z   allow-unsafe-pr-checkout: false
+2026-11-12T17:43:29.2561387Z ##[endgroup]
+2026-11-12T17:43:29.5302673Z Syncing repository: robertyang87/carbon-league
+2026-11-12T17:43:29.5305814Z ##[group]Getting Git version info
+2026-11-12T17:43:29.5307032Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T17:43:29.5402126Z [command]/usr/bin/git version
+2026-11-12T17:43:29.5916369Z git version 2.56.1
+2026-11-12T17:43:29.5919982Z ##[endgroup]
+2026-11-12T17:43:29.5926171Z Temporarily overriding HOME='/home/runner/work/_temp/5dd4f2c6-ce3c-46f3-925e-4a12efea6329' before making global git config changes
+2026-11-12T17:43:29.5927974Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T17:43:29.5929600Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T17:43:29.6002085Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T17:43:29.6003871Z ##[group]Initializing the repository
+2026-11-12T17:43:29.6066599Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T17:43:29.6153671Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T17:43:29.6155844Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T17:43:29.6157490Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T17:43:29.6158980Z hint: call:
+2026-11-12T17:43:29.6159999Z hint:
+2026-11-12T17:43:29.6160888Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T17:43:29.6162103Z hint:
+2026-11-12T17:43:29.6163089Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T17:43:29.6164648Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T17:43:29.6166013Z hint:
+2026-11-12T17:43:29.6167063Z hint: 	git branch -m <name>
+2026-11-12T17:43:29.6168013Z hint:
+2026-11-12T17:43:29.6169334Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T17:43:29.6206988Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T17:43:29.6210960Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T17:43:29.6290510Z ##[endgroup]
+2026-11-12T17:43:29.6291881Z ##[group]Disabling automatic garbage collection
+2026-11-12T17:43:29.6296537Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T17:43:29.6358710Z ##[endgroup]
+2026-11-12T17:43:29.6376189Z ##[group]Setting up auth
+2026-11-12T17:43:29.6427875Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T17:43:29.6447383Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T17:43:29.7646385Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T17:43:29.7653409Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T17:43:29.7656539Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T17:43:29.7658684Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T17:43:29.7708712Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T17:43:29.7757861Z ##[endgroup]
+2026-11-12T17:43:29.7759352Z ##[group]Fetching the repository
+2026-11-12T17:43:29.7769946Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +639253c0ba9020399f8bc71d2cdc39904dedca61:refs/remotes/origin/main
+2026-11-12T17:43:55.2864319Z From https://github.com/robertyang87/carbon-league
+2026-11-12T17:43:55.2865800Z  * [new ref]         639253c0ba9020399f8bc71d2cdc39904dedca61 -> origin/main
+2026-11-12T17:43:55.2877614Z ##[endgroup]
+2026-11-12T17:43:55.2878686Z ##[group]Determining the checkout info
+2026-11-12T17:43:55.2913139Z ##[endgroup]
+2026-11-12T17:43:55.2914152Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T17:43:55.3020896Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T17:43:55.3107871Z ##[group]Checking out the ref
+2026-11-12T17:43:55.3116399Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T17:43:56.0751913Z Switched to a new branch 'main'
+2026-11-12T17:43:56.0753210Z branch 'main' set up to track 'origin/main'.
+2026-11-12T17:43:56.0898567Z ##[endgroup]
+2026-11-12T17:43:56.0918546Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T17:43:56.0941237Z 639253c0ba9020399f8bc71d2cdc39904dedca61
+2026-11-12T17:43:56.2224391Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKIyBIYWtpbWkgdjIgcHJvIHJlcGxpY2EgZHVhbC1hcm0gbGF1bmNoIG9uIFN0dWRpbywgVFJJUCAyICh2MiBzY3JpcHQpLgojIHYxIGZhaWx1cmUgKGNsYWltZWQgcnVuIDQzMjY5MzU3MDgyLCAwMToyNjo0MiBDU1QpOiBGQUlMIG5vLXJlcG8tY2xvbmUgLS0KIyBTdHVkaW8gJEhPTUUvanVueWFuZy9jYXJib24gaXMgYSBzeW5jZWQgd29ya2RpciwgTk9UIGEgZ2l0IGNsb25lIChubyAuZ2l0KSwKIyBhbmQgJEhPTUUvanVueWFuZy9jYXJib24tcmVwbyBkb2VzIG5vdCBleGlzdCBlaXRoZXIuIHYxIGFzc3VtZWQgYSBjbG9uZS4KIyB2MjogbG9vayBmb3IgYSBTdHVkaW8gY2xvbmUgaW4gc2V2ZXJhbCBwbGFjZXM7IGlmIG5vbmUsIHB1bGwgb24gREdYIG92ZXIgTEFOCiMgYW5kIHJzeW5jIGRhdGEvaGFraW1pMl9tYXRjaGVzLmpzb24gKyBkYXRhL2hha2ltaTJfY29ycHVzLyB0byBTdHVkaW8sIHRoZW4KIyB2ZXJpZnkvYnVpbGQgYWdhaW5zdCB0aGUgc3luY2VkIGNvcGllcy4gQ2hhaW4gKyBzaGlwIGxvZ2ljIHVuY2hhbmdlZCBmcm9tIHYxLgojIENoYW5uZWw6IGNsb3VkLWFzc2lzdGFudC55bWwgLT4gTDIwIC0+IHNzaCBTdHVkaW8uIE1hcmtlcjogSEFLSU1JMkxDSDIKTUFSSz1IQUtJTUkyTENIMgplY2hvICIkTUFSSyBMMjAtQkVHSU4gJChkYXRlICcrJUYgJVQgJVonKSIKdGltZW91dCAtayAzMCA0MjAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIC1vIFVzZXJLbm93bkhvc3RzRmlsZT0vcm9vdC8uamlzaHVidWRkeS9uZXR3b3JrLWNoZWNrcy9zdHVkaW8ta25vd24taG9zdHMtMjAyNjExMTIgYXJtQDEwLjIxMS40My42OCAnYmFzaCAtcycgPDwnU1RFT0YnCnNldCAtdQpNQVJLPUhBS0lNSTJMQ0gyCkQ9JEhPTUUvanVueWFuZy9jYXJib24vZGF0YQpER1g9YXJtQDEwLjE4OC4wLjIzClZFTlY9JEhPTUUvanVueWFuZy9jYXJib24vLnZlbnYvYmluL3B5dGhvbgplY2hvICIkTUFSSyBTVFVESU8tQkVHSU4gJChkYXRlICcrJUYgJVQgJVonKSIKbHMgLWwgIiRWRU5WIiB8fCB7IGVjaG8gIiRNQVJLIEZBSUwgbm8tdmVudi1weXRob24iOyBlY2hvICIkTUFSSyBTVFVESU8tRU5EIjsgZXhpdCAwOyB9CmVjaG8gJy0tLSBTVFVESU8tTEFZT1VUIC0tLScKbHMgJEhPTUUvanVueWFuZy8gMj4vZGV2L251bGwKIyAtLS0gMCkgZmluZCB0aGUgZGF0YTogU3R1ZGlvIGNsb25lIGZpcnN0LCBlbHNlIHN5bmMgZnJvbSBER1ggLS0tCkRBVEE9IiIKUkVQTz0iIgpmb3IgYyBpbiAkSE9NRS9qdW55YW5nL2NhcmJvbiAkSE9NRS9qdW55YW5nL2NhcmJvbi1yZXBvICRIT01FL2p1bnlhbmcvY2FyYm9uLWxlYWd1ZSAkSE9NRS9jYXJib24tbGVhZ3VlICRIT01FL2NhcmJvbi1yZXBvOyBkbwogIGlmIFsgLWQgIiRjLy5naXQiIF0gJiYgWyAtZiAiJGMvZGF0YS9oYWtpbWkyX21hdGNoZXMuanNvbiIgXTsgdGhlbiBSRVBPPSIkYyI7IERBVEE9IiRjL2RhdGEiOyBlY2hvICJDTE9ORS1GT1VORCAkYyI7IGJyZWFrOyBmaQpkb25lCmlmIFsgLW4gIiRSRVBPIiBdOyB0aGVuCiAgZWNobyAiSEVBRF9CRUZPUkU9JChnaXQgLUMgIiRSRVBPIiByZXYtcGFyc2UgLS1zaG9ydCBIRUFEIDI+L2Rldi9udWxsIHx8IGVjaG8gVU5LTk9XTikiCiAgdGltZW91dCAxMjAgZ2l0IC1DICIkUkVQTyIgcHVsbCAtLWZmLW9ubHkgPiAkRC9oYWtpbWkyX3B1bGwubG9nIDI+JjE7IFBVTExfUkM9JD8KICB0YWlsIC0zICREL2hha2ltaTJfcHVsbC5sb2cKICBlY2hvICJQVUxMX1JDPSRQVUxMX1JDIEhFQURfQUZURVI9JChnaXQgLUMgIiRSRVBPIiByZXYtcGFyc2UgLS1zaG9ydCBIRUFEIDI+L2Rldi9udWxsIHx8IGVjaG8gVU5LTk9XTikiCiAgaWYgWyAiJFBVTExfUkMiIC1uZSAwIF07IHRoZW4KICAgIGlmIGdpdCAtQyAiJFJFUE8iIG1lcmdlLWJhc2UgLS1pcy1hbmNlc3RvciBiZTkwOWU2YyBIRUFEIDI+L2Rldi9udWxsOyB0aGVuCiAgICAgIGVjaG8gIlBVTEwgZmFpbGVkIGJ1dCBsb2NhbCBIRUFEIGFscmVhZHkgY29udGFpbnMgYmU5MDllNmM7IHByb2NlZWRpbmcgb24gbG9jYWwgZmlsZXMiCiAgICBlbHNlCiAgICAgIGVjaG8gIiRNQVJLIEZBSUwgZ2l0LXB1bGwgcmM9JFBVTExfUkMgYW5kIEhFQUQgbGFja3MgYmU5MDllNmMiOyBlY2hvICIkTUFSSyBTVFVESU8tRU5EIjsgZXhpdCAwCiAgICBmaQogIGZpCmVsc2UKICBlY2hvICJOTy1TVFVESU8tQ0xPTkUsIHN5bmNpbmcgZGF0YSBmcm9tIERHWCBvdmVyIExBTiIKICB0aW1lb3V0IDEyMCBzc2ggLW8gQmF0Y2hNb2RlPXllcyAtbyBDb25uZWN0VGltZW91dD0yMCAkREdYICdnaXQgLUMgL2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uLXJlcG8gcHVsbCAtLWZmLW9ubHkgMj4mMSB8IHRhaWwgLTI7IGdpdCAtQyAvaG9tZS9hcm0vanVueWFuZy9jYXJib24tcmVwbyByZXYtcGFyc2UgLS1zaG9ydCBIRUFEJyB8fCB7IGVjaG8gIiRNQVJLIEZBSUwgZGd4LXB1bGwtc3NoIjsgZWNobyAiJE1BUksgU1RVRElPLUVORCI7IGV4aXQgMDsgfQogIHRpbWVvdXQgNjAgc3NoIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MjAgJERHWCAicHl0aG9uMyAtYyAnaW1wb3J0IGpzb247IHByaW50KFwiREdYLU1BVENIRVNcIiwgbGVuKGpzb24ubG9hZChvcGVuKFwiL2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uLXJlcG8vZGF0YS9oYWtpbWkyX21hdGNoZXMuanNvblwiKSkpKSc7IGxzIC9ob21lL2FybS9qdW55YW5nL2NhcmJvbi1yZXBvL2RhdGEvaGFraW1pMl9jb3JwdXMvKi5qc29uLmd6IHwgd2MgLWwiIHx8IHsgZWNobyAiJE1BUksgRkFJTCBkZ3gtY291bnRzIChtYXRjaGVzL2NvcnB1cyBtaXNzaW5nIG9uIERHWCBjbG9uZSkiOyBlY2hvICIkTUFSSyBTVFVESU8tRU5EIjsgZXhpdCAwOyB9CiAgbWtkaXIgLXAgJEQvaGFraW1pMl9zcmMKICB0aW1lb3V0IDMwMCByc3luYyAtYXZ6IC0tcGFydGlhbCAtZSAic3NoIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MjAiICRER1g6L2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uLXJlcG8vZGF0YS9oYWtpbWkyX21hdGNoZXMuanNvbiAkRC9oYWtpbWkyX3NyYy9oYWtpbWkyX21hdGNoZXMuanNvbiB8fCB7IGVjaG8gIiRNQVJLIEZBSUwgcnN5bmMtbWF0Y2hlcyI7IGVjaG8gIiRNQVJLIFNUVURJTy1FTkQiOyBleGl0IDA7IH0KICB0aW1lb3V0IDMwMCByc3luYyAtYXZ6IC0tcGFydGlhbCAtZSAic3NoIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MjAiICRER1g6L2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uLXJlcG8vZGF0YS9oYWtpbWkyX2NvcnB1cy8gJEQvaGFraW1pMl9zcmMvaGFraW1pMl9jb3JwdXMvIHx8IHsgZWNobyAiJE1BUksgRkFJTCByc3luYy1jb3JwdXMiOyBlY2hvICIkTUFSSyBTVFVESU8tRU5EIjsgZXhpdCAwOyB9CiAgREFUQT0iJEQvaGFraW1pMl9zcmMiCiAgZWNobyAiU1lOQy1ET05FIERBVEE9JERBVEEiCmZpCiMgLS0tIDEpIHdyaXRlIHZlcmlmeS9idWlsZCBweXRob24gKHRha2VzIGEgREFUQSBkaXIgaG9sZGluZyBoYWtpbWkyX21hdGNoZXMuanNvbiArIGhha2ltaTJfY29ycHVzLykgLS0tCmNhdCA+ICREL2hha2ltaTJfaW5kZXgucHkgPDwnUFlFT0YnCmltcG9ydCBnemlwLCBqc29uLCBvcywgc2hsZXgsIHNodXRpbCwgc3lzCmZyb20gY29sbGVjdGlvbnMgaW1wb3J0IENvdW50ZXIKCmRlZiBsb2FkX21hdGNoZXMoZGF0YSk6CiAgICByZXR1cm4ganNvbi5sb2FkKG9wZW4ob3MucGF0aC5qb2luKGRhdGEsICJoYWtpbWkyX21hdGNoZXMuanNvbiIpKSkKCmRlZiB0ZWFjaGVyX25hbWUobWF0Y2hlcyk6CiAgICBjID0gQ291bnRlcigpCiAgICBmb3IgbSBpbiBtYXRjaGVzOgogICAgICAgIGNbbS5nZXQoIm5hbWVfYSIpXSArPSAxCiAgICAgICAgY1ttLmdldCgibmFtZV9iIildICs9IDEKICAgIG4gPSBsZW4obWF0Y2hlcykKICAgIGNhbmRzID0gW25hbWUgZm9yIG5hbWUsIGsgaW4gYy5pdGVtcygpIGlmIGsgPT0gbl0KICAgIGlmIGxlbihjYW5kcykgPT0gMToKICAgICAgICByZXR1cm4gY2FuZHNbMF0sIGMKICAgIGZvciBuYW1lIGluIGNhbmRzOgogICAgICAgIGlmICJoYWtpbWkiIGluIHN0cihuYW1lKS5sb3dlcigpIG9yICLlk4jln7rnsbMiIGluIHN0cihuYW1lKToKICAgICAgICAgICAgcmV0dXJuIG5hbWUsIGMKICAgIHJldHVybiBOb25lLCBjCgpkZWYgdmVyaWZ5KGRhdGEpOgogICAgbWF0Y2hlcyA9IGxvYWRfbWF0Y2hlcyhkYXRhKQogICAgY2RpciA9IG9zLnBhdGguam9pbihkYXRhLCAiaGFraW1pMl9jb3JwdXMiKQogICAgZmlsZXMgPSBbZiBmb3IgZiBpbiBvcy5saXN0ZGlyKGNkaXIpIGlmIG9zLnBhdGguaXNmaWxlKG9zLnBhdGguam9pbihjZGlyLCBmKSldCiAgICBneiA9IFtmIGZvciBmIGluIGZpbGVzIGlmIGYuZW5kc3dpdGgoIi5qc29uLmd6IildCiAgICB0ZWFjaGVyLCBjb3VudHMgPSB0ZWFjaGVyX25hbWUobWF0Y2hlcykKICAgIHByaW50KGYiVkVSSUZZIG1hdGNoZXM9e2xlbihtYXRjaGVzKX0gY29ycHVzX2ZpbGVzPXtsZW4oZmlsZXMpfSBjb3JwdXNfZ3o9e2xlbihneil9IHRlYWNoZXI9e3RlYWNoZXJ9IHRvcF9uYW1lcz17Y291bnRzLm1vc3RfY29tbW9uKDUpfSIpCiAgICBpZiBsZW4oZmlsZXMpICE9IDEwMjoKICAgICAgICBwcmludChmIlZFUklGWSBOT1RFIGNvcnB1c19maWxlcz17bGVuKGZpbGVzKX0gIT0gMTAyIChnej17bGVuKGd6KX0gaXMgdGhlIG9wZXJhdGl2ZSBjb3VudCkiKQogICAgb2sgPSBsZW4obWF0Y2hlcykgPT0gMTAwIGFuZCBsZW4oZ3opID09IDEwMiBhbmQgdGVhY2hlciBpcyBub3QgTm9uZQogICAgaWYgbm90IG9rOgogICAgICAgIHByaW50KGYiVkVSSUZZIEZBSUwgbmVlZCBtYXRjaGVzPTEwMCBjb3JwdXNfZ3o9MTAyIHVuaXF1ZS10ZWFjaGVyOyBnb3QgbWF0Y2hlcz17bGVuKG1hdGNoZXMpfSBjb3JwdXNfZ3o9e2xlbihneil9IHRlYWNoZXI9e3RlYWNoZXJ9IikKICAgICAgICByZXR1cm4gMQogICAgZW52ID0gb3MucGF0aC5leHBhbmR1c2VyKCJ+L2p1bnlhbmcvY2FyYm9uL2RhdGEvaGFraW1pMl9lbnYuc2giKQogICAgd2l0aCBvcGVuKGVudiwgInciKSBhcyBmOgogICAgICAgIGYud3JpdGUoZiJEQVRBPXtzaGxleC5xdW90ZShkYXRhKX1cblRFQUNIRVI9e3NobGV4LnF1b3RlKHRlYWNoZXIpfVxuIikKICAgIHByaW50KGYiVkVSSUZZIEdBVEU9UEFTUyBlbnY9e2Vudn0iKQogICAgcmV0dXJuIDAKCmRlZiBidWlsZChkYXRhLCBkZXN0KToKICAgIG1hdGNoZXMgPSBsb2FkX21hdGNoZXMoZGF0YSkKICAgIHRlYWNoZXIsIF8gPSB0ZWFjaGVyX25hbWUobWF0Y2hlcykKICAgIGFzc2VydCB0ZWFjaGVyLCAibm8gdGVhY2hlciIKICAgIGNkaXIgPSBvcy5wYXRoLmpvaW4oZGF0YSwgImhha2ltaTJfY29ycHVzIikKICAgIGhhdmUgPSB7fQogICAgZm9yIGYgaW4gb3MubGlzdGRpcihjZGlyKToKICAgICAgICBpZiBub3QgZi5lbmRzd2l0aCgiLmpzb24uZ3oiKSBvciAiLSIgbm90IGluIGZbOi1sZW4oIi5qc29uLmd6IildOgogICAgICAgICAgICBjb250aW51ZQogICAgICAgIGJhc2UgPSBmWzotbGVuKCIuanNvbi5neiIpXQogICAgICAgIG1pZCwgZyA9IGJhc2UucnNwbGl0KCItIiwgMSkKICAgICAgICB0cnk6CiAgICAgICAgICAgIGhhdmVbKG1pZCwgaW50KGcpKV0gPSBmCiAgICAgICAgZXhjZXB0IFZhbHVlRXJyb3I6CiAgICAgICAgICAgIHBhc3MKICAgI

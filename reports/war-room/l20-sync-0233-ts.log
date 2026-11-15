@@ -1,0 +1,39 @@
+L20SYNC0233 PROBE-BEGIN 2026-11-14 02:36:35 CST
+L20SYNC0233 L20-BEGIN 2026-11-14 02:36:39 CST
+--- TRAINER-PROC ---
+  34214    01:09:29 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 
+--- SPAWN-MAIN-COUNT ---
+31
+--- GPU ---
+pid, used_gpu_memory [MiB]
+34214, 20432 MiB
+34225, 1720 MiB
+memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+22166 MiB, 46068 MiB, 9 %
+--- LOG-SIZE-MTIME ---
+16945 /root/carbon/data/rl3/snipe_n1.log
+2026-11-14 02:10:29 CST
+2026-11-14 02:36:39 CST
+--- JSONERR-COUNT ---
+4
+--- TRACEBACK-COUNT ---
+989
+--- LOG-TAIL-8 ---
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 3 (char 2)
+{"it": 80, "t": 1794593429, "games": 4263, "srv": {"req": 11795, "pos": 36088, "fwd": 816, "t_fwd": 30.11, "pos_per_fwd": 44.2, "models": 12, "servers": 1}, "dec": 1274118, "units": 14102919, "roll_s": 2101.6, "upd_s": 494.7, "buf_s": 1.5, "pre_s": 302.7, "games_per_min": 121.7, "dec_per_s": 606.3, "pol_s": 28936.4, "opp_s": 27899.5, "pl": 0.0002, "vl": 0.0028, "ent": 0.579, "kl": 0.0809, "kl_coef": 0.15, "clipfrac": 0.0, "gnorm": 0.0, "dlogp": -0.0, "warm": true, "adv_std": 0.0911, "v_mean": -0.058, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2": [-17, 521, 254], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj320r1.npz#T2": [-572, 418, 89], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [671, 169, 138], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_70.npz": [117, 425, 242], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2": [199, 191, 116], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260r1.npz#T2": [-116, 232, 98], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [775, 99, 84], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudio.npz#T2": [-387, 316, 93], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_60.npz": [99, 404, 233], "SELF": [0, 526, 263], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2": [129, 210, 110], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2r1.npz#T2": [-99, 280, 122], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [354, 173, 118], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260g1.npz#T2": [177, 119, 62], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2g1.npz#T2": [18, 69, 38], "SNAP:cnet2:/root/carbon/data/weights/cnet2_caragor1_ep19.npz#T2": [888, 111, 94]}, "winrate": 0.505, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2": [27.0, 29.4], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj320r1.npz#T2": [23.9, 33.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.1, 24.3], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_70.npz": [27.4, 29.0], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2": [28.5, 27.9], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260r1.npz#T2": [22.2, 34.9], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.1, 22.4], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudio.npz#T2": [23.4, 32.8], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_60.npz": [28.0, 27.7], "SELF": [28.0, 28.0], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2": [27.4, 27.2], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2r1.npz#T2": [27.1, 27.4], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.6, 28.5], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260g1.npz#T2": [24.2, 31.4], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2g1.npz#T2": [26.7, 27.9], "SNAP:cnet2:/root/carbon/data/weights/cnet2_caragor1_ep19.npz#T2": [25.4, 26.2]}, "buf_mb": 13578.3, "rss_mb": 27668, "workers_rss_mb": 19389}
+--- TRAIN-JSONL ---
+80 /root/carbon/data/rl3/snipe_n1/train.jsonl
+{"it": 80, "t": 1794593429, "games": 4263, "srv": {"req": 11795, "pos": 36088, "fwd": 816, "t_fwd": 30.11, "pos_per_fwd": 44.2, "models": 12, "servers": 1}, "dec": 1274118, "units": 14102919, "roll_s": 2101.6, "upd_s": 494.7, "buf_s": 1.5, "pre_s": 302.7, "games_per_min": 121.7, "dec_per_s": 606.3, 
+--- ROLLBACK-WATCHDOG ---
+  33515    01:21:16 bash -c md5sum /root/carbon/data/rl3/state_rollbackup.py; cd /root/carbon/data/rl3 && nohup /root/carbon/.venv/bin/python state_rollbackup.p
+  33517    01:21:16 /root/carbon/.venv/bin/python state_rollbackup.py
+-rw-r--r-- 1 root root 82608387 Nov 14 02:10 /root/carbon/data/rl3/snipe_n1/state_last.pt
+L20SYNC0233 L20-END 2026-11-14 02:36:39 CST
+L20SYNC0233 SSH-RC=0
+L20SYNC0233 PROBE-END 2026-11-14 02:36:38 CST

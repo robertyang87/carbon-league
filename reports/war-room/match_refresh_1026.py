@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""2b match-list refresh, run 10:26 2026-11-14.
+Pull 117-end full match lists via ladder.py (LADDER_BASE=117), compare id
+sets with warehouse main data/<label>_matches.json, put_file only on change,
+get_file read-back to verify. it570 is FROZEN at 89 (sha 9d69b8472d70):
+pull for reporting only, never update. Name guard: every pulled match must
+contain the target name as name_a or name_b, else skip without submitting
+(lesson of the 09:56 m9xj wrong-ID incident). m9xj (it260, delisted) is
+verified read-only only, never put."""
+import base64, json, os, subprocess, sys
+sys.path.insert(0, "/home/hatch/workspace")
+import gh_api
+
+BASE = "/home/hatch/workspace/carbon-live"
+WORK = "/tmp/newface_1026"
+os.makedirs(WORK, exist_ok=True)
+OWNER, REPO = "robertyang87", "carbon-league"
+
+# (label, hex strategy id, warehouse path, expected name, frozen?)
+TARGETS = [
+    ("m3s3z",     "f9fdbce38def1a78eb9c77f8711a1103", "data/m3s3z_matches.json", "claude-AlphaCarbon-Master3s3z", False),
+    ("hakimi3pro","aff6e57c5eba8857d5546783c7d39a46", "data/hakimi3pro_matches.json", "哈基米 v3pro", False),
+    ("k4v3",      "9d596068f39e0b8cca317c3bb27f8ae5", "data/k4v3_matches.json", "stephen-K4TacSearch-v3", False),
+    ("fable6",    "5b453cb4f7c49439673deda697d46a9b", "data/fable6_matches.json", "Fable5.2-Max-V6", False),
+    ("lite-v8",   "3a4d267d9fcea50794f48d38d3e1360d", "data/lite-v8_matches.json", "RyanX-AIPowercore-Lite-V8", False),
+    ("krypton",   "0f2c23daf04aaf650576575d2482b940", "data/krypton_matches.json", "Krypton-Cloud500", False),
+    ("k4v2",      "aaa02959b15d57e4e28f80d665ae3482", "data/k4v2_matches.json", "stephen-K4TacSearch-v2", False),
+    ("fable",     "2b4b44fd148fa7fdaa53bb0d110ae705", "data/fable_matches.json", "Fable5.2-Max-V5", False),
+    ("m9xj570",   "28c19bba51a260bbae29ea5fba59951c", "data/m9xj570_matches.json", "RyanX-AIPowercore-M9XJ-it570", True),
+]
+# read-only verification only (delisted/frozen, never put)
+VERIFY_ONLY = [
+    ("m9xj", "e43b20c5d8d644b4145cb1e7ff198201", "data/m9xj_matches.json", "RyanX-AIPowercore-M9XJ-it260"),
+]
+
+def ids(ms):
+    return {(m.get("id"), m.get("game")) for m in ms}
+
+def pull(label, sid):
+    out = f"{WORK}/{label}_matches_117.json"
+    env = dict(os.environ, LADDER_BASE="https://117.72.210.134")
+    r = subprocess.run(["python3", "ladder.py", "matches", sid, out],
+                       cwd=BASE, env=env, capture_output=True, text=True, timeout=300)
+    if r.returncode != 0:
+        return None, f"PULL FAILED rc={r.returncode} {r.stderr.strip()[-200:]}"
+    return json.load(open(out)), None
+
+report = []
+pulled = {}
+for label, sid, path, name, frozen in TARGETS:
+    new, err = pull(label, sid)
+    if err:
+        report.append(f"{label}: {err}")
+        continue
+    pulled[label] = new
+    bad = [m for m in new if name not in (m.get("name_a"), m.get("name_b"))]
+    if bad:
+        report.append(f"{label}: NAME GUARD FAIL {len(bad)}/{len(new)} matches lack {name} -- SKIPPED, no submit")
+        continue
+    wins = sum(1 for m in new if (m.get("winner") == "a" and m.get("name_a") == name) or (m.get("winner") == "b" and m.get("name_b") == name))
+    new_ids = ids(new)
+    cur = gh_api.get_file(OWNER, REPO, path, ref="main")
+    if cur is None:
+        report.append(f"{label}: warehouse file MISSING ({len(new)} pulled, {wins} wins)")
+        continue
+    old = json.loads(base64.b64decode(cur["content"]).decode())
+    old_ids = ids(old)
+    sha = cur["sha"]
+    if frozen:
+        report.append(f"{label}: FROZEN pull={len(new)} wins={wins} ware={len(old)} sha={sha[:12]} "
+                      f"{'UNCHANGED' if sha.startswith('9d69b8472d70') else 'SHA CHANGED!'}")
+        continue
+    if new_ids == old_ids:
+        report.append(f"{label}: no change ({len(new)} games, {wins} wins, id set identical)")
+        continue
+    added = new_ids - old_ids
+    removed = old_ids - new_ids
+    content = open(f"{WORK}/{label}_matches_117.json", "rb").read()
+    put = gh_api.put_file(OWNER, REPO, path, content,
+                          f"newface-watch 10:26: {label} matches {len(old)}->{len(new)}",
+                          sha=sha, branch="main")
+    back = gh_api.get_file(OWNER, REPO, path, ref="main")
+    back_n = len(json.loads(base64.b64decode(back["content"]).decode())) if back else -1
+    report.append(f"{label}: {len(old)}->{len(new)} wins={wins} (+{len(added)} -{len(removed)}) "
+                  f"commit={put.get('commit',{}).get('sha','?')[:12]} readback={back_n} "
+                  f"sha={back['sha'][:12] if back else '?'} "
+                  f"{'OK' if back_n == len(new) else 'READBACK MISMATCH!'}")
+
+for label, sid, path, name in VERIFY_ONLY:
+    new, err = pull(label, sid)
+    if err:
+        report.append(f"{label}: {err}")
+        continue
+    bad = [m for m in new if name not in (m.get("name_a"), m.get("name_b"))]
+    if bad:
+        report.append(f"{label}: NAME GUARD FAIL {len(bad)}/{len(new)} -- read-only, no action")
+        continue
+    cur = gh_api.get_file(OWNER, REPO, path, ref="main")
+    old = json.loads(base64.b64decode(cur["content"]).decode())
+    report.append(f"{label}: VERIFY-ONLY pull={len(new)} ware={len(old)} "
+                  f"idset={'IDENTICAL' if ids(new) == ids(old) else 'DIFFERS!'} sha={cur['sha'][:12]}")
+
+print("\n".join(report))
+json.dump({"report": report, "pulled_counts": {k: len(v) for k, v in pulled.items()}},
+          open(f"{WORK}/refresh_report.json", "w"), ensure_ascii=False, indent=1)

@@ -1,0 +1,144 @@
+dispatched at 17:57:48
+CLAIMED run 43196086370 job 131107316262 conclusion success
+hanghai
+2026-11-12T09:57:57.0430438Z ##[endgroup]
+2026-11-12T09:58:04.0956797Z InvokeId: t-sh072vnulcc8i68
+2026-11-12T09:58:04.0957827Z --- status=Success exit=0 ---
+2026-11-12T09:58:04.0958840Z MARK N1WATCH-17559F72167F START 2026-11-12 17:57:58 CST
+2026-11-12T09:58:04.0959638Z === weights ===
+2026-11-12T09:58:04.0960206Z total 258720
+2026-11-12T09:58:04.0960870Z -rw-r--r-- 1 root root  11821004 Nov 12 15:05 cnet2_m7bsg1L.npz
+2026-11-12T09:58:04.0961774Z -rw-r--r-- 1 root root  13968972 Nov 12 14:51 cnet2_m7bsr1L.npz
+2026-11-12T09:58:04.0962667Z -rw-r--r-- 1 root root  13968972 Nov 12 14:51 cnet2_m3s2r1L.npz
+2026-11-12T09:58:04.0963474Z -rw-r--r-- 1 root root  11821004 Nov 12 06:58 cnet2_m6r1L.npz
+2026-11-12T09:58:04.0964280Z -rw-r--r-- 1 root root  13968972 Nov 12 06:58 cnet2_m3n1L.npz
+2026-11-12T09:58:04.0965094Z -rw-rw-r-- 1  501 root  11821004 Nov 11 23:10 cnet2_top_j1L.npz
+2026-11-12T09:58:04.0965906Z -rw-rw-r-- 1 1000  1000 11821000 Nov 11 17:33 cnet2_m3w3L.npz
+2026-11-12T09:58:04.0967159Z -rw-rw-r-- 1 1000  1000 11821000 Nov 11 17:33 cnet2_m3w2L.npz
+2026-11-12T09:58:04.0967985Z -rw-rw-r-- 1 1000  1000 11821004 Nov 11 17:33 cnet2_m3w1L.npz
+2026-11-12T09:58:04.0968787Z -rw-rw-r-- 1  501 staff 11821144 Nov 10 05:20 cnet2_b128m2t3.npz
+2026-11-12T09:58:04.0969641Z -rw-rw-r-- 1  501 staff 11821144 Nov 10 00:47 cnet2_b128awr_r1.npz
+2026-11-12T09:58:04.0970773Z -rw-rw-r-- 1  501 staff 11821140 Nov  9 22:42 cnet2_b128m2so.npz
+2026-11-12T09:58:04.0971714Z -rw-r--r-- 1  501 staff  3394044 Nov  8 22:07 cnet2_s64v8.npz
+2026-11-12T09:58:04.0972751Z -rw-r--r-- 1  501 staff 11821132 Nov  8 21:36 cnet2_m2s2stand.npz
+2026-11-12T09:58:04.0973947Z -rw-r--r-- 1  501 staff 11821112 Nov  8 14:26 cnet2_b128v7.npz
+2026-11-12T09:58:04.0975106Z -rw-r--r-- 1  501 staff 11821128 Nov  8 13:09 cnet2_m2sstand.npz
+2026-11-12T09:58:04.0976226Z -rw-r--r-- 1  501 staff 11821124 Nov  8 11:19 cnet2_b128v6.npz
+2026-11-12T09:58:04.1007305Z -rw-r--r-- 1  501 staff 11821124 Nov  8 08:21 cnet2_b128v5.npz
+2026-11-12T09:58:04.1008705Z -rw-r--r-- 1  501 staff 11821124 Nov  7 23:33 cnet2_m2stand.npz
+2026-11-12T09:58:04.1018832Z b6db08c9b076257c54817377bb93130d  /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T09:58:04.1021435Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T09:58:04.1022876Z 2c8ca0ae7266a6c0a41bf3b8ba7f723b  /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T09:58:04.1023818Z === proc ===
+2026-11-12T09:58:04.1029275Z 154179 ../.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward worth --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 768 --pre-mb 4096 --rscale 3.33e-4 --ckpt-every 1 --snap-every 10 --max-snaps 2 --eval-every 5 --eval-pairs 32 --eval-opps exp/opp_master2r.py,exp/opp_m3echo.py --lr 1e-5 --kl 0.10 --init /root/carbon/data/weights/cnet2_m3n1L.npz --games 4000 --out /root/carbon/data/rl3/snipe_n1 --resume /root/carbon/data/rl3/snipe_n1/state_last.pt --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2", 1.0], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2", 0.5]]
+2026-11-12T09:58:04.1034389Z 89 %, 16655 MiB
+2026-11-12T09:58:04.1035018Z === dir ===
+2026-11-12T09:58:04.1035644Z total 583132
+2026-11-12T09:58:04.1036783Z -rw-r--r-- 1 root root      903 Nov 12 17:51 eval.jsonl
+2026-11-12T09:58:04.1037677Z -rw-r--r-- 1 root root 82595743 Nov 12 17:51 state_last.pt
+2026-11-12T09:58:04.1038519Z -rw-r--r-- 1 root root 13968424 Nov 12 17:51 ckpt_last.npz
+2026-11-12T09:58:04.1039640Z -rw-r--r-- 1 root root 13968424 Nov 12 17:51 ckpt_21.npz
+2026-11-12T09:58:04.1040443Z -rw-r--r-- 1 root root      873 Nov 12 17:51 league.json
+2026-11-12T09:58:04.1041267Z -rw-r--r-- 1 root root    24870 Nov 12 17:51 train.jsonl
+2026-11-12T09:58:04.1042055Z drwxr-xr-x 2 root root     4096 Nov 12 17:51 live
+2026-11-12T09:58:04.1042843Z -rw-r--r-- 1 root root 13968424 Nov 12 17:36 ckpt_20.npz
+2026-11-12T09:58:04.1043621Z -rw-r--r-- 1 root root 13968424 Nov 12 17:36 snap_20.npz
+2026-11-12T09:58:04.1044356Z -rw-r--r-- 1 root root 13968424 Nov 12 17:21 ckpt_19.npz
+2026-11-12T09:58:04.1045078Z -rw-r--r-- 1 root root 13968424 Nov 12 17:06 ckpt_18.npz
+2026-11-12T09:58:04.1045788Z -rw-r--r-- 1 root root 13968424 Nov 12 16:51 ckpt_17.npz
+2026-11-12T09:58:04.1046772Z -rw-r--r-- 1 root root 13968424 Nov 12 16:36 ckpt_16.npz
+2026-11-12T09:58:04.1047503Z -rw-r--r-- 1 root root 13968424 Nov 12 16:22 ckpt_15.npz
+2026-11-12T09:58:04.1048229Z -rw-r--r-- 1 root root     1223 Nov 12 16:03 config.json
+2026-11-12T09:58:04.1049043Z -rw-r--r-- 1 root root 82595743 Nov 12 16:03 state_pre_klfix2_it14.pt
+2026-11-12T09:58:04.1049870Z -rw-r--r-- 1 root root 13968424 Nov 12 16:03 ckpt_14.npz
+2026-11-12T09:58:04.1050619Z -rw-r--r-- 1 root root 13968424 Nov 12 15:48 ckpt_13.npz
+2026-11-12T09:58:04.1051380Z -rw-r--r-- 1 root root 13968424 Nov 12 15:33 ckpt_12.npz
+2026-11-12T09:58:04.1052219Z -rw-r--r-- 1 root root 13968424 Nov 12 15:19 ckpt_11.npz
+2026-11-12T09:58:04.1053124Z -rw-r--r-- 1 root root 82595743 Nov 12 14:57 state_pre_klfix_it10.pt
+2026-11-12T09:58:04.1054024Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 eval_w_10.npz
+2026-11-12T09:58:04.1055057Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 ckpt_10.npz
+2026-11-12T09:58:04.1055864Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 snap_10.npz
+2026-11-12T09:58:04.1057093Z === ckpt mtimes (last 6) ===
+2026-11-12T09:58:04.1058058Z -rw-r--r-- 1 root root 13968424 Nov 12 17:51 /root/carbon/data/rl3/snipe_n1/ckpt_last.npz
+2026-11-12T09:58:04.1059325Z -rw-r--r-- 1 root root 13968424 Nov 12 17:51 /root/carbon/data/rl3/snipe_n1/ckpt_21.npz
+2026-11-12T09:58:04.1060573Z -rw-r--r-- 1 root root 13968424 Nov 12 17:36 /root/carbon/data/rl3/snipe_n1/ckpt_20.npz
+2026-11-12T09:58:04.1061889Z -rw-r--r-- 1 root root 13968424 Nov 12 17:21 /root/carbon/data/rl3/snipe_n1/ckpt_19.npz
+2026-11-12T09:58:04.1063176Z -rw-r--r-- 1 root root 13968424 Nov 12 17:06 /root/carbon/data/rl3/snipe_n1/ckpt_18.npz
+2026-11-12T09:58:04.1064392Z -rw-r--r-- 1 root root 13968424 Nov 12 16:51 /root/carbon/data/rl3/snipe_n1/ckpt_17.npz
+2026-11-12T09:58:04.1065532Z 2026-11-12 17:51:19.021198778 +0800 /root/carbon/data/rl3/snipe_n1/train.jsonl
+2026-11-12T09:58:04.1066875Z 2026-11-12 17:51:19.069200190 +0800 /root/carbon/data/rl3/snipe_n1/league.json
+2026-11-12T09:58:04.1068022Z === train.jsonl all rows (it pre_s upd_s winrate kl dlogp kl_coef t amp) ===
+2026-11-12T09:58:04.1069162Z 1 384.5 637.3 0.617 0.0 0.0 0.05 1794458553 None
+2026-11-12T09:58:04.1069910Z 2 364.9 625.3 0.612 0.0 0.0 0.05 1794459294 None
+2026-11-12T09:58:04.1070595Z 3 388.4 660.2 0.586 0.0 -0.0 0.05 1794460094 None
+2026-11-12T09:58:04.1071300Z 4 399.5 805.7 0.58 0.0325 -0.0326 0.05 1794461029 None
+2026-11-12T09:58:04.1072041Z 5 408.4 807.5 0.595 0.0555 -0.0227 0.05 1794462188 None
+2026-11-12T09:58:04.1072778Z 6 335.3 732.3 0.592 0.0596 -0.0286 0.05 1794462997 None
+2026-11-12T09:58:04.1073513Z 7 363.0 771.6 0.602 0.073 -0.0307 0.05 1794463931 None
+2026-11-12T09:58:04.1074235Z 8 361.6 767.3 0.605 0.0761 -0.0333 0.05 1794464822 None
+2026-11-12T09:58:04.1075177Z 9 375.8 801.4 0.586 0.0874 -0.0346 0.05 1794465752 None
+2026-11-12T09:58:04.1075871Z 10 367.6 783.3 0.582 0.0921 -0.0367 0.05 1794466654 None
+2026-11-12T09:58:04.1076859Z 11 376.0 746.8 0.577 0.1089 -0.0229 0.05 1794467957 None
+2026-11-12T09:58:04.1077595Z 12 330.1 698.1 0.579 0.1114 -0.0296 0.05 1794468794 None
+2026-11-12T09:58:04.1078305Z 13 334.7 708.4 0.572 0.1224 -0.0322 0.05 1794469689 None
+2026-11-12T09:58:04.1079030Z 14 337.6 715.7 0.559 0.1177 -0.0347 0.05 1794470591 None
+2026-11-12T09:58:04.1080019Z 15 381.9 750.5 0.576 0.1056 -0.0215 0.1 1794471762 None
+2026-11-12T09:58:04.1080732Z 16 314.2 688.6 0.579 0.1046 -0.0273 0.1 1794472596 None
+2026-11-12T09:58:04.1081444Z 17 337.1 708.1 0.563 0.1045 -0.0285 0.1 1794473516 None
+2026-11-12T09:58:04.1082179Z 18 335.9 707.6 0.579 0.1034 -0.031 0.1 1794474404 None
+2026-11-12T09:58:04.1082891Z 19 344.0 723.4 0.573 0.1092 -0.0317 0.1 1794475312 None
+2026-11-12T09:58:04.1083638Z 20 331.0 697.8 0.577 0.1068 -0.034 0.1 1794476190 None
+2026-11-12T09:58:04.1084357Z 21 321.0 695.0 0.589 0.1052 -0.0326 0.1 1794477079 None
+2026-11-12T09:58:04.1085009Z === eval.jsonl ===
+2026-11-12T09:58:04.1085804Z -rw-r--r-- 1 root root 903 Nov 12 17:51 /root/carbon/data/rl3/snipe_n1/eval.jsonl
+2026-11-12T09:58:04.1087192Z {"it": 5, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 44, "mean": 391.3, "se": 79.2, "t": 1794462997.2878213}
+2026-11-12T09:58:04.1088372Z {"it": 15, "opp": "exp/opp_master2r.py", "n": 64, "wins": 56, "mean": 1014.5, "se": 102.0, "t": 1794472596.5231662}
+2026-11-12T09:58:04.1089528Z {"it": 15, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 50, "mean": 627.4, "se": 96.1, "t": 1794472596.5232165}
+2026-11-12T09:58:04.1090652Z {"it": 20, "opp": "exp/opp_master2r.py", "n": 64, "wins": 59, "mean": 1179.8, "se": 92.0, "t": 1794477079.332844}
+2026-11-12T09:58:04.1091894Z {"it": 20, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 43, "mean": 342.2, "se": 80.3, "t": 1794477079.3328693}
+2026-11-12T09:58:04.1092846Z === EVAL lines in log ===
+2026-11-12T09:58:04.1093639Z EVAL {"it": 0, "opp": "exp/opp_master2r.py", "n": 64, "wins": 60, "mean": 1011.4, "se": 89.4, "t": 1794458553.671161}
+2026-11-12T09:58:04.1094903Z EVAL {"it": 0, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 49, "mean": 388.4, "se": 107.3, "t": 1794458553.6711898}
+2026-11-12T09:58:04.1096068Z EVAL {"it": 5, "opp": "exp/opp_master2r.py", "n": 64, "wins": 59, "mean": 1088.6, "se": 92.4, "t": 1794462997.287793}
+2026-11-12T09:58:04.1097498Z EVAL {"it": 5, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 44, "mean": 391.3, "se": 79.2, "t": 1794462997.2878213}
+2026-11-12T09:58:04.1098645Z EVAL {"it": 15, "opp": "exp/opp_master2r.py", "n": 64, "wins": 56, "mean": 1014.5, "se": 102.0, "t": 1794472596.5231662}
+2026-11-12T09:58:04.1099817Z EVAL {"it": 15, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 50, "mean": 627.4, "se": 96.1, "t": 1794472596.5232165}
+2026-11-12T09:58:04.1100991Z EVAL {"it": 20, "opp": "exp/opp_master2r.py", "n": 64, "wins": 59, "mean": 1179.8, "se": 92.0, "t": 1794477079.332844}
+2026-11-12T09:58:04.1102178Z EVAL {"it": 20, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 43, "mean": 342.2, "se": 80.3, "t": 1794477079.3328693}
+2026-11-12T09:58:04.1103045Z === traceback ===
+2026-11-12T09:58:04.1103494Z 87
+2026-11-12T09:58:04.1103921Z 2026-11-12 17:51:19.332207928 +0800 97973
+2026-11-12T09:58:04.1111036Z {"it": 21, "t": 1794477079, "games": 4874, "srv": {"req": 28294, "pos": 184428, "fwd": 2699, "t_fwd": 29.86, "pos_per_fwd": 68.3, "models": 12, "servers": 1}, "dec": 1462200, "units": 16153931, "roll_s": 892.1, "upd_s": 695.0, "buf_s": 1.6, "pre_s": 321.0, "games_per_min": 327.8, "dec_per_s": 1639.0, "pol_s": 18426.8, "opp_s": 7044.4, "pl": 0.0185, "vl": 0.0024, "ent": 0.577, "kl": 0.1052, "kl_coef": 0.1, "clipfrac": 0.193, "gnorm": 11.454, "dlogp": -0.0326, "warm": false, "adv_std": 0.0486, "v_mean": 0.013, "margin": {"SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [47, 1181, 614], "SELF": [0, 1748, 874], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [464, 897, 658], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [517, 426, 332], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [209, 622, 393]}, "winrate": 0.589, "planted": {"SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [27.7, 28.0], "SELF": [27.9, 27.9], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.9, 24.0], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.2, 23.7], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.5, 28.9]}, "buf_mb": 15582.7, "rss_mb": 35195, "workers_rss_mb": 17055}
+2026-11-12T09:58:04.1118681Z EVAL {"it": 20, "opp": "exp/opp_master2r.py", "n": 64, "wins": 59, "mean": 1179.8, "se": 92.0, "t": 1794477079.332844}
+2026-11-12T09:58:04.1119922Z EVAL {"it": 20, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 43, "mean": 342.2, "se": 80.3, "t": 1794477079.3328693}
+2026-11-12T09:58:04.1121466Z === snaps ===
+2026-11-12T09:58:04.1122507Z -rw-r--r-- 1 root root 13968424 Nov 12 17:36 /root/carbon/data/rl3/snipe_n1/snap_20.npz
+2026-11-12T09:58:04.1123768Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 /root/carbon/data/rl3/snipe_n1/snap_10.npz
+2026-11-12T09:58:04.1124735Z === config pool/amp ===
+2026-11-12T09:58:04.1126629Z amp= 0 kl= 0.1 pool= [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2", 1.0], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2", 0.5]]
+2026-11-12T09:58:04.1128419Z === pool go flag ===
+2026-11-12T09:58:04.1129171Z ls: cannot access '/tmp/n1_pool_go.txt': No such file or directory
+2026-11-12T09:58:04.1130077Z === residual ssh/scp/sftp/git procs ===
+2026-11-12T09:58:04.1131736Z   16744  1-01:03:33 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+2026-11-12T09:58:04.1133360Z  158632       00:08 timeout 420 ssh -i /root/.ssh/dgx_access -o BatchMode=yes -o ConnectTimeout=20 -o StrictHostKeyChecking=accept-new arm@10.211.43.68 bash -s
+2026-11-12T09:58:04.1135462Z  158633       00:08 ssh -i /root/.ssh/dgx_access -o BatchMode=yes -o ConnectTimeout=20 -o StrictHostKeyChecking=accept-new arm@10.211.43.68 bash -s
+2026-11-12T09:58:04.1137149Z MARK N1WATCH-17559F72167F END 2026-11-12 17:57:59 CST
+2026-11-12T09:58:04.1137562Z 
+2026-11-12T09:58:04.1344214Z Post job cleanup.
+2026-11-12T09:58:04.2376580Z [command]/usr/bin/git version
+2026-11-12T09:58:04.2456815Z git version 2.56.0
+2026-11-12T09:58:04.2500368Z Temporarily overriding HOME='/home/runner/work/_temp/775a8bff-68d3-435c-aa6f-a6898b11f6c4' before making global git config changes
+2026-11-12T09:58:04.2513881Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T09:58:04.2515191Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T09:58:04.2588739Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T09:58:04.2648495Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T09:58:04.3063076Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T09:58:04.3120426Z http.https://github.com/.extraheader
+2026-11-12T09:58:04.3161637Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T09:58:04.3318478Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T09:58:04.3858387Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T09:58:04.3912904Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T09:58:04.4326020Z Cleaning up orphan processes
+2026-11-12T09:58:04.4692322Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 28 claimed

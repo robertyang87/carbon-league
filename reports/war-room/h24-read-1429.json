@@ -1,0 +1,46 @@
+{
+  "trip": "h24-status-report 14:29 CST",
+  "read_at_cst": "2026-11-13 14:29",
+  "rate_limit": {
+    "core_remaining": 4686,
+    "core_reset_cst": 1794553125
+  },
+  "sync_h31_branch": {
+    "sha": "9ae9d4e0",
+    "date": "2026-11-13T06:25:24Z",
+    "message": "c2: k4v2r1 field raw lines (k4v2r1_echo2.jsonl)"
+  },
+  "sync_h24_branch": {
+    "sha": "2a4f2e3e",
+    "date": "2026-11-12T12:10:01Z",
+    "message": "sync h24 2026-11-12T12:10:01Z"
+  },
+  "synced_h31_listing": [
+    {
+      "name": "bigeval_live",
+      "size": 0,
+      "type": "dir"
+    }
+  ],
+  "correction": "files are under synced/h31/bigeval_live/ (not synced/h31/ top level); initial 404s were wrong path, not missing files",
+  "k4v2r1_echo2_jsonl_verified": {
+    "size": 757965,
+    "md5": "56701b97a580ca4e315bf625a4229f9a",
+    "lines": 200,
+    "wins": 51,
+    "mean": -539.8,
+    "seeds": "999000-999199 unique"
+  },
+  "k4v2r1_m2_jsonl_verified": {
+    "size": 756646,
+    "md5": "8e37f1fc3245936a36840b205b25e202",
+    "lines": 200,
+    "wins": 101,
+    "mean": 29.4,
+    "seeds": "996000-996199 unique"
+  },
+  "verdict": "k4v2r1 dual-field calibration CLOSED FAIL: field1 vs Master2 101 wins mean +29.4 (calibration -756); field2 vs Echo2 51 wins mean -539.8 se 57.7 lo2se -655.2; both far below +150 gate. Branch files recomputed from sync/h31 match C2 launcher JSON exactly.",
+  "next": "it320 three arms: DGX located weights (r1 2a3dbbdd, g1 ffbed3e5, wr1 71e8692f); C2 to pull from spot-31 via tailnet scp, then start. No pull receipt yet as of 14:29.",
+  "anomaly": "none: sync/h24 unchanged since 2026-11-12 12:10:01Z (expected, spot-24 released); sync/h31 head 9ae9d4e0 @14:25:24, exam complete, no stall",
+  "war_room_sync": "short verification sync sent this trip (independent md5 + recompute confirmation; war-room 14:27 sync still listed final numbers as pending C2 receipt)"
+}

@@ -1,0 +1,290 @@
+﻿2026-11-12T13:35:35.8315401Z Current runner version: '2.338.2'
+2026-11-12T13:35:35.8332078Z ##[group]Runner Image Provisioner
+2026-11-12T13:35:35.8332778Z Hosted Compute Agent
+2026-11-12T13:35:35.8333242Z Version: 20261103.629
+2026-11-12T13:35:35.8333759Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-12T13:35:35.8334375Z Build Date: 2026-11-03T17:26:59Z
+2026-11-12T13:35:35.8334919Z Worker ID: {0de51f0a-1376-46b7-b058-7859bdab0157}
+2026-11-12T13:35:35.8335491Z Region: us-west-2
+2026-11-12T13:35:35.8335949Z Cloud: AWS
+2026-11-12T13:35:35.8336372Z ##[endgroup]
+2026-11-12T13:35:35.8337310Z ##[group]Operating System
+2026-11-12T13:35:35.8337796Z Ubuntu
+2026-11-12T13:35:35.8338195Z 24.04.5
+2026-11-12T13:35:35.8338620Z LTS
+2026-11-12T13:35:35.8339024Z ##[endgroup]
+2026-11-12T13:35:35.8339426Z ##[group]Runner Image
+2026-11-12T13:35:35.8339894Z Image: ubuntu-24.04
+2026-11-12T13:35:35.8340349Z Version: 20261111.127.1
+2026-11-12T13:35:35.8341310Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T13:35:35.8342671Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+2026-11-12T13:35:35.8343381Z ##[endgroup]
+2026-11-12T13:35:35.8344215Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T13:35:35.8345758Z Contents: read
+2026-11-12T13:35:35.8346231Z Metadata: read
+2026-11-12T13:35:35.8346689Z ##[endgroup]
+2026-11-12T13:35:35.8348159Z Secret source: Actions
+2026-11-12T13:35:35.8348881Z Cache mode: write
+2026-11-12T13:35:35.8349383Z Prepare workflow directory
+2026-11-12T13:35:35.8576203Z Prepare all required actions
+2026-11-12T13:35:35.8611928Z Getting action download info
+2026-11-12T13:35:36.2330365Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T13:35:38.4197871Z Complete job name: run
+2026-11-12T13:35:38.4799121Z ##[group]Run actions/checkout@v4
+2026-11-12T13:35:38.4799898Z with:
+2026-11-12T13:35:38.4800371Z   repository: robertyang87/carbon-league
+2026-11-12T13:35:38.4803988Z   token: ***
+2026-11-12T13:35:38.4804545Z   ssh-strict: true
+2026-11-12T13:35:38.4805050Z   ssh-user: git
+2026-11-12T13:35:38.4805521Z   persist-credentials: true
+2026-11-12T13:35:38.4805992Z   clean: true
+2026-11-12T13:35:38.4806492Z   sparse-checkout-cone-mode: true
+2026-11-12T13:35:38.4807010Z   fetch-depth: 1
+2026-11-12T13:35:38.4807459Z   fetch-tags: false
+2026-11-12T13:35:38.4807919Z   show-progress: true
+2026-11-12T13:35:38.4808391Z   lfs: false
+2026-11-12T13:35:38.4808836Z   submodules: false
+2026-11-12T13:35:38.4809297Z   set-safe-directory: true
+2026-11-12T13:35:38.4809871Z   allow-unsafe-pr-checkout: false
+2026-11-12T13:35:38.4810592Z ##[endgroup]
+2026-11-12T13:35:42.1194458Z Syncing repository: robertyang87/carbon-league
+2026-11-12T13:35:42.1196673Z ##[group]Getting Git version info
+2026-11-12T13:35:42.1197533Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T13:35:42.1198802Z [command]/usr/bin/git version
+2026-11-12T13:35:42.4153043Z git version 2.56.1
+2026-11-12T13:35:42.4183348Z ##[endgroup]
+2026-11-12T13:35:42.4197949Z Temporarily overriding HOME='/home/runner/work/_temp/dcfa9b6a-4574-44ed-a544-7dbb09b4be26' before making global git config changes
+2026-11-12T13:35:42.4199494Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T13:35:42.4200632Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T13:35:42.4257782Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T13:35:42.4262580Z ##[group]Initializing the repository
+2026-11-12T13:35:42.4264259Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T13:35:42.5276522Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T13:35:42.5280161Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T13:35:42.5282035Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T13:35:42.5283261Z hint: call:
+2026-11-12T13:35:42.5283726Z hint:
+2026-11-12T13:35:42.5284601Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T13:35:42.5285858Z hint:
+2026-11-12T13:35:42.5286538Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T13:35:42.5287403Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T13:35:42.5288150Z hint:
+2026-11-12T13:35:42.5288658Z hint: 	git branch -m <name>
+2026-11-12T13:35:42.5289170Z hint:
+2026-11-12T13:35:42.5289854Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T13:35:42.5307251Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T13:35:42.5309278Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T13:35:42.5369562Z ##[endgroup]
+2026-11-12T13:35:42.5370407Z ##[group]Disabling automatic garbage collection
+2026-11-12T13:35:42.5371127Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T13:35:42.5398125Z ##[endgroup]
+2026-11-12T13:35:42.5398920Z ##[group]Setting up auth
+2026-11-12T13:35:42.5399666Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T13:35:42.5422448Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T13:35:42.9916353Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T13:35:42.9970819Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T13:35:43.0124240Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T13:35:43.0165748Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T13:35:43.0316100Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T13:35:43.0343222Z ##[endgroup]
+2026-11-12T13:35:43.0344063Z ##[group]Fetching the repository
+2026-11-12T13:35:43.0357983Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +6ed91bad124afe5203e6e8632f146c24457599f7:refs/remotes/origin/main
+2026-11-12T13:35:44.3170531Z From https://github.com/robertyang87/carbon-league
+2026-11-12T13:35:44.3173801Z  * [new ref]         6ed91bad124afe5203e6e8632f146c24457599f7 -> origin/main
+2026-11-12T13:35:44.3178847Z ##[endgroup]
+2026-11-12T13:35:44.3179632Z ##[group]Determining the checkout info
+2026-11-12T13:35:44.3180877Z ##[endgroup]
+2026-11-12T13:35:44.3186591Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T13:35:44.3274494Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T13:35:44.3303315Z ##[group]Checking out the ref
+2026-11-12T13:35:44.3306540Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T13:35:44.6661905Z Switched to a new branch 'main'
+2026-11-12T13:35:44.6682641Z branch 'main' set up to track 'origin/main'.
+2026-11-12T13:35:44.6689393Z ##[endgroup]
+2026-11-12T13:35:44.6723806Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T13:35:44.6742162Z 6ed91bad124afe5203e6e8632f146c24457599f7
+2026-11-12T13:35:44.6958454Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKTUFSSz1NMzIwUE9MTDIxMzYKZWNobyAiJHtNQVJLfV9CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIGhvc3Q9JChob3N0bmFtZSkiCmVjaG8gJ0l5RXZZbWx1TDJKaGMyZ0tJeUJOTXpJd0lIQnZiR3d5SUNoeWRXNXpJRTlPSUVSSFdDazZJR1psZEdOb0szQjFiR3dzSUhKbGNHOXlkQ0JqYjNWdWRITXZaR2xtWml3Z1pIVnRjQ0J5WlhCc2FXTmhYMk5vWVdsdUxuTm9JRFl4TFRFeE5DNEtjMlYwSUMxMUNsSkZVRTg5TDJodmJXVXZZWEp0TDJwMWJubGhibWN2WTJGeVltOXVMWEpsY0c4S1kyUWdJaVJTUlZCUElpQjhmQ0I3SUdWamFHOGdUazh0VWtWUVR6c2daWGhwZENBeE95QjlDblJwYldWdmRYUWdOakFnWjJsMElHWmxkR05vSUc5eWFXZHBiaUJqYm1WME1pMXpaV0Z5WTJndGRqRXlJSHg4SUhzZ1pXTm9ieUJHUlZSRFNDMUdRVWxNT3lCbGVHbDBJREU3SUgwS2RHbHRaVzkxZENBMk1DQm5hWFFnY0hWc2JDQXRMV1ptTFc5dWJIa2dmSHdnZXlCbFkyaHZJRkJWVEV3dFJrRkpURHNnWlhocGRDQXhPeUI5Q21WamFHOGdJa2hGUVVRZ0pDaG5hWFFnY21WMkxYQmhjbk5sSUMwdGMyaHZjblFnU0VWQlJDa2lDbkI1ZEdodmJqTWdMU0E4UENkRlQwWW5DbWx0Y0c5eWRDQnFjMjl1TENCdmN3cHRQV3B6YjI0dWJHOWhaQ2h2Y0dWdUtDZGtZWFJoTDIwNWVHb3pNakJmYldGMFkyaGxjeTVxYzI5dUp5a3BDbVpwYkdWelBWdG1JR1p2Y2lCbUlHbHVJRzl6TG14cGMzUmthWElvSjJSaGRHRXZiVGw0YWpNeU1GOWpiM0p3ZFhNbktTQnBaaUJtTG1WdVpITjNhWFJvS0NjdWFuTnZiaTVuZWljcFhRcHBaSE05ZTJWYkoybGtKMTBnWm05eUlHVWdhVzRnYlgwS1ptbGtjejE3Wmk1eWNHRnlkR2wwYVc5dUtDY3RKeWxiTUYwZ1ptOXlJR1lnYVc0Z1ptbHNaWE45Q25CeWFXNTBLQ2ROUVZSRFNFVlRKeXdnYkdWdUtHMHBMQ0FuUTA5U1VGVlRKeXdnYkdWdUtHWnBiR1Z6S1N3Z0owUkpSa1luTENCc1pXNG9hV1J6TFdacFpITXBMQ0JzWlc0b1ptbGtjeTFwWkhNcEtRcEZUMFlLWldOb2J5QW5MUzB0SUhKbGNHeHBZMkZmWTJoaGFXNHVjMmdnTmpFdE1URTBJQzB0TFNjS2MyVmtJQzF1SUNjMk1Td3hNVFJ3SnlBaUpGSkZVRTh2WTI5a1pTOXlaWEJzYVdOaFgyTm9ZV2x1TG5Ob0lncGxZMmh2SUZCUFRFd3lMVVJQVGtVSycgfCBiYXNlNjQgLWQgPiAvdG1wL20zMjBfaW5uZXJfTTMyMFBPTEwyMTM2LnNoCndjIC1jIC90bXAvbTMyMF9pbm5lcl9NMzIwUE9MTDIxMzYuc2gKdGltZW91dCAtayAzMCA2MDAgc3NoIC1pIH4vLnNzaC9kZ3hfYWNjZXNzIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MTUgLW8gU3RyaWN0SG9zdEtleUNoZWNraW5nPWFjY2VwdC1uZXcgYXJtQDEwLjIxMS40My4xNTUgJ2Jhc2ggLXMnIDwgL3RtcC9tMzIwX2lubmVyX00zMjBQT0xMMjEzNi5zaCAyPiYxCmVjaG8gInNzaC1yYz0kPyIKZWNobyAiJHtNQVJLfV9FTkQiCg==" ]; then
+2026-11-12T13:35:44.7011452Z [36;1mif [ -n "IyEvYmluL2Jhc2gKTUFSSz1NMzIwUE9MTDIxMzYKZWNobyAiJHtNQVJLfV9CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIGhvc3Q9JChob3N0bmFtZSkiCmVjaG8gJ0l5RXZZbWx1TDJKaGMyZ0tJeUJOTXpJd0lIQnZiR3d5SUNoeWRXNXpJRTlPSUVSSFdDazZJR1psZEdOb0szQjFiR3dzSUhKbGNHOXlkQ0JqYjNWdWRITXZaR2xtWml3Z1pIVnRjQ0J5WlhCc2FXTmhYMk5vWVdsdUxuTm9JRFl4TFRFeE5DNEtjMlYwSUMxMUNsSkZVRTg5TDJodmJXVXZZWEp0TDJwMWJubGhibWN2WTJGeVltOXVMWEpsY0c4S1kyUWdJaVJTUlZCUElpQjhmQ0I3SUdWamFHOGdUazh0VWtWUVR6c2daWGhwZENBeE95QjlDblJwYldWdmRYUWdOakFnWjJsMElHWmxkR05vSUc5eWFXZHBiaUJqYm1WME1pMXpaV0Z5WTJndGRqRXlJSHg4SUhzZ1pXTm9ieUJHUlZSRFNDMUdRVWxNT3lCbGVHbDBJREU3SUgwS2RHbHRaVzkxZENBMk1DQm5hWFFnY0hWc2JDQXRMV1ptTFc5dWJIa2dmSHdnZXlCbFkyaHZJRkJWVEV3dFJrRkpURHNnWlhocGRDQXhPeUI5Q21WamFHOGdJa2hGUVVRZ0pDaG5hWFFnY21WMkxYQmhjbk5sSUMwdGMyaHZjblFnU0VWQlJDa2lDbkI1ZEdodmJqTWdMU0E4UENkRlQwWW5DbWx0Y0c5eWRDQnFjMjl1TENCdmN3cHRQV3B6YjI0dWJHOWhaQ2h2Y0dWdUtDZGtZWFJoTDIwNWVHb3pNakJmYldGMFkyaGxjeTVxYzI5dUp5a3BDbVpwYkdWelBWdG1JR1p2Y2lCbUlHbHVJRzl6TG14cGMzUmthWElvSjJSaGRHRXZiVGw0YWpNeU1GOWpiM0p3ZFhNbktTQnBaaUJtTG1WdVpITjNhWFJvS0NjdWFuTnZiaTVuZWljcFhRcHBaSE05ZTJWYkoybGtKMTBnWm05eUlHVWdhVzRnYlgwS1ptbGtjejE3Wmk1eWNHRnlkR2wwYVc5dUtDY3RKeWxiTUYwZ1ptOXlJR1lnYVc0Z1ptbHNaWE45Q25CeWFXNTBLQ2ROUVZSRFNFVlRKeXdnYkdWdUtHMHBMQ0FuUTA5U1VGVlRKeXdnYkdWdUtHWnBiR1Z6S1N3Z0owUkpSa1luTENCc1pXNG9hV1J6TFdacFpITXBMQ0JzWlc0b1ptbGtjeTFwWkhNcEtRcEZUMFlLWldOb2J5QW5MUzB0SUhKbGNHeHBZMkZmWTJoaGFXNHVjMmdnTmpFdE1URTBJQzB0TFNjS2MyVmtJQzF1SUNjMk1Td3hNVFJ3SnlBaUpGSkZVRTh2WTI5a1pTOXlaWEJzYVdOaFgyTm9ZV2x1TG5Ob0lncGxZMmh2SUZCUFRFd3lMVVJQVGtVSycgfCBiYXNlNjQgLWQgPiAvdG1wL20zMjBfaW5uZXJfTTMyMFBPTEwyMTM2LnNoCndjIC1jIC90bXAvbTMyMF9pbm5lcl9NMzIwUE9MTDIxMzYuc2gKdGltZW91dCAtayAzMCA2MDAgc3NoIC1pIH4vLnNzaC9kZ3hfYWNjZXNzIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MTUgLW8gU3RyaWN0SG9zdEtleUNoZWNraW5nPWFjY2VwdC1uZXcgYXJtQDEwLjIxMS40My4xNTUgJ2Jhc2ggLXMnIDwgL3RtcC9tMzIwX2lubmVyX00zMjBQT0xMMjEzNi5zaCAyPiYxCmVjaG8gInNzaC1yYz0kPyIKZWNobyAiJHtNQVJLfV9FTkQiCg==" ]; then[0m
+2026-11-12T13:35:44.7063926Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" --b64 "IyEvYmluL2Jhc2gKTUFSSz1NMzIwUE9MTDIxMzYKZWNobyAiJHtNQVJLfV9CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIGhvc3Q9JChob3N0bmFtZSkiCmVjaG8gJ0l5RXZZbWx1TDJKaGMyZ0tJeUJOTXpJd0lIQnZiR3d5SUNoeWRXNXpJRTlPSUVSSFdDazZJR1psZEdOb0szQjFiR3dzSUhKbGNHOXlkQ0JqYjNWdWRITXZaR2xtWml3Z1pIVnRjQ0J5WlhCc2FXTmhYMk5vWVdsdUxuTm9JRFl4TFRFeE5DNEtjMlYwSUMxMUNsSkZVRTg5TDJodmJXVXZZWEp0TDJwMWJubGhibWN2WTJGeVltOXVMWEpsY0c4S1kyUWdJaVJTUlZCUElpQjhmQ0I3SUdWamFHOGdUazh0VWtWUVR6c2daWGhwZENBeE95QjlDblJwYldWdmRYUWdOakFnWjJsMElHWmxkR05vSUc5eWFXZHBiaUJqYm1WME1pMXpaV0Z5WTJndGRqRXlJSHg4SUhzZ1pXTm9ieUJHUlZSRFNDMUdRVWxNT3lCbGVHbDBJREU3SUgwS2RHbHRaVzkxZENBMk1DQm5hWFFnY0hWc2JDQXRMV1ptTFc5dWJIa2dmSHdnZXlCbFkyaHZJRkJWVEV3dFJrRkpURHNnWlhocGRDQXhPeUI5Q21WamFHOGdJa2hGUVVRZ0pDaG5hWFFnY21WMkxYQmhjbk5sSUMwdGMyaHZjblFnU0VWQlJDa2lDbkI1ZEdodmJqTWdMU0E4UENkRlQwWW5DbWx0Y0c5eWRDQnFjMjl1TENCdmN3cHRQV3B6YjI0dWJHOWhaQ2h2Y0dWdUtDZGtZWFJoTDIwNWVHb3pNakJmYldGMFkyaGxjeTVxYzI5dUp5a3BDbVpwYkdWelBWdG1JR1p2Y2lCbUlHbHVJRzl6TG14cGMzUmthWElvSjJSaGRHRXZiVGw0YWpNeU1GOWpiM0p3ZFhNbktTQnBaaUJtTG1WdVpITjNhWFJvS0NjdWFuTnZiaTVuZWljcFhRcHBaSE05ZTJWYkoybGtKMTBnWm05eUlHVWdhVzRnYlgwS1ptbGtjejE3Wmk1eWNHRnlkR2wwYVc5dUtDY3RKeWxiTUYwZ1ptOXlJR1lnYVc0Z1ptbHNaWE45Q25CeWFXNTBLQ2ROUVZSRFNFVlRKeXdnYkdWdUtHMHBMQ0FuUTA5U1VGVlRKeXdnYkdWdUtHWnBiR1Z6S1N3Z0owUkpSa1luTENCc1pXNG9hV1J6TFdacFpITXBMQ0JzWlc0b1ptbGtjeTFwWkhNcEtRcEZUMFlLWldOb2J5QW5MUzB0SUhKbGNHeHBZMkZmWTJoaGFXNHVjMmdnTmpFdE1URTBJQzB0TFNjS2MyVmtJQzF1SUNjMk1Td3hNVFJ3SnlBaUpGSkZVRTh2WTI5a1pTOXlaWEJzYVdOaFgyTm9ZV2x1TG5Ob0lncGxZMmh2SUZCUFRFd3lMVVJQVGtVSycgfCBiYXNlNjQgLWQgPiAvdG1wL20zMjBfaW5uZXJfTTMyMFBPTEwyMTM2LnNoCndjIC1jIC90bXAvbTMyMF9pbm5lcl9NMzIwUE9MTDIxMzYuc2gKdGltZW91dCAtayAzMCA2MDAgc3NoIC1pIH4vLnNzaC9kZ3hfYWNjZXNzIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MTUgLW8gU3RyaWN0SG9zdEtleUNoZWNraW5nPWFjY2VwdC1uZXcgYXJtQDEwLjIxMS40My4xNTUgJ2Jhc2ggLXMnIDwgL3RtcC9tMzIwX2lubmVyX00zMjBQT0xMMjEzNi5zaCAyPiYxCmVjaG8gInNzaC1yYz0kPyIKZWNobyAiJHtNQVJLfV9FTkQiCg=="[0m
+2026-11-12T13:35:44.7090432Z [36;1melse[0m
+2026-11-12T13:35:44.7090814Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" "hostname && uptime"[0m
+2026-11-12T13:35:44.7091174Z [36;1mfi[0m
+2026-11-12T13:35:44.9363447Z shell: /usr/bin/bash -e {0}
+2026-11-12T13:35:44.9363795Z env:
+2026-11-12T13:35:44.9364613Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T13:35:44.9364944Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T13:35:44.9365218Z   ACS_REGION: cn-shanghai
+2026-11-12T13:35:44.9365467Z ##[endgroup]
+2026-11-12T13:36:15.9362407Z InvokeId: t-sh072w7a0wiifb4
+2026-11-12T13:36:15.9363322Z --- status=Success exit=0 ---
+2026-11-12T13:36:15.9364367Z M320POLL2136_BEGIN 2026-11-12 21:35:46 CST host=iZuf62k0o6zbe6j7zxnzg5Z
+2026-11-12T13:36:15.9366695Z 783 /tmp/m320_inner_M320POLL2136.sh
+2026-11-12T13:36:15.9367366Z From github.com:robertyang87/carbon-league
+2026-11-12T13:36:15.9368107Z  * branch            cnet2-search-v12 -> FETCH_HEAD
+2026-11-12T13:36:15.9368732Z    1d239ec..df6ef3f  cnet2-search-v12 -> origin/cnet2-search-v12
+2026-11-12T13:36:15.9369232Z Updating 1d239ec..df6ef3f
+2026-11-12T13:36:15.9369640Z Fast-forward
+2026-11-12T13:36:15.9370140Z  .../01f2253c0908408c4002d1d03f465e36-1.json.gz         | Bin 0 -> 254311 bytes
+2026-11-12T13:36:15.9370823Z  .../10d411aa58a949250484d44313d9ed6b-1.json.gz         | Bin 0 -> 243725 bytes
+2026-11-12T13:36:15.9371658Z  .../21bf5470b3b1cf7263e04a873b197a04-1.json.gz         | Bin 0 -> 257330 bytes
+2026-11-12T13:36:15.9372311Z  .../23bf4186ae21eee6e8f22e7487d996d0-1.json.gz         | Bin 0 -> 246531 bytes
+2026-11-12T13:36:15.9372996Z  .../2f6405fe528a6e8cbe425324e8af67ef-1.json.gz         | Bin 0 -> 243786 bytes
+2026-11-12T13:36:15.9373627Z  .../2f8acd10c8fe5d0ed90a0d2e77541427-1.json.gz         | Bin 0 -> 243264 bytes
+2026-11-12T13:36:15.9374290Z  .../373b0d1ed0bf3c8beb117a1c8fce49b5-1.json.gz         | Bin 0 -> 236978 bytes
+2026-11-12T13:36:15.9376673Z  .../396892af10a8aeaefbcc35be30e3db37-1.json.gz         | Bin 0 -> 241544 bytes
+2026-11-12T13:36:15.9377667Z  .../3f244955314a8711e7b4d24dc9d9e7bc-1.json.gz         | Bin 0 -> 251399 bytes
+2026-11-12T13:36:15.9399774Z  .../3fb19bb340f94a95a46a6c1a0c6366f9-1.json.gz         | Bin 0 -> 232820 bytes
+2026-11-12T13:36:15.9401008Z  .../4e0dd008800d71b869769d48cb6771df-1.json.gz         | Bin 0 -> 238331 bytes
+2026-11-12T13:36:15.9402150Z  .../5215387de3ac0dc22f57eaaed48defef-1.json.gz         | Bin 0 -> 238929 bytes
+2026-11-12T13:36:15.9402932Z  .../52c6026176a857cc789f1665502638b6-1.json.gz         | Bin 0 -> 247435 bytes
+2026-11-12T13:36:15.9403852Z  .../54a4012de078eff34817bac3289a65c7-1.json.gz         | Bin 0 -> 240116 bytes
+2026-11-12T13:36:15.9405139Z  .../5af50de7e8a06c95a1e2a630942aa8ba-1.json.gz         | Bin 0 -> 232902 bytes
+2026-11-12T13:36:15.9406106Z  .../5c40295064b43558f5349d100863abab-1.json.gz         | Bin 0 -> 234765 bytes
+2026-11-12T13:36:15.9406861Z  .../6b3caca96fbb61e8c0ab81765044783b-1.json.gz         | Bin 0 -> 251445 bytes
+2026-11-12T13:36:15.9407741Z  .../791e8a708b75ae7ca15dd9ace7e7e5d9-1.json.gz         | Bin 0 -> 252572 bytes
+2026-11-12T13:36:15.9408521Z  .../7c80e408cd6191ae00dc00523d69b06b-1.json.gz         | Bin 0 -> 254175 bytes
+2026-11-12T13:36:15.9409233Z  .../8fc08fb35fede5027321ea55615f263d-1.json.gz         | Bin 0 -> 241052 bytes
+2026-11-12T13:36:15.9410215Z  .../a0033d6f38d53a26c3336217912dba1f-1.json.gz         | Bin 0 -> 243275 bytes
+2026-11-12T13:36:15.9418650Z  .../aa7778a521aeef3fbd6e4e22dcad0f25-1.json.gz         | Bin 0 -> 249476 bytes
+2026-11-12T13:36:15.9419452Z  .../abe0f097ebb398503ecd1796c090a6a2-1.json.gz         | Bin 0 -> 237232 bytes
+2026-11-12T13:36:15.9420258Z  .../b2c98879fd4152a2860a2e92fb02b726-1.json.gz         | Bin 0 -> 250164 bytes
+2026-11-12T13:36:15.9421621Z  .../b3311c5048d6f8c2c692e755b25ce78c-1.json.gz         | Bin 0 -> 247105 bytes
+2026-11-12T13:36:15.9422465Z  .../b5f92b0062d9791fa39c5e14a5e3eae5-1.json.gz         | Bin 0 -> 256682 bytes
+2026-11-12T13:36:15.9423199Z  .../dcf32386323d06e9b32619dee08828c7-1.json.gz         | Bin 0 -> 251418 bytes
+2026-11-12T13:36:15.9423925Z  .../de5997550cc21ce807c50514563085f7-1.json.gz         | Bin 0 -> 244030 bytes
+2026-11-12T13:36:15.9424582Z  .../e17932a701e832a42c2e7cbad190d4a1-1.json.gz         | Bin 0 -> 243587 bytes
+2026-11-12T13:36:15.9425158Z  .../e299f915d7263c4bdd30d0b4eb31a3c0-1.json.gz         | Bin 0 -> 245880 bytes
+2026-11-12T13:36:15.9425984Z  .../fb3b6157feb9ae121f142f362dd3ce76-1.json.gz         | Bin 0 -> 251464 bytes
+2026-11-12T13:36:15.9426593Z  .../fd168827f2fbe6cf83e760faebec1b11-1.json.gz         | Bin 0 -> 247102 bytes
+2026-11-12T13:36:15.9427203Z  .../2207eb5772529b374aa3dea84b13e40f-1.json.gz         | Bin 0 -> 251567 bytes
+2026-11-12T13:36:15.9427856Z  .../2eaba1b994d4c26d6b6aade569c8ed76-1.json.gz         | Bin 0 -> 239466 bytes
+2026-11-12T13:36:15.9428466Z  .../4257ca34258026d652f67b28ae54a8ba-1.json.gz         | Bin 0 -> 236036 bytes
+2026-11-12T13:36:15.9429113Z  .../46a25da1b53d436436f2f36f9d7aef67-1.json.gz         | Bin 0 -> 243299 bytes
+2026-11-12T13:36:15.9429750Z  .../5ce801b6d524514a3728473f78f75421-1.json.gz         | Bin 0 -> 248934 bytes
+2026-11-12T13:36:15.9430415Z  .../7c80e408cd6191ae00dc00523d69b06b-1.json.gz         | Bin 0 -> 254175 bytes
+2026-11-12T13:36:15.9431148Z  .../7f745a35914cf23f1e70393c082b921a-1.json.gz         | Bin 0 -> 248088 bytes
+2026-11-12T13:36:15.9432183Z  .../8db7241d21ec8791f0fc2130be40593b-1.json.gz         | Bin 0 -> 256056 bytes
+2026-11-12T13:36:15.9433038Z  .../9f5e3d093cdb794b0f688e2c02ad06fd-1.json.gz         | Bin 0 -> 242227 bytes
+2026-11-12T13:36:15.9433819Z  .../af24537e9e1515655e2438aab2ec1678-1.json.gz         | Bin 0 -> 242200 bytes
+2026-11-12T13:36:15.9434683Z  .../e16f5b60406bfd4f3db30f3e2e83df38-1.json.gz         | Bin 0 -> 257163 bytes
+2026-11-12T13:36:15.9435358Z  43 files changed, 0 insertions(+), 0 deletions(-)
+2026-11-12T13:36:15.9436012Z  create mode 100644 data/m9xj320_corpus/01f2253c0908408c4002d1d03f465e36-1.json.gz
+2026-11-12T13:36:15.9436695Z  create mode 100644 data/m9xj320_corpus/10d411aa58a949250484d44313d9ed6b-1.json.gz
+2026-11-12T13:36:15.9437547Z  create mode 100644 data/m9xj320_corpus/21bf5470b3b1cf7263e04a873b197a04-1.json.gz
+2026-11-12T13:36:15.9438500Z  create mode 100644 data/m9xj320_corpus/23bf4186ae21eee6e8f22e7487d996d0-1.json.gz
+2026-11-12T13:36:15.9439400Z  create mode 100644 data/m9xj320_corpus/2f6405fe528a6e8cbe425324e8af67ef-1.json.gz
+2026-11-12T13:36:15.9440576Z  create mode 100644 data/m9xj320_corpus/2f8acd10c8fe5d0ed90a0d2e77541427-1.json.gz
+2026-11-12T13:36:15.9441596Z  create mode 100644 data/m9xj320_corpus/373b0d1ed0bf3c8beb117a1c8fce49b5-1.json.gz
+2026-11-12T13:36:15.9442494Z  create mode 100644 data/m9xj320_corpus/396892af10a8aeaefbcc35be30e3db37-1.json.gz
+2026-11-12T13:36:15.9443445Z  create mode 100644 data/m9xj320_corpus/3f244955314a8711e7b4d24dc9d9e7bc-1.json.gz
+2026-11-12T13:36:15.9444266Z  create mode 100644 data/m9xj320_corpus/3fb19bb340f94a95a46a6c1a0c6366f9-1.json.gz
+2026-11-12T13:36:15.9445169Z  create mode 100644 data/m9xj320_corpus/4e0dd008800d71b869769d48cb6771df-1.json.gz
+2026-11-12T13:36:15.9445875Z  create mode 100644 data/m9xj320_corpus/5215387de3ac0dc22f57eaaed48defef-1.json.gz
+2026-11-12T13:36:15.9446656Z  create mode 100644 data/m9xj320_corpus/52c6026176a857cc789f1665502638b6-1.json.gz
+2026-11-12T13:36:15.9447521Z  create mode 100644 data/m9xj320_corpus/54a4012de078eff34817bac3289a65c7-1.json.gz
+2026-11-12T13:36:15.9448386Z  create mode 100644 data/m9xj320_corpus/5af50de7e8a06c95a1e2a630942aa8ba-1.json.gz
+2026-11-12T13:36:15.9449129Z  create mode 100644 data/m9xj320_corpus/5c40295064b43558f5349d100863abab-1.json.gz
+2026-11-12T13:36:15.9449973Z  create mode 100644 data/m9xj320_corpus/6b3caca96fbb61e8c0ab81765044783b-1.json.gz
+2026-11-12T13:36:15.9450846Z  create mode 100644 data/m9xj320_corpus/791e8a708b75ae7ca15dd9ace7e7e5d9-1.json.gz
+2026-11-12T13:36:15.9451889Z  create mode 100644 data/m9xj320_corpus/7c80e408cd6191ae00dc00523d69b06b-1.json.gz
+2026-11-12T13:36:15.9452669Z  create mode 100644 data/m9xj320_corpus/8fc08fb35fede5027321ea55615f263d-1.json.gz
+2026-11-12T13:36:15.9453382Z  create mode 100644 data/m9xj320_corpus/a0033d6f38d53a26c3336217912dba1f-1.json.gz
+2026-11-12T13:36:15.9454096Z  create mode 100644 data/m9xj320_corpus/aa7778a521aeef3fbd6e4e22dcad0f25-1.json.gz
+2026-11-12T13:36:15.9454875Z  create mode 100644 data/m9xj320_corpus/abe0f097ebb398503ecd1796c090a6a2-1.json.gz
+2026-11-12T13:36:15.9455630Z  create mode 100644 data/m9xj320_corpus/b2c98879fd4152a2860a2e92fb02b726-1.json.gz
+2026-11-12T13:36:15.9456348Z  create mode 100644 data/m9xj320_corpus/b3311c5048d6f8c2c692e755b25ce78c-1.json.gz
+2026-11-12T13:36:15.9457022Z  create mode 100644 data/m9xj320_corpus/b5f92b0062d9791fa39c5e14a5e3eae5-1.json.gz
+2026-11-12T13:36:15.9457743Z  create mode 100644 data/m9xj320_corpus/dcf32386323d06e9b32619dee08828c7-1.json.gz
+2026-11-12T13:36:15.9458377Z  create mode 100644 data/m9xj320_corpus/de5997550cc21ce807c50514563085f7-1.json.gz
+2026-11-12T13:36:15.9459126Z  create mode 100644 data/m9xj320_corpus/e17932a701e832a42c2e7cbad190d4a1-1.json.gz
+2026-11-12T13:36:15.9459812Z  create mode 100644 data/m9xj320_corpus/e299f915d7263c4bdd30d0b4eb31a3c0-1.json.gz
+2026-11-12T13:36:15.9460425Z  create mode 100644 data/m9xj320_corpus/fb3b6157feb9ae121f142f362dd3ce76-1.json.gz
+2026-11-12T13:36:15.9461064Z  create mode 100644 data/m9xj320_corpus/fd168827f2fbe6cf83e760faebec1b11-1.json.gz
+2026-11-12T13:36:15.9462226Z  create mode 100644 data/m9xj_corpus/2207eb5772529b374aa3dea84b13e40f-1.json.gz
+2026-11-12T13:36:15.9462902Z  create mode 100644 data/m9xj_corpus/2eaba1b994d4c26d6b6aade569c8ed76-1.json.gz
+2026-11-12T13:36:15.9463588Z  create mode 100644 data/m9xj_corpus/4257ca34258026d652f67b28ae54a8ba-1.json.gz
+2026-11-12T13:36:15.9464196Z  create mode 100644 data/m9xj_corpus/46a25da1b53d436436f2f36f9d7aef67-1.json.gz
+2026-11-12T13:36:15.9464784Z  create mode 100644 data/m9xj_corpus/5ce801b6d524514a3728473f78f75421-1.json.gz
+2026-11-12T13:36:15.9465403Z  create mode 100644 data/m9xj_corpus/7c80e408cd6191ae00dc00523d69b06b-1.json.gz
+2026-11-12T13:36:15.9465985Z  create mode 100644 data/m9xj_corpus/7f745a35914cf23f1e70393c082b921a-1.json.gz
+2026-11-12T13:36:15.9466655Z  create mode 100644 data/m9xj_corpus/8db7241d21ec8791f0fc2130be40593b-1.json.gz
+2026-11-12T13:36:15.9467416Z  create mode 100644 data/m9xj_corpus/9f5e3d093cdb794b0f688e2c02ad06fd-1.json.gz
+2026-11-12T13:36:15.9468048Z  create mode 100644 data/m9xj_corpus/af24537e9e1515655e2438aab2ec1678-1.json.gz
+2026-11-12T13:36:15.9469062Z  create mode 100644 data/m9xj_corpus/e16f5b60406bfd4f3db30f3e2e83df38-1.json.gz
+2026-11-12T13:36:15.9469552Z HEAD df6ef3f
+2026-11-12T13:36:15.9469928Z MATCHES 85 CORPUS 85 DIFF 0 0
+2026-11-12T13:36:15.9470412Z --- replica_chain.sh 61-114 ---
+2026-11-12T13:36:15.9470924Z done
+2026-11-12T13:36:15.9471169Z 
+2026-11-12T13:36:15.9471760Z echo '--- 2) COUNT ASSERTION: replays == matches == index (no orphans downstream) ---'
+2026-11-12T13:36:15.9472571Z read RP MT IX <<< "$(counts)"; echo "counts: replays=$RP matches=$MT index=$IX expected=${EXPECTED:-auto}"
+2026-11-12T13:36:15.9473258Z if [ "$RP" != "$IX" ] || { [ -n "${MATCHES:-}" ] && [ "$MT" != "$IX" ]; }; then
+2026-11-12T13:36:15.9473968Z   echo "MISMATCH -> same-run repair: repo pull + API re-pull of matches, then recount"
+2026-11-12T13:36:15.9474765Z   if [ -n "${REPO_DIR:-}" ]; then timeout 60 git -C "$REPO_DIR" pull --ff-only 2>&1 | tail -2 || true; fi
+2026-11-12T13:36:15.9475448Z   if [ -n "${REPO_MATCHES:-}" ] && [ -n "${MATCHES:-}" ]; then cp "$REPO_MATCHES" "$MATCHES" || true; fi
+2026-11-12T13:36:15.9476028Z   if [ -n "${SYNC_CMD:-}" ]; then eval "$SYNC_CMD" || true; fi
+2026-11-12T13:36:15.9476680Z   read RP MT IX <<< "$(counts)"; echo "counts after repair: replays=$RP matches=$MT index=$IX"
+2026-11-12T13:36:15.9477229Z fi
+2026-11-12T13:36:15.9477674Z if [ "$RP" != "$IX" ] || { [ -n "${MATCHES:-}" ] && [ "$MT" != "$IX" ]; } || [ "$IX" -le 0 ]; then
+2026-11-12T13:36:15.9478433Z   mark "FAIL counts still misaligned (replays=$RP matches=$MT index=$IX) -- build NOT started, no orphans passed on"; exit 1
+2026-11-12T13:36:15.9479105Z fi
+2026-11-12T13:36:15.9479577Z if [ -n "${EXPECTED:-}" ] && [ "$IX" != "$EXPECTED" ]; then
+2026-11-12T13:36:15.9480320Z   mark "FAIL index=$IX != EXPECTED=$EXPECTED -- build NOT started"; exit 1
+2026-11-12T13:36:15.9480805Z fi
+2026-11-12T13:36:15.9481588Z mark "COUNTS-OK replays=$RP matches=$MT index=$IX"
+2026-11-12T13:36:15.9481982Z 
+2026-11-12T13:36:15.9482207Z echo '--- 3) BUILD + SET_UW ---'
+2026-11-12T13:36:15.9482641Z rm -rf "$DS"
+2026-11-12T13:36:15.9483294Z CNET2_TOP_TEACHERS="${TEACHER}@2" ../.venv/bin/python build_top.py "$DS" "$CORPUS" > "$LOGD/build_${PREFIX}.log" 2>&1 \
+2026-11-12T13:36:15.9484023Z   || { mark "FAIL build_top rc=$? (see $LOGD/build_${PREFIX}.log)"; exit 1; }
+2026-11-12T13:36:15.9484821Z ../.venv/bin/python set_uw.py "$DS" 1 1 1 >> "$LOGD/build_${PREFIX}.log" 2>&1 \
+2026-11-12T13:36:15.9485393Z   || { mark "FAIL set_uw rc=$?"; exit 1; }
+2026-11-12T13:36:15.9486293Z GAMES=$(../.venv/bin/python -c "import json,sys;d=json.load(open(sys.argv[1]));g=d.get('games');print(len(g) if isinstance(g,list) else g)" "$DS/meta.json" 2>/dev/null)
+2026-11-12T13:36:15.9487150Z echo "dataset games=$GAMES"
+2026-11-12T13:36:15.9487721Z [ "$GAMES" = "$IX" ] || { mark "FAIL dataset games=$GAMES != index=$IX"; exit 1; }
+2026-11-12T13:36:15.9488141Z 
+2026-11-12T13:36:15.9488483Z echo '--- 4) DUAL-ARM LAUNCH (standard recipe, 20 epochs) ---'
+2026-11-12T13:36:15.9489172Z export BC_DEVICE=${BC_DEVICE:-cuda} BC_RAM=1 BC_THREADS=${BC_THREADS:-5} BC_USE_W=1 BC_USE_UW=1 \
+2026-11-12T13:36:15.9489907Z        BC_BS=256 BC_SAVE_EPOCHS=1 BC_PCT=0.1 BC_LR=3e-4
+2026-11-12T13:36:15.9490678Z unset BC_AMP BC_CLIP BC_TRAIN_PREFIX BC_CACHE_TRUNK BC_SELF_KL BC_EXIT_W BC_AUX_W BC_COMPILE BC_CAR_KL
+2026-11-12T13:36:15.9491860Z BC_INIT=$D/weights/cnet2_arch_n1_last.npz nohup ../.venv/bin/python cnet2_train.py "$DS" "$D/weights/cnet2_${PREFIX}r1.npz" "$EPOCHS" \
+2026-11-12T13:36:15.9492702Z   '{"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}' > "$LOGD/${PREFIX}r1.log" 2>&1 &
+2026-11-12T13:36:15.9493493Z BC_INIT=$D/weights/cnet2_b128m2t3.npz nohup ../.venv/bin/python cnet2_train.py "$DS" "$D/weights/cnet2_${PREFIX}g1.npz" "$EPOCHS" \
+2026-11-12T13:36:15.9494170Z   '{"C":128,"NB":8,"D":128}' > "$LOGD/${PREFIX}g1.log" 2>&1 &
+2026-11-12T13:36:15.9494749Z sleep 5; echo "pids: $(pgrep -f 'cnet2_train[.]py' | tr '\n' ' ')"
+2026-11-12T13:36:15.9495057Z 
+2026-11-12T13:36:15.9495295Z echo '--- 5) ATTESTATION (completion = trio live + this block in the log) ---'
+2026-11-12T13:36:15.9495621Z sleep 120
+2026-11-12T13:36:15.9495925Z EP0R=$(grep -c '"ep": 0' "$LOGD/${PREFIX}r1.log" 2>/dev/null || true)
+2026-11-12T13:36:15.9496302Z EP0G=$(grep -c '"ep": 0' "$LOGD/${PREFIX}g1.log" 2>/dev/null || true)
+2026-11-12T13:36:15.9496687Z echo "=== ATTESTATION $PREFIX $(date '+%F %T %Z') ==="
+2026-11-12T13:36:15.9497179Z echo "processes:"; ps -eo pid,etime,args | grep 'cnet2_train' | grep -v grep || echo NO-TRAIN-PROC
+2026-11-12T13:36:15.9497780Z echo "gpu:"; nvidia-smi --query-gpu=utilization.gpu,memory.used,temperature.gpu --format=csv,noheader 2>/dev/null || echo NO-NVIDIA-SMI
+2026-11-12T13:36:15.9498412Z echo "logs:"; ls -l --time-style=+%F_%T "$LOGD/${PREFIX}r1.log" "$LOGD/${PREFIX}g1.log" 2>/dev/null
+2026-11-12T13:36:15.9498930Z echo "weights:"; ls -lt --time-style=+%F_%T "$D/weights/cnet2_${PREFIX}"*.npz 2>/dev/null | head -6
+2026-11-12T13:36:15.9499415Z read RP MT IX <<< "$(counts)"; echo "counts: replays=$RP matches=$MT index=$IX dataset_games=$GAMES"
+2026-11-12T13:36:15.9499794Z echo "ep0 lines: r1=$EP0R g1=$EP0G"
+2026-11-12T13:36:15.9500189Z if [ "${EP0R:-0}" -lt 1 ] || [ "${EP0G:-0}" -lt 1 ] || ! pgrep -f 'cnet2_train[.]py' >/dev/null 2>&1; then
+2026-11-12T13:36:15.9500714Z   mark "FAIL attestation: trio not live (ep0 r1=$EP0R g1=$EP0G) -- NOT complete, escalate with this log"; exit 1
+2026-11-12T13:36:15.9501118Z fi
+2026-11-12T13:36:15.9501729Z mark "LAUNCH-OK + ATTESTED -- executor complete ONLY in this sense; training itself continues to ep$((EPOCHS-1))"
+2026-11-12T13:36:15.9502219Z POLL2-DONE
+2026-11-12T13:36:15.9502429Z ssh-rc=0
+2026-11-12T13:36:15.9502648Z M320POLL2136_END
+2026-11-12T13:36:15.9502782Z 
+2026-11-12T13:36:15.9594958Z Post job cleanup.
+2026-11-12T13:36:16.0304447Z [command]/usr/bin/git version
+2026-11-12T13:36:16.0358463Z git version 2.56.1
+2026-11-12T13:36:16.0403796Z Temporarily overriding HOME='/home/runner/work/_temp/7241351b-659f-4786-8476-44d8357ab21b' before making global git config changes
+2026-11-12T13:36:16.0410190Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T13:36:16.0413149Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T13:36:16.0493908Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T13:36:16.0509627Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T13:36:16.0749457Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T13:36:16.0780295Z http.https://github.com/.extraheader
+2026-11-12T13:36:16.0806749Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T13:36:16.0839997Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T13:36:16.1123008Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T13:36:16.1164901Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T13:36:16.1444716Z Cleaning up orphan processes
+2026-11-12T13:36:16.1686655Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

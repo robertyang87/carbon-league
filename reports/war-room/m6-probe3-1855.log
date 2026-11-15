@@ -1,0 +1,117 @@
+dispatched at 10:54:15
+CLAIMED run 43204439111 job 131135916664 status completed conclusion success
+ cn-shanghai
+2026-11-12T10:54:23.4352341Z ##[endgroup]
+2026-11-12T10:54:42.3767138Z InvokeId: t-sh072vsvucioglc
+2026-11-12T10:54:42.3785481Z --- status=Success exit=0 ---
+2026-11-12T10:54:42.3786511Z M6PRB31855K3 L20-BEGIN 2026-11-12 18:54:25 CST
+2026-11-12T10:54:42.3790161Z M6PRB31855K3 DGX-BEGIN 2026-11-12 18:54:29 CST
+2026-11-12T10:54:42.3815086Z --- K4V2-STAGE-LOG ---
+2026-11-12T10:54:42.3823685Z K4V2STG1 STAGE-BEGIN 2026-11-12 18:21:26 CST
+2026-11-12T10:54:42.3835050Z --- SWEEP-GIT-RESIDUE ---
+2026-11-12T10:54:42.3845889Z NO-GIT-RESIDUE
+2026-11-12T10:54:42.3864999Z --- PULL-REPO ---
+2026-11-12T10:54:42.3867545Z repo HEAD before: ca410e2
+2026-11-12T10:54:42.3885216Z  create mode 100644 data/k4v2_corpus/bac4e0f38750e54803d0ac80aba03722-1.json.gz
+2026-11-12T10:54:42.3905279Z  create mode 100644 data/k4v2_corpus/c94838bb1aa541f29a4299ea99e45151-1.json.gz
+2026-11-12T10:54:42.3915405Z  create mode 100644 data/k4v2_corpus/dcb756ee0b2f5e05ed76c88f91d56188-1.json.gz
+2026-11-12T10:54:42.3916340Z repo HEAD after: 45371d6
+2026-11-12T10:54:42.3916896Z --- REPO-COUNTS ---
+2026-11-12T10:54:42.3917533Z repo matches=104 corpus_gz=104 corpus_all_files=104
+2026-11-12T10:54:42.3918203Z --- SYNC-CORPUS ---
+2026-11-12T10:54:42.3918705Z local replays=104
+2026-11-12T10:54:42.3919192Z --- BUILD-INDEX ---
+2026-11-12T10:54:42.3919720Z matches entries: 104
+2026-11-12T10:54:42.3920239Z teacher wins in matches list: 74
+2026-11-12T10:54:42.3920815Z orphan replays: []
+2026-11-12T10:54:42.3921382Z INDEX-BUILT entries: 104 missing: 0 skipped: 0
+2026-11-12T10:54:42.3923893Z first entry strategies: {"a": {"id": "", "name": "大肥鱼v66-M2public"}, "b": {"id": "aaa02959b15d57e4e28f80d665ae3482", "name": "stephen-K4TacSearch-v2"}}
+2026-11-12T10:54:42.3925281Z index entries: 104
+2026-11-12T10:54:42.3925813Z THREE-COUNT matches=104 replays=104 index=104
+2026-11-12T10:54:42.3926517Z --- SCAN-VALIDATE (real consumer cnet2_build.scan) ---
+2026-11-12T10:54:42.3927182Z scan games: 104
+2026-11-12T10:54:42.3927635Z --- BUILD-DS-K4V2 ---
+2026-11-12T10:54:42.3928111Z build_k4v2_rc=0
+2026-11-12T10:54:42.3928534Z set_uw_rc=0
+2026-11-12T10:54:42.3929437Z {'teachers': {2: 'stephen-K4TacSearch-v2'}}
+2026-11-12T10:54:42.3930236Z {"games": 104, "samples": 31096, "val_games": 11, "teacher_sides": {"stephen-K4TacSearch-v2": 104}}
+2026-11-12T10:54:42.3931844Z {'rows': 31096, 'planter_tokens': 52888, 'car_tokens': 230807, 'base_tokens': 62192, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T10:54:42.3933483Z DS-META games: 104 total: 31096 teachers: ['_slot0', '_slot1', 'stephen-K4TacSearch-v2', '_slot3', '_slot4', '_slot5', '_slot6', '_slot7', 'other']
+2026-11-12T10:54:42.3934906Z --- DS-AGGREGATE ---
+2026-11-12T10:54:42.3935511Z 649M	/home/arm/junyang/carbon/data/ds_k4v2
+2026-11-12T10:54:42.3936106Z 125
+2026-11-12T10:54:42.3936601Z b1ce3cad95dedfc91386b6b425f393f2  -
+2026-11-12T10:54:42.3937383Z K4V2STG1 STAGE-DONE scan_games=104 index=104 2026-11-12 18:21:47 CST
+2026-11-12T10:54:42.3938163Z --- M7V2FIX-LOG ---
+2026-11-12T10:54:42.3938791Z M7V2FX7Q2 STAGE-BEGIN 2026-11-12 17:52:19 CST
+2026-11-12T10:54:42.3939437Z --- WAIT-CARAGO-R1 ---
+2026-11-12T10:54:42.3939973Z carago clear at wait-min 1
+2026-11-12T10:54:42.3940543Z 0 %, 36
+2026-11-12T10:54:42.3941579Z carago r1 ep19: {"ep": 19, "val": {"collector": 0.8978, "planter": 0.8841, "base": 0.9769, "all": 0.9086, "workers": 0.8936, "loss": 0.2352}, "train_pi": 0.1493, "s": 110}
+2026-11-12T10:54:42.3942786Z carago r1 best: best 0.9086
+2026-11-12T10:54:42.3943352Z carago g1 best: best 0.9101
+2026-11-12T10:54:42.3944491Z 82027e53f3b397307b2dfb41c003a7da  /home/arm/junyang/carbon/data/weights/cnet2_caragor1_ep19.npz
+2026-11-12T10:54:42.3945813Z 8f51fe9d3ca3270adbd6e758f5dab7ed  /home/arm/junyang/carbon/data/weights/cnet2_caragog1_ep19.npz
+2026-11-12T10:54:42.3946756Z --- PULL-REPO ---
+2026-11-12T10:54:42.3947186Z repo HEAD before: a44acf4
+2026-11-12T10:54:42.3947754Z  create mode 100644 data/m9xj_corpus/ec437a88933730f125f153b43cf7de1e-1.json.gz
+2026-11-12T10:54:42.3948557Z  create mode 100644 data/m9xj_corpus/ee71f1edb40f4941e738a454fb795ccb-1.json.gz
+2026-11-12T10:54:42.3949277Z  create mode 100644 reports/live/replica_gap_plan.md
+2026-11-12T10:54:42.3949779Z repo HEAD after: ca410e2
+2026-11-12T10:54:42.3950217Z remote HEAD: ca410e2851d8af0cfb66e914daa0ea1ae5fcca85
+2026-11-12T10:54:42.3950708Z --- SYNC-CORPUS ---
+2026-11-12T10:54:42.3951032Z repo m7bs files: 142
+2026-11-12T10:54:42.3951366Z local replays before=142
+2026-11-12T10:54:42.3951732Z local replays after=142
+2026-11-12T10:54:42.3952089Z local matches after copy: 142
+2026-11-12T10:54:42.3952546Z --- REBUILD-INDEX (ladder_corpus nested shape) ---
+2026-11-12T10:54:42.3953058Z local matches: 142 repo matches: 142
+2026-11-12T10:54:42.3953483Z using matches: 142
+2026-11-12T10:54:42.3953828Z base index entries: 142
+2026-11-12T10:54:42.3954538Z teacher id: '67a89340f860f030de13ca23d350d203'
+2026-11-12T10:54:42.3954977Z orphan replays: 0
+2026-11-12T10:54:42.3955549Z index merged: base 142 added 0 missing replays 0 skipped no-order 0 orphans 0 FINAL 142
+2026-11-12T10:54:42.3956092Z index final entries: 142
+2026-11-12T10:54:42.3956340Z --- BUILD-DS-M7BSV2 ---
+2026-11-12T10:54:42.3956576Z build_m7bsv2_rc=0
+2026-11-12T10:54:42.3956835Z {'teachers': {2: 'RyanX-AIPowercore-M7Bs-b010'}}
+2026-11-12T10:54:42.3957319Z {"games": 142, "samples": 42458, "val_games": 17, "teacher_sides": {"RyanX-AIPowercore-M7Bs-b010": 142}}
+2026-11-12T10:54:42.3958061Z {'rows': 42458, 'planter_tokens': 86301, 'car_tokens': 295931, 'base_tokens': 84916, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T10:54:42.3958875Z meta games: 142 samples: None
+2026-11-12T10:54:42.3959138Z dataset games: 142
+2026-11-12T10:54:42.3959364Z --- LAUNCH-M7BSV2-TRAIN ---
+2026-11-12T10:54:42.3959596Z 0 %
+2026-11-12T10:54:42.3959792Z train pids: 193396 193397 
+2026-11-12T10:54:42.3960318Z ep0 r1: {"ep": 0, "val": {"collector": 0.84, "planter": 0.7921, "base": 0.9379, "all": 0.8495, "workers": 0.8299, "loss": 0.3796}, "train_pi": 0.4156, "s": 157}
+2026-11-12T10:54:42.3961110Z ep0 g1: {"ep": 0, "val": {"collector": 0.8403, "planter": 0.7895, "base": 0.9357, "all": 0.8488, "workers": 0.8295, "loss": 0.3842}, "train_pi": 0.4186, "s": 82}
+2026-11-12T10:54:42.3961816Z M7V2FX7Q2 LAUNCH-OK 2026-11-12 17:58:11 CST
+2026-11-12T10:54:42.3962098Z --- WAIT-TRAINING ---
+2026-11-12T10:54:42.3962416Z wait-min 15 r1: {"ep": 7, "i": 0, "pi": 0.3016, "v": 0.0237, "aux": 0.0485, "s": 1}
+2026-11-12T10:54:42.3962875Z wait-min 15 g1: {"ep": 14, "i": 0, "pi": 0.2984, "v": 0.0265, "aux": 0.0424, "s": 1}
+2026-11-12T10:54:42.3963298Z wait-min 30 r1: {"ep": 16, "i": 0, "pi": 0.2652, "v": 0.023, "aux": 0.0343, "s": 0}
+2026-11-12T10:54:42.3963638Z wait-min 30 g1: best 0.8649
+2026-11-12T10:54:42.3963927Z M7V2FX7Q2 FAIL trainers gone, done missing at min 35
+2026-11-12T10:54:42.3964502Z {"ep": 18, "i": 0, "pi": 0.2679, "v": 0.024, "aux": 0.042, "s": 0}
+2026-11-12T10:54:42.3965137Z {"ep": 18, "val": {"collector": 0.8508, "planter": 0.8158, "base": 0.9498, "all": 0.8627, "workers": 0.8434, "loss": 0.3567}, "train_pi": 0.2617, "s": 76}
+2026-11-12T10:54:42.3965729Z {"ep": 19, "i": 0, "pi": 0.2383, "v": 0.0231, "aux": 0.0463, "s": 0}
+2026-11-12T10:54:42.3966312Z {"ep": 19, "val": {"collector": 0.8503, "planter": 0.8154, "base": 0.9497, "all": 0.8624, "workers": 0.843, "loss": 0.3569}, "train_pi": 0.2487, "s": 73}
+2026-11-12T10:54:42.3966817Z best 0.8631
+2026-11-12T10:54:42.3967062Z {"ep": 18, "i": 0, "pi": 0.2859, "v": 0.0261, "aux": 0.0419, "s": 1}
+2026-11-12T10:54:42.3967606Z {"ep": 18, "val": {"collector": 0.8541, "planter": 0.8153, "base": 0.9484, "all": 0.8645, "workers": 0.8459, "loss": 0.3484}, "train_pi": 0.2797, "s": 81}
+2026-11-12T10:54:42.3968168Z {"ep": 19, "i": 0, "pi": 0.2538, "v": 0.0251, "aux": 0.0459, "s": 1}
+2026-11-12T10:54:42.3968714Z {"ep": 19, "val": {"collector": 0.8543, "planter": 0.8155, "base": 0.9488, "all": 0.8647, "workers": 0.8461, "loss": 0.3482}, "train_pi": 0.263, "s": 83}
+2026-11-12T10:54:42.3969226Z best 0.8649
+2026-11-12T10:54:42.3969443Z --- LADDER-CORPUS-HEAD ---
+2026-11-12T10:54:42.3970119Z """把天梯上指定策略的对局 + 回放拉成「回放快照」同款目录，供 nn_build_bc / ladder_report 使用。
+2026-11-12T10:54:42.3970389Z 
+2026-11-12T10:54:42.3970629Z   python3 ladder_corpus.py OUT_DIR <名字前缀或策略ID>... [--loop 秒]
+2026-11-12T10:54:42.3970983Z 例：
+2026-11-12T10:54:42.3971453Z   python3 ladder_corpus.py ../data/ladder_corpus claude-AlphaCarbon AgyCarbon-Argon-Godslayer Codex-Carbon CarbonEdge
+2026-11-12T10:54:42.3972237Z   python3 ladder_corpus.py ../data/ladder_ours claude-opus55-cloud --loop 900    # 持续跟踪自家对局
+2026-11-12T10:54:42.3972574Z 
+2026-11-12T10:54:42.3973062Z 目录结构：index.json（快照格式：id/game/order/scores/strategies/winner/steps/file）、leaderboard.json、
+2026-11-12T10:54:42.3973714Z replays/<id>-<game>.json.gz。已下载的跳过；下载限速 ≤30 次/分钟（每次 2.1 s）。
+2026-11-12T10:54:42.3974825Z 需登录（cookie 由 ladder.py login 建立）。CORPUS_MIN_RATING=2150 只收高分版本。前缀按当前排行榜名字匹配（大小写敏感）。
+2026-11-12T10:54:42.3975251Z """
+2026-11-12T10:54:42.4027513Z import gzi\u529b"], "scores": [7389.89, 7058.25], "sides": [0], "val": false, "src": "m6_corpus", "gi": 85, "shard": "../data/ds_m6/shards/3db7ae7de228e803ce068f4769ba3855-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/9dc5c741bb2ad7c40a27ab90fcd5a69e-1.json.gz", "key": "9dc5c741bb2ad7c40a27ab90fcd5a69e-1.json.gz", "names": ["RyanX-AIPowercore-M6", "claude-AlphaCarbon-Master2"], "scores": [7178.69, 6948.92], "sides": [0], "val": false, "src": "m6_corpus", "gi": 86, "shard": "../data/ds_m6/shards/9dc5c741bb2ad7c40a27ab90fcd5a69e-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/5716b056e0b5c5ac1b59b661e06ca62a-1.json.gz", "key": "5716b056e0b5c5ac1b59b661e06ca62a-1.json.gz", "names": ["AgyCarbon-P2C-Godslayer-CII", "RyanX-AIPowercore-M6"], "scores": [7728.6, 9046.52], "sides": [1], "val": false, "src": "m6_corpus", "gi": 87, "shard": "../data/ds_m6/shards/5716b056e0b5c5ac1b59b661e06ca62a-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/a76ffecba8c42ac1fc11141e3a398a01-1.json.gz", "key": "a76ffecba8c42ac1fc11141e3a398a01-1.json.gz", "names": ["RyanX-AIPowercore-M6", "Fable5.2-Max-V3.1-RLtest"], "scores": [8138.06, 7094.86], "sides": [0], "val": false, "src": "m6_corpus", "gi": 88, "shard": "../data/ds_m6/shards/a76ffecba8c42ac1fc11141e3a398a01-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/752b2ad044ebc6d21a96858b4dc507bc-1.json.gz", "key": "752b2ad044ebc6d21a96858b4dc507bc-1.json.gz", "names": ["RyanX-AIPowercore-M6", "claude-opus55-cloud-Echo1"], "scores": [11727.14, 11687.26], "sides": [0], "val": false, "src": "m6_corpus", "gi": 89, "shard": "../data/ds_m6/shards/752b2ad044ebc6d21a96858b4dc507bc-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/ecc6b1d367ae0cd0ace62d045a564566-1.json.gz", "key": "ecc6b1d367ae0cd0ace62d045a564566-1.json.gz", "names": ["claude-opus55-cloud-Echo1", "RyanX-AIPowercore-M6"], "scores": [8004.53, 7370.87], "sides": [1], "val": false, "src": "m6_corpus", "gi": 90, "shard": "../data/ds_m6/shards/ecc6b1d367ae0cd0ace62d045a564566-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/64cb4c41fc1a2f58dbdb54fae97a872f-1.json.gz", "key": "64cb4c41fc1a2f58dbdb54fae97a872f-1.json.gz", "names": ["claude-opus55-cloud-Echo1", "RyanX-AIPowercore-M6"], "scores": [8901.91, 8487.2], "sides": [1], "val": false, "src": "m6_corpus", "gi": 91, "shard": "../data/ds_m6/shards/64cb4c41fc1a2f58dbdb54fae97a872f-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/554d9be3011765bba6b7ba069824e909-1.json.gz", "key": "554d9be3011765bba6b7ba069824e909-1.json.gz", "names": ["\u5927\u80a5\u9c7cv49-M1TTA4", "RyanX-AIPowercore-M6"], "scores": [8756.88, 9067.67], "sides": [1], "val": false, "src": "m6_corpus", "gi": 92, "shard": "../data/ds_m6/shards/554d9be3011765bba6b7ba069824e909-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/97399e9b67bbab090398f278e8abadd5-1.json.gz", "key": "97399e9b67bbab090398f278e8abadd5-1.json.gz", "names": ["RyanX-AIPowercore-M6", "AgyCarbon-P2C-Godslayer-CIV"], "scores": [8220.85, 6913.69], "sides": [0], "val": false, "src": "m6_corpus", "gi": 93, "shard": "../data/ds_m6/shards/97399e9b67bbab090398f278e8abadd5-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/38b7ece60b49974a41ffd20ec4ef2450-1.json.gz", "key": "38b7ece60b49974a41ffd20ec4ef2450-1.json.gz", "names": ["Fable5.2-Max-V1", "RyanX-AIPowercore-M6"], "scores": [8242.28, 11012.16], "sides": [1], "val": true, "src": "m6_corpus", "gi": 94, "shard": "../data/ds_m6/shards/38b7ece60b49974a41ffd20ec4ef2450-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/2f3700a52a68c11deec1b3eac2f9e3a7-1.json.gz", "key": "2f3700a52a68c11deec1b3eac2f9e3a7-1.json.gz", "names": ["Fable5.2-Max-V2", "RyanX-AIPowercore-M6"], "scores": [7205.53, 8199.42], "sides": [1], "val": false, "src": "m6_corpus", "gi": 95, "shard": "../data/ds_m6/shards/2f3700a52a68c11deec1b3eac2f9e3a7-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/5fdfbb991210e9ab6b8fd55175089f1c-1.json.gz", "key": "5fdfbb991210e9ab6b8fd55175089f1c-1.json.gz", "names": ["AgyCarbon-P2C-Godslayer-CIII", "RyanX-AIPowercore-M6"], "scores": [6654.6, 6562.91], "sides": [1], "val": true, "src": "m6_corpus", "gi": 96, "shard": "../data/ds_m6/shards/5fdfbb991210e9ab6b8fd55175089f1c-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/aee69ec7bde6e50a1313afa5578f05b6-1.json.gz", "key": "aee69ec7bde6e50a1313afa5578f05b6-1.json.gz", "names": ["RyanX-AIPowercore-M6", "\u54c8\u57fa\u7c73\u795e\u529b"], "scores": [5798.12, 6668.42], "sides": [0], "val": false, "src": "m6_corpus", "gi": 97, "shard": "../data/ds_m6/shards/aee69ec7bde6e50a1313afa5578f05b6-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/94f26aa4ffea6b143d8178477ed22f49-1.json.gz", "key": "94f26aa4ffea6b143d8178477ed22f49-1.json.gz", "names": ["RyanX-AIPowercore-M6", "Makabaka-v1.3"], "scores": [7560.32, 6105.06], "sides": [0], "val": false, "src": "m6_corpus", "gi": 98, "shard": "../data/ds_m6/shards/94f26aa4ffea6b143d8178477ed22f49-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/03f854f3884a03d2a843365b9fb655ac-1.json.gz", "key": "03f854f3884a03d2a843365b9fb655ac-1.json.gz", "names": ["RyanX-AIPowercore-M6", "claude-opus55-cloud-v17d2"], "scores": [8611.41, 7463.58], "sides": [0], "val": false, "src": "m6_corpus", "gi": 99, "shard": "../data/ds_m6/shards/03f854f3884a03d2a843365b9fb655ac-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/3a16a9aea894a1cf7d10d1c79a68e32b-1.json.gz", "key": "3a16a9aea894a1cf7d10d1c79a68e32b-1.json.gz", "names": ["hy-rp-carbon-30823ca4-57854b45", "RyanX-AIPowercore-M6"], "scores": [5871.69, 6947.03], "sides": [1], "val": false, "src": "m6_corpus", "gi": 100, "shard": "../data/ds_m6/shards/3a16a9aea894a1cf7d10d1c79a68e32b-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/3898aaf4972c7bd332a8cce446633c3e-1.json.gz", "key": "3898aaf4972c7bd332a8cce446633c3e-1.json.gz", "names": ["RyanX-AIPowercore-M6", "minimax-m3.1-flash-v4"], "scores": [9327.92, 7760.39], "sides": [0], "val": false, "src": "m6_corpus", "gi": 101, "shard": "../data/ds_m6/shards/3898aaf4972c7bd332a8cce446633c3e-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/49101c3b106569433bbdd77dfd908553-1.json.gz", "key": "49101c3b106569433bbdd77dfd908553-1.json.gz", "names": ["QoDuck-v2", "RyanX-AIPowercore-M6"], "scores": [6906.93, 7138.79], "sides": [1], "val": false, "src": "m6_corpus", "gi": 102, "shard": "../data/ds_m6/shards/49101c3b106569433bbdd77dfd908553-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/2c3d997af205128d461dd4b19740aaf3-1.json.gz", "key": "2c3d997af205128d461dd4b19740aaf3-1.json.gz", "names": ["RyanX-AIPowercore-M6", "\u65e0\u59cb6.0"], "scores": [8119.55, 7126.22], "sides": [0], "val": false, "src": "m6_corpus", "gi": 103, "shard": "../data/ds_m6/shards/2c3d997af205128d461dd4b19740aaf3-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/09745d529a098d4018503ead8c724fe3-1.json.gz", "key": "09745d529a098d4018503ead8c724fe3-1.json.gz", "names": ["AgyCarbon-P2C-Godslayer-CIV", "RyanX-AIPowercore-M6"], "scores": [8489.98, 10345.58], "sides": [1], "val": false, "src": "m6_corpus", "gi": 104, "shard": "../data/ds_m6/shards/09745d529a098d4018503ead8c724fe3-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/247a762ec860606802b7f8b3c34539fa-1.json.gz", "key": "247a762ec860606802b7f8b3c34539fa-1.json.gz", "names": ["claude-opus55-cloud-Echo1", "RyanX-AIPowercore-M6"], "scores": [8188.19, 7741.96], "sides": [1], "val": false, "src": "m6_corpus", "gi": 105, "shard": "../data/ds_m6/shards/247a762ec860606802b7f8b3c34539fa-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/1b4a446b0435d2b25a2ddd850ccdaa50-1.json.gz", "key": "1b4a446b0435d2b25a2ddd850ccdaa50-1.json.gz", "names": ["claude-opus55-cloud-v16", "RyanX-AIPowercore-M6"], "scores": [6015.08, 7642.74], "sides": [1], "val": false, "src": "m6_corpus", "gi": 106, "shard": "../data/ds_m6/shards/1b4a446b0435d2b25a2ddd850ccdaa50-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/dce7a1412f6cb4502b9fb2978109cf06-1.json.gz", "key": "dce7a1412f6cb4502b9fb2978109cf06-1.json.gz", "names": ["RyanX-AIPowercore-M6", "\u5927\u80a5\u9c7cv66-M2public"], "scores": [7926.08, 7880.48], "sides": [0], "val": false, "src": "m6_corpus", "gi": 107, "shard": "../data/ds_m6/shards/dce7a1412f6cb4502b9fb2978109cf06-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/fef0d7586327f3351ed46a6191cee5af-1.json.gz", "key": "fef0d7586327f3351ed46a6191cee5af-1.json.gz", "names": ["claude-opus55-cloud-Scout2", "RyanX-AIPowercore-M6"], "scores": [9092.26, 8185.29], "sides": [1], "val": false, "src": "m6_corpus", "gi": 108, "shard": "../data/ds_m6/shards/fef0d7586327f3351ed46a6191cee5af-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/02f9faa534e99d5daac8de161f8c1044-1.json.gz", "key": "02f9faa534e99d5daac8de161f8c1044-1.json.gz", "names": ["RyanX-AIPowercore-M6", "claude-AlphaCarbon-Master3s"], "scores": [7951.97, 8489.78], "sides": [0], "val": false, "src": "m6_corpus", "gi": 109, "shard": "../data/ds_m6/shards/02f9faa534e99d5daac8de161f8c1044-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/e88d7acda114b539b32080da5a681ef7-1.json.gz", "key": "e88d7acda114b539b32080da5a681ef7-1.json.gz", "names": ["RyanX-AIPowercore-M6", "claude-AlphaCarbon-Master2s"], "scores": [6635.9, 6313.82], "sides": [0], "val": true, "src": "m6_corpus", "gi": 110, "shard": "../data/ds_m6/shards/e88d7acda114b539b32080da5a681ef7-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/d49369f5152cbb0d6aff39389a1b3010-1.json.gz", "key": "d49369f5152cbb0d6aff39389a1b3010-1.json.gz", "names": ["claude-opus55-cloud-Echo1", "RyanX-AIPowercore-M6"], "scores": [7869.17, 8016.2], "sides": [1], "val": false, "src": "m6_corpus", "gi": 111, "shard": "../data/ds_m6/shards/d49369f5152cbb0d6aff39389a1b3010-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/0868954d233cf94696b47fd70c9a0061-1.json.gz", "key": "0868954d233cf94696b47fd70c9a0061-1.json.gz", "names": ["RyanX-AIPowercore-M6", "sensenova-v6-rush"], "scores": [8860.87, 7984.18], "sides": [0], "val": true, "src": "m6_corpus", "gi": 112, "shard": "../data/ds_m6/shards/0868954d233cf94696b47fd70c9a0061-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/93248aa672a5c3a401c9bf9f9f75b882-1.json.gz", "key": "93248aa672a5c3a401c9bf9f9f75b882-1.json.gz", "names": ["RyanX-AIPowercore-M6", "AgyCarbon-P2C-Godslayer-CV"], "scores": [7154.72, 6030.64], "sides": [0], "val": false, "src": "m6_corpus", "gi": 113, "shard": "../data/ds_m6/shards/93248aa672a5c3a401c9bf9f9f75b882-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/c7f5da6862cc7f49bfc601f6f61163bd-1.json.gz", "key": "c7f5da6862cc7f49bfc601f6f61163bd-1.json.gz", "names": ["RyanX-AIPowercore-M6", "AgyCarbon-P2C-Godslayer-CV"], "scores": [7512.37, 7609.44], "sides": [0], "val": false, "src": "m6_corpus", "gi": 114, "shard": "../data/ds_m6/shards/c7f5da6862cc7f49bfc601f6f61163bd-1.npz", "n": 299}, {"file": "../data/m6_corpus/replays/b751160837d95183fdd68720be116b5c-1.json.gz", "key": "b751160837d95183fdd68720be116b5c-1.json.gz", "names": ["\u54c8\u57fa\u7c73 pro", "RyanX-AIPowercore-M6"], "scores": [8190.16, 9570.09], "sid
+elapsed 50 claimed

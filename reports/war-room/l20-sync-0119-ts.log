@@ -1,0 +1,106 @@
+L20SYNC0119C3D4 PROBE-BEGIN 2026-11-14 01:18:45 CST
+L20SYNC0119C3D4 L20-BEGIN 2026-11-14 01:18:50 CST
+--- WATCHDOG-33517 ---
+    PID     ELAPSED COMMAND
+  33517       03:26 /root/carbon/.venv/bin/python state_rollbackup.py
+--- ANY-PYTHON-PROCS ---
+   2001    19:38:40 21084 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   2115    19:38:40 23428 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+   3840    18:41:02 12956 /root/carbon/code/../.venv/bin/python -c from multiprocessing.resource_tracker import main;main(47)
+   3842    18:41:02 1580280 /root/carbon/code/../.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  12161    18:39:40 28688 /usr/bin/python3 -Es /usr/sbin/tuned -l -P
+  18678    11:54:58 12948 /root/carbon/code/../.venv/bin/python -c from multiprocessing.resource_tracker import main;main(47)
+  18680    11:54:58 1567428 /root/carbon/code/../.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  19672    11:13:02 13064 /root/carbon/code/../.venv/bin/python -c from multiprocessing.resource_tracker import main;main(47)
+  19674    11:13:02 1583896 /root/carbon/code/../.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  24186    08:33:24 12992 /root/carbon/code/../.venv/bin/python -c from multiprocessing.resource_tracker import main;main(47)
+  24188    08:33:24 1569124 /root/carbon/code/../.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  27741    05:16:02 12964 /root/carbon/code/../.venv/bin/python -c from multiprocessing.resource_tracker import main;main(47)
+  27743    05:16:02 1564228 /root/carbon/code/../.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  28242    04:29:45 12968 /root/carbon/code/../.venv/bin/python -c from multiprocessing.resource_tracker import main;main(47)
+  28244    04:29:45 1562408 /root/carbon/code/../.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  30482    01:32:48 12948 /root/carbon/code/../.venv/bin/python -c from multiprocessing.resource_tracker import main;main(47)
+  30484    01:32:48 1569240 /root/carbon/code/../.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  33515       03:26  2048 bash -c md5sum /root/carbon/data/rl3/state_rollbackup.py; cd /root/carbon/data/rl3 && nohup /root/carbon/.venv/bin/python state_rollbackup.py > state_rollbackup.out 2>&1 & sleep 4; pgrep -af state_rollbackup.py; cat /root/carbon/data/rl3/snipe_n1/state_backup_status.txt 2>/dev/null
+  33517       03:26 16552 /root/carbon/.venv/bin/python state_rollbackup.py
+--- GPU-PROCS ---
+pid, used_gpu_memory [MiB]
+3842, 1740 MiB
+18680, 1700 MiB
+19674, 1722 MiB
+24188, 1740 MiB
+27743, 1722 MiB
+28244, 1722 MiB
+30484, 1700 MiB
+--- OOM-COUNT ---
+1
+--- FIRST-OOM-LINE ---
+16915:torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 44.39 GiB of which 462.75 MiB is free. Process 3842 has 1.70 GiB memory in use. Process 18680 has 1.66 GiB memory in use. Process 19674 has 1.68 GiB memory in use. Process 24188 has 1.70 GiB memory in use. Process 27743 has 1.68 GiB memory in use. Process 28244 has 1.68 GiB memory in use. Process 30484 has 1.66 GiB memory in use. Including non-PyTorch memory, this process has 30.45 GiB memory in use. Process 32726 has 1.68 GiB memory in use. Of the allocated memory 29.88 GiB is allocated by PyTorch, and 218.39 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
+--- LAST-OOM-LINE ---
+16915:torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 44.39 GiB of which 462.75 MiB is free. Process 3842 has 1.70 GiB memory in use. Process 18680 has 1.66 GiB memory in use. Process 19674 has 1.68 GiB memory in use. Process 24188 has 1.70 GiB memory in use. Process 27743 has 1.68 GiB memory in use. Process 28244 has 1.68 GiB memory in use. Process 30484 has 1.66 GiB memory in use. Including non-PyTorch memory, this process has 30.45 GiB memory in use. Process 32726 has 1.68 GiB memory in use. Of the allocated memory 29.88 GiB is allocated by PyTorch, and 218.39 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
+--- TRACEBACK-COUNT ---
+988
+--- LOG-LINES-TOTAL ---
+16915 /root/carbon/data/rl3/snipe_n1.log
+--- CONTEXT-BEFORE-LAST-OOM (50 lines before last OOM, non-traceback) ---
+BrokenPipeError: [Errno 32] Broken pipe
+Process SpawnPoolWorker-23:
+Traceback (most recent call last):
+    put((job, i, result))
+    self._writer.send_bytes(obj)
+    self._send_bytes(m[offset:offset + size])
+    self._send(header)
+    n = write(self._handle, buf)
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+    self.run()
+    self._target(*self._args, **self._kwargs)
+    put((job, i, (False, wrapped)))
+    self._writer.send_bytes(obj)
+    self._send_bytes(m[offset:offset + size])
+    self._send(header)
+    n = write(self._handle, buf)
+BrokenPipeError: [Errno 32] Broken pipe
+[W1114 01:14:15.078041864 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 21757952, total: 47665709056).
+[W1114 01:14:15.087452642 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 2883584, total: 47665709056).
+Traceback (most recent call last):
+    main()
+    vv = ad.evaluate(vnet, bt, args.temp)["value"]
+    lg, _, _, u, _, _ = model.forward_heads(b)
+    tok, ctx, aux = self.encode(b)
+    h = self.tattn[self._ta[i]](h)
+    sc = q @ k.transpose(-1, -2) / (C // self.NH) ** 0.5 + self.rel(REL_CELL.to(h.device)).permute(2, 0, 1)
+--- TAIL-AFTER-LAST-OOM ---
+--- STATE-FILES-ALL ---
+ls: cannot access '/root/carbon/data/rl3/snipe_n1/*.prev*': No such file or directory
+-rw-r--r-- 1 root root 82607619 Nov 14 00:32 /root/carbon/data/rl3/snipe_n1/state_last.pt
+-rw-r--r-- 1 root root 82595743 Nov 12 19:36 /root/carbon/data/rl3/snipe_n1/state_pre_amp_it28.pt
+-rw-r--r-- 1 root root 82595743 Nov 13 14:05 /root/carbon/data/rl3/snipe_n1/state_pre_codea7ed_it64.pt
+-rw-r--r-- 1 root root 82595743 Nov 12 22:14 /root/carbon/data/rl3/snipe_n1/state_pre_kl015_it36.pt
+-rw-r--r-- 1 root root 82595743 Nov 12 16:03 /root/carbon/data/rl3/snipe_n1/state_pre_klfix2_it14.pt
+-rw-r--r-- 1 root root 82595743 Nov 12 14:57 /root/carbon/data/rl3/snipe_n1/state_pre_klfix_it10.pt
+-rw-r--r-- 1 root root 82595743 Nov 12 23:39 /root/carbon/data/rl3/snipe_n1/state_pre_pool260_it41.pt
+-rw-r--r-- 1 root root 82604855 Nov 13 20:02 /root/carbon/data/rl3/snipe_n1/state_pre_pool320r1_it73.pt
+-rw-r--r-- 1 root root 82595743 Nov 13 13:23 /root/carbon/data/rl3/snipe_n1/state_pre_poolcarago_it63.pt
+-rw-r--r-- 1 root root 82595743 Nov 13 00:01 /root/carbon/data/rl3/snipe_n1/state_pre_poolm7v2_it42.pt
+-rw-r--r-- 1 root root 82595743 Nov 12 20:46 /root/carbon/data/rl3/snipe_n1/state_pre_pools2_it32.pt
+-rw-r--r-- 1 root root 82595743 Nov 12 21:04 /root/carbon/data/rl3/snipe_n1/state_pre_pools3_it32.pt
+-rw-r--r-- 1 root root 82595743 Nov 12 20:14 /root/carbon/data/rl3/snipe_n1/state_pre_poolswap_it30.pt
+-rw-r--r-- 1 root root 82607619 Nov 14 00:32 /root/carbon/data/rl3/snipe_n1/state_pre_r18_it79.pt
+-rw-r--r-- 1 root root 82595743 Nov 13 05:12 /root/carbon/data/rl3/snipe_n1/state_pre_resize.pt
+-rw-r--r-- 1 root root 82604855 Nov 13 16:45 /root/carbon/data/rl3/snipe_n1/state_pre_s1v11_it68.pt
+-rw-r--r-- 1 root root 82604855 Nov 13 20:49 /root/carbon/data/rl3/snipe_n1/state_pre_termU_it74.pt
+-rw-r--r-- 1 root root 82604855 Nov 13 23:45 /root/carbon/data/rl3/snipe_n1/state_pre_vhead_it78.pt
+--- TRAIN-JSONL-WC ---
+79 /root/carbon/data/rl3/snipe_n1/train.jsonl
+{"it": 79, "t": 1794587547, "games": 4252, "srv": {"req": 10878, "pos": 31072, "fwd": 751, "t_fwd": 30.32, "pos_per_fwd"
+--- LOG-MTIME ---
+-rw-r--r-- 1 root root 983498 Nov 14 01:14 /root/carbon/data/rl3/snipe_n1.log
+2026-11-14 01:14:15 CST
+2026-11-14 01:18:50 CST
+L20SYNC0119C3D4 L20-END
+L20SYNC0119C3D4 SSH-RC=0
+L20SYNC0119C3D4 PROBE-END 2026-11-14 01:18:49 CST

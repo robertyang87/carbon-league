@@ -1,0 +1,55 @@
+L20SYNC0736 PROBE-BEGIN 2026-11-15 07:37:03 CST
+L20SYNC0736 L20-BEGIN 2026-11-15 07:37:07 CST
+--- PPOU2-PROCS ---
+ 104993    05:06:23 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --value-head tanh --init /root/carbon/data/weights/cnet2_m3s2r1L.npz --pool-authoritative --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2", 1.1], ["SNAP:cnet2:/r
+--- SPAWN-MAIN-COUNT ---
+15
+--- GPU ---
+memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+13396 MiB, 46068 MiB, 50 %
+--- GPU-COMPUTE-APPS ---
+pid, used_gpu_memory [MiB]
+104993, 12292 MiB
+105002, 1090 MiB
+--- PPOU2_M-DIR ---
+total 419456
+-rw------- 1 root root      209 2026-11-15_07:34:51 checkpoint_complete.json
+-rw-r--r-- 1 root root 13972532 2026-11-15_06:22:09 ckpt_10.npz
+-rw-r--r-- 1 root root 13972532 2026-11-15_06:44:46 ckpt_11.npz
+-rw-r--r-- 1 root root 13972532 2026-11-15_07:10:46 ckpt_12.npz
+-rw-r--r-- 1 root root 13972532 2026-11-15_07:34:50 ckpt_13.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_02:56:08 ckpt_1.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_03:17:58 ckpt_2.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_03:39:39 ckpt_3.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_04:02:55 ckpt_4.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_04:26:01 ckpt_5.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_04:49:27 ckpt_6.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_05:13:13 ckpt_7.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_05:36:10 ckpt_8.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_05:59:06 ckpt_9.npz
+-rw-r--r-- 1 root root 13972532 2026-11-15_07:34:50 ckpt_last.npz
+-rw-r--r-- 1 root root     1863 2026-11-15_02:30:45 config.json
+-rw-r--r-- 1 root root     1239 2026-11-15_02:30:45 effective_params.json
+-rw-r--r-- 1 root root      972 2026-11-15_07:10:47 eval.jsonl
+-rw-r--r-- 1 root root     1860 2026-11-15_07:34:50 league.json
+drwxr-xr-x 2 root root     4096 2026-11-15_07:34:51 live
+-rw-r--r-- 1 root root 13972532 2026-11-15_06:22:09 snap_10.npz
+-rw-r--r-- 1 root root 54613777 2026-11-15_03:40:07 state_anchor_frozen.pt
+-rw------- 1 root root 82600176 2026-11-15_07:34:51 state_last.pt
+-rw------- 1 root root 82600176 2026-11-15_07:10:47 state_previous.pt
+-rw-r--r-- 1 root root    32246 2026-11-15_07:34:51 train.jsonl
+-rw-r--r-- 1 root root        0 2026-11-15_02:30:45 warmup.jsonl
+--- PPOU2_M-TRAIN-JSONL ---
+13 /root/carbon/data/rl3/ppou2_m/train.jsonl
+{"it": 12, "t": 1794697847, "games": 4354, "srv": {"req": 22318, "pos": 80224, "fwd": 4007, "t_fwd": 29.91, "pos_per_fwd": 20.0, "models": 12, "servers": 1}, "dec": 1301334, "units": 14376041, "roll_s": 1535.2, "upd_s": 625.5, "buf_s": 1.4, "pre_s": 321.2, "games_per_min": 170.2, "dec_per_s": 847.7, "pol_s": 9793.0, "opp_s": 4886.7, "pl": 0.0183, "vl": 0.0115, "ent": 0.694, "kl": 0.0885, "kl_coef"
+{"it": 13, "t": 1794699291, "games": 4369, "srv": {"req": 22637, "pos": 76020, "fwd": 3983, "t_fwd": 29.96, "pos_per_fwd": 19.1, "models": 12, "servers": 1}, "dec": 1305447, "units": 14443113, "roll_s": 1440.8, "upd_s": 628.7, "buf_s": 1.4, "pre_s": 322.7, "games_per_min": 181.9, "dec_per_s": 906.1, "pol_s": 11495.0, "opp_s": 7041.7, "pl": 0.0201, "vl": 0.0124, "ent": 0.686, "kl": 0.0925, "kl_coef
+--- PPOU2_M-LOG-MTIME-TAIL ---
+-rw-r--r-- 1 root root 39884 2026-11-15_07:34:51 /root/carbon/data/rl3/ppou2_m.log
+EVAL {"it": 10, "opp": "exp/opp_master2r.py", "n": 64, "n_seeds": 32, "wins": 58, "mean_u": 0.8339, "se_u": 0.03, "mean": 1319.8, "se": 104.8, "t": 1794697847.263839}
+EVAL {"it": 10, "opp": "exp/opp_m3echo.py", "n": 64, "n_seeds": 32, "wins": 56, "mean_u": 0.7545, "se_u": 0.0381, "mean": 589.1, "se": 100.0, "t": 1794697847.2641044}
+{"it": 13, "t": 1794699291, "games": 4369, "srv": {"req": 22637, "pos": 76020, "fwd": 3983, "t_fwd": 29.96, "pos_per_fwd": 19.1, "models": 12, "servers": 1}, "dec": 1305447, "units": 14443113, "roll_s": 1440.8, "upd_s": 628.7, "buf_s": 1.4, "pre_s": 322.7, "games_per_min": 181.9, "dec_per_s": 906.1,
+--- PPOU2_C-STATE ---
+-rw------- 1 root root 82589239 2026-11-15_02:41:41 /root/carbon/data/rl3/ppou2_c/state_last.pt
+L20SYNC0736 L20-END 2026-11-15 07:37:07 CST
+L20SYNC0736 SSH-RC=0
+L20SYNC0736 PROBE-END 2026-11-15 07:37:06 CST

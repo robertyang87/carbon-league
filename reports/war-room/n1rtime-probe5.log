@@ -1,0 +1,147 @@
+dispatched marker=N1RT5E2X instance=i-uf65ykinp4dvkirzk7q4
+CLAIMED run=43192276540 job=131094328352 conclusion=success
+2026-11-12T09:32:08.3389080Z --- status=Success exit=0 ---
+2026-11-12T09:32:08.3397050Z N1RT5E2X_BEGIN
+2026-11-12T09:32:08.3418025Z     for _side in (0, 1):
+2026-11-12T09:32:08.3431806Z         JOBS.append(("v53v05", V53, "policy_v0_5.py", _seed, _side))
+2026-11-12T09:32:08.3438673Z         JOBS.append(("gev53", GE, V53, _seed, _side))
+2026-11-12T09:32:08.3458566Z for _side in (0, 1):
+2026-11-12T09:32:08.3478857Z     JOBS.append(("v53ex", V53, "example.py", 2000, _side))
+2026-11-12T09:32:08.3479407Z     JOBS.append(("geex", GE, "example.py", 2000, _side))
+2026-11-12T09:32:08.3508654Z 
+2026-11-12T09:32:08.3509291Z _counter = [0]
+2026-11-12T09:32:08.3509684Z 
+2026-11-12T09:32:08.3509873Z 
+2026-11-12T09:32:08.3510167Z def load_agent_fn(path):
+2026-11-12T09:32:08.3510708Z     """Shared loader rule: our policy_*.py via make_agent() (fresh
+2026-11-12T09:32:08.3511295Z     instance), everything else via module-level agent()."""
+2026-11-12T09:32:08.3511782Z     _counter[0] += 1
+2026-11-12T09:32:08.3512200Z     name = f"evalv53_{_counter[0]}_{os.getpid()}"
+2026-11-12T09:32:08.3512710Z     s = importlib.util.spec_from_file_location(name, path)
+2026-11-12T09:32:08.3513246Z     m = importlib.util.module_from_spec(s)
+2026-11-12T09:32:08.3513712Z     s.loader.exec_module(m)
+2026-11-12T09:32:08.3514235Z     if os.path.basename(path).startswith("policy_") and hasattr(m, "make_agent"):
+2026-11-12T09:32:08.3514809Z         return m.make_agent()
+2026-11-12T09:32:08.3515187Z     return m.agent
+2026-11-12T09:32:08.3515471Z 
+2026-11-12T09:32:08.3515629Z 
+2026-11-12T09:32:08.3515975Z def rng_seed(seed, policy_side):
+2026-11-12T09:32:08.3516351Z     return 7919 * seed + 104729 * policy_side + 31
+2026-11-12T09:32:08.3516535Z 
+2026-11-12T09:32:08.3516539Z 
+2026-11-12T09:32:08.3516654Z def _plant_price(pre_trees, player):
+2026-11-12T09:32:08.3516990Z     mine = sum(1 for t in pre_trees.values() if t["player"] == player)
+2026-11-12T09:32:08.3517386Z     if mine <= CFG["playerTreeProtectiveNumber"]:
+2026-11-12T09:32:08.3517679Z         return float(CFG["plantCost"])
+2026-11-12T09:32:08.3518021Z     alive = sum(1 for t in pre_trees.values() if t["age"] < CFG["treeLifespan"])
+2026-11-12T09:32:08.3518613Z     return (CFG["plantCost"] + CFG["plantCostInflationRatio"]
+2026-11-12T09:32:08.3518962Z             * (CFG["plantCostInflationBase"] ** alive))
+2026-11-12T09:32:08.3519171Z 
+2026-11-12T09:32:08.3519176Z 
+2026-11-12T09:32:08.3519336Z def _tdist(a, b):                 # torus Manhattan distance on the 15x15 board
+2026-11-12T09:32:08.3519704Z     dr = abs(a // 15 - b // 15); dc = abs(a % 15 - b % 15)
+2026-11-12T09:32:08.3520002Z     return min(dr, 15 - dr) + min(dc, 15 - dc)
+2026-11-12T09:32:08.3520182Z 
+2026-11-12T09:32:08.3520187Z 
+2026-11-12T09:32:08.3520369Z def _cheb(a, b):                  # torus Chebyshev distance (1 = one of the 8 neighbours)
+2026-11-12T09:32:08.3521330Z     dr = abs(a // 15 - b // 15); dc = abs(a % 15 - b % 15)
+2026-11-12T09:32:08.3521629Z     return max(min(dr, 15 - dr), min(dc, 15 - dc))
+2026-11-12T09:32:08.3521823Z 
+2026-11-12T09:32:08.3521827Z 
+2026-11-12T09:32:08.3521894Z def new_ledger():
+2026-11-12T09:32:08.3522042Z     return dict(deposits=0.0, tree_income=0.0,
+2026-11-12T09:32:08.3522232Z                 recruit_spend=0.0, recruit_count=0,
+2026-11-12T09:32:08.3522417Z                 plant_spend=0.0, plant_count=0,
+2026-11-12T09:32:08.3522731Z                 seize_spend=0.0, seize_count=0,
+2026-11-12T09:32:08.3522919Z                 deaths=0, death_cargo=0.0, stranded=0.0)
+2026-11-12T09:32:08.3523042Z 
+2026-11-12T09:32:08.3523046Z 
+2026-11-12T09:32:08.3523102Z def _comp(st, p):
+2026-11-12T09:32:08.3523243Z     c = sum(1 for w in st["workers"].values()
+2026-11-12T09:32:08.3523439Z             if w["player"] == p and w["type"] == "COLLECTOR")
+2026-11-12T09:32:08.3523636Z     pl = sum(1 for w in st["workers"].values()
+2026-11-12T09:32:08.3523836Z              if w["player"] == p and w["type"] == "PLANTER")
+2026-11-12T09:32:08.3524060Z     tr = sum(1 for t in st["trees"].values() if t["player"] == p)
+2026-11-12T09:32:08.3524258Z     return [c, pl, tr]
+2026-11-12T09:32:08.3524344Z 
+2026-11-12T09:32:08.3524347Z 
+2026-11-12T09:32:08.3524539Z NSTEPS = int(os.environ.get("EVAL_STEPS", "300"))   # 100 = opening exam: stop at step 100, margin = cash difference then
+2026-11-12T09:32:08.3524783Z 
+2026-11-12T09:32:08.3524787Z 
+2026-11-12T09:32:08.3524848Z def play_game(task):
+2026-11-12T09:32:08.3524993Z     tag, a_file, b_file, seed, a_side = task
+2026-11-12T09:32:08.3525168Z     random.seed(rng_seed(seed, a_side))
+2026-11-12T09:32:08.3525339Z     sim = FastCarbon(CFG).reset(seed=seed)
+2026-11-12T09:32:08.3525631Z     ob_ = float(os.environ.get("EVAL_OPP_CASH", "0"))   # exam ruler only: extra starting cash for the OPPONENT (b side)
+2026-11-12T09:32:08.3525909Z     if ob_:
+2026-11-12T09:32:08.3526037Z         sim.cash[1 - a_side] += ob_
+2026-11-12T09:32:08.3526215Z     fa = load_agent_fn(os.path.join(HERE, a_file))
+2026-11-12T09:32:08.3526410Z     fb = load_agent_fn(os.path.join(HERE, b_file))
+2026-11-12T09:32:08.3526585Z     agents = [None, None]
+2026-11-12T09:32:08.3526725Z     agents[a_side] = fa
+2026-11-12T09:32:08.3526863Z     agents[1 - a_side] = fb
+2026-11-12T09:32:08.3527019Z     led = [new_ledger(), new_ledger()]
+2026-11-12T09:32:08.3527174Z     times = [0.0, 0.0]
+2026-11-12T09:32:08.3527301Z     worst_a = 0.0
+2026-11-12T09:32:08.3527445Z     comp = {}
+2026-11-12T09:32:08.3527631Z     t0 = time.time()
+2026-11-12T09:32:08.3527757Z     bk_steps = 0
+2026-11-12T09:32:08.3527998Z     pstat = [{"succ": {}, "planted": 0, "seized": 0, "born": {}, "lives": []} for _ in range(2)]   # planter / tree ledger
+2026-11-12T09:32:08.3532458Z     sh = {"col75": [0, 0], "colsteps": [0, 0], "late15": [0.0, 0.0], "late30": [0.0, 0.0], "late30_self": [0.0, 0.0], "late30_unknown": [0.0, 0.0], "lost_enemy": [0.0, 0.0], "lost_self": [0.0, 0.0], "lost_unknown": [0.0, 0.0], "treesteps": [0, 0], "tree50": [0, 0], "tree100": [0, 0], "trees": [[], []], "pla_rec": [0, 0], "pdist": [0, 0], "pdist_n": [0, 0], "col_etree8": [0, 0], "cc100_sum": [0.0, 0.0], "cc100_n": [0, 0], "haul100": [0.0, 0.0], "colsteps100": [0, 0], "rec259_275": [0, 0], "rec276": [0, 0], "haul240": [0.0, 0.0], "rec60_c": [0, 0], "rec60_p": [0, 0], "dep100": [0.0, 0.0], "dep240": [0.0, 0.0], "pet_sum": [0, 0], "pet_n": [0, 0], "pla_dead": [0, 0], "pla_dead0": [0, 0], "cash100": [0.0, 0.0], "cargo100": [0.0, 0.0], "pc4_sum": [0.0, 0.0], "pc4_n": [0, 0], "sc4_sum": [0.0, 0.0], "sc4_n": [0, 0], "pd_clash_move": [0, 0], "pd_clash_stay": [0, 0], "pd_owncar": [0, 0], "pd_ecar": [0, 0], "pd_other": [0, 0], "life50_sum": [0, 0], "life50_n": [0, 0], "cargo240": [0.0, 0.0], "cargo270": [0.0, 0.0], "dep270": [0.0, 0.0], "lost240": [0.0, 0.0], "gain240": [0.0, 0.0], "tax240": [0.0, 0.0], "lost240_self": [0.0, 0.0], "ts3": [[0, 0, 0], [0, 0, 0]], "pl3": [[0, 0, 0], [0, 0, 0]], "sz3": [[0, 0, 0], [0, 0, 0]], "dep200": [0.0, 0.0], "cash200": [0.0, 0.0], "cargo200": [0.0, 0.0], "camp100": [0, 0], "stall_max": [0, 0], "stall_run": [0, 0], "_dprev": [0.0, 0.0], "wait6": [0, 0], "haul_all": [0.0, 0.0], "gain_all": [0.0, 0.0], "tax_all": [0.0, 0.0], "tax_onT": [0.0, 0.0], "e_prec25": [0, 0], "e_palive25": [0, 0], "e_pdead30": [0, 0], "e_pdead0_30": [0, 0], "e_cash25": [0.0, 0.0], "e_cash40": [0.0, 0.0], "e_clost30": [0, 0], "e_first_tree": [0, 0], "e_trees50": [0, 0], "e_unseen20": [0, 0], "e_unseen30": [0, 0], "_seen": [set(), set()]}   # stand-in validation ledger
+2026-11-12T09:32:08.3536859Z     late_deaths = [[], []]
+2026-11-12T09:32:08.3537103Z     for step in range(1, NSTEPS + 1):
+2026-11-12T09:32:08.3537371Z         pre = sim.get_state()
+2026-11-12T09:32:08.3537596Z         acts = []
+2026-11-12T09:32:08.3537793Z         for p in range(2):
+2026-11-12T09:32:08.3538018Z             o = sim.obs(p)
+2026-11-12T09:32:08.3544799Z             if p == a_side and step < int(os.environ.get("EVAL_ORACLE_STEPS", "0")):
+2026-11-12T09:32:08.3545394Z                 o = dict(o, oracle_carbon=list(sim.carbon))      # diagnostic: the tested side sees the true carbon map
+2026-11-12T09:32:08.3545905Z             if p == a_side and step < int(os.environ.get("EVAL_REVEAL_STEPS", "0")):
+2026-11-12T09:32:08.3546448Z                 o = dict(o, reveal={c: sim.carbon[c] for c in range(225)})   # diagnostic: whole map seen (kept as seen)
+2026-11-12T09:32:08.3547132Z             if p == a_side and os.environ.get("EVAL_SNAKE"):        # diagnostic: one planter's snake route from step s0, k steps
+2026-11-12T09:32:08.3547681Z                 s0, k = map(int, os.environ["EVAL_SNAKE"].split(":"))
+2026-11-12T09:32:08.3548018Z                 if s0 <= step < s0 + k:
+2026-11-12T09:32:08.3548578Z                     b0 = int(sorted(sim.bases[p])[0][1]) if sim.bases[p] else 0
+2026-11-12T09:32:08.3549039Z                     br, bc = divmod(b0, 15); dr = 1 if br < 7 else -1; dc = 1 if bc < 7 else -1
+2026-11-12T09:32:08.3549490Z                     i = step - s0; leg, j = divmod(i, 5); j = j if leg % 2 == 0 else 4 - j
+2026-11-12T09:32:08.3549909Z                     r_, c_ = (br + dr * (1 + 3 * leg)) % 15, (bc + dc * j) % 15; q = r_ * 15 + c_
+2026-11-12T09:32:08.3550381Z                     cells = [((r_ - 1) % 15) * 15 + c_, ((r_ + 1) % 15) * 15 + c_, r_ * 15 + (c_ - 1) % 15, r_ * 15 + (c_ + 1) % 15]
+2026-11-12T09:32:08.3550846Z                     o = dict(o, reveal={c: sim.carbon[c] for c in cells})
+2026-11-12T09:32:08.3551181Z             ts = time.time()
+2026-11-12T09:32:08.3551441Z             acts.append(agents[p](o, CFG))
+2026-11-12T09:32:08.3551720Z             dt = time.time() - ts
+2026-11-12T09:32:08.3551962Z             times[p] += dt
+2026-11-12T09:32:08.3552190Z             if p == a_side:
+2026-11-12T09:32:08.3552424Z                 worst_a = max(worst_a, dt)
+2026-11-12T09:32:08.3552694Z         sim.step(acts[0], acts[1])
+2026-11-12T09:32:08.3552947Z         post = sim.get_state()
+2026-11-12T09:32:08.3553346Z         # bankruptcy: policy side has no workers and cannot afford a collector (after the opening)
+2026-11-12T09:32:08.3553773Z         for p in range(2):
+2026-11-12T09:32:08.3553987Z             ps = pstat[p]
+2026-11-12T09:32:08.3554360Z             at = {w["pos"]: wid for wid, w in pre["workers"].items() if w["player"] == p and w["type"] == "PLANTER"}
+2026-11-12T09:32:08.3554823Z             for tid, tr in post["trees"].items():
+2026-11-12T09:32:08.3555088Z                 if tr["player"] != p:
+2026-11-12T09:32:08.3555315Z                     continue
+2026-11-12T09:32:08.3555537Z                 was = pre["trees"].get(tid)
+2026-11-12T09:32:08.3555801Z                 if was is None or was["player"] != p:
+2026-11-12T09:32:08.3556061Z                     planted = was is None
+2026-11-12T09:32:08.3556337Z                     ps["planted" if planted else "seized"] += 1
+2026-11-12T09:32:08.3556903Z                     cpre = pre.get("carbon")              # landing-spot quality: carbon on the 4 neighbours before the step
+2026-11-12T09:32:08.3557547Z                     if cpre is not None:
+2026-11-12T09:32:08.3557826Z                         q_ = int(tr["pos"]); r_, c_ = divmod(q_, 15)
+2026-11-12T09:32:08.3558452Z                         nc4 = sum(float(cpre[((r_ + dr) % 15) * 15 + (c_ + dc) % 15]) for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)))
+2026-11-12T09:32:08.3558891Z                         k_ = "pc4" if planted else "sc4"
+2026-11-12T09:32:08.3559202Z                         sh[k_ + "_sum"][p] += nc4; sh[k_ + "_n"][p] += 1
+2026-11-12T09:32:08.3559632Z                     if planted:
+2026-11-12T09:32:08.3559878Z                         ps["born"][tid] = step
+2026-11-12T09:32:08.3560304Z                         eb = [int(b) for _, b in post["bases"][1 - p]]   # planting site: distance to the nearest enemy base
+2026-11-12T09:32:08.3560747Z                         if eb:
+2026-11-12T09:32:08.3561112Z                             sh["pdist"][p] += min(_tdist(int(tr["pos"]), b) for b in eb); sh["pdist_n"][p] += 1
+2026-11-12T09:32:08.3561518Z                     u = at.get(tr["pos"])
+2026-11-12T09:32:08.3561769Z                     if u is not None:
+2026-11-12T09:32:08.3562048Z                         ps["succ"][u] = ps["succ"].get(u, 0) + 1
+2026-11-12T09:32:08.3562360Z             for tid, b in list(ps["born"].items()):
+2026-11-12T09:32:08.3562648Z                 tr = post["trees"].get(tid)
+2026-11-12T09:32:08.3562933Z                 if tr is None or tr["player"] != p:
+2026-11-12T09:32:08.3563202Z N1RT5E2X_END
+2026-11-12T09:32:08.3563318Z 

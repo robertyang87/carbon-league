@@ -1,0 +1,69 @@
+dispatched marker=N1RT3C5R instance=i-uf65ykinp4dvkirzk7q4
+CLAIMED run=43192074508 job=131093647773 conclusion=success
+2026-11-12T09:30:47.3415636Z --- status=Success exit=0 ---
+2026-11-12T09:30:47.3425744Z N1RT3C5R_BEGIN
+2026-11-12T09:30:47.3453810Z 6365 /root/carbon/code/bigeval.py
+2026-11-12T09:30:47.3454782Z """bigeval -- independent-sample evaluation: one game per seed (seat alternates by seed parity), since the
+2026-11-12T09:30:47.3475735Z two seats of a seed are exact mirrors in this harness.
+2026-11-12T09:30:47.3486264Z   python3 bigeval.py A.py B.py SEED0 N TAG     -> appends summary to ../data/bigeval.jsonl"""
+2026-11-12T09:30:47.3510306Z import json, os, statistics as st, sys, time
+2026-11-12T09:30:47.3511093Z from concurrent.futures import ProcessPoolExecutor, as_completed
+2026-11-12T09:30:47.3535724Z HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
+2026-11-12T09:30:47.3536059Z def _play(t):
+2026-11-12T09:30:47.3536232Z     import eval_v53
+2026-11-12T09:30:47.3536433Z     try: return eval_v53.play_game(t)
+2026-11-12T09:30:47.3536763Z     except Exception as e: return {"error": repr(e)[:200], "seed": t[3]}
+2026-11-12T09:30:47.3537108Z def main(a, b, s0, n, tag):
+2026-11-12T09:30:47.3537528Z     seeds = [int(x) for x in os.environ["EVO_SEEDS"].split(",")] if os.environ.get("EVO_SEEDS") else range(s0, s0 + n)
+2026-11-12T09:30:47.3538004Z     tasks = [(tag, a, b, s, s % 2) for s in seeds]
+2026-11-12T09:30:47.3538382Z     live = os.path.join(HERE, "..", "data", "bigeval_live"); os.makedirs(live, exist_ok=True)
+2026-11-12T09:30:47.3538772Z     lf = open(os.path.join(live, tag + ".jsonl"), "a")
+2026-11-12T09:30:47.3539056Z     rows = []
+2026-11-12T09:30:47.3539352Z     with ProcessPoolExecutor(int(os.environ.get("EVO_WORKERS", "8"))) as ex:
+2026-11-12T09:30:47.3539747Z         futs = [ex.submit(_play, t) for t in tasks]
+2026-11-12T09:30:47.3540032Z         for f in as_completed(futs):
+2026-11-12T09:30:47.3540324Z             r = f.result(); rows.append(r)
+2026-11-12T09:30:47.3540774Z             g = {"seed": r.get("seed"), "side": r.get("policy_side"), "margin": round(r["margin"]) if "margin" in r else None,
+2026-11-12T09:30:47.3541336Z                  "err": r.get("error"), "t": time.strftime("%H:%M:%S"), "serr": r.get("a_errors", 0)}
+2026-11-12T09:30:47.3541708Z             if "ledger_pol" in r:
+2026-11-12T09:30:47.3542105Z                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
+2026-11-12T09:30:47.3542644Z                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
+2026-11-12T09:30:47.3543193Z                          tinc=round(r["ledger_pol"]["tree_income"]), otinc=round(r["ledger_opp"]["tree_income"]),
+2026-11-12T09:30:47.3544220Z                          pspend=round(r["ledger_pol"].get("plant_spend", 0)), opspend=round(r["ledger_opp"].get("plant_spend", 0)),
+2026-11-12T09:30:47.3544881Z                          sspend=round(r["ledger_pol"].get("seize_spend", 0)), osspend=round(r["ledger_opp"].get("seize_spend", 0)),
+2026-11-12T09:30:47.3545634Z                          strand=r["ledger_pol"].get("stranded"), ostrand=r["ledger_opp"].get("stranded"),
+2026-11-12T09:30:47.3546239Z                          bk=r.get("bankrupt_steps", 0), lx=r.get("ledger_extra"), wms=r.get("a_worst_step_ms"), ms=r.get("a_ms_per_step"),
+2026-11-12T09:30:47.3555683Z                          **({"srch": r["a_stats"].get("searched"), "chg": r["a_stats"].get("changed"),
+2026-11-12T09:30:47.3560180Z                              "shal": r["a_stats"].get("shallow"), "ab": r["a_stats"].get("aborted", 0),
+2026-11-12T09:30:47.3576112Z                              "rerr": r["a_stats"].get("root_errors", 0), "eh_e": r["a_stats"].get("eh_edge", 0), "eh_h": r["a_stats"].get("eh_heavy", 0),
+2026-11-12T09:30:47.3579412Z                              "cc21": r["a_stats"].get("cc_2to1", 0), "cc01": r["a_stats"].get("cc_0to1", 0), "pa": r["a_stats"].get("pa_moves", 0), "paerr": r["a_stats"].get("pa_errors", 0), "pb": r["a_stats"].get("pb_skip", 0), "mnp": r["a_stats"].get("mnp", 0), "eh_alt": r["a_stats"].get("eh_alt", 0), "fixdrop": r["a_stats"].get("fix_dropped", 0), "pk_in": r["a_stats"].get("pk_in", 0), "pk_cut": r["a_stats"].get("pk_cut", 0), "sims": r["a_stats"].get("sims", 0), "pk_rep": r["a_stats"].get("pk_rep", 0), "pk_rep3": r["a_stats"].get("pk_rep_plant3", 0), "pk_repc": r["a_stats"].get("pk_rep_cash", 0), "bk_in": r["a_stats"].get("bk_in", 0), "bk_cut": r["a_stats"].get("bk_cut", 0), "simsl": r["a_stats"].get("sims_steps"), "cb": [r["a_stats"].get(k, 0) for k in ("cb_seen", "cb", "cb_ok", "cb_errors")], "se": [r["a_stats"].get(k, 0) for k in ("se_seen", "se", "se_ok", "se_none", "se_errors")], "se_lat": r["a_stats"].get("se_lat"), "msl": r["a_stats"].get("ms_steps"), "px": [r["a_stats"].get("px", 0), r["a_stats"].get("px_errors", 0)], "opl": [r["a_stats"].get("opl", 0), r["a_stats"].get("opl_errors", 0)], "tg": r["a_stats"].get("tg", 0), "rg": r["a_stats"].get("rg", 0), "seqc": r["a_stats"].get("seq_changed", 0)} if r.get("a_stats") else {}))
+2026-11-12T09:30:47.3582706Z             lf.write(json.dumps(g) + "\n"); lf.flush()
+2026-11-12T09:30:47.3583178Z     m = [r["margin"] for r in rows if "margin" in r]
+2026-11-12T09:30:47.3583710Z     if len(m) < 2:
+2026-11-12T09:30:47.3584306Z         print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m)}), file=sys.stderr, flush=True)
+2026-11-12T09:30:47.3584924Z         sys.exit(2)
+2026-11-12T09:30:47.3585528Z     L = lambda side, k: round(st.mean([r[f"ledger_{side}"][k] for r in rows if "margin" in r]))
+2026-11-12T09:30:47.3586071Z     se = st.stdev(m) / len(m) ** .5
+2026-11-12T09:30:47.3586569Z     rec = {"tag": tag, "a": a, "b": b, "seed0": s0, "n": len(m), "err": sum("error" in r for r in rows),
+2026-11-12T09:30:47.3587271Z            "wins": sum(x > 0 for x in m), "mean": round(st.mean(m)), "se": round(se), "lo2se": round(st.mean(m) - 2 * se),
+2026-11-12T09:30:47.3587977Z            "worst": round(min(m)), "worst_ms": max(r.get("a_worst_step_ms", 0) for r in rows if "margin" in r),
+2026-11-12T09:30:47.3588745Z            "dep": [L("pol", "deposits"), L("opp", "deposits")], "tree": [L("pol", "tree_income"), L("opp", "tree_income")],
+2026-11-12T09:30:47.3589567Z            "deathcargo": [L("pol", "death_cargo"), L("opp", "death_cargo")], "plants": [L("pol", "plant_count"), L("opp", "plant_count")],
+2026-11-12T09:30:47.3590190Z            "t": time.strftime("%H:%M"),
+2026-11-12T09:30:47.3590730Z            "search_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched")),
+2026-11-12T09:30:47.3591500Z            "changed0_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched") and not r["a_stats"].get("changed")),
+2026-11-12T09:30:47.3592287Z            "games": [[r.get("seed"), r.get("policy_side"), round(r["margin"])] for r in rows if "margin" in r]}
+2026-11-12T09:30:47.3593462Z     open(os.path.join(HERE, "..", "data", "bigeval.jsonl"), "a").write(json.dumps(rec) + "\n"); print(json.dumps({k: v for k, v in rec.items() if k != "games"}), flush=True)
+2026-11-12T09:30:47.3594426Z     # unified exam rule: an incomplete result (missing or errored games) must never be marked as done by callers
+2026-11-12T09:30:47.3595298Z     rec["search_error_games"] = sum(1 for r in rows if r.get("a_errors"))
+2026-11-12T09:30:47.3596105Z     if rec["search_error_games"]:      # any exception inside the search / rule layers: the exam is not testing the intended code
+2026-11-12T09:30:47.3597220Z         print(json.dumps({"tag": tag, "WARN_SEARCH_ERRORS": rec["search_error_games"], "of": len(rows)}), file=sys.stderr, flush=True)
+2026-11-12T09:30:47.3597862Z     if rec["changed0_games"]:
+2026-11-12T09:30:47.3598485Z         print(json.dumps({"tag": tag, "WARN_SEARCH_NEVER_CHANGED": rec["changed0_games"], "of": rec["search_games"]}), file=sys.stderr, flush=True)
+2026-11-12T09:30:47.3599174Z     if rec["err"] or rec["n"] < n:
+2026-11-12T09:30:47.3599802Z         print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": rec["n"], "want": n, "err": rec["err"]}), file=sys.stderr, flush=True)
+2026-11-12T09:30:47.3600440Z         sys.exit(2)
+2026-11-12T09:30:47.3600792Z if __name__ == "__main__":
+2026-11-12T09:30:47.3601253Z     a = sys.argv[1:]; main(a[0], a[1], int(a[2]), int(a[3]), a[4])
+2026-11-12T09:30:47.3601763Z N1RT3C5R_END
+2026-11-12T09:30:47.3602027Z 

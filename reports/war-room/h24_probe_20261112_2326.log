@@ -1,0 +1,217 @@
+﻿2026-11-12T15:26:23.7494879Z Current runner version: '2.338.2'
+2026-11-12T15:26:23.7533175Z ##[group]Runner Image Provisioner
+2026-11-12T15:26:23.7534761Z Hosted Compute Agent
+2026-11-12T15:26:23.7535945Z Version: 20261028.624
+2026-11-12T15:26:23.7537188Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T15:26:23.7538666Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T15:26:23.7540475Z Worker ID: {465a68d6-0222-47cd-8918-11fc485d20f7}
+2026-11-12T15:26:23.7541812Z Region: westus
+2026-11-12T15:26:23.7542950Z Cloud: Azure
+2026-11-12T15:26:23.7543995Z ##[endgroup]
+2026-11-12T15:26:23.7546430Z ##[group]Operating System
+2026-11-12T15:26:23.7547800Z Ubuntu
+2026-11-12T15:26:23.7548804Z 24.04.5
+2026-11-12T15:26:23.7549869Z LTS
+2026-11-12T15:26:23.7551160Z ##[endgroup]
+2026-11-12T15:26:23.7552236Z ##[group]Runner Image
+2026-11-12T15:26:23.7553643Z Image: ubuntu-24.04
+2026-11-12T15:26:23.7554744Z Version: 20261101.360.1
+2026-11-12T15:26:23.7557280Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T15:26:23.7560487Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T15:26:23.7562570Z ##[endgroup]
+2026-11-12T15:26:23.7564591Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T15:26:23.7567524Z Contents: read
+2026-11-12T15:26:23.7569174Z Metadata: read
+2026-11-12T15:26:23.7570429Z ##[endgroup]
+2026-11-12T15:26:23.7573521Z Secret source: Actions
+2026-11-12T15:26:23.7575182Z Cache mode: write
+2026-11-12T15:26:23.7576334Z Prepare workflow directory
+2026-11-12T15:26:23.8161203Z Prepare all required actions
+2026-11-12T15:26:23.8235755Z Getting action download info
+2026-11-12T15:26:24.2432358Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T15:26:24.4662449Z Complete job name: run
+2026-11-12T15:26:24.5644102Z ##[group]Run actions/checkout@v4
+2026-11-12T15:26:24.5644988Z with:
+2026-11-12T15:26:24.5645473Z   repository: robertyang87/carbon-league
+2026-11-12T15:26:24.5649385Z   token: ***
+2026-11-12T15:26:24.5649839Z   ssh-strict: true
+2026-11-12T15:26:24.5650641Z   ssh-user: git
+2026-11-12T15:26:24.5651111Z   persist-credentials: true
+2026-11-12T15:26:24.5651625Z   clean: true
+2026-11-12T15:26:24.5652088Z   sparse-checkout-cone-mode: true
+2026-11-12T15:26:24.5652628Z   fetch-depth: 1
+2026-11-12T15:26:24.5653078Z   fetch-tags: false
+2026-11-12T15:26:24.5653530Z   show-progress: true
+2026-11-12T15:26:24.5653988Z   lfs: false
+2026-11-12T15:26:24.5654416Z   submodules: false
+2026-11-12T15:26:24.5654878Z   set-safe-directory: true
+2026-11-12T15:26:24.5655401Z   allow-unsafe-pr-checkout: false
+2026-11-12T15:26:24.5656248Z ##[endgroup]
+2026-11-12T15:26:24.9144369Z Syncing repository: robertyang87/carbon-league
+2026-11-12T15:26:24.9153979Z ##[group]Getting Git version info
+2026-11-12T15:26:24.9155732Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T15:26:24.9158464Z [command]/usr/bin/git version
+2026-11-12T15:26:24.9211042Z git version 2.56.0
+2026-11-12T15:26:24.9249283Z ##[endgroup]
+2026-11-12T15:26:24.9265936Z Temporarily overriding HOME='/home/runner/work/_temp/c4af4337-da29-4e05-831d-ae9032363cbf' before making global git config changes
+2026-11-12T15:26:24.9269061Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T15:26:24.9292858Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T15:26:24.9403209Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T15:26:24.9423098Z ##[group]Initializing the repository
+2026-11-12T15:26:24.9432525Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T15:26:24.9546237Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T15:26:24.9561541Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T15:26:24.9563845Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T15:26:24.9581750Z hint: call:
+2026-11-12T15:26:24.9582830Z hint:
+2026-11-12T15:26:24.9593771Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T15:26:24.9611226Z hint:
+2026-11-12T15:26:24.9631254Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T15:26:24.9633108Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T15:26:24.9634769Z hint:
+2026-11-12T15:26:24.9635819Z hint: 	git branch -m <name>
+2026-11-12T15:26:24.9636968Z hint:
+2026-11-12T15:26:24.9638437Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T15:26:24.9640972Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T15:26:24.9644994Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T15:26:24.9694331Z ##[endgroup]
+2026-11-12T15:26:24.9695927Z ##[group]Disabling automatic garbage collection
+2026-11-12T15:26:24.9697367Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T15:26:25.0897505Z ##[endgroup]
+2026-11-12T15:26:25.0903577Z ##[group]Setting up auth
+2026-11-12T15:26:25.0905347Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T15:26:25.0910320Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T15:26:25.0916032Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T15:26:25.0923122Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T15:26:25.1200348Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T15:26:25.1251006Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T15:26:25.1512976Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T15:26:25.1565688Z ##[endgroup]
+2026-11-12T15:26:25.1568058Z ##[group]Fetching the repository
+2026-11-12T15:26:25.1581161Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c64bbeda8a00b2f4d79ace589f201bab3cca5163:refs/remotes/origin/main
+2026-11-12T15:26:54.0219484Z From https://github.com/robertyang87/carbon-league
+2026-11-12T15:26:54.0220899Z  * [new ref]         c64bbeda8a00b2f4d79ace589f201bab3cca5163 -> origin/main
+2026-11-12T15:26:54.0227464Z ##[endgroup]
+2026-11-12T15:26:54.0228727Z ##[group]Determining the checkout info
+2026-11-12T15:26:54.0230753Z ##[endgroup]
+2026-11-12T15:26:54.0238063Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T15:26:54.0305693Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T15:26:54.0348307Z ##[group]Checking out the ref
+2026-11-12T15:26:54.0368030Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T15:26:54.9376023Z Switched to a new branch 'main'
+2026-11-12T15:26:54.9402203Z branch 'main' set up to track 'origin/main'.
+2026-11-12T15:26:54.9506610Z ##[endgroup]
+2026-11-12T15:26:54.9568403Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T15:26:54.9610995Z c64bbeda8a00b2f4d79ace589f201bab3cca5163
+2026-11-12T15:26:54.9914669Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKIyBIMjQgcmVhZC1vbmx5IHByb2JlIDIwMjYtMTEtMTIgMjM6MTU6IHNwb3QtMjggSzQgcHJvYmUgc3R1Y2sgY2hlY2suCiMgTWFya2VyOiBIMjRQUk9CRTIzMjYuIFJFQUQtT05MWTogbm8ga2lsbCwgbm8gc3RhcnQsIG5vIGZpbGUgY2hhbmdlLgplY2hvICJIMjRQUk9CRTIzMjZfQkVHSU4iCmRhdGUgLXUgIitVVEMgJUYgJVQiOyBkYXRlICIrQ1NUICVGICVUICVaIgplY2hvICItLS0gbG9hZCAtLS0iCnRpbWVvdXQgMTAgdXB0aW1lCmVjaG8gIi0tLSBiaWdldmFsL2V2YWwgcHJvY2Vzc2VzIC0tLSIKdGltZW91dCAxMCBwcyAtZW8gcGlkLGV0aW1lLHBjcHUsYXJncyB8IGdyZXAgLUUgImJpZ2V2YWx8ZXZhbF92NTN8czI4azR8azR2MiIgfCBncmVwIC12IGdyZXAgfHwgZWNobyAiTk9fTUFUQ0giCmVjaG8gIi0tLSBhbGwgcHl0aG9uIHByb2NzIC0tLSIKdGltZW91dCAxMCBwcyAtZW8gcGlkLGV0aW1lLGFyZ3MgfCBncmVwIHB5dGhvbjMgfCBncmVwIC12IGdyZXAgfCBoZWFkIC0yMCB8fCBlY2hvICJOT19QWVRIT04iCmVjaG8gIi0tLSBsaXZlIGZpbGUgb24gbWFjaGluZSAtLS0iCnRpbWVvdXQgMjAgZmluZCAvcm9vdC9jYXJib24gLW5hbWUgIms0djJyMV9lMC5qc29ubCIgMj4vZGV2L251bGwgfCB3aGlsZSByZWFkIGY7IGRvIGVjaG8gIkZJTEUgJGYiOyB0aW1lb3V0IDEwIGxzIC1sIC0tdGltZS1zdHlsZT1mdWxsLWlzbyAiJGYiOyB0aW1lb3V0IDEwIHdjIC1sICIkZiI7IGRvbmUKZWNobyAiLS0tIHNuYXBzaG90L3N5bmMgbG9vcCBwcm9jcyAtLS0iCnRpbWVvdXQgMTAgcHMgLWVvIHBpZCxldGltZSxhcmdzIHwgZ3JlcCAtRSAic3luY3xzbmFwc2hvdHxnaXQgcHVzaCIgfCBncmVwIC12IGdyZXAgfCBoZWFkIC0xMCB8fCBlY2hvICJOT19TWU5DX1BST0MiCmVjaG8gIi0tLSBkaXNrIC0tLSIKdGltZW91dCAxMCBkZiAtaCAvcm9vdC9jYXJib24gfCB0YWlsIC0xCmVjaG8gIkgyNFBST0JFMjMyNl9FTkQiCg==" ]; then
+2026-11-12T15:26:54.9953928Z [36;1mif [ -n "IyEvYmluL2Jhc2gKIyBIMjQgcmVhZC1vbmx5IHByb2JlIDIwMjYtMTEtMTIgMjM6MTU6IHNwb3QtMjggSzQgcHJvYmUgc3R1Y2sgY2hlY2suCiMgTWFya2VyOiBIMjRQUk9CRTIzMjYuIFJFQUQtT05MWTogbm8ga2lsbCwgbm8gc3RhcnQsIG5vIGZpbGUgY2hhbmdlLgplY2hvICJIMjRQUk9CRTIzMjZfQkVHSU4iCmRhdGUgLXUgIitVVEMgJUYgJVQiOyBkYXRlICIrQ1NUICVGICVUICVaIgplY2hvICItLS0gbG9hZCAtLS0iCnRpbWVvdXQgMTAgdXB0aW1lCmVjaG8gIi0tLSBiaWdldmFsL2V2YWwgcHJvY2Vzc2VzIC0tLSIKdGltZW91dCAxMCBwcyAtZW8gcGlkLGV0aW1lLHBjcHUsYXJncyB8IGdyZXAgLUUgImJpZ2V2YWx8ZXZhbF92NTN8czI4azR8azR2MiIgfCBncmVwIC12IGdyZXAgfHwgZWNobyAiTk9fTUFUQ0giCmVjaG8gIi0tLSBhbGwgcHl0aG9uIHByb2NzIC0tLSIKdGltZW91dCAxMCBwcyAtZW8gcGlkLGV0aW1lLGFyZ3MgfCBncmVwIHB5dGhvbjMgfCBncmVwIC12IGdyZXAgfCBoZWFkIC0yMCB8fCBlY2hvICJOT19QWVRIT04iCmVjaG8gIi0tLSBsaXZlIGZpbGUgb24gbWFjaGluZSAtLS0iCnRpbWVvdXQgMjAgZmluZCAvcm9vdC9jYXJib24gLW5hbWUgIms0djJyMV9lMC5qc29ubCIgMj4vZGV2L251bGwgfCB3aGlsZSByZWFkIGY7IGRvIGVjaG8gIkZJTEUgJGYiOyB0aW1lb3V0IDEwIGxzIC1sIC0tdGltZS1zdHlsZT1mdWxsLWlzbyAiJGYiOyB0aW1lb3V0IDEwIHdjIC1sICIkZiI7IGRvbmUKZWNobyAiLS0tIHNuYXBzaG90L3N5bmMgbG9vcCBwcm9jcyAtLS0iCnRpbWVvdXQgMTAgcHMgLWVvIHBpZCxldGltZSxhcmdzIHwgZ3JlcCAtRSAic3luY3xzbmFwc2hvdHxnaXQgcHVzaCIgfCBncmVwIC12IGdyZXAgfCBoZWFkIC0xMCB8fCBlY2hvICJOT19TWU5DX1BST0MiCmVjaG8gIi0tLSBkaXNrIC0tLSIKdGltZW91dCAxMCBkZiAtaCAvcm9vdC9jYXJib24gfCB0YWlsIC0xCmVjaG8gIkgyNFBST0JFMjMyNl9FTkQiCg==" ]; then[0m
+2026-11-12T15:26:54.9993105Z [36;1m  python3 tools/acs_runcommand.py "i-uf65egu9fey7xf7tu8ft" --b64 "IyEvYmluL2Jhc2gKIyBIMjQgcmVhZC1vbmx5IHByb2JlIDIwMjYtMTEtMTIgMjM6MTU6IHNwb3QtMjggSzQgcHJvYmUgc3R1Y2sgY2hlY2suCiMgTWFya2VyOiBIMjRQUk9CRTIzMjYuIFJFQUQtT05MWTogbm8ga2lsbCwgbm8gc3RhcnQsIG5vIGZpbGUgY2hhbmdlLgplY2hvICJIMjRQUk9CRTIzMjZfQkVHSU4iCmRhdGUgLXUgIitVVEMgJUYgJVQiOyBkYXRlICIrQ1NUICVGICVUICVaIgplY2hvICItLS0gbG9hZCAtLS0iCnRpbWVvdXQgMTAgdXB0aW1lCmVjaG8gIi0tLSBiaWdldmFsL2V2YWwgcHJvY2Vzc2VzIC0tLSIKdGltZW91dCAxMCBwcyAtZW8gcGlkLGV0aW1lLHBjcHUsYXJncyB8IGdyZXAgLUUgImJpZ2V2YWx8ZXZhbF92NTN8czI4azR8azR2MiIgfCBncmVwIC12IGdyZXAgfHwgZWNobyAiTk9fTUFUQ0giCmVjaG8gIi0tLSBhbGwgcHl0aG9uIHByb2NzIC0tLSIKdGltZW91dCAxMCBwcyAtZW8gcGlkLGV0aW1lLGFyZ3MgfCBncmVwIHB5dGhvbjMgfCBncmVwIC12IGdyZXAgfCBoZWFkIC0yMCB8fCBlY2hvICJOT19QWVRIT04iCmVjaG8gIi0tLSBsaXZlIGZpbGUgb24gbWFjaGluZSAtLS0iCnRpbWVvdXQgMjAgZmluZCAvcm9vdC9jYXJib24gLW5hbWUgIms0djJyMV9lMC5qc29ubCIgMj4vZGV2L251bGwgfCB3aGlsZSByZWFkIGY7IGRvIGVjaG8gIkZJTEUgJGYiOyB0aW1lb3V0IDEwIGxzIC1sIC0tdGltZS1zdHlsZT1mdWxsLWlzbyAiJGYiOyB0aW1lb3V0IDEwIHdjIC1sICIkZiI7IGRvbmUKZWNobyAiLS0tIHNuYXBzaG90L3N5bmMgbG9vcCBwcm9jcyAtLS0iCnRpbWVvdXQgMTAgcHMgLWVvIHBpZCxldGltZSxhcmdzIHwgZ3JlcCAtRSAic3luY3xzbmFwc2hvdHxnaXQgcHVzaCIgfCBncmVwIC12IGdyZXAgfCBoZWFkIC0xMCB8fCBlY2hvICJOT19TWU5DX1BST0MiCmVjaG8gIi0tLSBkaXNrIC0tLSIKdGltZW91dCAxMCBkZiAtaCAvcm9vdC9jYXJib24gfCB0YWlsIC0xCmVjaG8gIkgyNFBST0JFMjMyNl9FTkQiCg=="[0m
+2026-11-12T15:26:55.0013070Z [36;1melse[0m
+2026-11-12T15:26:55.0013434Z [36;1m  python3 tools/acs_runcommand.py "i-uf65egu9fey7xf7tu8ft" "hostname && uptime"[0m
+2026-11-12T15:26:55.0013875Z [36;1mfi[0m
+2026-11-12T15:26:55.0037286Z shell: /usr/bin/bash -e {0}
+2026-11-12T15:26:55.0037557Z env:
+2026-11-12T15:26:55.0038038Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T15:26:55.0038399Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T15:26:55.0038867Z   ACS_REGION: cn-shanghai
+2026-11-12T15:26:55.0039096Z ##[endgroup]
+2026-11-12T15:27:01.6401227Z InvokeId: t-sh072wh70e7wgsg
+2026-11-12T15:27:01.6420858Z --- status=Success exit=0 ---
+2026-11-12T15:27:01.6440664Z H24PROBE2326_BEGIN
+2026-11-12T15:27:01.6460718Z UTC 2026-11-12 15:26:56
+2026-11-12T15:27:01.6461218Z CST 2026-11-12 23:26:56 CST
+2026-11-12T15:27:01.6461651Z --- load ---
+2026-11-12T15:27:01.6462106Z  23:26:56 up  1:08,  0 user,  load average: 62.06, 51.39, 47.47
+2026-11-12T15:27:01.6462758Z --- bigeval/eval processes ---
+2026-11-12T15:27:01.6463590Z    7663       05:32  0.0 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6464744Z    7664       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6465927Z    7665       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6467200Z    7666       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6468408Z    7667       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6469557Z    7668       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6470988Z    7669       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6472105Z    7670       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6473206Z    7671       05:32 99.6 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6474323Z    7672       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6475437Z    7673       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6476594Z    7674       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6477771Z    7675       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6478878Z    7676       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6500629Z    7677       05:32 99.6 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6501850Z    7678       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6503031Z    7679       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6504180Z    7680       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6505338Z    7681       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6506492Z    7682       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6507625Z    7683       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6508759Z    7684       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6510586Z    7685       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6511795Z    7686       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6512924Z    7687       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6514113Z    7688       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6515537Z    7689       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6516646Z    7690       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6517754Z    7691       05:32 99.6 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6518962Z    7692       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6540591Z    7693       05:32 99.5 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6541818Z    7694       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6542976Z    7695       05:32 99.6 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6544100Z    7696       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6545237Z    7697       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6546384Z    7698       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6547494Z    7699       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6548583Z    7700       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6549676Z    7701       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6551010Z    7702       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6552105Z    7703       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6553193Z    7704       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6554237Z    7705       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6555394Z    7706       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6556514Z    7707       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6557655Z    7708       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6558773Z    7709       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6559877Z    7710       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6580252Z    7711       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6581370Z    7712       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6582437Z    7713       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6583508Z    7714       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6584925Z    7715       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6585994Z    7716       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6587034Z    7717       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6588067Z    7718       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6589152Z    7719       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6590658Z    7720       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6591766Z    7721       05:32 99.8 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6592807Z    7722       05:32 99.6 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6593849Z    7723       05:32 99.6 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6594856Z    7724       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6595904Z    7725       05:32 99.7 ../.venv/bin/python bigeval.py exp/k4v2g1.py exp/echo_e0.py 997000 200 k4v2g1_e0
+2026-11-12T15:27:01.6596708Z --- all python procs ---
+2026-11-12T15:27:01.6597388Z    3559    01:08:10 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+2026-11-12T15:27:01.6598580Z    3648    01:08:10 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+2026-11-12T15:27:01.6599616Z    3675    01:08:10 /usr/bin/python3 -Es /usr/sbin/tuned -l -P
+2026-11-12T15:27:01.6600865Z --- live file on machine ---
+2026-11-12T15:27:01.6601393Z FILE /root/carbon/data/bigeval_live/k4v2r1_e0.jsonl
+2026-11-12T15:27:01.6602300Z -rw-r--r-- 1 root root 749484 2026-11-12 23:21:23.394246182 +0800 /root/carbon/data/bigeval_live/k4v2r1_e0.jsonl
+2026-11-12T15:27:01.6603197Z 200 /root/carbon/data/bigeval_live/k4v2r1_e0.jsonl
+2026-11-12T15:27:01.6603742Z --- snapshot/sync loop procs ---
+2026-11-12T15:27:01.6604195Z --- disk ---
+2026-11-12T15:27:01.6604555Z /dev/nvme0n1p2   99G  4.7G   90G   5% /
+2026-11-12T15:27:01.6605014Z H24PROBE2326_END
+2026-11-12T15:27:01.6605235Z 
+2026-11-12T15:27:01.6856468Z Post job cleanup.
+2026-11-12T15:27:01.7917133Z [command]/usr/bin/git version
+2026-11-12T15:27:01.8010698Z git version 2.56.0
+2026-11-12T15:27:01.8061440Z Temporarily overriding HOME='/home/runner/work/_temp/0042f4e2-6dd4-4afd-8b36-69a18b8549a7' before making global git config changes
+2026-11-12T15:27:01.8068822Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T15:27:01.8073018Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T15:27:01.8139260Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T15:27:01.8215692Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T15:27:01.8635641Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T15:27:01.8678864Z http.https://github.com/.extraheader
+2026-11-12T15:27:01.8750809Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T15:27:01.8817588Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T15:27:01.9301625Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T15:27:01.9377039Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T15:27:01.9839695Z Cleaning up orphan processes
+2026-11-12T15:27:02.0346792Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

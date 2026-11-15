@@ -1,0 +1,194 @@
+dispatched at 10:52:43
+CLAIMED run 43204219002 job 131135161116 status completed conclusion success
+ cn-shanghai
+2026-11-12T10:52:51.9392460Z ##[endgroup]
+2026-11-12T10:53:10.6554909Z InvokeId: t-sh072vsqxlmu1a8
+2026-11-12T10:53:10.6555959Z --- status=Success exit=0 ---
+2026-11-12T10:53:10.6556936Z M6PRB21855K3 L20-BEGIN 2026-11-12 18:52:53 CST
+2026-11-12T10:53:10.6557905Z M6PRB21855K3 DGX-BEGIN 2026-11-12 18:53:07 CST
+2026-11-12T10:53:10.6558642Z --- REPO-LOG ---
+2026-11-12T10:53:10.6559510Z 56c140e exams: record new E0 baseline anchor +785 (200 games, se 66) and re-based calibration scores
+2026-11-12T10:53:10.6561060Z 924b0b1 Refresh fable matches to 194 games (newface-watch 18:26)
+2026-11-12T10:53:10.6561931Z 9387c4d Refresh m9xj320 matches to 36 games (newface-watch 18:26)
+2026-11-12T10:53:10.6562747Z 42ca07b Refresh m9xj matches to 73 games (newface-watch 18:26)
+2026-11-12T10:53:10.6564221Z e27200d harness: backfill in-machine seqc a_stats passthrough into repo bigeval.py (repo copy was one record-key behind h23/h24; result is byte-identical to the running in-machine file, md5 a5822338)
+2026-11-12T10:53:10.6565844Z --- WORKDIR-GIT ---
+2026-11-12T10:53:10.6566508Z fatal: not a git repository (or any of the parent directories): .git
+2026-11-12T10:53:10.6567516Z fatal: not a git repository (or any of the parent directories): .git
+2026-11-12T10:53:10.6568254Z --- REPO-MATCHES ---
+2026-11-12T10:53:10.6568989Z -rw-rw-r-- 1 arm arm 55336 Nov 12 17:31 /home/arm/junyang/carbon-repo/data/m6_matches.json
+2026-11-12T10:53:10.6569814Z ds_m6
+2026-11-12T10:53:10.6570280Z m6_corpus
+2026-11-12T10:53:10.6570779Z --- COPY-MATCHES ---
+2026-11-12T10:53:10.6571293Z COPY-OK
+2026-11-12T10:53:10.6571990Z -rw-rw-r-- 1 arm arm 55336 Nov 12 18:53 /home/arm/junyang/carbon/data/m6_matches.json
+2026-11-12T10:53:10.6572871Z --- MATCHES-SHAPE ---
+2026-11-12T10:53:10.6573474Z matches-type list len 191
+2026-11-12T10:53:10.6575110Z first-entry {"id": "484a142e6d5a84415c8a72d77f586ed1", "state": "done", "created": 1794475423.6663926, "name_a": "RyanX-AIPowercore-M6", "name_b": "stephen-K4TacSearch-v2", "game": 1, "scores": {"a": 8090.11, "b": 7661.68}, "winner": "a", "order": ["b", "a"]}
+2026-11-12T10:53:10.6576897Z strategy-names {}
+2026-11-12T10:53:10.6577645Z --- BUILD-TOP ---
+2026-11-12T10:53:10.6578593Z """Dataset "top": several current top-of-ladder strategies as teachers, each on its own style row, whole games.
+2026-11-12T10:53:10.6579958Z Why: one teacher's games are few for a 3M-parameter net (Master3s: ~120 games); the other strong players' games teach
+2026-11-12T10:53:10.6581401Z the trunk the same board situations (trees under contest, crowded bases, fights for cargo) from several hands, while
+2026-11-12T10:53:10.6582430Z the style row keeps whose decisions are whose.
+2026-11-12T10:53:10.6583354Z   python3 build_top.py OUT_DIR REPLAY_DIR [REPLAY_DIR ...]    then    python3 set_uw.py OUT_DIR 1 1 1
+2026-11-12T10:53:10.6584667Z Teachers: the default set (J1, five teachers, rows 2-6), or CNET2_TOP=J2 (eight teachers, all rows), or an explicit
+2026-11-12T10:53:10.6586043Z CNET2_TOP_TEACHERS="name@row,name@row,..." (rows 0-7; names exactly as on the leaderboard).
+2026-11-12T10:53:10.6587340Z Master3s stays on row 2 in every set -- the row the Echo packs play.
+2026-11-12T10:53:10.6588366Z Only ladder replays (public games) -- never games generated locally with someone's public source."""
+2026-11-12T10:53:10.6589331Z import os
+2026-11-12T10:53:10.6589813Z import sys
+2026-11-12T10:53:10.6590293Z import cnet2_feat as F
+2026-11-12T10:53:10.6590699Z 
+2026-11-12T10:53:10.6591015Z SETS = {
+2026-11-12T10:53:10.6591830Z     "J1": {2: "claude-AlphaCarbon-Master3s", 3: "RyanX-AIPowercore-M6", 4: "stephen-K4TacSearch-v1",
+2026-11-12T10:53:10.6592950Z            5: "AgyCarbon-P2C-Godslayer-CV", 6: "claude-AlphaCarbon-Master2s"},
+2026-11-12T10:53:10.6594074Z     "J2": {2: "claude-AlphaCarbon-Master3s", 3: "RyanX-AIPowercore-M6", 4: "stephen-K4TacSearch-v1",
+2026-11-12T10:53:10.6595208Z            5: "AgyCarbon-P2C-Godslayer-CV", 6: "claude-AlphaCarbon-Master2s",
+2026-11-12T10:53:10.6596225Z            0: "Carago-V2", 1: "RyanX-AIPowercore-M2", 7: "Fable5.2-Max-V3"},
+2026-11-12T10:53:10.6597243Z }
+2026-11-12T10:53:10.6597838Z spec = os.environ.get("CNET2_TOP_TEACHERS")
+2026-11-12T10:53:10.6598487Z if spec:
+2026-11-12T10:53:10.6599183Z     rows = {int(r): n for n, r in (item.rsplit("@", 1) for item in spec.split(",") if item)}
+2026-11-12T10:53:10.6599999Z else:
+2026-11-12T10:53:10.6600562Z     rows = SETS[os.environ.get("CNET2_TOP", "J1")]
+2026-11-12T10:53:10.6601444Z assert all(0 <= r < F.N_TEACH for r in rows) and len(set(rows.values())) == len(rows), rows
+2026-11-12T10:53:10.6602727Z T = [rows.get(i, f"_slot{i}") for i in range(F.N_TEACH)] + ["other"]
+2026-11-12T10:53:10.6603486Z F.TEACHERS[:] = T
+2026-11-12T10:53:10.6604060Z import cnet2_build as B  # noqa: E402
+2026-11-12T10:53:10.6604683Z B.F.TEACHERS[:] = T
+2026-11-12T10:53:10.6605236Z if __name__ == "__main__":
+2026-11-12T10:53:10.6606089Z     print({"teachers": {i: n for i, n in enumerate(T[:-1]) if not n.startswith("_slot")}}, flush=True)
+2026-11-12T10:53:10.6607165Z     B.main(sys.argv[1], sys.argv[2:])
+2026-11-12T10:53:10.6608072Z --- SET-UW ---
+2026-11-12T10:53:10.6609101Z """set_uw DS [CAR_W [PLANTER_W [BASE_W [END_W [END_FROM]]]]] -- per-unit weights for a teacher dataset whose cars are NOT to be learned:
+2026-11-12T10:53:10.6610597Z uw = PLANTER_W (1) for planter tokens, BASE_W (1) for base tokens, CAR_W (0) for collector tokens; w = 1 for every row,
+2026-11-12T10:53:10.6611997Z or END_W for rows with step >= END_FROM (default 250): the teacher's endgame, e.g. Master3s' last 50 steps.
+2026-11-12T10:53:10.6613246Z (With BC_SELF_KL in cnet2_train the collectors are held on the initial net instead.)
+2026-11-12T10:53:10.6614526Z The recruit mix (base tokens) is learned from a handful of games, the planters' movement is not: a net that has only
+2026-11-12T10:53:10.6615939Z the first half recruits fewer planters and loses its tree income. Weight the planters up and check the ledger."""
+2026-11-12T10:53:10.6616907Z import os
+2026-11-12T10:53:10.6617964Z import sys
+2026-11-12T10:53:10.6618502Z 
+2026-11-12T10:53:10.6618881Z import numpy as np
+2026-11-12T10:53:10.6619274Z 
+2026-11-12T10:53:10.6619766Z ds = sys.argv[1]; car_w = float(sys.argv[2]) if len(sys.argv) > 2 else 0.0
+2026-11-12T10:53:10.6620923Z pl_w = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0; base_w = float(sys.argv[4]) if len(sys.argv) > 4 else 1.0
+2026-11-12T10:53:10.6622297Z kind = np.load(os.path.join(ds, "tok_kind.npy"), mmap_mode="r"); y = np.load(os.path.join(ds, "y.npy"), mmap_mode="r")
+2026-11-12T10:53:10.6623318Z N, S = y.shape
+2026-11-12T10:53:10.6623876Z uw = np.full((N, S), base_w, np.float32)
+2026-11-12T10:53:10.6624627Z uw[:, :10] = np.where(np.asarray(kind[:, :10]) == 0, car_w, pl_w)
+2026-11-12T10:53:10.6625663Z end_w = float(sys.argv[5]) if len(sys.argv) > 5 else 1.0; end_from = int(sys.argv[6]) if len(sys.argv) > 6 else 250
+2026-11-12T10:53:10.6626666Z w = np.ones(N, np.float32)
+2026-11-12T10:53:10.6627405Z if end_w != 1.0:
+2026-11-12T10:53:10.6628033Z     w[np.load(os.path.join(ds, "step.npy")) >= end_from] = end_w
+2026-11-12T10:53:10.6629043Z np.save(os.path.join(ds, "uw.npy"), uw); np.save(os.path.join(ds, "w.npy"), w)
+2026-11-12T10:53:10.6629961Z v = np.asarray(y) >= 0; k = np.asarray(kind[:, :10])
+2026-11-12T10:53:10.6631001Z print({"rows": int(N), "planter_tokens": int((v[:, :10] & (k == 1)).sum()), "car_tokens": int((v[:, :10] & (k == 0)).sum()),
+2026-11-12T10:53:10.6632253Z        "base_tokens": int(v[:, 10:].sum()), "car_w": car_w, "planter_w": pl_w, "base_w": base_w,
+2026-11-12T10:53:10.6633237Z        "end_w": end_w, "end_rows": int((w != 1.0).sum())})
+2026-11-12T10:53:10.6634017Z --- LADDER-CORPUS-FUNCS ---
+2026-11-12T10:53:10.6634657Z 25:def _rate_wait(gap=2.1):
+2026-11-12T10:53:10.6635280Z 34:def fetch(outdir, m):
+2026-11-12T10:53:10.6635886Z 53:def targets(keys, rows):
+2026-11-12T10:53:10.6636496Z 62:def sync(outdir, keys):
+2026-11-12T10:53:10.6637518Z 110:if __name__ == "__main__":
+2026-11-12T10:53:10.6638147Z             off = d["next_offset"]
+2026-11-12T10:53:10.6638750Z             time.sleep(0.7)
+2026-11-12T10:53:10.6639651Z         todo = [m for m in ms if m.get("state") == "done" and m.get("scores") and (m["id"], m["game"]) not in index]
+2026-11-12T10:53:10.6640624Z         with ThreadPoolExecutor(4) as ex:
+2026-11-12T10:53:10.6641385Z             for m, fn, steps in ex.map(lambda m: fetch(outdir, m), todo):
+2026-11-12T10:53:10.6642181Z                 if isinstance(steps, str):
+2026-11-12T10:53:10.6642965Z                     print(f"  {m['id']}-{m['game']}: {steps}", flush=True)
+2026-11-12T10:53:10.6643968Z                     continue
+2026-11-12T10:53:10.6644912Z                 # 按策略查询时 a 方 = 该策略
+2026-11-12T10:53:10.6645561Z                 index[(m["id"], m["game"])] = {
+2026-11-12T10:53:10.6646378Z                     "id": m["id"], "game": m["game"], "order": m["order"], "scores": m["scores"],
+2026-11-12T10:53:10.6647509Z                     "winner": m.get("winner"), "steps": steps, "file": fn, "created": m.get("created"),
+2026-11-12T10:53:10.6651135Z                     "strategies": {"a": {"id": sid, "name": m.get("name_a", name)},
+2026-11-12T10:53:10.6652579Z                                    "b": {"id": "", "name": m.get("name_b", "?")}}}
+2026-11-12T10:53:10.6653335Z                 new += 1
+2026-11-12T10:53:10.6653913Z                 if new % 20 == 0:
+2026-11-12T10:53:10.6654702Z                     json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
+2026-11-12T10:53:10.6655861Z                     print(f"  已入库 {len(index)} 局（本轮新增 {new}）", flush=True)
+2026-11-12T10:53:10.6656950Z       except Exception as e:   # 单个策略失败不拖垮整轮
+2026-11-12T10:53:10.6658118Z         print(f"  {name}: 失败 {e!r}，跳过（下轮再试）", flush=True)
+2026-11-12T10:53:10.6659033Z         json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
+2026-11-12T10:53:10.6660013Z     json.dump(list(index.values()), open(ip, "w"), ensure_ascii=False)
+2026-11-12T10:53:10.6661131Z     print(f"完成：共 {len(index)} 局，本轮新增 {new}", flush=True)
+2026-11-12T10:53:10.6661822Z 
+2026-11-12T10:53:10.6662062Z 
+2026-11-12T10:53:10.6662561Z if __name__ == "__main__":
+2026-11-12T10:53:10.6663247Z     a = sys.argv[1:]
+2026-11-12T10:53:10.6663908Z     loop = None
+2026-11-12T10:53:10.6664518Z     if "--loop" in a:
+2026-11-12T10:53:10.6665279Z         i = a.index("--loop"); loop = int(a[i + 1]); del a[i:i + 2]
+2026-11-12T10:53:10.6666079Z     if len(a) < 2:
+2026-11-12T10:53:10.6666690Z         sys.exit(__doc__)
+2026-11-12T10:53:10.6667547Z     while True:
+2026-11-12T10:53:10.6668157Z         try:
+2026-11-12T10:53:10.6668744Z             sync(a[0], a[1:])
+2026-11-12T10:53:10.6669449Z         except Exception as e:
+2026-11-12T10:53:10.6670321Z             print("sync 失败：", repr(e), flush=True)
+2026-11-12T10:53:10.6671071Z         if not loop:
+2026-11-12T10:53:10.6671686Z             break
+2026-11-12T10:53:10.6672281Z         time.sleep(loop)
+2026-11-12T10:53:10.6673007Z --- K4V2-BUILD-LOG ---
+2026-11-12T10:53:10.6673597Z total 176
+2026-11-12T10:53:10.6674227Z -rw-rw-r-- 1 arm arm 3393 Nov 12 18:33 m7v2fix.log
+2026-11-12T10:53:10.6674988Z -rw-rw-r-- 1 arm arm 4640 Nov 12 18:32 m7bsv2r1.log
+2026-11-12T10:53:10.6675758Z -rw-rw-r-- 1 arm arm 1615 Nov 12 18:21 k4v2_stage.log
+2026-11-12T10:53:10.6676475Z -rw-rw-r-- 1 arm arm  305 Nov 12 18:21 build_k4v2.log
+2026-11-12T10:53:10.6677513Z -rw-rw-r-- 1 arm arm    0 Nov 12 18:21 k4v2_scan.err
+2026-11-12T10:53:10.6678280Z -rw-rw-r-- 1 arm arm    0 Nov 12 18:21 k4v2_stage_outer.log
+2026-11-12T10:53:10.6679013Z -rw-rw-r-- 1 arm arm 4603 Nov 12 18:21 m7bsv2g1.log
+2026-11-12T10:53:10.6679733Z -rw-rw-r-- 1 arm arm  315 Nov 12 17:53 build_m7bsv2.log
+2026-11-12T10:53:10.6680487Z -rw-rw-r-- 1 arm arm 1401 Nov 12 17:10 m7v2.log
+2026-11-12T10:53:10.6681196Z -rw-rw-r-- 1 arm arm 4655 Nov 12 16:51 caragor1.log
+2026-11-12T10:53:10.6681910Z -rw-rw-r-- 1 arm arm 4622 Nov 12 16:37 caragog1.log
+2026-11-12T10:53:10.6682631Z -rw-rw-r-- 1 arm arm 1709 Nov 12 15:59 stage2.log
+2026-11-12T10:53:10.6683355Z -rw-rw-r-- 1 arm arm  293 Nov 12 15:59 build_fable.log
+2026-11-12T10:53:10.6684083Z -rw-rw-r-- 1 arm arm  299 Nov 12 15:59 build_carago.log
+2026-11-12T10:53:10.6684869Z == /home/arm/junyang/carbon/data/dq_logs/build_k4v2.log
+2026-11-12T10:53:10.6685619Z {'teachers': {2: 'stephen-K4TacSearch-v2'}}
+2026-11-12T10:53:10.6686693Z {"games": 104, "samples": 31096, "val_games": 11, "teacher_sides": {"stephen-K4TacSearch-v2": 104}}
+2026-11-12T10:53:10.6688366Z {'rows': 31096, 'planter_tokens': 52888, 'car_tokens': 230807, 'base_tokens': 62192, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T10:53:10.6689929Z == /home/arm/junyang/carbon/data/dq_logs/build_m7bsv2.log
+2026-11-12T10:53:10.6690794Z {'teachers': {2: 'RyanX-AIPowercore-M7Bs-b010'}}
+2026-11-12T10:53:10.6691804Z {"games": 142, "samples": 42458, "val_games": 17, "teacher_sides": {"RyanX-AIPowercore-M7Bs-b010": 142}}
+2026-11-12T10:53:10.6693284Z {'rows': 42458, 'planter_tokens': 86301, 'car_tokens': 295931, 'base_tokens': 84916, 'car_w': 1.0, 'planter_w': 1.0, 'base_w': 1.0, 'end_w': 1.0, 'end_rows': 0}
+2026-11-12T10:53:10.6694479Z --- M7BSV2-TRAIN-LOG-HEAD ---
+2026-11-12T10:53:10.6695391Z == /home/arm/junyang/carbon/data/dq_logs/m7bsv2r1.log
+2026-11-12T10:53:10.6790258Z {"train": 37375, "val": 5083, "params": 3480130, "cfg": {"C": 128, "NB": 8, "D": 128, "NH": 4, "L": 2, "E": 32, "G": 8, "ZI": 1, "TA": 4, "TNH": 4}, "bs": 256, "steps_per_epoch": 145}
+2026-11-12T10:53:10.6799922Z {"ep": 0, "i": 0, "pi": 0.4354, "v": 0.0561, "aux": 0.0515, "s": 2}
+2026-11-12T10:53:10.6800853Z {"ep": 0, "val": {"collector": 0.84, "planter": 0.7921, "base": 0.9379, "all": 0.8495, "workers": 0.8299, "loss": 0.3796}, "train_pi": 0.4156, "s": 157}
+2026-11-12T10:53:10.6801829Z {"ep": 1, "i": 0, "pi": 0.3946, "v": 0.0296, "aux": 0.0336, "s": 1}
+2026-11-12T10:53:10.6802451Z == /home/arm/junyang/carbon/data/dq_logs/m7bsv2g1.log
+2026-11-12T10:53:10.6803371Z {"train": 37375, "val": 5083, "params": 2946610, "cfg": {"C": 128, "NB": 8, "D": 128, "NH": 4, "L": 2, "E": 32, "G": 8}, "bs": 256, "steps_per_epoch": 145}
+2026-11-12T10:53:10.6804321Z {"ep": 0, "i": 0, "pi": 0.4293, "v": 0.0517, "aux": 0.0511, "s": 2}
+2026-11-12T10:53:10.6805326Z {"ep": 0, "val": {"collector": 0.8403, "planter": 0.7895, "base": 0.9357, "all": 0.8488, "workers": 0.8295, "loss": 0.3842}, "train_pi": 0.4186, "s": 82}
+2026-11-12T10:53:10.6806296Z {"ep": 1, "i": 0, "pi": 0.3989, "v": 0.0329, "aux": 0.0328, "s": 1}
+2026-11-12T10:53:10.6806820Z --- DS-META-SAMPLE ---
+2026-11-12T10:53:10.6807639Z ds_k4v2-meta-keys ['games', 'teachers', 'total']
+2026-11-12T10:53:10.6808155Z {'games': 104, 'total': 31096, 'teachers': 9}
+2026-11-12T10:53:10.6808673Z M6PRB21855K3 DGX-END
+2026-11-12T10:53:10.6809048Z M6PRB21855K3 L20-END rc=0
+2026-11-12T10:53:10.6809254Z 
+2026-11-12T10:53:10.6931089Z Post job cleanup.
+2026-11-12T10:53:10.7908213Z [command]/usr/bin/git version
+2026-11-12T10:53:10.8007838Z git version 2.56.0
+2026-11-12T10:53:10.8045212Z Temporarily overriding HOME='/home/runner/work/_temp/c9fd775c-b925-4ab8-95ab-d93f7238b3cd' before making global git config changes
+2026-11-12T10:53:10.8046707Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T10:53:10.8068673Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T10:53:10.8158953Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T10:53:10.8248628Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T10:53:10.8668774Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T10:53:10.8728151Z http.https://github.com/.extraheader
+2026-11-12T10:53:10.8765815Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T10:53:10.8879195Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T10:53:10.9468257Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T10:53:10.9602749Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T10:53:11.0345716Z Cleaning up orphan processes
+2026-11-12T10:53:11.0739269Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 64 claimed

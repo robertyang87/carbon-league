@@ -1,0 +1,141 @@
+dispatched at 10:57:17
+CLAIMED run 43204874446 job 131137399263 status completed conclusion success
+ cn-shanghai
+2026-11-12T10:57:26.0502616Z ##[endgroup]
+2026-11-12T10:57:39.2165905Z InvokeId: t-sh072vt5mkuqbcw
+2026-11-12T10:57:39.2166872Z --- status=Success exit=0 ---
+2026-11-12T10:57:39.2167618Z M6PRB51855K3 L20-BEGIN 2026-11-12 18:57:28 CST
+2026-11-12T10:57:39.2168187Z M6PRB51855K3 DGX-BEGIN 2026-11-12 18:57:32 CST
+2026-11-12T10:57:39.2168688Z --- K4V2-STAGE-SCRIPT ---
+2026-11-12T10:57:39.2169110Z #!/bin/bash
+2026-11-12T10:57:39.2169583Z # K4v2 DGX staging (runs ON DGX, detached): pull repo, sync corpus, build
+2026-11-12T10:57:39.2170257Z # index (nested strategies shape), validate via cnet2_build.scan, build
+2026-11-12T10:57:39.2170934Z # ds_k4v2. Does NOT train (Studio is the trainer). Marker: K4V2STG1
+2026-11-12T10:57:39.2172029Z MARK=K4V2STG1
+2026-11-12T10:57:39.2172420Z D=/home/arm/junyang/carbon/data
+2026-11-12T10:57:39.2172831Z C=/home/arm/junyang/carbon/code
+2026-11-12T10:57:39.2173238Z R=/home/arm/junyang/carbon-repo
+2026-11-12T10:57:39.2173663Z exec > $D/dq_logs/k4v2_stage.log 2>&1
+2026-11-12T10:57:39.2174137Z echo "$MARK STAGE-BEGIN $(date '+%F %T %Z')"
+2026-11-12T10:57:39.2174597Z cd $C || { echo "$MARK FAIL cd code"; exit 1; }
+2026-11-12T10:57:39.2174959Z 
+2026-11-12T10:57:39.2175203Z echo '--- SWEEP-GIT-RESIDUE ---'
+2026-11-12T10:57:39.2176222Z ps -eo pid,etime,args | grep -E 'git (fetch|pull)' | grep -v grep || echo NO-GIT-RESIDUE
+2026-11-12T10:57:39.2176812Z 
+2026-11-12T10:57:39.2177088Z echo '--- PULL-REPO ---'
+2026-11-12T10:57:39.2177618Z echo "repo HEAD before: $(git -C $R rev-parse --short HEAD 2>/dev/null)"
+2026-11-12T10:57:39.2178212Z timeout 120 git -C $R pull --ff-only 2>&1 | tail -3
+2026-11-12T10:57:39.2178818Z echo "repo HEAD after: $(git -C $R rev-parse --short HEAD 2>/dev/null)"
+2026-11-12T10:57:39.2179284Z 
+2026-11-12T10:57:39.2179541Z echo '--- REPO-COUNTS ---'
+2026-11-12T10:57:39.2180215Z REPO_MATCHES=$(../.venv/bin/python -c "import json;print(len(json.load(open('$R/data/k4v2_matches.json'))))" 2>&1)
+2026-11-12T10:57:39.2181065Z REPO_CORPUS=$(ls $R/data/k4v2_corpus/*.json.gz 2>/dev/null | wc -l)
+2026-11-12T10:57:39.2181751Z REPO_CORPUS_ALL=$(ls $R/data/k4v2_corpus 2>/dev/null | wc -l)
+2026-11-12T10:57:39.2182531Z echo "repo matches=$REPO_MATCHES corpus_gz=$REPO_CORPUS corpus_all_files=$REPO_CORPUS_ALL"
+2026-11-12T10:57:39.2183131Z 
+2026-11-12T10:57:39.2183406Z echo '--- SYNC-CORPUS ---'
+2026-11-12T10:57:39.2183890Z mkdir -p $D/k4v2_corpus/replays
+2026-11-12T10:57:39.2184489Z cp -n $R/data/k4v2_corpus/*.json.gz $D/k4v2_corpus/replays/ 2>/dev/null
+2026-11-12T10:57:39.2185168Z cp $R/data/k4v2_matches.json $D/k4v2_matches.json
+2026-11-12T10:57:39.2185977Z echo -n 'local replays='; ls $D/k4v2_corpus/replays/*.json.gz | wc -l
+2026-11-12T10:57:39.2186488Z 
+2026-11-12T10:57:39.2186770Z echo '--- BUILD-INDEX ---'
+2026-11-12T10:57:39.2187224Z ../.venv/bin/python - <<'PYEOF'
+2026-11-12T10:57:39.2187722Z import json, gzip, os, glob
+2026-11-12T10:57:39.2188187Z D = '/home/arm/junyang/carbon/data'
+2026-11-12T10:57:39.2188702Z TNAME = 'stephen-K4TacSearch-v2'
+2026-11-12T10:57:39.2189167Z TID = 'aaa02959b15d57e4e28f80d665ae3482'
+2026-11-12T10:57:39.2189665Z matches = json.load(open(f'{D}/k4v2_matches.json'))
+2026-11-12T10:57:39.2190231Z print('matches entries:', len(matches))
+2026-11-12T10:57:39.2190734Z names = set()
+2026-11-12T10:57:39.2191124Z for m in matches:
+2026-11-12T10:57:39.2191643Z     names.add(m.get('name_a')); names.add(m.get('name_b'))
+2026-11-12T10:57:39.2192512Z assert TNAME in names, f'teacher name not found verbatim in matches: {sorted(str(x) for x in names)[:8]}'
+2026-11-12T10:57:39.2193500Z # teacher appearance check: wins/losses + side counts from task trigger caliber
+2026-11-12T10:57:39.2194513Z tw = sum(1 for m in matches if (m['name_a']==TNAME and m.get('winner')=='a') or (m['name_b']==TNAME and m.get('winner')=='b'))
+2026-11-12T10:57:39.2195385Z print('teacher wins in matches list:', tw)
+2026-11-12T10:57:39.2196113Z entries, missing, skipped = [], 0, 0
+2026-11-12T10:57:39.2196656Z for m in matches:
+2026-11-12T10:57:39.2197115Z     fn = f"{m['id']}-{m['game']}.json.gz"
+2026-11-12T10:57:39.2197654Z     path = f'{D}/k4v2_corpus/replays/{fn}'
+2026-11-12T10:57:39.2198193Z     if not os.path.exists(path):
+2026-11-12T10:57:39.2198733Z         missing += 1; print('missing replay for', fn); continue
+2026-11-12T10:57:39.2199350Z     if m.get('order') is None:
+2026-11-12T10:57:39.2199820Z         skipped += 1; print('no order for', fn); continue
+2026-11-12T10:57:39.2200422Z     with gzip.open(path, 'rt') as f:
+2026-11-12T10:57:39.2200952Z         rep = json.load(f)
+2026-11-12T10:57:39.2201427Z     def side(name):
+2026-11-12T10:57:39.2201914Z         return {'id': TID if name == TNAME else '', 'name': name}
+2026-11-12T10:57:39.2202780Z     e = {'id': m['id'], 'game': m['game'], 'order': m['order'],
+2026-11-12T10:57:39.2203426Z          'scores': m['scores'], 'winner': m.get('winner'),
+2026-11-12T10:57:39.2204116Z          'steps': len(rep['steps']) - 1, 'file': f'replays/{fn}',
+2026-11-12T10:57:39.2204653Z          'created': m.get('created'),
+2026-11-12T10:57:39.2205213Z          'strategies': {'a': side(m['name_a']), 'b': side(m['name_b'])}}
+2026-11-12T10:57:39.2205929Z     entries.append(e)
+2026-11-12T10:57:39.2206416Z have = {(e['id'], e['game']) for e in entries}
+2026-11-12T10:57:39.2207163Z orphans = []
+2026-11-12T10:57:39.2207651Z for p in glob.glob(f'{D}/k4v2_corpus/replays/*.json.gz'):
+2026-11-12T10:57:39.2208234Z     fn = os.path.basename(p)
+2026-11-12T10:57:39.2208730Z     mid, g = fn[:-len('.json.gz')].rsplit('-', 1)
+2026-11-12T10:57:39.2209226Z     try:
+2026-11-12T10:57:39.2209621Z         if (mid, int(g)) not in have:
+2026-11-12T10:57:39.2210114Z             orphans.append(fn)
+2026-11-12T10:57:39.2210564Z     except ValueError:
+2026-11-12T10:57:39.2210993Z         orphans.append(fn)
+2026-11-12T10:57:39.2211471Z print('orphan replays:', orphans)
+2026-11-12T10:57:39.2212108Z json.dump(entries, open(f'{D}/k4v2_corpus/index.json', 'w'), ensure_ascii=False)
+2026-11-12T10:57:39.2212911Z print('INDEX-BUILT entries:', len(entries), 'missing:', missing, 'skipped:', skipped)
+2026-11-12T10:57:39.2213934Z # shape check on first entry, verbatim vs a real m7bs entry is done by scan below
+2026-11-12T10:57:39.2214815Z print('first entry strategies:', json.dumps(entries[0]['strategies'], ensure_ascii=False))
+2026-11-12T10:57:39.2215842Z assert isinstance(entries[0]['strategies']['a'], dict) and 'id' in entries[0]['strategies']['a']
+2026-11-12T10:57:39.2216481Z PYEOF
+2026-11-12T10:57:39.2217085Z IDX_N=$(../.venv/bin/python -c "import json;print(len(json.load(open('$D/k4v2_corpus/index.json'))))" 2>&1)
+2026-11-12T10:57:39.2217778Z echo "index entries: $IDX_N"
+2026-11-12T10:57:39.2218380Z REPLAY_N=$(ls $D/k4v2_corpus/replays/*.json.gz | wc -l)
+2026-11-12T10:57:39.2219008Z echo "THREE-COUNT matches=$REPO_MATCHES replays=$REPLAY_N index=$IDX_N"
+2026-11-12T10:57:39.2219494Z 
+2026-11-12T10:57:39.2219821Z echo '--- SCAN-VALIDATE (real consumer cnet2_build.scan) ---'
+2026-11-12T10:57:39.2220504Z SCAN_N=$(CNET2_TOP_TEACHERS="stephen-K4TacSearch-v2@2" ../.venv/bin/python -c "
+2026-11-12T10:57:39.2221117Z import build_top
+2026-11-12T10:57:39.2221504Z import cnet2_build as B
+2026-11-12T10:57:39.2221933Z games = B.scan(['$D/k4v2_corpus'])
+2026-11-12T10:57:39.2222380Z print(len(games))
+2026-11-12T10:57:39.2222811Z " 2>$D/dq_logs/k4v2_scan.err | tail -1)
+2026-11-12T10:57:39.2223316Z echo "scan games: $SCAN_N"
+2026-11-12T10:57:39.2223853Z tail -3 $D/dq_logs/k4v2_scan.err 2>/dev/null | cut -c1-200
+2026-11-12T10:57:39.2224610Z if [ -z "$SCAN_N" ] || [ "$SCAN_N" = "0" ]; then echo "$MARK FAIL scan returned $SCAN_N"; exit 1; fi
+2026-11-12T10:57:39.2225210Z 
+2026-11-12T10:57:39.2225601Z echo '--- BUILD-DS-K4V2 ---'
+2026-11-12T10:57:39.2226065Z rm -rf $D/ds_k4v2
+2026-11-12T10:57:39.2226955Z CNET2_TOP_TEACHERS="stephen-K4TacSearch-v2@2" ../.venv/bin/python build_top.py $D/ds_k4v2 $D/k4v2_corpus > $D/dq_logs/build_k4v2.log 2>&1; echo "build_k4v2_rc=$?"
+2026-11-12T10:57:39.2228137Z ../.venv/bin/python set_uw.py $D/ds_k4v2 1 1 1 >> $D/dq_logs/build_k4v2.log 2>&1; echo "set_uw_rc=$?"
+2026-11-12T10:57:39.2228873Z tail -3 $D/dq_logs/build_k4v2.log | cut -c1-300
+2026-11-12T10:57:39.2230467Z ../.venv/bin/python -c 'import json,sys; d=json.load(open(sys.argv[1])); print("DS-META games:", len(d["games"]) if isinstance(d.get("games"), list) else d.get("games"), "total:", d.get("total"), "teachers:", d.get("teachers"))' "$D/ds_k4v2/meta.json" || { echo "$MARK FAIL no ds meta"; exit 1; }
+2026-11-12T10:57:39.2232012Z echo '--- DS-AGGREGATE ---'
+2026-11-12T10:57:39.2232471Z du -sh $D/ds_k4v2
+2026-11-12T10:57:39.2232900Z find $D/ds_k4v2 -type f | wc -l
+2026-11-12T10:57:39.2233464Z cd $D/ds_k4v2 && find . -type f | sort | xargs md5sum | md5sum
+2026-11-12T10:57:39.2234159Z echo "$MARK STAGE-DONE scan_games=$SCAN_N index=$IDX_N $(date '+%F %T %Z')"
+2026-11-12T10:57:39.2235002Z --- M7V2FIX-TEACHER-ID ---
+2026-11-12T10:57:39.2235635Z 76:print('teacher id:', repr(tid))
+2026-11-12T10:57:39.2236128Z M6PRB51855K3 DGX-END
+2026-11-12T10:57:39.2236558Z M6PRB51855K3 L20-END rc=0
+2026-11-12T10:57:39.2236896Z 
+2026-11-12T10:57:39.2441208Z Post job cleanup.
+2026-11-12T10:57:39.3261090Z [command]/usr/bin/git version
+2026-11-12T10:57:39.3327507Z git version 2.56.0
+2026-11-12T10:57:39.3381940Z Temporarily overriding HOME='/home/runner/work/_temp/3eed01cc-4f2c-473f-9c73-79bf68524a23' before making global git config changes
+2026-11-12T10:57:39.3383250Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T10:57:39.3384181Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T10:57:39.3440456Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T10:57:39.3543841Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T10:57:39.3821039Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T10:57:39.3861840Z http.https://github.com/.extraheader
+2026-11-12T10:57:39.3916199Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T10:57:39.3930476Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T10:57:39.4444823Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T10:57:39.4509828Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T10:57:39.4935677Z Cleaning up orphan processes
+2026-11-12T10:57:39.5240419Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 54 claimed

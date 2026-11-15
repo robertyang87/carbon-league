@@ -1,0 +1,46 @@
+L20CPU0148 BEGIN 2026-11-14 01:57:33 CST
+L20CPU0148 L20-BEGIN 2026-11-14 01:57:37 CST
+--- SAMPLE1 ---
+    PID     ELAPSED     TIME %CPU COMMAND
+  34214       30:26 00:00:30  1.6 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 768 --pre-mb 4096 --rscale 1.0 --gamma 1.0 --ckpt-every 1 --snap-every 10 --max-snaps 2 --eval-every 5 --eval-pairs 32 --eval-opps exp/opp_master2r.py,exp/opp_m3echo.py --lr 1e-5 --kl 0.15 --init /root/carbon/data/weights/cnet2_m3n1L.npz --games 4000 --out /root/carbon/data/rl3/snipe_n1 --resume /root/carbon/data/rl3/snipe_n1/state_last.pt --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2", 1.0], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudio.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260r1.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260g1.npz#T2", 0.25], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2r1.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2g1.npz#T2", 0.25], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_caragor1_ep19.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj320r1.npz#T2", 0.5]] --value-head utility --utility-source checkpoint --resume-vwarm 1
+  34225       30:24 00:31:16  102 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  34230       30:24 00:02:45  9.0 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=130) --multiprocessing-fork
+  34240       30:24 00:02:43  8.9 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=150) --multiprocessing-fork
+  34250       30:24 00:02:45  9.0 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=170) --multiprocessing-fork
+--- FRESH-FILES snipe_n1 dir ---
+total 2680496
+drwxr-xr-x 2 root root     4096 Nov 14 01:27 live
+-rw-r--r-- 1 root root     1884 Nov 14 01:27 config.json
+-rw-r--r-- 1 root root     3341 Nov 14 01:27 league.json
+-rw-r--r-- 1 root root      810 Nov 14 01:27 effective_params.json
+-rw-r--r-- 1 root root       60 Nov 14 01:15 state_backup_status.txt
+-rw-r--r-- 1 root root     2067 Nov 14 00:34 r18_swap_status.txt
+-rw-r--r-- 1 root root    37499 Nov 14 00:32 selfplay_gen.py.pre_r18
+-rw-r--r-- 1 root root    67650 Nov 14 00:32 cnet2_build.py.pre_r18
+-rw-r--r-- 1 root root    40588 Nov 14 00:32 stage1_teacher_gate.py.pre_r18
+-rw-r--r-- 1 root root    15233 Nov 14 00:32 stage0_teacher.py.pre_r18
+-rw-r--r-- 1 root root    33766 Nov 14 00:32 rl2_ppo_train.py.pre_r18
+-rw-r--r-- 1 root root 82607619 Nov 14 00:32 state_pre_r18_it79.pt
+-rw-r--r-- 1 root root 82607619 Nov 14 00:32 state_last.pt
+-rw-r--r-- 1 root root 13972532 Nov 14 00:32 ckpt_last.npz
+--- FRESH-FILES rl3 dir ---
+total 14060
+drwxr-xr-x 4 root root     4096 Nov 14 01:27 snipe_n1
+-rw-r----- 1 root root     2666 Nov 14 01:27 relaunch_it79.py
+-rw-r--r-- 1 root root   985953 Nov 14 01:25 snipe_n1.log
+-rw-r--r-- 1 root root        0 Nov 14 01:15 state_rollbackup.out
+-rw-r----- 1 root root     2627 Nov 14 01:15 state_rollbackup.py
+-rw-r--r-- 1 root root        0 Nov 14 00:22 r18_swap.out
+-rw-r----- 1 root root     7080 Nov 14 00:22 r18_swap.py
+-rw-r--r-- 1 root root        0 Nov 13 23:15 vhead_swap.out
+-rw-r----- 1 root root     5696 Nov 13 23:15 vhead_swap.py
+--- SAMPLE2 (+60s) ---
+    PID     ELAPSED     TIME %CPU COMMAND
+  34214       31:26 00:00:30  1.6 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 768 --pre-mb 4096 --rscale 1.0 --gamma 1.0 --ckpt-every 1 --snap-every 10 --max-snaps 2 --eval-every 5 --eval-pairs 32 --eval-opps exp/opp_master2r.py,exp/opp_m3echo.py --lr 1e-5 --kl 0.15 --init /root/carbon/data/weights/cnet2_m3n1L.npz --games 4000 --out /root/carbon/data/rl3/snipe_n1 --resume /root/carbon/data/rl3/snipe_n1/state_last.pt --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2", 1.0], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudio.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260r1.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260g1.npz#T2", 0.25], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2r1.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2g1.npz#T2", 0.25], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_caragor1_ep19.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj320r1.npz#T2", 0.5]] --value-head utility --utility-source checkpoint --resume-vwarm 1
+  34225       31:24 00:32:17  102 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=114) --multiprocessing-fork
+  34230       31:24 00:02:49  9.0 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=130) --multiprocessing-fork
+  34240       31:24 00:02:48  8.9 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=150) --multiprocessing-fork
+  34250       31:24 00:02:50  9.0 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=48, pipe_handle=170) --multiprocessing-fork
+L20CPU0148 L20-END 2026-11-14 01:58:37 CST
+L20CPU0148 SSH-RC=0
+L20CPU0148 END 2026-11-14 01:58:36 CST

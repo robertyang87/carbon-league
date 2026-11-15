@@ -1,0 +1,53 @@
+L20SYNC0112 PROBE-BEGIN 2026-11-15 01:12:27 CST
+L20SYNC0112 L20-BEGIN 2026-11-15 01:12:32 CST
+--- PID-91251 ---
+    PID    PPID     ELAPSED COMMAND
+  91251   91224    01:06:04 /root/carbon/.venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=49, pipe_handle=83) --multiprocessing-fork
+--- ARM-M-LIVE-DIR ---
+total 13648
+-rw-r--r-- 1 root root 13972528 2026-11-15_00:06:28 w_0.npz
+--- ARM-M-LOGS-NEARBY ---
+ls: cannot access '/root/carbon/*.log': No such file or directory
+-rw-r--r-- 1 root root 1695 2026-11-14_23:36:42 /root/carbon/data/rl3/ppou2_m.failed1.launch.json
+-rw-r--r-- 1 root root 1584 2026-11-14_23:38:27 /root/carbon/data/rl3/ppou2_m.failed1.log
+-rw-r--r-- 1 root root 1584 2026-11-14_23:38:27 /root/carbon/data/rl3/ppou2_m.failed1.log
+-rw-r--r-- 1 root root 3634 2026-11-15_00:41:18 /root/carbon/data/rl3/ppou2_m.log
+
+/root/carbon/data/rl3/ppou2_m.failed1:
+total 16
+-rw-r--r-- 1 root root 1722 2026-11-14_23:36:44 config.json
+-rw-r--r-- 1 root root 1098 2026-11-14_23:36:44 effective_params.json
+-rw-r--r-- 1 root root    0 2026-11-14_23:36:44 eval.jsonl
+-rw-r--r-- 1 root root 1195 2026-11-14_23:36:44 league.json
+drwxr-xr-x 2 root root 4096 2026-11-14_23:36:44 live
+-rw-r--r-- 1 root root    0 2026-11-14_23:36:44 train.jsonl
+-rw-r--r-- 1 root root    0 2026-11-14_23:36:44 warmup.jsonl
+drwxr-xr-x 3 root root     4096 2026-11-15_01:07:52 ppou2_c
+drwxr-xr-x 3 root root     4096 2026-11-14_23:36:44 ppou2_c.failed1
+-rw-r--r-- 1 root root     1693 2026-11-14_23:36:42 ppou2_c.failed1.launch.json
+-rw-r--r-- 1 root root     1584 2026-11-14_23:38:27 ppou2_c.failed1.log
+-rw-r--r-- 1 root root     1833 2026-11-15_00:06:26 ppou2_c.launch.json
+-rw-r--r-- 1 root root     5233 2026-11-15_01:07:52 ppou2_c.log
+drwxr-xr-x 3 root root     4096 2026-11-15_00:06:28 ppou2_m
+drwxr-xr-x 3 root root     4096 2026-11-14_23:36:44 ppou2_m.failed1
+-rw-r--r-- 1 root root     1695 2026-11-14_23:36:42 ppou2_m.failed1.launch.json
+-rw-r--r-- 1 root root     1584 2026-11-14_23:38:27 ppou2_m.failed1.log
+-rw-r--r-- 1 root root     1835 2026-11-15_00:06:26 ppou2_m.launch.json
+-rw-r--r-- 1 root root     3634 2026-11-15_00:41:18 ppou2_m.log
+--- MONITORS ---
+--- ARM-C-TRAIN-LAST ---
+{"it": 1, "t": 1794674706, "games": 4372, "srv": {"req": 10718, "pos": 28962, "fwd": 2593, "t_fwd": 29.87, "pos_per_fwd": 11.2, "models": 11, "servers": 1}, "dec": 1306183, "units": 14447212, "roll_s": 1549.2, "upd_s": 767.6, "buf_s": 1.4, "pre_s": 559.1, "games_per_min": 169.3, "dec_per_s": 843.1, "pol_s": 12047.3, "opp_s": 5839.1, "pl": 0.0008, "vl": 0.2387, "ent": 0.667, "kl": 0.0, "kl_coef": 0
+{"it": 2, "t": 1794676072, "games": 4338, "srv": {"req": 24575, "pos": 84224, "fwd": 4111, "t_fwd": 29.91, "pos_per_fwd": 20.5, "models": 11, "servers": 1}, "dec": 1295986, "units": 14335744, "roll_s": 1592.5, "upd_s": 540.9, "buf_s": 1.5, "pre_s": 333.6, "games_per_min": 163.4, "dec_per_s": 813.8, "pol_s": 12627.6, "opp_s": 8111.0, "pl": -0.0009, "vl": 0.2233, "ent": 0.665, "kl": 0.0, "kl_coef": 
+--- ARM-C-EVAL ---
+{"it": 0, "opp": "exp/opp_master2r.py", "n": 64, "n_seeds": 32, "wins": 61, "mean_u": 0.853, "se_u": 0.0216, "mean": 1286.7, "se": 120.6, "t": 1794674706.116976}
+{"it": 0, "opp": "exp/opp_m3echo.py", "n": 64, "n_seeds": 32, "wins": 58, "mean_u": 0.7865, "se_u": 0.0355, "mean": 751.6, "se": 112.8, "t": 1794674706.117266}
+--- DMSG-OOM-RECENT ---
+--- TRAINER-LOGS-MTIME ---
+total 40944
+-rw-r--r-- 1 root root 13972528 2026-11-15_00:06:28 w_0.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_00:45:06 w_1.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_01:07:52 w_2.npz
+2026-11-15 01:12:32 CST
+L20SYNC0112 L20-END 2026-11-15 01:12:32 CST
+L20SYNC0112 SSH-RC=0
+L20SYNC0112 PROBE-END 2026-11-15 01:12:32 CST

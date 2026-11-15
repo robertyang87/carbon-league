@@ -1,0 +1,34 @@
+L20SYNC0236 PROBE-BEGIN 2026-11-15 02:37:14 CST
+L20SYNC0236 L20-BEGIN 2026-11-15 02:37:20 CST
+--- PPOU2-PROCS ---
+ 104993       06:36 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --value-head tanh --init /root/carbon/data/weights/cnet2_m3s2r1L.npz --pool-authoritative --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2", 1.1], ["SNAP:cnet2:/r
+--- SPAWN-MAIN-COUNT ---
+15
+--- GPU ---
+memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+1462 MiB, 46068 MiB, 41 %
+--- GPU-COMPUTE-APPS ---
+pid, used_gpu_memory [MiB]
+104993, 374 MiB
+105002, 1074 MiB
+--- PPOU2_M-DIR ---
+total 16
+-rw-r--r-- 1 root root 1863 2026-11-15_02:30:45 config.json
+-rw-r--r-- 1 root root 1239 2026-11-15_02:30:45 effective_params.json
+-rw-r--r-- 1 root root    0 2026-11-15_02:30:45 eval.jsonl
+-rw-r--r-- 1 root root 1335 2026-11-15_02:30:45 league.json
+drwxr-xr-x 2 root root 4096 2026-11-15_02:30:46 live
+-rw-r--r-- 1 root root    0 2026-11-15_02:30:45 train.jsonl
+-rw-r--r-- 1 root root    0 2026-11-15_02:30:45 warmup.jsonl
+--- PPOU2_M-TRAIN-JSONL ---
+0 /root/carbon/data/rl3/ppou2_m/train.jsonl
+--- PPOU2_M-LOG-MTIME-TAIL ---
+-rw-r--r-- 1 root root 6636 2026-11-15_02:29:48 /root/carbon/data/rl3/ppou2_m.log
+EVAL {"it": 0, "opp": "exp/opp_m3echo.py", "n": 64, "n_seeds": 32, "wins": 58, "mean_u": 0.7875, "se_u": 0.0355, "mean": 758.5, "se": 111.8, "t": 1794680374.054106}
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 57 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+--- PPOU2_C-STATE ---
+-rw------- 1 root root 82600176 2026-11-15_01:52:58 /root/carbon/data/rl3/ppou2_c/state_last.pt
+L20SYNC0236 L20-END 2026-11-15 02:37:20 CST
+L20SYNC0236 SSH-RC=0
+L20SYNC0236 PROBE-END 2026-11-15 02:37:19 CST

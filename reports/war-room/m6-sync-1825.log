@@ -1,0 +1,53 @@
+dispatched at 10:25:54
+CLAIMED run 43200307066 job 131121686314 status completed conclusion success
+ cn-shanghai
+2026-11-12T10:26:03.1292227Z ##[endgroup]
+2026-11-12T10:26:16.6995908Z InvokeId: t-sh072vqcugr1pts
+2026-11-12T10:26:16.7005765Z --- status=Success exit=0 ---
+2026-11-12T10:26:16.7006394Z M6SYNC1825XQ7 L20-BEGIN 2026-11-12 18:26:05 CST
+2026-11-12T10:26:16.7025844Z M6SYNC1825XQ7 DGX-BEGIN 2026-11-12 18:26:11 CST
+2026-11-12T10:26:16.7027941Z --- TRAIN-STILL-RUNNING-CHECK (before) ---
+2026-11-12T10:26:16.7046589Z  193396       33:04 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_m7bs_v2 /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T10:26:16.7065581Z --- REPO-PULL ---
+2026-11-12T10:26:16.7066009Z Already up to date.
+2026-11-12T10:26:16.7067396Z repo HEAD: 45371d6c73432031765d8549074b277d69bec429 2026-11-12 18:19:30 +0800 replica_gap_plan: append anti-idle mechanism (single-chain script, count assertion, completion definition) after M7Bs v2 incident
+2026-11-12T10:26:16.7069334Z --- REPO-COUNTS ---
+2026-11-12T10:26:16.7069736Z repo m6_corpus replays: 191
+2026-11-12T10:26:16.7070179Z repo m6_corpus total files: 191
+2026-11-12T10:26:16.7070657Z repo m6_matches.json entries: 191
+2026-11-12T10:26:16.7071172Z repo m6_corpus index.json entries: NO-INDEX-FILE
+2026-11-12T10:26:16.7071692Z NO-INDEX-LS
+2026-11-12T10:26:16.7072068Z --- WORKDIR-COUNTS-BEFORE ---
+2026-11-12T10:26:16.7072598Z workdir m6_corpus replays: 0
+2026-11-12T10:26:16.7073307Z -rw-r--r-- 1 arm arm 52553 2026-11-11_23:58:30 /home/arm/junyang/carbon/data/m6_corpus/index.json
+2026-11-12T10:26:16.7074096Z --- SYNC (repo authoritative) ---
+2026-11-12T10:26:16.7074551Z rsync rc=0
+2026-11-12T10:26:16.7075178Z --- WORKDIR-COUNTS-AFTER ---
+2026-11-12T10:26:16.7075668Z workdir m6_corpus replays after: 191
+2026-11-12T10:26:16.7076171Z workdir m6_corpus total files after: 328
+2026-11-12T10:26:16.7076731Z workdir m6_corpus index.json entries after: 136
+2026-11-12T10:26:16.7077530Z -rw-r--r-- 1 arm arm 52553 2026-11-11_23:58:30 /home/arm/junyang/carbon/data/m6_corpus/index.json
+2026-11-12T10:26:16.7078344Z --- TRAIN-STILL-RUNNING-CHECK (after) ---
+2026-11-12T10:26:16.7106905Z  193396       33:07 ../.venv/bin/python cnet2_train.py /home/arm/junyang/carbon/data/ds_m7bs_v2 /home/arm/junyang/carbon/data/weights/cnet2_m7bsv2r1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T10:26:16.7108313Z 58 %, 45
+2026-11-12T10:26:16.7108670Z M6SYNC1825XQ7 DGX-END
+2026-11-12T10:26:16.7109077Z M6SYNC1825XQ7 L20-END rc=0
+2026-11-12T10:26:16.7109336Z 
+2026-11-12T10:26:16.7313781Z Post job cleanup.
+2026-11-12T10:26:16.8355807Z [command]/usr/bin/git version
+2026-11-12T10:26:16.8439354Z git version 2.56.0
+2026-11-12T10:26:16.8501797Z Temporarily overriding HOME='/home/runner/work/_temp/7f6c2808-a5ba-4822-9726-d435c7ac090b' before making global git config changes
+2026-11-12T10:26:16.8513373Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T10:26:16.8514837Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T10:26:16.8605952Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T10:26:16.8647912Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T10:26:16.9083297Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T10:26:16.9130488Z http.https://github.com/.extraheader
+2026-11-12T10:26:16.9176392Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T10:26:16.9258639Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T10:26:16.9632739Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T10:26:16.9710956Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T10:26:17.0132856Z Cleaning up orphan processes
+2026-11-12T10:26:17.0486434Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 56 claimed

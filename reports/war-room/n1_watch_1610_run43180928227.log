@@ -1,0 +1,369 @@
+﻿2026-11-12T08:11:37.5379447Z Current runner version: '2.338.2'
+2026-11-12T08:11:37.5405944Z ##[group]Runner Image Provisioner
+2026-11-12T08:11:37.5406830Z Hosted Compute Agent
+2026-11-12T08:11:37.5407486Z Version: 20261028.624
+2026-11-12T08:11:37.5408093Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T08:11:37.5408931Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T08:11:37.5409614Z Worker ID: {f690e753-8417-4357-9552-bd7171378ed4}
+2026-11-12T08:11:37.5410284Z Region: centralus
+2026-11-12T08:11:37.5410889Z Cloud: Azure
+2026-11-12T08:11:37.5411452Z ##[endgroup]
+2026-11-12T08:11:37.5412952Z ##[group]Operating System
+2026-11-12T08:11:37.5413656Z Ubuntu
+2026-11-12T08:11:37.5414165Z 24.04.5
+2026-11-12T08:11:37.5415092Z LTS
+2026-11-12T08:11:37.5415655Z ##[endgroup]
+2026-11-12T08:11:37.5416243Z ##[group]Runner Image
+2026-11-12T08:11:37.5416853Z Image: ubuntu-24.04
+2026-11-12T08:11:37.5417411Z Version: 20261101.360.1
+2026-11-12T08:11:37.5418743Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T08:11:37.5420448Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T08:11:37.5421392Z ##[endgroup]
+2026-11-12T08:11:37.5422542Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T08:11:37.5424454Z Contents: read
+2026-11-12T08:11:37.5425218Z Metadata: read
+2026-11-12T08:11:37.5425903Z ##[endgroup]
+2026-11-12T08:11:37.5427972Z Secret source: Actions
+2026-11-12T08:11:37.5428972Z Cache mode: write
+2026-11-12T08:11:37.5429725Z Prepare workflow directory
+2026-11-12T08:11:37.5897411Z Prepare all required actions
+2026-11-12T08:11:37.5944912Z Getting action download info
+2026-11-12T08:11:37.8322693Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T08:11:38.0080444Z Complete job name: run
+2026-11-12T08:11:38.0737847Z ##[group]Run actions/checkout@v4
+2026-11-12T08:11:38.0738286Z with:
+2026-11-12T08:11:38.0738558Z   repository: robertyang87/carbon-league
+2026-11-12T08:11:38.0740691Z   token: ***
+2026-11-12T08:11:38.0740947Z   ssh-strict: true
+2026-11-12T08:11:38.0741203Z   ssh-user: git
+2026-11-12T08:11:38.0741464Z   persist-credentials: true
+2026-11-12T08:11:38.0741744Z   clean: true
+2026-11-12T08:11:38.0742007Z   sparse-checkout-cone-mode: true
+2026-11-12T08:11:38.0742313Z   fetch-depth: 1
+2026-11-12T08:11:38.0742564Z   fetch-tags: false
+2026-11-12T08:11:38.0742824Z   show-progress: true
+2026-11-12T08:11:38.0743087Z   lfs: false
+2026-11-12T08:11:38.0743332Z   submodules: false
+2026-11-12T08:11:38.0743599Z   set-safe-directory: true
+2026-11-12T08:11:38.0743895Z   allow-unsafe-pr-checkout: false
+2026-11-12T08:11:38.0744260Z ##[endgroup]
+2026-11-12T08:11:38.3083721Z Syncing repository: robertyang87/carbon-league
+2026-11-12T08:11:38.3085586Z ##[group]Getting Git version info
+2026-11-12T08:11:38.3086453Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T08:11:38.3089591Z [command]/usr/bin/git version
+2026-11-12T08:11:38.3219048Z git version 2.56.0
+2026-11-12T08:11:38.3221199Z ##[endgroup]
+2026-11-12T08:11:38.3234238Z Temporarily overriding HOME='/home/runner/work/_temp/c10ae6d9-5538-4a65-8509-514e54e52064' before making global git config changes
+2026-11-12T08:11:38.3236350Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:11:38.3239696Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:11:38.3374376Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T08:11:38.3377180Z ##[group]Initializing the repository
+2026-11-12T08:11:38.3377977Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:11:38.3543945Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T08:11:38.3545424Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T08:11:38.3546395Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T08:11:38.3547464Z hint: call:
+2026-11-12T08:11:38.3547873Z hint:
+2026-11-12T08:11:38.3548420Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T08:11:38.3549034Z hint:
+2026-11-12T08:11:38.3549603Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T08:11:38.3550539Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T08:11:38.3551284Z hint:
+2026-11-12T08:11:38.3551703Z hint: 	git branch -m <name>
+2026-11-12T08:11:38.3552176Z hint:
+2026-11-12T08:11:38.3552828Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T08:11:38.3553888Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T08:11:38.3558692Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T08:11:38.3595338Z ##[endgroup]
+2026-11-12T08:11:38.3628991Z ##[group]Disabling automatic garbage collection
+2026-11-12T08:11:38.3639921Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T08:11:38.3642512Z ##[endgroup]
+2026-11-12T08:11:38.3707587Z ##[group]Setting up auth
+2026-11-12T08:11:38.3711474Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:11:38.3715749Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:11:38.4150248Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:11:38.4153395Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T08:11:38.4347796Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T08:11:38.4389615Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T08:11:38.4595163Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T08:11:38.4640805Z ##[endgroup]
+2026-11-12T08:11:38.4641939Z ##[group]Fetching the repository
+2026-11-12T08:11:38.4651316Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fb0c13b2554206b1e89954df459a954e337a1208:refs/remotes/origin/main
+2026-11-12T08:11:40.1253704Z From https://github.com/robertyang87/carbon-league
+2026-11-12T08:11:40.1259860Z  * [new ref]         fb0c13b2554206b1e89954df459a954e337a1208 -> origin/main
+2026-11-12T08:11:40.1262155Z ##[endgroup]
+2026-11-12T08:11:40.1262995Z ##[group]Determining the checkout info
+2026-11-12T08:11:40.1263664Z ##[endgroup]
+2026-11-12T08:11:40.1264361Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T08:11:40.1307372Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T08:11:40.1343417Z ##[group]Checking out the ref
+2026-11-12T08:11:40.1348155Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T08:11:40.4140019Z Switched to a new branch 'main'
+2026-11-12T08:11:40.4160741Z branch 'main' set up to track 'origin/main'.
+2026-11-12T08:11:40.4171723Z ##[endgroup]
+2026-11-12T08:11:40.4217802Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T08:11:40.4251087Z fb0c13b2554206b1e89954df459a954e337a1208
+2026-11-12T08:11:40.4480202Z ##[group]Run if [ -n "c2V0IC14CmVjaG8gIj09IE4xV0FUQ0gtMTYxMEYzQTkgQkVHSU4gPT0iCmRhdGUgJyslRiAlVCAlWicKRD0vcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEKTEc9L3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xLmxvZwpXPS9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMKZWNobyAiLS0gaGVhbHRoIHBncmVwIC0tIgpwZ3JlcCAtYWYgInJsMy9zbmlwZV9uMSIgfHwgcGdyZXAgLWFmIHNuaXBlX24xIHx8IGVjaG8gTk9fUFJPQwplY2hvICItLSBoZWFsdGggbnZpZGlhLXNtaSAtLSIKbnZpZGlhLXNtaSAtLXF1ZXJ5LWdwdT11dGlsaXphdGlvbi5ncHUsbWVtb3J5LnVzZWQsbWVtb3J5LnRvdGFsIC0tZm9ybWF0PWNzdgplY2hvICItLSB3ZWlnaHRzIC0tIgpscyAtbHQgJFcgfCBoZWFkIC0yMAptZDVzdW0gJFcvY25ldDJfbTNzMnIxTC5ucHogJFcvY25ldDJfbTdic3IxTC5ucHogJFcvY25ldDJfbTdic2cxTC5ucHogMj4mMQplY2hvICItLSBydW5kaXIgc25pcGVfbjEgLS0iCmxzIC1sdCAkRCB8IGhlYWQgLTQwCmVjaG8gIi0tIHRyYWluLmpzb25sIC0tIgpjYXQgJEQvdHJhaW4uanNvbmwKZWNobyAiLS0gZXZhbC5qc29ubCAtLSIKY2F0ICREL2V2YWwuanNvbmwgMj4mMSB8IHRhaWwgLTEwCmVjaG8gIi0tIEVWQUwgbGluZXMgaW4gbG9nIC0tIgpncmVwIC1uICJFVkFMIiAkTEcgfCB0YWlsIC0yMAplY2hvICItLSBsb2cgbXRpbWUvc2l6ZSAtLSIKbHMgLWwgJExHOyBkYXRlIC1yICRMRyAnKyVGICVUICVaJwplY2hvICItLSB0cmFjZWJhY2sgY291bnQrbGFzdCAtLSIKZ3JlcCAtYyBUcmFjZWJhY2sgJExHCmdyZXAgLW4gVHJhY2ViYWNrICRMRyB8IHRhaWwgLTMKZWNobyAiLS0gbG9nIHRhaWwgMTUgLS0iCnRhaWwgLTE1ICRMRwplY2hvICItLSBjb25maWcgLS0iCmNhdCAkRC9jb25maWcuanNvbgplY2hvICItLSBnbyBmaWxlIC0tIgpscyAtbCAvdG1wL24xX3Bvb2xfZ28udHh0IDI+JjEKZWNobyAiLS0gc3RhdGVfbGFzdCAtLSIKbHMgLWwgJEQvc3RhdGVfbGFzdC5wdCAyPiYxCmVjaG8gIj09IE4xV0FUQ0gtMTYxMEYzQTkgRU5EID09IgplY2hvICItLSByZXNpZHVhbCBzc2gvc2NwL3NmdHAvZ2l0IHByb2NzIC0tIgpwcyAtZW8gcGlkLGV0aW1lLGFyZ3MgfCBncmVwIC1FICdzc2h8c2NwfHNmdHB8Z2l0JyB8IGdyZXAgLXYgZ3JlcCB8fCBlY2hvIE5PTkUKZWNobyAiLS0gbGFzdDQgY2twdCBtdGltZSAtLSIKbHMgLXRkIC9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS9ja3B0XyogMj4vZGV2L251bGwgfCBoZWFkIC00IHwgd2hpbGUgcmVhZCBkOyBkbyBzdGF0IC1jICcleSAlbicgIiRkIjsgZG9uZQplY2hvICItLSBzbmFwIGxpc3QgLS0iCmxzIC1sdCAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvIHwgZ3JlcCAtaSBzbmFwIHwgaGVhZCAtNQo=" ]; then
+2026-11-12T08:11:40.4520573Z [36;1mif [ -n "c2V0IC14CmVjaG8gIj09IE4xV0FUQ0gtMTYxMEYzQTkgQkVHSU4gPT0iCmRhdGUgJyslRiAlVCAlWicKRD0vcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEKTEc9L3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xLmxvZwpXPS9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMKZWNobyAiLS0gaGVhbHRoIHBncmVwIC0tIgpwZ3JlcCAtYWYgInJsMy9zbmlwZV9uMSIgfHwgcGdyZXAgLWFmIHNuaXBlX24xIHx8IGVjaG8gTk9fUFJPQwplY2hvICItLSBoZWFsdGggbnZpZGlhLXNtaSAtLSIKbnZpZGlhLXNtaSAtLXF1ZXJ5LWdwdT11dGlsaXphdGlvbi5ncHUsbWVtb3J5LnVzZWQsbWVtb3J5LnRvdGFsIC0tZm9ybWF0PWNzdgplY2hvICItLSB3ZWlnaHRzIC0tIgpscyAtbHQgJFcgfCBoZWFkIC0yMAptZDVzdW0gJFcvY25ldDJfbTNzMnIxTC5ucHogJFcvY25ldDJfbTdic3IxTC5ucHogJFcvY25ldDJfbTdic2cxTC5ucHogMj4mMQplY2hvICItLSBydW5kaXIgc25pcGVfbjEgLS0iCmxzIC1sdCAkRCB8IGhlYWQgLTQwCmVjaG8gIi0tIHRyYWluLmpzb25sIC0tIgpjYXQgJEQvdHJhaW4uanNvbmwKZWNobyAiLS0gZXZhbC5qc29ubCAtLSIKY2F0ICREL2V2YWwuanNvbmwgMj4mMSB8IHRhaWwgLTEwCmVjaG8gIi0tIEVWQUwgbGluZXMgaW4gbG9nIC0tIgpncmVwIC1uICJFVkFMIiAkTEcgfCB0YWlsIC0yMAplY2hvICItLSBsb2cgbXRpbWUvc2l6ZSAtLSIKbHMgLWwgJExHOyBkYXRlIC1yICRMRyAnKyVGICVUICVaJwplY2hvICItLSB0cmFjZWJhY2sgY291bnQrbGFzdCAtLSIKZ3JlcCAtYyBUcmFjZWJhY2sgJExHCmdyZXAgLW4gVHJhY2ViYWNrICRMRyB8IHRhaWwgLTMKZWNobyAiLS0gbG9nIHRhaWwgMTUgLS0iCnRhaWwgLTE1ICRMRwplY2hvICItLSBjb25maWcgLS0iCmNhdCAkRC9jb25maWcuanNvbgplY2hvICItLSBnbyBmaWxlIC0tIgpscyAtbCAvdG1wL24xX3Bvb2xfZ28udHh0IDI+JjEKZWNobyAiLS0gc3RhdGVfbGFzdCAtLSIKbHMgLWwgJEQvc3RhdGVfbGFzdC5wdCAyPiYxCmVjaG8gIj09IE4xV0FUQ0gtMTYxMEYzQTkgRU5EID09IgplY2hvICItLSByZXNpZHVhbCBzc2gvc2NwL3NmdHAvZ2l0IHByb2NzIC0tIgpwcyAtZW8gcGlkLGV0aW1lLGFyZ3MgfCBncmVwIC1FICdzc2h8c2NwfHNmdHB8Z2l0JyB8IGdyZXAgLXYgZ3JlcCB8fCBlY2hvIE5PTkUKZWNobyAiLS0gbGFzdDQgY2twdCBtdGltZSAtLSIKbHMgLXRkIC9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS9ja3B0XyogMj4vZGV2L251bGwgfCBoZWFkIC00IHwgd2hpbGUgcmVhZCBkOyBkbyBzdGF0IC1jICcleSAlbicgIiRkIjsgZG9uZQplY2hvICItLSBzbmFwIGxpc3QgLS0iCmxzIC1sdCAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvIHwgZ3JlcCAtaSBzbmFwIHwgaGVhZCAtNQo=" ]; then[0m
+2026-11-12T08:11:40.4561561Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" --b64 "c2V0IC14CmVjaG8gIj09IE4xV0FUQ0gtMTYxMEYzQTkgQkVHSU4gPT0iCmRhdGUgJyslRiAlVCAlWicKRD0vcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEKTEc9L3Jvb3QvY2FyYm9uL2RhdGEvcmwzL3NuaXBlX24xLmxvZwpXPS9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMKZWNobyAiLS0gaGVhbHRoIHBncmVwIC0tIgpwZ3JlcCAtYWYgInJsMy9zbmlwZV9uMSIgfHwgcGdyZXAgLWFmIHNuaXBlX24xIHx8IGVjaG8gTk9fUFJPQwplY2hvICItLSBoZWFsdGggbnZpZGlhLXNtaSAtLSIKbnZpZGlhLXNtaSAtLXF1ZXJ5LWdwdT11dGlsaXphdGlvbi5ncHUsbWVtb3J5LnVzZWQsbWVtb3J5LnRvdGFsIC0tZm9ybWF0PWNzdgplY2hvICItLSB3ZWlnaHRzIC0tIgpscyAtbHQgJFcgfCBoZWFkIC0yMAptZDVzdW0gJFcvY25ldDJfbTNzMnIxTC5ucHogJFcvY25ldDJfbTdic3IxTC5ucHogJFcvY25ldDJfbTdic2cxTC5ucHogMj4mMQplY2hvICItLSBydW5kaXIgc25pcGVfbjEgLS0iCmxzIC1sdCAkRCB8IGhlYWQgLTQwCmVjaG8gIi0tIHRyYWluLmpzb25sIC0tIgpjYXQgJEQvdHJhaW4uanNvbmwKZWNobyAiLS0gZXZhbC5qc29ubCAtLSIKY2F0ICREL2V2YWwuanNvbmwgMj4mMSB8IHRhaWwgLTEwCmVjaG8gIi0tIEVWQUwgbGluZXMgaW4gbG9nIC0tIgpncmVwIC1uICJFVkFMIiAkTEcgfCB0YWlsIC0yMAplY2hvICItLSBsb2cgbXRpbWUvc2l6ZSAtLSIKbHMgLWwgJExHOyBkYXRlIC1yICRMRyAnKyVGICVUICVaJwplY2hvICItLSB0cmFjZWJhY2sgY291bnQrbGFzdCAtLSIKZ3JlcCAtYyBUcmFjZWJhY2sgJExHCmdyZXAgLW4gVHJhY2ViYWNrICRMRyB8IHRhaWwgLTMKZWNobyAiLS0gbG9nIHRhaWwgMTUgLS0iCnRhaWwgLTE1ICRMRwplY2hvICItLSBjb25maWcgLS0iCmNhdCAkRC9jb25maWcuanNvbgplY2hvICItLSBnbyBmaWxlIC0tIgpscyAtbCAvdG1wL24xX3Bvb2xfZ28udHh0IDI+JjEKZWNobyAiLS0gc3RhdGVfbGFzdCAtLSIKbHMgLWwgJEQvc3RhdGVfbGFzdC5wdCAyPiYxCmVjaG8gIj09IE4xV0FUQ0gtMTYxMEYzQTkgRU5EID09IgplY2hvICItLSByZXNpZHVhbCBzc2gvc2NwL3NmdHAvZ2l0IHByb2NzIC0tIgpwcyAtZW8gcGlkLGV0aW1lLGFyZ3MgfCBncmVwIC1FICdzc2h8c2NwfHNmdHB8Z2l0JyB8IGdyZXAgLXYgZ3JlcCB8fCBlY2hvIE5PTkUKZWNobyAiLS0gbGFzdDQgY2twdCBtdGltZSAtLSIKbHMgLXRkIC9yb290L2NhcmJvbi9kYXRhL3JsMy9zbmlwZV9uMS9ja3B0XyogMj4vZGV2L251bGwgfCBoZWFkIC00IHwgd2hpbGUgcmVhZCBkOyBkbyBzdGF0IC1jICcleSAlbicgIiRkIjsgZG9uZQplY2hvICItLSBzbmFwIGxpc3QgLS0iCmxzIC1sdCAvcm9vdC9jYXJib24vZGF0YS9ybDMvc25pcGVfbjEvIHwgZ3JlcCAtaSBzbmFwIHwgaGVhZCAtNQo="[0m
+2026-11-12T08:11:40.4582780Z [36;1melse[0m
+2026-11-12T08:11:40.4582993Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" "hostname && uptime"[0m
+2026-11-12T08:11:40.4583231Z [36;1mfi[0m
+2026-11-12T08:11:40.4601964Z shell: /usr/bin/bash -e {0}
+2026-11-12T08:11:40.4602125Z env:
+2026-11-12T08:11:40.4602424Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T08:11:40.4602610Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T08:11:40.4602756Z   ACS_REGION: cn-shanghai
+2026-11-12T08:11:40.4602891Z ##[endgroup]
+2026-11-12T08:11:48.1386044Z InvokeId: t-sh072vedav00x6o
+2026-11-12T08:11:48.1386967Z --- status=Success exit=0 ---
+2026-11-12T08:11:48.1387440Z + echo == N1WATCH-1610F3A9 BEGIN ==
+2026-11-12T08:11:48.1387870Z == N1WATCH-1610F3A9 BEGIN ==
+2026-11-12T08:11:48.1388277Z + date +%F %T %Z
+2026-11-12T08:11:48.1388671Z 2026-11-12 16:11:42 CST
+2026-11-12T08:11:48.1389023Z + D=/root/carbon/data/rl3/snipe_n1
+2026-11-12T08:11:48.1389405Z + LG=/root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:11:48.1389789Z + W=/root/carbon/data/weights
+2026-11-12T08:11:48.1390159Z + echo -- health pgrep --
+2026-11-12T08:11:48.1390499Z -- health pgrep --
+2026-11-12T08:11:48.1390834Z + pgrep -af rl3/snipe_n1
+2026-11-12T08:11:48.1392933Z 154179 ../.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward worth --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 768 --pre-mb 4096 --rscale 3.33e-4 --ckpt-every 1 --snap-every 10 --max-snaps 2 --eval-every 5 --eval-pairs 32 --eval-opps exp/opp_master2r.py,exp/opp_m3echo.py --lr 1e-5 --kl 0.10 --init /root/carbon/data/weights/cnet2_m3n1L.npz --games 4000 --out /root/carbon/data/rl3/snipe_n1 --resume /root/carbon/data/rl3/snipe_n1/state_last.pt --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2", 1.0], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2", 0.5]]
+2026-11-12T08:11:48.1395219Z + echo -- health nvidia-smi --
+2026-11-12T08:11:48.1395576Z -- health nvidia-smi --
+2026-11-12T08:11:48.1396030Z + nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv
+2026-11-12T08:11:48.1396569Z utilization.gpu [%], memory.used [MiB], memory.total [MiB]
+2026-11-12T08:11:48.1396988Z 70 %, 13799 MiB, 46068 MiB
+2026-11-12T08:11:48.1397818Z + echo -- weights --
+2026-11-12T08:11:48.1398172Z -- weights --
+2026-11-12T08:11:48.1398506Z + ls -lt /root/carbon/data/weights
+2026-11-12T08:11:48.1398862Z + head -20
+2026-11-12T08:11:48.1399165Z total 258720
+2026-11-12T08:11:48.1399530Z -rw-r--r-- 1 root root  11821004 Nov 12 15:05 cnet2_m7bsg1L.npz
+2026-11-12T08:11:48.1400009Z -rw-r--r-- 1 root root  13968972 Nov 12 14:51 cnet2_m7bsr1L.npz
+2026-11-12T08:11:48.1400499Z -rw-r--r-- 1 root root  13968972 Nov 12 14:51 cnet2_m3s2r1L.npz
+2026-11-12T08:11:48.1401153Z -rw-r--r-- 1 root root  11821004 Nov 12 06:58 cnet2_m6r1L.npz
+2026-11-12T08:11:48.1401623Z -rw-r--r-- 1 root root  13968972 Nov 12 06:58 cnet2_m3n1L.npz
+2026-11-12T08:11:48.1402105Z -rw-rw-r-- 1  501 root  11821004 Nov 11 23:10 cnet2_top_j1L.npz
+2026-11-12T08:11:48.1402591Z -rw-rw-r-- 1 1000  1000 11821000 Nov 11 17:33 cnet2_m3w3L.npz
+2026-11-12T08:11:48.1403060Z -rw-rw-r-- 1 1000  1000 11821000 Nov 11 17:33 cnet2_m3w2L.npz
+2026-11-12T08:11:48.1403529Z -rw-rw-r-- 1 1000  1000 11821004 Nov 11 17:33 cnet2_m3w1L.npz
+2026-11-12T08:11:48.1404022Z -rw-rw-r-- 1  501 staff 11821144 Nov 10 05:20 cnet2_b128m2t3.npz
+2026-11-12T08:11:48.1404535Z -rw-rw-r-- 1  501 staff 11821144 Nov 10 00:47 cnet2_b128awr_r1.npz
+2026-11-12T08:11:48.1405145Z -rw-rw-r-- 1  501 staff 11821140 Nov  9 22:42 cnet2_b128m2so.npz
+2026-11-12T08:11:48.1405623Z -rw-r--r-- 1  501 staff  3394044 Nov  8 22:07 cnet2_s64v8.npz
+2026-11-12T08:11:48.1406120Z -rw-r--r-- 1  501 staff 11821132 Nov  8 21:36 cnet2_m2s2stand.npz
+2026-11-12T08:11:48.1406623Z -rw-r--r-- 1  501 staff 11821112 Nov  8 14:26 cnet2_b128v7.npz
+2026-11-12T08:11:48.1407104Z -rw-r--r-- 1  501 staff 11821128 Nov  8 13:09 cnet2_m2sstand.npz
+2026-11-12T08:11:48.1407561Z -rw-r--r-- 1  501 staff 11821124 Nov  8 11:19 cnet2_b128v6.npz
+2026-11-12T08:11:48.1408036Z -rw-r--r-- 1  501 staff 11821124 Nov  8 08:21 cnet2_b128v5.npz
+2026-11-12T08:11:48.1408522Z -rw-r--r-- 1  501 staff 11821124 Nov  7 23:33 cnet2_m2stand.npz
+2026-11-12T08:11:48.1409274Z + md5sum /root/carbon/data/weights/cnet2_m3s2r1L.npz /root/carbon/data/weights/cnet2_m7bsr1L.npz /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T08:11:48.1410106Z b6db08c9b076257c54817377bb93130d  /root/carbon/data/weights/cnet2_m3s2r1L.npz
+2026-11-12T08:11:48.1410740Z 0835830f792840ed66eef6d5be84b417  /root/carbon/data/weights/cnet2_m7bsr1L.npz
+2026-11-12T08:11:48.1411372Z 2c8ca0ae7266a6c0a41bf3b8ba7f723b  /root/carbon/data/weights/cnet2_m7bsg1L.npz
+2026-11-12T08:11:48.1411910Z + echo -- rundir snipe_n1 --
+2026-11-12T08:11:48.1412299Z -- rundir snipe_n1 --
+2026-11-12T08:11:48.1412678Z + ls -lt /root/carbon/data/rl3/snipe_n1
+2026-11-12T08:11:48.1413076Z + head -40
+2026-11-12T08:11:48.1413406Z total 473952
+2026-11-12T08:11:48.1413779Z drwxr-xr-x 2 root root     4096 Nov 12 16:03 live
+2026-11-12T08:11:48.1414312Z -rw-r--r-- 1 root root     1223 Nov 12 16:03 config.json
+2026-11-12T08:11:48.1414931Z -rw-r--r-- 1 root root      736 Nov 12 16:03 league.json
+2026-11-12T08:11:48.1415410Z -rw-r--r-- 1 root root 82584386 Nov 12 16:03 state_last.pt
+2026-11-12T08:11:48.1415911Z -rw-r--r-- 1 root root 82595743 Nov 12 16:03 state_pre_klfix2_it14.pt
+2026-11-12T08:11:48.1416402Z -rw-r--r-- 1 root root 13968424 Nov 12 16:03 ckpt_last.npz
+2026-11-12T08:11:48.1416872Z -rw-r--r-- 1 root root 13968424 Nov 12 16:03 ckpt_14.npz
+2026-11-12T08:11:48.1417354Z -rw-r--r-- 1 root root    16091 Nov 12 16:03 train.jsonl
+2026-11-12T08:11:48.1417839Z -rw-r--r-- 1 root root 13968424 Nov 12 15:48 ckpt_13.npz
+2026-11-12T08:11:48.1418310Z -rw-r--r-- 1 root root 13968424 Nov 12 15:33 ckpt_12.npz
+2026-11-12T08:11:48.1418784Z -rw-r--r-- 1 root root 13968424 Nov 12 15:19 ckpt_11.npz
+2026-11-12T08:11:48.1419370Z -rw-r--r-- 1 root root 82595743 Nov 12 14:57 state_pre_klfix_it10.pt
+2026-11-12T08:11:48.1419889Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 eval_w_10.npz
+2026-11-12T08:11:48.1420358Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 ckpt_10.npz
+2026-11-12T08:11:48.1420858Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 snap_10.npz
+2026-11-12T08:11:48.1421610Z -rw-r--r-- 1 root root 13968420 Nov 12 14:42 ckpt_9.npz
+2026-11-12T08:11:48.1422058Z -rw-r--r-- 1 root root 13968420 Nov 12 14:27 ckpt_8.npz
+2026-11-12T08:11:48.1422622Z -rw-r--r-- 1 root root 13968420 Nov 12 14:12 ckpt_7.npz
+2026-11-12T08:11:48.1423073Z -rw-r--r-- 1 root root      449 Nov 12 13:56 eval.jsonl
+2026-11-12T08:11:48.1423516Z -rw-r--r-- 1 root root 13968420 Nov 12 13:56 ckpt_6.npz
+2026-11-12T08:11:48.1423965Z -rw-r--r-- 1 root root 13968420 Nov 12 13:43 ckpt_5.npz
+2026-11-12T08:11:48.1424662Z -rw-r--r-- 1 root root 13968420 Nov 12 13:23 ckpt_4.npz
+2026-11-12T08:11:48.1425107Z -rw-r--r-- 1 root root 13968420 Nov 12 13:08 ckpt_3.npz
+2026-11-12T08:11:48.1425553Z -rw-r--r-- 1 root root 13968420 Nov 12 12:54 ckpt_2.npz
+2026-11-12T08:11:48.1425994Z -rw-r--r-- 1 root root 13968420 Nov 12 12:42 ckpt_1.npz
+2026-11-12T08:11:48.1426413Z + echo -- train.jsonl --
+2026-11-12T08:11:48.1426779Z -- train.jsonl --
+2026-11-12T08:11:48.1427159Z + cat /root/carbon/data/rl3/snipe_n1/train.jsonl
+2026-11-12T08:11:48.1430081Z {"it": 1, "t": 1794458553, "games": 4762, "srv": {"req": 30136, "pos": 244064, "fwd": 2058, "t_fwd": 29.91, "pos_per_fwd": 118.6, "models": 4, "servers": 1}, "dec": 1428600, "units": 15816025, "roll_s": 353.5, "upd_s": 637.3, "buf_s": 1.5, "pre_s": 384.5, "games_per_min": 808.4, "dec_per_s": 4041.8, "pol_s": 7041.2, "opp_s": 1138.1, "pl": -0.0, "vl": 0.0081, "ent": 0.548, "kl": 0.0, "kl_coef": 0.05, "clipfrac": 0.0, "gnorm": 0.0, "dlogp": 0.0, "warm": true, "adv_std": 0.0934, "v_mean": 0.319, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [397, 1671, 1157], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [148, 790, 456], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [426, 777, 564], "SELF": [0, 1524, 761]}, "winrate": 0.617, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.3, 24.6], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.0, 29.5], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [30.8, 24.1], "SELF": [27.9, 27.9]}, "buf_mb": 15224.6, "rss_mb": 30810, "workers_rss_mb": 12820}
+2026-11-12T08:11:48.1435722Z {"it": 2, "t": 1794459294, "games": 4827, "srv": {"req": 27065, "pos": 218938, "fwd": 2474, "t_fwd": 29.81, "pos_per_fwd": 88.5, "models": 4, "servers": 1}, "dec": 1448100, "units": 16025295, "roll_s": 752.9, "upd_s": 625.3, "buf_s": 1.6, "pre_s": 364.9, "games_per_min": 384.7, "dec_per_s": 1923.4, "pol_s": 15880.5, "opp_s": 5434.4, "p"dec": 1548600, "units": 17133154, "roll_s": 789.8, "upd_s": 805.7, "buf_s": 1.6, "pre_s": 399.5, "games_per_min": 392.1, "dec_per_s": 1960.7, "pol_s": 17146.2, "opp_s": 5253.4, "pl": 0.0194, "vl": 0.0042, "ent": 0.543, "kl": 0.0325, "kl_coef": 0.05, "clipfrac": 0.187, "gnorm": 14.718, "dlogp": -0.0326, "warm": false, "adv_std": 0.0667, "v_mean": 0.19, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [135, 1126, 632], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [369, 869, 601], "SELF": [0, 2324, 1162], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [412, 843, 597]}, "winrate": 0.58, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.2, 29.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.3, 24.5], "SELF": [27.9, 27.9], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [30.6, 24.1]}, "buf_mb": 16503.4, "rss_mb": 36840, "workers_rss_mb": 15545}
+2026-11-12T08:11:48.1441690Z {"it": 5, "t": 1794462188, "games": 4996, "srv": {"req": 25671, "pos": 210131, "fwd": 2832, "t_fwd": 29.81, "pos_per_fwd": 74.2, "models": 4, "servers": 1}, "dec": 1498800, "units": 16569963, "roll_s": 318.3, "upd_s": 807.5, "buf_s": 1.6, "pre_s": 408.4, "games_per_min": 941.7, "dec_per_s": 4708.5, "pol_s": 7236.9, "opp_s": 1041.0, "pl": 0.0133, "vl": 0.0038, "ent": 0.546, "kl": 0.0555, "kl_coef": 0.05, "clipfrac": 0.157, "gnorm": 11.59, "dlogp": -0.0227, "warm": false, "adv_std": 0.0641, "v_mean": 0.185, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [412, 566, 394], "SELF": [0, 1992, 995], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [159, 1052, 623], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [402, 1386, 962]}, "winrate": 0.595, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [30.7, 23.8], "SELF": [27.9, 27.9], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.3, 29.4], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.6, 24.1]}, "buf_mb": 15972.7, "rss_mb": 32360, "workers_rss_mb": 12833}
+2026-11-12T08:11:48.1447459Z {"it": 6, "t": 1794462997, "games": 4974, "srv": {"req": 7771, "pos": 7771, "fwd": 583, "t_fwd": 29.73, "pos_per_fwd": 13.3, "models": 5, "servers": 1}, "dec": 1492200, "units": 16482156, "roll_s": 884.0, "upd_s": 732.3, "buf_s": 1.6, "pre_s": 335.3, "games_per_min": 337.6, "dec_per_s": 1688.0, "pol_s": 18739.1, "opp_s": 6058.5, "pl": 0.0188, "vl": 0.0036, "ent": 0.544, "kl": 0.0596, "kl_coef": 0.05, "clipfrac": 0.178, "gnorm": 11.681, "dlogp": -0.0286, "warm": false, "adv_std": 0.0624, "v_mean": 0.158, "margin": {"SELF": [0, 1948, 971], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [149, 1139, 658], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [378, 1303, 907], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [406, 584, 411]}, "winrate": 0.592, "planted": {"SELF": [27.8, 27.8], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.4, 29.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.5, 24.4], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [30.5, 24.0]}, "buf_mb": 15902.4, "rss_mb": 33899, "workers_rss_mb": 14282}
+2026-11-12T08:11:48.1452973Z {"it": 7, "t": 1794463931, "games": 5127, "srv": {"req": 26518, "pos": 216128, "fwd": 2406, "t_fwd": 29.86, "pos_per_fwd": 89.8, "models": 6, "servers": 1}, "dec": 1538100, "units": 17011645, "roll_s": 894.9, "upd_s": 771.6, "buf_s": 1.6, "pre_s": 363.0, "games_per_min": 343.7, "dec_per_s": 1718.7, "pol_s": 16593.8, "opp_s": 5396.8, "pl": 0.018, "vl": 0.0035, "ent": 0.551, "kl": 0.073, "kl_coef": 0.05, "clipfrac": 0.187, "gnorm": 11.642, "dlogp": -0.0307, "warm": false, "adv_std": 0.0608, "v_mean": 0.135, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [181, 901, 525], "SELF": [0, 2254, 1126], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [495, 697, 515], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [445, 1275, 923]}, "winrate": 0.602, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.5, 29.3], "SELF": [27.9, 27.9], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.1, 23.7], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.3, 24.3]}, "buf_mb": 16391.5, "rss_mb": 36783, "workers_rss_mb": 15803}
+2026-11-12T08:11:48.1458505Z {"it": 8, "t": 1794464822, "games": 5100, "srv": {"req": 26620, "pos": 215957, "fwd": 2475, "t_fwd": 29.85, "pos_per_fwd": 87.3, "models": 7, "servers": 1}, "dec": 1530000, "units": 16889050, "roll_s": 895.4, "upd_s": 767.3, "buf_s": 1.6, "pre_s": 361.6, "games_per_min": 341.7, "dec_per_s": 1708.7, "pol_s": 19115.7, "opp_s": 6505.7, "pl": 0.0182, "vl": 0.0031, "ent": 0.56, "kl": 0.0761, "kl_coef": 0.05, "clipfrac": 0.193, "gnorm": 11.955, "dlogp": -0.0333, "warm": false, "adv_std": 0.0571, "v_mean": 0.116, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [146, 688, 397], "SELF": [0, 2200, 1096], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [415, 1620, 1151], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [524, 592, 443]}, "winrate": 0.605, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.6, 28.8], "SELF": [28.0, 28.0], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.7, 24.2], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.3, 23.4]}, "buf_mb": 16305.2, "rss_mb": 39421, "workers_rss_mb": 17108}
+2026-11-12T08:11:48.1464169Z {"it": 9, "t": 1794465752, "games": 5317, "srv": {"req": 26187, "pos": 218525, "fwd": 2443, "t_fwd": 29.87, "pos_per_fwd": 89.4, "models": 8, "servers": 1}, "dec": 1595100, "units": 17617245, "roll_s": 895.2, "upd_s": 801.4, "buf_s": 1.7, "pre_s": 375.8, "games_per_min": 356.4, "dec_per_s": 1781.8, "pol_s": 19302.3, "opp_s": 6333.3, "pl": 0.0224, "vl": 0.0031, "ent": 0.558, "kl": 0.0874, "kl_coef": 0.05, "clipfrac": 0.196, "gnorm": 11.856, "dlogp": -0.0346, "warm": false, "adv_std": 0.0563, "v_mean": 0.104, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [401, 1424, 1007], "SELF": [0, 2634, 1314], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [139, 724, 423], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [411, 535, 370]}, "winrate": 0.586, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [30.3, 24.5], "SELF": [27.8, 27.8], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.1, 29.5], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [30.4, 24.3]}, "buf_mb": 16999.0, "rss_mb": 40696, "workers_rss_mb": 17812}
+2026-11-12T08:11:48.1469525Z {"it": 10, "t": 1794466654, "games": 5193, "srv": {"req": 25881, "pos": 213353, "fwd": 2471, "t_fwd": 29.85, "pos_per_fwd": 86.3, "models": 9, "servers": 1}, "dec": 1557900, "units": 17214365, "roll_s": 920.1, "upd_s": 783.3, "buf_s": 1.6, "pre_s": 367.6, "games_per_min": 338.6, "dec_per_s": 1693.2, "pol_s": 19582.1, "opp_s": 6689.2, "pl": 0.0233, "vl": 0.0028, "ent": 0.548, "kl": 0.0921, "kl_coef": 0.05, "clipfrac": 0.199, "gnorm": 11.795, "dlogp": -0.0367, "warm": false, "adv_std": 0.0542, "v_mean": 0.075, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [185, 1302, 766], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [430, 996, 702], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [434, 509, 363], "SELF": [0, 2386, 1192]}, "winrate": 0.582, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.8, 28.8], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.1, 24.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.4, 23.5], "SELF": [28.1, 28.1]}, "buf_mb": 16602.5, "rss_mb": 40696, "workers_rss_mb": 17386}
+2026-11-12T08:11:48.1475097Z {"it": 11, "t": 1794467957, "games": 4683, "srv": {"req": 30621, "pos": 214560, "fwd": 2235, "t_fwd": 29.88, "pos_per_fwd": 96.0, "models": 5, "servers": 1}, "dec": 1404900, "units": 15497607, "roll_s": 356.6, "upd_s": 746.8, "buf_s": 1.5, "pre_s": 376.0, "games_per_min": 788.0, "dec_per_s": 3939.9, "pol_s": 7978.5, "opp_s": 1396.0, "pl": 0.0154, "vl": 0.0026, "ent": 0.566, "kl": 0.1089, "kl_coef": 0.05, "clipfrac": 0.159, "gnorm": 11.613, "dlogp": -0.0229, "warm": false, "adv_std": 0.0511, "v_mean": 0.076, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [409, 1081, 769], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [-1, 1438, 713], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [499, 328, 249], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [198, 470, 291], "SELF": [0, 1366, 680]}, "winrate": 0.577, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.1, 24.0], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [27.9, 28.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.9, 22.7], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [26.2, 28.7], "SELF": [28.0, 28.0]}, "buf_mb": 14972.0, "rss_mb": 30392, "workers_rss_mb": 13484}
+2026-11-12T08:11:48.1481052Z {"it": 12, "t": 1794468794, "games": 4713, "srv": {"req": 27842, "pos": 195688, "fwd": 2675, "t_fwd": 29.9, "pos_per_fwd": 73.2, "models": 5, "servers": 1}, "dec": 1413900, "units": 15600043, "roll_s": 885.1, "upd_s": 698.1, "buf_s": 1.5, "pre_s": 330.1, "games_per_min": 319.5, "dec_per_s": 1597.4, "pol_s": 18049.7, "opp_s": 7300.8, "pl": 0.0188, "vl": 0.0025, "ent": 0.571, "kl": 0.1114, "kl_coef": 0.05, "clipfrac": 0.183, "gnorm": 11.782, "dlogp": -0.0296, "warm": false, "adv_std": 0.0506, "v_mean": 0.066, "margin": {"SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [22, 1397, 709], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [186, 463, 275], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [399, 1134, 823], "SELF": [0, 1426, 711], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [466, 293, 212]}, "winrate": 0.579, "planted": {"SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [28.2, 27.8], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [26.5, 28.3], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.3, 23.9], "SELF": [28.1, 28.1], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [31.6, 23.7]}, "buf_mb": 15067.9, "rss_mb": 32223, "workers_rss_mb": 14137}
+2026-11-12T08:11:48.1487383Z {"it": 13, "t": 1794469689, "games": 4743, "srv": {"req": 29696, "pos": 195392, "fwd": 2565, "t_fwd": 29.91, "pos_per_fwd": 76.2, "models": 6, "servers": 1}, "dec": 1422900, "units": 15717785, "roll_s": 885.3, "upd_s": 708.4, "buf_s": 1.5, "pre_s": 334.7, "games_per_min": 321.4, "dec_per_s": 1607.2, "pol_s": 18151.6, "opp_s": 7115.1, "pl": 0.0183, "vl": 0.0025, "ent": 0.57, "kl": 0.1224, "kl_coef": 0.05, "clipfrac": 0.191, "gnorm": 11.906, "dlogp": -0.0322, "warm": false, "adv_std": 0.0502, "v_mean": 0.056, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [437, 881, 639], "SELF": [0, 1486, 743], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [1, 1341, 656], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [149, 557, 315], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [544, 478, 362]}, "winrate": 0.572, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.5, 23.7], "SELF": [28.3, 28.3], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [28.3, 28.0], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [26.1, 29.0], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [32.0, 22.8]}, "buf_mb": 15163.8, "rss_mb": 33124, "workers_rss_mb": 14744}
+2026-11-12T08:11:48.1498077Z {"it": 14, "t": 1794470591, "games": 4776, "srv": {"req": 28094, "pos": 193920, "fwd": 2540, "t_fwd": 29.9, "pos_per_fwd": 76.3, "models": 7, "servers": 1}, "dec": 1432800, "units": 15814609, "roll_s": 894.9, "upd_s": 715.7, "buf_s": 1.5, "pre_s": 337.6, "games_per_min": 320.2, "dec_per_s": 1601.1, "pol_s": 18400.4, "opp_s": 7251.7, "pl": 0.0189, "vl": 0.0026, "ent": 0.568, "kl": 0.1177, "kl_coef": 0.05, "clipfrac": 0.199, "gnorm": 11.598, "dlogp": -0.0347, "warm": false, "adv_std": 0.0513, "v_mean": 0.042, "margin": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [196, 546, 322], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [3, 1602, 801], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [443, 645, 460], "SELF": [0, 1552, 775], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [465, 431, 313]}, "winrate": 0.559, "planted": {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2": [25.8, 28.8], "SNAP:cnet2:/root/carbon/data/rl3/snipe_n1/snap_10.npz": [27.6, 28.4], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2": [31.0, 23.6], "SELF": [27.8, 27.8], "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2": [30.8, 23.9]}, "buf_mb": 15269.3, "rss_mb": 34231, "workers_rss_mb": 15842}
+2026-11-12T08:11:48.1501346Z + echo -- eval.jsonl --
+2026-11-12T08:11:48.1501554Z -- eval.jsonl --
+2026-11-12T08:11:48.1501782Z + cat /root/carbon/data/rl3/snipe_n1/eval.jsonl
+2026-11-12T08:11:48.1502024Z + tail -10
+2026-11-12T08:11:48.1502340Z {"it": 0, "opp": "exp/opp_master2r.py", "n": 64, "wins": 60, "mean": 1011.4, "se": 89.4, "t": 1794458553.671161}
+2026-11-12T08:11:48.1502831Z {"it": 0, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 49, "mean": 388.4, "se": 107.3, "t": 1794458553.6711898}
+2026-11-12T08:11:48.1503323Z {"it": 5, "opp": "exp/opp_master2r.py", "n": 64, "wins": 59, "mean": 1088.6, "se": 92.4, "t": 1794462997.287793}
+2026-11-12T08:11:48.1503804Z {"it": 5, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 44, "mean": 391.3, "se": 79.2, "t": 1794462997.2878213}
+2026-11-12T08:11:48.1504165Z + echo -- EVAL lines in log --
+2026-11-12T08:11:48.1504382Z -- EVAL lines in log --
+2026-11-12T08:11:48.1504909Z + grep -n EVAL /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:11:48.1505158Z + tail -20
+2026-11-12T08:11:48.1505374Z 2:EVAL {"it": 0, "opp": "exp/opp_master2r.py", "n": 64, "wins": 60, "mean": 1011.4, "se": 89.4, "t": 1794458553.671161}
+2026-11-12T08:11:48.1505705Z 3:EVAL {"it": 0, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 49, "mean": 388.4, "se": 107.3, "t": 1794458553.6711898}
+2026-11-12T08:11:48.1506034Z 11:EVAL {"it": 5, "opp": "exp/opp_master2r.py", "n": 64, "wins": 59, "mean": 1088.6, "se": 92.4, "t": 1794462997.287793}
+2026-11-12T08:11:48.1506447Z 12:EVAL {"it": 5, "opp": "exp/opp_m3echo.py", "n": 64, "wins": 44, "mean": 391.3, "se": 79.2, "t": 1794462997.2878213}
+2026-11-12T08:11:48.1506685Z + echo -- log mtime/size --
+2026-11-12T08:11:48.1506820Z -- log mtime/size --
+2026-11-12T08:11:48.1506961Z + ls -l /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:11:48.1507254Z -rw-r--r-- 1 root root 88720 Nov 12 16:05 /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:11:48.1507484Z + date -r /root/carbon/data/rl3/snipe_n1.log +%F %T %Z
+2026-11-12T08:11:48.1507663Z 2026-11-12 16:05:21 CST
+2026-11-12T08:11:48.1507796Z + echo -- traceback count+last --
+2026-11-12T08:11:48.1507945Z -- traceback count+last --
+2026-11-12T08:11:48.1508106Z + grep -c Traceback /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:11:48.1508274Z 87
+2026-11-12T08:11:48.1508407Z + grep -n Traceback /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:11:48.1508572Z + tail -3
+2026-11-12T08:11:48.1508693Z 1446:Traceback (most recent call last):
+2026-11-12T08:11:48.1508851Z 1464:Traceback (most recent call last):
+2026-11-12T08:11:48.1509012Z 1480:Traceback (most recent call last):
+2026-11-12T08:11:48.1509161Z + echo -- log tail 15 --
+2026-11-12T08:11:48.1509290Z -- log tail 15 --
+2026-11-12T08:11:48.1509426Z + tail -15 /root/carbon/data/rl3/snipe_n1.log
+2026-11-12T08:11:48.1509581Z     self.run()
+2026-11-12T08:11:48.1509760Z   File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+2026-11-12T08:11:48.1509980Z     self._target(*self._args, **self._kwargs)
+2026-11-12T08:11:48.1510192Z   File "/usr/lib/python3.12/multiprocessing/pool.py", line 136, in worker
+2026-11-12T08:11:48.1510403Z     put((job, i, (False, wrapped)))
+2026-11-12T08:11:48.1510601Z   File "/usr/lib/python3.12/multiprocessing/queues.py", line 399, in put
+2026-11-12T08:11:48.1510807Z     self._writer.send_bytes(obj)
+2026-11-12T08:11:48.1511018Z   File "/usr/lib/python3.12/multiprocessing/connection.py", line 200, in send_bytes
+2026-11-12T08:11:48.1511253Z     self._send_bytes(m[offset:offset + size])
+2026-11-12T08:11:48.1511481Z   File "/usr/lib/python3.12/multiprocessing/connection.py", line 420, in _send_bytes
+2026-11-12T08:11:48.1511701Z     self._send(header)
+2026-11-12T08:11:48.1511884Z   File "/usr/lib/python3.12/multiprocessing/connection.py", line 384, in _send
+2026-11-12T08:11:48.1512094Z     n = write(self._handle, buf)
+2026-11-12T08:11:48.1512231Z         ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T08:11:48.1512379Z BrokenPipeError: [Errno 32] Broken pipe
+2026-11-12T08:11:48.1512529Z + echo -- config --
+2026-11-12T08:11:48.1512651Z -- config --
+2026-11-12T08:11:48.1512785Z + cat /root/carbon/data/rl3/snipe_n1/config.json
+2026-11-12T08:11:48.1512940Z {
+2026-11-12T08:11:48.1513049Z  "adapter": "cnet2",
+2026-11-12T08:11:48.1513198Z  "init": "/root/carbon/data/weights/cnet2_m3n1L.npz",
+2026-11-12T08:11:48.1513363Z  "ref": null,
+2026-11-12T08:11:48.1513488Z  "out": "/root/carbon/data/rl3/snipe_n1",
+2026-11-12T08:11:48.1513635Z  "iters": 1000000,
+2026-11-12T08:11:48.1513753Z  "minutes": 1000000000.0,
+2026-11-12T08:11:48.1513885Z  "workers": 30,
+2026-11-12T08:11:48.1513996Z  "games": 4000,
+2026-11-12T08:11:48.1514109Z  "lockstep": 16,
+2026-11-12T08:11:48.1514226Z  "overlap": 1,
+2026-11-12T08:11:48.1514339Z  "device": "cuda",
+2026-11-12T08:11:48.1574232Z  "temp": 1.0,
+2026-11-12T08:11:48.1574440Z  "lr": 1e-05,
+2026-11-12T08:11:48.1574747Z  "vlr": 0.0003,
+2026-11-12T08:11:48.1574921Z  "epochs": 1,
+2026-11-12T08:11:48.1575079Z  "mb": 768,
+2026-11-12T08:11:48.1575237Z  "clip": 0.2,
+2026-11-12T08:11:48.1575805Z  "ratio": "joint",
+2026-11-12T08:11:48.1576026Z  "vf": 0.5,
+2026-11-12T08:11:48.1576204Z  "ent": 0.001,
+2026-11-12T08:11:48.1576404Z  "kl": 0.1,
+2026-11-12T08:11:48.1576586Z  "kl_target": 0.0,
+2026-11-12T08:11:48.1576797Z  "gclip": 1.0,
+2026-11-12T08:11:48.1576988Z  "gamma": 0.995,
+2026-11-12T08:11:48.1577190Z  "lam": 0.95,
+2026-11-12T08:11:48.1577393Z  "rscale": 0.000333,
+2026-11-12T08:11:48.1577614Z  "reward": "worth",
+2026-11-12T08:11:48.1577829Z  "win_bonus": 0.1,
+2026-11-12T08:11:48.1578043Z  "c_dep": 0.0,
+2026-11-12T08:11:48.1578334Z  "c_lost": 0.0,
+2026-11-12T08:11:48.1578498Z  "shape_iters": 200,
+2026-11-12T08:11:48.1578668Z  "sep_value": 1,
+2026-11-12T08:11:48.1578832Z  "vwarm": 3,
+2026-11-12T08:11:48.1579434Z  "pool": "[[\"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w1L.npz#T2\", 1.0], [\"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3w2L.npz#T2\", 0.5], [\"SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2\", 0.5]]",
+2026-11-12T08:11:48.1580052Z  "snap_every": 10,
+2026-11-12T08:11:48.1580238Z  "snap_prior": 1.0,
+2026-11-12T08:11:48.1580411Z  "max_snaps": 2,
+2026-11-12T08:11:48.1580611Z  "pfsp": 1.0,
+2026-11-12T08:11:48.1580776Z  "ckpt_every": 1,
+2026-11-12T08:11:48.1580943Z  "eval_every": 5,
+2026-11-12T08:11:48.1581111Z  "eval_pairs": 32,
+2026-11-12T08:11:48.1581337Z  "eval_opps": "exp/opp_master2r.py,exp/opp_m3echo.py",
+2026-11-12T08:11:48.1581593Z  "eval_seed0": 980000,
+2026-11-12T08:11:48.1581770Z  "seed0": 3000000,
+2026-11-12T08:11:48.1581933Z  "amp": 0,
+2026-11-12T08:11:48.1582093Z  "pre_mb": 4096,
+2026-11-12T08:11:48.1582303Z  "server": 1,
+2026-11-12T08:11:48.1582471Z  "self_prior": 0.5,
+2026-11-12T08:11:48.1582707Z  "resume": "/root/carbon/data/rl3/snipe_n1/state_last.pt",
+2026-11-12T08:11:48.1583008Z  "remote": null,
+2026-11-12T08:11:48.1583180Z  "dec_frac": 0.25,
+2026-11-12T08:11:48.1583353Z  "max_stale": 2
+2026-11-12T08:11:48.1583532Z }+ echo -- go file --
+2026-11-12T08:11:48.1583723Z -- go file --
+2026-11-12T08:11:48.1583904Z + ls -l /tmp/n1_pool_go.txt
+2026-11-12T08:11:48.1584194Z ls: cannot access '/tmp/n1_pool_go.txt': No such file or directory
+2026-11-12T08:11:48.1584518Z + echo -- state_last --
+2026-11-12T08:11:48.1584878Z -- state_last --
+2026-11-12T08:11:48.1585105Z + ls -l /root/carbon/data/rl3/snipe_n1/state_last.pt
+2026-11-12T08:11:48.1585503Z -rw-r--r-- 1 root root 82584386 Nov 12 16:03 /root/carbon/data/rl3/snipe_n1/state_last.pt
+2026-11-12T08:11:48.1585880Z + echo == N1WATCH-1610F3A9 END ==
+2026-11-12T08:11:48.1586124Z == N1WATCH-1610F3A9 END ==
+2026-11-12T08:11:48.1586368Z + echo -- residual ssh/scp/sftp/git procs --
+2026-11-12T08:11:48.1586653Z -- residual ssh/scp/sftp/git procs --
+2026-11-12T08:11:48.1586902Z + ps -eo pid,etime,args
+2026-11-12T08:11:48.1587124Z + grep -E ssh|scp|sftp|git
+2026-11-12T08:11:48.1587341Z + grep -v grep
+2026-11-12T08:11:48.1587618Z   16744    23:17:17 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+2026-11-12T08:11:48.1587960Z + echo -- last4 ckpt mtime --
+2026-11-12T08:11:48.1588177Z -- last4 ckpt mtime --
+2026-11-12T08:11:48.1590092Z + ls -td /root/carbon/data/rl3/snipe_n1/ckpt_1.npz /root/carbon/data/rl3/snipe_n1/ckpt_10.npz /root/carbon/data/rl3/snipe_n1/ckpt_11.npz /root/carbon/data/rl3/snipe_n1/ckpt_12.npz /root/carbon/data/rl3/snipe_n1/ckpt_13.npz /root/carbon/data/rl3/snipe_n1/ckpt_14.npz /root/carbon/data/rl3/snipe_n1/ckpt_2.npz /root/carbon/data/rl3/snipe_n1/ckpt_3.npz /root/carbon/data/rl3/snipe_n1/ckpt_4.npz /root/carbon/data/rl3/snipe_n1/ckpt_5.npz /root/carbon/data/rl3/snipe_n1/ckpt_6.npz /root/carbon/data/rl3/snipe_n1/ckpt_7.npz /root/carbon/data/rl3/snipe_n1/ckpt_8.npz /root/carbon/data/rl3/snipe_n1/ckpt_9.npz /root/carbon/data/rl3/snipe_n1/ckpt_last.npz
+2026-11-12T08:11:48.1592039Z + head -4
+2026-11-12T08:11:48.1592217Z + read d
+2026-11-12T08:11:48.1592456Z + stat -c %y %n /root/carbon/data/rl3/snipe_n1/ckpt_last.npz
+2026-11-12T08:11:48.1592857Z 2026-11-12 16:03:11.588526271 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_last.npz
+2026-11-12T08:11:48.1593173Z + read d
+2026-11-12T08:11:48.1593657Z + stat -c %y %n /root/carbon/data/rl3/snipe_n1/ckpt_14.npz
+2026-11-12T08:11:48.1594041Z 2026-11-12 16:03:11.567525654 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_14.npz
+2026-11-12T08:11:48.1594348Z + read d
+2026-11-12T08:11:48.1594853Z + stat -c %y %n /root/carbon/data/rl3/snipe_n1/ckpt_13.npz
+2026-11-12T08:11:48.1595084Z 2026-11-12 15:48:09.287054159 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_13.npz
+2026-11-12T08:11:48.1595281Z + read d
+2026-11-12T08:11:48.1595422Z + stat -c %y %n /root/carbon/data/rl3/snipe_n1/ckpt_12.npz
+2026-11-12T08:11:48.1595645Z 2026-11-12 15:33:13.684763373 +0800 /root/carbon/data/rl3/snipe_n1/ckpt_12.npz
+2026-11-12T08:11:48.1595955Z + read d
+2026-11-12T08:11:48.1596068Z + echo -- snap list --
+2026-11-12T08:11:48.1596196Z -- snap list --
+2026-11-12T08:11:48.1596328Z + ls -lt /root/carbon/data/rl3/snipe_n1/
+2026-11-12T08:11:48.1596478Z + grep -i snap
+2026-11-12T08:11:48.1596594Z + head -5
+2026-11-12T08:11:48.1596740Z -rw-r--r-- 1 root root 13968424 Nov 12 14:57 snap_10.npz
+2026-11-12T08:11:48.1596869Z 
+2026-11-12T08:11:48.1676884Z Post job cleanup.
+2026-11-12T08:11:48.2356949Z [command]/usr/bin/git version
+2026-11-12T08:11:48.2405410Z git version 2.56.0
+2026-11-12T08:11:48.2453460Z Temporarily overriding HOME='/home/runner/work/_temp/0e4586b4-444e-470c-aaff-a5c4cdae76e8' before making global git config changes
+2026-11-12T08:11:48.2454497Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:11:48.2455812Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:11:48.2517166Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:11:48.2574515Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:11:48.2895021Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:11:48.2937291Z http.https://github.com/.extraheader
+2026-11-12T08:11:48.2975762Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T08:11:48.3006091Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T08:11:48.3276147Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T08:11:48.3318100Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T08:11:48.3850891Z Cleaning up orphan processes
+2026-11-12T08:11:48.4114450Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

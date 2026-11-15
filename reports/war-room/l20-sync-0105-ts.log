@@ -1,0 +1,60 @@
+L20SYNC0105 PROBE-BEGIN 2026-11-15 01:10:33 CST
+L20SYNC0105 L20-BEGIN 2026-11-15 01:10:38 CST
+--- ARM-PROCS ---
+    PID     ELAPSED COMMAND
+  91224    01:04:12 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --value-head tanh --init /root/carbon/data/weights/cnet2_m3s2r1L.npz --pool-autho
+--- SPAWN-MAIN-COUNT ---
+15
+--- GPU ---
+pid, used_gpu_memory [MiB]
+91224, 21772 MiB
+91251, 1066 MiB
+memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+22852 MiB, 46068 MiB, 36 %
+--- CHECK-ARMS ---
+=== ARM m ===
+warmup lines: 0 | last: -
+train lines: 0
+effective: {'kl_coef': 0.2, 'reward': 'u', 'gamma': 1.0, 'rscale': 1.0, 'value_head': 'tanh', 'utility_provenance': None}
+league type dict keys: ['SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudio.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260r1.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2r1.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260g1.npz#T2']
+league raw: {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2": {"prior": 1.1, "n": 0, "wr": 0.5, "margin": 0.0}, "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2": {"prior": 0.55, "n": 0, "wr": 0.5, "margin": 0.0}, "SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2": {"prior": 0.55, "n": 0, "wr": 0.5, "margin": 0.0}, "SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudi
+files: ['config.json', 'effective_params.json', 'eval.jsonl', 'league.json', 'live', 'train.jsonl', 'warmup.jsonl']
+=== ARM c ===
+warmup lines: 0 | last: -
+train lines: 2
+train[0] keys: {'it': 1, 'kl': 0.0, 'kl_coef': 0.2, 'pl': 0.0008, 'vl': 0.2387, 'winrate': 0.58}
+effective: {'kl_coef': 0.2, 'reward': 'u', 'gamma': 1.0, 'rscale': 1.0, 'value_head': 'tanh', 'utility_provenance': None}
+league type dict keys: ['SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudio.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260r1.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2r1.npz#T2', 'SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260g1.npz#T2']
+league raw: {"SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2": {"prior": 1.1, "n": 1578, "wr": 0.6405073690739596, "margin": 228.55492035855855}, "SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2": {"prior": 0.55, "n": 808, "wr": 0.6945612910877103, "margin": 385.1892856818443}, "SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2": {"prior": 0.55, "n": 807, "wr": 0.4986321925982847,
+files: ['checkpoint_complete.json', 'ckpt_1.npz', 'ckpt_2.npz', 'ckpt_last.npz', 'config.json', 'effective_params.json', 'eval.jsonl', 'league.json', 'live', 'state_last.pt', 'state_previous.pt', 'train.jsonl', 'warmup.jsonl']
+--- ARM-DIRS ---
+total 16
+-rw-r--r-- 1 root root 1862 2026-11-15_00:06:28 config.json
+-rw-r--r-- 1 root root 1238 2026-11-15_00:06:28 effective_params.json
+-rw-r--r-- 1 root root    0 2026-11-15_00:06:28 eval.jsonl
+-rw-r--r-- 1 root root 1335 2026-11-15_00:06:28 league.json
+drwxr-xr-x 2 root root 4096 2026-11-15_00:06:28 live
+-rw-r--r-- 1 root root    0 2026-11-15_00:06:28 train.jsonl
+-rw-r--r-- 1 root root    0 2026-11-15_00:06:28 warmup.jsonl
+total 147648
+-rw------- 1 root root      208 2026-11-15_01:07:52 checkpoint_complete.json
+-rw-r--r-- 1 root root 13972528 2026-11-15_00:45:05 ckpt_1.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_01:07:51 ckpt_2.npz
+-rw-r--r-- 1 root root 13972528 2026-11-15_01:07:51 ckpt_last.npz
+-rw-r--r-- 1 root root     1861 2026-11-15_00:06:28 config.json
+-rw-r--r-- 1 root root     1238 2026-11-15_00:06:28 effective_params.json
+-rw-r--r-- 1 root root      322 2026-11-15_00:45:06 eval.jsonl
+-rw-r--r-- 1 root root     1688 2026-11-15_01:07:51 league.json
+drwxr-xr-x 2 root root     4096 2026-11-15_01:07:52 live
+-rw------- 1 root root 54613777 2026-11-15_01:07:51 state_last.pt
+-rw------- 1 root root 54613777 2026-11-15_00:45:05 state_previous.pt
+-rw-r--r-- 1 root root     4901 2026-11-15_01:07:52 train.jsonl
+-rw-r--r-- 1 root root        0 2026-11-15_00:06:28 warmup.jsonl
+--- ANCHOR-STATE-MD5 ---
+8b873df8f42cda273f68e5b60ab96d17  /root/carbon/data/rl3/ppou2_c/state_last.pt
+39b45efd8680ac75eb7f1e7b5f2b101c  /root/carbon/data/rl3/ppou2_c/state_previous.pt
+--- LOG-MTIME ---
+2026-11-15 01:10:38 CST
+L20SYNC0105 L20-END 2026-11-15 01:10:38 CST
+L20SYNC0105 SSH-RC=0
+L20SYNC0105 PROBE-END 2026-11-15 01:10:37 CST

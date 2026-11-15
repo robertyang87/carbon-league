@@ -1,0 +1,69 @@
+L20SYNC0126B PROBE-BEGIN 2026-11-14 01:31:45 CST
+L20SYNC0126B L20-BEGIN 2026-11-14 01:31:49 CST
+--- TRAINER-PROC ---
+  34214       04:38 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --vwarm 3 --self-prior 0.5 --snap-prior 1
+--- TRAINER-CHILD-COUNT ---
+32
+--- GPU-PROCS ---
+pid, used_gpu_memory [MiB]
+34214, 378 MiB
+34225, 1698 MiB
+memory.used [MiB], utilization.gpu [%]
+2090 MiB, 11 %
+--- LOG-SIZE-MTIME ---
+16944 /root/carbon/data/rl3/snipe_n1.log
+-rw-r--r-- 1 root root 985953 Nov 14 01:25 /root/carbon/data/rl3/snipe_n1.log
+2026-11-14 01:25:51 CST
+2026-11-14 01:31:49 CST
+--- JSONERR-CONTEXT ---
+JSONERR-LINE=16944
+    return self._call_impl(*args, **kwargs)
+    return forward_call(*args, **kwargs)
+    sc = q @ k.transpose(-1, -2) / (C // self.NH) ** 0.5 + self.rel(REL_CELL.to(h.device)).permute(2, 0, 1)
+         ~~^~~~~~~~~~~~~~~~~~~~~
+    return _fallback.call_boxed(keyset, *args, **kwargs)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 44.39 GiB of which 462.75 MiB is free. Process 3842 has 1.70 GiB memory in use. Process 18680 has 1.66 GiB memory in use. Process 19674 has 1.68 GiB memory in use. Process 24188 has 1.70 GiB memory in use. Process 27743 has 1.68 GiB memory in use. Process 28244 has 1.68 GiB memory in use. Process 30484 has 1.66 GiB memory in use. Including non-PyTorch memory, this process has 30.45 GiB memory in use. Process 32726 has 1.68 GiB memory in use. Of the allocated memory 29.88 GiB is allocated by PyTorch, and 218.39 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 105 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 105 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 105 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 105 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 105 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 105 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 105 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+Traceback (most recent call last):
+    main()
+    league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
+    return _default_decoder.decode(s)
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 3 (char 2)
+--- LOG-TAIL-15 ---
+Traceback (most recent call last):
+  File "/root/carbon/code/rl2_ppo_train.py", line 761, in <module>
+    main()
+  File "/root/carbon/code/rl2_ppo_train.py", line 486, in main
+    league = League(os.path.join(args.out, "league.json"), json.loads(args.pool), args.snap_prior, args.pfsp)
+                                                           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 3 (char 2)
+--- TRAIN-JSONL ---
+79 /root/carbon/data/rl3/snipe_n1/train.jsonl
+--- ROLLBACK-STATUS ---
+01:15:23 WATCHER_START s19 rolling state backup (from it81)
+L20SYNC0126B L20-END 2026-11-14 01:31:49 CST
+L20SYNC0126B SSH-RC=0
+L20SYNC0126B PROBE-END 2026-11-14 01:31:48 CST

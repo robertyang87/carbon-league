@@ -1,0 +1,17 @@
+{
+  "trip": "h24-status-report 13:59 CST",
+  "read_at_cst": "2026-11-13 14:00",
+  "exam": "k4v2r1 (K4TacSearch-v2 replica, search version) vs Echo2 (ladder #8 examiner), seed 999000, 200 games, ruling (a) full fresh field, lone game 999059 (+80, spot-30 old stack) voided",
+  "host": "spot-31 (replacement for reclaimed spot-30); launch driver C2",
+  "branch_reads": {
+    "sync/h31": "NOT FOUND (404) - branch still not created as of 14:00; no live file, no cal.out",
+    "sync/h24": "2a4f2e3e 2026-11-12T12:10:01Z (unchanged, expected: spot-24 released 2026-11-12)"
+  },
+  "live_progress": "0/200 - no live file on any sync branch as of 14:00 direct read; exam start NOT yet confirmed by sync evidence",
+  "war_room_latest": "No new messages since 13:57 H23 sync trip; C2 start three-piece + first 2-min snapshot receipt still outstanding; receipt window per 13:48 sync trip was ~13:59-14:03 (just opening)",
+  "watch_item": "sync/h31 absent ~12-16 min after C2 launch claim (~13:44-13:48). Snapshot loop PID 5607 reported alive 13:44; first 2-min snapshot should create the branch ~2 min after exam start. If still 404 at next trip (~14:14), treat as stuck: ask C2 for start three-piece / probe spot-31 directly. Do NOT duplicate C2 launch work this trip - C2 is the driver.",
+  "anomaly": "none confirmed this trip - receipt window not yet closed",
+  "next_milestone": "C2 start three-piece + first snapshot row count (due ~13:59-14:03); then 200/200 + cal.out verdict. Estimate: if started ~13:45, done ~14:15 (ESTIMATE)",
+  "war_room_sync": "none this trip: no milestone/anomaly confirmed; routine report only per no-repeat-bombardment rule",
+  "sources": "gh_api.py direct read of robertyang87/carbon-league sync/h24 + sync/h31 (14:00); war-room chat + H24 chat reads 13:59-14:00"
+}

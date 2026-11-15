@@ -1,0 +1,414 @@
+run=43296374684 job=131455689228 conclusion=success dispatched_at=20:03:01 how=full verdict=OK studio_end=True
+﻿2026-11-12T20:03:09.1070327Z Current runner version: '2.338.2'
+2026-11-12T20:03:09.1117299Z ##[group]Runner Image Provisioner
+2026-11-12T20:03:09.1118504Z Hosted Compute Agent
+2026-11-12T20:03:09.1119230Z Version: 20261028.624
+2026-11-12T20:03:09.1119916Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T20:03:09.1120788Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T20:03:09.1121520Z Worker ID: {e78e6be7-9a7c-4140-b50f-154fa3210fb1}
+2026-11-12T20:03:09.1122299Z Region: westus2
+2026-11-12T20:03:09.1122950Z Cloud: Azure
+2026-11-12T20:03:09.1123535Z ##[endgroup]
+2026-11-12T20:03:09.1125135Z ##[group]Operating System
+2026-11-12T20:03:09.1125844Z Ubuntu
+2026-11-12T20:03:09.1126486Z 24.04.5
+2026-11-12T20:03:09.1127109Z LTS
+2026-11-12T20:03:09.1128107Z ##[endgroup]
+2026-11-12T20:03:09.1128867Z ##[group]Runner Image
+2026-11-12T20:03:09.1129546Z Image: ubuntu-24.04
+2026-11-12T20:03:09.1130192Z Version: 20261101.360.1
+2026-11-12T20:03:09.1131590Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T20:03:09.1133265Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T20:03:09.1134328Z ##[endgroup]
+2026-11-12T20:03:09.1135546Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T20:03:09.1137485Z Contents: read
+2026-11-12T20:03:09.1138613Z Metadata: read
+2026-11-12T20:03:09.1139225Z ##[endgroup]
+2026-11-12T20:03:09.1141774Z Secret source: Actions
+2026-11-12T20:03:09.1142852Z Cache mode: write
+2026-11-12T20:03:09.1143626Z Prepare workflow directory
+2026-11-12T20:03:09.1526316Z Prepare all required actions
+2026-11-12T20:03:09.1589704Z Getting action download info
+2026-11-12T20:03:09.5093121Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T20:03:09.7192141Z Complete job name: run
+2026-11-12T20:03:09.8174095Z ##[group]Run actions/checkout@v4
+2026-11-12T20:03:09.8174995Z with:
+2026-11-12T20:03:09.8175485Z   repository: robertyang87/carbon-league
+2026-11-12T20:03:09.8179667Z   token: ***
+2026-11-12T20:03:09.8180153Z   ssh-strict: true
+2026-11-12T20:03:09.8180635Z   ssh-user: git
+2026-11-12T20:03:09.8181179Z   persist-credentials: true
+2026-11-12T20:03:09.8181714Z   clean: true
+2026-11-12T20:03:09.8182190Z   sparse-checkout-cone-mode: true
+2026-11-12T20:03:09.8182744Z   fetch-depth: 1
+2026-11-12T20:03:09.8183203Z   fetch-tags: false
+2026-11-12T20:03:09.8183671Z   show-progress: true
+2026-11-12T20:03:09.8184150Z   lfs: false
+2026-11-12T20:03:09.8184594Z   submodules: false
+2026-11-12T20:03:09.8185067Z   set-safe-directory: true
+2026-11-12T20:03:09.8185600Z   allow-unsafe-pr-checkout: false
+2026-11-12T20:03:09.8186504Z ##[endgroup]
+2026-11-12T20:03:10.2275827Z Syncing repository: robertyang87/carbon-league
+2026-11-12T20:03:10.2359489Z ##[group]Getting Git version info
+2026-11-12T20:03:10.2361125Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T20:03:10.2400762Z [command]/usr/bin/git version
+2026-11-12T20:03:10.2455149Z git version 2.56.0
+2026-11-12T20:03:10.2595968Z ##[endgroup]
+2026-11-12T20:03:10.2643321Z Temporarily overriding HOME='/home/runner/work/_temp/ab4d7ed7-ab16-4545-8de7-44c4eddfcade' before making global git config changes
+2026-11-12T20:03:10.2665742Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T20:03:10.2669617Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T20:03:10.2739653Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T20:03:10.2764215Z ##[group]Initializing the repository
+2026-11-12T20:03:10.5371537Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T20:03:10.5390027Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T20:03:10.5404700Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T20:03:10.5412740Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T20:03:10.5428941Z hint: call:
+2026-11-12T20:03:10.5429986Z hint:
+2026-11-12T20:03:10.5431138Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T20:03:10.5432469Z hint:
+2026-11-12T20:03:10.5433741Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T20:03:10.5435728Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T20:03:10.5437342Z hint:
+2026-11-12T20:03:10.5438609Z hint: 	git branch -m <name>
+2026-11-12T20:03:10.5439677Z hint:
+2026-11-12T20:03:10.5441316Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T20:03:10.5443599Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T20:03:10.5479159Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T20:03:10.5544216Z ##[endgroup]
+2026-11-12T20:03:10.5546500Z ##[group]Disabling automatic garbage collection
+2026-11-12T20:03:10.5549158Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T20:03:10.5554867Z ##[endgroup]
+2026-11-12T20:03:10.5556347Z ##[group]Setting up auth
+2026-11-12T20:03:10.5558098Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T20:03:10.5562639Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T20:03:10.5567300Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T20:03:10.5573475Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T20:03:10.5657447Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T20:03:10.5734234Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T20:03:10.6101232Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T20:03:10.6210112Z ##[endgroup]
+2026-11-12T20:03:10.6212143Z ##[group]Fetching the repository
+2026-11-12T20:03:10.6270383Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +81d1b3e1da13a9c3cd247d7891f78b43c7b04f98:refs/remotes/origin/main
+2026-11-12T20:03:37.7889369Z From https://github.com/robertyang87/carbon-league
+2026-11-12T20:03:37.7890648Z  * [new ref]         81d1b3e1da13a9c3cd247d7891f78b43c7b04f98 -> origin/main
+2026-11-12T20:03:37.7929185Z ##[endgroup]
+2026-11-12T20:03:37.7930449Z ##[group]Determining the checkout info
+2026-11-12T20:03:37.7931731Z ##[endgroup]
+2026-11-12T20:03:37.7932638Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T20:03:37.8020075Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T20:03:37.8099008Z ##[group]Checking out the ref
+2026-11-12T20:03:37.8118735Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T20:03:38.7888792Z Switched to a new branch 'main'
+2026-11-12T20:03:38.7923622Z branch 'main' set up to track 'origin/main'.
+2026-11-12T20:03:38.8019378Z ##[endgroup]
+2026-11-12T20:03:38.8102744Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T20:03:38.8132802Z 81d1b3e1da13a9c3cd247d7891f78b43c7b04f98
+2026-11-12T20:03:38.8552960Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKIyBIYWtpbWkgdjIgcHJvIFRSSVAgNSwgU3RhZ2UgMyBhY2NlcHRhbmNlIChSRUFELU9OTFkpOiBMMjAgLT4gc3NoIFN0dWRpbywKIyB2ZXJpZnkgdGhlIHRyYWluaW5nIHRocmVlLXBpZWNlIG9uIHRoZSBtYWNoaW5lIGl0c2VsZjoKIyAgIDEpIHRyYWluaW5nIHByb2Nlc3NlcyByZWdpc3RlcmVkIChjbWRsaW5lIGNvbnRhaW5zIGhha2ltaTIpCiMgICAyKSBtYWNoaW5lIGxvYWQgLyBwZXItcHJvY2VzcyBDUFUKIyAgIDMpIGRzX2hha2ltaTIgY291bnRzICsgdHJhaW4tbG9nIC8gd2VpZ2h0IG10aW1lcyBmcmVzaAojIEludGVybmFsIHJlY2hlY2s6IGlmIG5vIHRyYWluZXIgeWV0IGJ1dCB0aGUgY2hhaW4gbG9nIHNob3dzIHRoZSBidWlsZAojIHN0aWxsIGluIHByb2dyZXNzLCB3YWl0IG9uIFN0dWRpbyBhbmQgcmUtY2hlY2sgKHNhbWUgZGlzcGF0Y2gsIHVwIHRvCiMgMyBjaGVja3MgfjE1MHMgYXBhcnQpLiBSZXBvcnRzIGZhY3RzIG9ubHk7IGV4aXRzIG5vbi16ZXJvIG9ubHkgd2hlbiB0aGUKIyBzc2ggbGVnIGl0c2VsZiBmYWlscy4KIyBUcmlwLTUgbm90ZTogdGhlIFN0dWRpbyBzZWdtZW50IGJlbG93IGNvbnRhaW5zIE5PIGlubmVyIHNzaC9yc3luYywgc28KIyB0aGVyZSBpcyBubyBzdGRpbiBjb25zdW1lcjsgdGhlIG91dGVyICdiYXNoIC1zJyBoZXJlZG9jIHNzaCBrZWVwcyBOTyAtbgojIChhZGRpbmcgLW4gd291bGQgc3RhcnZlIHRoZSBoZXJlZG9jIC0tIHJldmVyc2UgdHJhcCkuCk1BUks9SEFLSU1JMkFDNQplY2hvICIkTUFSSyBMMjAtQkVHSU4gJChkYXRlICcrJUYgJVQgJVonKSIKdGltZW91dCAtayAzMCA2MDAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIC1vIFVzZXJLbm93bkhvc3RzRmlsZT0vcm9vdC8uamlzaHVidWRkeS9uZXR3b3JrLWNoZWNrcy9zdHVkaW8ta25vd24taG9zdHMtMjAyNjExMTIgYXJtQDEwLjIxMS40My42OCAnYmFzaCAtcycgPDwnQUVPRicKc2V0IC11Ck1BUks9SEFLSU1JMkFDNQpEPSRIT01FL2p1bnlhbmcvY2FyYm9uL2RhdGEKVkVOVj0kSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uCmVjaG8gIiRNQVJLIFNUVURJTy1CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIgpob3N0bmFtZQpjaGVjaygpIHsKICBlY2hvICItLS0gQ0hFQ0sgJDEgJChkYXRlICcrJUYgJVQgJVonKSAtLS0iCiAgZWNobyAnW1BST0NTXScKICBwZ3JlcCAtZmwgImNuZXQyX3RyYWluLnB5IiB8IGN1dCAtYzEtMjIwIHx8IGVjaG8gTk8tVFJBSU4tUFJPQwogIGVjaG8gJ1tMT0FEXScKICB1cHRpbWUKICBlY2hvICdbUFMtVFJBSU5dJwogIGZvciBwIGluICQocGdyZXAgLWYgImNuZXQyX3RyYWluLnB5Iik7IGRvIHBzIC1vIHBpZCwlY3B1LCVtZW0sZXRpbWUsY29tbWFuZCAtcCAkcCB8IHRhaWwgLTEgfCBjdXQgLWMxLTIyMDsgZG9uZQogIGVjaG8gJ1tDSEFJTi1MT0ctVEFJTF0nCiAgdGFpbCAtMjAgJEQvaGFraW1pMl9jaGFpbi5sb2cgMj4vZGV2L251bGwgfHwgZWNobyBOTy1DSEFJTi1MT0cKICBlY2hvICdbRFMtTUVUQV0nCiAgJFZFTlYgLWMgImltcG9ydCBqc29uOyBkPWpzb24ubG9hZChvcGVuKCckRC9kc19oYWtpbWkyL21ldGEuanNvbicpKTsgcHJpbnQoJ0RTLU1FVEEgZ2FtZXM9JywgbGVuKGRbJ2dhbWVzJ10pLCAndG90YWw9JywgZFsndG90YWwnXSwgJ3RlYWNoZXJzPScsIGRbJ3RlYWNoZXJzJ10pIiAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PLURTLU1FVEEKICBlY2hvICdbVFJBSU4tTE9HU10nCiAgZm9yIGEgaW4gcjEgZzE7IGRvCiAgICBlY2hvICI9PSAkYSA9PSIKICAgIGdyZXAgLWggJ15iZXN0JyAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsIHwgdGFpbCAtMgogICAgdGFpbCAtMiAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsIHwgY3V0IC1jMS0yMjAKICAgIHN0YXQgLWYgJ210aW1lICVTbSAlTicgLXQgJyVGICVUJyAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsCiAgZG9uZQogIGVjaG8gJ1tXRUlHSFRTXScKICBscyAtbHQgJEQvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIGhha2ltaTIgfCBoZWFkIC0xMAogIGZvciBmIGluICREL3dlaWdodHMvY25ldDJfaGFraW1pMipfZXAqLm5wejsgZG8KICAgIGlmIFsgLWYgIiRmIiBdOyB0aGVuIGVjaG8gIk1ENSAkZiAkKG1kNSAtcSAkZikiOyBmaQogIGRvbmUKfQpjaGVjayAxCk49MQp3aGlsZSAhIHBncmVwIC1mICJjbmV0Ml90cmFpbi5weSIgPi9kZXYvbnVsbCAmJiBbICROIC1sdCAzIF07IGRvCiAgaWYgdGFpbCAtNSAkRC9oYWtpbWkyX2NoYWluLmxvZyAyPi9kZXYvbnVsbCB8IGdyZXAgLXEgIkZBSUwiOyB0aGVuIGVjaG8gIkNIQUlOLUZBSUwtU0VFTiwgc3RvcCByZWNoZWNrIjsgYnJlYWs7IGZpCiAgZWNobyAibm8gdHJhaW5lciB5ZXQgKGJ1aWxkIG1heSBzdGlsbCBiZSBydW5uaW5nKTsgd2FpdCAxNTBzIGFuZCByZWNoZWNrIgogIHNsZWVwIDE1MAogIE49JCgoTisxKSkKICBjaGVjayAkTgpkb25lCmVjaG8gIiRNQVJLIFNUVURJTy1FTkQgJChkYXRlICcrJUYgJVQgJVonKSIKQUVPRgpSQz0kPwplY2hvICIkTUFSSyBMMjAtRU5EIHJjPSRSQyIKaWYgWyAkUkMgLW5lIDAgXTsgdGhlbiBlY2hvICIkTUFSSyBGQUlMIHNzaC1sZWcgcmM9JFJDIjsgZXhpdCAxOyBmaQpleGl0IDAK" ]; then
+2026-11-12T20:03:38.8792729Z [36;1mif [ -n "IyEvYmluL2Jhc2gKIyBIYWtpbWkgdjIgcHJvIFRSSVAgNSwgU3RhZ2UgMyBhY2NlcHRhbmNlIChSRUFELU9OTFkpOiBMMjAgLT4gc3NoIFN0dWRpbywKIyB2ZXJpZnkgdGhlIHRyYWluaW5nIHRocmVlLXBpZWNlIG9uIHRoZSBtYWNoaW5lIGl0c2VsZjoKIyAgIDEpIHRyYWluaW5nIHByb2Nlc3NlcyByZWdpc3RlcmVkIChjbWRsaW5lIGNvbnRhaW5zIGhha2ltaTIpCiMgICAyKSBtYWNoaW5lIGxvYWQgLyBwZXItcHJvY2VzcyBDUFUKIyAgIDMpIGRzX2hha2ltaTIgY291bnRzICsgdHJhaW4tbG9nIC8gd2VpZ2h0IG10aW1lcyBmcmVzaAojIEludGVybmFsIHJlY2hlY2s6IGlmIG5vIHRyYWluZXIgeWV0IGJ1dCB0aGUgY2hhaW4gbG9nIHNob3dzIHRoZSBidWlsZAojIHN0aWxsIGluIHByb2dyZXNzLCB3YWl0IG9uIFN0dWRpbyBhbmQgcmUtY2hlY2sgKHNhbWUgZGlzcGF0Y2gsIHVwIHRvCiMgMyBjaGVja3MgfjE1MHMgYXBhcnQpLiBSZXBvcnRzIGZhY3RzIG9ubHk7IGV4aXRzIG5vbi16ZXJvIG9ubHkgd2hlbiB0aGUKIyBzc2ggbGVnIGl0c2VsZiBmYWlscy4KIyBUcmlwLTUgbm90ZTogdGhlIFN0dWRpbyBzZWdtZW50IGJlbG93IGNvbnRhaW5zIE5PIGlubmVyIHNzaC9yc3luYywgc28KIyB0aGVyZSBpcyBubyBzdGRpbiBjb25zdW1lcjsgdGhlIG91dGVyICdiYXNoIC1zJyBoZXJlZG9jIHNzaCBrZWVwcyBOTyAtbgojIChhZGRpbmcgLW4gd291bGQgc3RhcnZlIHRoZSBoZXJlZG9jIC0tIHJldmVyc2UgdHJhcCkuCk1BUks9SEFLSU1JMkFDNQplY2hvICIkTUFSSyBMMjAtQkVHSU4gJChkYXRlICcrJUYgJVQgJVonKSIKdGltZW91dCAtayAzMCA2MDAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIC1vIFVzZXJLbm93bkhvc3RzRmlsZT0vcm9vdC8uamlzaHVidWRkeS9uZXR3b3JrLWNoZWNrcy9zdHVkaW8ta25vd24taG9zdHMtMjAyNjExMTIgYXJtQDEwLjIxMS40My42OCAnYmFzaCAtcycgPDwnQUVPRicKc2V0IC11Ck1BUks9SEFLSU1JMkFDNQpEPSRIT01FL2p1bnlhbmcvY2FyYm9uL2RhdGEKVkVOVj0kSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uCmVjaG8gIiRNQVJLIFNUVURJTy1CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIgpob3N0bmFtZQpjaGVjaygpIHsKICBlY2hvICItLS0gQ0hFQ0sgJDEgJChkYXRlICcrJUYgJVQgJVonKSAtLS0iCiAgZWNobyAnW1BST0NTXScKICBwZ3JlcCAtZmwgImNuZXQyX3RyYWluLnB5IiB8IGN1dCAtYzEtMjIwIHx8IGVjaG8gTk8tVFJBSU4tUFJPQwogIGVjaG8gJ1tMT0FEXScKICB1cHRpbWUKICBlY2hvICdbUFMtVFJBSU5dJwogIGZvciBwIGluICQocGdyZXAgLWYgImNuZXQyX3RyYWluLnB5Iik7IGRvIHBzIC1vIHBpZCwlY3B1LCVtZW0sZXRpbWUsY29tbWFuZCAtcCAkcCB8IHRhaWwgLTEgfCBjdXQgLWMxLTIyMDsgZG9uZQogIGVjaG8gJ1tDSEFJTi1MT0ctVEFJTF0nCiAgdGFpbCAtMjAgJEQvaGFraW1pMl9jaGFpbi5sb2cgMj4vZGV2L251bGwgfHwgZWNobyBOTy1DSEFJTi1MT0cKICBlY2hvICdbRFMtTUVUQV0nCiAgJFZFTlYgLWMgImltcG9ydCBqc29uOyBkPWpzb24ubG9hZChvcGVuKCckRC9kc19oYWtpbWkyL21ldGEuanNvbicpKTsgcHJpbnQoJ0RTLU1FVEEgZ2FtZXM9JywgbGVuKGRbJ2dhbWVzJ10pLCAndG90YWw9JywgZFsndG90YWwnXSwgJ3RlYWNoZXJzPScsIGRbJ3RlYWNoZXJzJ10pIiAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PLURTLU1FVEEKICBlY2hvICdbVFJBSU4tTE9HU10nCiAgZm9yIGEgaW4gcjEgZzE7IGRvCiAgICBlY2hvICI9PSAkYSA9PSIKICAgIGdyZXAgLWggJ15iZXN0JyAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsIHwgdGFpbCAtMgogICAgdGFpbCAtMiAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsIHwgY3V0IC1jMS0yMjAKICAgIHN0YXQgLWYgJ210aW1lICVTbSAlTicgLXQgJyVGICVUJyAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsCiAgZG9uZQogIGVjaG8gJ1tXRUlHSFRTXScKICBscyAtbHQgJEQvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIGhha2ltaTIgfCBoZWFkIC0xMAogIGZvciBmIGluICREL3dlaWdodHMvY25ldDJfaGFraW1pMipfZXAqLm5wejsgZG8KICAgIGlmIFsgLWYgIiRmIiBdOyB0aGVuIGVjaG8gIk1ENSAkZiAkKG1kNSAtcSAkZikiOyBmaQogIGRvbmUKfQpjaGVjayAxCk49MQp3aGlsZSAhIHBncmVwIC1mICJjbmV0Ml90cmFpbi5weSIgPi9kZXYvbnVsbCAmJiBbICROIC1sdCAzIF07IGRvCiAgaWYgdGFpbCAtNSAkRC9oYWtpbWkyX2NoYWluLmxvZyAyPi9kZXYvbnVsbCB8IGdyZXAgLXEgIkZBSUwiOyB0aGVuIGVjaG8gIkNIQUlOLUZBSUwtU0VFTiwgc3RvcCByZWNoZWNrIjsgYnJlYWs7IGZpCiAgZWNobyAibm8gdHJhaW5lciB5ZXQgKGJ1aWxkIG1heSBzdGlsbCBiZSBydW5uaW5nKTsgd2FpdCAxNTBzIGFuZCByZWNoZWNrIgogIHNsZWVwIDE1MAogIE49JCgoTisxKSkKICBjaGVjayAkTgpkb25lCmVjaG8gIiRNQVJLIFNUVURJTy1FTkQgJChkYXRlICcrJUYgJVQgJVonKSIKQUVPRgpSQz0kPwplY2hvICIkTUFSSyBMMjAtRU5EIHJjPSRSQyIKaWYgWyAkUkMgLW5lIDAgXTsgdGhlbiBlY2hvICIkTUFSSyBGQUlMIHNzaC1sZWcgcmM9JFJDIjsgZXhpdCAxOyBmaQpleGl0IDAK" ]; then[0m
+2026-11-12T20:03:38.9036834Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" --b64 "IyEvYmluL2Jhc2gKIyBIYWtpbWkgdjIgcHJvIFRSSVAgNSwgU3RhZ2UgMyBhY2NlcHRhbmNlIChSRUFELU9OTFkpOiBMMjAgLT4gc3NoIFN0dWRpbywKIyB2ZXJpZnkgdGhlIHRyYWluaW5nIHRocmVlLXBpZWNlIG9uIHRoZSBtYWNoaW5lIGl0c2VsZjoKIyAgIDEpIHRyYWluaW5nIHByb2Nlc3NlcyByZWdpc3RlcmVkIChjbWRsaW5lIGNvbnRhaW5zIGhha2ltaTIpCiMgICAyKSBtYWNoaW5lIGxvYWQgLyBwZXItcHJvY2VzcyBDUFUKIyAgIDMpIGRzX2hha2ltaTIgY291bnRzICsgdHJhaW4tbG9nIC8gd2VpZ2h0IG10aW1lcyBmcmVzaAojIEludGVybmFsIHJlY2hlY2s6IGlmIG5vIHRyYWluZXIgeWV0IGJ1dCB0aGUgY2hhaW4gbG9nIHNob3dzIHRoZSBidWlsZAojIHN0aWxsIGluIHByb2dyZXNzLCB3YWl0IG9uIFN0dWRpbyBhbmQgcmUtY2hlY2sgKHNhbWUgZGlzcGF0Y2gsIHVwIHRvCiMgMyBjaGVja3MgfjE1MHMgYXBhcnQpLiBSZXBvcnRzIGZhY3RzIG9ubHk7IGV4aXRzIG5vbi16ZXJvIG9ubHkgd2hlbiB0aGUKIyBzc2ggbGVnIGl0c2VsZiBmYWlscy4KIyBUcmlwLTUgbm90ZTogdGhlIFN0dWRpbyBzZWdtZW50IGJlbG93IGNvbnRhaW5zIE5PIGlubmVyIHNzaC9yc3luYywgc28KIyB0aGVyZSBpcyBubyBzdGRpbiBjb25zdW1lcjsgdGhlIG91dGVyICdiYXNoIC1zJyBoZXJlZG9jIHNzaCBrZWVwcyBOTyAtbgojIChhZGRpbmcgLW4gd291bGQgc3RhcnZlIHRoZSBoZXJlZG9jIC0tIHJldmVyc2UgdHJhcCkuCk1BUks9SEFLSU1JMkFDNQplY2hvICIkTUFSSyBMMjAtQkVHSU4gJChkYXRlICcrJUYgJVQgJVonKSIKdGltZW91dCAtayAzMCA2MDAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIC1vIFVzZXJLbm93bkhvc3RzRmlsZT0vcm9vdC8uamlzaHVidWRkeS9uZXR3b3JrLWNoZWNrcy9zdHVkaW8ta25vd24taG9zdHMtMjAyNjExMTIgYXJtQDEwLjIxMS40My42OCAnYmFzaCAtcycgPDwnQUVPRicKc2V0IC11Ck1BUks9SEFLSU1JMkFDNQpEPSRIT01FL2p1bnlhbmcvY2FyYm9uL2RhdGEKVkVOVj0kSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uCmVjaG8gIiRNQVJLIFNUVURJTy1CRUdJTiAkKGRhdGUgJyslRiAlVCAlWicpIgpob3N0bmFtZQpjaGVjaygpIHsKICBlY2hvICItLS0gQ0hFQ0sgJDEgJChkYXRlICcrJUYgJVQgJVonKSAtLS0iCiAgZWNobyAnW1BST0NTXScKICBwZ3JlcCAtZmwgImNuZXQyX3RyYWluLnB5IiB8IGN1dCAtYzEtMjIwIHx8IGVjaG8gTk8tVFJBSU4tUFJPQwogIGVjaG8gJ1tMT0FEXScKICB1cHRpbWUKICBlY2hvICdbUFMtVFJBSU5dJwogIGZvciBwIGluICQocGdyZXAgLWYgImNuZXQyX3RyYWluLnB5Iik7IGRvIHBzIC1vIHBpZCwlY3B1LCVtZW0sZXRpbWUsY29tbWFuZCAtcCAkcCB8IHRhaWwgLTEgfCBjdXQgLWMxLTIyMDsgZG9uZQogIGVjaG8gJ1tDSEFJTi1MT0ctVEFJTF0nCiAgdGFpbCAtMjAgJEQvaGFraW1pMl9jaGFpbi5sb2cgMj4vZGV2L251bGwgfHwgZWNobyBOTy1DSEFJTi1MT0cKICBlY2hvICdbRFMtTUVUQV0nCiAgJFZFTlYgLWMgImltcG9ydCBqc29uOyBkPWpzb24ubG9hZChvcGVuKCckRC9kc19oYWtpbWkyL21ldGEuanNvbicpKTsgcHJpbnQoJ0RTLU1FVEEgZ2FtZXM9JywgbGVuKGRbJ2dhbWVzJ10pLCAndG90YWw9JywgZFsndG90YWwnXSwgJ3RlYWNoZXJzPScsIGRbJ3RlYWNoZXJzJ10pIiAyPi9kZXYvbnVsbCB8fCBlY2hvIE5PLURTLU1FVEEKICBlY2hvICdbVFJBSU4tTE9HU10nCiAgZm9yIGEgaW4gcjEgZzE7IGRvCiAgICBlY2hvICI9PSAkYSA9PSIKICAgIGdyZXAgLWggJ15iZXN0JyAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsIHwgdGFpbCAtMgogICAgdGFpbCAtMiAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsIHwgY3V0IC1jMS0yMjAKICAgIHN0YXQgLWYgJ210aW1lICVTbSAlTicgLXQgJyVGICVUJyAkRC9oYWtpbWkyJGEubG9nIDI+L2Rldi9udWxsCiAgZG9uZQogIGVjaG8gJ1tXRUlHSFRTXScKICBscyAtbHQgJEQvd2VpZ2h0cy8gMj4vZGV2L251bGwgfCBncmVwIC1pIGhha2ltaTIgfCBoZWFkIC0xMAogIGZvciBmIGluICREL3dlaWdodHMvY25ldDJfaGFraW1pMipfZXAqLm5wejsgZG8KICAgIGlmIFsgLWYgIiRmIiBdOyB0aGVuIGVjaG8gIk1ENSAkZiAkKG1kNSAtcSAkZikiOyBmaQogIGRvbmUKfQpjaGVjayAxCk49MQp3aGlsZSAhIHBncmVwIC1mICJjbmV0Ml90cmFpbi5weSIgPi9kZXYvbnVsbCAmJiBbICROIC1sdCAzIF07IGRvCiAgaWYgdGFpbCAtNSAkRC9oYWtpbWkyX2NoYWluLmxvZyAyPi9kZXYvbnVsbCB8IGdyZXAgLXEgIkZBSUwiOyB0aGVuIGVjaG8gIkNIQUlOLUZBSUwtU0VFTiwgc3RvcCByZWNoZWNrIjsgYnJlYWs7IGZpCiAgZWNobyAibm8gdHJhaW5lciB5ZXQgKGJ1aWxkIG1heSBzdGlsbCBiZSBydW5uaW5nKTsgd2FpdCAxNTBzIGFuZCByZWNoZWNrIgogIHNsZWVwIDE1MAogIE49JCgoTisxKSkKICBjaGVjayAkTgpkb25lCmVjaG8gIiRNQVJLIFNUVURJTy1FTkQgJChkYXRlICcrJUYgJVQgJVonKSIKQUVPRgpSQz0kPwplY2hvICIkTUFSSyBMMjAtRU5EIHJjPSRSQyIKaWYgWyAkUkMgLW5lIDAgXTsgdGhlbiBlY2hvICIkTUFSSyBGQUlMIHNzaC1sZWcgcmM9JFJDIjsgZXhpdCAxOyBmaQpleGl0IDAK"[0m
+2026-11-12T20:03:38.9156798Z [36;1melse[0m
+2026-11-12T20:03:38.9157175Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" "hostname && uptime"[0m
+2026-11-12T20:03:38.9157729Z [36;1mfi[0m
+2026-11-12T20:03:38.9185538Z shell: /usr/bin/bash -e {0}
+2026-11-12T20:03:38.9185986Z env:
+2026-11-12T20:03:38.9186754Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T20:03:38.9187346Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T20:03:38.9188066Z   ACS_REGION: cn-shanghai
+2026-11-12T20:03:38.9188482Z ##[endgroup]
+2026-11-12T20:08:53.0313601Z InvokeId: t-sh072x5vqlm9iww
+2026-11-12T20:08:53.0328474Z --- status=Success exit=0 ---
+2026-11-12T20:08:53.0329125Z HAKIMI2AC5 L20-BEGIN 2026-11-13 04:03:40 CST
+2026-11-12T20:08:53.0364743Z HAKIMI2AC5 STUDIO-BEGIN 2026-11-13 04:03:47 CST
+2026-11-12T20:08:53.0365665Z mac-studio.local
+2026-11-12T20:08:53.0386926Z --- CHECK 1 2026-11-13 04:03:47 CST ---
+2026-11-12T20:08:53.0387857Z [PROCS]
+2026-11-12T20:08:53.0408215Z [LOAD]
+2026-11-12T20:08:53.0411453Z  4:03  up 14 days, 11:56, 5 users, load averages: 1.79 1.53 1.37
+2026-11-12T20:08:53.0428194Z [PS-TRAIN]
+2026-11-12T20:08:53.0448194Z [CHAIN-LOG-TAIL]
+2026-11-12T20:08:53.0448943Z -rw-rw-r--  1 arm  staff  11821144 Nov 10 05:20 /Users/arm/junyang/carbon/data/weights/cnet2_b128m2t3.npz
+2026-11-12T20:08:53.0449818Z R1_PID=123
+2026-11-12T20:08:53.0463094Z G1_PID=125
+2026-11-12T20:08:53.0463560Z SHIP_WATCHER_PID=134
+2026-11-12T20:08:53.0463990Z --- CHAIN-ATTEST +150s ---
+2026-11-12T20:08:53.0465487Z 123 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py /Users/arm/junyang/carbon/data/ds_hakimi2 /Users/arm/
+2026-11-12T20:08:53.0468373Z 125 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py /Users/arm/junyang/carbon/data/ds_hakimi2 /Users/arm/
+2026-11-12T20:08:53.0470224Z {"ep": 1, "i": 0, "pi": 0.3107, "v": 0.0423, "aux": 0.0461, "s": 1}
+2026-11-12T20:08:53.0471295Z {"ep": 1, "val": {"collector": 0.8573, "planter": 0.7654, "base": 0.9629, "all": 0.8649, "workers": 0.8432, "loss": 0.3294}, "train_pi": 0.3148, "s": 63}
+2026-11-12T20:08:53.0472353Z {"ep": 2, "i": 0, "pi": 0.2802, "v": 0.0558, "aux": 0.057, "s": 1}
+2026-11-12T20:08:53.0473053Z {"ep": 4, "i": 0, "pi": 0.2785, "v": 0.041, "aux": 0.0424, "s": 0}
+2026-11-12T20:08:53.0473663Z {"ep": 4, "val": {"collector": 0.8626, "planter": 0.7696, "base": 0.9661, "all": 0.8696, "workers": 0.8483, "loss": 0.3214}, "train_pi": 0.296, "s": 29}
+2026-11-12T20:08:53.0474254Z {"ep": 5, "i": 0, "pi": 0.2943, "v": 0.0433, "aux": 0.0471, "s": 0}
+2026-11-12T20:08:53.0474657Z -rw-r--r--  1 arm  staff  11821212 Nov 13 03:42 cnet2_hakimi2g1.npz
+2026-11-12T20:08:53.0475096Z -rw-r--r--  1 arm  staff  11821000 Nov 13 03:42 cnet2_hakimi2g1_ep4.npz
+2026-11-12T20:08:53.0475536Z -rw-r--r--  1 arm  staff  11821000 Nov 13 03:42 cnet2_hakimi2g1_last.npz
+2026-11-12T20:08:53.0475971Z -rw-r--r--  1 arm  staff       764 Nov 13 03:42 cnet2_hakimi2g1_log.jsonl
+2026-11-12T20:08:53.0476394Z -rw-r--r--  1 arm  staff  13969180 Nov 13 03:41 cnet2_hakimi2r1.npz
+2026-11-12T20:08:53.0476803Z -rw-r--r--  1 arm  staff  13968968 Nov 13 03:41 cnet2_hakimi2r1_ep1.npz
+2026-11-12T20:08:53.0477191Z HAKIMI2CHN5 CHAIN-ATTESTED 2026-11-13 03:42:17 CST
+2026-11-12T20:08:53.0477492Z [DS-META]
+2026-11-12T20:08:53.0479328Z DS-META games= 100 total= 29900 teachers= ['_slot0', '_slot1', '哈基米 v2 pro', '_slot3', '_slot4', '_slot5', '_slot6', '_slot7', 'other']
+2026-11-12T20:08:53.0480348Z [TRAIN-LOGS]
+2026-11-12T20:08:53.0480650Z == r1 ==
+2026-11-12T20:08:53.0480834Z best 0.8762
+2026-11-12T20:08:53.0481332Z {"ep": 19, "val": {"collector": 0.869, "planter": 0.779, "base": 0.9684, "all": 0.8757, "workers": 0.8552, "loss": 0.3224}, "train_pi": 0.1924, "s": 36}
+2026-11-12T20:08:53.0481860Z best 0.8762
+2026-11-12T20:08:53.0482171Z mtime 2026-11-13 03:56:07 /Users/arm/junyang/carbon/data/hakimi2r1.log
+2026-11-12T20:08:53.0482529Z == g1 ==
+2026-11-12T20:08:53.0482714Z best 0.8769
+2026-11-12T20:08:53.0483193Z {"ep": 19, "val": {"collector": 0.8675, "planter": 0.7877, "base": 0.9686, "all": 0.8758, "workers": 0.8553, "loss": 0.3133}, "train_pi": 0.219, "s": 29}
+2026-11-12T20:08:53.0483718Z best 0.8769
+2026-11-12T20:08:53.0483996Z mtime 2026-11-13 03:49:38 /Users/arm/junyang/carbon/data/hakimi2g1.log
+2026-11-12T20:08:53.0484348Z [WEIGHTS]
+2026-11-12T20:08:53.0484640Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_ep19.npz
+2026-11-12T20:08:53.0485072Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_last.npz
+2026-11-12T20:08:53.0485493Z -rw-r--r--  1 arm  staff      3074 Nov 13 03:56 cnet2_hakimi2r1_log.jsonl
+2026-11-12T20:08:53.0485929Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:55 cnet2_hakimi2r1_ep18.npz
+2026-11-12T20:08:53.0486348Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:54 cnet2_hakimi2r1_ep17.npz
+2026-11-12T20:08:53.0486765Z -rw-r--r--  1 arm  staff  13969180 Nov 13 03:54 cnet2_hakimi2r1.npz
+2026-11-12T20:08:53.0487167Z -rw-r--r--  1 arm  staff  13968968 Nov 13 03:54 cnet2_hakimi2r1_ep16.npz
+2026-11-12T20:08:53.0487942Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:53 cnet2_hakimi2r1_ep15.npz
+2026-11-12T20:08:53.0488791Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:53 cnet2_hakimi2r1_ep14.npz
+2026-11-12T20:08:53.0489443Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:52 cnet2_hakimi2r1_ep13.npz
+2026-11-12T20:08:53.0490020Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep0.npz 614ba8e5bfbb9762b32e79fefaba2c36
+2026-11-12T20:08:53.0490694Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep1.npz 5461191a3fe0d13b47665b60c419917c
+2026-11-12T20:08:53.0491373Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep10.npz d7376e560bb498f08df82de6d067ffac
+2026-11-12T20:08:53.0492041Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep11.npz 880fbdd50facff4f7e8abb7b1de6481e
+2026-11-12T20:08:53.0492826Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep12.npz ec7bf987849b24cf67fa3fd2808dcb50
+2026-11-12T20:08:53.0493486Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep13.npz 6cc3cbb9ff2bfff2efbaa1b5f4378272
+2026-11-12T20:08:53.0494145Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep14.npz a5289904cfd512a61e9c0bc57c6a00b7
+2026-11-12T20:08:53.0494805Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep15.npz ae56ce17ed4f1623e983d3ceb26f9f49
+2026-11-12T20:08:53.0495461Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep16.npz 38ac1a23dbc82ee6386c473818c5c038
+2026-11-12T20:08:53.0567104Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep17.npz 544163fd41db808166391f3deda49da1
+2026-11-12T20:08:53.0568690Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep18.npz 6407635e862a876279340997fe3835bc
+2026-11-12T20:08:53.0570057Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep19.npz 6a90388b8216afd708950e11eadb1306
+2026-11-12T20:08:53.0571411Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep2.npz f2564e0bcb89ad9fb4fd0bcf07fc7cf6
+2026-11-12T20:08:53.0572641Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep3.npz 27c22c1fe502e3a70bfa0aa5138bb7b2
+2026-11-12T20:08:53.0574010Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep4.npz 627ee92595bcf27e71791ca34279a824
+2026-11-12T20:08:53.0575324Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep5.npz f608dd7b0c432529ba53f1e30f204243
+2026-11-12T20:08:53.0576634Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep6.npz cc19862417f0af3fedaad68d02f65c38
+2026-11-12T20:08:53.0578177Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep7.npz d640955300548d0b7559b3c0b46fa4ae
+2026-11-12T20:08:53.0579483Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep8.npz ee28db5f007772184f7d0aba38cc9a85
+2026-11-12T20:08:53.0580734Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep9.npz 41dd15e2af849597530d505929cf2036
+2026-11-12T20:08:53.0582030Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep0.npz 9792c8e792e8be7d8a2557e281bc5dc5
+2026-11-12T20:08:53.0583285Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep1.npz 486011d16731d507b6aca248e7cf33c1
+2026-11-12T20:08:53.0584626Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep10.npz 6f3e6319d854702e836f3fa9a3080036
+2026-11-12T20:08:53.0585552Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep11.npz 51152b4c68460c7b59b4350959d04231
+2026-11-12T20:08:53.0586234Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep12.npz 796f1eeb73ff93b0c9ff564816e12810
+2026-11-12T20:08:53.0586921Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep13.npz 2d80fec642cfd30d57707df6551454b3
+2026-11-12T20:08:53.0587859Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep14.npz e61a15eb6298b6fc807f0ba4ca8b9e9d
+2026-11-12T20:08:53.0588556Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep15.npz f098ae8ad0db1c1e379bcef3a20138c1
+2026-11-12T20:08:53.0589221Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep16.npz 50a93838192a3f0593599ed327759b3c
+2026-11-12T20:08:53.0589870Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep17.npz cf7265381ee37732dd76dafb393dcdcd
+2026-11-12T20:08:53.0590517Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep18.npz 3d4d7940b22be74dea6946f549a7444a
+2026-11-12T20:08:53.0591349Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep19.npz cf6b09262fe012c064a1126ca2950fc9
+2026-11-12T20:08:53.0592007Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep2.npz 92642062d175317720d22695ee515acc
+2026-11-12T20:08:53.0592670Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep3.npz 5f7d4ef35cfe8de2f31f809fe28ee517
+2026-11-12T20:08:53.0593320Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep4.npz 5fa2653117d8d878d067e950b796edfd
+2026-11-12T20:08:53.0593966Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep5.npz 92530972eecec5550ea5aa8f47cbe698
+2026-11-12T20:08:53.0594745Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep6.npz 8bc9c27ed23d830e9bd72b3970767ff7
+2026-11-12T20:08:53.0595383Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep7.npz e790b9b0ee8f062e699be5607678f311
+2026-11-12T20:08:53.0596023Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep8.npz ee09845e963323ec2e66b0bc65ed6a2c
+2026-11-12T20:08:53.0596668Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep9.npz c830db618b5a6e4ec334f6eb62111e82
+2026-11-12T20:08:53.0597217Z no trainer yet (build may still be running); wait 150s and recheck
+2026-11-12T20:08:53.0597898Z --- CHECK 2 2026-11-13 04:06:19 CST ---
+2026-11-12T20:08:53.0598215Z [PROCS]
+2026-11-12T20:08:53.0598412Z [LOAD]
+2026-11-12T20:08:53.0598669Z  4:06  up 14 days, 11:58, 5 users, load averages: 1.69 1.65 1.44
+2026-11-12T20:08:53.0598998Z [PS-TRAIN]
+2026-11-12T20:08:53.0599196Z [CHAIN-LOG-TAIL]
+2026-11-12T20:08:53.0599630Z -rw-rw-r--  1 arm  staff  11821144 Nov 10 05:20 /Users/arm/junyang/carbon/data/weights/cnet2_b128m2t3.npz
+2026-11-12T20:08:53.0600089Z R1_PID=123
+2026-11-12T20:08:53.0600273Z G1_PID=125
+2026-11-12T20:08:53.0600457Z SHIP_WATCHER_PID=134
+2026-11-12T20:08:53.0600687Z --- CHAIN-ATTEST +150s ---
+2026-11-12T20:08:53.0601481Z 123 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py /Users/arm/junyang/carbon/data/ds_hakimi2 /Users/arm/
+2026-11-12T20:08:53.0602818Z 125 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py /Users/arm/junyang/carbon/data/ds_hakimi2 /Users/arm/
+2026-11-12T20:08:53.0603664Z {"ep": 1, "i": 0, "pi": 0.3107, "v": 0.0423, "aux": 0.0461, "s": 1}
+2026-11-12T20:08:53.0604251Z {"ep": 1, "val": {"collector": 0.8573, "planter": 0.7654, "base": 0.9629, "all": 0.8649, "workers": 0.8432, "loss": 0.3294}, "train_pi": 0.3148, "s": 63}
+2026-11-12T20:08:53.0604835Z {"ep": 2, "i": 0, "pi": 0.2802, "v": 0.0558, "aux": 0.057, "s": 1}
+2026-11-12T20:08:53.0605183Z {"ep": 4, "i": 0, "pi": 0.2785, "v": 0.041, "aux": 0.0424, "s": 0}
+2026-11-12T20:08:53.0605751Z {"ep": 4, "val": {"collector": 0.8626, "planter": 0.7696, "base": 0.9661, "all": 0.8696, "workers": 0.8483, "loss": 0.3214}, "train_pi": 0.296, "s": 29}
+2026-11-12T20:08:53.0606334Z {"ep": 5, "i": 0, "pi": 0.2943, "v": 0.0433, "aux": 0.0471, "s": 0}
+2026-11-12T20:08:53.0606718Z -rw-r--r--  1 arm  staff  11821212 Nov 13 03:42 cnet2_hakimi2g1.npz
+2026-11-12T20:08:53.0607146Z -rw-r--r--  1 arm  staff  11821000 Nov 13 03:42 cnet2_hakimi2g1_ep4.npz
+2026-11-12T20:08:53.0607824Z -rw-r--r--  1 arm  staff  11821000 Nov 13 03:42 cnet2_hakimi2g1_last.npz
+2026-11-12T20:08:53.0608292Z -rw-r--r--  1 arm  staff       764 Nov 13 03:42 cnet2_hakimi2g1_log.jsonl
+2026-11-12T20:08:53.0608712Z -rw-r--r--  1 arm  staff  13969180 Nov 13 03:41 cnet2_hakimi2r1.npz
+2026-11-12T20:08:53.0609129Z -rw-r--r--  1 arm  staff  13968968 Nov 13 03:41 cnet2_hakimi2r1_ep1.npz
+2026-11-12T20:08:53.0609516Z HAKIMI2CHN5 CHAIN-ATTESTED 2026-11-13 03:42:17 CST
+2026-11-12T20:08:53.0609818Z [DS-META]
+2026-11-12T20:08:53.0610504Z DS-META games= 100 total= 29900 teachers= ['_slot0', '_slot1', '哈基米 v2 pro', '_slot3', '_slot4', '_slot5', '_slot6', '_slot7', 'other']
+2026-11-12T20:08:53.0611040Z [TRAIN-LOGS]
+2026-11-12T20:08:53.0611237Z == r1 ==
+2026-11-12T20:08:53.0611423Z best 0.8762
+2026-11-12T20:08:53.0612058Z {"ep": 19, "val": {"collector": 0.869, "planter": 0.779, "base": 0.9684, "all": 0.8757, "workers": 0.8552, "loss": 0.3224}, "train_pi": 0.1924, "s": 36}
+2026-11-12T20:08:53.0612593Z best 0.8762
+2026-11-12T20:08:53.0612884Z mtime 2026-11-13 03:56:07 /Users/arm/junyang/carbon/data/hakimi2r1.log
+2026-11-12T20:08:53.0613247Z == g1 ==
+2026-11-12T20:08:53.0613443Z best 0.8769
+2026-11-12T20:08:53.0613919Z {"ep": 19, "val": {"collector": 0.8675, "planter": 0.7877, "base": 0.9686, "all": 0.8758, "workers": 0.8553, "loss": 0.3133}, "train_pi": 0.219, "s": 29}
+2026-11-12T20:08:53.0614579Z best 0.8769
+2026-11-12T20:08:53.0614859Z mtime 2026-11-13 03:49:38 /Users/arm/junyang/carbon/data/hakimi2g1.log
+2026-11-12T20:08:53.0615203Z [WEIGHTS]
+2026-11-12T20:08:53.0615497Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_ep19.npz
+2026-11-12T20:08:53.0615933Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_last.npz
+2026-11-12T20:08:53.0616372Z -rw-r--r--  1 arm  staff      3074 Nov 13 03:56 cnet2_hakimi2r1_log.jsonl
+2026-11-12T20:08:53.0616833Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:55 cnet2_hakimi2r1_ep18.npz
+2026-11-12T20:08:53.0617285Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:54 cnet2_hakimi2r1_ep17.npz
+2026-11-12T20:08:53.0617995Z -rw-r--r--  1 arm  staff  13969180 Nov 13 03:54 cnet2_hakimi2r1.npz
+2026-11-12T20:08:53.0618422Z -rw-r--r--  1 arm  staff  13968968 Nov 13 03:54 cnet2_hakimi2r1_ep16.npz
+2026-11-12T20:08:53.0618842Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:53 cnet2_hakimi2r1_ep15.npz
+2026-11-12T20:08:53.0619269Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:53 cnet2_hakimi2r1_ep14.npz
+2026-11-12T20:08:53.0619691Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:52 cnet2_hakimi2r1_ep13.npz
+2026-11-12T20:08:53.0620243Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep0.npz 614ba8e5bfbb9762b32e79fefaba2c36
+2026-11-12T20:08:53.0620913Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep1.npz 5461191a3fe0d13b47665b60c419917c
+2026-11-12T20:08:53.0621589Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep10.npz d7376e560bb498f08df82de6d067ffac
+2026-11-12T20:08:53.0622256Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep11.npz 880fbdd50facff4f7e8abb7b1de6481e
+2026-11-12T20:08:53.0622913Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep12.npz ec7bf987849b24cf67fa3fd2808dcb50
+2026-11-12T20:08:53.0623587Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep13.npz 6cc3cbb9ff2bfff2efbaa1b5f4378272
+2026-11-12T20:08:53.0624247Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep14.npz a5289904cfd512a61e9c0bc57c6a00b7
+2026-11-12T20:08:53.0624906Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep15.npz ae56ce17ed4f1623e983d3ceb26f9f49
+2026-11-12T20:08:53.0625564Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep16.npz 38ac1a23dbc82ee6386c473818c5c038
+2026-11-12T20:08:53.0626219Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep17.npz 544163fd41db808166391f3deda49da1
+2026-11-12T20:08:53.0626865Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep18.npz 6407635e862a876279340997fe3835bc
+2026-11-12T20:08:53.0627507Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep19.npz 6a90388b8216afd708950e11eadb1306
+2026-11-12T20:08:53.0628288Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep2.npz f2564e0bcb89ad9fb4fd0bcf07fc7cf6
+2026-11-12T20:08:53.0628956Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep3.npz 27c22c1fe502e3a70bfa0aa5138bb7b2
+2026-11-12T20:08:53.0629611Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep4.npz 627ee92595bcf27e71791ca34279a824
+2026-11-12T20:08:53.0630262Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep5.npz f608dd7b0c432529ba53f1e30f204243
+2026-11-12T20:08:53.0630907Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep6.npz cc19862417f0af3fedaad68d02f65c38
+2026-11-12T20:08:53.0631564Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep7.npz d640955300548d0b7559b3c0b46fa4ae
+2026-11-12T20:08:53.0632337Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep8.npz ee28db5f007772184f7d0aba38cc9a85
+2026-11-12T20:08:53.0632990Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep9.npz 41dd15e2af849597530d505929cf2036
+2026-11-12T20:08:53.0633630Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep0.npz 9792c8e792e8be7d8a2557e281bc5dc5
+2026-11-12T20:08:53.0634286Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep1.npz 486011d16731d507b6aca248e7cf33c1
+2026-11-12T20:08:53.0635053Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep10.npz 6f3e6319d854702e836f3fa9a3080036
+2026-11-12T20:08:53.0635705Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep11.npz 51152b4c68460c7b59b4350959d04231
+2026-11-12T20:08:53.0636365Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep12.npz 796f1eeb73ff93b0c9ff564816e12810
+2026-11-12T20:08:53.0637018Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep13.npz 2d80fec642cfd30d57707df6551454b3
+2026-11-12T20:08:53.0637798Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep14.npz e61a15eb6298b6fc807f0ba4ca8b9e9d
+2026-11-12T20:08:53.0638459Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep15.npz f098ae8ad0db1c1e379bcef3a20138c1
+2026-11-12T20:08:53.0639118Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep16.npz 50a93838192a3f0593599ed327759b3c
+2026-11-12T20:08:53.0639766Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep17.npz cf7265381ee37732dd76dafb393dcdcd
+2026-11-12T20:08:53.0640421Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep18.npz 3d4d7940b22be74dea6946f549a7444a
+2026-11-12T20:08:53.0641071Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep19.npz cf6b09262fe012c064a1126ca2950fc9
+2026-11-12T20:08:53.0641723Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep2.npz 92642062d175317720d22695ee515acc
+2026-11-12T20:08:53.0642374Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep3.npz 5f7d4ef35cfe8de2f31f809fe28ee517
+2026-11-12T20:08:53.0643024Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep4.npz 5fa2653117d8d878d067e950b796edfd
+2026-11-12T20:08:53.0643668Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep5.npz 92530972eecec5550ea5aa8f47cbe698
+2026-11-12T20:08:53.0644322Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep6.npz 8bc9c27ed23d830e9bd72b3970767ff7
+2026-11-12T20:08:53.0644967Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep7.npz e790b9b0ee8f062e699be5607678f311
+2026-11-12T20:08:53.0645631Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep8.npz ee09845e963323ec2e66b0bc65ed6a2c
+2026-11-12T20:08:53.0646282Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep9.npz c830db618b5a6e4ec334f6eb62111e82
+2026-11-12T20:08:53.0646824Z no trainer yet (build may still be running); wait 150s and recheck
+2026-11-12T20:08:53.0647180Z --- CHECK 3 2026-11-13 04:08:50 CST ---
+2026-11-12T20:08:53.0647437Z [PROCS]
+2026-11-12T20:08:53.0647732Z [LOAD]
+2026-11-12T20:08:53.0647998Z  4:08  up 14 days, 12:01, 5 users, load averages: 1.76 1.65 1.46
+2026-11-12T20:08:53.0648314Z [PS-TRAIN]
+2026-11-12T20:08:53.0648515Z [CHAIN-LOG-TAIL]
+2026-11-12T20:08:53.0648924Z -rw-rw-r--  1 arm  staff  11821144 Nov 10 05:20 /Users/arm/junyang/carbon/data/weights/cnet2_b128m2t3.npz
+2026-11-12T20:08:53.0649383Z R1_PID=123
+2026-11-12T20:08:53.0649570Z G1_PID=125
+2026-11-12T20:08:53.0649762Z SHIP_WATCHER_PID=134
+2026-11-12T20:08:53.0649996Z --- CHAIN-ATTEST +150s ---
+2026-11-12T20:08:53.0650794Z 123 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py /Users/arm/junyang/carbon/data/ds_hakimi2 /Users/arm/
+2026-11-12T20:08:53.0652136Z 125 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py /Users/arm/junyang/carbon/data/ds_hakimi2 /Users/arm/
+2026-11-12T20:08:53.0653100Z {"ep": 1, "i": 0, "pi": 0.3107, "v": 0.0423, "aux": 0.0461, "s": 1}
+2026-11-12T20:08:53.0653708Z {"ep": 1, "val": {"collector": 0.8573, "planter": 0.7654, "base": 0.9629, "all": 0.8649, "workers": 0.8432, "loss": 0.3294}, "train_pi": 0.3148, "s": 63}
+2026-11-12T20:08:53.0654303Z {"ep": 2, "i": 0, "pi": 0.2802, "v": 0.0558, "aux": 0.057, "s": 1}
+2026-11-12T20:08:53.0654654Z {"ep": 4, "i": 0, "pi": 0.2785, "v": 0.041, "aux": 0.0424, "s": 0}
+2026-11-12T20:08:53.0655229Z {"ep": 4, "val": {"collector": 0.8626, "planter": 0.7696, "base": 0.9661, "all": 0.8696, "workers": 0.8483, "loss": 0.3214}, "train_pi": 0.296, "s": 29}
+2026-11-12T20:08:53.0655918Z {"ep": 5, "i": 0, "pi": 0.2943, "v": 0.0433, "aux": 0.0471, "s": 0}
+2026-11-12T20:08:53.0656308Z -rw-r--r--  1 arm  staff  11821212 Nov 13 03:42 cnet2_hakimi2g1.npz
+2026-11-12T20:08:53.0656731Z -rw-r--r--  1 arm  staff  11821000 Nov 13 03:42 cnet2_hakimi2g1_ep4.npz
+2026-11-12T20:08:53.0657171Z -rw-r--r--  1 arm  staff  11821000 Nov 13 03:42 cnet2_hakimi2g1_last.npz
+2026-11-12T20:08:53.0657727Z -rw-r--r--  1 arm  staff       764 Nov 13 03:42 cnet2_hakimi2g1_log.jsonl
+2026-11-12T20:08:53.0658152Z -rw-r--r--  1 arm  staff  13969180 Nov 13 03:41 cnet2_hakimi2r1.npz
+2026-11-12T20:08:53.0658559Z -rw-r--r--  1 arm  staff  13968968 Nov 13 03:41 cnet2_hakimi2r1_ep1.npz
+2026-11-12T20:08:53.0658948Z HAKIMI2CHN5 CHAIN-ATTESTED 2026-11-13 03:42:17 CST
+2026-11-12T20:08:53.0659248Z [DS-META]
+2026-11-12T20:08:53.0659846Z DS-META games= 100 total= 29900 teachers= ['_slot0', '_slot1', '哈基米 v2 pro', '_slot3', '_slot4', '_slot5', '_slot6', '_slot7', 'other']
+2026-11-12T20:08:53.0660386Z [TRAIN-LOGS]
+2026-11-12T20:08:53.0660586Z == r1 ==
+2026-11-12T20:08:53.0660773Z best 0.8762
+2026-11-12T20:08:53.0661249Z {"ep": 19, "val": {"collector": 0.869, "planter": 0.779, "base": 0.9684, "all": 0.8757, "workers": 0.8552, "loss": 0.3224}, "train_pi": 0.1924, "s": 36}
+2026-11-12T20:08:53.0661786Z best 0.8762
+2026-11-12T20:08:53.0662084Z mtime 2026-11-13 03:56:07 /Users/arm/junyang/carbon/data/hakimi2r1.log
+2026-11-12T20:08:53.0662432Z == g1 ==
+2026-11-12T20:08:53.0662624Z best 0.8769
+2026-11-12T20:08:53.0663098Z {"ep": 19, "val": {"collector": 0.8675, "planter": 0.7877, "base": 0.9686, "all": 0.8758, "workers": 0.8553, "loss": 0.3133}, "train_pi": 0.219, "s": 29}
+2026-11-12T20:08:53.0663620Z best 0.8769
+2026-11-12T20:08:53.0663916Z mtime 2026-11-13 03:49:38 /Users/arm/junyang/carbon/data/hakimi2g1.log
+2026-11-12T20:08:53.0664260Z [WEIGHTS]
+2026-11-12T20:08:53.0664541Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_ep19.npz
+2026-11-12T20:08:53.0664981Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_last.npz
+2026-11-12T20:08:53.0665415Z -rw-r--r--  1 arm  staff      3074 Nov 13 03:56 cnet2_hakimi2r1_log.jsonl
+2026-11-12T20:08:53.0665846Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:55 cnet2_hakimi2r1_ep18.npz
+2026-11-12T20:08:53.0666270Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:54 cnet2_hakimi2r1_ep17.npz
+2026-11-12T20:08:53.0666686Z -rw-r--r--  1 arm  staff  13969180 Nov 13 03:54 cnet2_hakimi2r1.npz
+2026-11-12T20:08:53.0667106Z -rw-r--r--  1 arm  staff  13968968 Nov 13 03:54 cnet2_hakimi2r1_ep16.npz
+2026-11-12T20:08:53.0667637Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:53 cnet2_hakimi2r1_ep15.npz
+2026-11-12T20:08:53.0668069Z -rw-r--r--  1 arm  staff  13968964 Nov 13 03:53 cnet2_hakimi2r1_ep14.npz
+2026-11-12T20:08:53.0668487Z -rw-r--r--  1 arm  staff  13968972 Nov 13 03:52 cnet2_hakimi2r1_ep13.npz
+2026-11-12T20:08:53.0669042Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep0.npz 614ba8e5bfbb9762b32e79fefaba2c36
+2026-11-12T20:08:53.0669710Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep1.npz 5461191a3fe0d13b47665b60c419917c
+2026-11-12T20:08:53.0670375Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep10.npz d7376e560bb498f08df82de6d067ffac
+2026-11-12T20:08:53.0671043Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep11.npz 880fbdd50facff4f7e8abb7b1de6481e
+2026-11-12T20:08:53.0671838Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep12.npz ec7bf987849b24cf67fa3fd2808dcb50
+2026-11-12T20:08:53.0672506Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep13.npz 6cc3cbb9ff2bfff2efbaa1b5f4378272
+2026-11-12T20:08:53.0673169Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep14.npz a5289904cfd512a61e9c0bc57c6a00b7
+2026-11-12T20:08:53.0673831Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep15.npz ae56ce17ed4f1623e983d3ceb26f9f49
+2026-11-12T20:08:53.0674485Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep16.npz 38ac1a23dbc82ee6386c473818c5c038
+2026-11-12T20:08:53.0675252Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep17.npz 544163fd41db808166391f3deda49da1
+2026-11-12T20:08:53.0675898Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep18.npz 6407635e862a876279340997fe3835bc
+2026-11-12T20:08:53.0676547Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep19.npz 6a90388b8216afd708950e11eadb1306
+2026-11-12T20:08:53.0677207Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep2.npz f2564e0bcb89ad9fb4fd0bcf07fc7cf6
+2026-11-12T20:08:53.0677985Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep3.npz 27c22c1fe502e3a70bfa0aa5138bb7b2
+2026-11-12T20:08:53.0678638Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep4.npz 627ee92595bcf27e71791ca34279a824
+2026-11-12T20:08:53.0679292Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep5.npz f608dd7b0c432529ba53f1e30f204243
+2026-11-12T20:08:53.0679940Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep6.npz cc19862417f0af3fedaad68d02f65c38
+2026-11-12T20:08:53.0680590Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep7.npz d640955300548d0b7559b3c0b46fa4ae
+2026-11-12T20:08:53.0681235Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep8.npz ee28db5f007772184f7d0aba38cc9a85
+2026-11-12T20:08:53.0681882Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2g1_ep9.npz 41dd15e2af849597530d505929cf2036
+2026-11-12T20:08:53.0682529Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep0.npz 9792c8e792e8be7d8a2557e281bc5dc5
+2026-11-12T20:08:53.0683172Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep1.npz 486011d16731d507b6aca248e7cf33c1
+2026-11-12T20:08:53.0683892Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep10.npz 6f3e6319d854702e836f3fa9a3080036
+2026-11-12T20:08:53.0684555Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep11.npz 51152b4c68460c7b59b4350959d04231
+2026-11-12T20:08:53.0685206Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep12.npz 796f1eeb73ff93b0c9ff564816e12810
+2026-11-12T20:08:53.0685868Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep13.npz 2d80fec642cfd30d57707df6551454b3
+2026-11-12T20:08:53.0686538Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep14.npz e61a15eb6298b6fc807f0ba4ca8b9e9d
+2026-11-12T20:08:53.0687191Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep15.npz f098ae8ad0db1c1e379bcef3a20138c1
+2026-11-12T20:08:53.0687971Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep16.npz 50a93838192a3f0593599ed327759b3c
+2026-11-12T20:08:53.0688626Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep17.npz cf7265381ee37732dd76dafb393dcdcd
+2026-11-12T20:08:53.0689286Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep18.npz 3d4d7940b22be74dea6946f549a7444a
+2026-11-12T20:08:53.0689942Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep19.npz cf6b09262fe012c064a1126ca2950fc9
+2026-11-12T20:08:53.0690588Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep2.npz 92642062d175317720d22695ee515acc
+2026-11-12T20:08:53.0691241Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep3.npz 5f7d4ef35cfe8de2f31f809fe28ee517
+2026-11-12T20:08:53.0691894Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep4.npz 5fa2653117d8d878d067e950b796edfd
+2026-11-12T20:08:53.0692539Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep5.npz 92530972eecec5550ea5aa8f47cbe698
+2026-11-12T20:08:53.0693303Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep6.npz 8bc9c27ed23d830e9bd72b3970767ff7
+2026-11-12T20:08:53.0693975Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep7.npz e790b9b0ee8f062e699be5607678f311
+2026-11-12T20:08:53.0694648Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep8.npz ee09845e963323ec2e66b0bc65ed6a2c
+2026-11-12T20:08:53.0695305Z MD5 /Users/arm/junyang/carbon/data/weights/cnet2_hakimi2r1_ep9.npz c830db618b5a6e4ec334f6eb62111e82
+2026-11-12T20:08:53.0695800Z HAKIMI2AC5 STUDIO-END 2026-11-13 04:08:51 CST
+2026-11-12T20:08:53.0696255Z HAKIMI2AC5 L20-END rc=0
+2026-11-12T20:08:53.0696400Z 
+2026-11-12T20:08:53.0816090Z Post job cleanup.
+2026-11-12T20:08:53.1840266Z [command]/usr/bin/git version
+2026-11-12T20:08:53.2055079Z git version 2.56.0
+2026-11-12T20:08:53.2106747Z Temporarily overriding HOME='/home/runner/work/_temp/cb3624ac-0ff5-4300-892a-41bfe5c6c7ea' before making global git config changes
+2026-11-12T20:08:53.2108681Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T20:08:53.2110216Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T20:08:53.2112632Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T20:08:53.2138975Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T20:08:53.2576690Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T20:08:53.2619169Z http.https://github.com/.extraheader
+2026-11-12T20:08:53.2649486Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T20:08:53.2755265Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T20:08:53.3154856Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T20:08:53.3203502Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T20:08:53.3762502Z Cleaning up orphan processes
+2026-11-12T20:08:53.4275306Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
