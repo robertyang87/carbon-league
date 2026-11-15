@@ -16,6 +16,77 @@ Per real step:
      The best branch replaces the default only if it beats the default by > MARGIN.
 Wall-clock guards: no rollout step starts if the projected time passes BUDGET; any exception -> default.
 """
+# =====================================================================
+# RESYNC SUCCESSOR SOURCE -- cnet2_search_cmp2: comparator successor
+# of cnet2_search, R2-09/R2-10 resync build (generator:
+# make_search_cmp2.py). Base source: code/cnet2_search.py, code md5
+# (build-hash caliber) = 94f7fb6438bb7577b141e388f068e122. Everything not listed below
+# is byte-identical to the base.
+# Changes vs base (line numbers are BASE-source lines):
+#   1. This header block (inserted after the module docstring).
+#   2. Import of the comparator layer (cnet2_comparator) after the
+#      fastsim import. cnet2_comparator is the SINGLE authoritative
+#      kernel, mechanically generated from the frozen prototype
+#      sources by make_comparator.py -- never hand-edited, never
+#      forked (R2-09).
+#   3. DEFAULTS gains CMP_H=1 (comparator horizon cap: total depth
+#      including the root step).
+#   4. make_search_agent creates cmp_stats = StatsCollector() and the
+#      C_hi sample buckets next to pool; the outer agent publishes
+#      cmp_stats as agent.cmp_stats.
+#   5. _inner records the comparator envelope anchor
+#      st["_cmp_t0m"] = time.monotonic() at its first line (SI02: the
+#      envelope starts at the public entry of the constructed agent;
+#      one-time pack-template dequantisation / agent construction
+#      precede it and are charged to the step's external wall clock).
+#   6. _search candidate generation additionally tracks cand_y (the
+#      candidates' label vectors) for the guard-consistency screen.
+#   7. _search judgment segment replaced: base lines 1563-1662
+#      (batch branch advance, projection/0.45 budget gates, MIN_DEPTH
+#      acceptance gate, leaf argmax with MARGIN, ROBUST hunter second
+#      model) -> serial complete-round comparator over the generated
+#      kernel. MIN_DEPTH / 0.45 first-layer gate / MARGIN are NOT
+#      carried over; the layer is J=1 deterministic.
+#      H contract: CMP_H=1 runs exactly one round at H=1 (the shipped
+#      production form; decide_multi over [1] is the kernel's single
+#      round). CMP_H>=2 runs anytime rounds over [1..CMP_H]: each
+#      completed round replaces the committed result, an aborted
+#      round leaves the previous one standing. H>=2 continuation
+#      steps carry per-seat guards with split sources (own seat: the
+#      production guard's copy; opponent seat: a fresh guard seeded
+#      with the opponent's current worker units), the frozen
+#      harness's semantics (real_env f9bfacb72e112859459a57aceebbbf46).
+#      Candidate truncation keeps A0 + at most 3 alternatives by
+#      PRIOR lg0 order (R2-09; the segment-0 fork used generation
+#      order). Leaf values dispatch by terminal kind: extinction ->
+#      F01 nested leaf with pre-step cash; pure time terminal ->
+#      F04 real terminal cash; otherwise the nested heuristic leaf.
+#      SI01 caliber inside the segment: already-terminal roots are
+#      rejected at entry; after every joint advance, extinction and
+#      the step-299 time boundary are judged together and a terminal
+#      state is frozen with zero extra policy calls.
+#      SI02 caliber: one whole-call envelope on the monotonic clock
+#      from the public entry -- pre-comparator phases and the guard
+#      screen spend from it, the kernel is bounded by deadline_abs =
+#      anchor + BUDGET, an exhausted envelope returns A0 with NO
+#      top-up, and telemetry records the whole-call total plus
+#      per-phase times under the frozen prototype's keys
+#      (total_cost_s / phase_costs).
+#   8. Telemetry: every comparator decision is recorded on
+#      cmp_stats AND mirrored into the pack stats dict as
+#      stats["cmp"], which crosses the pack template boundary inside
+#      last_stats (the template forwards _AG.stats). Guard-screen
+#      errors count as stats["cmp_guard_errors"], following the
+#      pack's *_errors aggregation convention (segment 0's
+#      cmp_guard_err renamed). Continuation guard rewrites count as
+#      stats["cmp_guard_rewrites"].
+#   9. stats parity notes: "branches" counts compared candidates;
+#      "depth_sum" accumulates completed-round depth (0 on abort);
+#      "gain" accumulates leaf-value differences on change
+#      (raw-margin scale); _search no longer updates "shallow" /
+#      "term" / "branch_steps".
+# =====================================================================
+
 import math
 import os
 import sys
@@ -29,11 +100,12 @@ if "__file__" in globals() and HERE not in sys.path:
 import cnet2_feat as F  # noqa: E402
 import cnet2_np as NP  # noqa: E402
 from fastsim import FastCarbon  # noqa: E402
+from cnet2_comparator import Candidate, Comparator, HeuristicLeafAdapter, StatsCollector  # noqa: E402
 
 NEG = NP.NEG
 
 DEFAULTS = dict(
-    H=5, KEY_R=2, MAX_KEY=3, MINC=10.0, HUNT=True, MARGIN=20.0, BUDGET=0.38, MIN_DEPTH=3,
+    H=5, CMP_H=1, KEY_R=2, MAX_KEY=3, MINC=10.0, HUNT=True, MARGIN=20.0, BUDGET=0.38, MIN_DEPTH=3,
     CARGO_W=0.9, WORKER_V=30.0, TREE_V=2.0, ENDGAME_STOP=1, TEACHER=1, OPP_TEACHER=1, ROLL="s64",
     PLANT=False, LOG=False, SEARCH=True, MAX_BR=16, LOCAL_R=0, ROBUST=0.0, OPPID=False, MODE="sweep", MIX=False, ONLINE_T=False, TEMPS=(0.7, 1.0, 1.4, 2.0), EPS=1e-3, C_PUCT=1.5, OPEN_T=0.0, OPEN_STEPS=50, OPEN_SEED=0, LEAF_Q=None, GUARD=False, LOWW=2, GUARD_NARROW=True, GUARD_CASH=40.0, RISK_TOL=None, START_DL=None, ABORT_DL=None, MIN_N=1, SE_K=0.0, VS=100.0, ROOT_S=12, RSEED=0, STYLES=(0, 1, 2, 3, 4), ID_DECAY=0.97, ID_PRIOR=3.0, ID_MIN=5, PROJ=1.3, CLOCK="wall", HARD=0.6,
 )
@@ -638,6 +710,8 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     guard = BankruptcyGuard(cfg)   # A3: the agent's one guard instance (per game, per seat)
     st["guard_base"] = guard.guard_base   # search reads this alias; reset_step() clears it in place
     pool = []
+    cmp_stats = StatsCollector()   # comparator telemetry; published as agent.cmp_stats
+    cmp_chi = {}                   # C_hi cost samples by (n_candidates, horizon), last 64 per bucket
     stats = {"steps": 0, "searched": 0, "branches": 0, "changed": 0, "branch_steps": 0, "worst_ms": 0.0,
              "gain": 0.0, "errors": 0, "shallow": 0, "depth_sum": 0}
     log = []
@@ -794,6 +868,7 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
 
     def agent(obs, config=None):
         t0 = clk(); tw = time.time()
+        st["_cmp_t0m"] = time.monotonic()   # comparator envelope anchor (SI02: public entry, monotonic clock)
         me = obs["player"]
         if st.get("pk_pend"):       # planters whose move the search replaced: planted (our tree under it) within 3 steps?
             P_ = obs["players"][me]; tp_ = {int(pos) for pos, _ in P_[3].values()}
@@ -1542,12 +1617,12 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         X1["cash"] = [x["cash"]] * B0; X1["slots"] = [x["slots"]] * B0; X1["left"] = [x["left"]] * B0
         ys = decode_b(pol, X1, [f.aux] * B0, np.repeat(tok[None], B0, 0), np.repeat(ctx[None], B0, 0),
                       np.stack(forced))
-        cand = [acts]; seen = {tuple(y)}; cmeta = [None]
+        cand = [acts]; seen = {tuple(y)}; cmeta = [None]; cand_y = [y]   # cand_y: label vectors, for the guard screen
         for yy, mm in zip(ys, meta):
             k = tuple(yy)
             if k in seen:
                 continue
-            seen.add(k); cand.append(f.to_actions(yy)); cmeta.append(mm)
+            seen.add(k); cand.append(f.to_actions(yy)); cmeta.append(mm); cand_y.append(yy)
         if len(cand) < 2:
             return acts
         # ---- opponent root action (b128 from its seat)
@@ -1560,105 +1635,276 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
         # ---- branch sims
         full = {"step": step, "players": obs["players"], "trees": obs.get("trees") or {},
                 "full_carbon": [float(v) for v in f.est], "carbon": obs["carbon"], "remainingOverageTime": 60}
-        models = [acts_o]
-        if cfg["ROBUST"]:
-            ah = hunter_acts(obs, me, acts_o, cfg)
-            if ah != acts_o:
-                models.append(ah)
-        nc = len(cand)
-        bl = [(mi, ci) for mi in range(len(models)) for ci in range(nc)]
-        nb = len(bl)
-        while len(pool) < nb:
+        # ---- comparator segment (resync successor: replaces the base
+        # batch branch advance + budget gates + MIN_DEPTH/MARGIN
+        # judgment; kernel = cnet2_comparator, the single authoritative
+        # comparator generated from the frozen prototype sources) ----
+        # SI02 phase accounting on ONE clock: the envelope anchor
+        # st["_cmp_t0m"] was taken with time.monotonic() at the public
+        # entry (_inner); every phase below and the kernel deadline use
+        # that same monotonic clock. Everything before this segment
+        # (snapshot / baseline step / opponent inference / candidate
+        # generation) is pre-comparator work charged to the envelope.
+        _pre_cmp = time.monotonic() - st["_cmp_t0m"]
+        # SI01 entry: reject already-terminal roots. The authoritative
+        # terminal is extinction OR the time boundary (last valid action
+        # observation step 298, terminal state step 299).
+        while len(pool) < 1:
             pool.append(FastCarbon())
-        sims, fs = [], []
-        term_cash = []
-        for i, (mi, ci) in enumerate(bl):
-            a = cand[ci]; ao_ = models[mi]
-            s_ = pool[i]; s_.load_observation(full)
-            s_._tid_counter = [c + 500 for c in s_._tid_counter]
-            pc_ = list(s_.cash)     # F01: cash carried into the root step (survivor scoring if it ends the game)
-            if me == 0:
-                s_.step(a, ao_)
-            else:
-                s_.step(ao_, a)
-            sims.append(s_); fs.append((feat_copy(f), feat_copy(fo)))
-            term_cash.append(pc_)
-        term = [_terminal(s_) for s_ in sims]     # R02: sims the root step already ended by extinction stay frozen
-        stats["branches"] += nb
-        local = None
-        if cfg["LOCAL_R"]:
-            kp = [obs["players"][me][2][u][0] for _, u in keys]
-            local = {w_ for p in (0, 1) for w_, w in obs["players"][p][2].items()
-                     if min(F.DIST[w[0], c] for c in kp) <= cfg["LOCAL_R"]}
-        H = min(cfg["H"], left)          # R01: see _mcts -- left already counts the remaining transfers
-        depth = 1; last_dt = None
-        for hh in range(1, H):
-            if all(term):
-                break     # R02: every branch sim already ended by extinction
-            now = clk()
-            if last_dt is not None and now - t0 + cfg["PROJ"] * last_dt > cfg["BUDGET"]:
-                break
-            if last_dt is None and now - t0 > 0.45 * cfg["BUDGET"]:
-                break
-            if last_dt is not None and time.time() - tw + cfg["PROJ"] * last_wall > cfg["HARD"]:
-                break
-            nw = time.time()
-            xs, auxs, tch = [], [], []
-            for s_, (fm, fop) in zip(sims, fs):
-                xm = fm.observe(s_.obs(me)); xs.append(xm); auxs.append(fm.aux); tch.append(st.get("T_now", T))
-            for s_, (fm, fop) in zip(sims, fs):
-                xq = fop.observe(s_.obs(1 - me)); xs.append(xq); auxs.append(fop.aux); tch.append(st["ot"])
-            lab = act_b(rpol, xs, auxs, tch)
-            ref = {}
-            for i, (s_, (fm, fop)) in enumerate(zip(sims, fs)):
-                am = fm.to_actions(lab[i]); ao = fop.to_actions(lab[nb + i])
-                if local is not None:
-                    if bl[i][1] == 0:
-                        ref[bl[i][0]] = (am, ao)
-                    else:
-                        am0, ao0 = ref[bl[i][0]]
-                        # far units / bases copy the default branch (common actions -> less rollout noise)
-                        for d_, d0 in ((am, am0), (ao, ao0)):
-                            for k_ in [k_ for k_ in d_ if k_ not in local]:
-                                del d_[k_]
-                            for k_, v_ in d0.items():
-                                if k_ not in local:
-                                    d_[k_] = v_
-                if not term[i]:     # R02: frozen at extinction -- neither the sim nor its cash may evolve further
-                    pc_ = list(s_.cash)     # F01: cash carried into this step (survivor scoring if it ends the game)
-                    if me == 0:
-                        s_.step(am, ao)
-                    else:
-                        s_.step(ao, am)
-                    if _terminal(s_):
-                        term[i] = True; term_cash[i] = pc_; stats["term"] = stats.get("term", 0) + 1
-            stats["branch_steps"] += nb
-            depth = hh + 1
-            last_dt = clk() - now
-            last_wall = time.time() - nw
-        stats["depth_sum"] += depth
-        if depth < min(cfg["MIN_DEPTH"], H) and not all(term):
-            # C01: the MIN_DEPTH guard distrusts shallow HEURISTIC leaves. When every branch
-            # sim has reached an exact terminal (all(term)), the leaf values below are the true
-            # terminal scores under F01 semantics, not estimates -- the guard must not discard
-            # them and fall back to the default action. Any unresolved branch keeps the guard,
-            # including an expansion cut short by the budget checks above.
-            stats["shallow"] += 1
+        sim = pool[0]
+        sim.load_observation(full)
+        if left <= 0 or _terminal(sim) or sim.step_count >= 299:
+            stats["cmp_term_root"] = stats.get("cmp_term_root", 0) + 1
+            cmp_stats.record_decision({
+                "completed": False, "rounds": 0, "changed": False,
+                "depth": None, "leaf_calls": 0, "cost_s": 0.0,
+                "total_cost_s": time.monotonic() - st["_cmp_t0m"],
+                "phase_costs": {"pre_cmp": _pre_cmp},
+                "abort_reason": "terminal_root",
+            })
+            stats["cmp"] = cmp_stats.snapshot()
             return acts
-        lft = max(0, left - depth)
-        sc = np.array([leaf(s_, me, lft, term_cash[i]) for i, s_ in enumerate(sims)]).reshape(len(models), nc)
-        if len(models) > 1:
-            w_ = cfg["ROBUST"]
-            sc = (1 - w_) * sc[0] + w_ * sc.min(0)
+        # Candidate truncation (R2-09): A0 plus at most 3 alternatives,
+        # kept by PRIOR order -- the root policy logits lg0 at each
+        # candidate's deviating slot, descending, ties by generation
+        # order -- the frozen harness's admission rule
+        # (real_env._gen_candidates_raw). The fork's generation-order
+        # truncation silently kept low-prior deviations and dropped
+        # the policy's preferred alternatives.
+        lg0 = st.get("lg0")
+        if len(cand) > 4 and lg0 is not None:
+            def _prior(i):
+                uid, m = cmeta[i]
+                return float(lg0[uid2slot[uid]][m])
+            _order = sorted(range(1, len(cand)),
+                            key=lambda i: (-_prior(i), i))
+            keep = [0] + sorted(_order[:3])
         else:
-            sc = sc[0]
-        j = int(np.argmax(sc))
+            keep = list(range(min(len(cand), 4)))
+        # Guard-consistency screen: per candidate, on a guard.copy();
+        # a rewrite or an exception vetoes the candidate; A0 is exempt
+        # by contract (the base chain guarantees A0 passed the guard in
+        # _inner). Error counting follows the pack's *_errors
+        # aggregation convention: cmp_guard_errors (the segment-0
+        # fork's cmp_guard_err did not aggregate; renamed here).
+        vetoed = set()
+        _gs_t = time.monotonic()
+        if lg0 is not None and cfg["GUARD"]:
+            for i in keep[1:]:
+                try:
+                    out = guard.copy().apply(x, f.aux, cand_y[i].copy(), lg0,
+                                             pol, f.own_uid, st.get("T_now", T))
+                except Exception:
+                    stats["cmp_guard_errors"] = stats.get("cmp_guard_errors", 0) + 1
+                    vetoed.add(i)
+                    continue
+                if not np.array_equal(np.asarray(out), cand_y[i]):
+                    vetoed.add(i)
+        _guard_s = time.monotonic() - _gs_t
+        # SI02 budget: ONE whole-call envelope from the public entry,
+        # bounded by the absolute deadline anchor + BUDGET. There is
+        # NO top-up: an exhausted envelope returns A0 without a
+        # comparison. (One-time per-game costs before _inner -- pack
+        # template dequantisation and agent construction -- precede
+        # the anchor by construction and are charged to the step's
+        # external wall clock, e.g. certify_pack's step-0 gate; the
+        # comparator never runs during them.)
+        _deadline_abs = st["_cmp_t0m"] + cfg["BUDGET"]
+        if time.monotonic() >= _deadline_abs:
+            cmp_stats.record_decision({
+                "completed": False, "rounds": 0, "changed": False,
+                "depth": None, "leaf_calls": 0, "cost_s": 0.0,
+                "total_cost_s": time.monotonic() - st["_cmp_t0m"],
+                "phase_costs": {"pre_cmp": _pre_cmp,
+                                "guard_screen": _guard_s,
+                                "compare": 0.0},
+                "abort_reason": "deadline",
+            })
+            stats["cmp"] = cmp_stats.snapshot()
+            stats["cmp_deadline"] = stats.get("cmp_deadline", 0) + 1
+            return acts
+        horizon = max(1, min(int(cfg.get("CMP_H", 1)), left))
+        # Serial rollout on ONE pooled sim: the comparator consumes
+        # each leaf_state (via the leaf call) before the next rollout
+        # starts, so reuse is safe. scenario_seed is accepted but not
+        # consumed: this layer is J=1 deterministic (opponent root
+        # action fixed above, both seats then play greedily) -- the
+        # sweep path has no seed axis and none is invented here.
+        tch = [st.get("T_now", T), st["ot"]]
+        _cur = {"idx": None, "vals": {}}
+        _by_id = {id(a): i for i, a in enumerate(cand)}
+
+        def _cmp_rollout(state, action, horizon_, scenario_seed):
+            _cur["idx"] = _by_id[id(action)]
+            s_ = sim
+            s_.load_observation(state)
+            s_._tid_counter = [c + 500 for c in s_._tid_counter]
+            fm, fop = feat_copy(f), feat_copy(fo)
+            # F01: cash carried into the root step; becomes the leaf's
+            # prev_cash only if a step ends the game by extinction.
+            tcash = list(s_.cash)
+            if me == 0:
+                s_.step(action, acts_o)
+            else:
+                s_.step(acts_o, action)
+            depth = 1
+            # SI01: after every joint advance, extinction and the time
+            # boundary are judged together; a terminal state is frozen
+            # and no further policy call is made on it. The terminal
+            # KIND travels with the leaf state (leaf dispatch below).
+            if _terminal(s_):
+                return (s_, depth, tcash, "extinct")
+            if s_.step_count >= 299:
+                return (s_, depth, tcash, "time")
+            if horizon_ <= 1:
+                return (s_, depth, tcash, None)
+            # H>=2 continuation guards (R2-09): per-seat guards, each
+            # seat's OWN history, frozen harness split-source semantics
+            # (real_env.Internals.rollout, R2-01-fixed): our seat
+            # continues from the production guard's copy; the opponent
+            # seat -- a model prediction with no live guard of its
+            # own -- starts from a fresh guard whose prevw is the
+            # opponent's CURRENT worker units (worker slots only;
+            # slots 10/11 are recruitment centres, not workers). The
+            # root step itself is NOT re-guarded: its actions are
+            # already final (A0 guarded in _inner, candidates
+            # screened above). With GUARD off in cfg, continuation is
+            # unguarded, as in the harness.
+            guards = None
+            if cfg["GUARD"]:
+                g_opp = BankruptcyGuard(cfg)
+                g_opp.prevw = {u for u in fop.own_uid[:10] if u is not None}
+                guards = (guard.copy(), g_opp)
+            hh = 1
+            while hh < horizon_:
+                pc_ = list(s_.cash)   # F01: cash carried into this step
+                xs = [fm.observe(s_.obs(me)), fop.observe(s_.obs(1 - me))]
+                lab = act_b(rpol, xs, [fm.aux, fop.aux], tch)
+                if guards is not None:
+                    feats_ = (fm, fop)
+                    for side in (0, 1):
+                        _y, _lg, _v = rpol.act(xs[side], feats_[side].aux,
+                                               teacher=tch[side])
+                        g = guards[side]
+                        g.reset_step()
+                        out = g.apply(xs[side], feats_[side].aux, lab[side],
+                                      _lg, rpol, feats_[side].own_uid,
+                                      tch[side])
+                        if not np.array_equal(np.asarray(out),
+                                              np.asarray(lab[side])):
+                            stats["cmp_guard_rewrites"] = \
+                                stats.get("cmp_guard_rewrites", 0) + 1
+                            lab[side] = out
+                am, ao = fm.to_actions(lab[0]), fop.to_actions(lab[1])
+                if me == 0:
+                    s_.step(am, ao)
+                else:
+                    s_.step(ao, am)
+                depth += 1
+                hh += 1
+                if _terminal(s_):
+                    return (s_, depth, pc_, "extinct")
+                if s_.step_count >= 299:
+                    return (s_, depth, pc_, "time")
+            return (s_, depth, tcash, None)
+
+        def _raw_value(ls):
+            # Leaf dispatch by terminal kind (real_env._raw_leaf):
+            # extinction -> the pack's nested F01 leaf with the cash
+            # carried into the terminal step; pure time terminal ->
+            # F04, the REAL terminal cash difference (the nested
+            # heuristic leaf must not run on a time-terminal state);
+            # otherwise the nested heuristic leaf at the remaining
+            # horizon.
+            s_ls, d_ls, tc_ls, kind_ls = ls
+            if kind_ls == "time":
+                return float(s_ls.cash[me]) - float(s_ls.cash[1 - me])
+            return float(leaf(s_ls, me, max(0, left - d_ls), tc_ls))
+
+        _adapter = HeuristicLeafAdapter(_raw_value, a=1.0, b=0.0)
+        # ^ raw-margin pass-through: comparisons are within this one
+        # leaf; argmax is invariant to monotone rescaling (registered
+        # caliber). The adapter still counts calls and flags
+        # non-finite / out-of-range values for the kernel's gate.
+
+        def _cmp_leaf(leaf_state):
+            v = _adapter(leaf_state)
+            _cur["vals"][_cur["idx"]] = v
+            return v
+
+        cands = [Candidate(index=i, action=cand[i], is_a0=(i == 0))
+                 for i in keep]
+        # C_hi admission bound, bucketed by (n_candidates, horizon)
+        # (real_env.decide_at_root): bucket max; a cold shape falls
+        # back to the global bucket max; no samples at all -> None
+        # (the kernel's documented cold start: admission waived,
+        # in-round deadline checks still apply -- never a zero).
+        _shape = (len(cands), horizon)
+        _bucket = cmp_chi.get(_shape)
+        if _bucket:
+            _est = max(_bucket)
+        elif cmp_chi:
+            _est = max(max(v) for v in cmp_chi.values())
+        else:
+            _est = None
+        _rem_now = _deadline_abs - time.monotonic()
+        if _rem_now <= 0:
+            cmp_stats.record_decision({
+                "completed": False, "rounds": 0, "changed": False,
+                "depth": None, "leaf_calls": 0, "cost_s": 0.0,
+                "total_cost_s": time.monotonic() - st["_cmp_t0m"],
+                "phase_costs": {"pre_cmp": _pre_cmp,
+                                "guard_screen": _guard_s,
+                                "compare": 0.0},
+                "abort_reason": "deadline",
+            })
+            stats["cmp"] = cmp_stats.snapshot()
+            stats["cmp_deadline"] = stats.get("cmp_deadline", 0) + 1
+            return acts
+        comp = Comparator(budget_s=_rem_now, max_candidates=4)
+        _cmp_t = time.monotonic()
+        dec = comp.decide_multi(full, cands, _cmp_rollout, _cmp_leaf,
+                                horizons=list(range(1, horizon + 1)),
+                                scenario_seed=int(step),
+                                guard_vetoed=vetoed,
+                                deadline_abs=_deadline_abs,
+                                est_candidate_cost_s=_est)
+        _compare_s = time.monotonic() - _cmp_t
+        if _adapter.calls > 0:
+            _b = cmp_chi.setdefault(_shape, [])
+            _b.append(_compare_s / _adapter.calls)
+            del _b[:-64]
+        _tot = time.monotonic() - st["_cmp_t0m"]
+        cmp_stats.record_decision({
+            "completed": dec.completed_rounds > 0,
+            "rounds": dec.completed_rounds,
+            "changed": bool(dec.changed),
+            "depth": dec.deepest_completed_h if dec.completed_rounds > 0 else None,
+            "leaf_calls": _adapter.calls,
+            "cost_s": _compare_s,
+            "total_cost_s": _tot,
+            "phase_costs": {"pre_cmp": _pre_cmp, "guard_screen": _guard_s,
+                            "compare": _compare_s},
+            "abort_reason": dec.abort_reason,
+        })
+        # Telemetry through the pack: stats["cmp"] rides inside the
+        # stats dict, which the pack template already forwards as the
+        # public agent's last_stats; agent.cmp_stats (published on the
+        # outer agent below) is the live channel where the consumer
+        # holds the constructed agent.
+        stats["cmp"] = cmp_stats.snapshot()
+        stats["branches"] += len(keep)
+        stats["depth_sum"] += dec.deepest_completed_h
         if cfg["LOG"]:
-            log.append((step, cmeta, [round(float(v)) for v in sc], depth))
-        if j != 0 and sc[j] > sc[0] + cfg["MARGIN"]:
+            log.append((step, [cmeta[i] for i in keep], dec.chosen_index,
+                        dec.completed_rounds, dec.abort_reason))
+        if dec.completed_rounds > 0 and dec.changed:
             stats["changed"] += 1
-            stats["gain"] += float(sc[j] - sc[0])
-            return cand[j]
+            v0 = _cur["vals"].get(0)
+            vj = _cur["vals"].get(dec.chosen_index)
+            if v0 is not None and vj is not None:
+                stats["gain"] += float(vj - v0)
+            return dec.action
         return acts
 
     _inner = agent
@@ -2048,4 +2294,5 @@ def make_search_agent(conf=None, weights=None, rweights=None, oweights=None):
     agent.state = st
     agent.log = log
     agent.cfg = cfg
+    agent.cmp_stats = cmp_stats   # comparator telemetry channel (snapshot() per game)
     return agent
