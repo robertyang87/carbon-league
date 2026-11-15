@@ -26,7 +26,14 @@ class StatsCollector:
       depth_hist             —— {深度: 次数} 直方图（按完成轮的深度记）
       leaf_calls             —— 叶评估调用总次数
       cost_accum_s           —— 比较器内部累计耗时（秒，浮点）
-      abort_reasons          —— {原因: 次数}（如 deadline / budget_gate / exception）
+      total_cost_accum_s     —— 公开入口全链累计耗时（SI02：含基线与各
+                                阶段，不再只报比较器内核那一段）
+      phase_cost_accum_s     —— {阶段: 累计秒}，阶段口径由生产入口定义：
+                                snapshot / baseline / candgen / guard /
+                                rollout_leaf
+      abort_reasons          —— {原因: 次数}（deadline / single_call_
+                                overrun / budget_gate / nonfinite_leaf /
+                                exception / terminal_root）
 
     decision_dict 约定键（record_decision 入参，缺键按默认处理）：
       completed (bool)        本根是否完成至少一轮完整比较
@@ -34,7 +41,9 @@ class StatsCollector:
       changed (bool)          本根最终动作是否改变
       depth (int | None)      本根完成轮的最大深度（记入 depth_hist）
       leaf_calls (int)        本根消耗的叶调用数
-      cost_s (float)          本根耗时（秒）
+      cost_s (float)          本根比较器内部耗时（秒）
+      total_cost_s (float)    本根公开入口全链耗时（秒，含基线；SI02）
+      phase_costs (dict)      本根分阶段耗时 {阶段: 秒}（SI02）
       abort_reason (str|None) 未完成/中止原因；非 None 时记入 abort_reasons
     """
 
@@ -49,6 +58,8 @@ class StatsCollector:
         self.depth_hist: dict[int, int] = {}
         self.leaf_calls = 0
         self.cost_accum_s = 0.0
+        self.total_cost_accum_s = 0.0
+        self.phase_cost_accum_s: dict[str, float] = {}
         self.abort_reasons: dict[str, int] = {}
 
     def record_decision(self, decision: dict) -> None:
@@ -65,6 +76,12 @@ class StatsCollector:
             self.changed_count += 1
         self.leaf_calls += int(decision.get("leaf_calls", 0))
         self.cost_accum_s += float(decision.get("cost_s", 0.0))
+        if decision.get("total_cost_s") is not None:
+            self.total_cost_accum_s += float(decision["total_cost_s"])
+        phase_costs = decision.get("phase_costs") or {}
+        for phase, secs in phase_costs.items():
+            self.phase_cost_accum_s[phase] = (
+                self.phase_cost_accum_s.get(phase, 0.0) + float(secs))
         reason = decision.get("abort_reason")
         if reason:
             self.abort_reasons[reason] = self.abort_reasons.get(reason, 0) + 1
@@ -79,5 +96,7 @@ class StatsCollector:
             "depth_hist": {str(k): v for k, v in sorted(self.depth_hist.items())},
             "leaf_calls": self.leaf_calls,
             "cost_accum_s": self.cost_accum_s,
+            "total_cost_accum_s": self.total_cost_accum_s,
+            "phase_cost_accum_s": copy.deepcopy(self.phase_cost_accum_s),
             "abort_reasons": copy.deepcopy(self.abort_reasons),
         }
