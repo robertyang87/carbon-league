@@ -15,8 +15,14 @@
 
 ```
 python3 tests_s1.py          # 桩级 7/7
-python3 smoke_real_s1.py     # 真实环境冒烟（需先经 pack_bridge 备齐 vendor/）
-python3 s1_battery.py        # 正式 S1 电池，逐根明细落 s1_battery_roots.json
+python3 tests_s1_fix.py      # 修复回归（SI01/02/04/05/06＋anytime）15/15
+python3 tests_s1_fix_r2.py   # R2 修复回归（正式闸/桥/计时锚点）
+python3 smoke_real_s1.py [--pack PATH]  # 真实环境冒烟（需先经 pack_bridge 备齐 vendor/；包取 --pack→缓存→checkout→在线，整包 hash 恒验）
+python3 s1_battery2.py       # 正式 S1 电池 v2（正式闸：FAIL 退出 2、未验退出 3），证据包落 s1_battery2_evidence.json
+python3 s1_battery2.py --mode diagnostic   # 诊断模式：同采集同断言、只记账不裁决
+python3 s1_battery2.py --replay <旧证据 JSON>  # 对既有证据回放正式判读，不跑实局
 ```
+
+`s1_battery.py` 为 v1 历史工件（判读闸过松，见 SI03），不再作正式运行口径。
 
 钉版：基体包 `code/packs/echo4_int8.py`（md5 819250bf…）；四源 feat 2a45b08b／np d8c15ad4／fastsim aefe6c83／search 94f7fb64。vendor/ 为本地拉取的校验副本，不入仓。
