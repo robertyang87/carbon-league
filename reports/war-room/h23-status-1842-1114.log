@@ -1,0 +1,20 @@
+MARKER H23STAT1842
+CHECK_TIME 2026-11-14 18:42-18:47 CST (run scheduled 18:42:16)
+BRANCH_HEAD sync/h23 bd950f26 2026-11-12T12:42:01Z sync h23 2026-11-12T12:42:01Z
+BRANCH_HEAD main 558a14e4 (unchanged since war-room 18:33 read)
+BRANCH_HEAD sync/h29 77f7d26 (unchanged)
+BRANCH_HEAD sync/h31 bf0ffd2 2026-11-14T07:36:14Z it95 Echo2 checkpoint field (C2/spot-31)
+sync/h23 HEAD_UNCHANGED since bd950f26 (2026-11-12 20:42 CST)
+main HEAD_UNCHANGED since 558a14e4
+sync/h29 HEAD_UNCHANGED since 77f7d26
+sync/h31 HEAD_UNCHANGED since bf0ffd2
+DIR synced/h23 listing re-read: same name set as 18:27 (bigeval.jsonl, bigeval_live, lineA_cal.out, m3s2r1pre_cal.out, m7bsr1_cal.out, ...), no additions/removals
+CALOUT lineA_cal.out len=0 (empty, unchanged)
+CALOUT m3s2r1pre_cal.out len=345 {"tag": "m3s2r1pre_m2", "a": "exp/m3s2r1pre.py", "b": "exp/opp_master2r.py", "seed0": 995000, "n": 200, "err": 0, "wins": 188, "mean": 1115, "se": 54, "lo2se": 1008, "worst": -1186, "worst_ms": 1410.0} (unchanged)
+CALOUT m7bsr1_cal.out len=0 (empty, unchanged)
+LIVE synced/h23/bigeval_live total=862 lines (unchanged; proven by unchanged branch head bd950f26, which pins the whole tree; dir listing re-read identical)
+RATE_LIMIT core remaining=4761 reset=1794655682 (~18:48 CST)
+METHOD_NOTE: full per-file live loop over ~500 files exceeds 180 s timeout (this trip: h23-check-1842.py killed at 180 s with no output; second attempt hit 90 s timeout mid-loop). Individual gh_api calls are fast (~1 s each). Branch-head-unchanged is the authoritative no-change proof; per-file re-reads are redundant when head is unchanged. Future runs: check head first, spot-check only cal.out files, skip the full live loop unless head moved.
+WAR_ROOM_CONTEXT (18:33 sync,转述): DGX shard1 annotation 18:07 started, 29 min 0 shards at 18:35, 30-min no-output line ~18:37 — judgement due on war-room's next trip, not this line. Studio q-gate run 51972702 running, completion estimate ~11-15 15:40. L20 shutdown (§22 PPO-U final review pending). C1 idle ~23 min, C2 standby. Echo3 #11 (not #10; 18:10 read was a single-read flip, corrected 18:11/18:33).
+H23_LINE: no exam, machine released 11-12, expected silence, no anomaly, no new dispatch needed.
+NEXT_MILESTONE: await war-room assignment (h23 unassigned); n1r submission decision rests with owner, not chased.

@@ -1,0 +1,77 @@
+"""H23 status 17:57 run: branch-head check for sync/h23 + sync/h29 + sync/h31 + main.
+Prev heads from 17:42 report:
+  h23 bd950f2, h29 34069b0, h31 bf0ffd2, main 66a13ff7.
+If a head moved, fetch its tree (main: message only; sync branch: synced/<tag>/ listing).
+Writes h23-status-1757.log. Marker: H23STAT1757.
+"""
+import sys, os, base64
+sys.path.insert(0, "/home/hatch/workspace")
+from gh_api import req
+
+OWNER, REPO = "robertyang87", "carbon-league"
+HERE = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(HERE, "h23-status-1757.log")
+PREV = {"sync/h23": "bd950f2", "sync/h29": "34069b0", "sync/h31": "bf0ffd2", "main": "66a13ff7"}
+
+lines = ["MARKER H23STAT1757"]
+def emit(s):
+    lines.append(s)
+    print(s, flush=True)
+
+heads = {}
+for br_name in ["sync/h23", "sync/h29", "sync/h31", "main"]:
+    try:
+        br = req("GET", f"/repos/{OWNER}/{REPO}/branches/{br_name}")
+        c = br["commit"]
+        heads[br_name] = c["sha"][:7]
+        emit(f"BRANCH_HEAD {br_name} {c['sha'][:7]} {c['commit']['committer']['date']} {c['commit']['message'][:140]}")
+    except Exception as e:
+        emit(f"BRANCH_HEAD {br_name} ERROR {type(e).__name__}: {e}")
+
+for br_name, prev in PREV.items():
+    cur = heads.get(br_name)
+    if not cur:
+        continue
+    if cur != prev:
+        emit(f"{br_name} HEAD_CHANGED {prev} -> {cur}")
+        if br_name != "main":
+            try:
+                tree = req("GET", f"/repos/{OWNER}/{REPO}/git/trees/{cur}?recursive=1")
+                tag = br_name.split("/")[1]
+                for x in tree.get("tree", []):
+                    p = x["path"]
+                    if p.startswith(f"synced/{tag}/"):
+                        emit(f"TREE {p} size={x.get('size')} sha={x['sha'][:7]}")
+            except Exception as e:
+                emit(f"TREE {br_name} ERROR {type(e).__name__}: {e}")
+    else:
+        emit(f"{br_name} HEAD_UNCHANGED since {prev}")
+
+# bigeval_live count via one tree fetch (single call; do NOT per-file traverse)
+try:
+    tree = req("GET", f"/repos/{OWNER}/{REPO}/git/trees/{heads.get('sync/h23')}?recursive=1")
+    live = [x for x in tree.get("tree", []) if x["path"].startswith("synced/h23/bigeval_live/")]
+    emit(f"LIVE synced/h23/bigeval_live entries={len(live)}")
+except Exception as e:
+    emit(f"LIVE ERROR {type(e).__name__}: {e}")
+
+# Verify the three cal.out files' content via get_file (only if h23 head unchanged).
+if heads.get("sync/h23") == PREV["sync/h23"]:
+    for fn in ["lineA_cal.out", "m3s2r1pre_cal.out", "m7bsr1_cal.out"]:
+        try:
+            content = req("GET", f"/repos/{OWNER}/{REPO}/contents/synced/h23/{fn}?ref=sync/h23")
+            raw = base64.b64decode(content["content"]).decode("utf-8", "replace")
+            emit(f"CALOUT {fn} sha={content['sha'][:7]} len={len(raw)} first200={raw[:200]!r}")
+        except Exception as e:
+            emit(f"CALOUT {fn} ERROR {type(e).__name__}: {e}")
+
+try:
+    rl = req("GET", "/rate_limit")
+    core = rl["resources"]["core"]
+    emit(f"RATE_LIMIT core remaining={core['remaining']} reset={core['reset']}")
+except Exception as e:
+    emit(f"RATE_LIMIT ERROR {type(e).__name__}: {e}")
+
+with open(OUT, "w") as f:
+    f.write("\n".join(lines) + "\n")
+print("WROTE", OUT)

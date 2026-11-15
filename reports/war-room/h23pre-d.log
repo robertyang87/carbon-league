@@ -1,0 +1,62 @@
+dispatched at 08:35:57
+CLAIMED run 43184271717 job 131067468168 conclusion success
+ cn-shanghai
+2026-11-12T08:36:11.1830526Z ##[endgroup]
+2026-11-12T08:36:18.1066589Z InvokeId: t-sh072vgk06hb2tc
+2026-11-12T08:36:18.1068162Z --- status=Success exit=0 ---
+2026-11-12T08:36:18.1068946Z PREH23D7K9 H23-BEGIN 2026-11-12 16:36:12 CST
+2026-11-12T08:36:18.1088240Z iZuf65ykinp4dvkirzk7q4Z
+2026-11-12T08:36:18.1091191Z --- CLONE WRAPPER ---
+2026-11-12T08:36:18.1091868Z -rw-r--r-- 1 root root 844 Nov 12 16:36 exp/m3s2g1.py
+2026-11-12T08:36:18.1092482Z --- DIFF template vs new (expect only weights filename) ---
+2026-11-12T08:36:18.1093085Z 1c1
+2026-11-12T08:36:18.1093986Z < """sb30: fixed exam opponent = cnet2_m3s2r1_preL.npz, pure net, guard on, style row 2 all game, greedy. Frozen config.
+2026-11-12T08:36:18.1095048Z ---
+2026-11-12T08:36:18.1095768Z > """sb30: fixed exam opponent = cnet2_m3s2g1L.npz, pure net, guard on, style row 2 all game, greedy. Frozen config.
+2026-11-12T08:36:18.1096672Z 8c8
+2026-11-12T08:36:18.1097614Z < _W = os.path.join(_C, "..", "data", "weights", "cnet2_m3s2r1_preL.npz"); _AG = None
+2026-11-12T08:36:18.1098426Z ---
+2026-11-12T08:36:18.1099305Z > _W = os.path.join(_C, "..", "data", "weights", "cnet2_m3s2g1L.npz"); _AG = None
+2026-11-12T08:36:18.1109476Z --- NEW WRAPPER CONTENT ---
+2026-11-12T08:36:18.1110550Z """sb30: fixed exam opponent = cnet2_m3s2g1L.npz, pure net, guard on, style row 2 all game, greedy. Frozen config.
+2026-11-12T08:36:18.1111589Z style row 2 for the whole game, greedy. Frozen config: never change it, so exams stay comparable."""
+2026-11-12T08:36:18.1127869Z import os, sys
+2026-11-12T08:36:18.1144453Z _C = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, _C)
+2026-11-12T08:36:18.1161757Z import cnet2_search as _S
+2026-11-12T08:36:18.1162739Z CONF = {'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'OPEN_T': 0.0, 'OPEN_STEPS': 0,
+2026-11-12T08:36:18.1164410Z         'OPEN_KINDS': None, 'OPEN_SEED': 0, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 240}
+2026-11-12T08:36:18.1165136Z _W = os.path.join(_C, "..", "data", "weights", "cnet2_m3s2g1L.npz"); _AG = None
+2026-11-12T08:36:18.1165745Z def agent(observation, configuration):
+2026-11-12T08:36:18.1166174Z     global _AG
+2026-11-12T08:36:18.1166581Z     if _AG is None or observation["step"] == 0:
+2026-11-12T08:36:18.1167728Z         _AG = _S.make_search_agent(CONF, weights=_W)
+2026-11-12T08:36:18.1168281Z     return _AG(observation, configuration)
+2026-11-12T08:36:18.1168761Z --- SYNTAX CHECK ---
+2026-11-12T08:36:18.1169186Z SYNTAX_OK
+2026-11-12T08:36:18.1169576Z --- WEIGHTS LOAD CHECK ---
+2026-11-12T08:36:18.1170017Z NPZ_KEYS 129
+2026-11-12T08:36:18.1170819Z 975c518c10198723fec7bfa57744d9c3  /root/carbon/data/weights/cnet2_m3s2g1L.npz
+2026-11-12T08:36:18.1171455Z --- EXAM STILL RUNNING (read-only) ---
+2026-11-12T08:36:18.1173641Z  115105    02:48:00 bash -c EVO_WORKERS=7 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/opp_master2r.py 995000 200 m3s2r1pre_m2 >> /root/carbon/data/m3s2r1pre_cal.out 2>&1; EVO_WORKERS=7 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0 >> /root/carbon/data/m3s2r1pre_cal.out 2>&1; echo CAL_ALL_DONE >> /root/carbon/data/m3s2r1pre_cal.out
+2026-11-12T08:36:18.1175292Z  117514       41:59 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:36:18.1175952Z  117515       41:59 ../.venv/bin/python bigeval.py exp/m3s2r1pre.py exp/echo_e0.py 995200 200 m3s2r1pre_e0
+2026-11-12T08:36:18.1176576Z PREH23D7K9 H23-END
+2026-11-12T08:36:18.1177161Z 
+2026-11-12T08:36:18.1286592Z Post job cleanup.
+2026-11-12T08:36:18.2088491Z [command]/usr/bin/git version
+2026-11-12T08:36:18.2150175Z git version 2.56.0
+2026-11-12T08:36:18.2225421Z Temporarily overriding HOME='/home/runner/work/_temp/faf535bc-0a7e-4e51-835c-eb45cf97a3c5' before making global git config changes
+2026-11-12T08:36:18.2244432Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:36:18.2272397Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:36:18.2319839Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:36:18.2338814Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:36:18.2626489Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:36:18.2660783Z http.https://github.com/.extraheader
+2026-11-12T08:36:18.2698644Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T08:36:18.2759619Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T08:36:18.3033034Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T08:36:18.3097822Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T08:36:18.3359048Z Cleaning up orphan processes
+2026-11-12T08:36:18.3622921Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 60 claimed

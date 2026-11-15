@@ -1,0 +1,48 @@
+m3s2g1 calibration field 1 — launch self-attestation (agent 27e58358, 2026-11-12 ~19:00 CST)
+Task: launch m3s2g1 vs Master2 on h23 (seed 998000, 200 games, tag m3s2g1_m2).
+Field 2 (seed 998200 vs E0, tag m3s2g1_e0) NOT launched, per task.
+
+PRE-LAUNCH (probe run 43202813444, h23 read 18:43:19 CST, marker G1CALA9X2):
+- no bigeval running; baseline PID 119669 gone
+- /root/carbon/code/eval_v53.py md5 3770a282... (OLD, pre-patch) -> sync required
+- /root/carbon/code/bigeval.py md5 a5822338d979abea807fbd2ab4f7dace (matches repo)
+- exp/m3s2g1.py md5 bcca7198017ca70bcc2e244017d7f93c (uses cnet2_m3s2g1L.npz)
+- exp/opp_master2r.py md5 2aebfbc1008d3475ece8e178696e292d
+- /root/carbon/data/weights/cnet2_m3s2g1L.npz 11,821,004 bytes, md5 975c518c10198723fec7bfa57744d9c3
+- no pre-existing m3s2g1_m2 live files; venv /root/carbon/.venv/bin/python present
+- /root/carbon is NOT a git repo (no git pull possible)
+
+DGX-SIDE CHECK (run 43202866329, 18:43:45 CST, marker G1CALDGX7):
+- DGX /home/arm/junyang/carbon/data/weights/cnet2_m3s2g1_ep19.npz md5 975c518c... == h23 weight
+  (also == cnet2_m3s2g1_last.npz) -> h23 weight IS DGX ep19/final
+- DGX repo HEAD 924b0b1f; DGX repo code/eval_v53.py md5 6d24da0eeeb28bad350d8b38f08ec3fc (NEW)
+
+FAILURE + FIX:
+- First launch attempt (41KB script with embedded base64 eval_v53.py) FAILED:
+  run 43203146550, Aliyun API 403 CmdContent.ExceedLimit (command content too long).
+  Lesson: cloud-assistant commands have a size limit (below ~41KB); never embed whole
+  files; transfer files via the DGX relay instead. Keep dispatch scripts small.
+- Fix: DGX relay scp (run 43204418597, marker G1CALR7Q3, 18:54:22 CST): DGX repo
+  eval_v53.py -> root@47.117.148.216:/root/carbon/code/eval_v53.py, SCP-OK,
+  verified on h23 md5 6d24da0eeeb28bad350d8b38f08ec3fc, 29,106 bytes.
+  (Also caught before dispatch: sed-derived g1cal-c-driver.py initially still pointed
+  at released spot-25 instance id; fixed to h23 i-uf65ykinp4dvkirzk7q4.)
+
+LAUNCH (run 43204631277, job 131136563149, success; h23 read 18:55:44 CST, marker G1CALC5P9):
+- command: EVO_WORKERS=7 setsid nohup ../.venv/bin/python bigeval.py exp/m3s2g1.py
+  exp/opp_master2r.py 998000 200 m3s2g1_m2 >> /root/carbon/data/m3s2g1_m2.out 2>&1 &
+- main PID 122060 (PPID 122049 at launch, reparented to 1 later) + 7 workers
+  PIDs 122062-122068; worker count grep = 8 (main + 7)
+- all md5s re-verified at launch: eval_v53 6d24da0e..., bigeval a5822338...,
+  m3s2g1.py bcca7198..., opp_master2r.py 2aebfbc1..., weights 975c518c...
+
+FIRST GAMES (follow-up read 18:58:58 CST, etime 03:14, marker G1CALD2M8, run 43205088802):
+- main PID 122060 + workers 122062-122068 all alive, etime 03:14
+- /root/carbon/data/bigeval_live/m3s2g1_m2.jsonl: 7 lines, 25,977 bytes, mtime 18:58
+- line 1: seed 998002, side 0, margin +2349, err null, serr 0
+- line 2: seed 998005, side 1, margin +2276, err null, serr 0
+- no summary line yet (expected; lands at field end)
+
+THREE-PIECE (launch): processes in registry YES (1+7) / workers busy YES /
+output landing YES (7 lines by +3:14, mtime fresh). COMPLETE.
+Estimated field completion ~20:15-20:25 CST at baseline-like pace (estimate only).

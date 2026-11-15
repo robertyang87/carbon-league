@@ -1,0 +1,34 @@
+dispatched at 08:31:22
+CLAIMED run 43183633622 job 131065384241 status completed conclusion success
+ai
+2026-11-12T08:31:31.0331152Z ##[endgroup]
+2026-11-12T08:31:44.6575282Z InvokeId: t-sh072vg518mz5ds
+2026-11-12T08:31:44.6576517Z --- status=Success exit=0 ---
+2026-11-12T08:31:44.6577323Z + echo == FABLELAUNCH-1626C4 BEGIN ==
+2026-11-12T08:31:44.6578167Z == FABLELAUNCH-1626C4 BEGIN ==
+2026-11-12T08:31:44.6578945Z + date +%F %T %Z
+2026-11-12T08:31:44.6579531Z 2026-11-12 16:31:33 CST
+2026-11-12T08:31:44.6581604Z + ssh -n -i /root/.ssh/dgx_access -o BatchMode=yes -o ConnectTimeout=20 -o UserKnownHostsFile=/root/.jishubuddy/network-checks/studio-known-hosts-20261112 arm@10.211.43.68 bash -s
+2026-11-12T08:31:44.6583372Z + echo SSH_RC=0
+2026-11-12T08:31:44.6587211Z SSH_RC=0
+2026-11-12T08:31:44.6588035Z + echo == FABLELAUNCH-1626C4 END ==
+2026-11-12T08:31:44.6588960Z == FABLELAUNCH-1626C4 END ==
+2026-11-12T08:31:44.6589447Z 
+2026-11-12T08:31:44.6899759Z Post job cleanup.
+2026-11-12T08:31:44.8057446Z [command]/usr/bin/git version
+2026-11-12T08:31:44.8155128Z git version 2.56.0
+2026-11-12T08:31:44.8213281Z Temporarily overriding HOME='/home/runner/work/_temp/48c8c931-a73e-4d86-9b2b-062089fef96e' before making global git config changes
+2026-11-12T08:31:44.8218010Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:31:44.8237859Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:31:44.8363975Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:31:44.8485795Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:31:44.8916682Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:31:44.8971514Z http.https://github.com/.extraheader
+2026-11-12T08:31:44.9013325Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T08:31:44.9070368Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T08:31:44.9474283Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T08:31:44.9528126Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T08:31:44.9991254Z Cleaning up orphan processes
+2026-11-12T08:31:45.0422595Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 57 claimed

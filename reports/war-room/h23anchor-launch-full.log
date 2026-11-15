@@ -1,0 +1,227 @@
+﻿2026-11-12T12:01:41.5871783Z Current runner version: '2.338.2'
+2026-11-12T12:01:41.5891199Z ##[group]Runner Image Provisioner
+2026-11-12T12:01:41.5891782Z Hosted Compute Agent
+2026-11-12T12:01:41.5892217Z Version: 20261028.624
+2026-11-12T12:01:41.5892670Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T12:01:41.5893123Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T12:01:41.5893602Z Worker ID: {675b392f-f762-4cf5-87da-1b86b1588615}
+2026-11-12T12:01:41.5894045Z Region: centralus
+2026-11-12T12:01:41.5894470Z Cloud: Azure
+2026-11-12T12:01:41.5894874Z ##[endgroup]
+2026-11-12T12:01:41.5895696Z ##[group]Operating System
+2026-11-12T12:01:41.5896307Z Ubuntu
+2026-11-12T12:01:41.5896811Z 24.04.5
+2026-11-12T12:01:41.5897183Z LTS
+2026-11-12T12:01:41.5897572Z ##[endgroup]
+2026-11-12T12:01:41.5897966Z ##[group]Runner Image
+2026-11-12T12:01:41.5898422Z Image: ubuntu-24.04
+2026-11-12T12:01:41.5898987Z Version: 20261101.360.1
+2026-11-12T12:01:41.5899931Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T12:01:41.5900841Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T12:01:41.5901478Z ##[endgroup]
+2026-11-12T12:01:41.5902179Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T12:01:41.5903593Z Contents: read
+2026-11-12T12:01:41.5903991Z Metadata: read
+2026-11-12T12:01:41.5904404Z ##[endgroup]
+2026-11-12T12:01:41.5905829Z Secret source: Actions
+2026-11-12T12:01:41.5906839Z Cache mode: write
+2026-11-12T12:01:41.5907294Z Prepare workflow directory
+2026-11-12T12:01:41.6160443Z Prepare all required actions
+2026-11-12T12:01:41.6194503Z Getting action download info
+2026-11-12T12:01:41.8449880Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T12:01:41.9981920Z Complete job name: run
+2026-11-12T12:01:42.0656760Z ##[group]Run actions/checkout@v4
+2026-11-12T12:01:42.0657488Z with:
+2026-11-12T12:01:42.0657912Z   repository: robertyang87/carbon-league
+2026-11-12T12:01:42.0662031Z   token: ***
+2026-11-12T12:01:42.0662460Z   ssh-strict: true
+2026-11-12T12:01:42.0662856Z   ssh-user: git
+2026-11-12T12:01:42.0663298Z   persist-credentials: true
+2026-11-12T12:01:42.0663755Z   clean: true
+2026-11-12T12:01:42.0664168Z   sparse-checkout-cone-mode: true
+2026-11-12T12:01:42.0664655Z   fetch-depth: 1
+2026-11-12T12:01:42.0665054Z   fetch-tags: false
+2026-11-12T12:01:42.0665471Z   show-progress: true
+2026-11-12T12:01:42.0665890Z   lfs: false
+2026-11-12T12:01:42.0666278Z   submodules: false
+2026-11-12T12:01:42.0666705Z   set-safe-directory: true
+2026-11-12T12:01:42.0667181Z   allow-unsafe-pr-checkout: false
+2026-11-12T12:01:42.0668180Z ##[endgroup]
+2026-11-12T12:01:42.2839748Z Syncing repository: robertyang87/carbon-league
+2026-11-12T12:01:42.2841522Z ##[group]Getting Git version info
+2026-11-12T12:01:42.2842415Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T12:01:42.2881207Z [command]/usr/bin/git version
+2026-11-12T12:01:42.3015587Z git version 2.56.0
+2026-11-12T12:01:42.3024859Z ##[endgroup]
+2026-11-12T12:01:42.3055535Z Temporarily overriding HOME='/home/runner/work/_temp/d27c2785-6047-47fe-9d8b-523cbc7f2624' before making global git config changes
+2026-11-12T12:01:42.3057321Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T12:01:42.3059157Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:01:42.3270000Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T12:01:42.3271478Z ##[group]Initializing the repository
+2026-11-12T12:01:42.3272703Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:01:42.3318520Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T12:01:42.3319740Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T12:01:42.3323543Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T12:01:42.3324676Z hint: call:
+2026-11-12T12:01:42.3325096Z hint:
+2026-11-12T12:01:42.3325831Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T12:01:42.3326444Z hint:
+2026-11-12T12:01:42.3327015Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T12:01:42.3327946Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T12:01:42.3328691Z hint:
+2026-11-12T12:01:42.3329245Z hint: 	git branch -m <name>
+2026-11-12T12:01:42.3329747Z hint:
+2026-11-12T12:01:42.3330408Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T12:01:42.3338703Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T12:01:42.3362706Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T12:01:42.3439702Z ##[endgroup]
+2026-11-12T12:01:42.3449905Z ##[group]Disabling automatic garbage collection
+2026-11-12T12:01:42.3450767Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T12:01:42.3527156Z ##[endgroup]
+2026-11-12T12:01:42.3528062Z ##[group]Setting up auth
+2026-11-12T12:01:42.3558079Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T12:01:42.3590884Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T12:01:42.3978093Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T12:01:42.4009160Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T12:01:42.4241401Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T12:01:42.4282976Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T12:01:42.4504673Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T12:01:42.4553351Z ##[endgroup]
+2026-11-12T12:01:42.4554669Z ##[group]Fetching the repository
+2026-11-12T12:01:42.4562856Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +261a8e1946afc502e06de2b8fa15ab4708e486e2:refs/remotes/origin/main
+2026-11-12T12:01:44.0863657Z From https://github.com/robertyang87/carbon-league
+2026-11-12T12:01:44.0865585Z  * [new ref]         261a8e1946afc502e06de2b8fa15ab4708e486e2 -> origin/main
+2026-11-12T12:01:44.0868759Z ##[endgroup]
+2026-11-12T12:01:44.0869724Z ##[group]Determining the checkout info
+2026-11-12T12:01:44.0871005Z ##[endgroup]
+2026-11-12T12:01:44.0871550Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T12:01:44.0874029Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T12:01:44.0919487Z ##[group]Checking out the ref
+2026-11-12T12:01:44.0923017Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T12:01:44.3929713Z Switched to a new branch 'main'
+2026-11-12T12:01:44.3939356Z branch 'main' set up to track 'origin/main'.
+2026-11-12T12:01:44.3941871Z ##[endgroup]
+2026-11-12T12:01:44.3981943Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T12:01:44.4022414Z 261a8e1946afc502e06de2b8fa15ab4708e486e2
+2026-11-12T12:01:44.4337217Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKIyBoMjM6IGxhdW5jaCBFY2hvMiBhbmNob3IgY2hhaW4gKGZpZWxkMSBlY2hvMl9tMiAyMDAgKyBmaWVsZDIgbTNzMmcxX2VjaG8yIDIwMCksCiMgZnVsbC1sb2FkIHJlY2lwZTogRVZPX1dPUktFUlM9NjIsIGFsbCBudW1weSB0aHJlYWQgdmFycyBwaW5uZWQgdG8gMS4KTUFSSz0iSDIzQU5DSE9STEFVTkNIMjAwNEMiCmVjaG8gIiR7TUFSS31fQkVHSU4iCmRhdGUgJyslRiAlVCAlWicKZWNobyAiLS0tIFBSRS1GTElHSFQgLS0tIgppZiBwZ3JlcCAtZiAnYmlnZXZhbC5weSBleHAvJyA+IC9kZXYvbnVsbDsgdGhlbgogIGVjaG8gIkFCT1JUOiBhIGJpZ2V2YWwgZmllbGQgaXMgYWxyZWFkeSBydW5uaW5nIgogIHBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnYmlnZXZhbC5weSBleHAvJyB8IGdyZXAgLXYgZ3JlcAogIGVjaG8gIiR7TUFSS31fRU5EIjsgZXhpdCAwCmZpCmVjaG8gIm5vIGJpZ2V2YWwgcnVubmluZyIKRVY9JChtZDVzdW0gL3Jvb3QvY2FyYm9uL2NvZGUvZXZhbF92NTMucHkgfCBjdXQgLWQnICcgLWYxKQpCVj0kKG1kNXN1bSAvcm9vdC9jYXJib24vY29kZS9iaWdldmFsLnB5IHwgY3V0IC1kJyAnIC1mMSkKRzE9JChtZDVzdW0gL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3MyZzFMLm5weiB8IGN1dCAtZCcgJyAtZjEpClc1PSQobWQ1c3VtIC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTN3NUwubnB6IHwgY3V0IC1kJyAnIC1mMSkKRTJQPSQobWQ1c3VtIC9yb290L2NhcmJvbi9jb2RlL2V4cC9lY2hvMi5weSB8IGN1dCAtZCcgJyAtZjEpCmVjaG8gImV2YWxfdjUzPSRFViBiaWdldmFsPSRCViBnMT0kRzEgbTN3NT0kVzUgZWNobzJweT0kRTJQIgpbICIkRVYiID0gIjZkMjRkYTBlZWViMjhiYWQzNTBkOGIzOGYwOGVjM2ZjIiBdIHx8IHsgZWNobyAiQUJPUlQgZXZhbF92NTMgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJEJWIiA9ICJhNTgyMjMzOGQ5NzlhYmVhODA3ZmJkMmFiNGY3ZGFjZSIgXSB8fCB7IGVjaG8gIkFCT1JUIGJpZ2V2YWwgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJEcxIiA9ICI5NzVjNTE4YzEwMTk4NzIzZmVjN2JmYTU3NzQ0ZDljMyIgXSB8fCB7IGVjaG8gIkFCT1JUIGcxIHdlaWdodHMgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJFc1IiA9ICI4MmZkZTQ2YjI2MzM5NTBkM2NiYjI5ZThjYWNiZmRjMiIgXSB8fCB7IGVjaG8gIkFCT1JUIG0zdzUgd2VpZ2h0cyBtZDUiOyBlY2hvICIke01BUkt9X0VORCI7IGV4aXQgMTsgfQpbICIkRTJQIiA9ICIxNWI2ZDc1NGU2ZTIxZGUzMzg3MDA3NGQzOTgzYTE2ZiIgXSB8fCB7IGVjaG8gIkFCT1JUIGVjaG8yLnB5IG1kNSI7IGVjaG8gIiR7TUFSS31fRU5EIjsgZXhpdCAxOyB9CmVjaG8gImFsbCBtZDUgT0siCmZvciBmIGluIGVjaG8yX20yIG0zczJnMV9lY2hvMjsgZG8KICBpZiBbIC1lIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS8kZi5qc29ubCBdOyB0aGVuCiAgICBlY2hvICJBQk9SVCB0YWcgZmlsZSBhbHJlYWR5IGV4aXN0czogJGYuanNvbmwiOyBlY2hvICIke01BUkt9X0VORCI7IGV4aXQgMQogIGZpCmRvbmUKZWNobyAibmV3IHRhZyBmaWxlcyBhYnNlbnQiCmVjaG8gIi0tLSBXUklURSBDSEFJTiBSVU5ORVIgLS0tIgpjYXQgPiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3JfcnVubmVyLnNoIDw8J0NIQUlOJwojIS9iaW4vYmFzaAojIGNoYWluZWQ6IGZpZWxkMSBFY2hvMiB2cyBNYXN0ZXIyciAoOTk5NjAwLCAyMDApIHRoZW4gZmllbGQyIG0zczJnMSB2cyBFY2hvMiAoOTk5ODAwLCAyMDApLiBObyBpZGxlIGdhcC4KY2QgL3Jvb3QvY2FyYm9uL2NvZGUKZXhwb3J0IEVWT19XT1JLRVJTPTYyIE9NUF9OVU1fVEhSRUFEUz0xIE1LTF9OVU1fVEhSRUFEUz0xIE9QRU5CTEFTX05VTV9USFJFQURTPTEgTlVNRVhQUl9OVU1fVEhSRUFEUz0xCmVjaG8gIkNIQUlOX1NUQVJUICQoZGF0ZSAnKyVGICVUICVaJykgZmllbGQxIGVjaG8yX20yIiA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iuc3RhdHVzCi4uLy52ZW52L2Jpbi9weXRob24gYmlnZXZhbC5weSBleHAvZWNobzIucHkgZXhwL29wcF9tYXN0ZXIyci5weSA5OTk2MDAgMjAwIGVjaG8yX20yID4+IC9yb290L2NhcmJvbi9kYXRhL2VjaG8yX20yLmxhdW5jaGVyLmxvZyAyPiYxCmVjaG8gIkNIQUlOX0ZJRUxEMV9ET05FIHJjPSQ/ICQoZGF0ZSAnKyVGICVUICVaJykiID4+IC9yb290L2NhcmJvbi9kYXRhL2VjaG8yX2FuY2hvci5zdGF0dXMKZWNobyAiQ0hBSU5fU1RBUlQgJChkYXRlICcrJUYgJVQgJVonKSBmaWVsZDIgbTNzMmcxX2VjaG8yIiA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iuc3RhdHVzCi4uLy52ZW52L2Jpbi9weXRob24gYmlnZXZhbC5weSBleHAvbTNzMmcxLnB5IGV4cC9lY2hvMi5weSA5OTk4MDAgMjAwIG0zczJnMV9lY2hvMiA+PiAvcm9vdC9jYXJib24vZGF0YS9tM3MyZzFfZWNobzIubGF1bmNoZXIubG9nIDI+JjEKZWNobyAiQ0hBSU5fRklFTEQyX0RPTkUgcmM9JD8gJChkYXRlICcrJUYgJVQgJVonKSIgPj4gL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yLnN0YXR1cwpDSEFJTgpjaG1vZCAreCAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3JfcnVubmVyLnNoCmVjaG8gIi0tLSBMQVVOQ0ggQ0hBSU4gKGRldGFjaGVkKSAtLS0iCnNldHNpZCBub2h1cCAvYmluL2Jhc2ggL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yX3J1bm5lci5zaCA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iub3V0IDI+JjEgPCAvZGV2L251bGwgJgplY2hvICJjaGFpbiBsYXVuY2hlciBwaWQ6ICQhIgpzbGVlcCA5MAplY2hvICItLS0gVkVSSUZZIChmaWVsZDEgcnVubmluZyBvciBhbHJlYWR5IGRvbmU7IGZpZWxkMiBtYXkgYmUgcnVubmluZykgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yLnN0YXR1cyAyPiYxCnBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnYmlnZXZhbC5weSBleHAvJyB8IGdyZXAgLXYgZ3JlcCB8fCBlY2hvICJOT19CSUdFVkFMX1BST0NfQVRfVkVSSUZZIgplY2hvICJiaWdldmFsIHByb2MgY291bnQ6ICQocHMgLWVvIGFyZ3MgfCBncmVwIC1jICdbYl1pZ2V2YWwucHkgZXhwLycpIgpXUElEPSQocGdyZXAgLWYgJ2JpZ2V2YWwucHkgZXhwLycgfCB0YWlsIC0xKQplY2hvICJzYW1wbGUgd29ya2VyIHBpZDogJFdQSUQiCmlmIFsgLW4gIiRXUElEIiBdOyB0aGVuCiAgdHIgJ1wwJyAnXG4nIDwgL3Byb2MvJFdQSUQvZW52aXJvbiAyPi9kZXYvbnVsbCB8IGdyZXAgLUUgJ0VWT19XT1JLRVJTfE9NUF9OVU1fVEhSRUFEU3xNS0xfTlVNX1RIUkVBRFN8T1BFTkJMQVNfTlVNX1RIUkVBRFN8TlVNRVhQUl9OVU1fVEhSRUFEUycgfHwgZWNobyAiVEhSRUFEIEVOViBOT1QgVklTSUJMRSIKICBhd2sgJy9eVGhyZWFkczove3ByaW50ICJ3b3JrZXIgdGhyZWFkczoiLCAkMn0nIC9wcm9jLyRXUElEL3N0YXR1cyAyPi9kZXYvbnVsbApmaQplY2hvICItLS0gTElWRSBGSUxFUyAtLS0iCndjIC1sIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS9lY2hvMl9tMi5qc29ubCAvcm9vdC9jYXJib24vZGF0YS9iaWdldmFsX2xpdmUvbTNzMmcxX2VjaG8yLmpzb25sIDI+JjEKY2F0IC9wcm9jL2xvYWRhdmcKZWNobyAiJHtNQVJLfV9FTkQiCg==" ]; then
+2026-11-12T12:01:44.4495508Z [36;1mif [ -n "IyEvYmluL2Jhc2gKIyBoMjM6IGxhdW5jaCBFY2hvMiBhbmNob3IgY2hhaW4gKGZpZWxkMSBlY2hvMl9tMiAyMDAgKyBmaWVsZDIgbTNzMmcxX2VjaG8yIDIwMCksCiMgZnVsbC1sb2FkIHJlY2lwZTogRVZPX1dPUktFUlM9NjIsIGFsbCBudW1weSB0aHJlYWQgdmFycyBwaW5uZWQgdG8gMS4KTUFSSz0iSDIzQU5DSE9STEFVTkNIMjAwNEMiCmVjaG8gIiR7TUFSS31fQkVHSU4iCmRhdGUgJyslRiAlVCAlWicKZWNobyAiLS0tIFBSRS1GTElHSFQgLS0tIgppZiBwZ3JlcCAtZiAnYmlnZXZhbC5weSBleHAvJyA+IC9kZXYvbnVsbDsgdGhlbgogIGVjaG8gIkFCT1JUOiBhIGJpZ2V2YWwgZmllbGQgaXMgYWxyZWFkeSBydW5uaW5nIgogIHBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnYmlnZXZhbC5weSBleHAvJyB8IGdyZXAgLXYgZ3JlcAogIGVjaG8gIiR7TUFSS31fRU5EIjsgZXhpdCAwCmZpCmVjaG8gIm5vIGJpZ2V2YWwgcnVubmluZyIKRVY9JChtZDVzdW0gL3Jvb3QvY2FyYm9uL2NvZGUvZXZhbF92NTMucHkgfCBjdXQgLWQnICcgLWYxKQpCVj0kKG1kNXN1bSAvcm9vdC9jYXJib24vY29kZS9iaWdldmFsLnB5IHwgY3V0IC1kJyAnIC1mMSkKRzE9JChtZDVzdW0gL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3MyZzFMLm5weiB8IGN1dCAtZCcgJyAtZjEpClc1PSQobWQ1c3VtIC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTN3NUwubnB6IHwgY3V0IC1kJyAnIC1mMSkKRTJQPSQobWQ1c3VtIC9yb290L2NhcmJvbi9jb2RlL2V4cC9lY2hvMi5weSB8IGN1dCAtZCcgJyAtZjEpCmVjaG8gImV2YWxfdjUzPSRFViBiaWdldmFsPSRCViBnMT0kRzEgbTN3NT0kVzUgZWNobzJweT0kRTJQIgpbICIkRVYiID0gIjZkMjRkYTBlZWViMjhiYWQzNTBkOGIzOGYwOGVjM2ZjIiBdIHx8IHsgZWNobyAiQUJPUlQgZXZhbF92NTMgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJEJWIiA9ICJhNTgyMjMzOGQ5NzlhYmVhODA3ZmJkMmFiNGY3ZGFjZSIgXSB8fCB7IGVjaG8gIkFCT1JUIGJpZ2V2YWwgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJEcxIiA9ICI5NzVjNTE4YzEwMTk4NzIzZmVjN2JmYTU3NzQ0ZDljMyIgXSB8fCB7IGVjaG8gIkFCT1JUIGcxIHdlaWdodHMgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJFc1IiA9ICI4MmZkZTQ2YjI2MzM5NTBkM2NiYjI5ZThjYWNiZmRjMiIgXSB8fCB7IGVjaG8gIkFCT1JUIG0zdzUgd2VpZ2h0cyBtZDUiOyBlY2hvICIke01BUkt9X0VORCI7IGV4aXQgMTsgfQpbICIkRTJQIiA9ICIxNWI2ZDc1NGU2ZTIxZGUzMzg3MDA3NGQzOTgzYTE2ZiIgXSB8fCB7IGVjaG8gIkFCT1JUIGVjaG8yLnB5IG1kNSI7IGVjaG8gIiR7TUFSS31fRU5EIjsgZXhpdCAxOyB9CmVjaG8gImFsbCBtZDUgT0siCmZvciBmIGluIGVjaG8yX20yIG0zczJnMV9lY2hvMjsgZG8KICBpZiBbIC1lIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS8kZi5qc29ubCBdOyB0aGVuCiAgICBlY2hvICJBQk9SVCB0YWcgZmlsZSBhbHJlYWR5IGV4aXN0czogJGYuanNvbmwiOyBlY2hvICIke01BUkt9X0VORCI7IGV4aXQgMQogIGZpCmRvbmUKZWNobyAibmV3IHRhZyBmaWxlcyBhYnNlbnQiCmVjaG8gIi0tLSBXUklURSBDSEFJTiBSVU5ORVIgLS0tIgpjYXQgPiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3JfcnVubmVyLnNoIDw8J0NIQUlOJwojIS9iaW4vYmFzaAojIGNoYWluZWQ6IGZpZWxkMSBFY2hvMiB2cyBNYXN0ZXIyciAoOTk5NjAwLCAyMDApIHRoZW4gZmllbGQyIG0zczJnMSB2cyBFY2hvMiAoOTk5ODAwLCAyMDApLiBObyBpZGxlIGdhcC4KY2QgL3Jvb3QvY2FyYm9uL2NvZGUKZXhwb3J0IEVWT19XT1JLRVJTPTYyIE9NUF9OVU1fVEhSRUFEUz0xIE1LTF9OVU1fVEhSRUFEUz0xIE9QRU5CTEFTX05VTV9USFJFQURTPTEgTlVNRVhQUl9OVU1fVEhSRUFEUz0xCmVjaG8gIkNIQUlOX1NUQVJUICQoZGF0ZSAnKyVGICVUICVaJykgZmllbGQxIGVjaG8yX20yIiA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iuc3RhdHVzCi4uLy52ZW52L2Jpbi9weXRob24gYmlnZXZhbC5weSBleHAvZWNobzIucHkgZXhwL29wcF9tYXN0ZXIyci5weSA5OTk2MDAgMjAwIGVjaG8yX20yID4+IC9yb290L2NhcmJvbi9kYXRhL2VjaG8yX20yLmxhdW5jaGVyLmxvZyAyPiYxCmVjaG8gIkNIQUlOX0ZJRUxEMV9ET05FIHJjPSQ/ICQoZGF0ZSAnKyVGICVUICVaJykiID4+IC9yb290L2NhcmJvbi9kYXRhL2VjaG8yX2FuY2hvci5zdGF0dXMKZWNobyAiQ0hBSU5fU1RBUlQgJChkYXRlICcrJUYgJVQgJVonKSBmaWVsZDIgbTNzMmcxX2VjaG8yIiA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iuc3RhdHVzCi4uLy52ZW52L2Jpbi9weXRob24gYmlnZXZhbC5weSBleHAvbTNzMmcxLnB5IGV4cC9lY2hvMi5weSA5OTk4MDAgMjAwIG0zczJnMV9lY2hvMiA+PiAvcm9vdC9jYXJib24vZGF0YS9tM3MyZzFfZWNobzIubGF1bmNoZXIubG9nIDI+JjEKZWNobyAiQ0hBSU5fRklFTEQyX0RPTkUgcmM9JD8gJChkYXRlICcrJUYgJVQgJVonKSIgPj4gL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yLnN0YXR1cwpDSEFJTgpjaG1vZCAreCAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3JfcnVubmVyLnNoCmVjaG8gIi0tLSBMQVVOQ0ggQ0hBSU4gKGRldGFjaGVkKSAtLS0iCnNldHNpZCBub2h1cCAvYmluL2Jhc2ggL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yX3J1bm5lci5zaCA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iub3V0IDI+JjEgPCAvZGV2L251bGwgJgplY2hvICJjaGFpbiBsYXVuY2hlciBwaWQ6ICQhIgpzbGVlcCA5MAplY2hvICItLS0gVkVSSUZZIChmaWVsZDEgcnVubmluZyBvciBhbHJlYWR5IGRvbmU7IGZpZWxkMiBtYXkgYmUgcnVubmluZykgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yLnN0YXR1cyAyPiYxCnBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnYmlnZXZhbC5weSBleHAvJyB8IGdyZXAgLXYgZ3JlcCB8fCBlY2hvICJOT19CSUdFVkFMX1BST0NfQVRfVkVSSUZZIgplY2hvICJiaWdldmFsIHByb2MgY291bnQ6ICQocHMgLWVvIGFyZ3MgfCBncmVwIC1jICdbYl1pZ2V2YWwucHkgZXhwLycpIgpXUElEPSQocGdyZXAgLWYgJ2JpZ2V2YWwucHkgZXhwLycgfCB0YWlsIC0xKQplY2hvICJzYW1wbGUgd29ya2VyIHBpZDogJFdQSUQiCmlmIFsgLW4gIiRXUElEIiBdOyB0aGVuCiAgdHIgJ1wwJyAnXG4nIDwgL3Byb2MvJFdQSUQvZW52aXJvbiAyPi9kZXYvbnVsbCB8IGdyZXAgLUUgJ0VWT19XT1JLRVJTfE9NUF9OVU1fVEhSRUFEU3xNS0xfTlVNX1RIUkVBRFN8T1BFTkJMQVNfTlVNX1RIUkVBRFN8TlVNRVhQUl9OVU1fVEhSRUFEUycgfHwgZWNobyAiVEhSRUFEIEVOViBOT1QgVklTSUJMRSIKICBhd2sgJy9eVGhyZWFkczove3ByaW50ICJ3b3JrZXIgdGhyZWFkczoiLCAkMn0nIC9wcm9jLyRXUElEL3N0YXR1cyAyPi9kZXYvbnVsbApmaQplY2hvICItLS0gTElWRSBGSUxFUyAtLS0iCndjIC1sIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS9lY2hvMl9tMi5qc29ubCAvcm9vdC9jYXJib24vZGF0YS9iaWdldmFsX2xpdmUvbTNzMmcxX2VjaG8yLmpzb25sIDI+JjEKY2F0IC9wcm9jL2xvYWRhdmcKZWNobyAiJHtNQVJLfV9FTkQiCg==" ]; then[0m
+2026-11-12T12:01:44.4652843Z [36;1m  python3 tools/acs_runcommand.py "i-uf65ykinp4dvkirzk7q4" --b64 "IyEvYmluL2Jhc2gKIyBoMjM6IGxhdW5jaCBFY2hvMiBhbmNob3IgY2hhaW4gKGZpZWxkMSBlY2hvMl9tMiAyMDAgKyBmaWVsZDIgbTNzMmcxX2VjaG8yIDIwMCksCiMgZnVsbC1sb2FkIHJlY2lwZTogRVZPX1dPUktFUlM9NjIsIGFsbCBudW1weSB0aHJlYWQgdmFycyBwaW5uZWQgdG8gMS4KTUFSSz0iSDIzQU5DSE9STEFVTkNIMjAwNEMiCmVjaG8gIiR7TUFSS31fQkVHSU4iCmRhdGUgJyslRiAlVCAlWicKZWNobyAiLS0tIFBSRS1GTElHSFQgLS0tIgppZiBwZ3JlcCAtZiAnYmlnZXZhbC5weSBleHAvJyA+IC9kZXYvbnVsbDsgdGhlbgogIGVjaG8gIkFCT1JUOiBhIGJpZ2V2YWwgZmllbGQgaXMgYWxyZWFkeSBydW5uaW5nIgogIHBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnYmlnZXZhbC5weSBleHAvJyB8IGdyZXAgLXYgZ3JlcAogIGVjaG8gIiR7TUFSS31fRU5EIjsgZXhpdCAwCmZpCmVjaG8gIm5vIGJpZ2V2YWwgcnVubmluZyIKRVY9JChtZDVzdW0gL3Jvb3QvY2FyYm9uL2NvZGUvZXZhbF92NTMucHkgfCBjdXQgLWQnICcgLWYxKQpCVj0kKG1kNXN1bSAvcm9vdC9jYXJib24vY29kZS9iaWdldmFsLnB5IHwgY3V0IC1kJyAnIC1mMSkKRzE9JChtZDVzdW0gL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3MyZzFMLm5weiB8IGN1dCAtZCcgJyAtZjEpClc1PSQobWQ1c3VtIC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTN3NUwubnB6IHwgY3V0IC1kJyAnIC1mMSkKRTJQPSQobWQ1c3VtIC9yb290L2NhcmJvbi9jb2RlL2V4cC9lY2hvMi5weSB8IGN1dCAtZCcgJyAtZjEpCmVjaG8gImV2YWxfdjUzPSRFViBiaWdldmFsPSRCViBnMT0kRzEgbTN3NT0kVzUgZWNobzJweT0kRTJQIgpbICIkRVYiID0gIjZkMjRkYTBlZWViMjhiYWQzNTBkOGIzOGYwOGVjM2ZjIiBdIHx8IHsgZWNobyAiQUJPUlQgZXZhbF92NTMgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJEJWIiA9ICJhNTgyMjMzOGQ5NzlhYmVhODA3ZmJkMmFiNGY3ZGFjZSIgXSB8fCB7IGVjaG8gIkFCT1JUIGJpZ2V2YWwgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJEcxIiA9ICI5NzVjNTE4YzEwMTk4NzIzZmVjN2JmYTU3NzQ0ZDljMyIgXSB8fCB7IGVjaG8gIkFCT1JUIGcxIHdlaWdodHMgbWQ1IjsgZWNobyAiJHtNQVJLfV9FTkQiOyBleGl0IDE7IH0KWyAiJFc1IiA9ICI4MmZkZTQ2YjI2MzM5NTBkM2NiYjI5ZThjYWNiZmRjMiIgXSB8fCB7IGVjaG8gIkFCT1JUIG0zdzUgd2VpZ2h0cyBtZDUiOyBlY2hvICIke01BUkt9X0VORCI7IGV4aXQgMTsgfQpbICIkRTJQIiA9ICIxNWI2ZDc1NGU2ZTIxZGUzMzg3MDA3NGQzOTgzYTE2ZiIgXSB8fCB7IGVjaG8gIkFCT1JUIGVjaG8yLnB5IG1kNSI7IGVjaG8gIiR7TUFSS31fRU5EIjsgZXhpdCAxOyB9CmVjaG8gImFsbCBtZDUgT0siCmZvciBmIGluIGVjaG8yX20yIG0zczJnMV9lY2hvMjsgZG8KICBpZiBbIC1lIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS8kZi5qc29ubCBdOyB0aGVuCiAgICBlY2hvICJBQk9SVCB0YWcgZmlsZSBhbHJlYWR5IGV4aXN0czogJGYuanNvbmwiOyBlY2hvICIke01BUkt9X0VORCI7IGV4aXQgMQogIGZpCmRvbmUKZWNobyAibmV3IHRhZyBmaWxlcyBhYnNlbnQiCmVjaG8gIi0tLSBXUklURSBDSEFJTiBSVU5ORVIgLS0tIgpjYXQgPiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3JfcnVubmVyLnNoIDw8J0NIQUlOJwojIS9iaW4vYmFzaAojIGNoYWluZWQ6IGZpZWxkMSBFY2hvMiB2cyBNYXN0ZXIyciAoOTk5NjAwLCAyMDApIHRoZW4gZmllbGQyIG0zczJnMSB2cyBFY2hvMiAoOTk5ODAwLCAyMDApLiBObyBpZGxlIGdhcC4KY2QgL3Jvb3QvY2FyYm9uL2NvZGUKZXhwb3J0IEVWT19XT1JLRVJTPTYyIE9NUF9OVU1fVEhSRUFEUz0xIE1LTF9OVU1fVEhSRUFEUz0xIE9QRU5CTEFTX05VTV9USFJFQURTPTEgTlVNRVhQUl9OVU1fVEhSRUFEUz0xCmVjaG8gIkNIQUlOX1NUQVJUICQoZGF0ZSAnKyVGICVUICVaJykgZmllbGQxIGVjaG8yX20yIiA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iuc3RhdHVzCi4uLy52ZW52L2Jpbi9weXRob24gYmlnZXZhbC5weSBleHAvZWNobzIucHkgZXhwL29wcF9tYXN0ZXIyci5weSA5OTk2MDAgMjAwIGVjaG8yX20yID4+IC9yb290L2NhcmJvbi9kYXRhL2VjaG8yX20yLmxhdW5jaGVyLmxvZyAyPiYxCmVjaG8gIkNIQUlOX0ZJRUxEMV9ET05FIHJjPSQ/ICQoZGF0ZSAnKyVGICVUICVaJykiID4+IC9yb290L2NhcmJvbi9kYXRhL2VjaG8yX2FuY2hvci5zdGF0dXMKZWNobyAiQ0hBSU5fU1RBUlQgJChkYXRlICcrJUYgJVQgJVonKSBmaWVsZDIgbTNzMmcxX2VjaG8yIiA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iuc3RhdHVzCi4uLy52ZW52L2Jpbi9weXRob24gYmlnZXZhbC5weSBleHAvbTNzMmcxLnB5IGV4cC9lY2hvMi5weSA5OTk4MDAgMjAwIG0zczJnMV9lY2hvMiA+PiAvcm9vdC9jYXJib24vZGF0YS9tM3MyZzFfZWNobzIubGF1bmNoZXIubG9nIDI+JjEKZWNobyAiQ0hBSU5fRklFTEQyX0RPTkUgcmM9JD8gJChkYXRlICcrJUYgJVQgJVonKSIgPj4gL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yLnN0YXR1cwpDSEFJTgpjaG1vZCAreCAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3JfcnVubmVyLnNoCmVjaG8gIi0tLSBMQVVOQ0ggQ0hBSU4gKGRldGFjaGVkKSAtLS0iCnNldHNpZCBub2h1cCAvYmluL2Jhc2ggL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yX3J1bm5lci5zaCA+PiAvcm9vdC9jYXJib24vZGF0YS9lY2hvMl9hbmNob3Iub3V0IDI+JjEgPCAvZGV2L251bGwgJgplY2hvICJjaGFpbiBsYXVuY2hlciBwaWQ6ICQhIgpzbGVlcCA5MAplY2hvICItLS0gVkVSSUZZIChmaWVsZDEgcnVubmluZyBvciBhbHJlYWR5IGRvbmU7IGZpZWxkMiBtYXkgYmUgcnVubmluZykgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2RhdGEvZWNobzJfYW5jaG9yLnN0YXR1cyAyPiYxCnBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnYmlnZXZhbC5weSBleHAvJyB8IGdyZXAgLXYgZ3JlcCB8fCBlY2hvICJOT19CSUdFVkFMX1BST0NfQVRfVkVSSUZZIgplY2hvICJiaWdldmFsIHByb2MgY291bnQ6ICQocHMgLWVvIGFyZ3MgfCBncmVwIC1jICdbYl1pZ2V2YWwucHkgZXhwLycpIgpXUElEPSQocGdyZXAgLWYgJ2JpZ2V2YWwucHkgZXhwLycgfCB0YWlsIC0xKQplY2hvICJzYW1wbGUgd29ya2VyIHBpZDogJFdQSUQiCmlmIFsgLW4gIiRXUElEIiBdOyB0aGVuCiAgdHIgJ1wwJyAnXG4nIDwgL3Byb2MvJFdQSUQvZW52aXJvbiAyPi9kZXYvbnVsbCB8IGdyZXAgLUUgJ0VWT19XT1JLRVJTfE9NUF9OVU1fVEhSRUFEU3xNS0xfTlVNX1RIUkVBRFN8T1BFTkJMQVNfTlVNX1RIUkVBRFN8TlVNRVhQUl9OVU1fVEhSRUFEUycgfHwgZWNobyAiVEhSRUFEIEVOViBOT1QgVklTSUJMRSIKICBhd2sgJy9eVGhyZWFkczove3ByaW50ICJ3b3JrZXIgdGhyZWFkczoiLCAkMn0nIC9wcm9jLyRXUElEL3N0YXR1cyAyPi9kZXYvbnVsbApmaQplY2hvICItLS0gTElWRSBGSUxFUyAtLS0iCndjIC1sIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS9lY2hvMl9tMi5qc29ubCAvcm9vdC9jYXJib24vZGF0YS9iaWdldmFsX2xpdmUvbTNzMmcxX2VjaG8yLmpzb25sIDI+JjEKY2F0IC9wcm9jL2xvYWRhdmcKZWNobyAiJHtNQVJLfV9FTkQiCg=="[0m
+2026-11-12T12:01:44.4731393Z [36;1melse[0m
+2026-11-12T12:01:44.4731616Z [36;1m  python3 tools/acs_runcommand.py "i-uf65ykinp4dvkirzk7q4" "hostname && uptime"[0m
+2026-11-12T12:01:44.4731866Z [36;1mfi[0m
+2026-11-12T12:01:44.4754488Z shell: /usr/bin/bash -e {0}
+2026-11-12T12:01:44.4754694Z env:
+2026-11-12T12:01:44.4755197Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T12:01:44.4755404Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T12:01:44.4755556Z   ACS_REGION: cn-shanghai
+2026-11-12T12:01:44.4755700Z ##[endgroup]
+2026-11-12T12:03:21.2374739Z InvokeId: t-sh072vyw5j6l43k
+2026-11-12T12:03:21.2375639Z --- status=Success exit=0 ---
+2026-11-12T12:03:21.2377659Z H23ANCHORLAUNCH2004C_BEGIN
+2026-11-12T12:03:21.2377905Z 2026-11-12 20:01:46 CST
+2026-11-12T12:03:21.2378142Z --- PRE-FLIGHT ---
+2026-11-12T12:03:21.2378360Z no bigeval running
+2026-11-12T12:03:21.2379149Z eval_v53=6d24da0eeeb28bad350d8b38f08ec3fc bigeval=a5822338d979abea807fbd2ab4f7dace g1=975c518c10198723fec7bfa57744d9c3 m3w5=82fde46b2633950d3cbb29e8cacbfdc2 echo2py=15b6d754e6e21de33870074d3983a16f
+2026-11-12T12:03:21.2379814Z all md5 OK
+2026-11-12T12:03:21.2379985Z new tag files absent
+2026-11-12T12:03:21.2380171Z --- WRITE CHAIN RUNNER ---
+2026-11-12T12:03:21.2380377Z --- LAUNCH CHAIN (detached) ---
+2026-11-12T12:03:21.2381127Z chain launcher pid: 130802
+2026-11-12T12:03:21.2381395Z --- VERIFY (field1 running or already done; field2 may be running) ---
+2026-11-12T12:03:21.2381716Z CHAIN_START 2026-11-12 20:01:46 CST field1 echo2_m2
+2026-11-12T12:03:21.2381970Z CHAIN_FIELD1_DONE rc=0 2026-11-12 20:03:05 CST
+2026-11-12T12:03:21.2382230Z CHAIN_START 2026-11-12 20:03:05 CST field2 m3s2g1_echo2
+2026-11-12T12:03:21.2382619Z  130903  130802       00:11 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2383391Z  130904  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2383879Z  130905  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2384356Z  130906  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2384850Z  130907  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2385320Z  130908  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2385798Z  130909  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2386277Z  130910  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2386756Z  130911  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2387241Z  130912  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2387832Z  130913  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2388303Z  130914  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2389022Z  130915  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2389496Z  130916  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2389969Z  130917  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2390447Z  130918  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2390923Z  130919  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2391441Z  130920  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2392095Z  130921  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2392610Z  130922  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2393119Z  130923  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2393632Z  130924  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2394150Z  130925  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2394675Z  130926  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2395200Z  130927  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2395732Z  130928  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2396398Z  130929  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2396900Z  130930  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2397420Z  130931  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2397940Z  130932  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2398467Z  130933  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2399179Z  130934  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2399672Z  130935  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2400204Z  130936  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2400746Z  130937  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2401284Z  130938  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2401832Z  130939  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2402365Z  130940  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2402901Z  130941  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2403434Z  130942  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2403968Z  130943  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2404514Z  130944  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2405059Z  130945  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2405611Z  130946  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2406199Z  130947  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2406786Z  130948  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2407338Z  130949  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2407847Z  130950  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2408394Z  130951  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2408992Z  130952  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2409551Z  130953  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2410138Z  130954  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2410696Z  130955  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2411258Z  130956  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2411839Z  130957  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2412410Z  130958  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2413158Z  130959  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2413692Z  130960  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2414223Z  130961  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2414757Z  130962  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2415417Z  130963  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2415949Z  130964  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2416478Z  130965  130903       00:10 ../.venv/bin/python bigeval.py exp/m3s2g1.py exp/echo2.py 999800 200 m3s2g1_echo2
+2026-11-12T12:03:21.2416923Z bigeval proc count: 63
+2026-11-12T12:03:21.2417136Z sample worker pid: 130965
+2026-11-12T12:03:21.2417352Z EVO_WORKERS=62
+2026-11-12T12:03:21.2417541Z NUMEXPR_NUM_THREADS=1
+2026-11-12T12:03:21.2417733Z OPENBLAS_NUM_THREADS=1
+2026-11-12T12:03:21.2417931Z OMP_NUM_THREADS=1
+2026-11-12T12:03:21.2418111Z MKL_NUM_THREADS=1
+2026-11-12T12:03:21.2418286Z worker threads: 1
+2026-11-12T12:03:21.2418463Z --- LIVE FILES ---
+2026-11-12T12:03:21.2418688Z    200 /root/carbon/data/bigeval_live/echo2_m2.jsonl
+2026-11-12T12:03:21.2419098Z      0 /root/carbon/data/bigeval_live/m3s2g1_echo2.jsonl
+2026-11-12T12:03:21.2419361Z    200 total
+2026-11-12T12:03:21.2419537Z 37.48 16.44 32.37 63/1003 130982
+2026-11-12T12:03:21.2419784Z H23ANCHORLAUNCH2004C_END
+2026-11-12T12:03:21.2419923Z 
+2026-11-12T12:03:21.2623398Z Post job cleanup.
+2026-11-12T12:03:21.3351218Z [command]/usr/bin/git version
+2026-11-12T12:03:21.3481056Z git version 2.56.0
+2026-11-12T12:03:21.3485307Z Temporarily overriding HOME='/home/runner/work/_temp/d0f6deec-16f9-4b92-b09a-83bc797dbbe5' before making global git config changes
+2026-11-12T12:03:21.3486312Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T12:03:21.3487184Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:03:21.3572257Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T12:03:21.3574274Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T12:03:21.3981066Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T12:03:21.4050291Z http.https://github.com/.extraheader
+2026-11-12T12:03:21.4091804Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T12:03:21.4093481Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T12:03:21.4423071Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T12:03:21.4480103Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T12:03:21.5014212Z Cleaning up orphan processes
+2026-11-12T12:03:21.5265258Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

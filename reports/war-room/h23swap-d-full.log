@@ -1,0 +1,157 @@
+﻿2026-11-12T09:07:50.8308381Z Current runner version: '2.338.2'
+2026-11-12T09:07:50.8333701Z ##[group]Runner Image Provisioner
+2026-11-12T09:07:50.8334567Z Hosted Compute Agent
+2026-11-12T09:07:50.8335171Z Version: 20261028.624
+2026-11-12T09:07:50.8335784Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T09:07:50.8336416Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T09:07:50.8337141Z Worker ID: {c70d3cfe-cab6-463e-8ac3-70f70dcaf164}
+2026-11-12T09:07:50.8337773Z Region: centralus
+2026-11-12T09:07:50.8338342Z Cloud: Azure
+2026-11-12T09:07:50.8338871Z ##[endgroup]
+2026-11-12T09:07:50.8340583Z ##[group]Operating System
+2026-11-12T09:07:50.8341175Z Ubuntu
+2026-11-12T09:07:50.8341646Z 24.04.5
+2026-11-12T09:07:50.8342175Z LTS
+2026-11-12T09:07:50.8342688Z ##[endgroup]
+2026-11-12T09:07:50.8343264Z ##[group]Runner Image
+2026-11-12T09:07:50.8343837Z Image: ubuntu-24.04
+2026-11-12T09:07:50.8344357Z Version: 20261101.360.1
+2026-11-12T09:07:50.8345662Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T09:07:50.8347146Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T09:07:50.8348087Z ##[endgroup]
+2026-11-12T09:07:50.8349152Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T09:07:50.8351193Z Contents: read
+2026-11-12T09:07:50.8351704Z Metadata: read
+2026-11-12T09:07:50.8352309Z ##[endgroup]
+2026-11-12T09:07:50.8354276Z Secret source: Actions
+2026-11-12T09:07:50.8355203Z Cache mode: write
+2026-11-12T09:07:50.8355863Z Prepare workflow directory
+2026-11-12T09:07:50.8716706Z Prepare all required actions
+2026-11-12T09:07:50.8763346Z Getting action download info
+2026-11-12T09:07:51.1885191Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T09:07:51.3666688Z Complete job name: run
+2026-11-12T09:07:51.4292772Z ##[group]Run actions/checkout@v4
+2026-11-12T09:07:51.4293208Z with:
+2026-11-12T09:07:51.4293472Z   repository: robertyang87/carbon-league
+2026-11-12T09:07:51.4295650Z   token: ***
+2026-11-12T09:07:51.4295893Z   ssh-strict: true
+2026-11-12T09:07:51.4296133Z   ssh-user: git
+2026-11-12T09:07:51.4296380Z   persist-credentials: true
+2026-11-12T09:07:51.4296649Z   clean: true
+2026-11-12T09:07:51.4296897Z   sparse-checkout-cone-mode: true
+2026-11-12T09:07:51.4297178Z   fetch-depth: 1
+2026-11-12T09:07:51.4297413Z   fetch-tags: false
+2026-11-12T09:07:51.4297657Z   show-progress: true
+2026-11-12T09:07:51.4297901Z   lfs: false
+2026-11-12T09:07:51.4298132Z   submodules: false
+2026-11-12T09:07:51.4298379Z   set-safe-directory: true
+2026-11-12T09:07:51.4298658Z   allow-unsafe-pr-checkout: false
+2026-11-12T09:07:51.4299006Z ##[endgroup]
+2026-11-12T09:07:51.6235207Z Syncing repository: robertyang87/carbon-league
+2026-11-12T09:07:51.6237383Z ##[group]Getting Git version info
+2026-11-12T09:07:51.6238766Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T09:07:51.6240899Z [command]/usr/bin/git version
+2026-11-12T09:07:51.6371564Z git version 2.56.0
+2026-11-12T09:07:51.6379032Z ##[endgroup]
+2026-11-12T09:07:51.6387223Z Temporarily overriding HOME='/home/runner/work/_temp/72d92420-cd1d-46ce-ba19-c88f341c6ea3' before making global git config changes
+2026-11-12T09:07:51.6389043Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T09:07:51.6392303Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T09:07:51.6498945Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T09:07:51.6500422Z ##[group]Initializing the repository
+2026-11-12T09:07:51.6501140Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T09:07:51.6654163Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T09:07:51.6672299Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T09:07:51.6704447Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T09:07:51.6706019Z hint: call:
+2026-11-12T09:07:51.6795414Z hint:
+2026-11-12T09:07:51.6822262Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T09:07:51.6841314Z hint:
+2026-11-12T09:07:51.6842021Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T09:07:51.6842727Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T09:07:51.6843277Z hint:
+2026-11-12T09:07:51.6843689Z hint: 	git branch -m <name>
+2026-11-12T09:07:51.6844100Z hint:
+2026-11-12T09:07:51.6844763Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T09:07:51.6871628Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T09:07:51.6964682Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T09:07:51.6966947Z ##[endgroup]
+2026-11-12T09:07:51.6968060Z ##[group]Disabling automatic garbage collection
+2026-11-12T09:07:51.6968724Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T09:07:51.6971340Z ##[endgroup]
+2026-11-12T09:07:51.6972144Z ##[group]Setting up auth
+2026-11-12T09:07:51.6973464Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T09:07:51.6976039Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T09:07:51.7205409Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T09:07:51.7243074Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T09:07:51.7442210Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T09:07:51.7472830Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T09:07:51.7668793Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T09:07:51.7714206Z ##[endgroup]
+2026-11-12T09:07:51.7715358Z ##[group]Fetching the repository
+2026-11-12T09:07:51.7723311Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +261a8e1946afc502e06de2b8fa15ab4708e486e2:refs/remotes/origin/main
+2026-11-12T09:07:53.3683409Z From https://github.com/robertyang87/carbon-league
+2026-11-12T09:07:53.3683791Z  * [new ref]         261a8e1946afc502e06de2b8fa15ab4708e486e2 -> origin/main
+2026-11-12T09:07:53.3684703Z ##[endgroup]
+2026-11-12T09:07:53.3685103Z ##[group]Determining the checkout info
+2026-11-12T09:07:53.3685533Z ##[endgroup]
+2026-11-12T09:07:53.3685769Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T09:07:53.3705905Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T09:07:53.3744791Z ##[group]Checking out the ref
+2026-11-12T09:07:53.3756785Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T09:07:53.6355178Z Switched to a new branch 'main'
+2026-11-12T09:07:53.6413835Z branch 'main' set up to track 'origin/main'.
+2026-11-12T09:07:53.6433259Z ##[endgroup]
+2026-11-12T09:07:53.6470883Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T09:07:53.6511444Z 261a8e1946afc502e06de2b8fa15ab4708e486e2
+2026-11-12T09:07:53.6787054Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKIyBoMjMgc3RlcCBEOiB2ZXJpZnkgZTBfbTJfYmFzZSBiYXNlbGluZSBmaWVsZCBpcyBydW5uaW5nIGFuZCBwcm9kdWNpbmcgZ2FtZXMuCk1BUks9IkgyM1NXUEQ4UiIKZWNobyAiTUFSS0VSICRNQVJLIFNUQVJUIgpkYXRlICcrJUYgJVQgJVonCmVjaG8gIi0tLSBQUk9DUyAtLS0iCnBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnZTBfbTJfYmFzZScgfCBncmVwIC12IGdyZXAgfHwgZWNobyAiTk8gZTBfbTJfYmFzZSBQUk9DIgpGPS9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS9lMF9tMl9iYXNlLmpzb25sCmlmIFsgLWYgIiRGIiBdOyB0aGVuCiAgQzE9JCh3YyAtbCA8ICIkRiIpOyBlY2hvICJsaW5lcyBub3c6ICRDMSIKICBzbGVlcCAyMAogIEMyPSQod2MgLWwgPCAiJEYiKTsgZWNobyAibGluZXMgKzIwczogJEMyIgogIGlmIFsgIiRDMiIgLWd0ICIkQzEiIF07IHRoZW4gZWNobyAiR1JPV0lORyI7IGVsaWYgWyAiJEMyIiA9ICIkQzEiIF07IHRoZW4gZWNobyAiU1RBVElDLUlOLVdJTkRPVyI7IGVsc2UgZWNobyAiU0hSQU5LLUFOT01BTFkiOyBmaQogIFBZPS9yb290L2NhcmJvbi8udmVudi9iaW4vcHl0aG9uOyBbIC14ICIkUFkiIF0gfHwgUFk9cHl0aG9uMwogICIkUFkiIC0gPDwnUFlFT0YnCmltcG9ydCBqc29uCmYgPSAnL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL2UwX20yX2Jhc2UuanNvbmwnCmxpbmVzID0gb3BlbihmKS5yZWFkKCkuc3RyaXAoKS5zcGxpdGxpbmVzKCkKcHJpbnQoJ3RvdGFsIGxpbmVzOicsIGxlbihsaW5lcykpCmZvciBsIGluIGxpbmVzWzozXToKICAgIGQgPSBqc29uLmxvYWRzKGwpCiAgICBwcmludCgnR0FNRSBzZWVkPSVzIHNpZGU9JXMgbWFyZ2luPSVzIGVycj0lcyB0PSVzJyAlIChkLmdldCgnc2VlZCcpLCBkLmdldCgnc2lkZScpLCBkLmdldCgnbWFyZ2luJyksIGQuZ2V0KCdlcnInKSwgZC5nZXQoJ3QnKSkpCm1zID0gW2pzb24ubG9hZHMobCkuZ2V0KCdtYXJnaW4nKSBmb3IgbCBpbiBsaW5lc10KbXMgPSBbbSBmb3IgbSBpbiBtcyBpZiBtIGlzIG5vdCBOb25lXQplcnJzID0gc3VtKDEgZm9yIGwgaW4gbGluZXMgaWYganNvbi5sb2FkcyhsKS5nZXQoJ2VycicpKQppZiBtczoKICAgIHByaW50KCdTTy1GQVIgbWVhbl9tYXJnaW5fYT0lLjFmIHdpbnNfYT0lZCBlcnJfbGluZXM9JWQnICUgKHN1bShtcykvbGVuKG1zKSwgc3VtKDEgZm9yIG0gaW4gbXMgaWYgbSA+IDApLCBlcnJzKSkKUFlFT0YKZWxzZQogIGVjaG8gIkpTT05MIE5PVCBZRVQgUFJFU0VOVCIKZmkKZWNobyAiLS0tIE9VVCBUQUlMIC0tLSIKdGFpbCAtNSAvcm9vdC9jYXJib24vZGF0YS9lMF9tMl9iYXNlLm91dCAyPi9kZXYvbnVsbAplY2hvICJNQVJLRVIgJE1BUksgRU5EIgo=" ]; then
+2026-11-12T09:07:53.6822423Z [36;1mif [ -n "IyEvYmluL2Jhc2gKIyBoMjMgc3RlcCBEOiB2ZXJpZnkgZTBfbTJfYmFzZSBiYXNlbGluZSBmaWVsZCBpcyBydW5uaW5nIGFuZCBwcm9kdWNpbmcgZ2FtZXMuCk1BUks9IkgyM1NXUEQ4UiIKZWNobyAiTUFSS0VSICRNQVJLIFNUQVJUIgpkYXRlICcrJUYgJVQgJVonCmVjaG8gIi0tLSBQUk9DUyAtLS0iCnBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnZTBfbTJfYmFzZScgfCBncmVwIC12IGdyZXAgfHwgZWNobyAiTk8gZTBfbTJfYmFzZSBQUk9DIgpGPS9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS9lMF9tMl9iYXNlLmpzb25sCmlmIFsgLWYgIiRGIiBdOyB0aGVuCiAgQzE9JCh3YyAtbCA8ICIkRiIpOyBlY2hvICJsaW5lcyBub3c6ICRDMSIKICBzbGVlcCAyMAogIEMyPSQod2MgLWwgPCAiJEYiKTsgZWNobyAibGluZXMgKzIwczogJEMyIgogIGlmIFsgIiRDMiIgLWd0ICIkQzEiIF07IHRoZW4gZWNobyAiR1JPV0lORyI7IGVsaWYgWyAiJEMyIiA9ICIkQzEiIF07IHRoZW4gZWNobyAiU1RBVElDLUlOLVdJTkRPVyI7IGVsc2UgZWNobyAiU0hSQU5LLUFOT01BTFkiOyBmaQogIFBZPS9yb290L2NhcmJvbi8udmVudi9iaW4vcHl0aG9uOyBbIC14ICIkUFkiIF0gfHwgUFk9cHl0aG9uMwogICIkUFkiIC0gPDwnUFlFT0YnCmltcG9ydCBqc29uCmYgPSAnL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL2UwX20yX2Jhc2UuanNvbmwnCmxpbmVzID0gb3BlbihmKS5yZWFkKCkuc3RyaXAoKS5zcGxpdGxpbmVzKCkKcHJpbnQoJ3RvdGFsIGxpbmVzOicsIGxlbihsaW5lcykpCmZvciBsIGluIGxpbmVzWzozXToKICAgIGQgPSBqc29uLmxvYWRzKGwpCiAgICBwcmludCgnR0FNRSBzZWVkPSVzIHNpZGU9JXMgbWFyZ2luPSVzIGVycj0lcyB0PSVzJyAlIChkLmdldCgnc2VlZCcpLCBkLmdldCgnc2lkZScpLCBkLmdldCgnbWFyZ2luJyksIGQuZ2V0KCdlcnInKSwgZC5nZXQoJ3QnKSkpCm1zID0gW2pzb24ubG9hZHMobCkuZ2V0KCdtYXJnaW4nKSBmb3IgbCBpbiBsaW5lc10KbXMgPSBbbSBmb3IgbSBpbiBtcyBpZiBtIGlzIG5vdCBOb25lXQplcnJzID0gc3VtKDEgZm9yIGwgaW4gbGluZXMgaWYganNvbi5sb2FkcyhsKS5nZXQoJ2VycicpKQppZiBtczoKICAgIHByaW50KCdTTy1GQVIgbWVhbl9tYXJnaW5fYT0lLjFmIHdpbnNfYT0lZCBlcnJfbGluZXM9JWQnICUgKHN1bShtcykvbGVuKG1zKSwgc3VtKDEgZm9yIG0gaW4gbXMgaWYgbSA+IDApLCBlcnJzKSkKUFlFT0YKZWxzZQogIGVjaG8gIkpTT05MIE5PVCBZRVQgUFJFU0VOVCIKZmkKZWNobyAiLS0tIE9VVCBUQUlMIC0tLSIKdGFpbCAtNSAvcm9vdC9jYXJib24vZGF0YS9lMF9tMl9iYXNlLm91dCAyPi9kZXYvbnVsbAplY2hvICJNQVJLRVIgJE1BUksgRU5EIgo=" ]; then[0m
+2026-11-12T09:07:53.6858737Z [36;1m  python3 tools/acs_runcommand.py "i-uf65ykinp4dvkirzk7q4" --b64 "IyEvYmluL2Jhc2gKIyBoMjMgc3RlcCBEOiB2ZXJpZnkgZTBfbTJfYmFzZSBiYXNlbGluZSBmaWVsZCBpcyBydW5uaW5nIGFuZCBwcm9kdWNpbmcgZ2FtZXMuCk1BUks9IkgyM1NXUEQ4UiIKZWNobyAiTUFSS0VSICRNQVJLIFNUQVJUIgpkYXRlICcrJUYgJVQgJVonCmVjaG8gIi0tLSBQUk9DUyAtLS0iCnBzIC1lbyBwaWQscHBpZCxldGltZSxhcmdzIHwgZ3JlcCAnZTBfbTJfYmFzZScgfCBncmVwIC12IGdyZXAgfHwgZWNobyAiTk8gZTBfbTJfYmFzZSBQUk9DIgpGPS9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS9lMF9tMl9iYXNlLmpzb25sCmlmIFsgLWYgIiRGIiBdOyB0aGVuCiAgQzE9JCh3YyAtbCA8ICIkRiIpOyBlY2hvICJsaW5lcyBub3c6ICRDMSIKICBzbGVlcCAyMAogIEMyPSQod2MgLWwgPCAiJEYiKTsgZWNobyAibGluZXMgKzIwczogJEMyIgogIGlmIFsgIiRDMiIgLWd0ICIkQzEiIF07IHRoZW4gZWNobyAiR1JPV0lORyI7IGVsaWYgWyAiJEMyIiA9ICIkQzEiIF07IHRoZW4gZWNobyAiU1RBVElDLUlOLVdJTkRPVyI7IGVsc2UgZWNobyAiU0hSQU5LLUFOT01BTFkiOyBmaQogIFBZPS9yb290L2NhcmJvbi8udmVudi9iaW4vcHl0aG9uOyBbIC14ICIkUFkiIF0gfHwgUFk9cHl0aG9uMwogICIkUFkiIC0gPDwnUFlFT0YnCmltcG9ydCBqc29uCmYgPSAnL3Jvb3QvY2FyYm9uL2RhdGEvYmlnZXZhbF9saXZlL2UwX20yX2Jhc2UuanNvbmwnCmxpbmVzID0gb3BlbihmKS5yZWFkKCkuc3RyaXAoKS5zcGxpdGxpbmVzKCkKcHJpbnQoJ3RvdGFsIGxpbmVzOicsIGxlbihsaW5lcykpCmZvciBsIGluIGxpbmVzWzozXToKICAgIGQgPSBqc29uLmxvYWRzKGwpCiAgICBwcmludCgnR0FNRSBzZWVkPSVzIHNpZGU9JXMgbWFyZ2luPSVzIGVycj0lcyB0PSVzJyAlIChkLmdldCgnc2VlZCcpLCBkLmdldCgnc2lkZScpLCBkLmdldCgnbWFyZ2luJyksIGQuZ2V0KCdlcnInKSwgZC5nZXQoJ3QnKSkpCm1zID0gW2pzb24ubG9hZHMobCkuZ2V0KCdtYXJnaW4nKSBmb3IgbCBpbiBsaW5lc10KbXMgPSBbbSBmb3IgbSBpbiBtcyBpZiBtIGlzIG5vdCBOb25lXQplcnJzID0gc3VtKDEgZm9yIGwgaW4gbGluZXMgaWYganNvbi5sb2FkcyhsKS5nZXQoJ2VycicpKQppZiBtczoKICAgIHByaW50KCdTTy1GQVIgbWVhbl9tYXJnaW5fYT0lLjFmIHdpbnNfYT0lZCBlcnJfbGluZXM9JWQnICUgKHN1bShtcykvbGVuKG1zKSwgc3VtKDEgZm9yIG0gaW4gbXMgaWYgbSA+IDApLCBlcnJzKSkKUFlFT0YKZWxzZQogIGVjaG8gIkpTT05MIE5PVCBZRVQgUFJFU0VOVCIKZmkKZWNobyAiLS0tIE9VVCBUQUlMIC0tLSIKdGFpbCAtNSAvcm9vdC9jYXJib24vZGF0YS9lMF9tMl9iYXNlLm91dCAyPi9kZXYvbnVsbAplY2hvICJNQVJLRVIgJE1BUksgRU5EIgo="[0m
+2026-11-12T09:07:53.6878241Z [36;1melse[0m
+2026-11-12T09:07:53.6878443Z [36;1m  python3 tools/acs_runcommand.py "i-uf65ykinp4dvkirzk7q4" "hostname && uptime"[0m
+2026-11-12T09:07:53.6878668Z [36;1mfi[0m
+2026-11-12T09:07:53.6898655Z shell: /usr/bin/bash -e {0}
+2026-11-12T09:07:53.6898824Z env:
+2026-11-12T09:07:53.6899243Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T09:07:53.6899432Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T09:07:53.6899575Z   ACS_REGION: cn-shanghai
+2026-11-12T09:07:53.6899708Z ##[endgroup]
+2026-11-12T09:08:18.8721265Z InvokeId: t-sh072vjdulfy0hs
+2026-11-12T09:08:18.8736474Z --- status=Success exit=0 ---
+2026-11-12T09:08:18.8750548Z MARKER H23SWPD8R START
+2026-11-12T09:08:18.8760021Z 2026-11-12 17:07:55 CST
+2026-11-12T09:08:18.8780345Z --- PROCS ---
+2026-11-12T09:08:18.8790620Z  119669       1       05:10 ../.venv/bin/python bigeval.py exp/echo_e0.py exp/opp_master2r.py 999200 200 e0_m2_base
+2026-11-12T09:08:18.8800495Z  119671  119669       05:10 ../.venv/bin/python bigeval.py exp/echo_e0.py exp/opp_master2r.py 999200 200 e0_m2_base
+2026-11-12T09:08:18.8815548Z  119672  119669       05:10 ../.venv/bin/python bigeval.py exp/echo_e0.py exp/opp_master2r.py 999200 200 e0_m2_base
+2026-11-12T09:08:18.8821102Z  119673  119669       05:10 ../.venv/bin/python bigeval.py exp/echo_e0.py exp/opp_master2r.py 999200 200 e0_m2_base
+2026-11-12T09:08:18.8821944Z  119674  119669       05:10 ../.venv/bin/python bigeval.py exp/echo_e0.py exp/opp_master2r.py 999200 200 e0_m2_base
+2026-11-12T09:08:18.8822745Z  119675  119669       05:10 ../.venv/bin/python bigeval.py exp/echo_e0.py exp/opp_master2r.py 999200 200 e0_m2_base
+2026-11-12T09:08:18.8823428Z  119676  119669       05:10 ../.venv/bin/python bigeval.py exp/echo_e0.py exp/opp_master2r.py 999200 200 e0_m2_base
+2026-11-12T09:08:18.8824147Z  119677  119669       05:10 ../.venv/bin/python bigeval.py exp/echo_e0.py exp/opp_master2r.py 999200 200 e0_m2_base
+2026-11-12T09:08:18.8824698Z lines now: 7
+2026-11-12T09:08:18.8824989Z lines +20s: 9
+2026-11-12T09:08:18.8825275Z GROWING
+2026-11-12T09:08:18.8825551Z total lines: 9
+2026-11-12T09:08:18.8825892Z GAME seed=999204 side=0 margin=1488 err=None t=17:05:15
+2026-11-12T09:08:18.8826322Z GAME seed=999205 side=1 margin=1232 err=None t=17:05:26
+2026-11-12T09:08:18.8826744Z GAME seed=999203 side=1 margin=1358 err=None t=17:05:28
+2026-11-12T09:08:18.8827477Z SO-FAR mean_margin_a=875.9 wins_a=8 err_lines=0
+2026-11-12T09:08:18.8827877Z --- OUT TAIL ---
+2026-11-12T09:08:18.8828174Z MARKER H23SWPD8R END
+2026-11-12T09:08:18.8828416Z 
+2026-11-12T09:08:18.8941572Z Post job cleanup.
+2026-11-12T09:08:18.9602019Z [command]/usr/bin/git version
+2026-11-12T09:08:18.9660445Z git version 2.56.0
+2026-11-12T09:08:18.9735387Z Temporarily overriding HOME='/home/runner/work/_temp/062d981f-8b63-47d3-b089-83a7e418bcdc' before making global git config changes
+2026-11-12T09:08:18.9737723Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T09:08:18.9738874Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T09:08:18.9779521Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T09:08:18.9839510Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T09:08:19.0184281Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T09:08:19.0233510Z http.https://github.com/.extraheader
+2026-11-12T09:08:19.0242745Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T09:08:19.0403803Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T09:08:19.0575503Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T09:08:19.0614624Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T09:08:19.0933184Z Cleaning up orphan processes
+2026-11-12T09:08:19.1155322Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

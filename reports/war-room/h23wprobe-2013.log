@@ -1,0 +1,691 @@
+﻿2026-11-12T12:13:56.0853352Z Current runner version: '2.338.2'
+2026-11-12T12:13:56.0889787Z ##[group]Runner Image Provisioner
+2026-11-12T12:13:56.0891060Z Hosted Compute Agent
+2026-11-12T12:13:56.0892083Z Version: 20261028.624
+2026-11-12T12:13:56.0893242Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T12:13:56.0894377Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T12:13:56.0895605Z Worker ID: {7fe0653e-0159-474d-9f66-fd06249c8eaf}
+2026-11-12T12:13:56.0896777Z Region: westus3
+2026-11-12T12:13:56.0897610Z Cloud: Azure
+2026-11-12T12:13:56.0898491Z ##[endgroup]
+2026-11-12T12:13:56.0901108Z ##[group]Operating System
+2026-11-12T12:13:56.0902300Z Ubuntu
+2026-11-12T12:13:56.0903212Z 24.04.5
+2026-11-12T12:13:56.0904063Z LTS
+2026-11-12T12:13:56.0904877Z ##[endgroup]
+2026-11-12T12:13:56.0905735Z ##[group]Runner Image
+2026-11-12T12:13:56.0906818Z Image: ubuntu-24.04
+2026-11-12T12:13:56.0907834Z Version: 20261101.360.1
+2026-11-12T12:13:56.0910114Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T12:13:56.0912739Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T12:13:56.0914289Z ##[endgroup]
+2026-11-12T12:13:56.0916059Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T12:13:56.0919745Z Contents: read
+2026-11-12T12:13:56.0920823Z Metadata: read
+2026-11-12T12:13:56.0921748Z ##[endgroup]
+2026-11-12T12:13:56.0924891Z Secret source: Actions
+2026-11-12T12:13:56.0926480Z Cache mode: write
+2026-11-12T12:13:56.0927955Z Prepare workflow directory
+2026-11-12T12:13:56.1410641Z Prepare all required actions
+2026-11-12T12:13:56.1484005Z Getting action download info
+2026-11-12T12:13:56.5091820Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T12:13:56.6934318Z Complete job name: run
+2026-11-12T12:13:56.7734082Z ##[group]Run actions/checkout@v4
+2026-11-12T12:13:56.7735042Z with:
+2026-11-12T12:13:56.7735557Z   repository: robertyang87/carbon-league
+2026-11-12T12:13:56.7739516Z   token: ***
+2026-11-12T12:13:56.7740037Z   ssh-strict: true
+2026-11-12T12:13:56.7740571Z   ssh-user: git
+2026-11-12T12:13:56.7741101Z   persist-credentials: true
+2026-11-12T12:13:56.7741712Z   clean: true
+2026-11-12T12:13:56.7742220Z   sparse-checkout-cone-mode: true
+2026-11-12T12:13:56.7742789Z   fetch-depth: 1
+2026-11-12T12:13:56.7743298Z   fetch-tags: false
+2026-11-12T12:13:56.7743822Z   show-progress: true
+2026-11-12T12:13:56.7744360Z   lfs: false
+2026-11-12T12:13:56.7744838Z   submodules: false
+2026-11-12T12:13:56.7745342Z   set-safe-directory: true
+2026-11-12T12:13:56.7745913Z   allow-unsafe-pr-checkout: false
+2026-11-12T12:13:56.7746901Z ##[endgroup]
+2026-11-12T12:13:57.0679472Z Syncing repository: robertyang87/carbon-league
+2026-11-12T12:13:57.0686972Z ##[group]Getting Git version info
+2026-11-12T12:13:57.0690301Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T12:13:57.0694590Z [command]/usr/bin/git version
+2026-11-12T12:13:57.0696238Z git version 2.56.0
+2026-11-12T12:13:57.0725723Z ##[endgroup]
+2026-11-12T12:13:57.0737640Z Temporarily overriding HOME='/home/runner/work/_temp/39118287-0563-4ba2-95c5-f086bb396065' before making global git config changes
+2026-11-12T12:13:57.0746772Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T12:13:57.0753122Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:13:57.0777715Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T12:13:57.0783308Z ##[group]Initializing the repository
+2026-11-12T12:13:57.0786314Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:13:57.1092481Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T12:13:57.1095130Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T12:13:57.1097440Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T12:13:57.1100593Z hint: call:
+2026-11-12T12:13:57.1101944Z hint:
+2026-11-12T12:13:57.1103419Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T12:13:57.1105067Z hint:
+2026-11-12T12:13:57.1106730Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T12:13:57.1109456Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T12:13:57.1111323Z hint:
+2026-11-12T12:13:57.1112528Z hint: 	git branch -m <name>
+2026-11-12T12:13:57.1113948Z hint:
+2026-11-12T12:13:57.1115685Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T12:13:57.1117960Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T12:13:57.1123531Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T12:13:57.2298186Z ##[endgroup]
+2026-11-12T12:13:57.2306340Z ##[group]Disabling automatic garbage collection
+2026-11-12T12:13:57.2309793Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T12:13:57.2315353Z ##[endgroup]
+2026-11-12T12:13:57.2318037Z ##[group]Setting up auth
+2026-11-12T12:13:57.2320517Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T12:13:57.2328641Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T12:13:57.2337110Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T12:13:57.2345998Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T12:13:57.2820952Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T12:13:57.2825270Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T12:13:57.2932356Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T12:13:57.2964899Z ##[endgroup]
+2026-11-12T12:13:57.2966980Z ##[group]Fetching the repository
+2026-11-12T12:13:57.2980112Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +261a8e1946afc502e06de2b8fa15ab4708e486e2:refs/remotes/origin/main
+2026-11-12T12:13:58.9317496Z From https://github.com/robertyang87/carbon-league
+2026-11-12T12:13:58.9318958Z  * [new ref]         261a8e1946afc502e06de2b8fa15ab4708e486e2 -> origin/main
+2026-11-12T12:13:58.9323682Z ##[endgroup]
+2026-11-12T12:13:58.9324818Z ##[group]Determining the checkout info
+2026-11-12T12:13:58.9326603Z ##[endgroup]
+2026-11-12T12:13:58.9333062Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T12:13:58.9379986Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T12:13:58.9409052Z ##[group]Checking out the ref
+2026-11-12T12:13:58.9415991Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T12:13:59.2951237Z Switched to a new branch 'main'
+2026-11-12T12:13:59.3026986Z branch 'main' set up to track 'origin/main'.
+2026-11-12T12:13:59.3090483Z ##[endgroup]
+2026-11-12T12:13:59.3160367Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T12:13:59.3161080Z 261a8e1946afc502e06de2b8fa15ab4708e486e2
+2026-11-12T12:13:59.3395552Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKIyBoMjMgcmVhZC1vbmx5IHByb2JlIGZvciBMaW5lIEEgcGFpcmVkIGNhbGlicmF0aW9uIHByZXAgKHdyMS93ZzEpLgpNQVJLPSJIMjNXUFJFUDIwMTNBIgplY2hvICIke01BUkt9X0JFR0lOIgpkYXRlICcrJUYgJVQgJVonOyBob3N0bmFtZQplY2hvICItLS0gcHJvY3MgLS0tIgpwZ3JlcCAtYWYgJ2JpZ2V2YWwucHknIHx8IGVjaG8gTk9fQklHRVZBTAplY2hvICItLS0gbWQ1IGNvcmUgLS0tIgptZDVzdW0gL3Jvb3QvY2FyYm9uL2NvZGUvZXZhbF92NTMucHkgL3Jvb3QvY2FyYm9uL2NvZGUvYmlnZXZhbC5weQplY2hvICItLS0gd2VpZ2h0cyBtM3MyL20zdzUgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gfCBncmVwIC1pRSAnbTNzMnxtM3c1JwptZDVzdW0gL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3Myd3IxX2Zyb21zdHVkaW8ubnB6IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTNzMndnMV9mcm9tc3R1ZGlvLm5weiAyPiYxCmVjaG8gIi0tLSBleHAgd3JhcHBlcnMgLS0tIgpscyAvcm9vdC9jYXJib24vY29kZS9leHAvCmVjaG8gIi0tLSBtM3MyZzEucHkgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJnMS5weQplY2hvICItLS0gbTNzMnIxLnB5IC0tLSIKY2F0IC9yb290L2NhcmJvbi9jb2RlL2V4cC9tM3MycjEucHkgMj4mMQplY2hvICItLS0gb3BwX21hc3RlcjJyLnB5IGhlYWQgLS0tIgpoZWFkIC0zMCAvcm9vdC9jYXJib24vY29kZS9leHAvb3BwX21hc3RlcjJyLnB5CmVjaG8gIi0tLSBnaXQgLS0tIgpjZCAvcm9vdC9jYXJib24gJiYgZ2l0IHJldi1wYXJzZSAtLWFiYnJldi1yZWYgSEVBRCAyPiYxOyBnaXQgcmVtb3RlIC12IDI+JjEgfCBoZWFkIC00OyBscyAtZCAvcm9vdC9jYXJib24vLmdpdCAyPiYxCmVjaG8gIi0tLSBsaXZlIHRhZ3MgKHdyL3dnIG11c3QgYmUgYWJzZW50KSAtLS0iCmxzIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS8gfCBncmVwIC1FICd3cjF8d2cxJyB8fCBlY2hvIE5PX1dSV0dfVEFHUwplY2hvICItLS0gZGlzayAtLS0iCmRmIC1oIC9yb290IHwgdGFpbCAtMQplY2hvICIke01BUkt9X0VORCIK" ]; then
+2026-11-12T12:13:59.3445035Z [36;1mif [ -n "IyEvYmluL2Jhc2gKIyBoMjMgcmVhZC1vbmx5IHByb2JlIGZvciBMaW5lIEEgcGFpcmVkIGNhbGlicmF0aW9uIHByZXAgKHdyMS93ZzEpLgpNQVJLPSJIMjNXUFJFUDIwMTNBIgplY2hvICIke01BUkt9X0JFR0lOIgpkYXRlICcrJUYgJVQgJVonOyBob3N0bmFtZQplY2hvICItLS0gcHJvY3MgLS0tIgpwZ3JlcCAtYWYgJ2JpZ2V2YWwucHknIHx8IGVjaG8gTk9fQklHRVZBTAplY2hvICItLS0gbWQ1IGNvcmUgLS0tIgptZDVzdW0gL3Jvb3QvY2FyYm9uL2NvZGUvZXZhbF92NTMucHkgL3Jvb3QvY2FyYm9uL2NvZGUvYmlnZXZhbC5weQplY2hvICItLS0gd2VpZ2h0cyBtM3MyL20zdzUgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gfCBncmVwIC1pRSAnbTNzMnxtM3c1JwptZDVzdW0gL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3Myd3IxX2Zyb21zdHVkaW8ubnB6IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTNzMndnMV9mcm9tc3R1ZGlvLm5weiAyPiYxCmVjaG8gIi0tLSBleHAgd3JhcHBlcnMgLS0tIgpscyAvcm9vdC9jYXJib24vY29kZS9leHAvCmVjaG8gIi0tLSBtM3MyZzEucHkgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJnMS5weQplY2hvICItLS0gbTNzMnIxLnB5IC0tLSIKY2F0IC9yb290L2NhcmJvbi9jb2RlL2V4cC9tM3MycjEucHkgMj4mMQplY2hvICItLS0gb3BwX21hc3RlcjJyLnB5IGhlYWQgLS0tIgpoZWFkIC0zMCAvcm9vdC9jYXJib24vY29kZS9leHAvb3BwX21hc3RlcjJyLnB5CmVjaG8gIi0tLSBnaXQgLS0tIgpjZCAvcm9vdC9jYXJib24gJiYgZ2l0IHJldi1wYXJzZSAtLWFiYnJldi1yZWYgSEVBRCAyPiYxOyBnaXQgcmVtb3RlIC12IDI+JjEgfCBoZWFkIC00OyBscyAtZCAvcm9vdC9jYXJib24vLmdpdCAyPiYxCmVjaG8gIi0tLSBsaXZlIHRhZ3MgKHdyL3dnIG11c3QgYmUgYWJzZW50KSAtLS0iCmxzIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS8gfCBncmVwIC1FICd3cjF8d2cxJyB8fCBlY2hvIE5PX1dSV0dfVEFHUwplY2hvICItLS0gZGlzayAtLS0iCmRmIC1oIC9yb290IHwgdGFpbCAtMQplY2hvICIke01BUkt9X0VORCIK" ]; then[0m
+2026-11-12T12:13:59.3491755Z [36;1m  python3 tools/acs_runcommand.py "i-uf65ykinp4dvkirzk7q4" --b64 "IyEvYmluL2Jhc2gKIyBoMjMgcmVhZC1vbmx5IHByb2JlIGZvciBMaW5lIEEgcGFpcmVkIGNhbGlicmF0aW9uIHByZXAgKHdyMS93ZzEpLgpNQVJLPSJIMjNXUFJFUDIwMTNBIgplY2hvICIke01BUkt9X0JFR0lOIgpkYXRlICcrJUYgJVQgJVonOyBob3N0bmFtZQplY2hvICItLS0gcHJvY3MgLS0tIgpwZ3JlcCAtYWYgJ2JpZ2V2YWwucHknIHx8IGVjaG8gTk9fQklHRVZBTAplY2hvICItLS0gbWQ1IGNvcmUgLS0tIgptZDVzdW0gL3Jvb3QvY2FyYm9uL2NvZGUvZXZhbF92NTMucHkgL3Jvb3QvY2FyYm9uL2NvZGUvYmlnZXZhbC5weQplY2hvICItLS0gd2VpZ2h0cyBtM3MyL20zdzUgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy8gfCBncmVwIC1pRSAnbTNzMnxtM3c1JwptZDVzdW0gL3Jvb3QvY2FyYm9uL2RhdGEvd2VpZ2h0cy9jbmV0Ml9tM3Myd3IxX2Zyb21zdHVkaW8ubnB6IC9yb290L2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfbTNzMndnMV9mcm9tc3R1ZGlvLm5weiAyPiYxCmVjaG8gIi0tLSBleHAgd3JhcHBlcnMgLS0tIgpscyAvcm9vdC9jYXJib24vY29kZS9leHAvCmVjaG8gIi0tLSBtM3MyZzEucHkgLS0tIgpjYXQgL3Jvb3QvY2FyYm9uL2NvZGUvZXhwL20zczJnMS5weQplY2hvICItLS0gbTNzMnIxLnB5IC0tLSIKY2F0IC9yb290L2NhcmJvbi9jb2RlL2V4cC9tM3MycjEucHkgMj4mMQplY2hvICItLS0gb3BwX21hc3RlcjJyLnB5IGhlYWQgLS0tIgpoZWFkIC0zMCAvcm9vdC9jYXJib24vY29kZS9leHAvb3BwX21hc3RlcjJyLnB5CmVjaG8gIi0tLSBnaXQgLS0tIgpjZCAvcm9vdC9jYXJib24gJiYgZ2l0IHJldi1wYXJzZSAtLWFiYnJldi1yZWYgSEVBRCAyPiYxOyBnaXQgcmVtb3RlIC12IDI+JjEgfCBoZWFkIC00OyBscyAtZCAvcm9vdC9jYXJib24vLmdpdCAyPiYxCmVjaG8gIi0tLSBsaXZlIHRhZ3MgKHdyL3dnIG11c3QgYmUgYWJzZW50KSAtLS0iCmxzIC9yb290L2NhcmJvbi9kYXRhL2JpZ2V2YWxfbGl2ZS8gfCBncmVwIC1FICd3cjF8d2cxJyB8fCBlY2hvIE5PX1dSV0dfVEFHUwplY2hvICItLS0gZGlzayAtLS0iCmRmIC1oIC9yb290IHwgdGFpbCAtMQplY2hvICIke01BUkt9X0VORCIK"[0m
+2026-11-12T12:13:59.3514543Z [36;1melse[0m
+2026-11-12T12:13:59.3514903Z [36;1m  python3 tools/acs_runcommand.py "i-uf65ykinp4dvkirzk7q4" "hostname && uptime"[0m
+2026-11-12T12:13:59.3515301Z [36;1mfi[0m
+2026-11-12T12:13:59.3534385Z shell: /usr/bin/bash -e {0}
+2026-11-12T12:13:59.3534691Z env:
+2026-11-12T12:13:59.3535279Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T12:13:59.3535621Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T12:13:59.3535878Z   ACS_REGION: cn-shanghai
+2026-11-12T12:13:59.3536139Z ##[endgroup]
+2026-11-12T12:14:06.5800612Z InvokeId: t-sh072vzzgxxt340
+2026-11-12T12:14:06.5820287Z --- status=Success exit=0 ---
+2026-11-12T12:14:06.5830281Z H23WPREP2013A_BEGIN
+2026-11-12T12:14:06.5850009Z 2026-11-12 20:14:01 CST
+2026-11-12T12:14:06.5859657Z iZuf65ykinp4dvkirzk7q4Z
+2026-11-12T12:14:06.5879838Z --- procs ---
+2026-11-12T12:14:06.5881951Z NO_BIGEVAL
+2026-11-12T12:14:06.5899834Z --- md5 core ---
+2026-11-12T12:14:06.5900536Z 6d24da0eeeb28bad350d8b38f08ec3fc  /root/carbon/code/eval_v53.py
+2026-11-12T12:14:06.5920146Z a5822338d979abea807fbd2ab4f7dace  /root/carbon/code/bigeval.py
+2026-11-12T12:14:06.5935935Z --- weights m3s2/m3w5 ---
+2026-11-12T12:14:06.5938170Z -rw-r--r--  1  501 staff     1337 Nov 11 14:00 cnet2_b128m3s2a_log.jsonl
+2026-11-12T12:14:06.5938971Z -rw-r--r--  1  501 staff 11821084 Nov 11 14:00 cnet2_b128m3s2a.npz
+2026-11-12T12:14:06.5939870Z -rw-r--r--  1 root root  11821004 Nov 12 16:35 cnet2_m3s2g1L.npz
+2026-11-12T12:14:06.5940527Z -rw-r--r--  1 root root  13968972 Nov 12 16:54 cnet2_m3s2r1L.npz
+2026-11-12T12:14:06.5941276Z -rw-r--r--  1 root root  13968972 Nov 12 13:46 cnet2_m3s2r1_preL.npz
+2026-11-12T12:14:06.5941933Z -rw-rw-r--  1 1000  1000 11821004 Nov 11 19:40 cnet2_m3w5L.npz
+2026-11-12T12:14:06.5942580Z -rw-r--r--  1 root root         0 Nov 11 19:40 cnet2_m3w5L.npz.ok
+2026-11-12T12:14:06.5943423Z md5sum: /root/carbon/data/weights/cnet2_m3s2wr1_fromstudio.npz: No such file or directory
+2026-11-12T12:14:06.5944623Z md5sum: /root/carbon/data/weights/cnet2_m3s2wg1_fromstudio.npz: No such file or directory
+2026-11-12T12:14:06.5945187Z --- exp wrappers ---
+2026-11-12T12:14:06.5945400Z awr_us.py
+2026-11-12T12:14:06.5945586Z awr_us_r1.py
+2026-11-12T12:14:06.5945784Z c1z_nr60.py
+2026-11-12T12:14:06.5945966Z cand_c1z_v1.py
+2026-11-12T12:14:06.5946162Z cand_selftest.py
+2026-11-12T12:14:06.5946354Z cnet2_awrr1.py
+2026-11-12T12:14:06.5946541Z cnet2_awrr2.py
+2026-11-12T12:14:06.5946731Z cnet2_awrr3.py
+2026-11-12T12:14:06.5946924Z cnet2_b128ep4_t0.py
+2026-11-12T12:14:06.5947141Z cnet2_b128ep4_t0_rules.py
+2026-11-12T12:14:06.5947371Z cnet2_b128ep4_t0_shield.py
+2026-11-12T12:14:06.5947590Z cnet2_b128ep4_t1_rules.py
+2026-11-12T12:14:06.5947812Z cnet2_b128ep7_t0.py
+2026-11-12T12:14:06.5948011Z cnet2_b128ep7_t0_rules.py
+2026-11-12T12:14:06.5948229Z cnet2_b128ep7_t1_rules.py
+2026-11-12T12:14:06.5948456Z cnet2_b128_t0_f16.py
+2026-11-12T12:14:06.5948672Z cnet2_b128_t0_packed_f16.py
+2026-11-12T12:14:06.5948897Z cnet2_b128_t0_packed.py
+2026-11-12T12:14:06.5949103Z cnet2_b128_t0.py
+2026-11-12T12:14:06.5949782Z cnet2_b128_t0_q8.py
+2026-11-12T12:14:06.5950018Z cnet2_b128_t0_rules.py
+2026-11-12T12:14:06.5950245Z cnet2_b128_t1_packed.py
+2026-11-12T12:14:06.5950449Z cnet2_b128_t1.py
+2026-11-12T12:14:06.5950647Z cnet2_b128_t1_q8.py
+2026-11-12T12:14:06.5950848Z cnet2_b128_t1_rules.py
+2026-11-12T12:14:06.5951060Z cnet2_b128_t1_tta2.py
+2026-11-12T12:14:06.5951272Z cnet2_b128_t2.py
+2026-11-12T12:14:06.5951464Z cnet2_b128_t3.py
+2026-11-12T12:14:06.5951658Z cnet2_b128_t4.py
+2026-11-12T12:14:06.5952111Z cnet2_b128v3_t1_packed.py
+2026-11-12T12:14:06.5952334Z cnet2_b128v3_t1_q8.py
+2026-11-12T12:14:06.5952558Z cnet2_b128v4_t1_packed.py
+2026-11-12T12:14:06.5952777Z cnet2_b128v4_t1_q8.py
+2026-11-12T12:14:06.5952996Z cnet2_dg1s57_240.py
+2026-11-12T12:14:06.5953211Z cnet2_dg2ccs57_240.py
+2026-11-12T12:14:06.5953432Z cnet2_dg2pas57_240.py
+2026-11-12T12:14:06.5953640Z cnet2_dg2pbs57_240.py
+2026-11-12T12:14:06.5953851Z cnet2_dg2s57_240.py
+2026-11-12T12:14:06.5954048Z cnet2_dg3s57_240.py
+2026-11-12T12:14:06.5954245Z cnet2_dg4s57_240.py
+2026-11-12T12:14:06.5954548Z cnet2_dg5e0s57_240.py
+2026-11-12T12:14:06.5954747Z cnet2_dg5e3s57_240.py
+2026-11-12T12:14:06.5954944Z cnet2_dg5e5s57_240.py
+2026-11-12T12:14:06.5955142Z cnet2_dg5e5s57.py
+2026-11-12T12:14:06.5955358Z cnet2_dg6s57.py
+2026-11-12T12:14:06.5955610Z cnet2_dg7s257.py
+2026-11-12T12:14:06.5955804Z cnet2_dg7s275.py
+2026-11-12T12:14:06.5955995Z cnet2_dg7s57.py
+2026-11-12T12:14:06.5956203Z cnet2_dm2e1L7s57_240.py
+2026-11-12T12:14:06.5956413Z cnet2_dm2e1s57_240.py
+2026-11-12T12:14:06.5956632Z cnet2_dm2e1s57_270.py
+2026-11-12T12:14:06.5956834Z cnet2_dm2e1s57_280.py
+2026-11-12T12:14:06.5957045Z cnet2_dm2e1t270s57_240.py
+2026-11-12T12:14:06.5957264Z cnet2_dm2e1t280s57_240.py
+2026-11-12T12:14:06.5957479Z cnet2_exit1_ctrl.py
+2026-11-12T12:14:06.5957677Z cnet2_exit1g.py
+2026-11-12T12:14:06.5957865Z cnet2_exit1_hard.py
+2026-11-12T12:14:06.5958052Z cnet2_late.py
+2026-11-12T12:14:06.5958242Z cnet2_m2s2stand.py
+2026-11-12T12:14:06.5958452Z cnet2_m2s2stand_s.py
+2026-11-12T12:14:06.5958653Z cnet2_m2so.py
+2026-11-12T12:14:06.5958848Z cnet2_m2sstand.py
+2026-11-12T12:14:06.5959039Z cnet2_m2stand.py
+2026-11-12T12:14:06.5959586Z cnet2_m2t_27.py
+2026-11-12T12:14:06.5959819Z cnet2_m2t3_27cut.py
+2026-11-12T12:14:06.5960015Z cnet2_m2t3_27.py
+2026-11-12T12:14:06.5960209Z cnet2_m2t_all2.py
+2026-11-12T12:14:06.5960404Z cnet2_m2v2stand.py
+2026-11-12T12:14:06.5960603Z cnet2_m2v2stand_s.py
+2026-11-12T12:14:06.5960814Z cnet2_mfitus.py
+2026-11-12T12:14:06.5961005Z cnet2_mm_27.py
+2026-11-12T12:14:06.5961202Z cnet2_mm_47.py
+2026-11-12T12:14:06.5961395Z cnet2_mm_all4.py
+2026-11-12T12:14:06.5961590Z cnet2_pgate.py
+2026-11-12T12:14:06.5961787Z cnet2_rlg.py
+2026-11-12T12:14:06.5961973Z cnet2_s64.py
+2026-11-12T12:14:06.5962159Z cnet2_s64_rulesp.py
+2026-11-12T12:14:06.5962362Z cnet2_s64_rules.py
+2026-11-12T12:14:06.5962556Z cnet2_s64_t0.py
+2026-11-12T12:14:06.5962780Z cnet2_s64_t0_rules_packed.py
+2026-11-12T12:14:06.5963005Z cnet2_s64_t0_rulesp.py
+2026-11-12T12:14:06.5963210Z cnet2_s64_t0_rules.py
+2026-11-12T12:14:06.5963424Z cnet2_s64_t0_rules_q8.py
+2026-11-12T12:14:06.5963653Z cnet2_s64_t0_rules_v10rec.py
+2026-11-12T12:14:06.5963889Z cnet2_search_a1.py
+2026-11-12T12:14:06.5964090Z cnet2_search_b30.py
+2026-11-12T12:14:06.5964289Z cnet2_search_b60.py
+2026-11-12T12:14:06.5964489Z cnet2_search_cut_a.py
+2026-11-12T12:14:06.5964693Z cnet2_search_cut_b.py
+2026-11-12T12:14:06.5964900Z cnet2_search_cut_c.py
+2026-11-12T12:14:06.5965112Z cnet2_search_final_packed.py
+2026-11-12T12:14:06.5965340Z cnet2_search_ma.py
+2026-11-12T12:14:06.5965543Z cnet2_search_mbc.py
+2026-11-12T12:14:06.5965746Z cnet2_search_mb.py
+2026-11-12T12:14:06.5965945Z cnet2_search_mbr.py
+2026-11-12T12:14:06.5966153Z cnet2_search_mbt_packed.py
+2026-11-12T12:14:06.5966372Z cnet2_search_mbt.py
+2026-11-12T12:14:06.5966565Z cnet2_search_mc.py
+2026-11-12T12:14:06.5966777Z cnet2_search_mfhc_packed.py
+2026-11-12T12:14:06.5967002Z cnet2_search_mfhc.py
+2026-11-12T12:14:06.5967201Z cnet2_search_mfhg.py
+2026-11-12T12:14:06.5967398Z cnet2_search_mfh.py
+2026-11-12T12:14:06.5967604Z cnet2_search_mfhx.py
+2026-11-12T12:14:06.5967809Z cnet2_search_mfx50.py
+2026-11-12T12:14:06.5968010Z cnet2_search_mfxg.py
+2026-11-12T12:14:06.5968216Z cnet2_search_mfxH.py
+2026-11-12T12:14:06.5968422Z cnet2_search_mfxn_end.py
+2026-11-12T12:14:06.5968647Z cnet2_search_mfxn_packed.py
+2026-11-12T12:14:06.5968877Z cnet2_search_mfxn.py
+2026-11-12T12:14:06.5969079Z cnet2_search_mfx.py
+2026-11-12T12:14:06.5969666Z cnet2_search_opp_b160.py
+2026-11-12T12:14:06.5969900Z cnet2_search_parity.py
+2026-11-12T12:14:06.5970283Z cnet2_search_t0.py
+2026-11-12T12:14:06.5970483Z cnet2_smoke.py
+2026-11-12T12:14:06.5970679Z cnet2_soup4g.py
+2026-11-12T12:14:06.5970876Z cnet2_style_t0.py
+2026-11-12T12:14:06.5971072Z cnet2_style_t2.py
+2026-11-12T12:14:06.5971276Z cnet2_style_t3.py
+2026-11-12T12:14:06.5971471Z cnet2_style_t4.py
+2026-11-12T12:14:06.5971667Z cnet2_v10s57_240.py
+2026-11-12T12:14:06.5971866Z cnet2_v11s57_240.py
+2026-11-12T12:14:06.5972067Z cnet2_v12g_packed.py
+2026-11-12T12:14:06.5972280Z cnet2_v12g_pcap.py
+2026-11-12T12:14:06.5972646Z cnet2_v12g.py
+2026-11-12T12:14:06.5972851Z cnet2_v12_shend.py
+2026-11-12T12:14:06.5973057Z cnet2_v12_shield.py
+2026-11-12T12:14:06.5973263Z cnet2_v18k2.py
+2026-11-12T12:14:06.5973475Z cnet2_v18k3.py
+2026-11-12T12:14:06.5973665Z cnet2_v5t5g.py
+2026-11-12T12:14:06.5973856Z cnet2_v5t6g.py
+2026-11-12T12:14:06.5974043Z cnet2_v5t7g.py
+2026-11-12T12:14:06.5974306Z cnet2_v6s57_200.py
+2026-11-12T12:14:06.5974507Z cnet2_v6s57_220.py
+2026-11-12T12:14:06.5974694Z cnet2_v6s57_230.py
+2026-11-12T12:14:06.5974894Z cnet2_v6s57_240.py
+2026-11-12T12:14:06.5975087Z cnet2_v6s57_250.py
+2026-11-12T12:14:06.5975277Z cnet2_v6s57_260.py
+2026-11-12T12:14:06.5975504Z cnet2_v6s57_270.py
+2026-11-12T12:14:06.5975695Z cnet2_v6t3g.py
+2026-11-12T12:14:06.5975883Z cnet2_v6t5g.py
+2026-11-12T12:14:06.5976068Z cnet2_v6t6g.py
+2026-11-12T12:14:06.5976265Z cnet2_v6t7g.py
+2026-11-12T12:14:06.5976453Z cnet2_v7s57_230.py
+2026-11-12T12:14:06.5976643Z cnet2_v7s57_240.py
+2026-11-12T12:14:06.5976831Z cnet2_v7s_mfxc.py
+2026-11-12T12:14:06.5977040Z cnet2_v7s_mfxn8_r10.py
+2026-11-12T12:14:06.5977245Z cnet2_v7s_mfxn8_r4.py
+2026-11-12T12:14:06.5977446Z cnet2_v7s_mfxn8_r6.py
+2026-11-12T12:14:06.5977643Z cnet2_v7s_mfxn.py
+2026-11-12T12:14:06.5977833Z cnet2_v7s_mfxn_r4.py
+2026-11-12T12:14:06.5978040Z cnet2_v7s_mfxn_r6.py
+2026-11-12T12:14:06.5978239Z cnet2_v7t5g.py
+2026-11-12T12:14:06.5978424Z cnet2_v7t7g.py
+2026-11-12T12:14:06.5978608Z cnet2_v8s57_240.py
+2026-11-12T12:14:06.5978792Z cnet2_v9s57_240.py
+2026-11-12T12:14:06.5978996Z cnet2_wsstand.py
+2026-11-12T12:14:06.5979184Z echo2.py
+2026-11-12T12:14:06.5979645Z echo_e0.py
+2026-11-12T12:14:06.5979834Z echo_p2.py
+2026-11-12T12:14:06.5980013Z echo_p3.py
+2026-11-12T12:14:06.5980197Z echo_p4.py
+2026-11-12T12:14:06.5980372Z fx20_m2t3A.py
+2026-11-12T12:14:06.5980560Z fx20_m2t3O.py
+2026-11-12T12:14:06.5980745Z fx20_SEK05.py
+2026-11-12T12:14:06.5980927Z fx20_UNI.py
+2026-11-12T12:14:06.5981116Z fx20_UNISEK.py
+2026-11-12T12:14:06.5981295Z fx_awr1.py
+2026-11-12T12:14:06.5981472Z fx_echoQ3.py
+2026-11-12T12:14:06.5981689Z fx_m2t3CB.py
+2026-11-12T12:14:06.5981874Z fx_m2t3IM.py
+2026-11-12T12:14:06.5982064Z fx_m2t3IT.py
+2026-11-12T12:14:06.5982244Z fx_m2t3L240.py
+2026-11-12T12:14:06.5982455Z fx_m2t3L260.py
+2026-11-12T12:14:06.5982644Z fx_m2t3L265.py
+2026-11-12T12:14:06.5982832Z fx_m2t3L270.py
+2026-11-12T12:14:06.5983022Z fx_m2t3L275.py
+2026-11-12T12:14:06.5983203Z fx_m2t3L280.py
+2026-11-12T12:14:06.5983395Z fx_m2t3NS.py
+2026-11-12T12:14:06.5983578Z fx_m2t3OPAB.py
+2026-11-12T12:14:06.5983763Z fx_m2t3OPA.py
+2026-11-12T12:14:06.5983956Z fx_m2t3OPB10.py
+2026-11-12T12:14:06.5984146Z fx_m2t3OPB.py
+2026-11-12T12:14:06.5984335Z fx_m2t3O.py
+2026-11-12T12:14:06.5984518Z fx_m2t3PXd.py
+2026-11-12T12:14:06.5984702Z fx_m2t3PXg.py
+2026-11-12T12:14:06.5984885Z fx_m2t3PXs.py
+2026-11-12T12:14:06.5985068Z fx_m2t3RS6.py
+2026-11-12T12:14:06.5985252Z fx_m2t3RS7.py
+2026-11-12T12:14:06.5985432Z fx_m2t3RS8.py
+2026-11-12T12:14:06.5985615Z fx_m2t3S12q2.py
+2026-11-12T12:14:06.5985810Z fx_m2t3S20cb100.py
+2026-11-12T12:14:06.5986009Z fx_m2t3S20cb150.py
+2026-11-12T12:14:06.5986207Z fx_m2t3S20cbn.py
+2026-11-12T12:14:06.5986393Z fx_m2t3S20d.py
+2026-11-12T12:14:06.5986575Z fx_m2t3S20e.py
+2026-11-12T12:14:06.5986764Z fx_m2t3S20H5.py
+2026-11-12T12:14:06.5986957Z fx_m2t3S20m.py
+2026-11-12T12:14:06.5987143Z fx_m2t3S20n.py
+2026-11-12T12:14:06.5987324Z fx_m2t3S20.py
+2026-11-12T12:14:06.5987508Z fx_m2t3S20q3m.py
+2026-11-12T12:14:06.5987699Z fx_m2t3S20q3.py
+2026-11-12T12:14:06.5987894Z fx_m2t3S30.py
+2026-11-12T12:14:06.5988077Z fx_m2t3S40BrS.py
+2026-11-12T12:14:06.5988406Z fx_m2t3S40K1.py
+2026-11-12T12:14:06.5988601Z fx_m2t3S40K2.py
+2026-11-12T12:14:06.5988793Z fx_m2t3S40K3.py
+2026-11-12T12:14:06.5988991Z fx_m2t3S40.py
+2026-11-12T12:14:06.5989177Z fx_m2t3S50n.py
+2026-11-12T12:14:06.5989624Z fx_m2t3S80.py
+2026-11-12T12:14:06.5989813Z fx_m2t3SEc.py
+2026-11-12T12:14:06.5990013Z fx_m2t3SE.py
+2026-11-12T12:14:06.5990208Z fx_m2t3SEt.py
+2026-11-12T12:14:06.5990396Z fx_m2t3SEv.py
+2026-11-12T12:14:06.5990576Z fx_m2t3SEw.py
+2026-11-12T12:14:06.5990761Z fx_m2t3U6B25.py
+2026-11-12T12:14:06.5991043Z fx_RGB.py
+2026-11-12T12:14:06.5991223Z fx_TAB.py
+2026-11-12T12:14:06.5991404Z fx_TGA.py
+2026-11-12T12:14:06.5991578Z fx_U6S0.py
+2026-11-12T12:14:06.5991753Z fx_U6S2.py
+2026-11-12T12:14:06.5991925Z g1_net.py
+2026-11-12T12:14:06.5992117Z g1_pure.py
+2026-11-12T12:14:06.5992296Z h1_cm1.py
+2026-11-12T12:14:06.5992464Z h1_cm2.py
+2026-11-12T12:14:06.5992638Z h1r_100.py
+2026-11-12T12:14:06.5992813Z h1r_60.py
+2026-11-12T12:14:06.5992999Z knob_us_factory.py
+2026-11-12T12:14:06.5993193Z m2bot.py
+2026-11-12T12:14:06.5993374Z m3s2g1.py
+2026-11-12T12:14:06.5993550Z m3s2r1pre.py
+2026-11-12T12:14:06.5993731Z m3s2r1.py
+2026-11-12T12:14:06.5993913Z master2_src.py
+2026-11-12T12:14:06.5994105Z mfit_dg5.py
+2026-11-12T12:14:06.5994282Z mfit_dir_dg5.py
+2026-11-12T12:14:06.5994475Z mfit_e0.py
+2026-11-12T12:14:06.5994654Z mfit_e1.py
+2026-11-12T12:14:06.5994837Z mfit_t8.py
+2026-11-12T12:14:06.5995013Z nn_alpha2_v1.py
+2026-11-12T12:14:06.5995207Z nn_bc_w48_v1_final.py
+2026-11-12T12:14:06.5995414Z nn_master64.py
+2026-11-12T12:14:06.5995604Z nn_rl3_last.py
+2026-11-12T12:14:06.5995811Z nn_shadow_alpha_v1.py
+2026-11-12T12:14:06.5996024Z nn_shadow_master_v1.py
+2026-11-12T12:14:06.5996233Z nn_shadow_master_v2.py
+2026-11-12T12:14:06.5996446Z nn_v9net_check.py
+2026-11-12T12:14:06.5996642Z nn_value_v1.py
+2026-11-12T12:14:06.5996905Z nn_wide64_alpha.py
+2026-11-12T12:14:06.5997102Z opp_1cz_v5.py
+2026-11-12T12:14:06.5997523Z opp_1cz_v9.py
+2026-11-12T12:14:06.5997718Z opp_m3echo.py
+2026-11-12T12:14:06.5997919Z opp_m6r.py
+2026-11-12T12:14:06.5998114Z opp_master2r.py
+2026-11-12T12:14:06.5998323Z opp_master2r.py.keep
+2026-11-12T12:14:06.5998529Z opp_w3b.py
+2026-11-12T12:14:06.5998720Z opp_wb532.py
+2026-11-12T12:14:06.5998920Z par_ref.py
+2026-11-12T12:14:06.5999102Z __pycache__
+2026-11-12T12:14:06.5999501Z rl2_it20.py
+2026-11-12T12:14:06.5999739Z rl2_it30.py
+2026-11-12T12:14:06.5999934Z ropen_cal2_c150_t100_f0_m13.py
+2026-11-12T12:14:06.6000183Z ropen_cal2_c150_t100_f0_m16.py
+2026-11-12T12:14:06.6000414Z ropen_cal2_c150_t100_f1_m13.py
+2026-11-12T12:14:06.6000650Z ropen_cal2_c150_t100_f1_m16.py
+2026-11-12T12:14:06.6000877Z ropen_cal2_c150_t130_f0_m13.py
+2026-11-12T12:14:06.6001111Z ropen_cal2_c150_t130_f0_m16.py
+2026-11-12T12:14:06.6001347Z ropen_cal2_c150_t130_f1_m13.py
+2026-11-12T12:14:06.6001575Z ropen_cal2_c150_t130_f1_m16.py
+2026-11-12T12:14:06.6001802Z ropen_cal2_c300_t100_f0_m13.py
+2026-11-12T12:14:06.6002027Z ropen_cal2_c300_t100_f0_m16.py
+2026-11-12T12:14:06.6002264Z ropen_cal2_c300_t100_f1_m13.py
+2026-11-12T12:14:06.6002498Z ropen_cal2_c300_t100_f1_m16.py
+2026-11-12T12:14:06.6002722Z ropen_cal2_c300_t130_f0_m13.py
+2026-11-12T12:14:06.6002948Z ropen_cal2_c300_t130_f0_m16.py
+2026-11-12T12:14:06.6003176Z ropen_cal2_c300_t130_f1_m13.py
+2026-11-12T12:14:06.6003414Z ropen_cal2_c300_t130_f1_m16.py
+2026-11-12T12:14:06.6003648Z ropen_cal_c0_m13_s0_p0_e0.py
+2026-11-12T12:14:06.6003883Z ropen_cal_c0_m13_s0_p0_e1.py
+2026-11-12T12:14:06.6004115Z ropen_cal_c0_m13_s0_p1_e0.py
+2026-11-12T12:14:06.6004348Z ropen_cal_c0_m13_s0_p1_e1.py
+2026-11-12T12:14:06.6004594Z ropen_cal_c0_m13_s40_p0_e0.py
+2026-11-12T12:14:06.6004830Z ropen_cal_c0_m13_s40_p0_e1.py
+2026-11-12T12:14:06.6005060Z ropen_cal_c0_m13_s40_p1_e0.py
+2026-11-12T12:14:06.6005297Z ropen_cal_c0_m13_s40_p1_e1.py
+2026-11-12T12:14:06.6005546Z ropen_cal_c0_m_s0_p0_e0.py
+2026-11-12T12:14:06.6005777Z ropen_cal_c0_m_s0_p0_e1.py
+2026-11-12T12:14:06.6006009Z ropen_cal_c0_m_s0_p1_e0.py
+2026-11-12T12:14:06.6006235Z ropen_cal_c0_m_s0_p1_e1.py
+2026-11-12T12:14:06.6006460Z ropen_cal_c0_m_s40_p0_e0.py
+2026-11-12T12:14:06.6006864Z ropen_cal_c0_m_s40_p0_e1.py
+2026-11-12T12:14:06.6007101Z ropen_cal_c0_m_s40_p1_e0.py
+2026-11-12T12:14:06.6007337Z ropen_cal_c0_m_s40_p1_e1.py
+2026-11-12T12:14:06.6007568Z ropen_cal_c150_m13_s0_p0_e0.py
+2026-11-12T12:14:06.6007814Z ropen_cal_c150_m13_s0_p0_e1.py
+2026-11-12T12:14:06.6008066Z ropen_cal_c150_m13_s0_p1_e0.py
+2026-11-12T12:14:06.6008301Z ropen_cal_c150_m13_s0_p1_e1.py
+2026-11-12T12:14:06.6008549Z ropen_cal_c150_m13_s40_p0_e0.py
+2026-11-12T12:14:06.6008821Z ropen_cal_c150_m13_s40_p0_e1.py
+2026-11-12T12:14:06.6009146Z ropen_cal_c150_m13_s40_p1_e0.py
+2026-11-12T12:14:06.6009682Z ropen_cal_c150_m13_s40_p1_e1.py
+2026-11-12T12:14:06.6009940Z ropen_cal_c150_m_s0_p0_e0.py
+2026-11-12T12:14:06.6010186Z ropen_cal_c150_m_s0_p0_e1.py
+2026-11-12T12:14:06.6010431Z ropen_cal_c150_m_s0_p1_e0.py
+2026-11-12T12:14:06.6010683Z ropen_cal_c150_m_s0_p1_e1.py
+2026-11-12T12:14:06.6010925Z ropen_cal_c150_m_s40_p0_e0.py
+2026-11-12T12:14:06.6011171Z ropen_cal_c150_m_s40_p0_e1.py
+2026-11-12T12:14:06.6011413Z ropen_cal_c150_m_s40_p1_e0.py
+2026-11-12T12:14:06.6011742Z ropen_cal_c150_m_s40_p1_e1.py
+2026-11-12T12:14:06.6012084Z ropen_cal_c300_m13_s0_p0_e0.py
+2026-11-12T12:14:06.6012443Z ropen_cal_c300_m13_s0_p0_e1.py
+2026-11-12T12:14:06.6012760Z ropen_cal_c300_m13_s0_p1_e0.py
+2026-11-12T12:14:06.6013157Z ropen_cal_c300_m13_s0_p1_e1.py
+2026-11-12T12:14:06.6013586Z ropen_cal_c300_m13_s40_p0_e0.py
+2026-11-12T12:14:06.6014005Z ropen_cal_c300_m13_s40_p0_e1.py
+2026-11-12T12:14:06.6014424Z ropen_cal_c300_m13_s40_p1_e0.py
+2026-11-12T12:14:06.6014848Z ropen_cal_c300_m13_s40_p1_e1.py
+2026-11-12T12:14:06.6015232Z ropen_cal_c300_m_s0_p0_e0.py
+2026-11-12T12:14:06.6015468Z ropen_cal_c300_m_s0_p0_e1.py
+2026-11-12T12:14:06.6015694Z ropen_cal_c300_m_s0_p1_e0.py
+2026-11-12T12:14:06.6015923Z ropen_cal_c300_m_s0_p1_e1.py
+2026-11-12T12:14:06.6016148Z ropen_cal_c300_m_s40_p0_e0.py
+2026-11-12T12:14:06.6016378Z ropen_cal_c300_m_s40_p0_e1.py
+2026-11-12T12:14:06.6016617Z ropen_cal_c300_m_s40_p1_e0.py
+2026-11-12T12:14:06.6016848Z ropen_cal_c300_m_s40_p1_e1.py
+2026-11-12T12:14:06.6017072Z ropen_dg5_c2.py
+2026-11-12T12:14:06.6017270Z ropen_dg5_f14t100.py
+2026-11-12T12:14:06.6017483Z ropen_dg5_f14t60.py
+2026-11-12T12:14:06.6017687Z ropen_dg5_f8t100.py
+2026-11-12T12:14:06.6017888Z ropen_dg5_f8t60.py
+2026-11-12T12:14:06.6018087Z ropen_dg5.py
+2026-11-12T12:14:06.6018272Z ropen_dg5_s3.py
+2026-11-12T12:14:06.6018474Z ropen_dg5_s4.py
+2026-11-12T12:14:06.6018667Z ropen_dg5_v2b.py
+2026-11-12T12:14:06.6018863Z ropen_dg5_v2.py
+2026-11-12T12:14:06.6019064Z ropen_dg5_v3n.py
+2026-11-12T12:14:06.6019432Z ropen_dg5_v3.py
+2026-11-12T12:14:06.6019698Z ropen_dg5_v3r.py
+2026-11-12T12:14:06.6019903Z ropen_dg5_v3s.py
+2026-11-12T12:14:06.6020106Z ropen_dg5_v4c.py
+2026-11-12T12:14:06.6020310Z ropen_dg5_v4.py
+2026-11-12T12:14:06.6020524Z ropen_g_s0_p0_e0_m13_t60.py
+2026-11-12T12:14:06.6020775Z ropen_g_s0_p0_e0_m13_t80.py
+2026-11-12T12:14:06.6021020Z ropen_g_s0_p0_e0_m_t60.py
+2026-11-12T12:14:06.6021253Z ropen_g_s0_p0_e0_m_t80.py
+2026-11-12T12:14:06.6021478Z ropen_g_s0_p0_e1_m13_t60.py
+2026-11-12T12:14:06.6021700Z ropen_g_s0_p0_e1_m13_t80.py
+2026-11-12T12:14:06.6021933Z ropen_g_s0_p0_e1_m_t60.py
+2026-11-12T12:14:06.6022149Z ropen_g_s0_p0_e1_m_t80.py
+2026-11-12T12:14:06.6022367Z ropen_g_s0_p1_e0_m13_t60.py
+2026-11-12T12:14:06.6022587Z ropen_g_s0_p1_e0_m13_t80.py
+2026-11-12T12:14:06.6022810Z ropen_g_s0_p1_e0_m_t60.py
+2026-11-12T12:14:06.6023027Z ropen_g_s0_p1_e0_m_t80.py
+2026-11-12T12:14:06.6023242Z ropen_g_s0_p1_e1_m13_t60.py
+2026-11-12T12:14:06.6023461Z ropen_g_s0_p1_e1_m13_t80.py
+2026-11-12T12:14:06.6023683Z ropen_g_s0_p1_e1_m_t60.py
+2026-11-12T12:14:06.6023900Z ropen_g_s0_p1_e1_m_t80.py
+2026-11-12T12:14:06.6024126Z ropen_g_s40_p0_e0_m13_t60.py
+2026-11-12T12:14:06.6024355Z ropen_g_s40_p0_e0_m13_t80.py
+2026-11-12T12:14:06.6024579Z ropen_g_s40_p0_e0_m_t60.py
+2026-11-12T12:14:06.6024809Z ropen_g_s40_p0_e0_m_t80.py
+2026-11-12T12:14:06.6025048Z ropen_g_s40_p0_e1_m13_t60.py
+2026-11-12T12:14:06.6025276Z ropen_g_s40_p0_e1_m13_t80.py
+2026-11-12T12:14:06.6025508Z ropen_g_s40_p0_e1_m_t60.py
+2026-11-12T12:14:06.6025890Z ropen_g_s40_p0_e1_m_t80.py
+2026-11-12T12:14:06.6026125Z ropen_g_s40_p1_e0_m13_t60.py
+2026-11-12T12:14:06.6026358Z ropen_g_s40_p1_e0_m13_t80.py
+2026-11-12T12:14:06.6026583Z ropen_g_s40_p1_e0_m_t60.py
+2026-11-12T12:14:06.6026808Z ropen_g_s40_p1_e0_m_t80.py
+2026-11-12T12:14:06.6027037Z ropen_g_s40_p1_e1_m13_t60.py
+2026-11-12T12:14:06.6027278Z ropen_g_s40_p1_e1_m13_t80.py
+2026-11-12T12:14:06.6027506Z ropen_g_s40_p1_e1_m_t60.py
+2026-11-12T12:14:06.6027728Z ropen_g_s40_p1_e1_m_t80.py
+2026-11-12T12:14:06.6028020Z ropen_m2r.py
+2026-11-12T12:14:06.6028211Z ropen_v17d2.py
+2026-11-12T12:14:06.6028421Z ropen_v17d2_v2b.py
+2026-11-12T12:14:06.6028619Z ropen_v17d2_v2.py
+2026-11-12T12:14:06.6028812Z s1_net.py
+2026-11-12T12:14:06.6028993Z s2_a.py
+2026-11-12T12:14:06.6029172Z s2_b.py
+2026-11-12T12:14:06.6029600Z s2c1z.py
+2026-11-12T12:14:06.6029806Z s2c1z_t.py
+2026-11-12T12:14:06.6029995Z s2_c.py
+2026-11-12T12:14:06.6030175Z s2_d.py
+2026-11-12T12:14:06.6030354Z s2_e.py
+2026-11-12T12:14:06.6030537Z s2_f.py
+2026-11-12T12:14:06.6030707Z s2_g.py
+2026-11-12T12:14:06.6030881Z s2_h8.py
+2026-11-12T12:14:06.6031056Z s2_h.py
+2026-11-12T12:14:06.6031225Z s2_off.py
+2026-11-12T12:14:06.6031415Z s2opp_alpha2.py
+2026-11-12T12:14:06.6031607Z s2_template.txt
+2026-11-12T12:14:06.6031791Z sb30.py
+2026-11-12T12:14:06.6031966Z spar_tf2.py
+2026-11-12T12:14:06.6032146Z spar_tf3.py
+2026-11-12T12:14:06.6032351Z submission_cnet2_awr1_nc.py
+2026-11-12T12:14:06.6032587Z submission_cnet2_awr1.py
+2026-11-12T12:14:06.6032818Z submission_cnet2_awr1r.py
+2026-11-12T12:14:06.6033042Z submission_cnet2_m2t3BC.py
+2026-11-12T12:14:06.6033279Z submission_cnet2_m2t3BL2.py
+2026-11-12T12:14:06.6033512Z submission_cnet2_m2t3BL2S.py
+2026-11-12T12:14:06.6033748Z submission_cnet2_m2t3BLN.py
+2026-11-12T12:14:06.6033976Z submission_cnet2_m2t3BL.py
+2026-11-12T12:14:06.6034204Z submission_cnet2_m2t3Bq.py
+2026-11-12T12:14:06.6034440Z submission_cnet2_m2t3BrA.py
+2026-11-12T12:14:06.6034668Z submission_cnet2_m2t3BrK.py
+2026-11-12T12:14:06.6034904Z submission_cnet2_m2t3BrL260.py
+2026-11-12T12:14:06.6035148Z submission_cnet2_m2t3BrL265.py
+2026-11-12T12:14:06.6035385Z submission_cnet2_m2t3BrL275.py
+2026-11-12T12:14:06.6035631Z submission_cnet2_m2t3BrL280.py
+2026-11-12T12:14:06.6035869Z submission_cnet2_m2t3Br_log.py
+2026-11-12T12:14:06.6036105Z submission_cnet2_m2t3BrL.py
+2026-11-12T12:14:06.6036338Z submission_cnet2_m2t3BrO.py
+2026-11-12T12:14:06.6036569Z submission_cnet2_m2t3Br.py
+2026-11-12T12:14:06.6036802Z submission_cnet2_m2t3BrS.py
+2026-11-12T12:14:06.6037036Z submission_cnet2_m2t3BrU6.py
+2026-11-12T12:14:06.6037276Z submission_cnet2_m2t3BrU6S.py
+2026-11-12T12:14:06.6037518Z submission_cnet2_m2t3BrUK.py
+2026-11-12T12:14:06.6037763Z submission_cnet2_m2t3BrU.py
+2026-11-12T12:14:06.6037999Z submission_cnet2_m2t3BW.py
+2026-11-12T12:14:06.6038231Z submission_cnet2_m2tA.py
+2026-11-12T12:14:06.6038453Z submission_cnet2_m2tB.py
+2026-11-12T12:14:06.6038681Z submission_cnet2_m2tBr.py
+2026-11-12T12:14:06.6038919Z submission_cnet2_m3w3L_l2.py
+2026-11-12T12:14:06.6039157Z submission_cnet2_v11b.py
+2026-11-12T12:14:06.6039636Z submission_cnet2_v11.py
+2026-11-12T12:14:06.6039866Z submission_cnet2_v12.py
+2026-11-12T12:14:06.6040100Z submission_cnet2_v13.py
+2026-11-12T12:14:06.6040321Z submission_cnet2_v14p.py
+2026-11-12T12:14:06.6040547Z submission_cnet2_v14.py
+2026-11-12T12:14:06.6040808Z submission_cnet2_v15.py
+2026-11-12T12:14:06.6041028Z submission_cnet2_v16b.py
+2026-11-12T12:14:06.6041260Z submission_cnet2_v16s_f16nc.py
+2026-11-12T12:14:06.6041507Z submission_cnet2_v16s_f16nc_st.py
+2026-11-12T12:14:06.6041765Z submission_cnet2_v16s_mixnc.py
+2026-11-12T12:14:06.6042006Z submission_cnet2_v16s_nocap.py
+2026-11-12T12:14:06.6042245Z submission_cnet2_v16s.py
+2026-11-12T12:14:06.6042479Z submission_cnet2_v17c_nc.py
+2026-11-12T12:14:06.6042714Z submission_cnet2_v17d2_nc.py
+2026-11-12T12:14:06.6042950Z submission_cnet2_v17d2.py
+2026-11-12T12:14:06.6043180Z submission_cnet2_v17d2r.py
+2026-11-12T12:14:06.6043420Z submission_cnet2_v17dg5_nc.py
+2026-11-12T12:14:06.6043804Z submission_cnet2_v17pt_nc.py
+2026-11-12T12:14:06.6044045Z submission_cnet2_v17.py
+2026-11-12T12:14:06.6044273Z submission_cnet2_v17tb_nc.py
+2026-11-12T12:14:06.6044518Z submission_cnet2_v17te_nc.py
+2026-11-12T12:14:06.6044767Z submission_cnet2_v17t_nc.py
+2026-11-12T12:14:06.6045012Z submission_cnet2_v18a_nc.py
+2026-11-12T12:14:06.6045255Z submission_cnet2_v18b_nc.py
+2026-11-12T12:14:06.6045495Z submission_cnet2_v18cc_nc.py
+2026-11-12T12:14:06.6045736Z submission_cnet2_v18c_nc.py
+2026-11-12T12:14:06.6045985Z submission_cnet2_v18e_nc.py
+2026-11-12T12:14:06.6046305Z submission_cnet2_v18lb100_nc.py
+2026-11-12T12:14:06.6046550Z submission_cnet2_v18lb_nc.py
+2026-11-12T12:14:06.6046783Z submission_cnet2_v18lk_nc.py
+2026-11-12T12:14:06.6047032Z submission_cnet2_v18lr_nc.py
+2026-11-12T12:14:06.6047268Z submission_cnet2_v19a_nc.py
+2026-11-12T12:14:06.6047527Z submission_cnet2_v19b_nc.py
+2026-11-12T12:14:06.6047771Z submission_cnet2_v19br_nc.py
+2026-11-12T12:14:06.6048005Z submission_cnet2_v19p2_nc.py
+2026-11-12T12:14:06.6048253Z submission_cnet2_v19pd2_nc.py
+2026-11-12T12:14:06.6048493Z submission_cnet2_v19pd_nc.py
+2026-11-12T12:14:06.6048729Z submission_cnet2_v19pk2_nc.py
+2026-11-12T12:14:06.6048966Z submission_cnet2_v19pk_nc.py
+2026-11-12T12:14:06.6049198Z submission_cnet2_v19pp_nc.py
+2026-11-12T12:14:06.6049684Z submission_cnet2_v19pp.py
+2026-11-12T12:14:06.6049922Z submission_cnet2_v19pq7_nc.py
+2026-11-12T12:14:06.6050166Z submission_cnet2_v19pq_nc.py
+2026-11-12T12:14:06.6050409Z submission_cnet2_v19pq.py
+2026-11-12T12:14:06.6050657Z submission_cnet2_v19sd.py
+2026-11-12T12:14:06.6050890Z submission_cnet2_v19tc2_nc.py
+2026-11-12T12:14:06.6051140Z submission_cnet2_v19tc_nc.py
+2026-11-12T12:14:06.6051373Z submission_nn_v10.py
+2026-11-12T12:14:06.6051591Z submission_nn_v9.py
+2026-11-12T12:14:06.6051801Z submission_s2d.py
+2026-11-12T12:14:06.6052006Z submission_s2f.py
+2026-11-12T12:14:06.6052205Z submission_s2h.py
+2026-11-12T12:14:06.6052412Z --- m3s2g1.py ---
+2026-11-12T12:14:06.6052845Z """sb30: fixed exam opponent = cnet2_m3s2g1L.npz, pure net, guard on, style row 2 all game, greedy. Frozen config.
+2026-11-12T12:14:06.6053512Z style row 2 for the whole game, greedy. Frozen config: never change it, so exams stay comparable."""
+2026-11-12T12:14:06.6053935Z import os, sys
+2026-11-12T12:14:06.6054293Z _C = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, _C)
+2026-11-12T12:14:06.6054703Z import cnet2_search as _S
+2026-11-12T12:14:06.6055252Z CONF = {'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'OPEN_T': 0.0, 'OPEN_STEPS': 0,
+2026-11-12T12:14:06.6055862Z         'OPEN_KINDS': None, 'OPEN_SEED': 0, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 240}
+2026-11-12T12:14:06.6056341Z _W = os.path.join(_C, "..", "data", "weights", "cnet2_m3s2g1L.npz"); _AG = None
+2026-11-12T12:14:06.6056722Z def agent(observation, configuration):
+2026-11-12T12:14:06.6056986Z     global _AG
+2026-11-12T12:14:06.6057215Z     if _AG is None or observation["step"] == 0:
+2026-11-12T12:14:06.6057540Z         _AG = _S.make_search_agent(CONF, weights=_W)
+2026-11-12T12:14:06.6057854Z     return _AG(observation, configuration)
+2026-11-12T12:14:06.6058130Z --- m3s2r1.py ---
+2026-11-12T12:14:06.6058700Z """m3s2r1: fixed exam candidate = cnet2_m3s2r1L.npz, pure net, guard on, style row 2 all game, greedy. Frozen config: never change it, so exams stay comparable."""
+2026-11-12T12:14:06.6059388Z import os, sys
+2026-11-12T12:14:06.6059740Z _C = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, _C)
+2026-11-12T12:14:06.6060175Z import cnet2_search as _S
+2026-11-12T12:14:06.6060626Z CONF = {'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'OPEN_T': 0.0, 'OPEN_STEPS': 0,
+2026-11-12T12:14:06.6061229Z         'OPEN_KINDS': None, 'OPEN_SEED': 0, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 240}
+2026-11-12T12:14:06.6061706Z _W = os.path.join(_C, "..", "data", "weights", "cnet2_m3s2r1L.npz"); _AG = None
+2026-11-12T12:14:06.6062219Z def agent(observation, configuration):
+2026-11-12T12:14:06.6062490Z     global _AG
+2026-11-12T12:14:06.6062730Z     if _AG is None or observation["step"] == 0:
+2026-11-12T12:14:06.6063044Z         _AG = _S.make_search_agent(CONF, weights=_W)
+2026-11-12T12:14:06.6063352Z     return _AG(observation, configuration)
+2026-11-12T12:14:06.6063652Z --- opp_master2r.py head ---
+2026-11-12T12:14:06.6064178Z """Exam-only opponent: claude-AlphaCarbon-Master2's public source (ladder /source/e591b77f..., md5 404114a0...), kept outside
+2026-11-12T12:14:06.6065005Z the repo in data/public_src/master2.py (or next to this file on cloud hosts). _SEED fixed so a seed replays bit-for-bit.
+2026-11-12T12:14:06.6065507Z Never in a training pool or a submission."""
+2026-11-12T12:14:06.6065808Z import importlib.util, os
+2026-11-12T12:14:06.6066071Z _H = os.path.dirname(os.path.abspath(__file__))
+2026-11-12T12:14:06.6066546Z for _p in (os.path.join(_H, "master2_src.py"), os.path.join(_H, "..", "..", "data", "public_src", "master2.py")):
+2026-11-12T12:14:06.6067003Z     if os.path.exists(_p):
+2026-11-12T12:14:06.6067230Z         break
+2026-11-12T12:14:06.6067712Z _s = importlib.util.spec_from_file_location("master2_public", _p); _m = importlib.util.module_from_spec(_s); _s.loader.exec_module(_m)
+2026-11-12T12:14:06.6068237Z _m._SEED = 20261111
+2026-11-12T12:14:06.6068439Z agent = _m.agent
+2026-11-12T12:14:06.6068633Z --- git ---
+2026-11-12T12:14:06.6068920Z fatal: not a git repository (or any of the parent directories): .git
+2026-11-12T12:14:06.6069419Z fatal: not a git repository (or any of the parent directories): .git
+2026-11-12T12:14:06.6069842Z ls: cannot access '/root/carbon/.git': No such file or directory
+2026-11-12T12:14:06.6070187Z --- live tags (wr/wg must be absent) ---
+2026-11-12T12:14:06.6070467Z c_awr1cap_m2s2.jsonl
+2026-11-12T12:14:06.6070690Z c_awr1nc_m2s2.jsonl
+2026-11-12T12:14:06.6070899Z h2h_awr1_m2r.jsonl
+2026-11-12T12:14:06.6071104Z h2h_awr1_mfit.jsonl
+2026-11-12T12:14:06.6071312Z h2h_awr1r_v17d2.jsonl
+2026-11-12T12:14:06.6071581Z h2h_awr1_v13.jsonl
+2026-11-12T12:14:06.6071782Z h2h_awr1_v16b.jsonl
+2026-11-12T12:14:06.6071990Z h2h_awr1_v17d2all.jsonl
+2026-11-12T12:14:06.6072206Z h2h_awr1_v17d2b.jsonl
+2026-11-12T12:14:06.6072420Z h2h_awr1_v17d2.jsonl
+2026-11-12T12:14:06.6072619Z h2h_awr1_v17.jsonl
+2026-11-12T12:14:06.6072817Z h2h_m2t3Br_awr1.jsonl
+2026-11-12T12:14:06.6073028Z o100_m2r_awr1cap.jsonl
+2026-11-12T12:14:06.6073249Z o100_m2s2_awr1cap.jsonl
+2026-11-12T12:14:06.6073475Z --- disk ---
+2026-11-12T12:14:06.6073704Z /dev/nvme0n1p2   99G  9.6G   85G  11% /
+2026-11-12T12:14:06.6073967Z H23WPREP2013A_END
+2026-11-12T12:14:06.6074102Z 
+2026-11-12T12:14:06.6201052Z Post job cleanup.
+2026-11-12T12:14:06.7200477Z [command]/usr/bin/git version
+2026-11-12T12:14:06.7282313Z git version 2.56.0
+2026-11-12T12:14:06.7344395Z Temporarily overriding HOME='/home/runner/work/_temp/86967b7b-83f5-458f-a893-2a7c7e63e5a2' before making global git config changes
+2026-11-12T12:14:06.7346066Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T12:14:06.7347447Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T12:14:06.7451416Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T12:14:06.7500978Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T12:14:06.7875792Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T12:14:06.7900698Z http.https://github.com/.extraheader
+2026-11-12T12:14:06.7939633Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T12:14:06.7943045Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T12:14:06.8360634Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T12:14:06.8422316Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T12:14:06.8938037Z Cleaning up orphan processes
+2026-11-12T12:14:06.9353419Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

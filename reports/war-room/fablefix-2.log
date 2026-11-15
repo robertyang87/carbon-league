@@ -1,0 +1,181 @@
+dispatched FABLEFIXQ7B at 08:49:41
+/home/hatch/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files/fablefix-driver.py:18: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+  min_created = datetime.datetime.utcfromtimestamp(t0 - 60).strftime("%Y-%m-%dT%H:%M:%SZ")
+CLAIMED run 43186144133 job 131073681383 conclusion success
+﻿2026-11-12T08:49:46.1418358Z Current runner version: '2.338.2'
+2026-11-12T08:49:46.1453316Z ##[group]Runner Image Provisioner
+2026-11-12T08:49:46.1454583Z Hosted Compute Agent
+2026-11-12T08:49:46.1455587Z Version: 20261028.624
+2026-11-12T08:49:46.1456472Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T08:49:46.1457613Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T08:49:46.1458646Z Worker ID: {0a32f3e9-e2d2-44cc-916e-b8f388e96639}
+2026-11-12T08:49:46.1459635Z Region: eastus2
+2026-11-12T08:49:46.1460461Z Cloud: Azure
+2026-11-12T08:49:46.1461189Z ##[endgroup]
+2026-11-12T08:49:46.1467243Z ##[group]Operating System
+2026-11-12T08:49:46.1468313Z Ubuntu
+2026-11-12T08:49:46.1469044Z 24.04.5
+2026-11-12T08:49:46.1469866Z LTS
+2026-11-12T08:49:46.1470631Z ##[endgroup]
+2026-11-12T08:49:46.1472204Z ##[group]Runner Image
+2026-11-12T08:49:46.1473118Z Image: ubuntu-24.04
+2026-11-12T08:49:46.1473900Z Version: 20261101.360.1
+2026-11-12T08:49:46.1475877Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T08:49:46.1478087Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T08:49:46.1479442Z ##[endgroup]
+2026-11-12T08:49:46.1481023Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T08:49:46.1484410Z Contents: read
+2026-11-12T08:49:46.1485349Z Metadata: read
+2026-11-12T08:49:46.1486143Z ##[endgroup]
+2026-11-12T08:49:46.1488739Z Secret source: Actions
+2026-11-12T08:49:46.1490721Z Cache mode: write
+2026-11-12T08:49:46.1512711Z Prepare workflow directory
+2026-11-12T08:49:46.2439776Z Prepare all required actions
+2026-11-12T08:49:46.2592663Z Getting action download info
+2026-11-12T08:49:46.4777624Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T08:49:46.7644887Z Complete job name: run
+2026-11-12T08:49:46.8402755Z ##[group]Run actions/checkout@v4
+2026-11-12T08:49:46.8403812Z with:
+2026-11-12T08:49:46.8404402Z   repository: robertyang87/carbon-league
+2026-11-12T08:49:46.8408441Z   token: ***
+2026-11-12T08:49:46.8409055Z   ssh-strict: true
+2026-11-12T08:49:46.8409575Z   ssh-user: git
+2026-11-12T08:49:46.8410120Z   persist-credentials: true
+2026-11-12T08:49:46.8410701Z   clean: true
+2026-11-12T08:49:46.8411271Z   sparse-checkout-cone-mode: true
+2026-11-12T08:49:46.8412011Z   fetch-depth: 1
+2026-11-12T08:49:46.8412550Z   fetch-tags: false
+2026-11-12T08:49:46.8413123Z   show-progress: true
+2026-11-12T08:49:46.8413649Z   lfs: false
+2026-11-12T08:49:46.8414184Z   submodules: false
+2026-11-12T08:49:46.8414736Z   set-safe-directory: true
+2026-11-12T08:49:46.8415320Z   allow-unsafe-pr-checkout: false
+2026-11-12T08:49:46.8416139Z ##[endgroup]
+2026-11-12T08:49:47.1081107Z Syncing repository: robertyang87/carbon-league
+2026-11-12T08:49:47.1097393Z ##[group]Getting Git version info
+2026-11-12T08:49:47.1099595Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T08:49:47.1146848Z [command]/usr/bin/git version
+2026-11-12T08:49:47.1254209Z git version 2.56.0
+2026-11-12T08:49:47.1314952Z ##[endgroup]
+2026-11-12T08:49:47.1344364Z Temporarily overriding HOME='/home/runner/work/_temp/32f913f9-1154-4286-afa0-64cf3c28412b' before making global git config changes
+2026-11-12T08:49:47.1346884Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:49:47.1349003Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:49:47.1486805Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T08:49:47.1494664Z ##[group]Initializing the repository
+2026-11-12T08:49:47.1496454Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:49:47.1653835Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T08:49:47.1673849Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T08:49:47.1693826Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T08:49:47.1704392Z hint: call:
+2026-11-12T08:49:47.1710404Z hint:
+2026-11-12T08:49:47.1727412Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T08:49:47.1777591Z hint:
+2026-11-12T08:49:47.1779682Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T08:49:47.1803580Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T08:49:47.1805373Z hint:
+2026-11-12T08:49:47.1836725Z hint: 	git branch -m <name>
+2026-11-12T08:49:47.1842717Z hint:
+2026-11-12T08:49:47.1846646Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T08:49:47.1849275Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T08:49:47.1913448Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T08:49:47.1954905Z ##[endgroup]
+2026-11-12T08:49:47.1958502Z ##[group]Disabling automatic garbage collection
+2026-11-12T08:49:47.1960516Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T08:49:47.2060454Z ##[endgroup]
+2026-11-12T08:49:47.2065789Z ##[group]Setting up auth
+2026-11-12T08:49:47.2096845Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:49:47.2164178Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:49:47.2810326Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:49:47.2834524Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T08:49:47.3043759Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T08:49:47.3079992Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T08:49:47.3331885Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T08:49:47.3376102Z ##[endgroup]
+2026-11-12T08:49:47.3378239Z ##[group]Fetching the repository
+2026-11-12T08:49:47.3389509Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +261a8e1946afc502e06de2b8fa15ab4708e486e2:refs/remotes/origin/main
+2026-11-12T08:49:49.3149414Z From https://github.com/robertyang87/carbon-league
+2026-11-12T08:49:49.3162805Z  * [new ref]         261a8e1946afc502e06de2b8fa15ab4708e486e2 -> origin/main
+2026-11-12T08:49:49.3176985Z ##[endgroup]
+2026-11-12T08:49:49.3179863Z ##[group]Determining the checkout info
+2026-11-12T08:49:49.3186529Z ##[endgroup]
+2026-11-12T08:49:49.3188370Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T08:49:49.3225323Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T08:49:49.3267587Z ##[group]Checking out the ref
+2026-11-12T08:49:49.3270408Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T08:49:49.7561076Z Switched to a new branch 'main'
+2026-11-12T08:49:49.7585044Z branch 'main' set up to track 'origin/main'.
+2026-11-12T08:49:49.7645977Z ##[endgroup]
+2026-11-12T08:49:49.7684590Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T08:49:49.7717292Z 261a8e1946afc502e06de2b8fa15ab4708e486e2
+2026-11-12T08:49:49.8165765Z ##[group]Run if [ -n "ZWNobyAiPT0gRkFCTEVGSVhRN0IgQkVHSU4gPT0iCmRhdGUgJyslRiAlVCAlWicKdGltZW91dCA0MjAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIC1vIFVzZXJLbm93bkhvc3RzRmlsZT0vcm9vdC8uamlzaHVidWRkeS9uZXR3b3JrLWNoZWNrcy9zdHVkaW8ta25vd24taG9zdHMtMjAyNjExMTIgYXJtQDEwLjIxMS40My42OCAnYmFzaCAtcycgPDwnU1RFT0YnCkQ9JEhPTUUvanVueWFuZy9jYXJib24vZGF0YQpDPSRIT01FL2p1bnlhbmcvY2FyYm9uL2NvZGUKREdYPWFybUAxMC4xODguMC4yMwpmYWlsKCl7IGVjaG8gIkZBQkxFRklYUTdCIEZBSUw6ICQxIjsgZXhpdCAxOyB9CmVjaG8gIlNUVURJTyAkKGhvc3RuYW1lKSAkKGRhdGUgJyslRiAlVCAlWicpIgokSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIC1jICJpbXBvcnQganNvbjtkPWpzb24ubG9hZChvcGVuKCckRC9kc19mYWJsZS9tZXRhLmpzb24nKSk7YXNzZXJ0IGxlbihkWydnYW1lcyddKT09MTgxIGFuZCBkWyd0b3RhbCddPT01NDExOSwgJ21ldGEgbWlzbWF0Y2gnO3ByaW50KCdNRVRBX09LJykiIHx8IGZhaWwgImRhdGFzZXQgcmUtdmVyaWZ5IGZhaWxlZCIKWyAtZiAiJEQvZHNfZmFibGUvbWFwcy5ucHkiIF0gfHwgZmFpbCAibWFwcy5ucHkgbWlzc2luZyIKaWYgcGdyZXAgLWYgY25ldDJfdHJhaW4gPi9kZXYvbnVsbDsgdGhlbiBlY2hvICJFWElTVElOR19UUkFJTl9QUk9DOiI7IHBncmVwIC1hZiBjbmV0Ml90cmFpbjsgZmFpbCAiYSBjbmV0Ml90cmFpbiBwcm9jZXNzIGFscmVhZHkgZXhpc3RzIC0gbm90IHRvdWNoaW5nIGl0IjsgZmkKZWNobyAiTk9fVFJBSU5fUFJPQyBjb25maXJtZWQiCmZvciBmIGluIGNuZXQyX2FyY2hfbjFfbGFzdC5ucHogY25ldDJfYjEyOG0ydDMubnB6OyBkbwogIGlmIFsgISAtZiAiJEQvd2VpZ2h0cy8kZiIgXTsgdGhlbgogICAgZWNobyAiZmV0Y2hpbmcgJGYgdmlhIHNjcCIKICAgIHNjcCAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwICRER1g6L2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uL2RhdGEvd2VpZ2h0cy8kZiAiJEQvd2VpZ2h0cy8kZiIgPCAvZGV2L251bGwgfHwgZmFpbCAic2NwICRmIGZhaWxlZCIKICBmaQogIGxzIC1sICIkRC93ZWlnaHRzLyRmIgpkb25lClsgLWYgIiRDL2NuZXQyX3RyYWluLnB5IiBdIHx8IGZhaWwgImNuZXQyX3RyYWluLnB5IG1pc3NpbmciCmNkICIkQyIgfHwgZmFpbCAiY2QgY29kZSBkaXIiCmV4cG9ydCBCQ19ERVZJQ0U9bXBzIEJDX1JBTT0xIEJDX1RIUkVBRFM9OCBCQ19VU0VfVz0xIEJDX1VTRV9VVz0xIEJDX0JTPTI1NiBCQ19TQVZFX0VQT0NIUz0xIEJDX1BDVD0wLjEgQkNfTFI9M2UtNApybSAtZiAiJEQvZmFibGVfcjEubG9nIiAiJEQvZmFibGVfZzEubG9nIgpCQ19JTklUPSREL3dlaWdodHMvY25ldDJfYXJjaF9uMV9sYXN0Lm5weiBub2h1cCAkSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIGNuZXQyX3RyYWluLnB5ICREL2RzX2ZhYmxlICREL3dlaWdodHMvY25ldDJfZmFibGVyMS5ucHogMjAgJ3siQyI6MTI4LCJOQiI6OCwiRCI6MTI4LCJaSSI6MSwiVEEiOjQsIlROSCI6NH0nID4gJEQvZmFibGVfcjEubG9nIDI+JjEgPCAvZGV2L251bGwgJgplY2hvICQhID4gL3RtcC9mYWJsZV9yMS5waWQKQkNfSU5JVD0kRC93ZWlnaHRzL2NuZXQyX2IxMjhtMnQzLm5weiBub2h1cCAkSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIGNuZXQyX3RyYWluLnB5ICREL2RzX2ZhYmxlICREL3dlaWdodHMvY25ldDJfZmFibGVnMS5ucHogMjAgJ3siQyI6MTI4LCJOQiI6OCwiRCI6MTI4fScgPiAkRC9mYWJsZV9nMS5sb2cgMj4mMSA8IC9kZXYvbnVsbCAmCmVjaG8gJCEgPiAvdG1wL2ZhYmxlX2cxLnBpZAplY2hvICJSMV9QSUQ9JChjYXQgL3RtcC9mYWJsZV9yMS5waWQpIEcxX1BJRD0kKGNhdCAvdG1wL2ZhYmxlX2cxLnBpZCkiCmNhdCA+IC90bXAvZmFibGVfc2hpcC5zaCA8PCdGQUJFT0YnCiMhL2Jpbi9iYXNoCkQ9JEhPTUUvanVueWFuZy9jYXJib24vZGF0YQpER1g9YXJtQDEwLjE4OC4wLjIzCmZvciBhcm0gaW4gcjEgZzE7IGRvCiAgcGlkPSQoY2F0IC90bXAvZmFibGVfJHthcm19LnBpZCAyPi9kZXYvbnVsbCkKICBpZiBbIC1uICIkcGlkIiBdOyB0aGVuCiAgICB3aGlsZSBraWxsIC0wICIkcGlkIiAyPi9kZXYvbnVsbDsgZG8gc2xlZXAgMzA7IGRvbmUKICBmaQogIHNsZWVwIDUKICBmPSREL3dlaWdodHMvY25ldDJfZmFibGUke2FybX1fZXAxOS5ucHoKICBpZiBbIC1mICIkZiIgXTsgdGhlbgogICAgc2NwIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MjAgIiRmIiAkREdYOi9ob21lL2FybS9qdW55YW5nL2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfZmFibGVfJHthcm19X2Zyb21zdHVkaW8ubnB6CiAgICBlY2hvICJTSElQUEVEXyR7YXJtfSByYz0kPyAkKGRhdGUgJyslRiAlVCcpIgogICAgTD0kKG1kNSAtcSAiJGYiKQogICAgUj0kKHNzaCAtbiAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwICRER1ggIm1kNXN1bSAvaG9tZS9hcm0vanVueWFuZy9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX2ZhYmxlXyR7YXJtfV9mcm9tc3R1ZGlvLm5weiB8IGF3ayAne3ByaW50IFwkMX0nIikKICAgIGVjaG8gIlNISVBfTUQ1XyR7YXJtfSBsb2NhbD0kTCByZW1vdGU9JFIiCiAgZWxzZQogICAgZWNobyAiTUlTU0lOR19FUDE5XyR7YXJtfSAkZiIKICBmaQpkb25lCmVjaG8gIkZBQkxFX1NISVBfRE9ORSAkKGRhdGUgJyslRiAlVCcpIgpGQUJFT0YKbm9odXAgYmFzaCAvdG1wL2ZhYmxlX3NoaXAuc2ggPiAvdG1wL2ZhYmxlX3NoaXAub3V0IDI+JjEgPCAvZGV2L251bGwgJgplY2hvICJTSElQX1dBVENIRVJfUElEPSQhIgplY2hvICItLSBzbGVlcCAxMjAgZm9yIGVwMCAtLSIKc2xlZXAgMTIwCmVjaG8gIi0tIHRocmVlLXBpZWNlIHZlcmlmeSAkKGRhdGUgJyslRiAlVCAlWicpIC0tIgpwZ3JlcCAtYWYgY25ldDJfdHJhaW4gfHwgZWNobyBOT19UUkFJTl9QUk9DCnBzIC1vIHBpZCxldGltZSwlY3B1LHJzcyxjb21tYW5kIC1wICQoY2F0IC90bXAvZmFibGVfcjEucGlkKSwkKGNhdCAvdG1wL2ZhYmxlX2cxLnBpZCkgMj4mMQplY2hvICJMT0dfTVRJTUUgcjE9JChzdGF0IC1mICVTbSAkRC9mYWJsZV9yMS5sb2cpIGcxPSQoc3RhdCAtZiAlU20gJEQvZmFibGVfZzEubG9nKSIKZWNobyAiLS0gZGV2aWNlIGxpbmVzIC0tIgpncmVwIC1pRSAnZGV2aWNlfG1wcycgJEQvZmFibGVfcjEubG9nIHwgaGVhZCAtMwpncmVwIC1pRSAnZGV2aWNlfG1wcycgJEQvZmFibGVfZzEubG9nIHwgaGVhZCAtMwplY2hvICItLSByMSBsb2cgdGFpbCAtLSIKdGFpbCAtNSAkRC9mYWJsZV9yMS5sb2cKZWNobyAiLS0gZzEgbG9nIHRhaWwgLS0iCnRhaWwgLTUgJEQvZmFibGVfZzEubG9nCmVjaG8gIi0tIGVwIGZpbGVzIHNvIGZhciAtLSIKbHMgLWx0ICREL3dlaWdodHMvIHwgZ3JlcCAtaSBmYWJsZSB8IGhlYWQgLTYKZWNobyAiRkFCTEVGSVhRN0IgRE9ORSIKU1RFT0YKZWNobyAiU1NIX1JDPSQ/IgplY2hvICI9PSBGQUJMRUZJWFE3QiBFTkQgPT0iCg==" ]; then
+2026-11-12T08:49:49.8524806Z [36;1mif [ -n "ZWNobyAiPT0gRkFCTEVGSVhRN0IgQkVHSU4gPT0iCmRhdGUgJyslRiAlVCAlWicKdGltZW91dCA0MjAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIC1vIFVzZXJLbm93bkhvc3RzRmlsZT0vcm9vdC8uamlzaHVidWRkeS9uZXR3b3JrLWNoZWNrcy9zdHVkaW8ta25vd24taG9zdHMtMjAyNjExMTIgYXJtQDEwLjIxMS40My42OCAnYmFzaCAtcycgPDwnU1RFT0YnCkQ9JEhPTUUvanVueWFuZy9jYXJib24vZGF0YQpDPSRIT01FL2p1bnlhbmcvY2FyYm9uL2NvZGUKREdYPWFybUAxMC4xODguMC4yMwpmYWlsKCl7IGVjaG8gIkZBQkxFRklYUTdCIEZBSUw6ICQxIjsgZXhpdCAxOyB9CmVjaG8gIlNUVURJTyAkKGhvc3RuYW1lKSAkKGRhdGUgJyslRiAlVCAlWicpIgokSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIC1jICJpbXBvcnQganNvbjtkPWpzb24ubG9hZChvcGVuKCckRC9kc19mYWJsZS9tZXRhLmpzb24nKSk7YXNzZXJ0IGxlbihkWydnYW1lcyddKT09MTgxIGFuZCBkWyd0b3RhbCddPT01NDExOSwgJ21ldGEgbWlzbWF0Y2gnO3ByaW50KCdNRVRBX09LJykiIHx8IGZhaWwgImRhdGFzZXQgcmUtdmVyaWZ5IGZhaWxlZCIKWyAtZiAiJEQvZHNfZmFibGUvbWFwcy5ucHkiIF0gfHwgZmFpbCAibWFwcy5ucHkgbWlzc2luZyIKaWYgcGdyZXAgLWYgY25ldDJfdHJhaW4gPi9kZXYvbnVsbDsgdGhlbiBlY2hvICJFWElTVElOR19UUkFJTl9QUk9DOiI7IHBncmVwIC1hZiBjbmV0Ml90cmFpbjsgZmFpbCAiYSBjbmV0Ml90cmFpbiBwcm9jZXNzIGFscmVhZHkgZXhpc3RzIC0gbm90IHRvdWNoaW5nIGl0IjsgZmkKZWNobyAiTk9fVFJBSU5fUFJPQyBjb25maXJtZWQiCmZvciBmIGluIGNuZXQyX2FyY2hfbjFfbGFzdC5ucHogY25ldDJfYjEyOG0ydDMubnB6OyBkbwogIGlmIFsgISAtZiAiJEQvd2VpZ2h0cy8kZiIgXTsgdGhlbgogICAgZWNobyAiZmV0Y2hpbmcgJGYgdmlhIHNjcCIKICAgIHNjcCAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwICRER1g6L2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uL2RhdGEvd2VpZ2h0cy8kZiAiJEQvd2VpZ2h0cy8kZiIgPCAvZGV2L251bGwgfHwgZmFpbCAic2NwICRmIGZhaWxlZCIKICBmaQogIGxzIC1sICIkRC93ZWlnaHRzLyRmIgpkb25lClsgLWYgIiRDL2NuZXQyX3RyYWluLnB5IiBdIHx8IGZhaWwgImNuZXQyX3RyYWluLnB5IG1pc3NpbmciCmNkICIkQyIgfHwgZmFpbCAiY2QgY29kZSBkaXIiCmV4cG9ydCBCQ19ERVZJQ0U9bXBzIEJDX1JBTT0xIEJDX1RIUkVBRFM9OCBCQ19VU0VfVz0xIEJDX1VTRV9VVz0xIEJDX0JTPTI1NiBCQ19TQVZFX0VQT0NIUz0xIEJDX1BDVD0wLjEgQkNfTFI9M2UtNApybSAtZiAiJEQvZmFibGVfcjEubG9nIiAiJEQvZmFibGVfZzEubG9nIgpCQ19JTklUPSREL3dlaWdodHMvY25ldDJfYXJjaF9uMV9sYXN0Lm5weiBub2h1cCAkSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIGNuZXQyX3RyYWluLnB5ICREL2RzX2ZhYmxlICREL3dlaWdodHMvY25ldDJfZmFibGVyMS5ucHogMjAgJ3siQyI6MTI4LCJOQiI6OCwiRCI6MTI4LCJaSSI6MSwiVEEiOjQsIlROSCI6NH0nID4gJEQvZmFibGVfcjEubG9nIDI+JjEgPCAvZGV2L251bGwgJgplY2hvICQhID4gL3RtcC9mYWJsZV9yMS5waWQKQkNfSU5JVD0kRC93ZWlnaHRzL2NuZXQyX2IxMjhtMnQzLm5weiBub2h1cCAkSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIGNuZXQyX3RyYWluLnB5ICREL2RzX2ZhYmxlICREL3dlaWdodHMvY25ldDJfZmFibGVnMS5ucHogMjAgJ3siQyI6MTI4LCJOQiI6OCwiRCI6MTI4fScgPiAkRC9mYWJsZV9nMS5sb2cgMj4mMSA8IC9kZXYvbnVsbCAmCmVjaG8gJCEgPiAvdG1wL2ZhYmxlX2cxLnBpZAplY2hvICJSMV9QSUQ9JChjYXQgL3RtcC9mYWJsZV9yMS5waWQpIEcxX1BJRD0kKGNhdCAvdG1wL2ZhYmxlX2cxLnBpZCkiCmNhdCA+IC90bXAvZmFibGVfc2hpcC5zaCA8PCdGQUJFT0YnCiMhL2Jpbi9iYXNoCkQ9JEhPTUUvanVueWFuZy9jYXJib24vZGF0YQpER1g9YXJtQDEwLjE4OC4wLjIzCmZvciBhcm0gaW4gcjEgZzE7IGRvCiAgcGlkPSQoY2F0IC90bXAvZmFibGVfJHthcm19LnBpZCAyPi9kZXYvbnVsbCkKICBpZiBbIC1uICIkcGlkIiBdOyB0aGVuCiAgICB3aGlsZSBraWxsIC0wICIkcGlkIiAyPi9kZXYvbnVsbDsgZG8gc2xlZXAgMzA7IGRvbmUKICBmaQogIHNsZWVwIDUKICBmPSREL3dlaWdodHMvY25ldDJfZmFibGUke2FybX1fZXAxOS5ucHoKICBpZiBbIC1mICIkZiIgXTsgdGhlbgogICAgc2NwIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MjAgIiRmIiAkREdYOi9ob21lL2FybS9qdW55YW5nL2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfZmFibGVfJHthcm19X2Zyb21zdHVkaW8ubnB6CiAgICBlY2hvICJTSElQUEVEXyR7YXJtfSByYz0kPyAkKGRhdGUgJyslRiAlVCcpIgogICAgTD0kKG1kNSAtcSAiJGYiKQogICAgUj0kKHNzaCAtbiAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwICRER1ggIm1kNXN1bSAvaG9tZS9hcm0vanVueWFuZy9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX2ZhYmxlXyR7YXJtfV9mcm9tc3R1ZGlvLm5weiB8IGF3ayAne3ByaW50IFwkMX0nIikKICAgIGVjaG8gIlNISVBfTUQ1XyR7YXJtfSBsb2NhbD0kTCByZW1vdGU9JFIiCiAgZWxzZQogICAgZWNobyAiTUlTU0lOR19FUDE5XyR7YXJtfSAkZiIKICBmaQpkb25lCmVjaG8gIkZBQkxFX1NISVBfRE9ORSAkKGRhdGUgJyslRiAlVCcpIgpGQUJFT0YKbm9odXAgYmFzaCAvdG1wL2ZhYmxlX3NoaXAuc2ggPiAvdG1wL2ZhYmxlX3NoaXAub3V0IDI+JjEgPCAvZGV2L251bGwgJgplY2hvICJTSElQX1dBVENIRVJfUElEPSQhIgplY2hvICItLSBzbGVlcCAxMjAgZm9yIGVwMCAtLSIKc2xlZXAgMTIwCmVjaG8gIi0tIHRocmVlLXBpZWNlIHZlcmlmeSAkKGRhdGUgJyslRiAlVCAlWicpIC0tIgpwZ3JlcCAtYWYgY25ldDJfdHJhaW4gfHwgZWNobyBOT19UUkFJTl9QUk9DCnBzIC1vIHBpZCxldGltZSwlY3B1LHJzcyxjb21tYW5kIC1wICQoY2F0IC90bXAvZmFibGVfcjEucGlkKSwkKGNhdCAvdG1wL2ZhYmxlX2cxLnBpZCkgMj4mMQplY2hvICJMT0dfTVRJTUUgcjE9JChzdGF0IC1mICVTbSAkRC9mYWJsZV9yMS5sb2cpIGcxPSQoc3RhdCAtZiAlU20gJEQvZmFibGVfZzEubG9nKSIKZWNobyAiLS0gZGV2aWNlIGxpbmVzIC0tIgpncmVwIC1pRSAnZGV2aWNlfG1wcycgJEQvZmFibGVfcjEubG9nIHwgaGVhZCAtMwpncmVwIC1pRSAnZGV2aWNlfG1wcycgJEQvZmFibGVfZzEubG9nIHwgaGVhZCAtMwplY2hvICItLSByMSBsb2cgdGFpbCAtLSIKdGFpbCAtNSAkRC9mYWJsZV9yMS5sb2cKZWNobyAiLS0gZzEgbG9nIHRhaWwgLS0iCnRhaWwgLTUgJEQvZmFibGVfZzEubG9nCmVjaG8gIi0tIGVwIGZpbGVzIHNvIGZhciAtLSIKbHMgLWx0ICREL3dlaWdodHMvIHwgZ3JlcCAtaSBmYWJsZSB8IGhlYWQgLTYKZWNobyAiRkFCTEVGSVhRN0IgRE9ORSIKU1RFT0YKZWNobyAiU1NIX1JDPSQ/IgplY2hvICI9PSBGQUJMRUZJWFE3QiBFTkQgPT0iCg==" ]; then[0m
+2026-11-12T08:49:49.8887190Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" --b64 "ZWNobyAiPT0gRkFCTEVGSVhRN0IgQkVHSU4gPT0iCmRhdGUgJyslRiAlVCAlWicKdGltZW91dCA0MjAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIC1vIFVzZXJLbm93bkhvc3RzRmlsZT0vcm9vdC8uamlzaHVidWRkeS9uZXR3b3JrLWNoZWNrcy9zdHVkaW8ta25vd24taG9zdHMtMjAyNjExMTIgYXJtQDEwLjIxMS40My42OCAnYmFzaCAtcycgPDwnU1RFT0YnCkQ9JEhPTUUvanVueWFuZy9jYXJib24vZGF0YQpDPSRIT01FL2p1bnlhbmcvY2FyYm9uL2NvZGUKREdYPWFybUAxMC4xODguMC4yMwpmYWlsKCl7IGVjaG8gIkZBQkxFRklYUTdCIEZBSUw6ICQxIjsgZXhpdCAxOyB9CmVjaG8gIlNUVURJTyAkKGhvc3RuYW1lKSAkKGRhdGUgJyslRiAlVCAlWicpIgokSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIC1jICJpbXBvcnQganNvbjtkPWpzb24ubG9hZChvcGVuKCckRC9kc19mYWJsZS9tZXRhLmpzb24nKSk7YXNzZXJ0IGxlbihkWydnYW1lcyddKT09MTgxIGFuZCBkWyd0b3RhbCddPT01NDExOSwgJ21ldGEgbWlzbWF0Y2gnO3ByaW50KCdNRVRBX09LJykiIHx8IGZhaWwgImRhdGFzZXQgcmUtdmVyaWZ5IGZhaWxlZCIKWyAtZiAiJEQvZHNfZmFibGUvbWFwcy5ucHkiIF0gfHwgZmFpbCAibWFwcy5ucHkgbWlzc2luZyIKaWYgcGdyZXAgLWYgY25ldDJfdHJhaW4gPi9kZXYvbnVsbDsgdGhlbiBlY2hvICJFWElTVElOR19UUkFJTl9QUk9DOiI7IHBncmVwIC1hZiBjbmV0Ml90cmFpbjsgZmFpbCAiYSBjbmV0Ml90cmFpbiBwcm9jZXNzIGFscmVhZHkgZXhpc3RzIC0gbm90IHRvdWNoaW5nIGl0IjsgZmkKZWNobyAiTk9fVFJBSU5fUFJPQyBjb25maXJtZWQiCmZvciBmIGluIGNuZXQyX2FyY2hfbjFfbGFzdC5ucHogY25ldDJfYjEyOG0ydDMubnB6OyBkbwogIGlmIFsgISAtZiAiJEQvd2VpZ2h0cy8kZiIgXTsgdGhlbgogICAgZWNobyAiZmV0Y2hpbmcgJGYgdmlhIHNjcCIKICAgIHNjcCAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwICRER1g6L2hvbWUvYXJtL2p1bnlhbmcvY2FyYm9uL2RhdGEvd2VpZ2h0cy8kZiAiJEQvd2VpZ2h0cy8kZiIgPCAvZGV2L251bGwgfHwgZmFpbCAic2NwICRmIGZhaWxlZCIKICBmaQogIGxzIC1sICIkRC93ZWlnaHRzLyRmIgpkb25lClsgLWYgIiRDL2NuZXQyX3RyYWluLnB5IiBdIHx8IGZhaWwgImNuZXQyX3RyYWluLnB5IG1pc3NpbmciCmNkICIkQyIgfHwgZmFpbCAiY2QgY29kZSBkaXIiCmV4cG9ydCBCQ19ERVZJQ0U9bXBzIEJDX1JBTT0xIEJDX1RIUkVBRFM9OCBCQ19VU0VfVz0xIEJDX1VTRV9VVz0xIEJDX0JTPTI1NiBCQ19TQVZFX0VQT0NIUz0xIEJDX1BDVD0wLjEgQkNfTFI9M2UtNApybSAtZiAiJEQvZmFibGVfcjEubG9nIiAiJEQvZmFibGVfZzEubG9nIgpCQ19JTklUPSREL3dlaWdodHMvY25ldDJfYXJjaF9uMV9sYXN0Lm5weiBub2h1cCAkSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIGNuZXQyX3RyYWluLnB5ICREL2RzX2ZhYmxlICREL3dlaWdodHMvY25ldDJfZmFibGVyMS5ucHogMjAgJ3siQyI6MTI4LCJOQiI6OCwiRCI6MTI4LCJaSSI6MSwiVEEiOjQsIlROSCI6NH0nID4gJEQvZmFibGVfcjEubG9nIDI+JjEgPCAvZGV2L251bGwgJgplY2hvICQhID4gL3RtcC9mYWJsZV9yMS5waWQKQkNfSU5JVD0kRC93ZWlnaHRzL2NuZXQyX2IxMjhtMnQzLm5weiBub2h1cCAkSE9NRS9qdW55YW5nL2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIGNuZXQyX3RyYWluLnB5ICREL2RzX2ZhYmxlICREL3dlaWdodHMvY25ldDJfZmFibGVnMS5ucHogMjAgJ3siQyI6MTI4LCJOQiI6OCwiRCI6MTI4fScgPiAkRC9mYWJsZV9nMS5sb2cgMj4mMSA8IC9kZXYvbnVsbCAmCmVjaG8gJCEgPiAvdG1wL2ZhYmxlX2cxLnBpZAplY2hvICJSMV9QSUQ9JChjYXQgL3RtcC9mYWJsZV9yMS5waWQpIEcxX1BJRD0kKGNhdCAvdG1wL2ZhYmxlX2cxLnBpZCkiCmNhdCA+IC90bXAvZmFibGVfc2hpcC5zaCA8PCdGQUJFT0YnCiMhL2Jpbi9iYXNoCkQ9JEhPTUUvanVueWFuZy9jYXJib24vZGF0YQpER1g9YXJtQDEwLjE4OC4wLjIzCmZvciBhcm0gaW4gcjEgZzE7IGRvCiAgcGlkPSQoY2F0IC90bXAvZmFibGVfJHthcm19LnBpZCAyPi9kZXYvbnVsbCkKICBpZiBbIC1uICIkcGlkIiBdOyB0aGVuCiAgICB3aGlsZSBraWxsIC0wICIkcGlkIiAyPi9kZXYvbnVsbDsgZG8gc2xlZXAgMzA7IGRvbmUKICBmaQogIHNsZWVwIDUKICBmPSREL3dlaWdodHMvY25ldDJfZmFibGUke2FybX1fZXAxOS5ucHoKICBpZiBbIC1mICIkZiIgXTsgdGhlbgogICAgc2NwIC1vIEJhdGNoTW9kZT15ZXMgLW8gQ29ubmVjdFRpbWVvdXQ9MjAgIiRmIiAkREdYOi9ob21lL2FybS9qdW55YW5nL2NhcmJvbi9kYXRhL3dlaWdodHMvY25ldDJfZmFibGVfJHthcm19X2Zyb21zdHVkaW8ubnB6CiAgICBlY2hvICJTSElQUEVEXyR7YXJtfSByYz0kPyAkKGRhdGUgJyslRiAlVCcpIgogICAgTD0kKG1kNSAtcSAiJGYiKQogICAgUj0kKHNzaCAtbiAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwICRER1ggIm1kNXN1bSAvaG9tZS9hcm0vanVueWFuZy9jYXJib24vZGF0YS93ZWlnaHRzL2NuZXQyX2ZhYmxlXyR7YXJtfV9mcm9tc3R1ZGlvLm5weiB8IGF3ayAne3ByaW50IFwkMX0nIikKICAgIGVjaG8gIlNISVBfTUQ1XyR7YXJtfSBsb2NhbD0kTCByZW1vdGU9JFIiCiAgZWxzZQogICAgZWNobyAiTUlTU0lOR19FUDE5XyR7YXJtfSAkZiIKICBmaQpkb25lCmVjaG8gIkZBQkxFX1NISVBfRE9ORSAkKGRhdGUgJyslRiAlVCcpIgpGQUJFT0YKbm9odXAgYmFzaCAvdG1wL2ZhYmxlX3NoaXAuc2ggPiAvdG1wL2ZhYmxlX3NoaXAub3V0IDI+JjEgPCAvZGV2L251bGwgJgplY2hvICJTSElQX1dBVENIRVJfUElEPSQhIgplY2hvICItLSBzbGVlcCAxMjAgZm9yIGVwMCAtLSIKc2xlZXAgMTIwCmVjaG8gIi0tIHRocmVlLXBpZWNlIHZlcmlmeSAkKGRhdGUgJyslRiAlVCAlWicpIC0tIgpwZ3JlcCAtYWYgY25ldDJfdHJhaW4gfHwgZWNobyBOT19UUkFJTl9QUk9DCnBzIC1vIHBpZCxldGltZSwlY3B1LHJzcyxjb21tYW5kIC1wICQoY2F0IC90bXAvZmFibGVfcjEucGlkKSwkKGNhdCAvdG1wL2ZhYmxlX2cxLnBpZCkgMj4mMQplY2hvICJMT0dfTVRJTUUgcjE9JChzdGF0IC1mICVTbSAkRC9mYWJsZV9yMS5sb2cpIGcxPSQoc3RhdCAtZiAlU20gJEQvZmFibGVfZzEubG9nKSIKZWNobyAiLS0gZGV2aWNlIGxpbmVzIC0tIgpncmVwIC1pRSAnZGV2aWNlfG1wcycgJEQvZmFibGVfcjEubG9nIHwgaGVhZCAtMwpncmVwIC1pRSAnZGV2aWNlfG1wcycgJEQvZmFibGVfZzEubG9nIHwgaGVhZCAtMwplY2hvICItLSByMSBsb2cgdGFpbCAtLSIKdGFpbCAtNSAkRC9mYWJsZV9yMS5sb2cKZWNobyAiLS0gZzEgbG9nIHRhaWwgLS0iCnRhaWwgLTUgJEQvZmFibGVfZzEubG9nCmVjaG8gIi0tIGVwIGZpbGVzIHNvIGZhciAtLSIKbHMgLWx0ICREL3dlaWdodHMvIHwgZ3JlcCAtaSBmYWJsZSB8IGhlYWQgLTYKZWNobyAiRkFCTEVGSVhRN0IgRE9ORSIKU1RFT0YKZWNobyAiU1NIX1JDPSQ/IgplY2hvICI9PSBGQUJMRUZJWFE3QiBFTkQgPT0iCg=="[0m
+2026-11-12T08:49:49.9066839Z [36;1melse[0m
+2026-11-12T08:49:49.9067447Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" "hostname && uptime"[0m
+2026-11-12T08:49:49.9067993Z [36;1mfi[0m
+2026-11-12T08:49:49.9088141Z shell: /usr/bin/bash -e {0}
+2026-11-12T08:49:49.9088571Z env:
+2026-11-12T08:49:49.9089418Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T08:49:49.9089850Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T08:49:49.9090262Z   ACS_REGION: cn-shanghai
+2026-11-12T08:49:49.9090605Z ##[endgroup]
+2026-11-12T08:52:10.5026041Z InvokeId: t-sh072vhruwd162o
+2026-11-12T08:52:10.5043420Z --- status=Success exit=0 ---
+2026-11-12T08:52:10.5054104Z == FABLEFIXQ7B BEGIN ==
+2026-11-12T08:52:10.5072857Z 2026-11-12 16:49:52 CST
+2026-11-12T08:52:10.5080169Z STUDIO mac-studio.local 2026-11-12 16:50:04 CST
+2026-11-12T08:52:10.5102687Z META_OK
+2026-11-12T08:52:10.5122522Z NO_TRAIN_PROC confirmed
+2026-11-12T08:52:10.5123515Z -rw-rw-r--  1 arm  staff  13968968 Nov 11 23:17 /Users/arm/junyang/carbon/data/weights/cnet2_arch_n1_last.npz
+2026-11-12T08:52:10.5140799Z -rw-rw-r--  1 arm  staff  11821144 Nov 10 05:20 /Users/arm/junyang/carbon/data/weights/cnet2_b128m2t3.npz
+2026-11-12T08:52:10.5155293Z R1_PID=40277 G1_PID=40278
+2026-11-12T08:52:10.5156180Z SHIP_WATCHER_PID=40282
+2026-11-12T08:52:10.5156743Z -- sleep 120 for ep0 --
+2026-11-12T08:52:10.5157375Z -- three-piece verify 2026-11-12 16:52:05 CST --
+2026-11-12T08:52:10.5158054Z 40277
+2026-11-12T08:52:10.5158611Z 40278
+2026-11-12T08:52:10.5159125Z   PID ELAPSED  %CPU    RSS COMMAND
+2026-11-12T08:52:10.5161525Z 40277   02:00  16.3 1404336 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py /Users/arm/junyang/carbon/data/ds_fable /Users/arm/junyang/carbon/data/weights/cnet2_fabler1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T08:52:10.5165259Z 40278   02:00   9.1 1413408 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py /Users/arm/junyang/carbon/data/ds_fable /Users/arm/junyang/carbon/data/weights/cnet2_fableg1.npz 20 {"C":128,"NB":8,"D":128}
+2026-11-12T08:52:10.5167183Z LOG_MTIME r1=Nov 12 16:52:04 2026 g1=Nov 12 16:51:57 2026
+2026-11-12T08:52:10.5168204Z -- device lines --
+2026-11-12T08:52:10.5168815Z -- r1 log tail --
+2026-11-12T08:52:10.5169721Z {"train": 48139, "val": 5980, "params": 3480130, "cfg": {"C": 128, "NB": 8, "D": 128, "NH": 4, "L": 2, "E": 32, "G": 8, "ZI": 1, "TA": 4, "TNH": 4}, "bs": 256, "steps_per_epoch": 188}
+2026-11-12T08:52:10.5170984Z {"ep": 0, "i": 0, "pi": 0.262, "v": 0.0805, "aux": 0.0549, "s": 1}
+2026-11-12T08:52:10.5172368Z {"ep": 0, "val": {"collector": 0.9075, "planter": 0.8926, "base": 0.9742, "all": 0.9171, "workers": 0.9046, "loss": 0.2114}, "train_pi": 0.2372, "s": 117}
+2026-11-12T08:52:10.5173521Z {"ep": 1, "i": 0, "pi": 0.215, "v": 0.056, "aux": 0.0588, "s": 1}
+2026-11-12T08:52:10.5174155Z -- g1 log tail --
+2026-11-12T08:52:10.5174711Z {"ep": 0, "i": 0, "pi": 0.2744, "v": 0.0785, "aux": 0.0546, "s": 1}
+2026-11-12T08:52:10.5175829Z {"ep": 0, "val": {"collector": 0.9057, "planter": 0.8848, "base": 0.9749, "all": 0.9148, "workers": 0.9016, "loss": 0.2162}, "train_pi": 0.2437, "s": 55}
+2026-11-12T08:52:10.5176888Z {"ep": 1, "i": 0, "pi": 0.2149, "v": 0.0565, "aux": 0.0589, "s": 0}
+2026-11-12T08:52:10.5177961Z {"ep": 1, "val": {"collector": 0.9085, "planter": 0.888, "base": 0.9747, "all": 0.9171, "workers": 0.9045, "loss": 0.2061}, "train_pi": 0.2137, "s": 54}
+2026-11-12T08:52:10.5179054Z {"ep": 2, "i": 0, "pi": 0.2204, "v": 0.0513, "aux": 0.0582, "s": 0}
+2026-11-12T08:52:10.5179735Z -- ep files so far --
+2026-11-12T08:52:10.5180433Z -rw-r--r--  1 arm  staff  13969172 Nov 12 16:52 cnet2_fabler1.npz
+2026-11-12T08:52:10.5181397Z -rw-r--r--  1 arm  staff  13968968 Nov 12 16:52 cnet2_fabler1_ep0.npz
+2026-11-12T08:52:10.5182866Z -rw-r--r--  1 arm  staff  13968968 Nov 12 16:52 cnet2_fabler1_last.npz
+2026-11-12T08:52:10.5183694Z -rw-r--r--  1 arm  staff       155 Nov 12 16:52 cnet2_fabler1_log.jsonl
+2026-11-12T08:52:10.5184668Z -rw-r--r--  1 arm  staff  11821200 Nov 12 16:51 cnet2_fableg1.npz
+2026-11-12T08:52:10.5185462Z -rw-r--r--  1 arm  staff  11820996 Nov 12 16:51 cnet2_fableg1_ep1.npz
+2026-11-12T08:52:10.5186213Z FABLEFIXQ7B DONE
+2026-11-12T08:52:10.5186711Z SSH_RC=0
+2026-11-12T08:52:10.5187238Z == FABLEFIXQ7B END ==
+2026-11-12T08:52:10.5187606Z 
+2026-11-12T08:52:10.5337938Z Post job cleanup.
+2026-11-12T08:52:10.6283128Z [command]/usr/bin/git version
+2026-11-12T08:52:10.6376822Z git version 2.56.0
+2026-11-12T08:52:10.6433224Z Temporarily overriding HOME='/home/runner/work/_temp/8bf57274-72f1-4b05-b03a-408c1eb0d51a' before making global git config changes
+2026-11-12T08:52:10.6434987Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T08:52:10.6439078Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T08:52:10.6525261Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T08:52:10.6644556Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T08:52:10.6966381Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T08:52:10.7016817Z http.https://github.com/.extraheader
+2026-11-12T08:52:10.7032733Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T08:52:10.7133391Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T08:52:10.7435738Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T08:52:10.7511014Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T08:52:10.7978689Z Cleaning up orphan processes
+2026-11-12T08:52:10.8279987Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 169 claimed

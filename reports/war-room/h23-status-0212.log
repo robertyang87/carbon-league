@@ -1,0 +1,79 @@
+RATE core remaining=4299/5000 reset=1794509349
+BRANCH sync/h29 sha=d42cdc8d date=2026-11-12T18:00:21Z msg='h29 snap m7bsv2r1_m2 30 lines'
+BRANCH sync/h23 sha=bd950f26 date=2026-11-12T12:42:01Z msg='sync h23 2026-11-12T12:42:01Z'
+Traceback (most recent call last):
+  File "/home/hatch/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files/h23-status-0212-driver.py", line 23, in <module>
+    live_dir = api(f"/repos/{OWNER}/{REPO}/contents/synced/h23/bigeval_live?ref=sync/h29")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files/h23-status-0212-driver.py", line 12, in api
+    return gh_api.req("GET", path)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/gh_api.py", line 16, in req
+    with urllib.request.urlopen(r, timeout=30) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+sha d42cdc8d date 2026-11-12T18:00:21Z
+  synced/h29/bigeval_live/m7bsv2r1_m2.jsonl status= modified add= 5 del= 0
+RATE core remaining=4295/5000 reset=1794509349
+BRANCH sync/h29 sha=d42cdc8d date=2026-11-12T18:00:21Z msg='h29 snap m7bsv2r1_m2 30 lines'
+BRANCH sync/h23 sha=bd950f26 date=2026-11-12T12:42:01Z msg='sync h23 2026-11-12T12:42:01Z'
+LIVE-DIR entries=8
+  fableg1_echo2.jsonl size=71296 type=file
+  fableg1_m2.jsonl size=71984 type=file
+  fabler1_echo2.jsonl size=154258 type=file
+  fabler1_m2.jsonl size=181614 type=file
+  m7bsv2g1_echo2.jsonl size=163844 type=file
+  m7bsv2g1_m2.jsonl size=97109 type=file
+  m7bsv2r1_echo2.jsonl size=74730 type=file
+  m7bsv2r1_m2.jsonl size=111994 type=file
+H23-DIR entries=3: ['bigeval.jsonl', 'bigeval_live', 'summaries']
+CAL-OUT files: none
+  fableg1_echo2.jsonl: RAW FETCH FAILED <HTTPError 404: 'Not Found'>
+  fableg1_m2.jsonl: RAW FETCH FAILED <HTTPError 404: 'Not Found'>
+  fabler1_echo2.jsonl: RAW FETCH FAILED <HTTPError 404: 'Not Found'>
+  fabler1_m2.jsonl: RAW FETCH FAILED <HTTPError 404: 'Not Found'>
+  m7bsv2g1_echo2.jsonl: RAW FETCH FAILED <HTTPError 404: 'Not Found'>
+  m7bsv2g1_m2.jsonl: RAW FETCH FAILED <HTTPError 404: 'Not Found'>
+  m7bsv2r1_echo2.jsonl: RAW FETCH FAILED <HTTPError 404: 'Not Found'>
+  m7bsv2r1_m2.jsonl: RAW FETCH FAILED <HTTPError 404: 'Not Found'>
+TOTAL live lines = 0 / 1600
+SUMMARIES entries=8: ['fableg1_echo2.json', 'fableg1_m2.json', 'fabler1_echo2.json', 'fabler1_m2.json', 'm7bsv2g1_echo2.json', 'm7bsv2g1_m2.json', 'm7bsv2r1_echo2.json', 'm7bsv2r1_m2.json']
+  fableg1_echo2.jsonl: lines=19 unique_seeds=19 last_seed=999040 last_ts=None
+  fableg1_m2.jsonl: lines=20 unique_seeds=20 last_seed=996042 last_ts=None
+  fabler1_echo2.jsonl: lines=41 unique_seeds=41 last_seed=999131 last_ts=None
+  fabler1_m2.jsonl: lines=48 unique_seeds=48 last_seed=996155 last_ts=None
+  m7bsv2g1_echo2.jsonl: lines=44 unique_seeds=44 last_seed=999155 last_ts=None
+  m7bsv2g1_m2.jsonl: lines=26 unique_seeds=26 last_seed=996047 last_ts=None
+  m7bsv2r1_echo2.jsonl: lines=20 unique_seeds=20 last_seed=999048 last_ts=None
+  m7bsv2r1_m2.jsonl: lines=30 unique_seeds=30 last_seed=996114 last_ts=None
+TOTAL live lines = 248 / 1600
+RATE remaining: 4279
+d42cdc8d 2026-11-12T18:00:21Z h29 snap m7bsv2r1_m2 30 lines
+a1b6ae2e 2026-11-12T18:00:14Z h29 summary m7bsv2r1_echo2
+d43fda33 2026-11-12T18:00:09Z h29 summary m7bsv2r1_m2
+7ee597a2 2026-11-12T18:00:05Z h29 snap m7bsv2g1_echo2 44 lines
+d706b454 2026-11-12T17:59:58Z h29 summary m7bsv2g1_echo2
+31438a62 2026-11-12T17:59:52Z h29 summary m7bsv2g1_m2
+dbe92b4c 2026-11-12T17:59:07Z h29 snap fableg1_echo2 19 lines
+6109ba2f 2026-11-12T17:59:03Z h29 summary fableg1_echo2
+f8267fc9 2026-11-12T17:59:00Z h29 summary fableg1_m2
+770a4d36 2026-11-12T17:58:56Z h29 summary fabler1_echo2
+63207ba6 2026-11-12T17:58:52Z h29 summary fabler1_m2
+0925f8fe 2026-11-12T17:58:00Z h29 snap m7bsv2r1_echo2 20 lines
