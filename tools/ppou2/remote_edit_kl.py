@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Edit kl_coef inside a trainer state file (state_last.pt) and verify.
 Usage: remote_edit_kl.py <state_path> <new_kl> [bak_path]
-Only the top-level 'kl_coef' entry is changed. After saving, the file is
-reloaded and kl_coef is read back; if bak_path is given, every other
-top-level entry is compared against the backup (tensors by torch.equal).
+Only the top-level 'kl_coef' entry is changed. Before editing, the
+original file is copied byte-for-byte to bak_path when given and not
+already present (an existing backup is never overwritten); after saving,
+the file is reloaded and kl_coef is read back, and every other top-level
+entry is compared against the backup (tensors by torch.equal).
+Fix 2026-11-15 (strategy-group fix-on-touch): the script used to expect
+the caller to pre-create the backup; a missing bak path crashed the
+post-edit deep-compare after the edit had already landed.
 """
-import sys, torch
+import os, shutil, sys, torch
 
 
 def deep_equal(a, b):
@@ -28,6 +33,9 @@ bak = sys.argv[3] if len(sys.argv) > 3 else None
 
 st = torch.load(path, map_location="cpu", weights_only=False)
 print("before kl_coef:", st.get("kl_coef"), "it:", st.get("it"))
+if bak and not os.path.exists(bak):
+    shutil.copyfile(path, bak)
+    print("backup created:", bak)
 st["kl_coef"] = new_kl
 torch.save(st, path)
 st2 = torch.load(path, map_location="cpu", weights_only=False)

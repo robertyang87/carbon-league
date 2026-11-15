@@ -63,56 +63,9 @@ def _ensure_bridge():
     time.sleep(2)
 
 
-class AmbiguousRequestError(RuntimeError):
-    """A non-GET request whose outcome is UNKNOWN: the transport failed
-    after the request may have reached the server (F08). Blindly retrying
-    can double-apply it (duplicate submission / quota burn), so callers
-    must first check server state via GET (see _recover_post).
-    possibly_sent=False marks failures where the connection was provably
-    never established (e.g. the local bridge refused it), so one retry is
-    safe."""
-
-    def __init__(self, msg, possibly_sent=True):
-        super().__init__(msg)
-        self.possibly_sent = possibly_sent
-
-
-def _is_refused(e):
-    seen = set()
-    while e is not None and id(e) not in seen:
-        seen.add(id(e))
-        if isinstance(e, ConnectionRefusedError):
-            return True
-        e = getattr(e, "reason", None) or getattr(e, "__cause__", None)
-    return False
-
-
 def _open_retry(req, timeout):
-    """GET: idempotent -- connection refused starts the local bridge;
-    reset/disconnect/timeout retry with backoff (max 6 attempts). HTTP
-    errors never retry.
-    Non-GET: NEVER blind-retried (F08). Exactly one attempt; a transport
-    failure raises AmbiguousRequestError so the caller can verify server
-    state before any explicit recovery resend."""
-    method = req.get_method()
-    if method != "GET":
-        try:
-            return _opener.open(req, timeout=timeout)
-        except urllib.error.HTTPError:
-            raise  # definitive server answer: not ambiguous
-        except (urllib.error.URLError, ConnectionError, http.client.HTTPException,
-                TimeoutError, OSError) as e:
-            if _is_refused(e) and "127.0.0.1" in BASE:
-                _ensure_bridge()  # connection never established: nothing was sent
-                raise AmbiguousRequestError(
-                    f"{method} {req.full_url}: local bridge was down (started); "
-                    "request provably not sent, one retry is safe",
-                    possibly_sent=False) from e
-            raise AmbiguousRequestError(
-                f"{method} {req.full_url}: transport failed after the request "
-                f"may have been sent ({type(e).__name__}: {e}); outcome unknown, "
-                "do NOT blind-retry -- verify state via GET first",
-                possibly_sent=True) from e
+    """连接被拒 → 拉起本地桥；连接重置 / 断开 / 超时 → 退避重试（最多 6 次）。HTTP 错误不重试。"""
+    import http.client
     for attempt in range(6):
         try:
             return _opener.open(req, timeout=timeout)
@@ -126,122 +79,6 @@ def _open_retry(req, timeout):
                 _ensure_bridge()
             else:
                 time.sleep(2 * 2 ** attempt)
-
-
-# --- Post-hoc state tri-state (owner tightening of the F08 protocol) -------
-# After an ambiguous POST (timeout / disconnect), a state check via GET can
-# only conclude one of three things:
-#   APPLIED  -- a positive record that the request took effect (e.g. the
-#               submitted strategy is now listed under /api/mine).
-#   REJECTED -- an EXPLICIT terminal failure/rejection record tied to this
-#               request's identity (e.g. a submission-log entry in a failed
-#               state). This is the ONLY outcome that permits exactly one
-#               explicit recovery resend.
-#   UNKNOWN  -- everything else: not found in a listing, listing lag, the
-#               check itself failing or timing out. "Not found" is NOT
-#               proof of non-application: the first attempt may still have
-#               landed. UNKNOWN always stops with AmbiguousRequestError.
-# Basis: the GET surface this client uses (/api/session, /api/mine,
-# /api/leaderboard) exposes only current-state listings; it has NO
-# per-request terminal-record / submission-log endpoint. The check helpers
-# below therefore never return REJECTED today -- REJECTED exists for the
-# day such a terminal record exists, and absence from a listing must never
-# be re-interpreted as REJECTED.
-APPLIED = "applied"
-REJECTED = "rejected"
-UNKNOWN = "unknown"
-
-
-def _norm_state(v):
-    """Normalize a check result to the tri-state. Legacy booleans are read
-    conservatively: True -> APPLIED, False/None/anything else -> UNKNOWN
-    (absence of a record is not a rejection record)."""
-    if v is True or v == APPLIED:
-        return APPLIED
-    if v == REJECTED:
-        return REJECTED
-    return UNKNOWN
-
-
-def _check_state(check_applied):
-    try:
-        return _norm_state(check_applied())
-    except Exception:
-        return UNKNOWN  # the check itself failed/timed out: unknown, not rejected
-
-
-def _recover_post(desc, do_post, check_applied, manual=None):
-    """Run a non-idempotent POST under the F08 ambiguous-outcome protocol.
-
-    do_post() performs the request once and returns its parsed result.
-    check_applied() queries fresh server state via GET and returns one of
-    APPLIED / REJECTED / UNKNOWN (see the tri-state comment above). Returns
-    do_post()'s result, or the string "confirmed-applied" when a state
-    check proves the first (or the recovery) attempt landed. A recovery
-    resend happens ONLY on REJECTED (an explicit terminal failure record
-    for this request identity), and exactly once. UNKNOWN -- including
-    "not found in the listing" and a failed/timed-out check -- raises
-    AmbiguousRequestError with manual-verification guidance; it never
-    auto-resends."""
-    try:
-        return do_post()
-    except AmbiguousRequestError as e:
-        if not e.possibly_sent:
-            return do_post()  # provably unsent: one safe retry
-        state = _check_state(check_applied)
-        if state == APPLIED:
-            return "confirmed-applied"
-        if state != REJECTED:
-            hint = f" 人工核对指引：{manual}" if manual else ""
-            raise AmbiguousRequestError(
-                f"{desc}: 结果不确定 (state=UNKNOWN：未查到生效记录，也没有"
-                f"该请求身份的明确失败终态；查不到不等于未生效) -- 已停手，"
-                f"禁止自动重发。{hint}", possibly_sent=True)
-        # REJECTED: explicit terminal failure record for this request
-        # identity -- exactly ONE explicit recovery resend.
-        try:
-            return do_post()
-        except AmbiguousRequestError:
-            if _check_state(check_applied) == APPLIED:
-                return "confirmed-applied"
-            hint = f" 人工核对指引：{manual}" if manual else ""
-            raise AmbiguousRequestError(
-                f"{desc}: 结果不确定 (recovery resend outcome unconfirmed) -- "
-                f"已停手，禁止再重发。{hint}", possibly_sent=True)
-
-
-def _login_state():
-    """APPLIED iff the session positively shows a logged-in user. No user
-    in the session response is UNKNOWN (the login may still have landed /
-    the session view may lag), never REJECTED: /api/session returns no
-    terminal record for a login attempt."""
-    try:
-        return APPLIED if session().get("user") is not None else UNKNOWN
-    except Exception:
-        return UNKNOWN
-
-
-def _submit_state(name):
-    """APPLIED iff a strategy with this exact name is positively listed in
-    /api/mine. Absence is UNKNOWN (the submission may still be processing
-    or the listing may lag), never REJECTED: /api/mine is a current-state
-    listing with no per-submission terminal record."""
-    try:
-        return APPLIED if any(x.get("name") == name
-                              for x in request("/api/mine").get("strategies", [])) else UNKNOWN
-    except Exception:
-        return UNKNOWN
-
-
-def _retire_state(sid):
-    """APPLIED iff the strategy id is positively ABSENT from /api/mine
-    (the delete's effect is observed). Still being listed is UNKNOWN (the
-    delete may not have been processed yet), never REJECTED: the listing
-    carries no terminal record for the delete request itself."""
-    try:
-        return UNKNOWN if sid in {x["id"] for x in request("/api/mine").get("strategies", [])} else APPLIED
-    except Exception:
-        return UNKNOWN
 
 
 def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
@@ -272,15 +109,8 @@ def request(path, method="GET", body=None, headers=None, raw=False, timeout=60):
             data, status = e.read(), e.code
             _absorb(e.headers)
             break
-        except AmbiguousRequestError:
-            raise
-        except (ConnectionError, http.client.HTTPException, OSError) as e:
-            if method != "GET":
-                raise AmbiguousRequestError(
-                    f"{method} {path}: response stream failed after send "
-                    f"({type(e).__name__}: {e}); outcome unknown -- verify "
-                    "state via GET before any resend", possibly_sent=True) from e
-            if attempt == 3:
+        except (ConnectionError, OSError, http.client.IncompleteRead) as e:
+            if method != "GET" or attempt == 3:
                 raise
             time.sleep(5 * (attempt + 1))
     if raw:
@@ -313,15 +143,7 @@ def cmd_login(user):
         import getpass
         pw = getpass.getpass(f"{user} 的密码: ")
     session()
-
-    r = _recover_post("login",
-                      lambda: request("/api/login", "POST", {"username": user, "password": pw}),
-                      _login_state,
-                      manual=f"运行 `python3 ladder.py whoami` 按登录名「{user}」核对："
-                             "显示已登录即第一次已生效、切勿重复登录；显示未登录也不等于"
-                             "未生效（会话视图可能未刷新），稍后再查，仍不确定先人工确认再决定。")
-    if r == "confirmed-applied":
-        print("登录请求曾断连，但状态核对确认会话已建立")
+    request("/api/login", "POST", {"username": user, "password": pw})
     cmd_whoami()
 
 
@@ -346,30 +168,16 @@ def cmd_submit(path, name, desc_path=None):
     if not s.get("user"):
         sys.exit("未登录：先 python3 ladder.py login <用户名>")
     print(f"提交 {path} ({len(src):,} B) 为「{name}」，今日剩余 {s.get('remaining')} 次")
-
-    def _submit_once():
-        b = uuid.uuid4().hex
-        parts = []
-        for k, v in (("name", name), ("description", desc)):
-            parts.append(f'--{b}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode())
-        parts.append(f'--{b}\r\nContent-Disposition: form-data; name="file"; filename="submission.py"\r\n'
-                     f'Content-Type: text/x-python; charset=utf-8\r\n\r\n'.encode() + src + b"\r\n")
-        parts.append(f"--{b}--\r\n".encode())
-        return request("/api/submit", "POST", b"".join(parts),
-                       {"Content-Type": f"multipart/form-data; boundary={b}"}, timeout=300)
-
-    r = _recover_post(f"submit '{name}'", _submit_once,
-                      lambda: _submit_state(name),
-                      manual=f"运行 `python3 ladder.py mine` 按策略名「{name}」核对在册记录："
-                             "查到即已生效、切勿重发；查不到不等于未生效（可能仍在处理或"
-                             "列表延迟），且本站无按提交身份的终态流水可证明被拒——人工"
-                             "确认前禁止重发，以免重复提交白烧当日额度。")
-    if r == "confirmed-applied":
-        print(f"提交请求曾断连，但状态核对确认「{name}」已在我的策略中（未重发）")
-        mine = {x["name"]: x for x in request("/api/mine").get("strategies", [])}
-        print(json.dumps(mine.get(name, {}), ensure_ascii=False, indent=1)[:2000])
-    else:
-        print(json.dumps(r, ensure_ascii=False, indent=1)[:2000])
+    b = uuid.uuid4().hex
+    parts = []
+    for k, v in (("name", name), ("description", desc)):
+        parts.append(f'--{b}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode())
+    parts.append(f'--{b}\r\nContent-Disposition: form-data; name="file"; filename="submission.py"\r\n'
+                 f'Content-Type: text/x-python; charset=utf-8\r\n\r\n'.encode() + src + b"\r\n")
+    parts.append(f"--{b}--\r\n".encode())
+    r = request("/api/submit", "POST", b"".join(parts),
+                {"Content-Type": f"multipart/form-data; boundary={b}"}, timeout=300)
+    print(json.dumps(r, ensure_ascii=False, indent=1)[:2000])
     cmd_whoami()
 
 
@@ -383,16 +191,7 @@ def cmd_retire(sid, confirm=""):
     print(f"retire {s['name']} ({sid}): {s.get('games')} games, rating {round(s.get('rating', 0))}")
     if confirm != "yes":
         sys.exit("add 'yes' to really retire it")
-    r = _recover_post(f"retire {sid}",
-                      lambda: request(f"/api/strategies/{sid}/delete", "POST", {}),
-                      lambda: _retire_state(sid),
-                      manual=f"运行 `python3 ladder.py mine` 按策略 id「{sid}」核对："
-                             "不在册即下架已生效；仍在册不等于被拒（可能尚未处理），"
-                             "人工确认前禁止重发。")
-    if r == "confirmed-applied":
-        print(f"下架请求曾断连，但状态核对确认 {sid} 已不在我的策略中（未重发）")
-    else:
-        print(json.dumps(r, ensure_ascii=False))
+    print(json.dumps(request(f"/api/strategies/{sid}/delete", "POST", {}), ensure_ascii=False))
 
 
 def cmd_mine():
@@ -412,7 +211,21 @@ def cmd_board(n=30):
         print(json.dumps(d, ensure_ascii=False)[:1500])
 
 
+def _resolve_strategy_id(sid):
+    """2026-11-13: /api/matches 的 strategy 参数改认 32 位 hex 策略 ID，
+    传显示名会 400 Invalid pagination parameters。hex 直传；名字先查榜单解析。"""
+    import re
+    if re.fullmatch(r"[0-9a-f]{32}", sid):
+        return sid
+    d = request("/api/leaderboard")
+    for s in d.get("strategies", []):
+        if s.get("name") == sid:
+            return s["id"]
+    raise RuntimeError(f"榜单上找不到策略名: {sid}")
+
+
 def cmd_matches(sid, out=None):
+    sid = _resolve_strategy_id(sid)
     got, off = [], 0
     while True:
         d = request(f"/api/matches?compact=1&limit=100&offset={off}&strategy={sid}")
