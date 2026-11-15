@@ -15,6 +15,12 @@ SI08 修复版（2026-11-16）：旧版只拉 cnet2_search 一件、依赖
 md5 口径与 real_env.verify_vendor / 包内 _BUILD_HASHES 一致：
 cnet2_search 的 vendor 副本带 3 行头注释，代码 md5 ＝去前 3 行后
 计算；其余三源为整文件 md5。副本只读，本桥从不回写仓库。
+
+R2-07 修复（2026-11-16）：load_all_sources 改按依赖序加载
+（feat/fastsim 先于 np/search 注册进 sys.modules 并替换同名旧
+条目），加载后核验跨模块绑定（np.F / search.F / search.NP /
+search.FastCarbon）同属已验集合——旧实现 np 先行加载会捕获
+sys.modules 里先在的旧 feat 对象，磁盘 hash 全过也拦不住。
 """
 
 from __future__ import annotations
@@ -182,7 +188,29 @@ def verify_vendor_cache(names=None) -> dict:
     return out
 
 
+# 依赖序（R2-07）：cnet2_np 以 `import cnet2_feat as F` 捕获 feat，
+# cnet2_search 捕获 feat/np/fastsim。必须先把被依赖方以已验对象注
+# 册进 sys.modules，再加载依赖方；旧实现先 np 后 feat，np 会捕获
+# sys.modules 里先在的任意旧 feat（或与随后重载的 feat 成两个对
+# 象），磁盘 hash 全过也防不住内存绑定污染。
+_LOAD_ORDER = ("cnet2_feat", "fastsim", "cnet2_np", "cnet2_search")
+
+# 加载后必须核验的跨模块绑定：(模块, 属性, 期望对象来源)
+# 期望对象 = 已验集合中的模块本身，或其上的类属性。
+_BINDINGS = (
+    ("cnet2_np", "F", ("module", "cnet2_feat")),
+    ("cnet2_search", "F", ("module", "cnet2_feat")),
+    ("cnet2_search", "NP", ("module", "cnet2_np")),
+    ("cnet2_search", "FastCarbon", ("attr", "fastsim", "FastCarbon")),
+)
+
+
 def _load_module(name: str):
+    """以已验 vendor 副本加载并**替换** sys.modules 同名条目。
+
+    注册先于 exec：加载期间依赖方的 import 直接命中本对象，不给
+    先在的同名旧模块留捕获窗口。
+    """
     path = os.path.join(VENDOR_DIR, name + ".py")
     spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
@@ -191,12 +219,30 @@ def _load_module(name: str):
     return mod
 
 
+def _verify_bindings(mods: dict) -> None:
+    """核验跨模块依赖对象同属已验集合，不合抛 RuntimeError 停。"""
+    for mod_name, attr, expect in _BINDINGS:
+        mod = mods[mod_name]
+        if not hasattr(mod, attr):
+            raise RuntimeError(
+                f"绑定核验失败：{mod_name}.{attr} 不存在 —— 停")
+        got = getattr(mod, attr)
+        if expect[0] == "module":
+            want = mods[expect[1]]
+        else:
+            want = getattr(mods[expect[1]], expect[2])
+        if got is not want:
+            raise RuntimeError(
+                f"绑定核验失败：{mod_name}.{attr} 不是已验集合中的"
+                f"对象（疑似捕获旧模块）—— 停")
+
+
 def load_all_sources() -> dict:
-    """校验缓存后加载四源，返回 {name: module}。
+    """校验缓存后按依赖序加载四源，返回 {name: module}。
 
     缺件时先尝试在线拉取（gh_api 不可用则报错指向离线 bootstrap）；
-    拉取后、加载前均逐件复核 md5。vendor 目录同时置于 sys.path 首位，
-    使 cnet2_search 的同级 import 解析到钉版副本。
+    拉取后、加载前均逐件复核 md5。加载按 _LOAD_ORDER（被依赖方
+    先行注册），加载后核验跨模块绑定同属已验集合（R2-07）。
     """
     try:
         verify_vendor_cache()
@@ -206,8 +252,9 @@ def load_all_sources() -> dict:
     if VENDOR_DIR not in sys.path:
         sys.path.insert(0, VENDOR_DIR)
     mods = {}
-    for name in ("cnet2_np", "cnet2_feat", "fastsim", "cnet2_search"):
+    for name in _LOAD_ORDER:
         mods[name] = _load_module(name)
+    _verify_bindings(mods)
     return mods
 
 
