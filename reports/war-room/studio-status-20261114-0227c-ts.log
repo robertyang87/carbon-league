@@ -1,0 +1,112 @@
+STUDIOSTAT0227Z3Q8 BEGIN 2026-11-14 02:32:05 CST
+STUDIOSTAT0227Z3Q8 STUDIO-BEGIN 2026-11-14 02:32:10 CST
+ 2:32  up 15 days, 10:24, 4 users, load averages: 1.87 2.12 1.87
+--- PILOT-FORMAL ---
+-rw-r-----  1 arm  staff  1268 Nov 14 00:25 /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v2.PARTIAL.md
+-rw-r--r--  1 arm  staff  2956 Nov 14 00:47 /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v2.log
+-rw-r--r--  1 arm  staff   492 Nov 14 00:19 /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v2.progress.json
+--- SIDECAR-CONTENT ---
+{
+ "kind": "stage1_formal_pilot_progress",
+ "run_id": "49b518f67267742c",
+ "pilot_pid": 91954,
+ "ts_epoch": 1794586782.634162,
+ "elapsed_s": 3735.0,
+ "workers_seen": 13,
+ "workers_active_since_prev": 12,
+ "worker_cpu_total_s": 44801.0,
+ "roots_total": 113,
+ "roots_completed_est": 36,
+ "roots_completed_note": "ESTIMATE: aggregate worker CPU / 1214 CPU-s per root (diagnostic v1.1 run baseline); the gate publishes no intermediate root count",
+ "out_json_exists": false,
+ "state": "running"
+}--- PROC-NOW ---
+41443   0.0  0.0       00:46 zsh -c cd /Users/arm/s1v4accept/automation/acceptance_s1; PY=/Users/arm/junyang/carbon/.venv/bin/python; $PY test_teacher_v2_twoworld.py /Users/arm/s12test/heads_v2.npz --canon > /tmp/tw_canon.log 2>&1; echo "EXIT=$?"; tail -6 /tmp/tw_canon.log
+       0
+--- PRODUCER-GUIDED-FIND ---
+/Users/arm/junyang/carbon/code_backup_pre_v2_a4dd8329_20261113/producer
+/Users/arm/junyang/carbon/code/producer
+/Users/arm/junyang/carbon/code_backup_pre_v3_4acbbaea_20261114/producer
+__pycache__
+accumulate_replays.sh
+aggregate_c.py
+aggregate_probe.py
+analyze.py
+analyze_corpus_mirror.py
+analyze_gs.py
+analyze_integration.py
+analyze_s1.py
+analyze_s3p2.py
+analyze_s4_traces.py
+app.js
+arch.sh
+aux_distill.sh
+aux_exp12.sh
+aux_labels.py
+awr_collector_anchor.py
+awr_gen.py
+awr_rekey.py
+awr_us_env.py
+awr_weights.py
+base_v53.py
+base_v53_probe.py
+bc_features.py
+belief.py
+bench_board.py
+bench_distilled.py
+bench_rl.py
+bench_v53.py
+bigeval.py
+bot_study.py
+build_activation.py
+build_awr.py
+build_bc2_data.py
+build_c_fork.py
+build_distill_dataset.py
+build_eval_s3p2.py
+build_gs.py
+build_integration.py
+build_m2.py
+--- R5-RESULTS ---
+total 432
+-rw-r--r--  1 arm  staff    624 Nov 14 02:27 test_ppo_wire_r.log
+-rw-r--r--  1 arm  staff   3372 Nov 14 02:27 test_labels_r.log
+-rw-r--r--  1 arm  staff    425 Nov 14 02:27 test_identity_f11_r.log
+-rw-r--r--  1 arm  staff   1749 Nov 14 02:27 stage0_ok2.log
+-rw-r--r--  1 arm  staff    507 Nov 14 02:27 stage0_ok.log
+-rw-r--r--  1 arm  staff    370 Nov 14 02:27 stage0_main.log
+-rw-r--r--  1 arm  staff    504 Nov 14 02:27 stage0_emptyval.log
+-rw-r--r--  1 arm  staff   2492 Nov 14 02:27 r3c.log
+-rw-r--r--  1 arm  staff   2492 Nov 14 02:27 r3b.log
+-rw-r--r--  1 arm  staff   2529 Nov 14 02:27 r3.log
+-rw-r--r--  1 arm  staff   1115 Nov 14 02:27 pub_r.log
+-rw-r--r--  1 arm  staff  24505 Nov 14 02:27 latest-selfplay-results2.json
+-rw-r--r--  1 arm  staff  24745 Nov 14 02:27 latest-selfplay-results.json
+-rw-r--r--  1 arm  staff    671 Nov 14 02:27 identity_sample.json
+-rw-r--r--  1 arm  staff   2434 Nov 14 02:27 identity_index_sample.json
+-rw-r--r--  1 arm  staff    396 Nov 14 02:27 heads_ok.npz.manifest.json
+-rw-r--r--  1 arm  staff    335 Nov 14 02:27 ds_norm.log
+-rw-r--r--  1 arm  staff   1708 Nov 14 02:27 der_r2.log
+-rw-r--r--  1 arm  staff   1400 Nov 14 02:27 der_r.log
+-rw-r--r--  1 arm  staff  97641 Nov 14 02:27 data-results.json
+== /Users/arm/s1v4accept/automation/acceptance_r5/results/stage0_ok.log
+{"load_source": "generation", "generation": "gen-e530a66259e079ed", "rows": 2392, "data": "/home/hatch/workspace/fix4-residual/ds_heads_ok"}
+{"labels": {"total_rows": 2392, "exact_rows": 1196, "approx_rows": 598, "unusable_rows": 598, "approx_labels": true, "label_source": "mixed: margin_raw/u_raw exact + tanh-inverse approx"}}
+val 集为空（0 局），检查 split 配置：没有任何样本被划入验证集（meta.games 的 val 标记 / 数据集划分），拒绝在空验证集上评估或训练
+== /Users/arm/s1v4accept/automation/acceptance_r5/results/test_labels_r.log
+PASS unusable excluded from value rows value_rows=4186 train=4784 unusable=598
+
+== mixed labels v2: 17/17 passed ==
+== /Users/arm/s1v4accept/automation/acceptance_r5/results/test_ppo_wire_r.log
+PASS _resume_sd corrupt checkpoint raises: Error(s) in loading state_dict for CNet2:
+	Unexpected key(s) in state_
+ALL PPO WIRING CHECKS PASS
+== /Users/arm/s1v4accept/automation/acceptance_r5/selfplay_err.log
+  },
+  "all_expected_checks_passed": false
+}
+--- DU-V4 ---
+2.2G	/Users/arm/s1v4accept
+/dev/disk3s1s1   926Gi    12Gi   415Gi     3%    455k  4.3G    0%   /
+STUDIOSTAT0227Z3Q8 STUDIO-END
+STUDIOSTAT0227Z3Q8 END rc=0

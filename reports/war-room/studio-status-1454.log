@@ -1,0 +1,69 @@
+dispatched at 14:55:34
+CLAIMED run 43171538778 job 131025754678 status completed conclusion success
+ cn-shanghai
+2026-11-12T06:55:42.0316179Z ##[endgroup]
+2026-11-12T06:56:01.4933087Z InvokeId: t-sh072v7lbo5nk00
+2026-11-12T06:56:01.4944458Z --- status=Success exit=0 ---
+2026-11-12T06:56:01.4952913Z STUDIOSTAT1454ZQ8W L20-BEGIN 2026-11-12 14:55:44 CST
+2026-11-12T06:56:01.4972667Z STUDIOSTAT1454ZQ8W STUDIO-BEGIN 2026-11-12 14:55:58 CST
+2026-11-12T06:56:01.4979942Z mac-studio.local
+2026-11-12T06:56:01.5002209Z 14:55  up 13 days, 22:48, 5 users, load averages: 0.58 0.76 0.94
+2026-11-12T06:56:01.5012311Z --- MEM-DISK ---
+2026-11-12T06:56:01.5022575Z /dev/disk3s1s1   926Gi    12Gi   386Gi     3%    455k  4.0G    0%   /
+2026-11-12T06:56:01.5072801Z --- TRAIN-PROC ---
+2026-11-12T06:56:01.5076981Z 99079   0.0  0.0       50:12 bash -c env BC_DEVICE=mps BC_RAM=1 BC_THREADS=8 BC_USE_W=1 BC_USE_UW=1 BC_BS=256 BC_SAVE_EPOCHS=1 BC_PCT=0.1 BC_LR=3e-4 BC_INIT=/Users/arm/junyang/carbon/data/weights/cnet2_arch_n1_last.npz ../.venv/bin/python cnet2_train.py ../data/ds_distill ../data/weights/cnet2_distill_r1.npz 20 "{\"C\":128,\"NB\":8,\"D\":128,\"ZI\":1,\"TA\":4,\"TNH\":4}" > ../data/distill_r1.log 2>&1; rsync -a ../data/weights/cnet2_distill_r1_ep19.npz arm@10.188.0.23:/home/arm/junyang/carbon/data/weights/cnet2_distill_r1_fromstudio.npz && echo DISTILL_R1_SHIPPED_TO_DGX >> ../data/distill_r1.log
+2026-11-12T06:56:01.5081214Z 99083  17.9  3.2       50:12 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py ../data/ds_distill ../data/weights/cnet2_distill_r1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T06:56:01.5083015Z --- G1-LOG-TAIL ---
+2026-11-12T06:56:01.5083592Z {"ep": 19, "i": 0, "pi": 0.2869, "v": 0.0212, "aux": 0.0411, "s": 0}
+2026-11-12T06:56:01.5084845Z {"ep": 19, "val": {"collector": 0.8638, "planter": 0.7881, "base": 0.9669, "all": 0.8728, "workers": 0.8522, "loss": 0.3205}, "train_pi": 0.2734, "s": 109}
+2026-11-12T06:56:01.5085787Z best 0.8729
+2026-11-12T06:56:01.5086136Z DISTILL_G1_SHIPPED_TO_DGX
+2026-11-12T06:56:01.5086542Z --- R1-LOG-TAIL ---
+2026-11-12T06:56:01.5087005Z {"ep": 13, "val": {"collector": 0.8631, "planter": 0.7868, "base": 0.968, "all": 0.8723, "workers": 0.8514, "loss": 0.3223}, "train_pi": 0.2857, "s": 134}
+2026-11-12T06:56:01.5087550Z {"ep": 14, "i": 0, "pi": 0.2464, "v": 0.0247, "aux": 0.045, "s": 0}
+2026-11-12T06:56:01.5088100Z {"ep": 14, "val": {"collector": 0.862, "planter": 0.7868, "base": 0.9666, "all": 0.8714, "workers": 0.8505, "loss": 0.3245}, "train_pi": 0.2658, "s": 134}
+2026-11-12T06:56:01.5088732Z {"ep": 15, "i": 0, "pi": 0.2729, "v": 0.0173, "aux": 0.0287, "s": 0}
+2026-11-12T06:56:01.5089030Z --- G1-JSONL-LAST3 ---
+2026-11-12T06:56:01.5089498Z {"ep": 17, "val": {"collector": 0.8639, "planter": 0.788, "base": 0.9664, "all": 0.8727, "workers": 0.8522, "loss": 0.3203}, "train_pi": 0.2787, "s": 109}
+2026-11-12T06:56:01.5090258Z {"ep": 18, "val": {"collector": 0.8641, "planter": 0.7879, "base": 0.9667, "all": 0.8729, "workers": 0.8524, "loss": 0.3204}, "train_pi": 0.2774, "s": 109}
+2026-11-12T06:56:01.5091003Z {"ep": 19, "val": {"collector": 0.8638, "planter": 0.7881, "base": 0.9669, "all": 0.8728, "workers": 0.8522, "loss": 0.3205}, "train_pi": 0.2734, "s": 109}
+2026-11-12T06:56:01.5091508Z --- R1-JSONL-LAST3 ---
+2026-11-12T06:56:01.5092247Z {"ep": 12, "val": {"collector": 0.863, "planter": 0.7851, "base": 0.9679, "all": 0.8721, "workers": 0.8511, "loss": 0.3235}, "train_pi": 0.2855, "s": 134}
+2026-11-12T06:56:01.5093098Z {"ep": 13, "val": {"collector": 0.8631, "planter": 0.7868, "base": 0.968, "all": 0.8723, "workers": 0.8514, "loss": 0.3223}, "train_pi": 0.2857, "s": 134}
+2026-11-12T06:56:01.5093833Z {"ep": 14, "val": {"collector": 0.862, "planter": 0.7868, "base": 0.9666, "all": 0.8714, "workers": 0.8505, "loss": 0.3245}, "train_pi": 0.2658, "s": 134}
+2026-11-12T06:56:01.5094332Z --- G1-FINAL-MD5 ---
+2026-11-12T06:56:01.5094756Z -rw-r--r--  1 arm  staff  11821004 Nov 12 14:42 /Users/arm/junyang/carbon/data/weights/cnet2_distill_g1_ep19.npz
+2026-11-12T06:56:01.5095399Z -rw-r--r--  1 arm  staff  11821004 Nov 12 14:42 /Users/arm/junyang/carbon/data/weights/cnet2_distill_g1_last.npz
+2026-11-12T06:56:01.5095848Z 6c3885c6ed801c7a435b88961ac8fb64
+2026-11-12T06:56:01.5096098Z --- WEIGHTS-NOW ---
+2026-11-12T06:56:01.5096304Z total 1109632
+2026-11-12T06:56:01.5096592Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:54 cnet2_distill_r1_ep14.npz
+2026-11-12T06:56:01.5097004Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:54 cnet2_distill_r1_last.npz
+2026-11-12T06:56:01.5097422Z -rw-r--r--  1 arm  staff      2319 Nov 12 14:54 cnet2_distill_r1_log.jsonl
+2026-11-12T06:56:01.5097820Z -rw-r--r--  1 arm  staff  13969088 Nov 12 14:52 cnet2_distill_r1.npz
+2026-11-12T06:56:01.5098227Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:52 cnet2_distill_r1_ep13.npz
+2026-11-12T06:56:01.5098619Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:50 cnet2_distill_r1_ep12.npz
+2026-11-12T06:56:01.5099017Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:48 cnet2_distill_r1_ep11.npz
+2026-11-12T06:56:01.5099340Z --- DATASETS ---
+2026-11-12T06:56:01.5099570Z 3.1G	/Users/arm/junyang/carbon/data
+2026-11-12T06:56:01.5099841Z STUDIOSTAT1454ZQ8W STUDIO-END
+2026-11-12T06:56:01.5100096Z STUDIOSTAT1454ZQ8W L20-END rc=0
+2026-11-12T06:56:01.5100416Z 
+2026-11-12T06:56:01.5217019Z Post job cleanup.
+2026-11-12T06:56:01.6173630Z [command]/usr/bin/git version
+2026-11-12T06:56:01.6254080Z git version 2.56.0
+2026-11-12T06:56:01.6351558Z Temporarily overriding HOME='/home/runner/work/_temp/c20ad87f-c6c8-466a-9a42-c93af0479f73' before making global git config changes
+2026-11-12T06:56:01.6362782Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T06:56:01.6373036Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T06:56:01.6433725Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T06:56:01.6515450Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T06:56:01.6816169Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T06:56:01.6850208Z http.https://github.com/.extraheader
+2026-11-12T06:56:01.6878428Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T06:56:01.6935515Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T06:56:01.7475087Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T06:56:01.7535847Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T06:56:01.8028823Z Cleaning up orphan processes
+2026-11-12T06:56:01.8337038Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 58 claimed

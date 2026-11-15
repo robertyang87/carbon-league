@@ -1,0 +1,20 @@
+fdd877ba3bb69a5bc84c62027c227180  exam_stack_golden.tar.zst
+# Location (on DGX spark-29db): /home/arm/junyang/golden/exam_stack_golden.tar.zst
+# Sidecar on DGX:               /home/arm/junyang/golden/exam_stack_golden.md5 (same md5)
+# Compressed size:   2018439231 bytes
+# Uncompressed size: 2532065280 bytes
+# Contents: 4536 tar entries (4191 regular files, 345 directories)
+# Source: spot-30 (root@100.99.41.71) /root/carbon, streamed read-only over
+#         the tailnet on 2026-11-13 (build ~11:13-11:21 CST, tar nice -n 19
+#         on the source; exams on spot-30 untouched).
+# Exclusions: __pycache__ (205 dirs on source), *.log, *.out,
+#             data/bigeval_live/, data/bigeval.jsonl
+# Verified 2026-11-13: zstd -t OK; md5 recomputed on DGX matches; listing
+# contains 0 bigeval_live / 0 __pycache__ / 0 .log entries; 186 weight files
+# under carbon/data/weights/; carbon/.venv present (3214 entries); manifest
+# files extracted from the tarball match the spot-30 originals:
+#   carbon/code/eval_v53.py    aa4c5bb63c879caffeb33b0b25c498d7
+#   carbon/code/bigeval.py     3547eb6abba5083c5aaa2645fcbf2a47
+#   carbon/code/cnet2_search.py 14230fa124e0a9b90d59d6df03c6765a
+# Rebuild: run /home/arm/junyang/golden/make_golden.sh on DGX (streams from
+# the then-current reference spot), then refresh this file.

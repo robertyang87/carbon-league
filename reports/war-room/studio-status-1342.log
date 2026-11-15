@@ -1,0 +1,72 @@
+MARKER=STUDIOSTAT1342
+mac-studio.local
+13:44  up 14 days, 21:36, 4 users, load averages: 1.20 1.41 1.56
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                              634475.
+Pages active:                           1371622.
+Pages inactive:                         1808571.
+Pages speculative:                       179516.
+Pages throttled:                              0.
+Pages wired down:                        146368.
+Pages purgeable:                          26634.
+---PS---
+  312 14-21:35:40   0.0 /usr/libexec/col /usr/libexec/colorsync.displayservices
+  314 14-21:35:40   0.0 /System/Library/ /System/Library/Frameworks/ColorSync.framework/Versions/A/XPCServices/com.apple.ColorSyncXPCAgent.xpc/Contents/MacOS/com.apple.ColorSyncXPCAgent
+  315 14-21:35:40   0.0 /usr/libexec/col /usr/libexec/colorsyncd
+  680 14-21:35:34   0.0 /System/Library/ /System/Library/CoreServices/appplaceholdersyncd
+ 2351 14-21:33:46   0.0 /System/Library/ /System/Library/CoreServices/appplaceholdersyncd
+ 2513 14-21:33:40   0.0 /System/Library/ /System/Library/Frameworks/ColorSync.framework/Versions/A/XPCServices/com.apple.ColorSyncXPCAgent.xpc/Contents/MacOS/com.apple.ColorSyncXPCAgent
+ 3400 14-21:29:31   0.0 /System/Library/ /System/Library/Frameworks/Contacts.framework/Support/postersyncd
+---PS-END---
+---TEACHER-LOG---
+-rw-r--r--  1 arm  staff  49147 Nov 13 12:02 /Users/arm/junyang/carbon/teacher_consistency_studio.log
+{"pos": 228, "game_seed": 995238, "step": 240, "me": 0, "ms": 5541.3, "n_arms": 16, "entropy": 2.199, "agree_greedy": false, "top_eq_sampled": false, "slot_match": 0.667, "greedy_eq_sampled": false, "q_max": 0.217}
+{"pos": 229, "game_seed": 995239, "step": 40, "me": 0, "ms": 5479.6, "n_arms": 16, "entropy": 1.359, "agree_greedy": false, "top_eq_sampled": false, "slot_match": 0.75, "greedy_eq_sampled": false, "q_max": 0.544}
+CONSISTENCY {"positions": 229, "games_played": 40, "agree_greedy_rate": 0.5459, "entropy_mean": 1.9006, "entropy_p50": 2.0692, "q_max_mean": 0.3214, "teacher_top_eq_sampled_exact_rate": 0.1048, "teacher_top_vs_sampled_slot_match_mean": 0.8377, "greedy_eq_sampled_exact_rate": 0.1223, "ms_per_position_mean": 5581.7, "ms_per_position_p50": 5540.9, "extrapolated_hours_for_35282_positions": 54.7, "wall_s_total": 1505.5}
+---HEADS---
+zsh:1: no matches found: /Users/arm/junyang/carbon/data/*heads*
+---STAGE0-SCRIPT---
+-rw-rw----  1 arm  staff  14138 Nov 13 13:43 /Users/arm/junyang/carbon/code/stage0_train_heads.py
+MD5 (/Users/arm/junyang/carbon/code/stage0_train_heads.py) = 14ba916651987fc2a7d8e6ed23c00fa7
+---PRODUCER---
+-rw-rw----  1 arm  staff  37499 Nov 13 13:43 /Users/arm/junyang/carbon/code/producer/selfplay_gen.py
+MD5 (/Users/arm/junyang/carbon/code/producer/selfplay_gen.py) = 95d2e29fbec8cfcebee57bf9bf0d25ed
+---BUILD---
+MD5 (/Users/arm/junyang/carbon/code/cnet2_build.py) = b38786537f579f421c4a1a0dc97adcad
+---NEW-FILES-SINCE-1330---
+/Users/arm/junyang/carbon/code/cnet2_model.py
+/Users/arm/junyang/carbon/code/producer/selfplay_gen.py
+/Users/arm/junyang/carbon/code/cnet2_train.py
+/Users/arm/junyang/carbon/code/certify_pack.py
+/Users/arm/junyang/carbon/code/cnet2_build.py
+/Users/arm/junyang/carbon/code/stage0_train_heads.py
+/Users/arm/junyang/carbon/code/stage0_heads_patch.py
+/Users/arm/junyang/carbon/code/cnet2_search.py
+/Users/arm/junyang/carbon/code/bigeval.py
+/Users/arm/junyang/carbon/code/fastsim.py
+/Users/arm/junyang/carbon/code/stage0_smoke_heads.py
+/Users/arm/junyang/carbon/code/cnet2_np.py
+/Users/arm/junyang/carbon/code/stage0_teacher.py
+/Users/arm/junyang/carbon/code/eval_v53.py
+---TOP-DATA---
+total 544
+drwxr-xr-x  286 arm  staff   9152 Nov 13 11:41 weights
+drwxr-xr-x    3 arm  staff     96 Nov 13 11:30 selfplay_probe
+-rw-r--r--    1 arm  staff    657 Nov 13 03:56 hakimi2_ship.log
+-rw-r--r--    1 arm  staff   4635 Nov 13 03:56 hakimi2r1.log
+-rw-r--r--    1 arm  staff   4603 Nov 13 03:49 hakimi2g1.log
+-rw-r--r--    1 arm  staff   2721 Nov 13 03:42 hakimi2_chain.log
+-rw-r--r--    1 arm  staff      0 Nov 13 03:39 hakimi2_ship.out
+-rw-r--r--    1 arm  staff   1355 Nov 13 03:39 ship_hakimi2.sh
+-rw-r--r--    1 arm  staff      4 Nov 13 03:39 hakimi2g1.pid
+-rw-r--r--    1 arm  staff      4 Nov 13 03:39 hakimi2r1.pid
+-rw-r--r--    1 arm  staff    302 Nov 13 03:39 hakimi2_build.log
+---FABLE---
+{"ep": 19, "val": {"collector": 0.9283, "planter": 0.9101, "base": 0.9793, "all": 0.9345, "workers": 0.9247, "loss": 0.1735}, "train_pi": 0.0923, "s": 67}
+best 0.9348
+{"ep": 19, "val": {"collector": 0.9274, "planter": 0.906, "base": 0.979, "all": 0.9333, "workers": 0.9232, "loss": 0.1707}, "train_pi": 0.1053, "s": 54}
+best 0.9336
+END-MARKER=STUDIOSTAT1342
+EXIT=0

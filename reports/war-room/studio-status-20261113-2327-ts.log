@@ -1,0 +1,56 @@
+STUDIOSTAT2327K9R4 PROBE-BEGIN 2026-11-13 23:29:09 CST
+STUDIOSTAT2327K9R4 STUDIO-BEGIN 2026-11-13 23:29:20 CST
+mac-studio.local
+23:29  up 15 days,  7:21, 4 users, load averages: 13.28 11.86 8.08
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                             1007808.
+Pages active:                           1466629.
+Pages inactive:                         1363825.
+--- PILOT-MAIN-91954 ---
+  PID  %CPU %MEM ELAPSED COMMAND
+91954   0.0  0.1   11:53 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/junyang/carbon/data/stage1_formal/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_formal/split_formal.json --mode du --pilot --workers 12 --ds-games-file /Users/arm/junyang/carbon/data/stage1_pilot/ds_m3s2_games.txt --train-data-version ds_m3s2 --train-temp 1.0 --belief sample --out /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v2.json
+--- ANY-TRAINING-PROC ---
+arm              91954   0.0  0.1 435331872  61728   ??  SN   11:17PM   0:00.65 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/junyang/carbon/data/stage1_formal/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_formal/split_formal.json --mode du --pilot --workers 12 --ds-games-file /Users/arm/junyang/carbon/data/stage1_pilot/ds_m3s2_games.txt --train-data-version ds_m3s2 --train-temp 1.0 --belief sample --out /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v2.json
+--- TOP-CPU ---
+USER               PID  %CPU %MEM      VSZ    RSS   TT  STAT STARTED      TIME COMMAND
+arm              91968 100.0  0.1 435293824  96832   ??  RN   11:17PM  11:51.84 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=35) --multiprocessing-fork
+arm              91969 100.0  0.2 435296192 104320   ??  RN   11:17PM  11:51.78 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=37) --multiprocessing-fork
+arm              91961 100.0  0.2 435295376 104016   ??  RN   11:17PM  11:51.84 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=21) --multiprocessing-fork
+arm              91963 100.0  0.2 435298752 108112   ??  RN   11:17PM  11:51.86 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=25) --multiprocessing-fork
+arm              91967 100.0  0.2 435298272 106384   ??  RN   11:17PM  11:51.84 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=33) --multiprocessing-fork
+arm              91966  99.7  0.2 435295968 104384   ??  RN   11:17PM  11:51.86 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=31) --multiprocessing-fork
+arm              91959  99.6  0.2 435295136 104560   ??  RN   11:17PM  11:51.87 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=17) --multiprocessing-fork
+--- S1-FILES-MD5 ---
+MD5 (/Users/arm/junyang/carbon/code/stage0_teacher.py) = 2c2541c6304c3316186b5ce66a5aaeea
+MD5 (/Users/arm/junyang/carbon/code/stage1_teacher_gate.py) = dd921e572223741d5fb28d0e59e8ebf6
+MD5 (/Users/arm/junyang/carbon/code/cnet2_build.py) = a3f160636f7ea963b39c98b626bc6fc5
+MD5 (/Users/arm/junyang/carbon/code/producer/selfplay_gen.py) = 15d2454441fa93a2b15ed915059add6f
+MD5 (/Users/arm/junyang/carbon/code/rl2_ppo_train.py) = 1f1430b47faa7f7d22414946a8d5ab53
+MD5 (/Users/arm/junyang/carbon/code/rl2_ppo_cnet2.py) = 62a9adc79069ca6dfa6f344a439a8310
+MD5 (/Users/arm/junyang/carbon/code/stage0_guided_match.py) = ed43fda8174df190159825c81a79208d
+MD5 (/Users/arm/junyang/carbon/code/stage0_measure_teacher.py) = d0de8a12faa9a728f2d34c0c7b37f70d
+--- FORMAL-DIR ---
+total 16664
+-rw-r--r--   1 arm  staff    33885 Nov 13 21:38:01 2026 pilot_du_formal.json
+-rw-r--r--   1 arm  staff     2754 Nov 13 21:38:01 2026 pilot_du_formal.json.pilot.json
+-rw-r--r--   1 arm  staff     8151 Nov 13 21:38:01 2026 pilot_du_formal.log
+-rw-r--r--   1 arm  staff      295 Nov 13 21:49:49 2026 pilot_du_formal.progress.json
+-rw-r--r--   1 arm  staff     2615 Nov 13 23:17:28 2026 pilot_du_v2.log
+-rw-r--r--   1 arm  staff      491 Nov 13 23:19:42 2026 pilot_du_v2.progress.json
+-rw-r--r--   1 arm  staff        0 Nov 13 18:19:48 2026 progress_monitor.log
+-rw-r-----   1 arm  staff     4725 Nov 13 18:19:44 2026 progress_monitor.py
+-rw-r--r--   1 arm  staff        0 Nov 13 23:19:42 2026 progress_monitor_v2.log
+-rw-r-----   1 arm  staff     4728 Nov 13 23:19:35 2026 progress_monitor_v2.py
+drwxr-xr-x  36 arm  staff     1152 Nov 13 18:16:59 2026 replays
+-rw-r--r--   1 arm  staff     1384 Nov 13 18:16:59 2026 split_formal.json
+-rw-r--r--   1 arm  staff  8437760 Nov 13 18:16:37 2026 stage1_pool34.tar
+-rw-r--r--   1 arm  staff    10430 Nov 13 16:29:09 2026 stageB_candidate_pool.json
+--- V2-PILOT-SIGNS ---
+-rw-r--r--  1 arm  staff  2615 Nov 13 23:17:28 2026 /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v2.log
+-rw-r--r--  1 arm  staff   491 Nov 13 23:19:42 2026 /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v2.progress.json
+drwxr-xr-x  11 arm  staff  352 Nov 13 23:14 /Users/arm/junyang/carbon/code_backup_pre_v2_a4dd8329_20261113
+STUDIOSTAT2327K9R4 STUDIO-END
+STUDIOSTAT2327K9R4 SSH-RC=0
+STUDIOSTAT2327K9R4 PROBE-END 2026-11-13 23:29:19 CST

@@ -1,0 +1,61 @@
+ cn-shanghai
+2026-11-12T14:28:45.0894304Z ##[endgroup]
+2026-11-12T14:29:04.6485017Z InvokeId: t-sh072wc09bcbbb4
+2026-11-12T14:29:04.6486490Z --- status=Success exit=0 ---
+2026-11-12T14:29:04.6486963Z S28PUSH2220 L20-BEGIN 2026-11-12 22:28:47 CST
+2026-11-12T14:29:04.6487600Z S28PUSH2220 DGX-BEGIN 2026-11-12 22:28:56 CST
+2026-11-12T14:29:04.6487978Z --- STAGE-QUICK-RECHECK ---
+2026-11-12T14:29:04.6488585Z 2.5G	/home/arm/junyang/s26stage
+2026-11-12T14:29:04.6488997Z stage-files=6039
+2026-11-12T14:29:04.6490288Z weights-files=184
+2026-11-12T14:29:04.6490667Z 15b6d754e6e21de33870074d3983a16f  code/exp/echo2.py
+2026-11-12T14:29:04.6491345Z c969f7e7af94b3b8a2ea007044e80e00  code/exp/echo_e0.py
+2026-11-12T14:29:04.6491853Z 6d24da0eeeb28bad350d8b38f08ec3fc  code/eval_v53.py
+2026-11-12T14:29:04.6494587Z a5822338d979abea807fbd2ab4f7dace  code/bigeval.py
+2026-11-12T14:29:04.6510808Z 82fde46b2633950d3cbb29e8cacbfdc2  data/weights/cnet2_m3w5L.npz
+2026-11-12T14:29:04.6514683Z e68d2660bab36bbee1ccd1a693cd67f0  data/weights/cnet2_m3w3L.npz
+2026-11-12T14:29:04.6515646Z c84eef933d1d71272e89de3742081451  data/weights/cnet2_s64.npz
+2026-11-12T14:29:04.6516443Z b6db08c9b076257c54817377bb93130d  data/weights/cnet2_m3s2r1L.npz
+2026-11-12T14:29:04.6517078Z 975c518c10198723fec7bfa57744d9c3  data/weights/cnet2_m3s2g1L.npz
+2026-11-12T14:29:04.6517849Z --- STAGE-EXPECTED-CHECK ---
+2026-11-12T14:29:04.6518236Z EVAL53-OK
+2026-11-12T14:29:04.6518858Z BIGEVAL-OK
+2026-11-12T14:29:04.6532359Z ECHO2-OK
+2026-11-12T14:29:04.6533109Z ECHOE0-MISMATCH
+2026-11-12T14:29:04.6533509Z M3W5-OK
+2026-11-12T14:29:04.6534068Z M3W3-OK
+2026-11-12T14:29:04.6534441Z S64-OK
+2026-11-12T14:29:04.6540821Z M3S2R1-OK
+2026-11-12T14:29:04.6541229Z M3S2G1-PREFIX-MISMATCH
+2026-11-12T14:29:04.6542014Z K4R1-MISMATCH
+2026-11-12T14:29:04.6560467Z K4G1-MISMATCH
+2026-11-12T14:29:04.6581962Z --- HOSTKEY-SCAN ---
+2026-11-12T14:29:04.6583821Z 256 SHA256:qWrfgmzKIUOMzXYj7RI5qj1WDBEe6w+FYJ86wWlV7lo 47.116.17.244 (ED25519)
+2026-11-12T14:29:04.6584301Z 3072 SHA256:W60yqYv6MWn34Z3pt5U4RLHtw4emM9uBAwez0vLqCRU 47.116.17.244 (RSA)
+2026-11-12T14:29:04.6584799Z md5sum: data/weights/cnet2_k4v2r1_fromstudio.npz: No such file or directory
+2026-11-12T14:29:04.6585570Z md5sum: data/weights/cnet2_k4v2g1_fromstudio.npz: No such file or directory
+2026-11-12T14:29:04.6585977Z HOSTKEY-RECORDED
+2026-11-12T14:29:04.6586173Z --- SSH-PROBE ---
+2026-11-12T14:29:04.6586390Z SSH-OK iZuf65egu9fey7xf7tu8ftZ
+2026-11-12T14:29:04.6586645Z KEY-USED=/home/arm/.ssh/id_ed25519_carbon_relay
+2026-11-12T14:29:04.6586919Z --- WRITE-WORKER ---
+2026-11-12T14:29:04.6587130Z S28PUSH2220 LAUNCHED pid=279878
+2026-11-12T14:29:04.6587353Z S28PUSH2220 DGX-END
+2026-11-12T14:29:04.6587550Z S28PUSH2220 L20-END rc=0
+2026-11-12T14:29:04.6587682Z 
+2026-11-12T14:29:04.6735208Z Post job cleanup.
+2026-11-12T14:29:04.7419879Z [command]/usr/bin/git version
+2026-11-12T14:29:04.7497108Z git version 2.56.1
+2026-11-12T14:29:04.7514604Z Temporarily overriding HOME='/home/runner/work/_temp/07a45866-647f-4252-aace-f86d1e37121f' before making global git config changes
+2026-11-12T14:29:04.7515593Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T14:29:04.7533005Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T14:29:04.7622585Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T14:29:04.7663328Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T14:29:04.8004813Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T14:29:04.8085856Z http.https://github.com/.extraheader
+2026-11-12T14:29:04.8121820Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T14:29:04.8127106Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T14:29:04.8411748Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T14:29:04.8444802Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T14:29:04.8829944Z Cleaning up orphan processes
+2026-11-12T14:29:04.9070767Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

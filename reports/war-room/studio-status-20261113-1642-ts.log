@@ -1,0 +1,37 @@
+STUDIOSTAT1642K9M2 STUDIO-BEGIN 2026-11-13 16:44:19 CST
+mac-studio.local
+16:44  up 15 days, 36 mins, 4 users, load averages: 13.20 12.63 9.67
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                              604653.
+Pages active:                           1455362.
+Pages inactive:                         1760126.
+--- PILOT-PROC ---
+  PID  %CPU %MEM ELAPSED COMMAND
+89571   0.0  0.1   17:22 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+children-of-89571:       13
+89571   0.0  0.1       17:22 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+93899   0.0  0.0       00:45 zsh -c python3 - << "EOF"\012import json\012t = open("/tmp/term_out.txt").read()\012d = json.loads(t[t.find("{"):])\012def walk(o, path=""):\012    if isinstance(o, dict):\012        if o.get("name", "").startswith("already_timed_out"):\012            print(o["name"], "raised:", o.get("raised"), "transitions:", o.get("simulated_transitions"))\012        for v in o.values(): walk(v)\012    elif isinstance(o, list):\012        for v in o: walk(v)\012walk(d)\012print("top keys:", list(d.keys()))\012for k, v in d.items():\012    if isinstance(v, dict) and v: print(k, "->", {kk: vv for kk, vv in v.items() if isinstance(vv, bool)})\012EOF\012cp ~/s1fix2/code/stage0_teacher.py ~/s1fix2/automation/test_s12_a3.py ~/s1fix2/automation/test_s12_a3_teacher.py ~/s1fix/accept_flat/ && cd ~/s1fix/accept_flat && PY=~/junyang/carbon/.venv/bin/python && for t in test_s1_a1_u_head test_s12_a2_terminal test_s12_a3 test_s12_a3_teacher; do echo "== $t"; $PY $t.py 2>&1 | tail -1; done
+--- PILOT-DIR ---
+total 32
+-rw-r--r--  1 arm  staff  4130 Nov 13 16:26:57 2026 ds_m3s2_games.txt
+-rw-r--r--  1 arm  staff  1597 Nov 13 16:26:57 2026 pilot_du.log
+-rw-r--r--  1 arm  staff   825 Nov 13 16:26:57 2026 split_pilot.json
+--- PILOT-LOG ---
+-rw-r--r--  1 arm  staff  1597 Nov 13 16:26:57 2026 /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.log
+PREREG {"gate": "du", "run_id": "7a189805a8fbc6ec", "weights": "/Users/arm/s12test/heads_v2.npz", "weights_md5": "06a03d9cfeec239af3065a49fefec382", "code_md5": {"stage0_teacher.py": "3f1d31779041239071cfb642f4779c8d", "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3", "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122", "stage1_teacher_gate.py": "2658cb2bff425b191c4763902e010695"}, "guard_cfg": {"GUARD": true, "GUARD_NARROW": true, "GUARD_CASH": 40.0, "LOWW": 2}, "K": 16, "M": 8, "H": 2, "behavior_temp": 1.0, "teacher_style": 2, "q_select_source": "teacher Q (stage0_teacher.evaluate_root)", "q_eval_source": "real terminal continuations (anchor / paired arms)", "root_feat_history": "fresh Feats at root (isolated-root scope)", "seeds": {"scene": 995300, "teacher": 7000, "cont": 996100, "anchor": 995310}, "games": ["0efcfa1227b59fd7f89ee0c9b9ca9268-1", "0f71c0eec95ba72983df274bb8214db0-1", "342cccab5628cd1551eda7ce748e41ca-1", "ee87df723ee662ea3adefa72151feda1-1", "ef736a7898fc940bb57cd50af80b25d0-1", "f08846b06bf96d5f81650a3f9ec6521e-1", "f10b4fe24989fc072226ccbb0dd4dcad-1", "f1f3aa472faead713e748b6b3e11bf2d-1", "f25ff59d11686a2ab8b9e54152f63dd3-1", "f4651b37a8d9d4f233ba48a029f34327-1", "f5ced308e911610f01e6443954ce58d2-1", "f69a75694d8745d69526c9686487c2bd-1", "f70ba87077d1f74fa2db672ea0879b7c-1", "fa5cf88bff62fd3da8bfb355413f7241-1"], "n_scenes": 47, "ds_overlap_check": "NOT RUN", "ds_manifest_md5": null, "train_data_version": "ds_m3s2", "n_required": 150, "canonical_config": true, "formal": false, "diagnostic_reasons": ["training-set isolation check not run (S06)"]}
+--- PILOT-JSON-HEAD ---
+NO-pilot_du.json
+
+--- RELAY-88066 ---
+  PID  %CPU ELAPSED COMMAND
+RELAY-88066-GONE
+STUDIOSTAT1642K9M2 STUDIO-END
+
+ASSESSMENT (16:44:19 CST direct read, marker STUDIOSTAT1642K9M2, Tailscale direct, SSH-RC=0):
+- Stage A pilot STILL RUNNING, three pieces hold: PID 89571 etime 17:22 (was 02:25 at 16:29), 13 children (12 workers); load 13.20/12.63/9.67 (was 12.18/6.13/3.73); pilot_du.log mtime still 16:26:57 (1,597 B, PREREG only). pilot_du.json STILL NOT landed after ~18 min.
+- NOT a stall yet: process alive + load high + workers present; gate script writes output only at end (no intermediate progress file observed). 30-min no-output threshold hits ~16:57 if json still absent — flag then.
+- CHANGE 1: relay PID 88066 (rsync DGX code -> L20 code_next) GONE — was etime 07:48 at 16:29. Consistent with war-room L20 staging receipt (1/2) ~16:34; likely completed, exit status not visible from this read.
+- CHANGE 2: NEW process PID 93899, etime 00:45, running s1fix acceptance tests (test_s1_a1_u_head / test_s12_a2_terminal / test_s12_a3 / test_s12_a3_teacher) in ~/s1fix/accept_flat — not the pilot, starter not named in war-room messages read this trip. Noted as observed only.
+- Disk 421Gi free, unchanged. No idle report (Studio busy). No ETA: no progress output to re-estimate from.

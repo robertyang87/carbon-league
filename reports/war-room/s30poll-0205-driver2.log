@@ -1,0 +1,105 @@
+rate_limit core: {'limit': 5000, 'used': 2074, 'remaining': 2926, 'reset': 1794509349}
+polled at 18:43:34
+new run 43282818409 status in_progress
+new run 43282911615 status in_progress
+new run 43282884842 status in_progress
+new run 43282884562 status in_progress
+new run 43282942734 status in_progress
+43282818409 131408315900 attempt 0 bytes 14082 full marker
+CLAIMED run 43282818409 job 131408315900 conclusion success
+ cn-shanghai
+2026-11-12T18:44:06.9250370Z ##[endgroup]
+2026-11-12T18:44:20.4744031Z InvokeId: t-sh072wysc2fc1kw
+2026-11-12T18:44:20.4755803Z --- status=Success exit=0 ---
+2026-11-12T18:44:20.4765075Z S30POLL0205 L20-BEGIN 2026-11-13 02:44:09 CST
+2026-11-12T18:44:20.4792639Z S30PUSH0205 WORKER-BEGIN 2026-11-13 02:07:19 CST
+2026-11-12T18:44:20.4814722Z RSYNC-RC=0
+2026-11-12T18:44:20.4815714Z --- TARGET-VERIFY ---
+2026-11-12T18:44:20.4820342Z host: iZuf6ak9krs1kt71y2unceZ
+2026-11-12T18:44:20.4843219Z 2.5G	/root/carbon
+2026-11-12T18:44:20.4864778Z target-files=6041
+2026-11-12T18:44:20.4865550Z weights-files=186
+2026-11-12T18:44:20.4866460Z 15b6d754e6e21de33870074d3983a16f  code/exp/echo2.py
+2026-11-12T18:44:20.4885032Z c969f7e7af94b3b8a2ea007044e80e00  code/exp/echo_e0.py
+2026-11-12T18:44:20.4886280Z 6d24da0eeeb28bad350d8b38f08ec3fc  code/eval_v53.py
+2026-11-12T18:44:20.4887872Z a5822338d979abea807fbd2ab4f7dace  code/bigeval.py
+2026-11-12T18:44:20.4889077Z 82fde46b2633950d3cbb29e8cacbfdc2  data/weights/cnet2_m3w5L.npz
+2026-11-12T18:44:20.4890080Z e68d2660bab36bbee1ccd1a693cd67f0  data/weights/cnet2_m3w3L.npz
+2026-11-12T18:44:20.4890871Z c84eef933d1d71272e89de3742081451  data/weights/cnet2_s64.npz
+2026-11-12T18:44:20.4891758Z b6db08c9b076257c54817377bb93130d  data/weights/cnet2_m3s2r1L.npz
+2026-11-12T18:44:20.4892602Z 975c518c10198723fec7bfa57744d9c3  data/weights/cnet2_m3s2g1L.npz
+2026-11-12T18:44:20.4893478Z 344cfde939debb0de7f8834af069ea16  data/weights/cnet2_k4v2r1_fromstudio.npz
+2026-11-12T18:44:20.4894408Z a594efd6cdb865d978e511c66d299206  data/weights/cnet2_k4v2g1_fromstudio.npz
+2026-11-12T18:44:20.4895025Z lrwxrwxrwx 1 1000 1000 7 Nov 11 20:45 /root/carbon/.venv/bin/python -> python3
+2026-11-12T18:44:20.4895502Z numpy 2.5.4
+2026-11-12T18:44:20.4895836Z PYCOMPILE-OK
+2026-11-12T18:44:20.4896156Z TARGET-VERIFY-RC=0
+2026-11-12T18:44:20.4896527Z --- MD5-COMPARE (DGX staging vs target) ---
+2026-11-12T18:44:20.4897196Z MD5-ALL-MATCH
+2026-11-12T18:44:20.4897621Z S30PUSH0205 WORKER-DONE 2026-11-13 02:14:38 CST
+2026-11-12T18:44:20.4898002Z S30POLL0205 L20-END rc=0
+2026-11-12T18:44:20.4898169Z 
+2026-11-12T18:44:20.5043100Z Post job cleanup.
+2026-11-12T18:44:20.6025572Z [command]/usr/bin/git version
+2026-11-12T18:44:20.6115034Z git version 2.56.1
+2026-11-12T18:44:20.6178855Z Temporarily overriding HOME='/home/runner/work/_temp/8d0f09f4-f42e-4cd9-a78b-d34b25bf5618' before making global git config changes
+2026-11-12T18:44:20.6181751Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T18:44:20.6183008Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T18:44:20.6241385Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T18:44:20.6299521Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T18:44:20.6672204Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T18:44:20.6745394Z http.https://github.com/.extraheader
+2026-11-12T18:44:20.6756387Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T18:44:20.6836183Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T18:44:20.7210876Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T18:44:20.7305816Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T18:44:20.7997529Z Cleaning up orphan processes
+2026-11-12T18:44:20.8317983Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+--- TAIL ---
+:20.4765075Z S30POLL0205 L20-BEGIN 2026-11-13 02:44:09 CST
+2026-11-12T18:44:20.4792639Z S30PUSH0205 WORKER-BEGIN 2026-11-13 02:07:19 CST
+2026-11-12T18:44:20.4814722Z RSYNC-RC=0
+2026-11-12T18:44:20.4815714Z --- TARGET-VERIFY ---
+2026-11-12T18:44:20.4820342Z host: iZuf6ak9krs1kt71y2unceZ
+2026-11-12T18:44:20.4843219Z 2.5G	/root/carbon
+2026-11-12T18:44:20.4864778Z target-files=6041
+2026-11-12T18:44:20.4865550Z weights-files=186
+2026-11-12T18:44:20.4866460Z 15b6d754e6e21de33870074d3983a16f  code/exp/echo2.py
+2026-11-12T18:44:20.4885032Z c969f7e7af94b3b8a2ea007044e80e00  code/exp/echo_e0.py
+2026-11-12T18:44:20.4886280Z 6d24da0eeeb28bad350d8b38f08ec3fc  code/eval_v53.py
+2026-11-12T18:44:20.4887872Z a5822338d979abea807fbd2ab4f7dace  code/bigeval.py
+2026-11-12T18:44:20.4889077Z 82fde46b2633950d3cbb29e8cacbfdc2  data/weights/cnet2_m3w5L.npz
+2026-11-12T18:44:20.4890080Z e68d2660bab36bbee1ccd1a693cd67f0  data/weights/cnet2_m3w3L.npz
+2026-11-12T18:44:20.4890871Z c84eef933d1d71272e89de3742081451  data/weights/cnet2_s64.npz
+2026-11-12T18:44:20.4891758Z b6db08c9b076257c54817377bb93130d  data/weights/cnet2_m3s2r1L.npz
+2026-11-12T18:44:20.4892602Z 975c518c10198723fec7bfa57744d9c3  data/weights/cnet2_m3s2g1L.npz
+2026-11-12T18:44:20.4893478Z 344cfde939debb0de7f8834af069ea16  data/weights/cnet2_k4v2r1_fromstudio.npz
+2026-11-12T18:44:20.4894408Z a594efd6cdb865d978e511c66d299206  data/weights/cnet2_k4v2g1_fromstudio.npz
+2026-11-12T18:44:20.4895025Z lrwxrwxrwx 1 1000 1000 7 Nov 11 20:45 /root/carbon/.venv/bin/python -> python3
+2026-11-12T18:44:20.4895502Z numpy 2.5.4
+2026-11-12T18:44:20.4895836Z PYCOMPILE-OK
+2026-11-12T18:44:20.4896156Z TARGET-VERIFY-RC=0
+2026-11-12T18:44:20.4896527Z --- MD5-COMPARE (DGX staging vs target) ---
+2026-11-12T18:44:20.4897196Z MD5-ALL-MATCH
+2026-11-12T18:44:20.4897621Z S30PUSH0205 WORKER-DONE 2026-11-13 02:14:38 CST
+2026-11-12T18:44:20.4898002Z S30POLL0205 L20-END rc=0
+2026-11-12T18:44:20.4898169Z 
+2026-11-12T18:44:20.5043100Z Post job cleanup.
+2026-11-12T18:44:20.6025572Z [command]/usr/bin/git version
+2026-11-12T18:44:20.6115034Z git version 2.56.1
+2026-11-12T18:44:20.6178855Z Temporarily overriding HOME='/home/runner/work/_temp/8d0f09f4-f42e-4cd9-a78b-d34b25bf5618' before making global git config changes
+2026-11-12T18:44:20.6181751Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T18:44:20.6183008Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T18:44:20.6241385Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T18:44:20.6299521Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T18:44:20.6672204Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T18:44:20.6745394Z http.https://github.com/.extraheader
+2026-11-12T18:44:20.6756387Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T18:44:20.6836183Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T18:44:20.7210876Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T18:44:20.7305816Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T18:44:20.7997529Z Cleaning up orphan processes
+2026-11-12T18:44:20.8317983Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+RESULT: DONE MD5-ALL-MATCH elapsed 71

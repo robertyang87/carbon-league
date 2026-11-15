@@ -1,0 +1,29 @@
+S30K4VER1107 PAYLOAD-BEGIN
+2026-11-13 11:07:27 CST
+--- wrapper md5 + CONF ---
+c395faa8f3d783c509cb2f9fc82db676  /root/carbon/code/exp/k4v2r1.py
+md5sum: /root/carbon/code/exp/k4v2g1.py: No such file or directory
+"""k4v2r1: K4TacSearch-v2 attention replica (cnet2_k4v2r1_fromstudio.npz), SEARCH ON.
+K4 probe arm: identical SEARCH config to exp/k4r1_on.py (pack-frozen), weights swapped to the v2 attention replica."""
+CONF = {'SEARCH': True, 'ROLL': 'self', 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 240, 'BUDGET': 0.7, 'HARD': 0.85, 'ABORT_DL': 0.95, 'START_DL': None}
+--- chain runner / status ---
+ls: cannot access '/root/carbon/data/k4probe_runner.sh': No such file or directory
+ls: cannot access '/root/carbon/data/k4probe.status': No such file or directory
+ls: cannot access '/root/carbon/data/k4probe.out': No such file or directory
+cat: /root/carbon/data/k4probe.status: No such file or directory
+--- launcher log head ---
+-rw-r--r-- 1 root root 345 Nov 13 02:57 /root/carbon/data/echo3_echo2.launcher.log
+-rw-r--r-- 1 root root   0 Nov 13 11:04 /root/carbon/data/k4v2r1_m2.launcher.log
+-rw-r--r-- 1 root root 326 Nov 13 02:35 /root/carbon/data/spot30_smoke.launcher.log
+--- live file ---
+0 /root/carbon/data/bigeval_live/k4v2r1_m2.jsonl
+-rw-r--r-- 1 root root 0 Nov 13 11:04 /root/carbon/data/bigeval_live/k4v2r1_m2.jsonl
+--- workers: count + env ---
+bigeval procs: 63
+sample pid 12452
+EVO_WORKERS=62
+OMP_NUM_THREADS=1
+58.58 26.56 10.19 63/1051 12779
+               total        used        free      shared  buff/cache   available
+Mem:          125280       10127      112392           1        3865      115152
+S30K4VER1107 PAYLOAD-END

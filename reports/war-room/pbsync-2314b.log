@@ -1,0 +1,111 @@
+dispatched at 15:16:51
+log error: Remote end closed connection without response
+CLAIMED run 43246073505 job 131278946054 conclusion success
+ cn-shanghai
+2026-11-12T15:17:22.5987171Z ##[endgroup]
+2026-11-12T15:17:36.2760171Z InvokeId: t-sh072wgcefizny8
+2026-11-12T15:17:36.2761467Z --- status=Success exit=0 ---
+2026-11-12T15:17:36.2783332Z PBSYNC2314B L20-BEGIN 2026-11-12 23:17:24 CST
+2026-11-12T15:17:36.2793379Z PBSYNC2314B DGX-BEGIN 2026-11-12 23:17:28 CST
+2026-11-12T15:17:36.2811288Z head-after=200b2d5fd1c80d317d4f47b635851aeb07a6bfe3
+2026-11-12T15:17:36.2823084Z branch=main
+2026-11-12T15:17:36.2843212Z origin-main=200b2d5fd1c80d317d4f47b635851aeb07a6bfe3
+2026-11-12T15:17:36.2843737Z behind=0
+2026-11-12T15:17:36.2883643Z 200b2d5 data: prune m9xj320_corpus_101 surplus replay e4fb6736439f6eb4931397125829d841-1.json.gz (outside the 101-game archive)
+2026-11-12T15:17:36.2888680Z 4319eb6 data: prune m9xj320_corpus_101 surplus replay d8ed87857b56de5b07fa21c1b162353b-1.json.gz (outside the 101-game archive)
+2026-11-12T15:17:36.2890036Z f729233 data: prune m9xj320_corpus_101 surplus replay bdfb78aef863ee5e291b468d77f92247-1.json.gz (outside the 101-game archive)
+2026-11-12T15:17:36.2891309Z 7fc19a2 data: prune m9xj320_corpus_101 surplus replay 28cf2f86a50c2323a2741582393d8e92-1.json.gz (outside the 101-game archive)
+2026-11-12T15:17:36.2893020Z 1aa5a3d data: prune m9xj320_corpus_101 surplus replay 2550092ac38f8afcfa5bc458bdb8a8ee-1.json.gz (outside the 101-game archive)
+2026-11-12T15:17:36.2893988Z --- B-GROUP ANCESTORS ---
+2026-11-12T15:17:36.2894443Z 6facdfe2 IN
+2026-11-12T15:17:36.2894818Z ddc39a57 IN
+2026-11-12T15:17:36.2895182Z 24957e17 IN
+2026-11-12T15:17:36.2895555Z d87b8ee6 IN
+2026-11-12T15:17:36.2895963Z --- ROLLOUT MD5 ---
+2026-11-12T15:17:36.2896658Z 55bfedac077a88c9f1f88cca0230c803  /home/arm/junyang/carbon-repo/code/rl2_ppo_rollout.py
+2026-11-12T15:17:36.2897618Z f258ed8ee709de89e5765ef8e2625b49  /home/arm/junyang/carbon/code/rl2_ppo_rollout.py
+2026-11-12T15:17:36.2898512Z --- PLAY_BATCH SIGNATURE ---
+2026-11-12T15:17:36.2898958Z 155:def play_batch(task):
+2026-11-12T15:17:36.2899608Z 156-    """task keys: adapter, wkey, weights (or None -> load wkey), games [(opp, seed, side)],
+2026-11-12T15:17:36.2900331Z 157-    temp, greedy, record (bool), rng_seed.
+2026-11-12T15:17:36.2901135Z 158-    Opponent "SELF": the same weights play the other side with the same temperature, and that side is recorded too
+2026-11-12T15:17:36.2902086Z 159-    (returned as a second game dict with opp "SELF", the other side, mirror=True).
+2026-11-12T15:17:36.2903144Z 160-    All positions that use the same model in one step go through ONE actor.act call (one server request).
+2026-11-12T15:17:36.2916521Z 161-    Returns list of per-game dicts (traj recs if record) + timing."""
+2026-11-12T15:17:36.2917299Z 162-    t0 = time.time()
+2026-11-12T15:17:36.2917877Z 163-    actor = _actor(task["adapter"], task["wkey"], task.get("weights"))
+2026-11-12T15:17:36.2918771Z 164-    # R04: the task's primary actor is the learner(-side) actor -- the only one CNET2_TEMP_KIND may
+2026-11-12T15:17:36.2919784Z 165-    # govern. Snapshot actors built below (and _SnapAgent's) keep temp_kind=False and play at the
+2026-11-12T15:17:36.2920854Z 166-    # temperature they are handed, so the learner's per-kind temperatures no longer leak into them.
+2026-11-12T15:17:36.2921624Z 167-    actor.temp_kind = True
+2026-11-12T15:17:36.2922103Z --- PLAY_BATCH CALLERS ---
+2026-11-12T15:17:36.2923346Z /home/arm/junyang/carbon-repo/code/rl2_actor.py:7:ROOT/out/it<IT>_<t>_<n>.pkl.z   finished games (zlib'd pickle of play_batch "games" lists), pulled + removed by the Mac
+2026-11-12T15:17:36.2924852Z /home/arm/junyang/carbon-repo/code/rl2_actor.py:114:            inflight.append((it, keys, pool.apply_async(RO.play_batch, (task,))))
+2026-11-12T15:17:36.2925868Z /home/arm/junyang/carbon-repo/code/rl2_ppo_bench.py:26:    r = RO.play_batch(t)
+2026-11-12T15:17:36.2926778Z /home/arm/junyang/carbon-repo/code/rl2_ppo_eval.py:49:        res = pool.map(RO.play_batch, tasks, chunksize=1)
+2026-11-12T15:17:36.2927938Z /home/arm/junyang/carbon-repo/code/rl2_ppo_train.py:3:Rollouts: persistent spawn-pool of CPU workers (rl2_ppo_rollout.play_batch),
+2026-11-12T15:17:36.2929213Z /home/arm/junyang/carbon-repo/code/rl2_ppo_train.py:366:        return pool.map_async(__import__("rl2_ppo_rollout").play_batch, tasks), time.time()
+2026-11-12T15:17:36.2930647Z /home/arm/junyang/carbon-repo/code/rl2_ppo_train.py:372:        pending_eval.append((0, [pool.apply_async(RO.play_batch, (t,)) for t in eval_tasks(args, args.adapter, wk, 0)]))
+2026-11-12T15:17:36.2932177Z /home/arm/junyang/carbon-repo/code/rl2_ppo_train.py:538:            pending_eval.append((it, [pool.apply_async(RO.play_batch, (t,)) for t in eval_tasks(args, args.adapter, ek, it)]))
+2026-11-12T15:17:36.2933399Z --- ROLLOUT IMPORTS/TOP ---
+2026-11-12T15:17:36.2933960Z """rl2_ppo_rollout -- CPU rollout / evaluation workers for rl2_ppo.
+2026-11-12T15:17:36.2934434Z 
+2026-11-12T15:17:36.2934844Z A worker task plays several FastCarbon games IN LOCKSTEP so the learner's
+2026-11-12T15:17:36.2935594Z forward pass is batched over all their units (one NumPy call per step);
+2026-11-12T15:17:36.2936328Z opponents are called per game. Game seeding follows eval_v53.play_game:
+2026-11-12T15:17:36.2937021Z random.seed(rng_seed(seed, side)) -> sim.reset(seed) -> load opponent.
+2026-11-12T15:17:36.2937786Z (With >1 lockstep game the global `random` stream is shared between the
+2026-11-12T15:17:36.2938829Z games' opponents, so training games are not bit-reproducible vs play_game;
+2026-11-12T15:17:36.2939542Z evaluation tasks therefore run one game per task.)
+2026-11-12T15:17:36.2939956Z 
+2026-11-12T15:17:36.2940213Z Opponent spec strings:
+2026-11-12T15:17:36.2940763Z     "exp/opp_1cz_v5.py"      a bot file (module agent(), eval_v53 loader rule)
+2026-11-12T15:17:36.2941629Z     "SNAP:<adapter>:<npz>"   frozen snapshot of a learner (greedy or sampled at
+2026-11-12T15:17:36.2942377Z                              SNAP_TEMP), played through that adapter's actor
+2026-11-12T15:17:36.2943673Z     "SNAP:cnet2:<npz>#T5"    any cnet2 policy net as a cheap fixed opponent (style row 5): no rule layer, no
+2026-11-12T15:17:36.2944565Z                              search, trunk on the inference server -- costs what a snapshot costs
+2026-11-12T15:17:36.2945209Z """
+2026-11-12T15:17:36.2945485Z 
+2026-11-12T15:17:36.2945734Z import os
+2026-11-12T15:17:36.2946121Z import random
+2026-11-12T15:17:36.2946513Z import sys
+2026-11-12T15:17:36.2946913Z import time
+2026-11-12T15:17:36.2947187Z 
+2026-11-12T15:17:36.2947660Z for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
+2026-11-12T15:17:36.2948435Z     os.environ.setdefault(_v, "1")
+2026-11-12T15:17:36.2948989Z os.environ.setdefault("BC_W", "64")
+2026-11-12T15:17:36.2949341Z 
+2026-11-12T15:17:36.2949609Z import numpy as np  # noqa: E402
+2026-11-12T15:17:36.2949982Z 
+2026-11-12T15:17:36.2950279Z HERE = os.path.dirname(os.path.abspath(__file__))
+2026-11-12T15:17:36.2950824Z sys.path.insert(0, HERE)
+2026-11-12T15:17:36.2951399Z sys.path.insert(0, os.path.join(HERE, "env_src", "carbon_challenge-master"))
+2026-11-12T15:17:36.2951962Z 
+2026-11-12T15:17:36.2952199Z import eval_v53  # noqa: E402
+2026-11-12T15:17:36.2952913Z from fastsim import FastCarbon  # noqa: E402
+2026-11-12T15:17:36.2953320Z import rl2_ppo_adapters as AD  # noqa: E402
+2026-11-12T15:17:36.2953564Z 
+2026-11-12T15:17:36.2953677Z CFG = eval_v53.CFG
+2026-11-12T15:17:36.2954024Z _W_CACHE = {}      # (adapter, key) -> actor   (worker-local)
+2026-11-12T15:17:36.2954320Z 
+2026-11-12T15:17:36.2954425Z PBSYNC2314B DGX-END
+2026-11-12T15:17:36.2954701Z PBSYNC2314B L20-END rc=0
+2026-11-12T15:17:36.2954881Z 
+2026-11-12T15:17:36.3125304Z Post job cleanup.
+2026-11-12T15:17:36.3961979Z [command]/usr/bin/git version
+2026-11-12T15:17:36.4033498Z git version 2.56.0
+2026-11-12T15:17:36.4076179Z Temporarily overriding HOME='/home/runner/work/_temp/4800c51d-4946-426a-9cd6-ff50a355269b' before making global git config changes
+2026-11-12T15:17:36.4077329Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T15:17:36.4078273Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T15:17:36.4161979Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T15:17:36.4222809Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T15:17:36.4565837Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T15:17:36.4583536Z http.https://github.com/.extraheader
+2026-11-12T15:17:36.4654764Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T15:17:36.4731310Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T15:17:36.5073497Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T15:17:36.5106864Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T15:17:36.5686085Z Cleaning up orphan processes
+2026-11-12T15:17:36.5973424Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 73 claimed

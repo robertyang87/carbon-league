@@ -1,0 +1,54 @@
+1:===== test_ppo_u_resume.py =====
+25:==== 23/23 checks passed ====
+26:EXIT=0
+27:===== test_ppo_u_mode.py =====
+46:==== 18/18 checks passed ====
+47:EXIT=0
+48:===== test_teacher_v2_twoworld.py small =====
+87:==== 37/37 checks passed ====
+88:EXIT=0
+89:===== test_teacher_v2_twoworld.py --canon =====
+128:==== 37/37 checks passed ====
+129:EXIT=0
+130:===== test_mirror_identity.py =====
+156:Ran 15 tests in 0.043s
+158:OK
+159:EXIT=0
+160:===== test_teacher_gate_identity.py =====
+181:Ran 3 tests in 0.797s
+183:OK
+184:EXIT=0
+185:===== test_teacher_information_set.py =====
+206:==== 20/20 checks passed ====
+207:EXIT=0
+---HEAD---
+===== test_ppo_u_resume.py =====
+PASS init without heads + matching U checkpoint accepted
+PASS legacy checkpoint cannot silently override calibrated init
+PASS legacy source declaration accepts checkpoint and records uncertainty
+PASS automatic resume rejects changed reward
+PASS automatic resume rejects changed value_head
+PASS automatic resume rejects changed gamma
+PASS automatic resume rejects changed rscale
+PASS automatic resume rejects changed sep_value
+PASS missing effective critic head refused even when init carries heads
+PASS both sources missing heads refused
+PASS non-finite checkpoint utility refused
+PASS explicit init reset cannot overwrite shared policy
+PASS utility source flag cannot silently affect legacy tanh mode
+PASS checkpoint source preserves parameters, moments, lr and steps exactly
+PASS explicit init resets complete critic and moments while preserving actor
+PASS actual main resume/warmup, separate=1
+PASS warmup preserves policy and policy optimizer, separate=1
+PASS warmup actually trains utility, separate=1
+PASS effective/checkpoint provenance and contract persist, separate=1
+PASS actual main resume/warmup, separate=0
+PASS warmup preserves policy and policy optimizer, separate=0
+PASS warmup actually trains utility, separate=0
+PASS effective/checkpoint provenance and contract persist, separate=0
+==== 23/23 checks passed ====
+EXIT=0
+===== test_ppo_u_mode.py =====
+PASS reward u, margin -13320: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=-1.0000 U=0.0000
+PASS reward u, margin -500: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=-0.6225 U=0.1888
+PASS reward u, margin -1: terminal-only, = 2*(U-0.5), antisymmetric, no shaping/bonus -- r_T=-0.5002 U=0.2499

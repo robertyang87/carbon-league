@@ -1,0 +1,40 @@
+dispatched 08:00:26
+RUN 43179453738 conclusion success
+1-12T08:00:49.5312112Z branch 'cnet2-search-v12' set up to track 'origin/cnet2-search-v12'.
+2026-11-12T08:00:49.5415155Z ##[endgroup]
+2026-11-12T08:00:49.5460822Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T08:00:49.5522568Z 62f8db71c7cefa290d020f4c50b6719c5e41bc5b
+2026-11-12T08:00:49.5814550Z ##[group]Run python3 code/ladder.py login claude-opus55-cloud
+2026-11-12T08:00:49.5815161Z [36;1mpython3 code/ladder.py login claude-opus55-cloud[0m
+2026-11-12T08:00:49.5815834Z [36;1mecho "--- MINE BEFORE ---"[0m
+2026-11-12T08:00:49.5816144Z [36;1mpython3 code/ladder.py mine[0m
+2026-11-12T08:00:49.5816440Z [36;1mecho "--- RETIRE v17d2 ---"[0m
+2026-11-12T08:00:49.5817041Z [36;1mpython3 code/ladder.py retire 9439051a4915cf1eab1fa9a604ce7707 yes || echo "RETIRE_FAILED 9439051a4915cf1eab1fa9a604ce7707"[0m
+2026-11-12T08:00:49.5817652Z [36;1mecho "--- RETIRE v16b ---"[0m
+2026-11-12T08:00:49.5818239Z [36;1mpython3 code/ladder.py retire 072688045615bc3e0f9c59bcccba7218 yes || echo "RETIRE_FAILED 072688045615bc3e0f9c59bcccba7218"[0m
+2026-11-12T08:00:49.5818830Z [36;1mecho "--- RETIRE v17 ---"[0m
+2026-11-12T08:00:49.5819407Z [36;1mpython3 code/ladder.py retire eeefd6e19021355633d34f6d5a2a1a9b yes || echo "RETIRE_FAILED eeefd6e19021355633d34f6d5a2a1a9b"[0m
+2026-11-12T08:00:49.5820054Z [36;1mecho "--- RETIRE v16 ---"[0m
+2026-11-12T08:00:49.5820619Z [36;1mpython3 code/ladder.py retire 64241d10fefabe20d2123b45cbc217d2 yes || echo "RETIRE_FAILED 64241d10fefabe20d2123b45cbc217d2"[0m
+2026-11-12T08:00:49.5821216Z [36;1mecho "--- RETIRE v14p ---"[0m
+2026-11-12T08:00:49.5821799Z [36;1mpython3 code/ladder.py retire 6142a1f80ca7fede3e81608eed8716ab yes || echo "RETIRE_FAILED 6142a1f80ca7fede3e81608eed8716ab"[0m
+2026-11-12T08:00:49.5822425Z [36;1mecho "--- MINE AFTER ---"[0m
+2026-11-12T08:00:49.5822757Z [36;1mpython3 code/ladder.py mine[0m
+2026-11-12T08:00:49.5847187Z shell: /usr/bin/bash -e {0}
+2026-11-12T08:00:49.5847490Z env:
+2026-11-12T08:00:49.5847751Z   LADDER_BASE: https://117.72.210.134
+2026-11-12T08:00:49.5848296Z   LADDER_PASS: ***
+2026-11-12T08:00:49.5848571Z   LADDER_COOKIES: /tmp/ladder_cookies.json
+2026-11-12T08:00:49.5848880Z ##[endgroup]
+2026-11-12T08:00:56.3245752Z 登录: claude-opus55-cloud  今日剩余提交: 10
+2026-11-12T08:00:56.3345367Z --- MINE BEFORE ---
+2026-11-12T08:01:01.5479649Z {"board": "heavy", "created": 1794402953.0889692, "draws": 0, "error": "", "games": 203, "id": "df8c016180803b5b3a2675650c11a7ed", "is_public": false, "margin": 102244.20999999999, "matches_played": 203, "name": "claude-opus55-cloud-Echo2", "placement_target": 203, "rank": 8, "ranking_phase": "ladder", "ranking_verdict": "focus", "rating": 2573.9632173328864, "rating_sd": 21.814224647782186, "status": "active", "wins": 140}
+2026-11-12T08:01:01.5484272Z {"board": "heavy", "created": 1794391172.3756473, "draws": 0, "error": "", "games": 200, "id": "08c61154810a06ddd2fcff37b25fd023", "is_public": false, "margin": 65905.10000000003, "matches_played": 200, "name": "claude-opus55-cloud-Echo1", "placement_target": 200, "rank": 9, "ranking_phase": "ladder", "ranking_verdict": "cap", "rating": 2553.35642421912, "rating_sd": 21.619596056803687, "status": "running", "wins": 133}
+2026-11-12T08:01:01.5490776Z {"board": "heavy", "created": 1794326705.1930714, "draws": 0, "error": "自动下线：2026-11-12 每日检查，本策略属于你在 2026-11-11 提交的策略，在该提交日未开源且已完成定级的在线策略中排名第 3（检查时评分 2486.4），超出每位作者每个提交日保留 Top 2 的限制。历史成绩、回放和策略文件保留。", "games": 174, "id": "edca5270f47d29339b5332b88cdaf574", "is_public": false, "margin": 83779.84999999995, "matches_played": 174, "name": "claude-opus55-cloud-Scout2", "placement_target": 174, "rank": null, "ranking_phase": "ladder", "ranking_verdict": "focus", "rating": 2463.4302485573567, "rating_sd": 22.00430127762657, "status": "retired", "wins": 113}
+2026-11-12T08:01:01.5496304Z {"board": "heavy", "created": 1794267194.5109699, "draws": 0, "error": "", "games": 270, "id": "1037848ba2964db17e522c11cd3fe938", "is_public": false, "margin": 87489.66000000003, "matches_played": 270, "name": "claude-opus55-cloud-Grove1", "placement_target": 270, "rank": 17, "ranking_phase": "ladder", "ranking_verdict": "focus", "rating": 2456.8370661455056, "rating_sd": 18.924657867156984, "status": "active", "wins": 170}
+2026-11-12T08:01:01.5501587Z {"board": "heavy", "created": 1794244210.5726135, "draws": 0, "error": "", "games": 268, "id": "f660d96e7ebe64bedc484c041fc42859", "is_public": false, "margin": 111187.08000000002, "matches_played": 268, "name": "claude-opus55-cloud-Scout1", "placement_target": 268, "rank": 18, "ranking_phase": "ladder", "ranking_verdict": "focus", "rating": 2452.4532485931586, "rating_sd": 18.92396528748183, "status": "active", "wins": 169}
+2026-11-12T08:01:01.5506633Z {"board": "heavy", "created": 1794204629.6319413, "draws": 0, "error": "", "games": 274, "id": "9439051a4915cf1eab1fa9a604ce7707", "is_public": false, "margin": 92072.78999999998, "matches_played": 274, "name": "claude-opus55-cloud-v17d2", "placement_target": 274, "rank": 25, "ranking_phase": "ladder", "ranking_verdict": "focus", "rating": 2430.018122146294, "rating_sd": 18.637962237768118, "status": "active", "wins": 171}
+2026-11-12T08:01:01.5511429Z {"board": "heavy", "created": 1794166030.7066057, "draws": 0, "error": "", "games": 295, "id": "eeefd6e19021355633d34f6d5a2a1a9b", "is_public": false, "margin": 113374.23999999995, "matches_played": 295, "name": "claude-opus55-cloud-v17", "placement_target": 295, "rank": 30, "ranking_phase": "ladder", "ranking_verdict": "cap", "rating": 2415.8191419196805, "rating_sd": 18.070717678844105, "status": "running", "wins": 184}
+2026-11-12T08:01:01.5516376Z {"board": "heavy", "created": 1794151284.2526393, "draws": 0, "error": "", "games": 292, "id": "072688045615bc3e0f9c59bcccba7218", "is_public": false, "margin": 90881.22999999998, "matches_played": 292, "name": "claude-opus55-cloud-v16b", "placement_target": 292, "rank": 29, "ranking_phase": "ladder", "ranking_verdict": "cap", "rating": 2417.774373358219, "rating_sd": 18.122528105992213, "status": "active", "wins": 186}
+2026-11-12T08:01:01.5521130Z {"board": "heavy", "created": 1794137919.1958857, "draws": 0, "error": "", "games": 293, "id": "64241d10fefabe20d2123b45cbc217d2", "is_public": false, "margin": 34871.659999999974, "matches_played": 293, "name": "claude-opus55-cloud-v16", "placement_target": 293, "rank": 34, "ranking_phase": "ladder", "ranking_verdict": "focus", "rating": 2358.7017912802844, "rating_sd": 17.72378374
+elapsed 67 done

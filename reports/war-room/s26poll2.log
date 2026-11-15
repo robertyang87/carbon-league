@@ -1,0 +1,147 @@
+﻿2026-11-12T10:56:35.8194090Z Current runner version: '2.338.2'
+2026-11-12T10:56:35.8223793Z ##[group]Runner Image Provisioner
+2026-11-12T10:56:35.8224935Z Hosted Compute Agent
+2026-11-12T10:56:35.8225658Z Version: 20261028.624
+2026-11-12T10:56:35.8226369Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T10:56:35.8227265Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T10:56:35.8228078Z Worker ID: {115b29f6-27e8-42a7-a160-bfa1614d0568}
+2026-11-12T10:56:35.8228955Z Region: centralus
+2026-11-12T10:56:35.8229671Z Cloud: Azure
+2026-11-12T10:56:35.8230243Z ##[endgroup]
+2026-11-12T10:56:35.8232463Z ##[group]Operating System
+2026-11-12T10:56:35.8233196Z Ubuntu
+2026-11-12T10:56:35.8234773Z 24.04.5
+2026-11-12T10:56:35.8235436Z LTS
+2026-11-12T10:56:35.8236028Z ##[endgroup]
+2026-11-12T10:56:35.8236855Z ##[group]Runner Image
+2026-11-12T10:56:35.8237620Z Image: ubuntu-24.04
+2026-11-12T10:56:35.8238399Z Version: 20261101.360.1
+2026-11-12T10:56:35.8239897Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T10:56:35.8241823Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T10:56:35.8242956Z ##[endgroup]
+2026-11-12T10:56:35.8244577Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T10:56:35.8247220Z Contents: read
+2026-11-12T10:56:35.8248089Z Metadata: read
+2026-11-12T10:56:35.8248750Z ##[endgroup]
+2026-11-12T10:56:35.8251506Z Secret source: Actions
+2026-11-12T10:56:35.8252649Z Cache mode: write
+2026-11-12T10:56:35.8254046Z Prepare workflow directory
+2026-11-12T10:56:35.8568089Z Prepare all required actions
+2026-11-12T10:56:35.8610480Z Getting action download info
+2026-11-12T10:56:36.1809524Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T10:56:36.3540065Z Complete job name: run
+2026-11-12T10:56:36.4231707Z ##[group]Run actions/checkout@v4
+2026-11-12T10:56:36.4232480Z with:
+2026-11-12T10:56:36.4233005Z   repository: robertyang87/carbon-league
+2026-11-12T10:56:36.4236888Z   token: ***
+2026-11-12T10:56:36.4237340Z   ssh-strict: true
+2026-11-12T10:56:36.4237839Z   ssh-user: git
+2026-11-12T10:56:36.4238330Z   persist-credentials: true
+2026-11-12T10:56:36.4238835Z   clean: true
+2026-11-12T10:56:36.4239350Z   sparse-checkout-cone-mode: true
+2026-11-12T10:56:36.4239865Z   fetch-depth: 1
+2026-11-12T10:56:36.4240341Z   fetch-tags: false
+2026-11-12T10:56:36.4240824Z   show-progress: true
+2026-11-12T10:56:36.4241337Z   lfs: false
+2026-11-12T10:56:36.4241783Z   submodules: false
+2026-11-12T10:56:36.4242248Z   set-safe-directory: true
+2026-11-12T10:56:36.4242806Z   allow-unsafe-pr-checkout: false
+2026-11-12T10:56:36.4243854Z ##[endgroup]
+2026-11-12T10:56:36.7159004Z Syncing repository: robertyang87/carbon-league
+2026-11-12T10:56:36.7162051Z ##[group]Getting Git version info
+2026-11-12T10:56:36.7163511Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T10:56:36.7169017Z [command]/usr/bin/git version
+2026-11-12T10:56:36.7280866Z git version 2.56.0
+2026-11-12T10:56:36.7298036Z ##[endgroup]
+2026-11-12T10:56:36.7519416Z Temporarily overriding HOME='/home/runner/work/_temp/dde64c22-782e-418a-8964-20967244b020' before making global git config changes
+2026-11-12T10:56:36.7523067Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T10:56:36.7528180Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T10:56:36.7532345Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T10:56:36.7535048Z ##[group]Initializing the repository
+2026-11-12T10:56:36.7536930Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T10:56:36.7588763Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T10:56:36.7591472Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T10:56:36.7594824Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T10:56:36.7615097Z hint: call:
+2026-11-12T10:56:36.7623771Z hint:
+2026-11-12T10:56:36.7625100Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T10:56:36.7626585Z hint:
+2026-11-12T10:56:36.7627741Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T10:56:36.7632623Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T10:56:36.7634566Z hint:
+2026-11-12T10:56:36.7635816Z hint: 	git branch -m <name>
+2026-11-12T10:56:36.7636850Z hint:
+2026-11-12T10:56:36.7638400Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T10:56:36.7641440Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T10:56:36.7644528Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T10:56:36.7704991Z ##[endgroup]
+2026-11-12T10:56:36.7706519Z ##[group]Disabling automatic garbage collection
+2026-11-12T10:56:36.7707790Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T10:56:36.7836854Z ##[endgroup]
+2026-11-12T10:56:36.7838235Z ##[group]Setting up auth
+2026-11-12T10:56:36.7839657Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T10:56:36.7844367Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T10:56:36.8436603Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T10:56:36.8442235Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T10:56:36.8538937Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T10:56:36.8570901Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T10:56:36.8743448Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T10:56:36.9390272Z ##[endgroup]
+2026-11-12T10:56:36.9391572Z ##[group]Fetching the repository
+2026-11-12T10:56:36.9393402Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +261a8e1946afc502e06de2b8fa15ab4708e486e2:refs/remotes/origin/main
+2026-11-12T10:56:38.8596162Z From https://github.com/robertyang87/carbon-league
+2026-11-12T10:56:38.8612491Z  * [new ref]         261a8e1946afc502e06de2b8fa15ab4708e486e2 -> origin/main
+2026-11-12T10:56:38.8638823Z ##[endgroup]
+2026-11-12T10:56:38.8641241Z ##[group]Determining the checkout info
+2026-11-12T10:56:38.8644232Z ##[endgroup]
+2026-11-12T10:56:38.8652214Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T10:56:38.8681838Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T10:56:38.8772614Z ##[group]Checking out the ref
+2026-11-12T10:56:38.8776709Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T10:56:39.2978063Z Switched to a new branch 'main'
+2026-11-12T10:56:39.2995488Z branch 'main' set up to track 'origin/main'.
+2026-11-12T10:56:39.3045332Z ##[endgroup]
+2026-11-12T10:56:39.3077802Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T10:56:39.3184726Z 261a8e1946afc502e06de2b8fa15ab4708e486e2
+2026-11-12T10:56:39.3377379Z ##[group]Run if [ -n "ZWNobyBTMjZQT0xMX0JFR0lOCmRhdGUgIislRiAlVCAlWiIKdGltZW91dCAtayAzMCAyNDAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIGFybUAxMC4yMTEuNDMuMTU1ICd0YWlsIC01IC9ob21lL2FybS9qdW55YW5nL3MyNnhmZXIubG9nOyBlY2hvIC0tLTsgZHUgLXNoIC9ob21lL2FybS9qdW55YW5nL3MyNnN0YWdlIDI+L2Rldi9udWxsOyBwZ3JlcCAtZmMgcnN5bmMgfHwgZWNobyAwJyA8IC9kZXYvbnVsbCAyPiYxIHwgaGVhZCAtMjAKZWNobyBTMjZQT0xMX0VORAo=" ]; then
+2026-11-12T10:56:39.3382860Z [36;1mif [ -n "ZWNobyBTMjZQT0xMX0JFR0lOCmRhdGUgIislRiAlVCAlWiIKdGltZW91dCAtayAzMCAyNDAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIGFybUAxMC4yMTEuNDMuMTU1ICd0YWlsIC01IC9ob21lL2FybS9qdW55YW5nL3MyNnhmZXIubG9nOyBlY2hvIC0tLTsgZHUgLXNoIC9ob21lL2FybS9qdW55YW5nL3MyNnN0YWdlIDI+L2Rldi9udWxsOyBwZ3JlcCAtZmMgcnN5bmMgfHwgZWNobyAwJyA8IC9kZXYvbnVsbCAyPiYxIHwgaGVhZCAtMjAKZWNobyBTMjZQT0xMX0VORAo=" ]; then[0m
+2026-11-12T10:56:39.3388930Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" --b64 "ZWNobyBTMjZQT0xMX0JFR0lOCmRhdGUgIislRiAlVCAlWiIKdGltZW91dCAtayAzMCAyNDAgc3NoIC1pIC9yb290Ly5zc2gvZGd4X2FjY2VzcyAtbyBCYXRjaE1vZGU9eWVzIC1vIENvbm5lY3RUaW1lb3V0PTIwIGFybUAxMC4yMTEuNDMuMTU1ICd0YWlsIC01IC9ob21lL2FybS9qdW55YW5nL3MyNnhmZXIubG9nOyBlY2hvIC0tLTsgZHUgLXNoIC9ob21lL2FybS9qdW55YW5nL3MyNnN0YWdlIDI+L2Rldi9udWxsOyBwZ3JlcCAtZmMgcnN5bmMgfHwgZWNobyAwJyA8IC9kZXYvbnVsbCAyPiYxIHwgaGVhZCAtMjAKZWNobyBTMjZQT0xMX0VORAo="[0m
+2026-11-12T10:56:39.3391898Z [36;1melse[0m
+2026-11-12T10:56:39.3392370Z [36;1m  python3 tools/acs_runcommand.py "i-uf62k0o6zbe6j7zxnzg5" "hostname && uptime"[0m
+2026-11-12T10:56:39.3392843Z [36;1mfi[0m
+2026-11-12T10:56:39.3409361Z shell: /usr/bin/bash -e {0}
+2026-11-12T10:56:39.3409732Z env:
+2026-11-12T10:56:39.3410342Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T10:56:39.3410812Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T10:56:39.3411235Z   ACS_REGION: cn-shanghai
+2026-11-12T10:56:39.3411563Z ##[endgroup]
+2026-11-12T10:56:52.9770660Z InvokeId: t-sh072vt355x3d34
+2026-11-12T10:56:52.9771886Z --- status=Success exit=0 ---
+2026-11-12T10:56:52.9772939Z S26POLL_BEGIN
+2026-11-12T10:56:52.9773821Z 2026-11-12 18:56:41 CST
+2026-11-12T10:56:52.9774540Z + mkdir -p /home/arm/junyang/s26stage/data
+2026-11-12T10:56:52.9775443Z + SSHOPT='-i /home/arm/.ssh/id_ed25519_carbon_relay -o BatchMode=yes -o ConnectTimeout=20'
+2026-11-12T10:56:52.9776203Z + ssh-keygen -R 8.133.222.114
+2026-11-12T10:56:52.9776774Z + timeout 30 ssh-keyscan -t ed25519 8.133.222.114
+2026-11-12T10:56:52.9777958Z + rsync -a -e 'ssh -i /home/arm/.ssh/id_ed25519_carbon_relay -o BatchMode=yes -o ConnectTimeout=20' --exclude m2fit/ --exclude mfit/ --exclude 'root@*' root@47.117.16.90:/root/carbon/code/ /home/arm/junyang/s26stage/code/
+2026-11-12T10:56:52.9779176Z ---
+2026-11-12T10:56:52.9779662Z 924M	/home/arm/junyang/s26stage
+2026-11-12T10:56:52.9780147Z 4
+2026-11-12T10:56:52.9780581Z S26POLL_END
+2026-11-12T10:56:52.9780884Z 
+2026-11-12T10:56:53.0051193Z Post job cleanup.
+2026-11-12T10:56:53.0894610Z [command]/usr/bin/git version
+2026-11-12T10:56:53.0954493Z git version 2.56.0
+2026-11-12T10:56:53.1012488Z Temporarily overriding HOME='/home/runner/work/_temp/7dddb8e3-dfec-4b38-bfcc-f46356f6a8cd' before making global git config changes
+2026-11-12T10:56:53.1040450Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T10:56:53.1048358Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T10:56:53.1117732Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T10:56:53.1157566Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T10:56:53.1459032Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T10:56:53.1469601Z http.https://github.com/.extraheader
+2026-11-12T10:56:53.1507115Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T10:56:53.1509688Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T10:56:53.1827360Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T10:56:53.1876587Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T10:56:53.2409633Z Cleaning up orphan processes
+2026-11-12T10:56:53.2731973Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,36 @@
+ cn-shanghai
+2026-11-12T20:07:00.2220942Z ##[endgroup]
+2026-11-12T20:08:54.7800555Z InvokeId: t-sh072x66iliz4lc
+2026-11-12T20:08:54.7802113Z --- status=Success exit=0 ---
+2026-11-12T20:08:54.7806795Z S30CT2B8E4 L20-BEGIN 2026-11-13 04:07:02 CST
+2026-11-12T20:08:54.7828313Z S30CT2B8E4 DGX-BEGIN 2026-11-13 04:07:06 CST
+2026-11-12T20:08:54.7830163Z SSH-OK iZuf6ak9krs1kt71y2unceZ
+2026-11-12T20:08:54.7849597Z KEY-USED=/home/arm/.ssh/id_ed25519_carbon_relay
+2026-11-12T20:08:54.7869164Z --- SNAPSHOT PREFLIGHT (pull smoke out spot-30 -> DGX) ---
+2026-11-12T20:08:54.7869987Z SNAP-PREFLIGHT-OK bytes=478
+2026-11-12T20:08:54.7889106Z --- LAUNCH BENCHMARK ---
+2026-11-12T20:08:54.7907144Z BENCH-ALREADY-RUNNING: 8035 bash -c pgrep -af "bigeval.py.*s30bench" | head -2
+2026-11-12T20:08:54.7929149Z --- SNAPSHOT 1 (after ~100s) ---
+2026-11-12T20:08:54.7931159Z LIVE-FILE=
+2026-11-12T20:08:54.7931728Z SNAP1-NO-LIVE-FILE-YET
+2026-11-12T20:08:54.7932842Z BENCH-ALIVE: 8179 bash -c pgrep -af "bigeval.py.*s30bench" | head -1
+2026-11-12T20:08:54.7933656Z tail: cannot open '/root/carbon/data/s30bench.out' for reading: No such file or directory
+2026-11-12T20:08:54.7934318Z S30CT2B8E4 DGX-END
+2026-11-12T20:08:54.7934760Z S30CT2B8E4 L20-END rc=0
+2026-11-12T20:08:54.7935027Z 
+2026-11-12T20:08:54.8070877Z Post job cleanup.
+2026-11-12T20:08:54.8787925Z [command]/usr/bin/git version
+2026-11-12T20:08:54.8870182Z git version 2.56.0
+2026-11-12T20:08:54.8931403Z Temporarily overriding HOME='/home/runner/work/_temp/8fefb0f8-1df9-41d8-ad6c-a065c82a7d52' before making global git config changes
+2026-11-12T20:08:54.8937381Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T20:08:54.8938902Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T20:08:54.9047415Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T20:08:54.9049851Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T20:08:54.9336752Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T20:08:54.9390316Z http.https://github.com/.extraheader
+2026-11-12T20:08:54.9412386Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T20:08:54.9466794Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T20:08:54.9809389Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T20:08:54.9882048Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T20:08:55.0176096Z Cleaning up orphan processes
+2026-11-12T20:08:55.0417238Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

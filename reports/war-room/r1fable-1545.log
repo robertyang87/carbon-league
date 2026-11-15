@@ -1,0 +1,91 @@
+dispatched at 07:46:11
+CLAIMED run 43177703109 job 131045863609 status completed conclusion success
+FULL LOG SAVED goals/carbon-league-large-file-leaderboard-challenge/hidden_files/r1fable-1545-full.log chars 36774
+ cn-shanghai
+2026-11-12T07:46:20.3637711Z ##[endgroup]
+2026-11-12T07:46:38.9807140Z InvokeId: t-sh072vc3xju7g8w
+2026-11-12T07:46:38.9808210Z --- status=Success exit=0 ---
+2026-11-12T07:46:38.9809095Z R1FABLE1545X7 L20-BEGIN 2026-11-12 15:46:22 CST
+2026-11-12T07:46:38.9809915Z R1FABLE1545X7 DGX-BEGIN 2026-11-12 15:46:27 CST
+2026-11-12T07:46:38.9810637Z --- DGX-KILL-STALE-FETCH ---
+2026-11-12T07:46:38.9811254Z     PID     ELAPSED 
+2026-11-12T07:46:38.9811813Z FETCH115896-GONE
+2026-11-12T07:46:38.9812364Z --- DGX-GIT-STATE-BEFORE ---
+2026-11-12T07:46:38.9813205Z 476b7ef4c3c568e7061e2e8ad65a3c5306af40ac
+2026-11-12T07:46:38.9814106Z 476b7ef data: pull m7bs replays via ladder API into data/m7bs_corpus
+2026-11-12T07:46:38.9815009Z 1b0ea86 data: pull m3s2 replays via ladder API into data/m3s2_corpus
+2026-11-12T07:46:38.9815806Z --- REPO-PULL-BOUNDED-180 ---
+2026-11-12T07:46:38.9816384Z fetch_rc=0
+2026-11-12T07:46:38.9816984Z Your branch is up to date with 'origin/cnet2-search-v12'.
+2026-11-12T07:46:38.9817734Z From github.com:robertyang87/carbon-league
+2026-11-12T07:46:38.9818507Z  * branch            cnet2-search-v12 -> FETCH_HEAD
+2026-11-12T07:46:38.9819597Z Already up to date.
+2026-11-12T07:46:38.9820165Z pull_rc=0
+2026-11-12T07:46:38.9820806Z 476b7ef data: pull m7bs replays via ladder API into data/m7bs_corpus
+2026-11-12T07:46:38.9821707Z 1b0ea86 data: pull m3s2 replays via ladder API into data/m3s2_corpus
+2026-11-12T07:46:38.9822721Z c58c64d data: pull carago replays via ladder API into data/carago_corpus
+2026-11-12T07:46:38.9823803Z --- CORPUS-COPY ---
+2026-11-12T07:46:38.9824733Z cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+2026-11-12T07:46:38.9826273Z cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+2026-11-12T07:46:38.9827548Z cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+2026-11-12T07:46:38.9828913Z cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+2026-11-12T07:46:38.9829995Z fable_replays_after=182
+2026-11-12T07:46:38.9830654Z carago_replays_after=183
+2026-11-12T07:46:38.9831415Z /home/arm/junyang/carbon/data/carago_matches.json
+2026-11-12T07:46:38.9832347Z /home/arm/junyang/carbon/data/fable_matches.json
+2026-11-12T07:46:38.9833436Z --- GPU-IDLE-CHECK ---
+2026-11-12T07:46:38.9834131Z 0 %, 38
+2026-11-12T07:46:38.9834655Z NO-TRAIN-PROC
+2026-11-12T07:46:38.9835221Z --- SCRIPT-DUMP-M3S2 ---
+2026-11-12T07:46:38.9835816Z #!/bin/bash
+2026-11-12T07:46:38.9837085Z # advice 05:45: Master3s2 solo replica once >=100 replays: m3s2r1 from N1 base (attention), control m3s2g1 from Grove1; teacher row 2, its own replays only; ship to h24
+2026-11-12T07:46:38.9838570Z cd ~/junyang/carbon/code; D=../data; L=$D/dq_logs
+2026-11-12T07:46:38.9839591Z R="ssh -i /home/arm/.ssh/id_ed25519_carbon_relay -o IdentitiesOnly=yes -o ConnectTimeout=20"
+2026-11-12T07:46:38.9840595Z until [ -f $D/m3s2_corpus/READY ]; do sleep 60; done
+2026-11-12T07:46:38.9841615Z for i in $(seq 1 240); do [ -f $L/m6n1.done ] && [ -f $L/n1r2.done ] && break; sleep 60; done
+2026-11-12T07:46:38.9843892Z ship() { md5sum $D/weights/cnet2_$1_ep19.npz >> $L/md5.txt; rsync -az -e "$R" $D/weights/cnet2_$1_ep19.npz root@47.117.16.90:/root/carbon/data/weights/cnet2_$1L.npz && $R root@47.117.16.90 "touch /root/carbon/data/weights/cnet2_$1L.npz.ok" </dev/null; echo DONE > $L/$1.done; }
+2026-11-12T07:46:38.9846593Z rm -rf $D/ds_m3s2; CNET2_TOP_TEACHERS="claude-AlphaCarbon-Master3s2@2" ../.venv/bin/python build_top.py $D/ds_m3s2 $D/m3s2_corpus > $L/build_m3s2.log 2>&1 || exit 1
+2026-11-12T07:46:38.9848287Z rm -rf $D/ds_m3s2/shards; ../.venv/bin/python set_uw.py $D/ds_m3s2 1 1 1 >> $L/build_m3s2.log
+2026-11-12T07:46:38.9849666Z export BC_DEVICE=cuda BC_RAM=1 BC_THREADS=5 BC_USE_W=1 BC_USE_UW=1 BC_BS=256 BC_SAVE_EPOCHS=1 BC_PCT=0.1 BC_LR=3e-4
+2026-11-12T07:46:38.9851098Z unset BC_AMP BC_CLIP BC_TRAIN_PREFIX BC_CACHE_TRUNK BC_SELF_KL BC_EXIT_W BC_AUX_W BC_COMPILE BC_CAR_KL
+2026-11-12T07:46:38.9853215Z ( BC_INIT=$D/weights/cnet2_arch_n1_last.npz ../.venv/bin/python cnet2_train.py $D/ds_m3s2 $D/weights/cnet2_m3s2r1.npz 20 "{\"C\":128,\"NB\":8,\"D\":128,\"ZI\":1,\"TA\":4,\"TNH\":4}" > $L/m3s2r1.log 2>&1 && ship m3s2r1 ) &
+2026-11-12T07:46:38.9855717Z ( BC_INIT=$D/weights/cnet2_b128m2t3.npz ../.venv/bin/python cnet2_train.py $D/ds_m3s2 $D/weights/cnet2_m3s2g1.npz 20 "{\"C\":128,\"NB\":8,\"D\":128}" > $L/m3s2g1.log 2>&1 && ship m3s2g1 ) &
+2026-11-12T07:46:38.9857164Z wait
+2026-11-12T07:46:38.9857726Z --- SCRIPT-DUMP-M7BS ---
+2026-11-12T07:46:38.9858314Z #!/bin/bash
+2026-11-12T07:46:38.9859094Z # m7bs: RyanX-AIPowercore-M7Bs-b010 solo replica, queued behind m3s2 trainings.
+2026-11-12T07:46:38.9860057Z D=$HOME/junyang/carbon/data
+2026-11-12T07:46:38.9860686Z cd $HOME/junyang/carbon/code || exit 1
+2026-11-12T07:46:38.9861466Z until [ -f $D/m7bs_corpus/READY ]; do sleep 30; done
+2026-11-12T07:46:38.9862168Z rm -rf $D/ds_m7bs
+2026-11-12T07:46:38.9863552Z CNET2_TOP_TEACHERS="RyanX-AIPowercore-M7Bs-b010@2" ../.venv/bin/python build_top.py $D/ds_m7bs $D/m7bs_corpus > $D/dq_logs/build_m7bs.log 2>&1
+2026-11-12T07:46:38.9865375Z ../.venv/bin/python set_uw.py $D/ds_m7bs 1 1 1 >> $D/dq_logs/build_m7bs.log 2>&1
+2026-11-12T07:46:38.9866501Z until ! pgrep -f "cnet2_train[.]py" > /dev/null; do sleep 60; done
+2026-11-12T07:46:38.9867562Z export BC_DEVICE=cuda BC_RAM=1 BC_THREADS=5 BC_USE_W=1 BC_USE_UW=1 BC_BS=256 BC_SAVE_EPOCHS=1 BC_PCT=0.1 BC_LR=3e-4
+2026-11-12T07:46:38.9869396Z BC_INIT=$D/weights/cnet2_arch_n1_last.npz ../.venv/bin/python cnet2_train.py $D/ds_m7bs $D/weights/cnet2_m7bsr1.npz 20 '{"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}' > $D/dq_logs/m7bsr1.log 2>&1 &
+2026-11-12T07:46:38.9871974Z BC_INIT=$D/weights/cnet2_b128m2t3.npz ../.venv/bin/python cnet2_train.py $D/ds_m7bs $D/weights/cnet2_m7bsg1.npz 20 '{"C":128,"NB":8,"D":128}' > $D/dq_logs/m7bsg1.log 2>&1 &
+2026-11-12T07:46:38.9873469Z wait
+2026-11-12T07:46:38.9873943Z for n in m7bsr1 m7bsg1; do
+2026-11-12T07:46:38.9875461Z   scp -i $HOME/.ssh/id_ed25519_carbon_relay -o IdentitiesOnly=yes -o BatchMode=yes $D/weights/cnet2_${n}_ep19.npz root@10.211.43.94:/root/carbon/data/weights/cnet2_${n}L.npz && touch $D/dq_logs/${n}.done
+2026-11-12T07:46:38.9877032Z done
+2026-11-12T07:46:38.9877586Z echo M7BS_ALL_DONE
+2026-11-12T07:46:38.9878266Z --- SCRIPT-DUMP-BUILD_TOP-HEAD ---
+2026-11-12T07:46:38.9879488Z """Dataset "top": several current top-of-ladder strategies as teachers, each on its own style row, whole games.
+2026-11-12T07:46:38.9881145Z Why: one teacher's games are few for a 3M-parameter net (Master3s: ~120 games); the other strong players' games teach
+2026-11-12T07:46:38.9882770Z the trunk the same board situations (trees under contest, crowded bases, fights for cargo) from several hands, while
+2026-11-12T07:46:38.9884688Z the style row keeps whose decisions are whose.
+2026-11-12T07:46:38.9885861Z   python3 build_top.py OUT_DIR REPLAY_DIR [REPLAY_DIR ...]    then    python3 set_uw.py OUT_DIR 1 1 1
+2026-11-12T07:46:38.9887404Z Teachers: the default set (J1, five teachers, rows 2-6), or CNET2_TOP=J2 (eight teachers, all rows), or an explicit
+2026-11-12T07:46:38.9888992Z CNET2_TOP_TEACHERS="name@row,name@row,..." (rows 0-7; names exactly as on the leaderboard).
+2026-11-12T07:46:38.9890264Z Master3s stays on row 2 in every set -- the row the Echo packs play.
+2026-11-12T07:46:38.9891582Z Only ladder replays (public games) -- never games generated locally with someone's public source."""
+2026-11-12T07:46:38.9892727Z import os
+2026-11-12T07:46:38.9893610Z import sys
+2026-11-12T07:46:38.9894221Z import cnet2_feat as F
+2026-11-12T07:46:38.9894722Z 
+2026-11-12T07:46:38.9895083Z SETS = {
+2026-11-12T07:46:38.9896111Z     "J1": {2: "claude-AlphaCarbon-Master3s", 3: "RyanX-AIPowercore-M6", 4: "stephen-K4TacSearch-v1",
+2026-11-12T07:46:38.9897519Z            5: "AgyCarbon-P2C-Godslayer-CV", 6: "claude-AlphaCarbon-Master2s"},
+2026-11-12T07:46:38.9898869Z     "J2": {2: "claude-AlphaCarbon-Master3s", 3: "RyanX-AIPowercore-M6", 4: "stephen-K4TacSearch-v1",
+2026-11-12T07:46:38.9900162Z            5
+elapsed 56 claimed

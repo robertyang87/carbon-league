@@ -1,0 +1,41 @@
+ cn-shanghai
+2026-11-12T18:49:28.4016037Z ##[endgroup]
+2026-11-12T18:49:41.1128908Z InvokeId: t-sh072wz9il37mdc
+2026-11-12T18:49:41.1143198Z --- status=Success exit=0 ---
+2026-11-12T18:49:41.1151311Z S30DEPLOY0245B L20-BEGIN 2026-11-13 02:49:30 CST
+2026-11-12T18:49:41.1165638Z S30DEPLOY0245B DGX-BEGIN 2026-11-13 02:49:33 CST
+2026-11-12T18:49:41.1187978Z SSH-OK iZuf63wxob7kzgyxkel2nlZ
+2026-11-12T18:49:41.1208200Z KEY-USED=/home/arm/.ssh/id_ed25519_carbon_relay
+2026-11-12T18:49:41.1208954Z --- DEPLOYED-MD5-REVERIFY (spot-29) ---
+2026-11-12T18:49:41.1210318Z aa4c5bb63c879caffeb33b0b25c498d7  eval_v53.py
+2026-11-12T18:49:41.1213678Z 3547eb6abba5083c5aaa2645fcbf2a47  bigeval.py
+2026-11-12T18:49:41.1214648Z 14230fa124e0a9b90d59d6df03c6765a  cnet2_search.py
+2026-11-12T18:49:41.1215321Z 8cd8a3d8a9e3e59e8b3ac966e797382e  cnet2_build.py
+2026-11-12T18:49:41.1215987Z c60390a36cc6e895eb9a725f89f5973c  cnet2_search_timing.py
+2026-11-12T18:49:41.1216664Z 07fa5e914a74ab07ab482b470facb911  replica_chain.sh
+2026-11-12T18:49:41.1217555Z d49298c059ac080b1e14f327519cdec6  rl2_ppo_rollout.py
+2026-11-12T18:49:41.1218638Z d95f63843511052bc8f7a82551ce31a1  cnet2_np.py
+2026-11-12T18:49:41.1219283Z --- SMOKE-SUMMARY-READBACK (s29deploy_smoke.out) ---
+2026-11-12T18:49:41.1221791Z {"tag": "s29deploy_smoke", "a": "exp/m3s2r1.py", "b": "exp/opp_master2r.py", "seed0": 999901, "n": 2, "err": 0, "wins": 2, "mean": 1395, "se": 544, "lo2se": 306, "worst": 850, "worst_ms": 103.0, "dep": [9846, 10099], "tree": [4378, 1359], "deathcargo": [232, 193], "plants": [40, 10], "t": "02:39", "search_games": 0, "changed0_games": 0, "search_error_games": 0, "a_errors_total": 0, "root_errors_total": 0, "first_error": null, "first_search_error_seed": null, "FAIL": false}
+2026-11-12T18:49:41.1225101Z --- RIDE-ALONG Echo2 md5 (spot-29) ---
+2026-11-12T18:49:41.1225796Z 15b6d754e6e21de33870074d3983a16f  /root/carbon/code/exp/echo2.py
+2026-11-12T18:49:41.1226675Z 82fde46b2633950d3cbb29e8cacbfdc2  /root/carbon/data/weights/cnet2_m3w5L.npz
+2026-11-12T18:49:41.1227693Z S30DEPLOY0245B DGX-END
+2026-11-12T18:49:41.1228212Z S30DEPLOY0245B L20-END rc=0
+2026-11-12T18:49:41.1228585Z 
+2026-11-12T18:49:41.1385550Z Post job cleanup.
+2026-11-12T18:49:41.2569068Z [command]/usr/bin/git version
+2026-11-12T18:49:41.2648633Z git version 2.56.0
+2026-11-12T18:49:41.2758920Z Temporarily overriding HOME='/home/runner/work/_temp/a26ff27a-0dc3-44e6-b35d-ee02b4d31586' before making global git config changes
+2026-11-12T18:49:41.2760558Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T18:49:41.2788681Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T18:49:41.2795914Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T18:49:41.2899489Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T18:49:41.3289056Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T18:49:41.3338809Z http.https://github.com/.extraheader
+2026-11-12T18:49:41.3405864Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T18:49:41.3437869Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T18:49:41.3959986Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T18:49:41.4011021Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T18:49:41.4445722Z Cleaning up orphan processes
+2026-11-12T18:49:41.4735397Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

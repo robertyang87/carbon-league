@@ -1,0 +1,11 @@
+STUDIO1420 run 43167456024 (cloud-assistant -> L20 i-uf62k0o6zbe6j7zxnzg5 -> ssh arm@10.211.43.68)
+Marker STUDIOSTAT1420V4R7; L20-BEGIN 2026-11-12 14:20:41 CST; STUDIO-BEGIN 14:20:56 CST; rc=0
+mac-studio.local; up 13 days 22:13; load 1.30 1.51 1.56; disk / 386Gi free (was 385)
+TRAIN-PROC: 99079/99080 bash wrappers; 99082 g1 7.9% etime 15:10; 99083 r1 8.3% etime 15:10
+R1-LOG-TAIL: ep2 val all 0.8669 loss 0.3345 (s 235); ep3 i:0 started
+G1-LOG-TAIL: ep5 val 0.8685/0.3312; ep6 val 0.8685/0.3303; ep7 val 0.869/0.3295; ep8 i:0 started
+R1-JSONL: ep0 0.8601/0.3516; ep1 0.8625/0.345; ep2 0.8669/0.3345
+G1-JSONL: ep0 0.8575/0.3614; ep1 0.8579/0.3573; ep2 0.8626/0.3435; ep3 0.8665/0.335; ep4 0.8646/0.3377; ep5 0.8685/0.3312; ep6 0.8685/0.3303; ep7 0.869/0.3295
+WEIGHTS-NOW: g1.npz 14:20; g1_ep7.npz 14:20; g1_last 14:20; g1_log.jsonl 14:20; g1_ep6 14:18; r1.npz 14:17; r1_ep2.npz 14:17
+Progress vs 14:16 read: g1 5/20 -> 8/20 (ETA ~14:43 est); r1 2/20 -> 3/20 (ETA ~15:28 est). Speeds unchanged (g1 ~109s/ep, r1 ~235s/ep).
+NOTE: poll loop had a seen-bug (in-progress runs marked seen, never re-checked) -> marker missed in 420s window; recovered by direct re-read of run logs. Fix poll to only mark seen after completion in future probes.

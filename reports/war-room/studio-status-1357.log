@@ -1,0 +1,75 @@
+MARKER=STUDIOSTAT1357
+mac-studio.local
+13:58  up 14 days, 21:51, 4 users, load averages: 2.01 1.82 1.70
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+---PS---
+  312 14-21:50:20   0.0 /usr/libexec/col /usr/libexec/colorsync.displayservices
+  314 14-21:50:20   0.0 /System/Library/ /System/Library/Frameworks/ColorSync.framework/Versions/A/XPCServices/com.apple.ColorSyncXPCAgent.xpc/Contents/MacOS/com.apple.ColorSyncXPCAgent
+  315 14-21:50:20   0.0 /usr/libexec/col /usr/libexec/colorsyncd
+  680 14-21:50:14   0.0 /System/Library/ /System/Library/CoreServices/appplaceholdersyncd
+ 2351 14-21:48:26   0.0 /System/Library/ /System/Library/CoreServices/appplaceholdersyncd
+ 2513 14-21:48:20   0.0 /System/Library/ /System/Library/Frameworks/ColorSync.framework/Versions/A/XPCServices/com.apple.ColorSyncXPCAgent.xpc/Contents/MacOS/com.apple.ColorSyncXPCAgent
+ 3400 14-21:44:11   0.0 /System/Library/ /System/Library/Frameworks/Contacts.framework/Support/postersyncd
+50408       08:19 100.0 /opt/homebrew/Ce /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage0_teacher_consistency_studio.py /Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz 1500 40
+---PS-END---
+---MPS---
+Graphics/Displays:
+
+    Apple M2 Ultra:
+
+      Chipset Model: Apple M2 Ultra
+---TEACHER-LOG---
+-rw-r--r--  1 arm  staff  49147 Nov 13 12:02 /Users/arm/junyang/carbon/teacher_consistency_studio.log
+{"pos": 229, "game_seed": 995239, "step": 40, "me": 0, "ms": 5479.6, "n_arms": 16, "entropy": 1.359, "agree_greedy": false, "top_eq_sampled": false, "slot_match": 0.75, "greedy_eq_sampled": false, "q_max": 0.544}
+CONSISTENCY {"positions": 229, "games_played": 40, "agree_greedy_rate": 0.5459, "entropy_mean": 1.9006, "entropy_p50": 2.0692, "q_max_mean": 0.3214, "teacher_top_eq_sampled_exact_rate": 0.1048, "teacher_top_vs_sampled_slot_match_mean": 0.8377, "greedy_eq_sampled_exact_rate": 0.1223, "ms_per_position_mean": 5581.7, "ms_per_position_p50": 5540.9, "extrapolated_hours_for_35282_positions": 54.7, "wall_s_total": 1505.5}
+---HEADS-WEIGHTS---
+-rw-r--r--  1 arm  staff  13973080 Nov 13 11:41 /Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads.npz
+-rw-r--r--  1 arm  staff  13973080 Nov 13 13:48 /Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz
+-rw-r--r--  1 arm  staff       374 Nov 13 13:48 /Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz.manifest.json
+MD5 (/Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads.npz) = 945a734f6e06e66b1ba485f9137860c5
+MD5 (/Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz) = db623416e282217fc5c066d0aab7e614
+MD5 (/Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz.manifest.json) = 1a5c32c1fd3088264632e6ef04c1dacc
+---TRAIN-HEADS-LOG---
+---STAGE0-SCRIPT---
+MD5 (/Users/arm/junyang/carbon/code/stage0_train_heads.py) = 14ba916651987fc2a7d8e6ed23c00fa7
+---PRODUCER---
+MD5 (/Users/arm/junyang/carbon/code/producer/selfplay_gen.py) = 95d2e29fbec8cfcebee57bf9bf0d25ed
+---NEW-FILES-SINCE-1344---
+zsh:1: no matches found: /Users/arm/junyang/carbon/data/*train_heads*
+/Users/arm/junyang/carbon/train_heads_v2_studio.log
+/Users/arm/junyang/carbon/teacher_consistency_v2_studio.log
+/Users/arm/junyang/carbon/code/__pycache__/cnet2_model.cpython-313.pyc
+/Users/arm/junyang/carbon/code/__pycache__/cnet2_build.cpython-313.pyc
+/Users/arm/junyang/carbon/code/__pycache__/stage0_teacher.cpython-313.pyc
+/Users/arm/junyang/carbon/code/__pycache__/stage0_smoke_heads.cpython-313.pyc
+/Users/arm/junyang/carbon/code/__pycache__/fastsim.cpython-313.pyc
+/Users/arm/junyang/carbon/code/__pycache__/eval_v53.cpython-313.pyc
+/Users/arm/junyang/carbon/code/__pycache__/cnet2_train.cpython-313.pyc
+/Users/arm/junyang/carbon/code/__pycache__/cnet2_np.cpython-313.pyc
+/Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz.manifest.json
+/Users/arm/junyang/carbon/data/weights/cnet2_m3s2r1_heads_v2.npz
+---TOP-DATA---
+total 544
+drwxr-xr-x  288 arm  staff   9216 Nov 13 13:48 weights
+drwxr-xr-x    3 arm  staff     96 Nov 13 11:30 selfplay_probe
+-rw-r--r--    1 arm  staff    657 Nov 13 03:56 hakimi2_ship.log
+-rw-r--r--    1 arm  staff   4635 Nov 13 03:56 hakimi2r1.log
+-rw-r--r--    1 arm  staff   4603 Nov 13 03:49 hakimi2g1.log
+-rw-r--r--    1 arm  staff   2721 Nov 13 03:42 hakimi2_chain.log
+-rw-r--r--    1 arm  staff      0 Nov 13 03:39 hakimi2_ship.out
+---S1-LOGS---
+-rw-r--r--  1 arm  staff  16137 Nov 13 13:58 /Users/arm/junyang/carbon/teacher_consistency_v2_studio.log
+-rw-r--r--  1 arm  staff  14643 Nov 13 13:48 /Users/arm/junyang/carbon/train_heads_v2_studio.log
+-rw-r--r--  1 arm  staff  49147 Nov 13 12:02 /Users/arm/junyang/carbon/teacher_consistency_studio.log
+-rw-r--r--  1 arm  staff   5979 Nov 13 11:41 /Users/arm/junyang/carbon/train_heads_studio.log
+-rw-r--r--  1 arm  staff   2911 Nov 13 11:36 /Users/arm/junyang/carbon/teacher_measure_studio.log
+-rw-r--r--  1 arm  staff   2043 Nov 13 11:32 /Users/arm/junyang/carbon/smoke_heads_studio.log
+-rw-r--r--  1 arm  staff    657 Nov 13 03:56 /Users/arm/junyang/carbon/data/hakimi2_ship.log
+-rw-r--r--  1 arm  staff   4635 Nov 13 03:56 /Users/arm/junyang/carbon/data/hakimi2r1.log
+-rw-r--r--  1 arm  staff   4603 Nov 13 03:49 /Users/arm/junyang/carbon/data/hakimi2g1.log
+-rw-r--r--  1 arm  staff   2721 Nov 13 03:42 /Users/arm/junyang/carbon/data/hakimi2_chain.log
+-rw-r--r--  1 arm  staff    302 Nov 13 03:39 /Users/arm/junyang/carbon/data/hakimi2_build.log
+-rw-r--r--  1 arm  staff      0 Nov 13 03:39 /Users/arm/junyang/carbon/data/hakimi2_chain_outer.log
+END-MARKER=STUDIOSTAT1357
+EXIT=0

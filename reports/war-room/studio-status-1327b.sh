@@ -1,0 +1,6 @@
+#!/bin/bash
+# Studio status direct read, run 2026-11-13 13:27 CST, marker STUDIOSTAT1327B (path-corrected follow-up)
+# Read-only. Tailscale direct SSH.
+MARK=STUDIOSTAT1327B
+timeout -k 30 120 ssh -i /home/hatch/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30 -o ProxyCommand="nc -X connect -x hatch-egress-proxy:3130 %h %p" arm@100.78.149.20 "echo MARKER=$MARK; echo ---TEACHER---; ls -l ~/junyang/carbon/teacher_consistency_studio.log ~/junyang/carbon/data/teacher_consistency_studio.log 2>&1; tail -2 ~/junyang/carbon/teacher_consistency_studio.log 2>/dev/null; echo ---HEADS-NPZ---; ls -l ~/junyang/carbon/data/weights/cnet2_m3s2r1_heads.npz 2>&1; md5 ~/junyang/carbon/data/weights/cnet2_m3s2r1_heads.npz 2>&1; echo ---TRAIN-HEADS-LOG---; find ~/junyang/carbon -name 'train_heads_studio.log' -o -name 'smoke_heads_studio.log' 2>/dev/null; echo ---PRODUCER-FIND---; find ~/junyang/carbon -name 'selfplay_gen.py' 2>/dev/null | head; echo ---GIT---; ls -d ~/junyang/carbon/.git 2>&1; cd ~/junyang/carbon && git rev-parse HEAD 2>&1 | head -2; echo ---PS2---; ps aux | grep -iE 'python|stage0|train_heads|selfplay' | grep -v grep | head; echo ---PS2-END---; echo END-MARKER=$MARK"
+echo "EXIT=$?"

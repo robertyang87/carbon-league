@@ -1,0 +1,71 @@
+STUDIOSTAT1612TS PROBE-BEGIN 2026-11-13 16:22:52 CST
+STUDIOSTAT1612TS STUDIO-BEGIN 2026-11-13 16:22:57 CST
+mac-studio.local
+16:22  up 15 days, 15 mins, 4 users, load averages: 1.78 1.79 2.07
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                              675225.
+Pages active:                           1386661.
+Pages inactive:                         1759496.
+Pages speculative:                       171414.
+Pages throttled:                              0.
+--- TRAIN-TEST-PROC ---
+88066   0.0  0.0       01:22 zsh -c rsync -az --delete arm@10.188.0.23:/home/arm/junyang/carbon-a7ed8f95/code/ /tmp/carbon_code_a7ed/ && rsync -az --delete /tmp/carbon_code_a7ed/ root@100.79.251.87:/root/carbon/code_next/ && ssh -o ConnectTimeout=20 root@100.79.251.87 "md5sum /root/carbon/code_next/stage0_teacher.py /root/carbon/code_next/cnet2_search.py /root/carbon/code_next/packs/cnet2_search.py /root/carbon/code_next/stage1_teacher_gate.py /root/carbon/code_next/stage0_guided_match.py /root/carbon/code_next/cnet2_np.py /root/carbon/code_next/packs/cnet2_np.py /root/carbon/code_next/cnet2_train.py /root/carbon/code_next/cnet2_build.py /root/carbon/code_next/set_uw.py /root/carbon/code_next/cnet2_model.py /root/carbon/code_next/producer/selfplay_gen.py"
+--- S12TEST ---
+total 29728
+-rw-r--r--   1 arm  staff      1504 Nov 13 15:10 run_all.log
+-rw-r--r--   1 arm  staff      2543 Nov 13 15:09 gate_q_smoke.json
+-rw-r--r--   1 arm  staff      2281 Nov 13 15:09 gate_q_smoke2.log
+-rw-r-----   1 arm  staff     21476 Nov 13 15:08 stage1_teacher_gate.py
+-rw-r--r--   1 arm  staff       858 Nov 13 15:01 gate_q_smoke.log
+-rw-r-----   1 arm  staff       471 Nov 13 15:00 split_smoke.json
+-rw-r-----   1 arm  staff     15999 Nov 13 14:57 guard_parity_new.json
+-rw-r-----   1 arm  staff     12571 Nov 13 14:55 stage0_teacher.py
+-rw-r-----   1 arm  staff         0 Nov 13 14:31 test_s12_a3_teacher.log
+-rw-r-----   1 arm  staff      5013 Nov 13 14:30 test_s12_a3_teacher.py
+-rw-r-----   1 arm  staff      7932 Nov 13 14:30 test_s12_a3.py
+--- CODE-MD5 ---
+030b317bc649fd45c07249c5e3bb662f
+4140d3986d2f7e3a1884e7a4cda9b48d
+0d0fbf103ddb11c1269e556ecad8c9eb
+3bb5857f833a94797ac6cdc2a5a28963
+95d2e29fbec8cfcebee57bf9bf0d25ed
+-rw-rw----  1 arm  staff  67650 Nov 13 14:54 cnet2_build.py
+-rw-rw----  1 arm  staff  19720 Nov 13 13:43 cnet2_model.py
+-rw-rw----  1 arm  staff  55274 Nov 13 15:28 cnet2_train.py
+-rw-rw----  1 arm  staff  37499 Nov 13 13:43 producer/selfplay_gen.py
+-rw-r--r--  1 arm  staff   6363 Nov 13 15:28 set_uw.py
+--- WEIGHTS-NOW ---
+total 6975872
+-rw-r--r--  1 arm  staff       374 Nov 13 13:48 cnet2_m3s2r1_heads_v2.npz.manifest.json
+-rw-r--r--  1 arm  staff  13973080 Nov 13 13:48 cnet2_m3s2r1_heads_v2.npz
+-rw-r--r--  1 arm  staff  13973080 Nov 13 11:41 cnet2_m3s2r1_heads.npz
+-rw-r--r--  1 arm  staff  13968972 Nov 13 11:26 cnet2_m3s2r1L.npz
+-rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_ep19.npz
+-rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_last.npz
+-rw-r--r--  1 arm  staff      3074 Nov 13 03:56 cnet2_hakimi2r1_log.jsonl
+--- DATA-TOP ---
+total 544
+drwxr-xr-x  288 arm  staff   9216 Nov 13 13:48 weights
+drwxr-xr-x    3 arm  staff     96 Nov 13 11:30 selfplay_probe
+-rw-r--r--    1 arm  staff    657 Nov 13 03:56 hakimi2_ship.log
+-rw-r--r--    1 arm  staff   4635 Nov 13 03:56 hakimi2r1.log
+-rw-r--r--    1 arm  staff   4603 Nov 13 03:49 hakimi2g1.log
+-rw-r--r--    1 arm  staff   2721 Nov 13 03:42 hakimi2_chain.log
+-rw-r--r--    1 arm  staff      0 Nov 13 03:39 hakimi2_ship.out
+-rw-r--r--    1 arm  staff   1355 Nov 13 03:39 ship_hakimi2.sh
+-rw-r--r--    1 arm  staff      4 Nov 13 03:39 hakimi2g1.pid
+--- FABLE-LOGS ---
+-rw-r--r--  1 arm  staff  4598 Nov 12 17:08:11 2026 /Users/arm/junyang/carbon/data/fable_g1.log
+-rw-r--r--  1 arm  staff  4644 Nov 12 17:20:05 2026 /Users/arm/junyang/carbon/data/fable_r1.log
+STUDIOSTAT1612TS STUDIO-END
+STUDIOSTAT1612TS SSH-RC=0
+STUDIOSTAT1612TS PROBE-END 2026-11-13 16:22:56 CST
+
+ASSESSMENT (16:22-16:23 CST direct read, marker STUDIOSTAT1612TS, Tailscale direct):
+- Direct read OK via Tailscale (SSH-RC=0). cloud-assistant route FAILED first: dispatched 16:14:30, run 43391680976 completed failure with 0 steps (GitHub Actions usage-blocked, known cause since 04:13); claim timed out after 427s. Tailscale direct used instead, same as 15:42/15:57 trips.
+- CHANGE vs 15:57: Studio is a transit relay for the S1 v1.1 refresh to spot-29. PID 88066 (zsh, started ~16:21:35) rsyncs code from 10.188.0.23:/home/arm/junyang/carbon-a7ed8f95/code/ to /tmp/carbon_code_a7ed/, then to root@100.79.251.87:/root/carbon/code_next/, then md5sums the S1 files. Re-checked 16:23:45: still running (child rsync PID 88072 active, /tmp staging populated). NOT a training process; CPU 0.0%.
+- Studio own code still b7e1db92 (build 030b317b / train 4140d398 / set_uw 0d0fbf10 / model 3bb5857f / producer 95d2e29f) — NOT yet refreshed to S1 v1.1 (main 7b025ae5). spot-29 already refreshed 16:22-16:23 per war-room record (7 files incl. cnet2_np d8c15ad4). Studio refresh executor/timing not yet named to this line.
+- No training/test process; load 1.78; disk 421Gi free; s12test untouched since 15:10; weights unchanged (latest heads_v2 13:48); fable logs still Nov 12.
+- Not a pure-idle trip (relay in flight); no new idle report to war room (last idle report 15:12 still stands). Next trip: confirm relay finished.

@@ -1,0 +1,73 @@
+STUDIOSTAT1757Q2F8 PROBE-BEGIN 2026-11-13 17:58:55 CST
+STUDIOSTAT1757Q2F8 STUDIO-BEGIN 2026-11-13 17:58:59 CST
+mac-studio.local
+17:58  up 15 days,  1:51, 4 users, load averages: 3.05 3.53 6.30
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                              610801.
+Pages active:                           1458741.
+Pages inactive:                         1745339.
+--- PILOT-PROC ---
+  PID  %CPU %MEM  ELAPSED COMMAND
+89571   0.0  0.1 01:32:02 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+children-of-89571:       13
+89571     1   0.0   0:00.39    01:32:03 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+--- PILOT-DIR ---
+total 32
+-rw-r--r--  1 arm  staff  4130 Nov 13 16:26:57 2026 ds_m3s2_games.txt
+-rw-r--r--  1 arm  staff  1597 Nov 13 16:26:57 2026 pilot_du.log
+-rw-r--r--  1 arm  staff   825 Nov 13 16:26:57 2026 split_pilot.json
+--- PILOT-LOG ---
+-rw-r--r--  1 arm  staff  1597 Nov 13 16:26:57 2026 /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.log
+PREREG {"gate": "du", "run_id": "7a189805a8fbc6ec", "weights": "/Users/arm/s12test/heads_v2.npz", "weights_md5": "06a03d9cfeec239af3065a49fefec382", "code_md5": {"stage0_teacher.py": "3f1d31779041239071cfb642f4779c8d", "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3", "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122", "stage1_teacher_gate.py": "2658cb2bff425b191c4763902e010695"}, "guard_cfg": {"GUARD": true, "GUARD_NARROW": true, "GUARD_CASH": 40.0, "LOWW": 2}, "K": 16, "M": 8, "H": 2, "behavior_temp": 1.0, "teacher_style": 2, "q_select_source": "teacher Q (stage0_teacher.evaluate_root)", "q_eval_source": "real terminal continuations (anchor / paired arms)", "root_feat_history": "fresh Feats at root (isolated-root scope)", "seeds": {"scene": 995300, "teacher": 7000, "cont": 996100, "anchor": 995310}, "games": ["0efcfa1227b59fd7f89ee0c9b9ca9268-1", "0f71c0eec95ba72983df274bb8214db0-1", "342cccab5628cd1551eda7ce748e41ca-1", "ee87df723ee662ea3adefa72151feda1-1", "ef736a7898fc940bb57cd50af80b25d0-1", "f08846b06bf96d5f81650a3f9ec6521e-1", "f10b4fe24989fc072226ccbb0dd4dcad-1", "f1f3aa472faead713e748b6b3e11bf2d-1", "f25ff59d11686a2ab8b9e54152f63dd3-1", "f4651b37a8d9d4f233ba48a029f34327-1", "f5ced308e911610f01e6443954ce58d2-1", "f69a75694d8745d69526c9686487c2bd-1", "f70ba87077d1f74fa2db672ea0879b7c-1", "fa5cf88bff62fd3da8bfb355413f7241-1"], "n_scenes": 47, "ds_overlap_check": "NOT RUN", "ds_manifest_md5": null, "train_data_version": "ds_m3s2", "n_required": 150, "canonical_config": true, "formal": false, "diagnostic_reasons": ["training-set isolation check not run (S06)"]}
+--- PILOT-JSON-HEAD ---
+NO-pilot_du.json
+
+--- S1-FILES-MD5 ---
+MD5 (/Users/arm/junyang/carbon/code/stage0_teacher.py) = 77ba36773fb135c92a6e5f171f88bdbd
+MD5 (/Users/arm/junyang/carbon/code/stage1_teacher_gate.py) = bdd3caed2814d3ed78cb4e38c92cecbd
+STUDIOSTAT1757Q2F8 STUDIO-END
+STUDIOSTAT1757Q2F8 SSH-RC=0
+STUDIOSTAT1757Q2F8 PROBE-END 2026-11-13 17:58:59 CST
+STUDIOSTAT1757W3K9 BEGIN 2026-11-13 17:59:06 CST
+STUDIOSTAT1757W3K9 BEGIN 2026-11-13 17:59:10 CST
+17:59  up 15 days,  1:51, 4 users, load averages: 2.81 3.46 6.25
+89571     1   0.0   0:00.39    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+89576 89571   0.0   0:00.03    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.resource_tracker import main;main(8)
+89577 89571   0.0  73:36.00    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=17) --multiprocessing-fork
+89578 89571  99.3  92:12.27    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=19) --multiprocessing-fork
+89579 89571   0.0  69:32.29    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=21) --multiprocessing-fork
+89580 89571   0.0  78:04.01    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=23) --multiprocessing-fork
+89581 89571   0.0  82:24.26    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=25) --multiprocessing-fork
+89582 89571   0.0  82:43.42    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=27) --multiprocessing-fork
+89583 89571   0.0  69:10.66    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=29) --multiprocessing-fork
+89584 89571   0.0  71:36.40    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=31) --multiprocessing-fork
+89585 89571   0.0  92:05.84    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=33) --multiprocessing-fork
+89586 89571   0.0  73:33.12    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=35) --multiprocessing-fork
+89587 89571   0.0  79:19.18    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=37) --multiprocessing-fork
+89588 89571   0.0  82:56.85    01:32:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=39) --multiprocessing-fork
+--- any-new-proc ---
+NO-OTHER-PILOT-PROC
+NO-pilot_du.json
+STUDIOSTAT1757W3K9 END
+STUDIOSTAT1757W3K9 SSH-RC=0
+
+ASSESSMENT (17:58:59 + 17:59:10 CST direct reads, markers STUDIOSTAT1757Q2F8 / W3K9, Tailscale direct arm@100.78.149.20, SSH-RC=0 both):
+- Stage A pilot STILL RUNNING, STILL NO OUTPUT: PID 89571 etime 01:32:13, 13 subprocesses, parent CPU 0:00.39 (coordinator).
+- BIG CHANGE vs 17:43 read: worker drain accelerated — 11 of 12 workers have now STOPPED accumulating CPU; only 89578 still at ~99%.
+  17:43:49 (elapsed 76:52): 7 running (89578/80/81/82/85/87/88), 5 stopped (89577/79/83/84/86).
+  17:59:10 (elapsed 92:13): only 89578 running (CPU 92:12.27, ~1s behind elapsed).
+  Stopped workers, CPU time now vs 17:43:49 (wall gap 15:21):
+    89577 73:36.00 (unchanged, stopped ~17:36-17:40) | 89579 69:32.29 (unchanged) |
+    89583 69:10.66 (unchanged, earliest stop ~17:36) | 89584 71:36.40 (unchanged) | 89586 73:33.12 (unchanged)
+    89580 78:04.01 (+1:13 -> stopped ~17:45) | 89587 79:19.18 (+2:28 -> stopped ~17:46)
+    89581 82:24.26 (+5:33 -> stopped ~17:49) | 89582 82:43.42 (+5:52 -> stopped ~17:49)
+    89588 82:56.85 (+6:06 -> stopped ~17:49) | 89585 92:05.84 (+15:15, only ~7s behind elapsed -> stopped just now / between tasks)
+  Load 1-min: 12.62 (17:29) -> 7.80 (17:43) -> 3.05 (17:58) -> 2.81 (17:59); 5-min 3.53, 15-min 6.30.
+  Read: workers appear to finish their scenes one by one and go idle (or block waiting); cannot distinguish "waiting for last worker to finish" from "stuck on a wait" from this read. If 89578 is the last scene, pilot_du.json may land when it finishes — or not. No ETA.
+- No-output duration now 92 min 13 s (PREREG 16:26:57 -> read 17:59:10); pilot_du.log still 1,597 B PREREG-only, pilot_du.json STILL NOT landed.
+- S1 disk files confirmed v1.3: teacher 77ba36773fb135c92a6e5f171f88bdbd, gate bdd3caed2814d3ed78cb4e38c92cecbd.
+- Disk 421Gi free, unchanged. No other pilot-related processes. Studio NOT idle (pilot still in place, 1 worker computing); no idle report.
+- Context: owner pilot verdict (wait vs stop-switch to v1.3 formal pilot) still pending as of 17:57 H23 sync / war-room; no newer reply seen in war-room chat this trip.
+- Next trip: watch whether 89578 also stops (pilot fully drained) and whether pilot_du.json lands; if all 12 stop with no output, pilot is done computing with nothing produced.

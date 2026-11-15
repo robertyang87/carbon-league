@@ -1,0 +1,58 @@
+STUDIOSTAT0227W2D9 BEGIN 2026-11-14 02:32:56 CST
+STUDIOSTAT0227W2D9 STUDIO-BEGIN 2026-11-14 02:33:01 CST
+ 2:33  up 15 days, 10:25, 4 users, load averages: 1.88 2.08 1.87
+  PID  %CPU ELAPSED      TIME COMMAND
+41443   0.0   01:37   0:00.01 zsh -c cd /Users/arm/s1v4accept/automation/acceptance_s1; PY=/Users/arm/junyang/carbon/.venv/bin/python; $PY test_teacher_v2_twoworld.py /Users/arm/s12test/heads_v2.npz --canon > /tmp/tw_canon.log 2>&1; echo "EXIT=$?"; tail -6 /tmp/tw_canon.log
+--- TW-CANON ---
+PASS seed22/step120 A. v3: Q unchanged when cells invisible to both seats differ -- max|dQ|=0.000e+00 arms=16 unknown_cells=0
+PASS seed22/step120 B. v3: Q unchanged when every cell outside the acting seat's view differs -- max|dQ|=0.000e+00
+PASS seed22/step120 D. v3 deterministic -- max|dQ|=0.000e+00
+PASS seed22/step120 E. root Feats not mutated
+PASS seed22/step120 result labels
+PASS seed22/step120 C. control: oracle clones DO depend on the hidden cells -- max|dQ|=0.0658 (label v1+c1)
+PASS seed23/step200 construction: both seats' observations identical in A and B -- 171 hidden cells changed
+PASS seed23/step200 construction: acting seat's observation identical in A and C -- 181 cells changed
+--- SELFPLAY-ERR-FULL ---
+   24745 /Users/arm/s1v4accept/automation/acceptance_r5/selfplay_err.log
+{
+  "commit": "6d24581b68f33d44eded5b67299c17dc0847659e",
+  "source_sha256": "4be84f8c130a6b5ad608bff20b25f2cd8248a8aa9dc18857418feb6e24100c12",
+  "source_md5": "f7dbb47eb5f23eca69d5fddd45af1769",
+  "training_was_launched": false,
+  "checks": {
+    "terminal_exact": true,
+    "utility_correct": true,
+    "default_builder_drops_early_terminal": false,
+    "missing_full_carbon_mislabels_aux": false,
+    "no_postterminal_rows_if_admitted": true,
+    "fallback_errors_not_rejected": true,
+    "natural_horizon": true,
+    "orphan_is_unrecoverable": false,
+    "indexed_missing_returns_success": false,
+    "batch_budget_overshoot": true,
+    "direct_import_failure": true
+  },
+  "terminal": {
+    "entry": {
+      "id": "selfplay",
+      "game": 0,
+      "order": [
+        "a",
+        "b"
+      ],
+      "scores": {
+        "a": -299.0,
+        "b": 50.0
+      },
+      "margin": {
+        "a": -349.0,
+        "b": 349.0
+      },
+      "u": {
+        "a": 0.2068124697319188,
+        "b": 0.7931875302680812
+      },
+      "winner": "b",
+      "steps": 2,
+STUDIOSTAT0227W2D9 STUDIO-END
+STUDIOSTAT0227W2D9 END rc=0

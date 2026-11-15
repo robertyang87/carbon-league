@@ -1,0 +1,78 @@
+dispatched at 14:32:43
+CLAIMED run 43168878835 job 131017115509 status completed conclusion success
+ cn-shanghai
+2026-11-12T06:32:50.5895503Z ##[endgroup]
+2026-11-12T06:33:23.3527691Z InvokeId: t-sh072v5jxsw7bwg
+2026-11-12T06:33:23.3547743Z --- status=Success exit=0 ---
+2026-11-12T06:33:23.3550762Z STUDIOSTAT1427K9M2 L20-BEGIN 2026-11-12 14:32:53 CST
+2026-11-12T06:33:23.3567559Z STUDIOSTAT1427K9M2 STUDIO-BEGIN 2026-11-12 14:33:16 CST
+2026-11-12T06:33:23.3583841Z mac-studio.local
+2026-11-12T06:33:23.3605378Z 14:33  up 13 days, 22:25, 5 users, load averages: 0.98 1.29 1.46
+2026-11-12T06:33:23.3606121Z --- MEM-DISK ---
+2026-11-12T06:33:23.3627226Z /dev/disk3s1s1   926Gi    12Gi   386Gi     3%    455k  4.0G    0%   /
+2026-11-12T06:33:23.3647634Z --- TRAIN-PROC ---
+2026-11-12T06:33:23.3650383Z 99079   0.0  0.0       27:31 bash -c env BC_DEVICE=mps BC_RAM=1 BC_THREADS=8 BC_USE_W=1 BC_USE_UW=1 BC_BS=256 BC_SAVE_EPOCHS=1 BC_PCT=0.1 BC_LR=3e-4 BC_INIT=/Users/arm/junyang/carbon/data/weights/cnet2_arch_n1_last.npz ../.venv/bin/python cnet2_train.py ../data/ds_distill ../data/weights/cnet2_distill_r1.npz 20 "{\"C\":128,\"NB\":8,\"D\":128,\"ZI\":1,\"TA\":4,\"TNH\":4}" > ../data/distill_r1.log 2>&1; rsync -a ../data/weights/cnet2_distill_r1_ep19.npz arm@10.188.0.23:/home/arm/junyang/carbon/data/weights/cnet2_distill_r1_fromstudio.npz && echo DISTILL_R1_SHIPPED_TO_DGX >> ../data/distill_r1.log
+2026-11-12T06:33:23.3655276Z 99080   0.0  0.0       27:31 bash -c env BC_DEVICE=mps BC_RAM=1 BC_THREADS=8 BC_USE_W=1 BC_USE_UW=1 BC_BS=256 BC_SAVE_EPOCHS=1 BC_PCT=0.1 BC_LR=3e-4 BC_INIT=/Users/arm/junyang/carbon/data/weights/cnet2_b128m2t3.npz ../.venv/bin/python cnet2_train.py ../data/ds_distill ../data/weights/cnet2_distill_g1.npz 20 "{\"C\":128,\"NB\":8,\"D\":128}" > ../data/distill_g1.log 2>&1; rsync -a ../data/weights/cnet2_distill_g1_ep19.npz arm@10.188.0.23:/home/arm/junyang/carbon/data/weights/cnet2_distill_g1_fromstudio.npz && echo DISTILL_G1_SHIPPED_TO_DGX >> ../data/distill_g1.log
+2026-11-12T06:33:23.3670838Z 99082   8.4  3.2       27:31 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py ../data/ds_distill ../data/weights/cnet2_distill_g1.npz 20 {"C":128,"NB":8,"D":128}
+2026-11-12T06:33:23.3673172Z 99083  14.6  3.2       27:31 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py ../data/ds_distill ../data/weights/cnet2_distill_r1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T06:33:23.3674626Z --- R1-LOG-TAIL ---
+2026-11-12T06:33:23.3675320Z {"ep": 4, "val": {"collector": 0.8574, "planter": 0.7811, "base": 0.9648, "all": 0.8671, "workers": 0.8457, "loss": 0.3323}, "train_pi": 0.3233, "s": 235}
+2026-11-12T06:33:23.3676337Z {"ep": 5, "i": 0, "pi": 0.3079, "v": 0.0252, "aux": 0.0342, "s": 1}
+2026-11-12T06:33:23.3677320Z {"ep": 5, "val": {"collector": 0.8605, "planter": 0.779, "base": 0.9655, "all": 0.8691, "workers": 0.848, "loss": 0.3285}, "train_pi": 0.312, "s": 236}
+2026-11-12T06:33:23.3677817Z {"ep": 6, "i": 0, "pi": 0.317, "v": 0.0231, "aux": 0.0497, "s": 1}
+2026-11-12T06:33:23.3678308Z {"ep": 6, "val": {"collector": 0.8588, "planter": 0.7778, "base": 0.9663, "all": 0.8679, "workers": 0.8464, "loss": 0.3296}, "train_pi": 0.3068, "s": 235}
+2026-11-12T06:33:23.3678905Z {"ep": 7, "i": 0, "pi": 0.2892, "v": 0.022, "aux": 0.0418, "s": 1}
+2026-11-12T06:33:23.3679236Z --- G1-LOG-TAIL ---
+2026-11-12T06:33:23.3679672Z {"ep": 12, "val": {"collector": 0.8626, "planter": 0.7851, "base": 0.9667, "all": 0.8715, "workers": 0.8507, "loss": 0.324}, "train_pi": 0.2972, "s": 109}
+2026-11-12T06:33:23.3680173Z {"ep": 13, "i": 0, "pi": 0.3114, "v": 0.0195, "aux": 0.0383, "s": 0}
+2026-11-12T06:33:23.3680692Z {"ep": 13, "val": {"collector": 0.8636, "planter": 0.789, "base": 0.967, "all": 0.8728, "workers": 0.8521, "loss": 0.321}, "train_pi": 0.2989, "s": 109}
+2026-11-12T06:33:23.3681296Z {"ep": 14, "i": 0, "pi": 0.268, "v": 0.0272, "aux": 0.0456, "s": 0}
+2026-11-12T06:33:23.3681793Z {"ep": 14, "val": {"collector": 0.8627, "planter": 0.7875, "base": 0.965, "all": 0.8716, "workers": 0.8511, "loss": 0.3227}, "train_pi": 0.2826, "s": 109}
+2026-11-12T06:33:23.3682305Z {"ep": 15, "i": 0, "pi": 0.2871, "v": 0.0211, "aux": 0.0294, "s": 0}
+2026-11-12T06:33:23.3682592Z --- R1-JSONL ---
+2026-11-12T06:33:23.3683014Z {"ep": 0, "val": {"collector": 0.8511, "planter": 0.7646, "base": 0.9615, "all": 0.8601, "workers": 0.8378, "loss": 0.3516}, "train_pi": 0.3917, "s": 231}
+2026-11-12T06:33:23.3683660Z {"ep": 1, "val": {"collector": 0.8528, "planter": 0.7719, "base": 0.9632, "all": 0.8625, "workers": 0.8404, "loss": 0.345}, "train_pi": 0.3466, "s": 236}
+2026-11-12T06:33:23.3684308Z {"ep": 2, "val": {"collector": 0.8581, "planter": 0.7766, "base": 0.9642, "all": 0.8669, "workers": 0.8456, "loss": 0.3345}, "train_pi": 0.333, "s": 235}
+2026-11-12T06:33:23.3684944Z {"ep": 3, "val": {"collector": 0.8579, "planter": 0.7774, "base": 0.9648, "all": 0.867, "workers": 0.8456, "loss": 0.3341}, "train_pi": 0.3216, "s": 235}
+2026-11-12T06:33:23.3685577Z {"ep": 4, "val": {"collector": 0.8574, "planter": 0.7811, "base": 0.9648, "all": 0.8671, "workers": 0.8457, "loss": 0.3323}, "train_pi": 0.3233, "s": 235}
+2026-11-12T06:33:23.3686240Z {"ep": 5, "val": {"collector": 0.8605, "planter": 0.779, "base": 0.9655, "all": 0.8691, "workers": 0.848, "loss": 0.3285}, "train_pi": 0.312, "s": 236}
+2026-11-12T06:33:23.3687154Z {"ep": 6, "val": {"collector": 0.8588, "planter": 0.7778, "base": 0.9663, "all": 0.8679, "workers": 0.8464, "loss": 0.3296}, "train_pi": 0.3068, "s": 235}
+2026-11-12T06:33:23.3687622Z --- G1-JSONL ---
+2026-11-12T06:33:23.3688054Z {"ep": 0, "val": {"collector": 0.8486, "planter": 0.7595, "base": 0.9603, "all": 0.8575, "workers": 0.8349, "loss": 0.3614}, "train_pi": 0.4102, "s": 116}
+2026-11-12T06:33:23.3688714Z {"ep": 1, "val": {"collector": 0.8484, "planter": 0.7622, "base": 0.9614, "all": 0.8579, "workers": 0.8352, "loss": 0.3573}, "train_pi": 0.3485, "s": 110}
+2026-11-12T06:33:23.3689378Z {"ep": 2, "val": {"collector": 0.8539, "planter": 0.7668, "base": 0.9633, "all": 0.8626, "workers": 0.8405, "loss": 0.3435}, "train_pi": 0.3431, "s": 109}
+2026-11-12T06:33:23.3690208Z {"ep": 3, "val": {"collector": 0.8576, "planter": 0.7776, "base": 0.9629, "all": 0.8665, "workers": 0.8453, "loss": 0.335}, "train_pi": 0.3253, "s": 109}
+2026-11-12T06:33:23.3690846Z {"ep": 4, "val": {"collector": 0.8551, "planter": 0.774, "base": 0.9647, "all": 0.8646, "workers": 0.8426, "loss": 0.3377}, "train_pi": 0.3377, "s": 109}
+2026-11-12T06:33:23.3691483Z {"ep": 5, "val": {"collector": 0.8593, "planter": 0.7825, "base": 0.9641, "all": 0.8685, "workers": 0.8475, "loss": 0.3312}, "train_pi": 0.3202, "s": 109}
+2026-11-12T06:33:23.3692658Z {"ep": 6, "val": {"collector": 0.8588, "planter": 0.7865, "base": 0.9638, "all": 0.8685, "workers": 0.8477, "loss": 0.3303}, "train_pi": 0.3144, "s": 109}
+2026-11-12T06:33:23.3693700Z {"ep": 7, "val": {"collector": 0.8604, "planter": 0.7811, "base": 0.9636, "all": 0.869, "workers": 0.8482, "loss": 0.3295}, "train_pi": 0.3206, "s": 109}
+2026-11-12T06:33:23.3694776Z {"ep": 8, "val": {"collector": 0.8603, "planter": 0.7848, "base": 0.9656, "all": 0.8697, "workers": 0.8487, "loss": 0.3274}, "train_pi": 0.3089, "s": 109}
+2026-11-12T06:33:23.3695602Z {"ep": 9, "val": {"collector": 0.8616, "planter": 0.7843, "base": 0.9651, "all": 0.8705, "workers": 0.8497, "loss": 0.3241}, "train_pi": 0.3146, "s": 109}
+2026-11-12T06:33:23.3696266Z {"ep": 10, "val": {"collector": 0.8609, "planter": 0.7839, "base": 0.9663, "all": 0.8701, "workers": 0.8491, "loss": 0.3266}, "train_pi": 0.3046, "s": 109}
+2026-11-12T06:33:23.3697138Z {"ep": 11, "val": {"collector": 0.8616, "planter": 0.7871, "base": 0.9662, "all": 0.871, "workers": 0.8502, "loss": 0.3228}, "train_pi": 0.2987, "s": 109}
+2026-11-12T06:33:23.3697797Z {"ep": 12, "val": {"collector": 0.8626, "planter": 0.7851, "base": 0.9667, "all": 0.8715, "workers": 0.8507, "loss": 0.324}, "train_pi": 0.2972, "s": 109}
+2026-11-12T06:33:23.3698431Z {"ep": 13, "val": {"collector": 0.8636, "planter": 0.789, "base": 0.967, "all": 0.8728, "workers": 0.8521, "loss": 0.321}, "train_pi": 0.2989, "s": 109}
+2026-11-12T06:33:23.3699063Z {"ep": 14, "val": {"collector": 0.8627, "planter": 0.7875, "base": 0.965, "all": 0.8716, "workers": 0.8511, "loss": 0.3227}, "train_pi": 0.2826, "s": 109}
+2026-11-12T06:33:23.3699522Z --- WEIGHTS-NOW ---
+2026-11-12T06:33:23.3699781Z total 775888
+2026-11-12T06:33:23.3700069Z -rw-r--r--  1 arm  staff  11821000 Nov 12 14:33 cnet2_distill_g1_ep14.npz
+2026-11-12T06:33:23.3700479Z -rw-r--r--  1 arm  staff  11821000 Nov 12 14:33 cnet2_distill_g1_last.npz
+2026-11-12T06:33:23.3700857Z -rw-r--r--  1 arm  staff      2321 Nov 12 14:33 cnet2_distill_g1_log.jsonl
+2026-11-12T06:33:23.3701239Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:33 cnet2_distill_r1_ep6.npz
+2026-11-12T06:33:23.3701609Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:33 cnet2_distill_r1_last.npz
+2026-11-12T06:33:23.3701973Z -rw-r--r--  1 arm  staff      1079 Nov 12 14:33 cnet2_distill_r1_log.jsonl
+2026-11-12T06:33:23.3702340Z -rw-r--r--  1 arm  staff  11821112 Nov 12 14:31 cnet2_disti
+elapsed 58 claimed
+
+SUMMARY (parsed by worker, 14:35 CST):
+STUDIO1427 run 43168878835 (cloud-assistant -> L20 i-uf62k0o6zbe6j7zxnzg5 -> ssh arm@10.211.43.68)
+Marker STUDIOSTAT1427K9M2; L20-BEGIN 14:32:53 CST; STUDIO-BEGIN 14:33:16 CST; rc=0; conclusion success
+mac-studio.local; up 13 days 22:25; load 0.98 1.29 1.46; disk / 386Gi free
+TRAIN-PROC: 99079/99080 bash wrappers; 99082 g1 8.4% etime 27:31; 99083 r1 14.6% etime 27:31
+R1: ep6 val 0.8679/loss 0.3296 (s 235); ep7 i:0 started -> 7/20 in progress
+G1: ep14 val 0.8716/loss 0.3227 (s 109); ep15 i:0 started -> 15/20 in progress
+WEIGHTS-NOW: g1_ep14.npz 14:33; g1_last 14:33; r1_ep6.npz 14:33; r1_last 14:33 (all mtime fresh)
+DATASETS: /Users/arm/junyang/carbon/data 3.0G total (ds_distill 2.3G + ds_m3s2 375M + weights/logs)
+Progress vs 14:20 read: g1 8/20 -> 15/20 (ETA ~14:42 est); r1 3/20 -> 7/20 (ETA ~15:24 est). Speeds unchanged (g1 ~109s/ep, r1 ~235s/ep).
+Three-piece set complete: procs in place + weights mtime fresh + logs advancing. No anomaly, not idle.
+NOTE: first driver attempt failed ModuleNotFoundError gh_api (script dir on sys.path[0]); fixed by sys.path.insert(0,'/home/hatch/workspace') in driver; re-dispatched 14:32:43, claimed in 58s.

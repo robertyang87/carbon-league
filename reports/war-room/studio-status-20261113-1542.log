@@ -1,0 +1,68 @@
+STUDIOSTAT1542TS PROBE-BEGIN 2026-11-13 15:44:36 CST
+STUDIOSTAT1542TS STUDIO-BEGIN 2026-11-13 15:44:41 CST
+mac-studio.local
+15:44  up 14 days, 23:36, 4 users, load averages: 2.05 2.20 4.75
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                              686957.
+Pages active:                           1367764.
+Pages inactive:                         1759552.
+Pages speculative:                       179833.
+Pages throttled:                              0.
+--- TRAIN-TEST-PROC ---
+NO-TRAIN-TEST-PROC
+--- S12TEST ---
+total 29728
+-rw-r--r--   1 arm  staff      1504 Nov 13 15:10 run_all.log
+-rw-r--r--   1 arm  staff      2543 Nov 13 15:09 gate_q_smoke.json
+-rw-r--r--   1 arm  staff      2281 Nov 13 15:09 gate_q_smoke2.log
+-rw-r-----   1 arm  staff     21476 Nov 13 15:08 stage1_teacher_gate.py
+-rw-r--r--   1 arm  staff       858 Nov 13 15:01 gate_q_smoke.log
+-rw-r-----   1 arm  staff       471 Nov 13 15:00 split_smoke.json
+-rw-r-----   1 arm  staff     15999 Nov 13 14:57 guard_parity_new.json
+-rw-r-----   1 arm  staff     12571 Nov 13 14:55 stage0_teacher.py
+-rw-r-----   1 arm  staff         0 Nov 13 14:31 test_s12_a3_teacher.log
+-rw-r-----   1 arm  staff      5013 Nov 13 14:30 test_s12_a3_teacher.py
+-rw-r-----   1 arm  staff      7932 Nov 13 14:30 test_s12_a3.py
+--- CODE-MD5 ---
+030b317bc649fd45c07249c5e3bb662f
+4140d3986d2f7e3a1884e7a4cda9b48d
+0d0fbf103ddb11c1269e556ecad8c9eb
+3bb5857f833a94797ac6cdc2a5a28963
+95d2e29fbec8cfcebee57bf9bf0d25ed
+-rw-rw----  1 arm  staff  67650 Nov 13 14:54 cnet2_build.py
+-rw-rw----  1 arm  staff  19720 Nov 13 13:43 cnet2_model.py
+-rw-rw----  1 arm  staff  55274 Nov 13 15:28 cnet2_train.py
+-rw-rw----  1 arm  staff  37499 Nov 13 13:43 producer/selfplay_gen.py
+-rw-r--r--  1 arm  staff   6363 Nov 13 15:28 set_uw.py
+--- WEIGHTS-NOW ---
+total 6975872
+-rw-r--r--  1 arm  staff       374 Nov 13 13:48 cnet2_m3s2r1_heads_v2.npz.manifest.json
+-rw-r--r--  1 arm  staff  13973080 Nov 13 13:48 cnet2_m3s2r1_heads_v2.npz
+-rw-r--r--  1 arm  staff  13973080 Nov 13 11:41 cnet2_m3s2r1_heads.npz
+-rw-r--r--  1 arm  staff  13968972 Nov 13 11:26 cnet2_m3s2r1L.npz
+-rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_ep19.npz
+-rw-r--r--  1 arm  staff  13968964 Nov 13 03:56 cnet2_hakimi2r1_last.npz
+-rw-r--r--  1 arm  staff      3074 Nov 13 03:56 cnet2_hakimi2r1_log.jsonl
+--- DATA-TOP ---
+total 544
+drwxr-xr-x  288 arm  staff   9216 Nov 13 13:48 weights
+drwxr-xr-x    3 arm  staff     96 Nov 13 11:30 selfplay_probe
+-rw-r--r--    1 arm  staff    657 Nov 13 03:56 hakimi2_ship.log
+-rw-r--r--    1 arm  staff   4635 Nov 13 03:56 hakimi2r1.log
+-rw-r--r--    1 arm  staff   4603 Nov 13 03:49 hakimi2g1.log
+-rw-r--r--    1 arm  staff   2721 Nov 13 03:42 hakimi2_chain.log
+-rw-r--r--    1 arm  staff      0 Nov 13 03:39 hakimi2_ship.out
+-rw-r--r--    1 arm  staff   1355 Nov 13 03:39 ship_hakimi2.sh
+-rw-r--r--    1 arm  staff      4 Nov 13 03:39 hakimi2g1.pid
+STUDIOSTAT1542TS STUDIO-END
+STUDIOSTAT1542TS SSH-RC=0
+STUDIOSTAT1542TS PROBE-END 2026-11-13 15:44:40 CST
+
+ASSESSMENT (15:44 CST, direct read, marker STUDIOSTAT1542TS):
+- Host identity verified by content: hostname mac-studio.local, uptime 14d 23:36 (continuation of 15:27's 14d 23:22), code md5s identical to 15:27 b7e1db92 set.
+- Studio still idle (NORMAL idle): NO-TRAIN-TEST-PROC, 1-min load 2.05, disk 421Gi free. s12test unchanged (run_all.log 15:10, A1/A2/A3 passed), code five files unchanged vs 15:27, weights unchanged (heads_v2 13:48, hakimi2 ep19 03:56).
+- No change vs 15:27 report; idle already reported to war room at 15:12; code-change report sent 15:27; war room confirmed 15:28 refresh executor = 作战室直执 (recorded in Studio chat). No new Studio dispatch in war room since 15:27 (Lite-V7 verdicts, it320 r1 pool prep, Hakimi v3 packs for spot-31 — none touch Studio). q gate still with 策略组接线中 + Codex 收口.
+- Connection note: first attempt failed Host key verification failed (persistent known_hosts had no Studio entry — /root copy lost in 15:21 VM replacement); reconnected with StrictHostKeyChecking=accept-new, key now recorded in /home/hatch/.ssh/known_hosts, identity verified by content above.
+- Per reporting rule: NO duplicate report this trip (no change, no anomaly).

@@ -1,0 +1,63 @@
+dispatched at 15:53:45
+CLAIMED run 43178638583 job 131048910748 status completed conclusion success
+FULL LOG SAVED goals/carbon-league-large-file-leaderboard-challenge/hidden_files/stage1-verify-full.log chars 17450
+ cn-shanghai
+2026-11-12T07:53:52.4640663Z ##[endgroup]
+2026-11-12T07:54:24.4512591Z InvokeId: t-sh072vcs4zmyvi8
+2026-11-12T07:54:24.4531112Z --- status=Success exit=0 ---
+2026-11-12T07:54:24.4532287Z VFYSTAGE1Q8 L20-BEGIN 2026-11-12 15:53:54 CST
+2026-11-12T07:54:24.4537782Z VFYSTAGE1Q8 DGX-BEGIN 2026-11-12 15:54:23 CST
+2026-11-12T07:54:24.4559687Z --- STAGE1-LOG ---
+2026-11-12T07:54:24.4580834Z STAGE1 BEGIN 2026-11-12 15:51:59 CST
+2026-11-12T07:54:24.4581675Z --- PRECONDITIONS ---
+2026-11-12T07:54:24.4600780Z carago_replays=183
+2026-11-12T07:54:24.4618507Z fable_replays=182
+2026-11-12T07:54:24.4640727Z 0 %, 38
+2026-11-12T07:54:24.4641376Z NO-TRAIN-PROC
+2026-11-12T07:54:24.4642536Z --- BUILD-INDEXES (FIX4, format mirrored from m3s2 index sample) ---
+2026-11-12T07:54:24.4652181Z sample keys: ['created', 'file', 'game', 'id', 'order', 'scores', 'steps', 'strategies', 'winner']
+2026-11-12T07:54:24.4654032Z sample strategies: {'a': {'id': 'd679ed45ab595e8b7bb1ea51c3451154', 'name': 'claude-AlphaCarbon-Master3s2'}, 'b': {'id': '', 'name': 'stephen-K4TacSearch-v1'}}
+2026-11-12T07:54:24.4655920Z carago index entries: 182 missing replays: 0
+2026-11-12T07:54:24.4656847Z fable index entries: 181 missing replays: 0
+2026-11-12T07:54:24.4657616Z --- BUILD-DS-CARAGO ---
+2026-11-12T07:54:24.4658373Z build_carago_rc=1
+2026-11-12T07:54:24.4659973Z   File "/home/arm/junyang/carbon/.venv/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 454, in load
+2026-11-12T07:54:24.4661421Z     fid = stack.enter_context(open(os.fspath(file), "rb"))
+2026-11-12T07:54:24.4662362Z                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T07:54:24.4663576Z FileNotFoundError: [Errno 2] No such file or directory: '/home/arm/junyang/carbon/data/ds_carago/tok_kind.npy'
+2026-11-12T07:54:24.4664770Z BUILD-CARAGO-FAILED: no meta.json, training NOT launched
+2026-11-12T07:54:24.4665730Z --- BUILD-DS-FABLE ---
+2026-11-12T07:54:24.4666375Z build_fable_rc=1
+2026-11-12T07:54:24.4677581Z   File "/home/arm/junyang/carbon/.venv/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 454, in load
+2026-11-12T07:54:24.4678661Z     fid = stack.enter_context(open(os.fspath(file), "rb"))
+2026-11-12T07:54:24.4679526Z                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-12T07:54:24.4680652Z FileNotFoundError: [Errno 2] No such file or directory: '/home/arm/junyang/carbon/data/ds_fable/tok_kind.npy'
+2026-11-12T07:54:24.4681620Z 8.0K	/home/arm/junyang/carbon/data/ds_fable
+2026-11-12T07:54:24.4682136Z STAGE1 END 2026-11-12 15:52:06 CST
+2026-11-12T07:54:24.4682582Z --- TRAIN-THREE-PIECE ---
+2026-11-12T07:54:24.4682979Z NO-TRAIN-PROC
+2026-11-12T07:54:24.4683313Z 0 %, 39
+2026-11-12T07:54:24.4683630Z --- CARAGO-LOGS ---
+2026-11-12T07:54:24.4683995Z --- WEIGHTS-MTIME ---
+2026-11-12T07:54:24.4684363Z --- FABLE-DS ---
+2026-11-12T07:54:24.4684746Z VFYSTAGE1Q8 DGX-END
+2026-11-12T07:54:24.4685126Z VFYSTAGE1Q8 SSH_RC=0 L20-END
+2026-11-12T07:54:24.4685392Z 
+2026-11-12T07:54:24.4817983Z Post job cleanup.
+2026-11-12T07:54:24.5974674Z [command]/usr/bin/git version
+2026-11-12T07:54:24.6054409Z git version 2.56.0
+2026-11-12T07:54:24.6162310Z Temporarily overriding HOME='/home/runner/work/_temp/c8695dd2-f86d-4e2a-9d11-7a28c8ea16dd' before making global git config changes
+2026-11-12T07:54:24.6164266Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T07:54:24.6166049Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:54:24.6236298Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T07:54:24.6301877Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T07:54:24.6791543Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T07:54:24.6805493Z http.https://github.com/.extraheader
+2026-11-12T07:54:24.6871793Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T07:54:24.6992210Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T07:54:24.7307270Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T07:54:24.7356820Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T07:54:24.7840732Z Cleaning up orphan processes
+2026-11-12T07:54:24.8325055Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 58 claimed

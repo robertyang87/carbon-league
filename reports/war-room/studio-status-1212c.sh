@@ -1,0 +1,6 @@
+#!/bin/bash
+# Studio status read #3, run 2026-11-13 12:1x CST, marker STUDIOSTAT1212C
+# Read-only. Correct log path is ~/junyang/carbon/*.log (NOT data/). Check teacher eval tail/mtime/last pos, full ps, any error tail.
+MARK=STUDIOSTAT1212C
+timeout -k 30 150 ssh -i /home/hatch/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30 -o ProxyCommand="nc -X connect -x hatch-egress-proxy:3130 %h %p" arm@100.78.149.20 "echo MARKER=$MARK; date; uptime; echo ---PS-FULL---; ps aux | head -30; echo ---LOG-LS---; ls -l ~/junyang/carbon/teacher_consistency_studio.log ~/junyang/carbon/teacher_measure_studio.log ~/junyang/carbon/train_heads_studio.log ~/junyang/carbon/smoke_heads_studio.log; echo ---TEACHER-TAIL---; tail -6 ~/junyang/carbon/teacher_consistency_studio.log; echo ---TEACHER-LASTPOS---; grep -o '\"pos\": [0-9]*' ~/junyang/carbon/teacher_consistency_studio.log | tail -1; wc -l ~/junyang/carbon/teacher_consistency_studio.log; echo ---TEACHER-ERR---; grep -iE 'Traceback|Error|Killed|DONE|done|KeyboardInterrupt' ~/junyang/carbon/teacher_consistency_studio.log | tail -5; echo ---HEADS-TAIL---; tail -2 ~/junyang/carbon/train_heads_studio.log; echo ---NOhup---; ls -lt ~/junyang/carbon/*.out ~/junyang/carbon/*.pid ~/junyang/carbon/nohup* 2>/dev/null | head; echo END-MARKER=$MARK"
+echo "EXIT=$?"

@@ -1,0 +1,76 @@
+MARKER=STUDIOSTAT1212D
+59:    npz = sys.argv[1]
+60:    max_seconds = float(sys.argv[2]) if len(sys.argv) > 2 else 1500.0
+61:    max_games = int(sys.argv[3]) if len(sys.argv) > 3 else 40
+66:    n_pos = 0
+85:        for step in range(1, 300):
+108:                break
+122:            n_pos += 1
+131:            print(json.dumps({"pos": n_pos, "game_seed": seed, "step": p["step"], "me": p["me"],
+140:                break
+143:        "positions": n_pos,
+145:        "agree_greedy_rate": round(agree / n_pos, 4) if n_pos else None,
+149:        "teacher_top_eq_sampled_exact_rate": round(exact / n_pos, 4) if n_pos else None,
+151:        "greedy_eq_sampled_exact_rate": round(greedy_exact / n_pos, 4) if n_pos else None,
+---
+"""Studio Stage 0: root-candidate teacher consistency eval (second dispatch).
+
+Why positions are generated, not read from ds_m3s2: evaluate_root needs a
+live FastCarbon state (it clones the sim from a full observation), and
+ds_m3s2 samples are one-way encoded features -- a sim state cannot be
+reconstructed from them. So, exactly like stage0_measure_teacher.py,
+positions are harvested from bare-net self-play games (m3s2r1 vs itself,
+temp 1.0 sampling) at steps 40..240. At each sampled step we also record
+the joint action the bare net actually sampled for the `me` seat.
+
+Per position, stage0_teacher.evaluate_root (K=16, M=8, H=2, teacher=1):
+  - agree_greedy: teacher argmax(q) == greedy arm (internal, exact)
+  - entropy of the target q
+  - teacher-top arm labels vs the actually-sampled joint action:
+    exact joint match + per-slot match (arms recovered by re-running the
+    deterministic gen_candidates on the same inputs)
+Cost: wall ms per position + extrapolation to 35,282 positions (ds_m3s2
+sample count) for the record.
+
+Run from code/ with:
+  env -u CNET2_TEMP_KIND CNET2_TEACHER=1 \
+    python3 stage0_teacher_consistency_studio.py <npz> [max_seconds] [max_games]
+Prints one JSON line per position + a CONSISTENCY summary line.
+"""
+import copy
+import json
+import os
+import sys
+import time
+import types
+
+import numpy as np
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+
+import cnet2_feat as F  # noqa: E402
+from eval_v53 import CFG  # noqa: E402
+from fastsim import FastCarbon  # noqa: E402
+from rl2_ppo_cnet2 import Cnet2Actor  # noqa: E402
+import rl2_ppo_adapters as AD  # noqa: E402
+import cnet2_np as NP  # noqa: E402
+import stage0_teacher as T  # noqa: E402
+
+SAMPLE_STEPS = (40, 80, 120, 160, 200, 240)
+SEED0 = 995200
+
+
+def _copy_x(x):
+    return {k: (np.array(v, copy=True) if isinstance(v, np.ndarray) else copy.deepcopy(v))
+            for k, v in x.items()}
+
+
+def _ns(seat, own_uid):
+    return types.SimpleNamespace(seat=seat, own_uid=list(own_uid))
+
+
+def main():
+    npz = sys.argv[1]
+    max_seconds = float(sys.argv[2]) if len(sys.argv) > 2 else 1500.0
+END-MARKER=STUDIOSTAT1212D

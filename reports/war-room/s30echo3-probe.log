@@ -1,0 +1,323 @@
+run=43282377375 conclusion=success
+﻿2026-11-12T18:41:03.7731487Z Current runner version: '2.338.2'
+2026-11-12T18:41:03.7811249Z ##[group]Runner Image Provisioner
+2026-11-12T18:41:03.7812726Z Hosted Compute Agent
+2026-11-12T18:41:03.7813894Z Version: 20261028.624
+2026-11-12T18:41:03.7814974Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T18:41:03.7816394Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T18:41:03.7817792Z Worker ID: {9f5b73ba-6acd-47ae-b0e8-e441660d35ae}
+2026-11-12T18:41:03.7839668Z Region: eastus
+2026-11-12T18:41:03.7840854Z Cloud: Azure
+2026-11-12T18:41:03.7841863Z ##[endgroup]
+2026-11-12T18:41:03.7844653Z ##[group]Operating System
+2026-11-12T18:41:03.7845835Z Ubuntu
+2026-11-12T18:41:03.7846893Z 24.04.5
+2026-11-12T18:41:03.7848207Z LTS
+2026-11-12T18:41:03.7849187Z ##[endgroup]
+2026-11-12T18:41:03.7850326Z ##[group]Runner Image
+2026-11-12T18:41:03.7851800Z Image: ubuntu-24.04
+2026-11-12T18:41:03.7853014Z Version: 20261101.360.1
+2026-11-12T18:41:03.7855452Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-12T18:41:03.7878714Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-12T18:41:03.7880580Z ##[endgroup]
+2026-11-12T18:41:03.7882683Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T18:41:03.7885734Z Contents: read
+2026-11-12T18:41:03.7886844Z Metadata: read
+2026-11-12T18:41:03.7888171Z ##[endgroup]
+2026-11-12T18:41:03.7891244Z Secret source: Actions
+2026-11-12T18:41:03.7892942Z Cache mode: write
+2026-11-12T18:41:03.7894473Z Prepare workflow directory
+2026-11-12T18:41:03.8614341Z Prepare all required actions
+2026-11-12T18:41:03.8685957Z Getting action download info
+2026-11-12T18:41:04.0543241Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T18:41:04.2908460Z Complete job name: run
+2026-11-12T18:41:04.3915714Z ##[group]Run actions/checkout@v4
+2026-11-12T18:41:04.3916620Z with:
+2026-11-12T18:41:04.3917108Z   repository: robertyang87/carbon-league
+2026-11-12T18:41:04.3921321Z   token: ***
+2026-11-12T18:41:04.3921780Z   ssh-strict: true
+2026-11-12T18:41:04.3922240Z   ssh-user: git
+2026-11-12T18:41:04.3922711Z   persist-credentials: true
+2026-11-12T18:41:04.3923221Z   clean: true
+2026-11-12T18:41:04.3923712Z   sparse-checkout-cone-mode: true
+2026-11-12T18:41:04.3924246Z   fetch-depth: 1
+2026-11-12T18:41:04.3924687Z   fetch-tags: false
+2026-11-12T18:41:04.3925180Z   show-progress: true
+2026-11-12T18:41:04.3925642Z   lfs: false
+2026-11-12T18:41:04.3926083Z   submodules: false
+2026-11-12T18:41:04.3926546Z   set-safe-directory: true
+2026-11-12T18:41:04.3927075Z   allow-unsafe-pr-checkout: false
+2026-11-12T18:41:04.3928205Z ##[endgroup]
+2026-11-12T18:41:04.7502185Z Syncing repository: robertyang87/carbon-league
+2026-11-12T18:41:04.7524222Z ##[group]Getting Git version info
+2026-11-12T18:41:04.7537314Z Working directory is '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T18:41:04.7540277Z [command]/usr/bin/git version
+2026-11-12T18:41:04.7541555Z git version 2.56.0
+2026-11-12T18:41:04.7545142Z ##[endgroup]
+2026-11-12T18:41:04.8966699Z Temporarily overriding HOME='/home/runner/work/_temp/9c8a37a0-ad11-4993-9c3a-904cd0ef20ed' before making global git config changes
+2026-11-12T18:41:04.8969955Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T18:41:04.9000243Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T18:41:04.9040267Z Deleting the contents of '/home/runner/work/carbon-league/carbon-league'
+2026-11-12T18:41:04.9045361Z ##[group]Initializing the repository
+2026-11-12T18:41:04.9046326Z [command]/usr/bin/git init /home/runner/work/carbon-league/carbon-league
+2026-11-12T18:41:04.9047426Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T18:41:04.9048928Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T18:41:04.9050020Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T18:41:04.9051349Z hint: call:
+2026-11-12T18:41:04.9051815Z hint:
+2026-11-12T18:41:04.9052395Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T18:41:04.9053101Z hint:
+2026-11-12T18:41:04.9053769Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T18:41:04.9054822Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T18:41:04.9055662Z hint:
+2026-11-12T18:41:04.9056141Z hint: 	git branch -m <name>
+2026-11-12T18:41:04.9056683Z hint:
+2026-11-12T18:41:04.9057392Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T18:41:04.9058954Z Initialized empty Git repository in /home/runner/work/carbon-league/carbon-league/.git/
+2026-11-12T18:41:04.9060913Z [command]/usr/bin/git remote add origin https://github.com/robertyang87/carbon-league
+2026-11-12T18:41:05.0054112Z ##[endgroup]
+2026-11-12T18:41:05.0055068Z ##[group]Disabling automatic garbage collection
+2026-11-12T18:41:05.0056012Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-12T18:41:05.0107015Z ##[endgroup]
+2026-11-12T18:41:05.0109367Z ##[group]Setting up auth
+2026-11-12T18:41:05.0117035Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T18:41:05.0169752Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T18:41:05.0634179Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T18:41:05.0705677Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T18:41:05.0983195Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T18:41:05.1034248Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T18:41:05.1300766Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T18:41:05.1358658Z ##[endgroup]
+2026-11-12T18:41:05.1360508Z ##[group]Fetching the repository
+2026-11-12T18:41:05.1372982Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c92ee50ab6a91f3189d5b14b2b93087c1eb91498:refs/remotes/origin/main
+2026-11-12T18:41:27.9202385Z From https://github.com/robertyang87/carbon-league
+2026-11-12T18:41:27.9203667Z  * [new ref]         c92ee50ab6a91f3189d5b14b2b93087c1eb91498 -> origin/main
+2026-11-12T18:41:27.9209508Z ##[endgroup]
+2026-11-12T18:41:27.9211056Z ##[group]Determining the checkout info
+2026-11-12T18:41:27.9213375Z ##[endgroup]
+2026-11-12T18:41:27.9221302Z [command]/usr/bin/git sparse-checkout disable
+2026-11-12T18:41:27.9294442Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T18:41:27.9340673Z ##[group]Checking out the ref
+2026-11-12T18:41:27.9359228Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T18:41:28.8768429Z Switched to a new branch 'main'
+2026-11-12T18:41:28.8799264Z branch 'main' set up to track 'origin/main'.
+2026-11-12T18:41:28.8881271Z ##[endgroup]
+2026-11-12T18:41:28.8946625Z [command]/usr/bin/git log -1 --format=%H
+2026-11-12T18:41:28.8985544Z c92ee50ab6a91f3189d5b14b2b93087c1eb91498
+2026-11-12T18:41:28.9295780Z ##[group]Run if [ -n "IyEvYmluL2Jhc2gKTUFSSz1TMzBFM1BST0JFMDI0MwplY2hvICIkTUFSSyBQQVlMT0FELUJFR0lOIgpkYXRlICcrJUYgJVQgJVonCmhvc3RuYW1lCmVjaG8gIi0tLSBSRVNJRFVBTC1TQ0FOIC0tLSIKcHMgYXV4IHwgZ3JlcCAtRSAiYmlnZXZhbHxldmFsX3Y1MyIgfCBncmVwIC12IGdyZXAgfHwgZWNobyBOTy1FWEFNLVBST0NTCmNhdCAvcHJvYy9sb2FkYXZnCmVjaG8gIi0tLSBQQUNLUy1ESVIgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvcGFja3MvIDI+L2Rldi9udWxsIHx8IGVjaG8gTk8tUEFDS1MtRElSCmVjaG8gIi0tLSBFWFAtTElTVCAtLS0iCmxzIC9yb290L2NhcmJvbi9jb2RlL2V4cC8gMj4vZGV2L251bGwgfCBoZWFkIC04MAplY2hvICItLS0gUEFDSy1XUkFQUEVSLUNBTkRJREFURVMgLS0tIgpscyAvcm9vdC9jYXJib24vY29kZS9leHAvIDI+L2Rldi9udWxsIHwgZ3JlcCAtaUUgInNiMzB8c2IxMDB8bjFyfHBhY2siIHx8IGVjaG8gTk9ORS1CWS1OQU1FCmZvciBmIGluIC9yb290L2NhcmJvbi9jb2RlL2V4cC9zYjMwLnB5IC9yb290L2NhcmJvbi9jb2RlL2V4cC9zYjEwMC5weTsgZG8KICBpZiBbIC1mICIkZiIgXTsgdGhlbiBlY2hvICItLS0gQ0FUICRmIC0tLSI7IGNhdCAiJGYiOyBmaQpkb25lCmVjaG8gIi0tLSBCSUdFVkFMLUhFQUQgLS0tIgpoZWFkIC01MCAvcm9vdC9jYXJib24vY29kZS9iaWdldmFsLnB5CmVjaG8gIi0tLSBWRU5WIC0tLSIKbHMgLWwgL3Jvb3QvY2FyYm9uLy52ZW52L2Jpbi9weXRob24gMj4vZGV2L251bGwgfHwgZWNobyBOTy1WRU5WCi9yb290L2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIC1jICJpbXBvcnQgbnVtcHk7IHByaW50KCdudW1weScsIG51bXB5Ll9fdmVyc2lvbl9fKSIgMj4vZGV2L251bGwgfHwgZWNobyBOVU1QWS1GQUlMCmVjaG8gIiRNQVJLIFBBWUxPQUQtRU5EIgo=" ]; then
+2026-11-12T18:41:28.9331354Z [36;1mif [ -n "IyEvYmluL2Jhc2gKTUFSSz1TMzBFM1BST0JFMDI0MwplY2hvICIkTUFSSyBQQVlMT0FELUJFR0lOIgpkYXRlICcrJUYgJVQgJVonCmhvc3RuYW1lCmVjaG8gIi0tLSBSRVNJRFVBTC1TQ0FOIC0tLSIKcHMgYXV4IHwgZ3JlcCAtRSAiYmlnZXZhbHxldmFsX3Y1MyIgfCBncmVwIC12IGdyZXAgfHwgZWNobyBOTy1FWEFNLVBST0NTCmNhdCAvcHJvYy9sb2FkYXZnCmVjaG8gIi0tLSBQQUNLUy1ESVIgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvcGFja3MvIDI+L2Rldi9udWxsIHx8IGVjaG8gTk8tUEFDS1MtRElSCmVjaG8gIi0tLSBFWFAtTElTVCAtLS0iCmxzIC9yb290L2NhcmJvbi9jb2RlL2V4cC8gMj4vZGV2L251bGwgfCBoZWFkIC04MAplY2hvICItLS0gUEFDSy1XUkFQUEVSLUNBTkRJREFURVMgLS0tIgpscyAvcm9vdC9jYXJib24vY29kZS9leHAvIDI+L2Rldi9udWxsIHwgZ3JlcCAtaUUgInNiMzB8c2IxMDB8bjFyfHBhY2siIHx8IGVjaG8gTk9ORS1CWS1OQU1FCmZvciBmIGluIC9yb290L2NhcmJvbi9jb2RlL2V4cC9zYjMwLnB5IC9yb290L2NhcmJvbi9jb2RlL2V4cC9zYjEwMC5weTsgZG8KICBpZiBbIC1mICIkZiIgXTsgdGhlbiBlY2hvICItLS0gQ0FUICRmIC0tLSI7IGNhdCAiJGYiOyBmaQpkb25lCmVjaG8gIi0tLSBCSUdFVkFMLUhFQUQgLS0tIgpoZWFkIC01MCAvcm9vdC9jYXJib24vY29kZS9iaWdldmFsLnB5CmVjaG8gIi0tLSBWRU5WIC0tLSIKbHMgLWwgL3Jvb3QvY2FyYm9uLy52ZW52L2Jpbi9weXRob24gMj4vZGV2L251bGwgfHwgZWNobyBOTy1WRU5WCi9yb290L2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIC1jICJpbXBvcnQgbnVtcHk7IHByaW50KCdudW1weScsIG51bXB5Ll9fdmVyc2lvbl9fKSIgMj4vZGV2L251bGwgfHwgZWNobyBOVU1QWS1GQUlMCmVjaG8gIiRNQVJLIFBBWUxPQUQtRU5EIgo=" ]; then[0m
+2026-11-12T18:41:28.9365694Z [36;1m  python3 tools/acs_runcommand.py "i-uf6ak9krs1kt71y2unce" --b64 "IyEvYmluL2Jhc2gKTUFSSz1TMzBFM1BST0JFMDI0MwplY2hvICIkTUFSSyBQQVlMT0FELUJFR0lOIgpkYXRlICcrJUYgJVQgJVonCmhvc3RuYW1lCmVjaG8gIi0tLSBSRVNJRFVBTC1TQ0FOIC0tLSIKcHMgYXV4IHwgZ3JlcCAtRSAiYmlnZXZhbHxldmFsX3Y1MyIgfCBncmVwIC12IGdyZXAgfHwgZWNobyBOTy1FWEFNLVBST0NTCmNhdCAvcHJvYy9sb2FkYXZnCmVjaG8gIi0tLSBQQUNLUy1ESVIgLS0tIgpscyAtbGEgL3Jvb3QvY2FyYm9uL2RhdGEvcGFja3MvIDI+L2Rldi9udWxsIHx8IGVjaG8gTk8tUEFDS1MtRElSCmVjaG8gIi0tLSBFWFAtTElTVCAtLS0iCmxzIC9yb290L2NhcmJvbi9jb2RlL2V4cC8gMj4vZGV2L251bGwgfCBoZWFkIC04MAplY2hvICItLS0gUEFDSy1XUkFQUEVSLUNBTkRJREFURVMgLS0tIgpscyAvcm9vdC9jYXJib24vY29kZS9leHAvIDI+L2Rldi9udWxsIHwgZ3JlcCAtaUUgInNiMzB8c2IxMDB8bjFyfHBhY2siIHx8IGVjaG8gTk9ORS1CWS1OQU1FCmZvciBmIGluIC9yb290L2NhcmJvbi9jb2RlL2V4cC9zYjMwLnB5IC9yb290L2NhcmJvbi9jb2RlL2V4cC9zYjEwMC5weTsgZG8KICBpZiBbIC1mICIkZiIgXTsgdGhlbiBlY2hvICItLS0gQ0FUICRmIC0tLSI7IGNhdCAiJGYiOyBmaQpkb25lCmVjaG8gIi0tLSBCSUdFVkFMLUhFQUQgLS0tIgpoZWFkIC01MCAvcm9vdC9jYXJib24vY29kZS9iaWdldmFsLnB5CmVjaG8gIi0tLSBWRU5WIC0tLSIKbHMgLWwgL3Jvb3QvY2FyYm9uLy52ZW52L2Jpbi9weXRob24gMj4vZGV2L251bGwgfHwgZWNobyBOTy1WRU5WCi9yb290L2NhcmJvbi8udmVudi9iaW4vcHl0aG9uIC1jICJpbXBvcnQgbnVtcHk7IHByaW50KCdudW1weScsIG51bXB5Ll9fdmVyc2lvbl9fKSIgMj4vZGV2L251bGwgfHwgZWNobyBOVU1QWS1GQUlMCmVjaG8gIiRNQVJLIFBBWUxPQUQtRU5EIgo="[0m
+2026-11-12T18:41:28.9383220Z [36;1melse[0m
+2026-11-12T18:41:28.9383864Z [36;1m  python3 tools/acs_runcommand.py "i-uf6ak9krs1kt71y2unce" "hostname && uptime"[0m
+2026-11-12T18:41:28.9384314Z [36;1mfi[0m
+2026-11-12T18:41:28.9409442Z shell: /usr/bin/bash -e {0}
+2026-11-12T18:41:28.9409738Z env:
+2026-11-12T18:41:28.9410255Z   ALIYUN_ACCESS_KEY_ID: ***
+2026-11-12T18:41:28.9410623Z   ALIYUN_ACCESS_KEY_SECRET: ***
+2026-11-12T18:41:28.9410891Z   ACS_REGION: cn-shanghai
+2026-11-12T18:41:28.9411140Z ##[endgroup]
+2026-11-12T18:41:36.4272848Z InvokeId: t-sh072wyjv87xnuo
+2026-11-12T18:41:36.4288827Z --- status=Success exit=0 ---
+2026-11-12T18:41:36.4289930Z S30E3PROBE0243 PAYLOAD-BEGIN
+2026-11-12T18:41:36.4295954Z 2026-11-13 02:41:30 CST
+2026-11-12T18:41:36.4318393Z iZuf6ak9krs1kt71y2unceZ
+2026-11-12T18:41:36.4338646Z --- RESIDUAL-SCAN ---
+2026-11-12T18:41:36.4358607Z NO-EXAM-PROCS
+2026-11-12T18:41:36.4359247Z 0.00 0.05 0.03 1/937 5668
+2026-11-12T18:41:36.4378636Z --- PACKS-DIR ---
+2026-11-12T18:41:36.4398549Z NO-PACKS-DIR
+2026-11-12T18:41:36.4408715Z --- EXP-LIST ---
+2026-11-12T18:41:36.4421933Z awr_us.py
+2026-11-12T18:41:36.4428792Z awr_us_r1.py
+2026-11-12T18:41:36.4429482Z c1z_nr60.py
+2026-11-12T18:41:36.4430047Z cand_c1z_v1.py
+2026-11-12T18:41:36.4430617Z cand_selftest.py
+2026-11-12T18:41:36.4431196Z cnet2_awrr1.py
+2026-11-12T18:41:36.4431777Z cnet2_awrr2.py
+2026-11-12T18:41:36.4432349Z cnet2_awrr3.py
+2026-11-12T18:41:36.4432914Z cnet2_b128ep4_t0.py
+2026-11-12T18:41:36.4433527Z cnet2_b128ep4_t0_rules.py
+2026-11-12T18:41:36.4434160Z cnet2_b128ep4_t0_shield.py
+2026-11-12T18:41:36.4434783Z cnet2_b128ep4_t1_rules.py
+2026-11-12T18:41:36.4435410Z cnet2_b128ep7_t0.py
+2026-11-12T18:41:36.4435993Z cnet2_b128ep7_t0_rules.py
+2026-11-12T18:41:36.4436620Z cnet2_b128ep7_t1_rules.py
+2026-11-12T18:41:36.4437213Z cnet2_b128_t0_f16.py
+2026-11-12T18:41:36.4437788Z cnet2_b128_t0_packed_f16.py
+2026-11-12T18:41:36.4438726Z cnet2_b128_t0_packed.py
+2026-11-12T18:41:36.4455744Z cnet2_b128_t0.py
+2026-11-12T18:41:36.4456395Z cnet2_b128_t0_q8.py
+2026-11-12T18:41:36.4457000Z cnet2_b128_t0_rules.py
+2026-11-12T18:41:36.4457627Z cnet2_b128_t1_packed.py
+2026-11-12T18:41:36.4458725Z cnet2_b128_t1.py
+2026-11-12T18:41:36.4459375Z cnet2_b128_t1_q8.py
+2026-11-12T18:41:36.4459969Z cnet2_b128_t1_rules.py
+2026-11-12T18:41:36.4460572Z cnet2_b128_t1_tta2.py
+2026-11-12T18:41:36.4461154Z cnet2_b128_t2.py
+2026-11-12T18:41:36.4461716Z cnet2_b128_t3.py
+2026-11-12T18:41:36.4462294Z cnet2_b128_t4.py
+2026-11-12T18:41:36.4462896Z cnet2_b128v3_t1_packed.py
+2026-11-12T18:41:36.4463554Z cnet2_b128v3_t1_q8.py
+2026-11-12T18:41:36.4464209Z cnet2_b128v4_t1_packed.py
+2026-11-12T18:41:36.4464876Z cnet2_b128v4_t1_q8.py
+2026-11-12T18:41:36.4465525Z cnet2_dg1s57_240.py
+2026-11-12T18:41:36.4466138Z cnet2_dg2ccs57_240.py
+2026-11-12T18:41:36.4466767Z cnet2_dg2pas57_240.py
+2026-11-12T18:41:36.4467387Z cnet2_dg2pbs57_240.py
+2026-11-12T18:41:36.4468223Z cnet2_dg2s57_240.py
+2026-11-12T18:41:36.4468890Z cnet2_dg3s57_240.py
+2026-11-12T18:41:36.4469483Z cnet2_dg4s57_240.py
+2026-11-12T18:41:36.4470071Z cnet2_dg5e0s57_240.py
+2026-11-12T18:41:36.4470699Z cnet2_dg5e3s57_240.py
+2026-11-12T18:41:36.4471256Z cnet2_dg5e5s57_240.py
+2026-11-12T18:41:36.4471804Z cnet2_dg5e5s57.py
+2026-11-12T18:41:36.4472389Z cnet2_dg6s57.py
+2026-11-12T18:41:36.4472961Z cnet2_dg7s257.py
+2026-11-12T18:41:36.4473324Z cnet2_dg7s275.py
+2026-11-12T18:41:36.4473661Z cnet2_dg7s57.py
+2026-11-12T18:41:36.4474008Z cnet2_dm2e1L7s57_240.py
+2026-11-12T18:41:36.4474381Z cnet2_dm2e1s57_240.py
+2026-11-12T18:41:36.4474738Z cnet2_dm2e1s57_270.py
+2026-11-12T18:41:36.4475088Z cnet2_dm2e1s57_280.py
+2026-11-12T18:41:36.4475441Z cnet2_dm2e1t270s57_240.py
+2026-11-12T18:41:36.4475823Z cnet2_dm2e1t280s57_240.py
+2026-11-12T18:41:36.4476212Z cnet2_exit1_ctrl.py
+2026-11-12T18:41:36.4476563Z cnet2_exit1g.py
+2026-11-12T18:41:36.4476901Z cnet2_exit1_hard.py
+2026-11-12T18:41:36.4477246Z cnet2_late.py
+2026-11-12T18:41:36.4477590Z cnet2_m2s2stand.py
+2026-11-12T18:41:36.4478230Z cnet2_m2s2stand_s.py
+2026-11-12T18:41:36.4478945Z cnet2_m2so.py
+2026-11-12T18:41:36.4479301Z cnet2_m2sstand.py
+2026-11-12T18:41:36.4479785Z cnet2_m2stand.py
+2026-11-12T18:41:36.4480135Z cnet2_m2t_27.py
+2026-11-12T18:41:36.4480798Z cnet2_m2t3_27cut.py
+2026-11-12T18:41:36.4481166Z cnet2_m2t3_27.py
+2026-11-12T18:41:36.4481507Z cnet2_m2t_all2.py
+2026-11-12T18:41:36.4481854Z cnet2_m2v2stand.py
+2026-11-12T18:41:36.4482205Z cnet2_m2v2stand_s.py
+2026-11-12T18:41:36.4482564Z cnet2_mfitus.py
+2026-11-12T18:41:36.4482906Z cnet2_mm_27.py
+2026-11-12T18:41:36.4483239Z cnet2_mm_47.py
+2026-11-12T18:41:36.4483588Z cnet2_mm_all4.py
+2026-11-12T18:41:36.4483811Z cnet2_pgate.py
+2026-11-12T18:41:36.4484011Z cnet2_rlg.py
+2026-11-12T18:41:36.4484211Z cnet2_s64.py
+2026-11-12T18:41:36.4484559Z cnet2_s64_rulesp.py
+2026-11-12T18:41:36.4484764Z cnet2_s64_rules.py
+2026-11-12T18:41:36.4484965Z cnet2_s64_t0.py
+2026-11-12T18:41:36.4485180Z cnet2_s64_t0_rules_packed.py
+2026-11-12T18:41:36.4485563Z --- PACK-WRAPPER-CANDIDATES ---
+2026-11-12T18:41:36.4485829Z cnet2_b128_t0_packed_f16.py
+2026-11-12T18:41:36.4486064Z cnet2_b128_t0_packed.py
+2026-11-12T18:41:36.4486303Z cnet2_b128_t1_packed.py
+2026-11-12T18:41:36.4486535Z cnet2_b128v3_t1_packed.py
+2026-11-12T18:41:36.4486776Z cnet2_b128v4_t1_packed.py
+2026-11-12T18:41:36.4487028Z cnet2_s64_t0_rules_packed.py
+2026-11-12T18:41:36.4487272Z cnet2_search_final_packed.py
+2026-11-12T18:41:36.4487517Z cnet2_search_mbt_packed.py
+2026-11-12T18:41:36.4487753Z cnet2_search_mfhc_packed.py
+2026-11-12T18:41:36.4488435Z cnet2_search_mfxn_packed.py
+2026-11-12T18:41:36.4488789Z cnet2_v12g_packed.py
+2026-11-12T18:41:36.4489004Z sb100.py
+2026-11-12T18:41:36.4489191Z sb30.py
+2026-11-12T18:41:36.4489413Z --- CAT /root/carbon/code/exp/sb30.py ---
+2026-11-12T18:41:36.4489961Z """sb30: fixed exam opponent = cnet2_snipe_b_30.npz, pure net, guard on, style row 2 all game, greedy. Frozen config.
+2026-11-12T18:41:36.4490686Z style row 2 for the whole game, greedy. Frozen config: never change it, so exams stay comparable."""
+2026-11-12T18:41:36.4491145Z import os, sys
+2026-11-12T18:41:36.4491519Z _C = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, _C)
+2026-11-12T18:41:36.4491960Z import cnet2_search as _S
+2026-11-12T18:41:36.4492453Z CONF = {'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'OPEN_T': 0.0, 'OPEN_STEPS': 0,
+2026-11-12T18:41:36.4493100Z         'OPEN_KINDS': None, 'OPEN_SEED': 0, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 240}
+2026-11-12T18:41:36.4493628Z _W = os.path.join(_C, "..", "data", "weights", "cnet2_snipe_b_30.npz"); _AG = None
+2026-11-12T18:41:36.4494051Z def agent(observation, configuration):
+2026-11-12T18:41:36.4494328Z     global _AG
+2026-11-12T18:41:36.4494566Z     if _AG is None or observation["step"] == 0:
+2026-11-12T18:41:36.4494901Z         _AG = _S.make_search_agent(CONF, weights=_W)
+2026-11-12T18:41:36.4495226Z     return _AG(observation, configuration)
+2026-11-12T18:41:36.4495540Z --- CAT /root/carbon/code/exp/sb100.py ---
+2026-11-12T18:41:36.4496070Z """sb100: fixed exam candidate = cnet2_snipe_b_100.npz, pure net, guard on, style row 2 all game, greedy. Frozen config.
+2026-11-12T18:41:36.4496785Z style row 2 for the whole game, greedy. Frozen config: never change it, so exams stay comparable."""
+2026-11-12T18:41:36.4497243Z import os, sys
+2026-11-12T18:41:36.4497620Z _C = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, _C)
+2026-11-12T18:41:36.4498472Z import cnet2_search as _S
+2026-11-12T18:41:36.4498949Z CONF = {'SEARCH': False, 'GUARD': True, 'GUARD_NARROW': True, 'MODE': 'sweep', 'MIX': False, 'OPEN_T': 0.0, 'OPEN_STEPS': 0,
+2026-11-12T18:41:36.4499582Z         'OPEN_KINDS': None, 'OPEN_SEED': 0, 'TEACHER': 2, 'TEACHER_LATE': 2, 'LATE_STEP': 240}
+2026-11-12T18:41:36.4500109Z _W = os.path.join(_C, "..", "data", "weights", "cnet2_snipe_b_100.npz"); _AG = None
+2026-11-12T18:41:36.4500514Z def agent(observation, configuration):
+2026-11-12T18:41:36.4500784Z     global _AG
+2026-11-12T18:41:36.4501020Z     if _AG is None or observation["step"] == 0:
+2026-11-12T18:41:36.4501349Z         _AG = _S.make_search_agent(CONF, weights=_W)
+2026-11-12T18:41:36.4501663Z     return _AG(observation, configuration)
+2026-11-12T18:41:36.4502159Z --- BIGEVAL-HEAD ---
+2026-11-12T18:41:36.4502626Z """bigeval -- independent-sample evaluation: one game per seed (seat alternates by seed parity), since the
+2026-11-12T18:41:36.4503167Z two seats of a seed are exact mirrors in this harness.
+2026-11-12T18:41:36.4503657Z   python3 bigeval.py A.py B.py SEED0 N TAG     -> appends summary to ../data/bigeval.jsonl"""
+2026-11-12T18:41:36.4504136Z import json, os, statistics as st, sys, time
+2026-11-12T18:41:36.4504522Z from concurrent.futures import ProcessPoolExecutor, as_completed
+2026-11-12T18:41:36.4505118Z HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
+2026-11-12T18:41:36.4505504Z def _play(t):
+2026-11-12T18:41:36.4505703Z     import eval_v53
+2026-11-12T18:41:36.4505932Z     try: return eval_v53.play_game(t)
+2026-11-12T18:41:36.4506291Z     except Exception as e: return {"error": repr(e)[:200], "seed": t[3]}
+2026-11-12T18:41:36.4506677Z def main(a, b, s0, n, tag):
+2026-11-12T18:41:36.4507130Z     seeds = [int(x) for x in os.environ["EVO_SEEDS"].split(",")] if os.environ.get("EVO_SEEDS") else range(s0, s0 + n)
+2026-11-12T18:41:36.4507640Z     tasks = [(tag, a, b, s, s % 2) for s in seeds]
+2026-11-12T18:41:36.4508439Z     live = os.path.join(HERE, "..", "data", "bigeval_live"); os.makedirs(live, exist_ok=True)
+2026-11-12T18:41:36.4508909Z     lf = open(os.path.join(live, tag + ".jsonl"), "a")
+2026-11-12T18:41:36.4509204Z     rows = []
+2026-11-12T18:41:36.4509526Z     with ProcessPoolExecutor(int(os.environ.get("EVO_WORKERS", "8"))) as ex:
+2026-11-12T18:41:36.4509964Z         futs = [ex.submit(_play, t) for t in tasks]
+2026-11-12T18:41:36.4510267Z         for f in as_completed(futs):
+2026-11-12T18:41:36.4510546Z             r = f.result(); rows.append(r)
+2026-11-12T18:41:36.4511028Z             g = {"seed": r.get("seed"), "side": r.get("policy_side"), "margin": round(r["margin"]) if "margin" in r else None,
+2026-11-12T18:41:36.4511639Z                  "err": r.get("error"), "t": time.strftime("%H:%M:%S"), "serr": r.get("a_errors", 0)}
+2026-11-12T18:41:36.4587170Z             if "ledger_pol" in r:
+2026-11-12T18:41:36.4588305Z                 g.update(dep=round(r["ledger_pol"]["deposits"]), odep=round(r["ledger_opp"]["deposits"]),
+2026-11-12T18:41:36.4589595Z                          lost=round(r["ledger_pol"]["death_cargo"]), olost=round(r["ledger_opp"]["death_cargo"]),
+2026-11-12T18:41:36.4590641Z                          tinc=round(r["ledger_pol"]["tree_income"]), otinc=round(r["ledger_opp"]["tree_income"]),
+2026-11-12T18:41:36.4591763Z                          pspend=round(r["ledger_pol"].get("plant_spend", 0)), opspend=round(r["ledger_opp"].get("plant_spend", 0)),
+2026-11-12T18:41:36.4592955Z                          sspend=round(r["ledger_pol"].get("seize_spend", 0)), osspend=round(r["ledger_opp"].get("seize_spend", 0)),
+2026-11-12T18:41:36.4593970Z                          strand=r["ledger_pol"].get("stranded"), ostrand=r["ledger_opp"].get("stranded"),
+2026-11-12T18:41:36.4595163Z                          bk=r.get("bankrupt_steps", 0), lx=r.get("ledger_extra"), wms=r.get("a_worst_step_ms"), ms=r.get("a_ms_per_step"),
+2026-11-12T18:41:36.4596288Z                          **({"srch": r["a_stats"].get("searched"), "chg": r["a_stats"].get("changed"),
+2026-11-12T18:41:36.4597242Z                              "shal": r["a_stats"].get("shallow"), "ab": r["a_stats"].get("aborted", 0),
+2026-11-12T18:41:36.4598655Z                              "rerr": r["a_stats"].get("root_errors", 0), "eh_e": r["a_stats"].get("eh_edge", 0), "eh_h": r["a_stats"].get("eh_heavy", 0),
+2026-11-12T18:41:36.4605359Z                              "cc21": r["a_stats"].get("cc_2to1", 0), "cc01": r["a_stats"].get("cc_0to1", 0), "pa": r["a_stats"].get("pa_moves", 0), "paerr": r["a_stats"].get("pa_errors", 0), "pb": r["a_stats"].get("pb_skip", 0), "mnp": r["a_stats"].get("mnp", 0), "eh_alt": r["a_stats"].get("eh_alt", 0), "fixdrop": r["a_stats"].get("fix_dropped", 0), "pk_in": r["a_stats"].get("pk_in", 0), "pk_cut": r["a_stats"].get("pk_cut", 0), "sims": r["a_stats"].get("sims", 0), "pk_rep": r["a_stats"].get("pk_rep", 0), "pk_rep3": r["a_stats"].get("pk_rep_plant3", 0), "pk_repc": r["a_stats"].get("pk_rep_cash", 0), "bk_in": r["a_stats"].get("bk_in", 0), "bk_cut": r["a_stats"].get("bk_cut", 0), "simsl": r["a_stats"].get("sims_steps"), "cb": [r["a_stats"].get(k, 0) for k in ("cb_seen", "cb", "cb_ok", "cb_errors")], "se": [r["a_stats"].get(k, 0) for k in ("se_seen", "se", "se_ok", "se_none", "se_errors")], "se_lat": r["a_stats"].get("se_lat"), "msl": r["a_stats"].get("ms_steps"), "px": [r["a_stats"].get("px", 0), r["a_stats"].get("px_errors", 0)], "opl": [r["a_stats"].get("opl", 0), r["a_stats"].get("opl_errors", 0)], "tg": r["a_stats"].get("tg", 0), "rg": r["a_stats"].get("rg", 0), "seqc": r["a_stats"].get("seq_changed", 0)} if r.get("a_stats") else {}))
+2026-11-12T18:41:36.4610135Z             lf.write(json.dumps(g) + "\n"); lf.flush()
+2026-11-12T18:41:36.4610512Z     m = [r["margin"] for r in rows if "margin" in r]
+2026-11-12T18:41:36.4610828Z     if len(m) < 2:
+2026-11-12T18:41:36.4611380Z         print(json.dumps({"tag": tag, "INCOMPLETE": True, "n": len(m), "want": n, "err": len(rows) - len(m)}), file=sys.stderr, flush=True)
+2026-11-12T18:41:36.4611943Z         sys.exit(2)
+2026-11-12T18:41:36.4612322Z     L = lambda side, k: round(st.mean([r[f"ledger_{side}"][k] for r in rows if "margin" in r]))
+2026-11-12T18:41:36.4612758Z     se = st.stdev(m) / len(m) ** .5
+2026-11-12T18:41:36.4613166Z     rec = {"tag": tag, "a": a, "b": b, "seed0": s0, "n": len(m), "err": sum("error" in r for r in rows),
+2026-11-12T18:41:36.4613795Z            "wins": sum(x > 0 for x in m), "mean": round(st.mean(m)), "se": round(se), "lo2se": round(st.mean(m) - 2 * se),
+2026-11-12T18:41:36.4614448Z            "worst": round(min(m)), "worst_ms": max(r.get("a_worst_step_ms", 0) for r in rows if "margin" in r),
+2026-11-12T18:41:36.4615091Z            "dep": [L("pol", "deposits"), L("opp", "deposits")], "tree": [L("pol", "tree_income"), L("opp", "tree_income")],
+2026-11-12T18:41:36.4615808Z            "deathcargo": [L("pol", "death_cargo"), L("opp", "death_cargo")], "plants": [L("pol", "plant_count"), L("opp", "plant_count")],
+2026-11-12T18:41:36.4616344Z            "t": time.strftime("%H:%M"),
+2026-11-12T18:41:36.4616752Z            "search_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched")),
+2026-11-12T18:41:36.4617383Z            "changed0_games": sum(1 for r in rows if (r.get("a_stats") or {}).get("searched") and not r["a_stats"].get("changed")),
+2026-11-12T18:41:36.4618366Z            "games": [[r.get("seed"), r.get("policy_side"), round(r["margin"])] for r in rows if "margin" in r]}
+2026-11-12T18:41:36.4618865Z --- VENV ---
+2026-11-12T18:41:36.4619204Z lrwxrwxrwx 1 1000 1000 7 Nov 11 20:45 /root/carbon/.venv/bin/python -> python3
+2026-11-12T18:41:36.4619594Z numpy 2.5.4
+2026-11-12T18:41:36.4619812Z S30E3PROBE0243 PAYLOAD-END
+2026-11-12T18:41:36.4619975Z 
+2026-11-12T18:41:36.4744621Z Post job cleanup.
+2026-11-12T18:41:36.5778949Z [command]/usr/bin/git version
+2026-11-12T18:41:36.5879056Z git version 2.56.0
+2026-11-12T18:41:36.5920633Z Temporarily overriding HOME='/home/runner/work/_temp/901dd529-3fff-4951-94be-2403c511d46e' before making global git config changes
+2026-11-12T18:41:36.5922341Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T18:41:36.5927735Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T18:41:36.6021991Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T18:41:36.6139464Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T18:41:36.6463067Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T18:41:36.6558726Z http.https://github.com/.extraheader
+2026-11-12T18:41:36.6609108Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T18:41:36.6705096Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T18:41:36.7548791Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T18:41:36.7620078Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T18:41:36.8215910Z Cleaning up orphan processes
+2026-11-12T18:41:36.8607687Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

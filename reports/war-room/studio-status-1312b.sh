@@ -1,0 +1,6 @@
+#!/bin/bash
+# Studio status direct read #2, run 2026-11-13 13:12 CST, marker STUDIOSTAT1312B
+# Read-only. Tailscale direct SSH. Corrects 1312 paths: teacher log at ~/junyang/carbon/, heads at data/weights/.
+MARK=STUDIOSTAT1312B
+timeout -k 30 150 ssh -i /home/hatch/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30 -o ProxyCommand="nc -X connect -x hatch-egress-proxy:3130 %h %p" arm@100.78.149.20 "echo MARKER=$MARK; uptime; echo ---PS2---; ps -eo pid,etime,pcpu,comm,args | grep -iE 'python|stage0|teacher|train|heads|spgen|selfplay|ssh' | grep -v grep | head -20; echo ---PS2-END---; echo ---TEACHER-LOG---; ls -l ~/junyang/carbon/teacher_consistency_studio.log ~/junyang/carbon/teacher_measure_studio.log 2>/dev/null; tail -2 ~/junyang/carbon/teacher_consistency_studio.log 2>/dev/null; echo ---HEADS-W---; ls -l ~/junyang/carbon/data/weights/*heads* 2>/dev/null; md5 ~/junyang/carbon/data/weights/cnet2_m3s2r1_heads.npz 2>/dev/null; echo ---WEIGHTS-TOP---; ls -lt ~/junyang/carbon/data/weights/ | head -8; echo ---NEW-FILES-SINCE-1217---; find ~/junyang/carbon -newermt '2026-11-13 12:17:00' -type f 2>/dev/null | head -20; echo END-MARKER=$MARK"
+echo "EXIT=$?"

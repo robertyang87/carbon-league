@@ -1,0 +1,99 @@
+import gh_api, time, os, sys, calendar, urllib.request, urllib.error
+sys.path.insert(0, "/opt/muse/skills/custom-connector-setup/bin")
+from dynamic_credentials import add_surrogate_to_request
+
+MARK = "SMKSYNC0032A"
+HF = "/home/hatch/workspace/goals/carbon-league-large-file-leaderboard-challenge/hidden_files"
+
+# Quota discipline (owner rule 2026-11-13 00:36): no API call before the 00:48:53 CST
+# reset; afterwards one batched pass only (list -> jobs -> one log fetch, Range on failure).
+target = calendar.timegm((2026, 11, 12, 16, 49, 15))  # 2026-11-13 00:49:15 CST
+delay = target - time.time()
+if delay > 0:
+    print(f"waiting {delay:.0f}s for quota reset", flush=True)
+    time.sleep(delay)
+
+def blob_url(job_id):
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            return None
+    opener = urllib.request.build_opener(NoRedirect)
+    url = f"https://api.github.com/repos/robertyang87/carbon-league/actions/jobs/{job_id}/logs"
+    r = urllib.request.Request(url, method="GET", headers={"User-Agent": "muse-agent"})
+    add_surrogate_to_request(r, "custom.github", allowed_hosts=["api.github.com"])
+    try:
+        with opener.open(r, timeout=30) as resp:
+            return None
+    except urllib.error.HTTPError as e:
+        return e.headers.get("Location")
+
+def fetch_ranged(job_id, seg=12000, max_bytes=400000):
+    loc = blob_url(job_id)
+    if not loc:
+        return None
+    out = b""
+    start = 0
+    while start < max_bytes:
+        got = None
+        for attempt in range(3):
+            try:
+                r2 = urllib.request.Request(loc, method="GET",
+                    headers={"User-Agent": "muse-agent",
+                             "Range": f"bytes={start}-{start + seg - 1}"})
+                with urllib.request.urlopen(r2, timeout=60) as resp2:
+                    got = resp2.read()
+                break
+            except Exception as e:
+                print("range fetch error", start, repr(e)[:80], flush=True)
+                time.sleep(3)
+        if got is None:
+            return out.decode("utf-8", errors="replace") if out else None
+        out += got
+        if len(got) < seg:
+            break
+        start += len(got)
+    return out.decode("utf-8", errors="replace")
+
+result = None
+for attempt in range(3):
+    try:
+        r = gh_api.req("GET", "/repos/robertyang87/carbon-league/actions/workflows/cloud-assistant.yml/runs?per_page=10")
+    except Exception as e:
+        print("list error:", repr(e)[:100], flush=True)
+        time.sleep(45)
+        continue
+    cands = [run for run in r.get("workflow_runs", [])
+             if run["created_at"] >= "2026-11-12T16:30:00Z" and run["status"] == "completed"]
+    print(f"attempt {attempt}: {len(cands)} completed candidate runs", flush=True)
+    for run in cands:
+        rid = run["id"]
+        try:
+            jobs = gh_api.req("GET", f"/repos/robertyang87/carbon-league/actions/runs/{rid}/jobs")
+        except Exception as e:
+            print("jobs error:", repr(e)[:100], flush=True)
+            continue
+        for j in jobs.get("jobs", []):
+            jid = j["id"]
+            log = None
+            try:
+                log = gh_api.get_job_logs("robertyang87", "carbon-league", jid)
+            except Exception as e:
+                print("whole-log error, falling to ranged:", repr(e)[:80], flush=True)
+            if log is None or MARK not in log:
+                log2 = fetch_ranged(jid)
+                if log2 and MARK in log2:
+                    log = log2
+            if isinstance(log, str) and MARK in log:
+                print("CLAIMED run", rid, "job", jid, "conclusion", run.get("conclusion"), flush=True)
+                i0 = log.find(MARK)
+                segtxt = log[max(0, i0 - 200):i0 + 30000]
+                open(HF + "/smksync-0032-recovered.txt", "w").write(segtxt)
+                print(segtxt, flush=True)
+                result = log
+                break
+        if result:
+            break
+    if result:
+        break
+    time.sleep(45)
+print("done:", "claimed" if result else "NOT-CLAIMED", flush=True)

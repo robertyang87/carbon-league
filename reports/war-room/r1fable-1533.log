@@ -1,0 +1,147 @@
+dispatched at 07:35:04
+CLAIMED run 43176335704 job 131041368091 status completed conclusion success
+ cn-shanghai
+2026-11-12T07:35:13.3425924Z ##[endgroup]
+2026-11-12T07:37:31.8767274Z InvokeId: t-sh072vb48mhjm68
+2026-11-12T07:37:31.8786878Z --- status=Success exit=0 ---
+2026-11-12T07:37:31.8803825Z R1FABLE1533K2 L20-BEGIN 2026-11-12 15:35:15 CST
+2026-11-12T07:37:31.8825651Z --- L20-STALE-SWEEP ---
+2026-11-12T07:37:31.8826724Z  150212       49:02 scp -i /root/.ssh/dgx_access -o IdentitiesOnly=yes /tmp/vfy2.sh arm@10.211.43.155:/tmp/vfy2.sh
+2026-11-12T07:37:31.8847350Z  150213       49:02 /usr/bin/ssh -x -oPermitLocalCommand=no -oClearAllForwardings=yes -oRemoteCommand=none -oRequestTTY=no -i /root/.ssh/dgx_access -o IdentitiesOnly=yes -oForwardAgent=no -l arm -s -- 10.211.43.155 sftp
+2026-11-12T07:37:31.8854864Z  152458       12:19 ssh -i /root/.ssh/dgx_access -o BatchMode=yes -o ConnectTimeout=20 -o StrictHostKeyChecking=accept-new arm@10.211.43.155 bash -s
+2026-11-12T07:37:31.8874612Z R1FABLE1533K2 DGX-BEGIN 2026-11-12 15:35:26 CST
+2026-11-12T07:37:31.8879216Z --- DGX-STALE-SWEEP ---
+2026-11-12T07:37:31.8886770Z  115896       12:20 git fetch origin
+2026-11-12T07:37:31.8893848Z --- GPU-IDLE-CHECK ---
+2026-11-12T07:37:31.8894226Z 0 %, 36
+2026-11-12T07:37:31.8894493Z NO-TRAIN-PROC
+2026-11-12T07:37:31.8894768Z --- CORPUS-ON-DGX-BEFORE ---
+2026-11-12T07:37:31.8895080Z fable_replays=0
+2026-11-12T07:37:31.8895333Z carago_replays=0
+2026-11-12T07:37:31.8895605Z --- REPO-PULL-BOUNDED ---
+2026-11-12T07:37:31.8895901Z cnet2-search-v12
+2026-11-12T07:37:31.8896404Z fetch_rc=124
+2026-11-12T07:37:31.8896734Z Your branch is up to date with 'origin/cnet2-search-v12'.
+2026-11-12T07:37:31.8897142Z pull_rc=0
+2026-11-12T07:37:31.8897579Z a33d21c docs: dynamic priorities + anti-idle + stall-escalation rules (owner 13:14)
+2026-11-12T07:37:31.8898179Z 8f5d71d data: M7Bs-b010 matches snapshot for DGX index build
+2026-11-12T07:37:31.8898590Z --- CORPUS-COPY ---
+2026-11-12T07:37:31.8898865Z fable_replays_after=0
+2026-11-12T07:37:31.8899132Z carago_replays_after=0
+2026-11-12T07:37:31.8899415Z --- BUILD-TOOLING-RECON ---
+2026-11-12T07:37:31.8899703Z build_activation.py
+2026-11-12T07:37:31.8899943Z build_awr.py
+2026-11-12T07:37:31.8900117Z build_bc2_data.py
+2026-11-12T07:37:31.8900288Z build_c_fork.py
+2026-11-12T07:37:31.8900477Z build_distill_dataset.py
+2026-11-12T07:37:31.8900664Z build_eval_s3p2.py
+2026-11-12T07:37:31.8900830Z build_gs.py
+2026-11-12T07:37:31.8901001Z build_integration.py
+2026-11-12T07:37:31.8901185Z build_m2early.py
+2026-11-12T07:37:31.8901361Z build_m2extra.py
+2026-11-12T07:37:31.8901524Z build_m2fam.py
+2026-11-12T07:37:31.8901685Z build_m2late.py
+2026-11-12T07:37:31.8901856Z build_m2.py
+2026-11-12T07:37:31.8902016Z build_m2s2.py
+2026-11-12T07:37:31.8902184Z build_m2s.py
+2026-11-12T07:37:31.8902368Z build_m2s_slot2.py
+2026-11-12T07:37:31.8902550Z build_m2v2.py
+2026-11-12T07:37:31.8902710Z build_m2vsM.py
+2026-11-12T07:37:31.8902873Z build_m3s.py
+2026-11-12T07:37:31.8903032Z build_mfam_slot4.py
+2026-11-12T07:37:31.8903349Z cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+2026-11-12T07:37:31.8903857Z cp: cannot stat '/home/arm/junyang/carbon-repo/data/fable_corpus/*.json.gz': No such file or directory
+2026-11-12T07:37:31.8904385Z cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+2026-11-12T07:37:31.8904872Z cp: cannot stat '/home/arm/junyang/carbon-repo/data/fable_matches.json': No such file or directory
+2026-11-12T07:37:31.8905336Z cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+2026-11-12T07:37:31.8905819Z cp: cannot stat '/home/arm/junyang/carbon-repo/data/carago_corpus/*.json.gz': No such file or directory
+2026-11-12T07:37:31.8906951Z cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead
+2026-11-12T07:37:31.8907457Z cp: cannot stat '/home/arm/junyang/carbon-repo/data/carago_matches.json': No such file or directory
+2026-11-12T07:37:31.8907826Z /home/arm/junyang/carbon/code/solo.sh
+2026-11-12T07:37:31.8908064Z /home/arm/junyang/carbon/code/m3s2.sh
+2026-11-12T07:37:31.8908277Z /home/arm/junyang/carbon/code/m7bs.sh
+2026-11-12T07:37:31.8908577Z /home/arm/junyang/carbon/code/dq.sh
+2026-11-12T07:37:31.8908933Z /home/arm/junyang/carbon/code/build_top.py
+2026-11-12T07:37:31.8909203Z /home/arm/junyang/carbon/code/accumulate_replays.sh
+2026-11-12T07:37:31.8909452Z /home/arm/junyang/carbon/code/arch.sh
+2026-11-12T07:37:31.8909683Z /home/arm/junyang/carbon/code/aux_distill.sh
+2026-11-12T07:37:31.8909922Z /home/arm/junyang/carbon/code/aux_exp12.sh
+2026-11-12T07:37:31.8910168Z /home/arm/junyang/carbon/code/cnet2_big_recipe.sh
+2026-11-12T07:37:31.8910448Z /home/arm/junyang/carbon/code/cnet2_gate.sh
+2026-11-12T07:37:31.8910739Z /home/arm/junyang/carbon/code/dg7.sh
+2026-11-12T07:37:31.8910963Z /home/arm/junyang/carbon/code/dq.sh
+2026-11-12T07:37:31.8911184Z /home/arm/junyang/carbon/code/e2w.sh
+2026-11-12T07:37:31.8911406Z /home/arm/junyang/carbon/code/e2w_ship.sh
+2026-11-12T07:37:31.8911643Z /home/arm/junyang/carbon/code/ep10ship.sh
+2026-11-12T07:37:31.8911870Z /home/arm/junyang/carbon/code/gate_watch.sh
+2026-11-12T07:37:31.8912105Z /home/arm/junyang/carbon/code/hser.sh
+2026-11-12T07:37:31.8912317Z /home/arm/junyang/carbon/code/j1bc.sh
+2026-11-12T07:37:31.8912536Z /home/arm/junyang/carbon/code/j1.sh
+2026-11-12T07:37:31.8912747Z /home/arm/junyang/carbon/code/m3s2.sh
+2026-11-12T07:37:31.8912964Z /home/arm/junyang/carbon/code/m3s89.sh
+2026-11-12T07:37:31.8913191Z /home/arm/junyang/carbon/code/m3s89_ship.sh
+2026-11-12T07:37:31.8913421Z /home/arm/junyang/carbon/code/m3w.sh
+2026-11-12T07:37:31.8913640Z /home/arm/junyang/carbon/code/m3w_ship.sh
+2026-11-12T07:37:31.8913873Z /home/arm/junyang/carbon/code/m7bs.sh
+2026-11-12T07:37:31.8914098Z /home/arm/junyang/carbon/code/nb2.sh
+2026-11-12T07:37:31.8914308Z /home/arm/junyang/carbon/code/nb.sh
+2026-11-12T07:37:31.8914528Z /home/arm/junyang/carbon/code/nc.sh
+2026-11-12T07:37:31.8914745Z /home/arm/junyang/carbon/code/prep_smoke.sh
+2026-11-12T07:37:31.8914979Z /home/arm/junyang/carbon/code/pull_gen2.sh
+2026-11-12T07:37:31.8915215Z /home/arm/junyang/carbon/code/run_bc_v3.sh
+2026-11-12T07:37:31.8915472Z /home/arm/junyang/carbon/code/run_distill_pipeline.sh
+2026-11-12T07:37:31.8915763Z /home/arm/junyang/carbon/code/run_gs_stage1.sh
+2026-11-12T07:37:31.8916224Z /home/arm/junyang/carbon/code/run_gs_stage2.sh
+2026-11-12T07:37:31.8916544Z /home/arm/junyang/carbon/code/run_s3p2_batch.sh
+2026-11-12T07:37:31.8916793Z /home/arm/junyang/carbon/code/ship24.sh
+2026-11-12T07:37:31.8917025Z /home/arm/junyang/carbon/code/ship_n1.sh
+2026-11-12T07:37:31.8917249Z /home/arm/junyang/carbon/code/solo.sh
+2026-11-12T07:37:31.8917465Z /home/arm/junyang/carbon/code/w6.sh
+2026-11-12T07:37:31.8917695Z /home/arm/junyang/carbon/code/with_lock.sh
+2026-11-12T07:37:31.8917917Z --- M3S2-BUILD-TRACE ---
+2026-11-12T07:37:31.8918120Z /home/arm/junyang/carbon/data/ds_m7bs/:
+2026-11-12T07:37:31.8918329Z carbon.npy
+2026-11-12T07:37:31.8918496Z gid.npy
+2026-11-12T07:37:31.8918652Z hist_cargo.npy
+2026-11-12T07:37:31.8918833Z hist_cell.npy
+2026-11-12T07:37:31.8918995Z hist_move.npy
+2026-11-12T07:37:31.8919154Z legal.npy
+2026-11-12T07:37:31.8919313Z maps.npy
+2026-11-12T07:37:31.8919468Z meta.json
+2026-11-12T07:37:31.8919620Z mf.npy
+2026-11-12T07:37:31.8919778Z scal.npy
+2026-11-12T07:37:31.8919926Z shards
+2026-11-12T07:37:31.8920080Z step.npy
+2026-11-12T07:37:31.8920233Z teacher.npy
+2026-11-12T07:37:31.8920393Z tok_cargo.npy
+2026-11-12T07:37:31.8920552Z tok_kind.npy
+2026-11-12T07:37:31.8920710Z tok_mask.npy
+2026-11-12T07:37:31.8920877Z tok_pos.npy
+2026-11-12T07:37:31.8921029Z uf.npy
+2026-11-12T07:37:31.8921179Z uw.npy
+2026-11-12T07:37:31.8921350Z /home/arm/junyang/carbon/code/build_m2vsM.py
+2026-11-12T07:37:31.8921750Z /home/arm/junyang/carbon/code/exit_merge.py
+2026-11-12T07:37:31.8922004Z /home/arm/junyang/carbon/code/merge_dagger.py
+2026-11-12T07:37:31.8922283Z /home/arm/junyang/carbon/code/cnet2_train.py
+2026-11-12T07:37:31.8922526Z /home/arm/junyang/carbon/code/build_m2extra.py
+2026-11-12T07:37:31.8989384Z R1FABLE1533K2 DGX-END
+2026-11-12T07:37:31.8989729Z R1FABLE1533K2 SSH_RC=0 L20-END
+2026-11-12T07:37:31.8989943Z 
+2026-11-12T07:37:31.9090358Z Post job cleanup.
+2026-11-12T07:37:31.9906789Z [command]/usr/bin/git version
+2026-11-12T07:37:31.9967513Z git version 2.56.0
+2026-11-12T07:37:32.0074300Z Temporarily overriding HOME='/home/runner/work/_temp/42eddc14-eb67-4966-88e8-f84198b741e5' before making global git config changes
+2026-11-12T07:37:32.0100374Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T07:37:32.0131695Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/carbon-league/carbon-league
+2026-11-12T07:37:32.0148963Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T07:37:32.0156963Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T07:37:32.0495389Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T07:37:32.0527794Z http.https://github.com/.extraheader
+2026-11-12T07:37:32.0546382Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T07:37:32.0609372Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T07:37:32.0996761Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T07:37:32.1098178Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T07:37:32.1608189Z Cleaning up orphan processes
+2026-11-12T07:37:32.1878914Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+elapsed 164 claimed

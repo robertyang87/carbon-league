@@ -1,0 +1,107 @@
+STUDIOSTAT1727H3K7 STUDIO-BEGIN 2026-11-13 17:29:29 CST
+mac-studio.local
+17:29  up 15 days,  1:21, 4 users, load averages: 12.62 12.96 12.84
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                              589575.
+Pages active:                           1468654.
+Pages inactive:                         1759864.
+--- PILOT-PROC ---
+  PID  %CPU %MEM  ELAPSED COMMAND
+89571   0.0  0.1 01:02:32 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+children-of-89571:       13
+89571     1   0.0   0:00.38    01:02:32 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+--- PILOT-DIR ---
+total 32
+-rw-r--r--  1 arm  staff  4130 Nov 13 16:26:57 2026 ds_m3s2_games.txt
+-rw-r--r--  1 arm  staff  1597 Nov 13 16:26:57 2026 pilot_du.log
+-rw-r--r--  1 arm  staff   825 Nov 13 16:26:57 2026 split_pilot.json
+--- PILOT-LOG ---
+-rw-r--r--  1 arm  staff  1597 Nov 13 16:26:57 2026 /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.log
+PREREG {"gate": "du", "run_id": "7a189805a8fbc6ec", "weights": "/Users/arm/s12test/heads_v2.npz", "weights_md5": "06a03d9cfeec239af3065a49fefec382", "code_md5": {"stage0_teacher.py": "3f1d31779041239071cfb642f4779c8d", "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3", "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122", "stage1_teacher_gate.py": "2658cb2bff425b191c4763902e010695"}, "guard_cfg": {"GUARD": true, "GUARD_NARROW": true, "GUARD_CASH": 40.0, "LOWW": 2}, "K": 16, "M": 8, "H": 2, "behavior_temp": 1.0, "teacher_style": 2, "q_select_source": "teacher Q (stage0_teacher.evaluate_root)", "q_eval_source": "real terminal continuations (anchor / paired arms)", "root_feat_history": "fresh Feats at root (isolated-root scope)", "seeds": {"scene": 995300, "teacher": 7000, "cont": 996100, "anchor": 995310}, "games": ["0efcfa1227b59fd7f89ee0c9b9ca9268-1", "0f71c0eec95ba72983df274bb8214db0-1", "342cccab5628cd1551eda7ce748e41ca-1", "ee87df723ee662ea3adefa72151feda1-1", "ef736a7898fc940bb57cd50af80b25d0-1", "f08846b06bf96d5f81650a3f9ec6521e-1", "f10b4fe24989fc072226ccbb0dd4dcad-1", "f1f3aa472faead713e748b6b3e11bf2d-1", "f25ff59d11686a2ab8b9e54152f63dd3-1", "f4651b37a8d9d4f233ba48a029f34327-1", "f5ced308e911610f01e6443954ce58d2-1", "f69a75694d8745d69526c9686487c2bd-1", "f70ba87077d1f74fa2db672ea0879b7c-1", "fa5cf88bff62fd3da8bfb355413f7241-1"], "n_scenes": 47, "ds_overlap_check": "NOT RUN", "ds_manifest_md5": null, "train_data_version": "ds_m3s2", "n_required": 150, "canonical_config": true, "formal": false, "diagnostic_reasons": ["training-set isolation check not run (S06)"]}
+--- PILOT-JSON-HEAD ---
+NO-pilot_du.json
+
+--- PROBE-1794-LEFTOVER ---
+  PID  %CPU ELAPSED COMMAND
+PID-1794-GONE
+-rw-r-----  1 arm  wheel  2493 Nov 13 17:15:07 2026 /tmp/p3a_harness.py
+-rw-r--r--  1 arm  wheel  1264 Nov 13 17:12:48 2026 /tmp/pilot_r3_out.txt
+    "train_target_mismatch_rejected": true
+  },
+  "all_expected_observations": false,
+  "output": "/tmp/r3-pilot/results.compact.json"
+}
+STUDIOSTAT1727H3K7 STUDIO-END
+STUDIOSTAT1727B2X4 BEGIN
+2026-11-13 17:29:53 CST
+---R3-OUT---
+{
+  "checks": {
+    "missing_ds_diagnostic": true,
+    "empty_ds_diagnostic": true,
+    "suffix_ds_refused": true,
+    "overlap_ds_refused": true,
+    "duplicate_ds_refused": true,
+    "duplicate_split_refused": true,
+    "missing_train_version_formal_pass": true,
+    "tiny_no_artifact_diagnostic": true,
+    "no_artifact_diagnostic": true,
+    "valid_bound_stage_b_pass": true,
+    "pilot_game_reuse_diagnostic": true,
+    "diagnostic_two_root_pilot_rejected": true,
+    "unchecked_training_pilot_rejected": true,
+    "changed_training_version_rejected": true,
+    "corrupt_artifact_diagnostic": true,
+    "style_mismatch_diagnostic": true,
+    "zero_variance_fresh_diagnostic_sidecar": true,
+    "fail_exits_one": true,
+    "worker_error_preserves_old_nonzero": true,
+    "empty_scene_is_strict_diagnostic": true,
+    "nonbinding_cap_matches_help": true,
+    "expected_run_id_correct_pass": true,
+    "expected_run_id_wrong_rejected": true,
+    "formal_pilot_training_overlap_rejected": true,
+    "old_v11_artifact_rejected": true,
+    "missing_du_ds_unbound_error_observed": false,
+    "pilot_nine_games_diagnostic": true,
+    "train_target_mismatch_rejected": true
+  },
+  "all_expected_observations": false,
+  "output": "/tmp/r3-pilot/results.compact.json"
+}
+---WORKERS---
+awk: syntax error at source line 1
+ context is
+	 >>> == <<< 
+awk: bailing out at source line 1
+---R3-RESULTS---
+total 392
+-rw-r--r--  1 arm  wheel   35109 Nov 13 17:12:48 2026 results.compact.json
+-rw-r--r--  1 arm  wheel  160791 Nov 13 17:12:48 2026 results.json
+{"commit":"3ca6e6c382487b9602491415378ecbf30ea9e135","scope":"Original main, sampler, artifact verification and output code; only expensive run_tasks is replaced. Synthetic length-only replays and header-only weights, no neural evaluation or performance conclusion.","source_sha256":"03d6450a52e51f64268b80e330a6433d5dd3ab2cb97fc8f0641b1bbcd809398a","checks":{"missing_ds_diagnostic":true,"empty_ds_diagnostic":true,"suffix_ds_refused":true,"overlap_ds_refused":true,"duplicate_ds_refused":true,"duplicate_split_refused":true,"missing_train_version_formal_pass":true,"tiny_no_artifact_diagnostic":true,"no_artifact_diagnostic":true,"valid_bound_stage_b_pass":true,"pilot_game_reuse_diagnostic":true,"diagnostic_two_root_pilot_rejected":true,"unchecked_training_pilot_rejected":true,"changed_training_
+STUDIOSTAT1727B2X4 END
+STUDIOSTAT1727C9W2 BEGIN 2026-11-13 17:30:12 CST
+89571     1   0.0   0:00.38    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+89576 89571   0.0   0:00.03    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.resource_tracker import main;main(8)
+89577 89571 100.0  63:14.44    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=17) --multiprocessing-fork
+89578 89571  99.3  63:14.62    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=19) --multiprocessing-fork
+89579 89571  99.1  63:14.59    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=21) --multiprocessing-fork
+89580 89571 100.0  63:14.62    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=23) --multiprocessing-fork
+89581 89571 100.0  63:14.55    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=25) --multiprocessing-fork
+89582 89571 100.0  63:14.48    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=27) --multiprocessing-fork
+89583 89571  99.0  63:14.60    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=29) --multiprocessing-fork
+89584 89571  99.0  63:14.37    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=31) --multiprocessing-fork
+89585 89571 100.0  63:14.45    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=33) --multiprocessing-fork
+89586 89571  99.0  63:14.45    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=35) --multiprocessing-fork
+89587 89571 100.0  63:14.35    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=37) --multiprocessing-fork
+89588 89571  99.4  63:14.50    01:03:16 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=9, pipe_handle=39) --multiprocessing-fork
+STUDIOSTAT1727C9W2 END
+
+ASSESSMENT (17:29:29 + 17:30:12 CST direct reads, markers STUDIOSTAT1727H3K7 / B2X4 / C9W2, Tailscale direct arm@100.78.149.20, SSH-RC=0):
+- Stage A pilot STILL RUNNING, STILL STALLED (no output): PID 89571 etime 01:03:16 (was 47:14 at 17:14), 12 workers (89577-89588) each ~99-100% CPU, CPU time 63:14 vs elapsed 63:16 -> genuinely computing, NOT hung, NOT dead. Parent CPU time 0:00.38 (coordinator). Load 12.62/12.96/12.84. pilot_du.log mtime still 16:26:57 (1,597 B, PREREG only). pilot_du.json STILL NOT landed.
+- No-output duration now 63 min 15 s (PREREG 16:26:57 -> read 17:30:12). Same stall as 17:14 report (already forwarded to war-room by 17:18 sync); only deeper. Still cannot distinguish slow compute from a stuck step from this read; no ETA. Fix/diagnosis belongs to war-room driver; this line reports only.
+- 17:12 SHORT-LIVED PROBE FINISHED: PID 1794 gone; output /tmp/pilot_r3_out.txt (1,264 B, mtime 17:12:48) + /tmp/r3-pilot/results.compact.json (35,109 B) + results.json (160,791 B). 28 checks, 27 true; only "missing_du_ds_unbound_error_observed": false -> all_expected_observations: false. Matches strategy group's v1.3 letter (28-item pilot probe, only the "no-manifest crash" item flips as expected: v1.3 P3-b fix, du without --ds-games-file no longer throws UnboundLocalError). Results commit 3ca6e6c382487b9602491415378ecbf30ea9e135, run from ~/s1fix3 (CARBON_REPO=/Users/arm/s1fix3). Launcher STILL unidentified from this read; war-room sync 17:18 already asked for identification.
+- Disk 421Gi free, unchanged. Studio NOT idle; no idle report.
+- Context: owner decision (wait vs stop-switch to v1.3 formal pilot, gate bdd3caed) still pending as of 17:18 war-room sync; no newer reply seen in war-room chat this trip.

@@ -1,0 +1,45 @@
+STUDIOSTAT1627Q7R3 STUDIO-BEGIN 2026-11-13 16:29:22 CST
+mac-studio.local
+16:29  up 15 days, 21 mins, 4 users, load averages: 12.18 6.13 3.73
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                              618554.
+Pages active:                           1442217.
+Pages inactive:                         1759854.
+--- PILOT-PROC ---
+  PID  %CPU %MEM ELAPSED COMMAND
+89571   0.0  0.1   02:25 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+children-of-89571:       13
+88066   0.0  0.0       07:48 zsh -c rsync -az --delete arm@10.188.0.23:/home/arm/junyang/carbon-a7ed8f95/code/ /tmp/carbon_code_a7ed/ && rsync -az --delete /tmp/carbon_code_a7ed/ root@100.79.251.87:/root/carbon/code_next/ && ssh -o ConnectTimeout=20 root@100.79.251.87 "md5sum /root/carbon/code_next/stage0_teacher.py /root/carbon/code_next/cnet2_search.py /root/carbon/code_next/packs/cnet2_search.py /root/carbon/code_next/stage1_teacher_gate.py /root/carbon/code_next/stage0_guided_match.py /root/carbon/code_next/cnet2_np.py /root/carbon/code_next/packs/cnet2_np.py /root/carbon/code_next/cnet2_train.py /root/carbon/code_next/cnet2_build.py /root/carbon/code_next/set_uw.py /root/carbon/code_next/cnet2_model.py /root/carbon/code_next/producer/selfplay_gen.py"
+89571   0.0  0.1       02:26 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python stage1_teacher_gate.py --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/s12test/replays --split-manifest /Users/arm/junyang/carbon/data/stage1_pilot/split_pilot.json --mode du --pilot --workers 12 --train-data-version ds_m3s2 --out /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.json
+--- PILOT-DIR ---
+total 32
+-rw-r--r--  1 arm  staff  4130 Nov 13 16:26:57 2026 ds_m3s2_games.txt
+-rw-r--r--  1 arm  staff  1597 Nov 13 16:26:57 2026 pilot_du.log
+-rw-r--r--  1 arm  staff   825 Nov 13 16:26:57 2026 split_pilot.json
+--- PILOT-LOG ---
+/Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.log
+-rw-r--r--  1 arm  staff  1597 Nov 13 16:26:57 2026 /Users/arm/junyang/carbon/data/stage1_pilot/pilot_du.log
+PREREG {"gate": "du", "run_id": "7a189805a8fbc6ec", "weights": "/Users/arm/s12test/heads_v2.npz", "weights_md5": "06a03d9cfeec239af3065a49fefec382", "code_md5": {"stage0_teacher.py": "3f1d31779041239071cfb642f4779c8d", "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3", "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122", "stage1_teacher_gate.py": "2658cb2bff425b191c4763902e010695"}, "guard_cfg": {"GUARD": true, "GUARD_NARROW": true, "GUARD_CASH": 40.0, "LOWW": 2}, "K": 16, "M": 8, "H": 2, "behavior_temp": 1.0, "teacher_style": 2, "q_select_source": "teacher Q (stage0_teacher.evaluate_root)", "q_eval_source": "real terminal continuations (anchor / paired arms)", "root_feat_history": "fresh Feats at root (isolated-root scope)", "seeds": {"scene": 995300, "teacher": 7000, "cont": 996100, "anchor": 995310}, "games": ["0efcfa1227b59fd7f89ee0c9b9ca9268-1", "0f71c0eec95ba72983df274bb8214db0-1", "342cccab5628cd1551eda7ce748e41ca-1", "ee87df723ee662ea3adefa72151feda1-1", "ef736a7898fc940bb57cd50af80b25d0-1", "f08846b06bf96d5f81650a3f9ec6521e-1", "f10b4fe24989fc072226ccbb0dd4dcad-1", "f1f3aa472faead713e748b6b3e11bf2d-1", "f25ff59d11686a2ab8b9e54152f63dd3-1", "f4651b37a8d9d4f233ba48a029f34327-1", "f5ced308e911610f01e6443954ce58d2-1", "f69a75694d8745d69526c9686487c2bd-1", "f70ba87077d1f74fa2db672ea0879b7c-1", "fa5cf88bff62fd3da8bfb355413f7241-1"], "n_scenes": 47, "ds_overlap_check": "NOT RUN", "ds_manifest_md5": null, "train_data_version": "ds_m3s2", "n_required": 150, "canonical_config": true, "formal": false, "diagnostic_reasons": ["training-set isolation check not run (S06)"]}
+--- RELAY-88066 ---
+  PID ELAPSED COMMAND
+88066   07:48 zsh -c rsync -az --delete arm@10.188.0.23:/home/arm/junyang/carbon-a7ed8f95/code/ /tmp/carbon_code_a7ed/ && rsync -az --delete /tmp/carbon_code_a7ed/ root@100.79.251.87:/root/carbon/code_next/ && ssh -o ConnectTimeout=20 root@100.79.251.87 "md5sum /root/carbon/code_next/stage0_teacher.py /root/carbon/code_next/cnet2_search.py /root/carbon/code_next/packs/cnet2_search.py /root/carbon/code_next/stage1_teacher_gate.py /root/carbon/code_next/stage0_guided_match.py /root/carbon/code_next/cnet2_np.py /root/carbon/code_next/packs/cnet2_np.py /root/carbon/code_next/cnet2_train.py /root/carbon/code_next/cnet2_build.py /root/carbon/code_next/set_uw.py /root/carbon/code_next/cnet2_model.py /root/carbon/code_next/producer/selfplay_gen.py"
+--- CODE-S1 ---
+3f1d31779041239071cfb642f4779c8d
+94f7fb6438bb7577b141e388f068e122
+94f7fb6438bb7577b141e388f068e122
+2658cb2bff425b191c4763902e010695
+042416bf6bdce1ee8034f66318a503d7
+d8c15ad4fdd8ee079363cf215d52daf3
+d8c15ad4fdd8ee079363cf215d52daf3
+STUDIOSTAT1627Q7R3 STUDIO-END
+
+ASSESSMENT (16:29:22 CST direct read, marker STUDIOSTAT1627Q7R3, Tailscale direct, SSH-RC=0):
+- Stage A pilot three-piece start INDEPENDENTLY VERIFIED, matches war-room receipt (run_id 7a189805a8fbc6ec, 16:26):
+  1) Process in place: PID 89571, etime 02:25, cmd = stage1_teacher_gate.py --mode du --pilot --workers 12 --train-data-version ds_m3s2, split-manifest split_pilot.json, out pilot_du.json; 13 children (12 workers).
+  2) Machine occupied: load 12.18 6.13 3.73 (1-min load up from 1.78 at 16:22, 2.26->7.51 at start).
+  3) Fresh output: pilot_du.log mtime 16:26:57 (1,597 B), PREREG header present, run_id + weights md5 06a03d9c... + code md5s all v1.1 + n_scenes 47 + ds_overlap_check NOT RUN. No pilot_du.json yet (expected, 2.5 min in).
+- Code S1 v1.1 seven md5s all match: teacher 3f1d3177 / search code+packs 94f7fb64 / gate 2658cb2b / guided 042416bf / np code+packs d8c15ad4.
+- Disk 421Gi free, unchanged. Relay PID 88066 (rsync code to spot-29 code_next) STILL running, etime 07:48, CPU 0.0% — not a training process; under 30-min stall threshold, noted only, belongs to war room.
+- No idle report to war room (Studio busy; pilot start receipt already sent 16:26). No new estimate: no progress output yet; next trip checks first results / sigma-hat.

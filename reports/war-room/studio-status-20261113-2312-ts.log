@@ -1,0 +1,73 @@
+STUDIOSTAT2312M7Q2 PROBE-BEGIN 2026-11-13 23:14:45 CST
+STUDIOSTAT2312M7Q2 STUDIO-BEGIN 2026-11-13 23:14:49 CST
+mac-studio.local
+23:14  up 15 days,  7:07, 4 users, load averages: 1.61 1.85 1.91
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   421Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                             1081736.
+Pages active:                           1393710.
+Pages inactive:                         1363649.
+--- WRAPPER-87466 ---
+  PID  %CPU %MEM ELAPSED COMMAND
+PID-87466-NOT-FOUND
+--- CANON-87657 ---
+  PID  %CPU %MEM ELAPSED COMMAND
+PID-87657-NOT-FOUND
+--- ANY-TRAINING-PROC ---
+NO-TRAINING-PROC
+--- ACC-LOGS ---
+== /tmp/acc_twoworld_small.log ==
+-rw-r--r--  1 arm  wheel  3082 Nov 13 23:00:33 2026 /tmp/acc_twoworld_small.log
+PASS belief_carbon: sampled values within [0, maxCellCarbon]
+PASS belief_carbon: sampled non-zero share near the generator's (29/64) -- share=0.41
+PASS early position (sampled unknown cells in play): Q unchanged when all unknown cells differ -- unknown_cells=157 Q_std over scenarios max=0.0851
+==== 37/37 checks passed ====
+EXIT=0
+== /tmp/acc_twoworld_canon.log ==
+-rw-r--r--  1 arm  wheel  3086 Nov 13 23:02:43 2026 /tmp/acc_twoworld_canon.log
+PASS belief_carbon: sampled values within [0, maxCellCarbon]
+PASS belief_carbon: sampled non-zero share near the generator's (29/64) -- share=0.41
+PASS early position (sampled unknown cells in play): Q unchanged when all unknown cells differ -- unknown_cells=157 Q_std over scenarios max=0.0765
+==== 37/37 checks passed ====
+EXIT=0
+== /tmp/acc_ppo.log ==
+-rw-r--r--  1 arm  wheel  1624 Nov 13 23:02:44 2026 /tmp/acc_ppo.log
+PASS u_mode_check: utility head without --reward u is flagged
+PASS u_mode_check: legacy modes are not touched
+PASS --value-head utility refuses init weights without a utility head -- rc=1
+==== 18/18 checks passed ====
+EXIT=0
+--- S1-FILES-MD5 ---
+MD5 (/Users/arm/junyang/carbon/code/stage0_teacher.py) = 77ba36773fb135c92a6e5f171f88bdbd
+MD5 (/Users/arm/junyang/carbon/code/stage1_teacher_gate.py) = ac307c9ddfdc5cf67ed1f3c8916c4529
+MD5 (/Users/arm/junyang/carbon/code/cnet2_build.py) = 030b317bc649fd45c07249c5e3bb662f
+MD5 (/Users/arm/junyang/carbon/code/producer/selfplay_gen.py) = 95d2e29fbec8cfcebee57bf9bf0d25ed
+MD5 (/Users/arm/junyang/carbon/code/rl2_ppo_train.py) = 404ad8e4c4dde9ffd6e6fd4a67ec66de
+MD5 (/Users/arm/junyang/carbon/code/rl2_ppo_cnet2.py) = 0daa79afac73f0875ceb473709c2e7e0
+MD5 (/Users/arm/junyang/carbon/code/stage0_guided_match.py) = 042416bf6bdce1ee8034f66318a503d7
+MD5 (/Users/arm/junyang/carbon/code/stage0_measure_teacher.py) = aa4de09584b0592c9fd9574701f0ff5d
+--- FORMAL-DIR ---
+total 16632
+-rw-r--r--   1 arm  staff    33885 Nov 13 21:38:01 2026 pilot_du_formal.json
+-rw-r--r--   1 arm  staff     2754 Nov 13 21:38:01 2026 pilot_du_formal.json.pilot.json
+-rw-r--r--   1 arm  staff     8151 Nov 13 21:38:01 2026 pilot_du_formal.log
+-rw-r--r--   1 arm  staff      295 Nov 13 21:49:49 2026 pilot_du_formal.progress.json
+-rw-r--r--   1 arm  staff        0 Nov 13 18:19:48 2026 progress_monitor.log
+-rw-r-----   1 arm  staff     4725 Nov 13 18:19:44 2026 progress_monitor.py
+drwxr-xr-x  36 arm  staff     1152 Nov 13 18:16:59 2026 replays
+-rw-r--r--   1 arm  staff     1384 Nov 13 18:16:59 2026 split_formal.json
+-rw-r--r--   1 arm  staff  8437760 Nov 13 18:16:37 2026 stage1_pool34.tar
+-rw-r--r--   1 arm  staff    10430 Nov 13 16:29:09 2026 stageB_candidate_pool.json
+--- V2-PILOT-SIGNS ---
+NO-v2-pilot-files
+drwxr-xr-x  4 arm  staff  128 Nov 13 15:28 /Users/arm/junyang/carbon/code_backup_pre_b7e1_20261113
+drwxr-xr-x  5 arm  staff  160 Nov 13 14:53 /Users/arm/junyang/carbon/code_backup_pre_d758_20261113
+drwxr-xr-x  5 arm  staff  160 Nov 13 16:22 /Users/arm/junyang/carbon/code_backup_pre_s1v11_20261113
+drwxr-xr-x  4 arm  staff  128 Nov 13 17:39 /Users/arm/junyang/carbon/code_backup_pre_s1v13_20261113
+drwxr-xr-x  3 arm  staff   96 Nov 13 18:14 /Users/arm/junyang/carbon/code_backup_pre_s1v15_20261113
+drwxr-xr-x  3 arm  staff   96 Nov 13 21:48 /Users/arm/junyang/carbon/code_backup_pre_s1v16_20261113
+drwxr-xr-x  3 arm  staff   96 Nov 13 21:48 /Users/arm/junyang/carbon/code_backup_pre_s1v16_20261113
+STUDIOSTAT2312M7Q2 STUDIO-END
+STUDIOSTAT2312M7Q2 SSH-RC=0
+STUDIOSTAT2312M7Q2 PROBE-END 2026-11-13 23:14:49 CST

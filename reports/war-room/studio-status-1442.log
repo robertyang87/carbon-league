@@ -1,0 +1,67 @@
+dispatched at 14:43:36
+CLAIMED run 43170152676 job 131021249629 status completed conclusion success
+ cn-shanghai
+2026-11-12T06:43:43.1540923Z ##[endgroup]
+2026-11-12T06:43:56.6439120Z InvokeId: t-sh072v6iuv7ni0w
+2026-11-12T06:43:56.6440593Z --- status=Success exit=0 ---
+2026-11-12T06:43:56.6441496Z STUDIOSTAT1442M7Q4 L20-BEGIN 2026-11-12 14:43:45 CST
+2026-11-12T06:43:56.6442399Z STUDIOSTAT1442M7Q4 STUDIO-BEGIN 2026-11-12 14:43:54 CST
+2026-11-12T06:43:56.6443189Z mac-studio.local
+2026-11-12T06:43:56.6443880Z 14:43  up 13 days, 22:36, 5 users, load averages: 0.58 1.00 1.24
+2026-11-12T06:43:56.6444604Z --- MEM-DISK ---
+2026-11-12T06:43:56.6445076Z /dev/disk3s1s1   926Gi    12Gi   386Gi     3%    455k  4.0G    0%   /
+2026-11-12T06:43:56.6445636Z --- TRAIN-PROC ---
+2026-11-12T06:43:56.6447717Z 99079   0.0  0.0       38:08 bash -c env BC_DEVICE=mps BC_RAM=1 BC_THREADS=8 BC_USE_W=1 BC_USE_UW=1 BC_BS=256 BC_SAVE_EPOCHS=1 BC_PCT=0.1 BC_LR=3e-4 BC_INIT=/Users/arm/junyang/carbon/data/weights/cnet2_arch_n1_last.npz ../.venv/bin/python cnet2_train.py ../data/ds_distill ../data/weights/cnet2_distill_r1.npz 20 "{\"C\":128,\"NB\":8,\"D\":128,\"ZI\":1,\"TA\":4,\"TNH\":4}" > ../data/distill_r1.log 2>&1; rsync -a ../data/weights/cnet2_distill_r1_ep19.npz arm@10.188.0.23:/home/arm/junyang/carbon/data/weights/cnet2_distill_r1_fromstudio.npz && echo DISTILL_R1_SHIPPED_TO_DGX >> ../data/distill_r1.log
+2026-11-12T06:43:56.6450282Z 99083  10.0  3.2       38:08 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python cnet2_train.py ../data/ds_distill ../data/weights/cnet2_distill_r1.npz 20 {"C":128,"NB":8,"D":128,"ZI":1,"TA":4,"TNH":4}
+2026-11-12T06:43:56.6451379Z --- R1-LOG-TAIL ---
+2026-11-12T06:43:56.6452020Z {"ep": 7, "val": {"collector": 0.8614, "planter": 0.7789, "base": 0.9664, "all": 0.8698, "workers": 0.8487, "loss": 0.3259}, "train_pi": 0.3058, "s": 236}
+2026-11-12T06:43:56.6452805Z {"ep": 8, "i": 0, "pi": 0.3058, "v": 0.0254, "aux": 0.0436, "s": 1}
+2026-11-12T06:43:56.6453965Z {"ep": 8, "val": {"collector": 0.8604, "planter": 0.7817, "base": 0.9658, "all": 0.8694, "workers": 0.8483, "loss": 0.3252}, "train_pi": 0.2983, "s": 235}
+2026-11-12T06:43:56.6455778Z {"ep": 9, "i": 0, "pi": 0.3243, "v": 0.0258, "aux": 0.0456, "s": 1}
+2026-11-12T06:43:56.6456676Z {"ep": 9, "val": {"collector": 0.8621, "planter": 0.7878, "base": 0.9675, "all": 0.8717, "workers": 0.8507, "loss": 0.3212}, "train_pi": 0.3077, "s": 167}
+2026-11-12T06:43:56.6457594Z {"ep": 10, "i": 0, "pi": 0.2906, "v": 0.0198, "aux": 0.0396, "s": 0}
+2026-11-12T06:43:56.6458131Z --- G1-LOG-TAIL ---
+2026-11-12T06:43:56.6458619Z {"ep": 18, "i": 0, "pi": 0.2784, "v": 0.0245, "aux": 0.0398, "s": 0}
+2026-11-12T06:43:56.6459613Z {"ep": 18, "val": {"collector": 0.8641, "planter": 0.7879, "base": 0.9667, "all": 0.8729, "workers": 0.8524, "loss": 0.3204}, "train_pi": 0.2774, "s": 109}
+2026-11-12T06:43:56.6460375Z {"ep": 19, "i": 0, "pi": 0.2869, "v": 0.0212, "aux": 0.0411, "s": 0}
+2026-11-12T06:43:56.6461128Z {"ep": 19, "val": {"collector": 0.8638, "planter": 0.7881, "base": 0.9669, "all": 0.8728, "workers": 0.8522, "loss": 0.3205}, "train_pi": 0.2734, "s": 109}
+2026-11-12T06:43:56.6461836Z best 0.8729
+2026-11-12T06:43:56.6462235Z DISTILL_G1_SHIPPED_TO_DGX
+2026-11-12T06:43:56.6462657Z --- R1-JSONL ---
+2026-11-12T06:43:56.6463328Z {"ep": 0, "val": {"collector": 0.8511, "planter": 0.7646, "base": 0.9615, "all": 0.8601, "workers": 0.8378, "loss": 0.3516}, "train_pi": 0.3917, "s": 231}
+2026-11-12T06:43:56.6464302Z {"ep": 1, "val": {"collector": 0.8528, "planter": 0.7719, "base": 0.9632, "all": 0.8625, "workers": 0.8404, "loss": 0.345}, "train_pi": 0.3466, "s": 236}
+2026-11-12T06:43:56.6465520Z {"ep": 2, "val": {"collector": 0.8581, "planter": 0.7766, "base": 0.9642, "all": 0.8669, "workers": 0.8456, "loss": 0.3345}, "train_pi": 0.333, "s": 235}
+2026-11-12T06:43:56.6467208Z {"ep": 3, "val": {"collector": 0.8579, "planter": 0.7774, "base": 0.9648, "all": 0.867, "workers": 0.8456, "loss": 0.3341}, "train_pi": 0.3216, "s": 235}
+2026-11-12T06:43:56.6468725Z {"ep": 4, "val": {"collector": 0.8574, "planter": 0.7811, "base": 0.9648, "all": 0.8671, "workers": 0.8457, "loss": 0.3323}, "train_pi": 0.3233, "s": 235}
+2026-11-12T06:43:56.6469545Z {"ep": 5, "val": {"collector": 0.8605, "planter": 0.779, "base": 0.9655, "all": 0.8691, "workers": 0.848, "loss": 0.3285}, "train_pi": 0.312, "s": 236}
+2026-11-12T06:43:56.6470317Z {"ep": 6, "val": {"collector": 0.8588, "planter": 0.7778, "base": 0.9663, "all": 0.8679, "workers": 0.8464, "loss": 0.3296}, "train_pi": 0.3068, "s": 235}
+2026-11-12T06:43:56.6471148Z {"ep": 7, "val": {"collector": 0.8614, "planter": 0.7789, "base": 0.9664, "all": 0.8698, "workers": 0.8487, "loss": 0.3259}, "train_pi": 0.3058, "s": 236}
+2026-11-12T06:43:56.6472001Z {"ep": 8, "val": {"collector": 0.8604, "planter": 0.7817, "base": 0.9658, "all": 0.8694, "workers": 0.8483, "loss": 0.3252}, "train_pi": 0.2983, "s": 235}
+2026-11-12T06:43:56.6472875Z {"ep": 9, "val": {"collector": 0.8621, "planter": 0.7878, "base": 0.9675, "all": 0.8717, "workers": 0.8507, "loss": 0.3212}, "train_pi": 0.3077, "s": 167}
+2026-11-12T06:43:56.6473527Z --- G1-JSONL ---
+2026-11-12T06:43:56.6474063Z {"ep": 0, "val": {"collector": 0.8486, "planter": 0.7595, "base": 0.9603, "all": 0.8575, "workers": 0.8349, "loss": 0.3614}, "train_pi": 0.4102, "s": 116}
+2026-11-12T06:43:56.6474948Z {"ep": 1, "val": {"collector": 0.8484, "planter": 0.7622, "base": 0.9614, "all": 0.8579, "workers": 0.8352, "loss": 0.3573}, "train_pi": 0.3485, "s": 110}
+2026-11-12T06:43:56.6475781Z {"ep": 2, "val": {"collector": 0.8539, "planter": 0.7668, "base": 0.9633, "all": 0.8626, "workers": 0.8405, "loss": 0.3435}, "train_pi": 0.3431, "s": 109}
+2026-11-12T06:43:56.6476811Z {"ep": 3, "val": {"collector": 0.8576, "planter": 0.7776, "base": 0.9629, "all": 0.8665, "workers": 0.8453, "loss": 0.335}, "train_pi": 0.3253, "s": 109}
+2026-11-12T06:43:56.6477685Z {"ep": 4, "val": {"collector": 0.8551, "planter": 0.774, "base": 0.9647, "all": 0.8646, "workers": 0.8426, "loss": 0.3377}, "train_pi": 0.3377, "s": 109}
+2026-11-12T06:43:56.6478863Z {"ep": 5, "val": {"collector": 0.8593, "planter": 0.7825, "base": 0.9641, "all": 0.8685, "workers": 0.8475, "loss": 0.3312}, "train_pi": 0.3202, "s": 109}
+2026-11-12T06:43:56.6479745Z {"ep": 6, "val": {"collector": 0.8588, "planter": 0.7865, "base": 0.9638, "all": 0.8685, "workers": 0.8477, "loss": 0.3303}, "train_pi": 0.3144, "s": 109}
+2026-11-12T06:43:56.6480636Z {"ep": 7, "val": {"collector": 0.8604, "planter": 0.7811, "base": 0.9636, "all": 0.869, "workers": 0.8482, "loss": 0.3295}, "train_pi": 0.3206, "s": 109}
+2026-11-12T06:43:56.6481489Z {"ep": 8, "val": {"collector": 0.8603, "planter": 0.7848, "base": 0.9656, "all": 0.8697, "workers": 0.8487, "loss": 0.3274}, "train_pi": 0.3089, "s": 109}
+2026-11-12T06:43:56.6482357Z {"ep": 9, "val": {"collector": 0.8616, "planter": 0.7843, "base": 0.9651, "all": 0.8705, "workers": 0.8497, "loss": 0.3241}, "train_pi": 0.3146, "s": 109}
+2026-11-12T06:43:56.6483195Z {"ep": 10, "val": {"collector": 0.8609, "planter": 0.7839, "base": 0.9663, "all": 0.8701, "workers": 0.8491, "loss": 0.3266}, "train_pi": 0.3046, "s": 109}
+2026-11-12T06:43:56.6484067Z {"ep": 11, "val": {"collector": 0.8616, "planter": 0.7871, "base": 0.9662, "all": 0.871, "workers": 0.8502, "loss": 0.3228}, "train_pi": 0.2987, "s": 109}
+2026-11-12T06:43:56.6484957Z {"ep": 12, "val": {"collector": 0.8626, "planter": 0.7851, "base": 0.9667, "all": 0.8715, "workers": 0.8507, "loss": 0.324}, "train_pi": 0.2972, "s": 109}
+2026-11-12T06:43:56.6485859Z {"ep": 13, "val": {"collector": 0.8636, "planter": 0.789, "base": 0.967, "all": 0.8728, "workers": 0.8521, "loss": 0.321}, "train_pi": 0.2989, "s": 109}
+2026-11-12T06:43:56.6490961Z {"ep": 14, "val": {"collector": 0.8627, "planter": 0.7875, "base": 0.965, "all": 0.8716, "workers": 0.8511, "loss": 0.3227}, "train_pi": 0.2826, "s": 109}
+2026-11-12T06:43:56.6492389Z {"ep": 15, "val": {"collector": 0.8638, "planter": 0.7886, "base": 0.9667, "all": 0.8728, "workers": 0.8523, "loss": 0.321}, "train_pi": 0.2873, "s": 109}
+2026-11-12T06:43:56.6493322Z {"ep": 16, "val": {"collector": 0.8634, "planter": 0.7871, "base": 0.9672, "all": 0.8725, "workers": 0.8517, "loss": 0.3214}, "train_pi": 0.2785, "s": 109}
+2026-11-12T06:43:56.6494342Z {"ep": 17, "val": {"collector": 0.8639, "planter": 0.788, "base": 0.9664, "all": 0.8727, "workers": 0.8522, "loss": 0.3203}, "train_pi": 0.2787, "s": 109}
+2026-11-12T06:43:56.6495302Z {"ep": 18, "val": {"collector": 0.8641, "planter": 0.7879, "base": 0.9667, "all": 0.8729, "workers": 0.8524, "loss": 0.3204}, "train_pi": 0.2774, "s": 109}
+2026-11-12T06:43:56.6496205Z {"ep": 19, "val": {"collector": 0.8638, "planter": 0.7881, "base": 0.9669, "all": 0.8728, "workers": 0.8522, "loss": 0.3205}, "train_pi": 0.2734, "s": 109}
+2026-11-12T06:43:56.6497674Z --- WEIGHTS-NOW ---
+2026-11-12T06:43:56.6498009Z total 973192
+2026-11-12T06:43:56.6498449Z -rw-r--r--  1 arm  staff  13969088 Nov 12 14:43 cnet2_distill_r1.npz
+2026-11-12T06:43:56.6499033Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:43 cnet2_distill_r1_ep9.npz
+2026-11-12T06:43:56.6499651Z -rw-r--r--  1 arm  staff  13968968 Nov 12 14:43 cnet2_distill_
+elapsed 53 claimed
