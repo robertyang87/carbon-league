@@ -54,6 +54,26 @@ Adapter 以 affine 恒等 (a=1, b=0) 直通——比较器 argmax 对单调变�
 压缩函数。代价：adapter 的 out_of_range 计数会大量增长（原始分差
 本就在 [0,1] 外），那是本阶段的预期登记现象，不是量纲错误信号；
 正式 U 尺度校准走后续注册流程。
+
+Codex 复核修复（2026-11-16，REVIEW_SEARCH_IMPLEMENTATION SI01/
+SI02/SI04/SI05）：
+  - SI01 权威终局：最后有效动作观察 step298、终态 step299
+    （eval_v53 口径）。decide_at_root 入口拒绝已终局根（step≥299
+    或根状态已灭绝）；rollout 每次联合推进后同时判灭绝＋时间边界，
+    终态冻结、其后零策略调用；leaf 的 left 按权威剩余步计；结算
+    口径 F01（灭绝：leaf 内按带入灭绝步前现金）／F04（到时：真实
+    终态现金差，见 _raw_leaf 的 terminal_kind 分流）。
+  - SI02 唯一 deadline：decide_at_root 入口产生唯一绝对 deadline
+    （总预算 cfg BUDGET 覆盖基线步耗＋快照/根构造＋候选生成＋守卫
+    准入＋比较器全链），删除原 0.05s 预算下限补齐逻辑——余额不足
+    直接回 A0 且不启动比较；遥测记总耗时与分阶段耗时（snapshot/
+    baseline/candgen/guard/rollout_leaf）；比较器带 C_hi 整轮准入
+    （单候选成本取本 harness 已测样本均值）。
+  - SI04 续弈生产守卫：rollout 的 H≥2 续弈步为双席各建独立
+    BankruptcyGuard 状态（copy 自根守卫、随步演化，reset_step→
+    apply 与 _inner 同序），act_b 后、step 前过守卫。
+  - SI05 seat 初始化：begin_step(obs) 的快照席位从当前 observation
+    的 player 明确取，不再默认己方为 0。
 """
 
 from __future__ import annotations
@@ -61,7 +81,7 @@ from __future__ import annotations
 import hashlib
 import os
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any, Optional
 
 import numpy as np
@@ -82,6 +102,11 @@ EXPECTED_VENDOR_MD5 = {
     "cnet2_search": "94f7fb6438bb7577b141e388f068e122",
 }
 EXPECTED_PACK_MD5 = "819250bfc82632786063dabd46a616bd"
+
+# SI01 权威终局（eval_v53 口径）：最后有效动作观察为 step298，
+# 终态为 step299。step>=TERMINAL_STEP 的观察不再有合法动作；
+# rollout 的联合推进绝不越过 TERMINAL_STEP。
+TERMINAL_STEP = 299
 
 
 def _md5(b: bytes) -> str:
@@ -233,11 +258,17 @@ def outer_layer_audit(cfg: dict) -> list:
 
 @dataclass
 class LeafState:
-    """rollout 的不透明叶状态：叶调用前 comparator 不触碰其内部。"""
+    """rollout 的不透明叶状态：叶调用前 comparator 不触碰其内部。
+
+    terminal_kind（SI01）：None＝未终局；"extinct"＝灭绝终局（结算走
+    leaf 内 F01 分支，prev_cash 为带入灭绝步前现金）；"time"＝到时
+    终局（step 到达 TERMINAL_STEP，结算用真实终态现金差）。
+    """
     sim: Any
     me: int
     left: int
     prev_cash: Any
+    terminal_kind: Optional[str] = None
 
 
 @dataclass
@@ -261,7 +292,7 @@ class RealEnvSearch:
     """在一个已构造的基线 agent 上接线的比较器 harness（单座）。
 
     用法（每个真实步）：
-        snap = harness.begin_step()          # 基线调用前存 fo 快照
+        snap = harness.begin_step(obs)       # 基线调用前存 fo 快照
         a0 = agent(obs)                      # 基线本体原样执行（A0 定型）
         dec = harness.decide_at_root(obs, a0, baseline_step_cost_s=dt,
                                      horizon=1, scenario_seed=...)
@@ -279,32 +310,74 @@ class RealEnvSearch:
         ]
         self._fo_snap = None
         self._guard_exceptions = 0
+        # SI01：被入口拒绝的已终局根计数（step>=299 或已灭绝）
+        self.terminal_roots_rejected = 0
+        # SI02：C_hi 整轮准入用的已测单候选成本（rollout+leaf 秒/次）样本
+        self._cand_cost_sum = 0.0
+        self._cand_cost_n = 0
+        # SI04：最近一次 rollout 的双席守卫副本（供验收/测试检查状态演化）
+        self._last_rollout_guards = None
+        self.rollout_guard_rewrites = 0
+        self._probe = None  # 根灭绝探针 sim（懒构造）
         # 叶①：原嵌套 leaf 函数 + affine 恒等适配（裁定 3）
         self.leaf_adapter = HeuristicLeafAdapter(self._raw_leaf, a=1.0, b=0.0)
 
     # -- 叶 ---------------------------------------------------------------
     def _raw_leaf(self, leaf_state: LeafState) -> float:
-        """直接引用原嵌套 leaf（行 666），不复刻公式。返回原始分差。"""
+        """叶值分流（SI01）：
+
+        - terminal_kind == "time"（到时终局）：F04 口径，用真实终态
+          现金差。不能走嵌套 leaf 的启发式分支——它在 left=0 时仍含
+          「已在基地格上的载货」等项，不等于终局结算（电池 B 的旧
+          双证只在构造格上偶合，不构成一般等式）。
+        - 其余（未终局 / 灭绝终局）：直接引用原嵌套 leaf（行 666），
+          不复刻公式；灭绝终局由 leaf 内 F01 分支按 prev_cash 结算。
+        返回原始分差尺度。
+        """
+        if leaf_state.terminal_kind == "time":
+            sim = leaf_state.sim
+            return float(sim.cash[leaf_state.me]) - float(sim.cash[1 - leaf_state.me])
         return float(self.inx.leaf_fn(leaf_state.sim, leaf_state.me,
                                       leaf_state.left, leaf_state.prev_cash))
 
     # -- 步首快照 -----------------------------------------------------------
-    def begin_step(self):
-        """基线调用前：feat_copy(fo) 存快照（fo 尚不存在时造同座新 Feat）。
+    def begin_step(self, obs: Optional[dict] = None):
+        """基线调用前：feat_copy(fo) 存快照（fo 尚不存在时造对座新 Feat）。
 
         见模块 docstring：真 fo 在本步内会被 _inner observe 一次，
         事后重算 xo 会触发 step<=self.step 的整表重 init；快照是唯一
         无损重建路径。快照同时把 infer 标志置 False——本 CONF 下
         INFER_MIRROR/INFER_TREE 均关，与真 fo 一致。
+
+        SI05：快照席位从当前 observation 明确取（obs["player"]）。
+        旧实现 fo 不存在时默认己方为 0，fresh seat1 根会把对手快照
+        造成 Feat(1)，随后对手预测分支全是 player-1 动作（错方）。
+        fo 已存在但席位与本观察对不上（换席新局、_inner 尚未重建）
+        时同样按观察席位新造，不沿用陈旧快照。
         """
         fo = self.inx.st.get("fo")
-        if fo is None:
-            me = self.inx.st.get("f")
-            seat = 1 - (me.seat if me is not None else 0)
-            self._fo_snap = self.inx.F.Feat(seat)
+        if obs is not None:
+            my_seat = int(obs["player"])
+        else:
+            f = self.inx.st.get("f")
+            my_seat = f.seat if f is not None else 0
+        if fo is None or int(getattr(fo, "seat", 1 - my_seat)) != 1 - my_seat:
+            self._fo_snap = self.inx.F.Feat(1 - my_seat)
         else:
             self._fo_snap = self.inx.mod["feat_copy"](fo)
         return self._fo_snap
+
+    # -- C_hi 单候选成本估计 ------------------------------------------------
+    def _est_candidate_cost_s(self) -> float:
+        """已测单候选（rollout+leaf）成本均值；无样本时 0（不启准入）。"""
+        if self._cand_cost_n == 0:
+            return 0.0
+        return self._cand_cost_sum / self._cand_cost_n
+
+    def _probe_sim(self):
+        if self._probe is None:
+            self._probe = self.inx.FastCarbon()
+        return self._probe
 
     # -- 根构造（复刻 _search 保留段的输入侧） ------------------------------
     def _build_root(self, obs: dict, a0_actions: dict) -> RootContext:
@@ -314,7 +387,8 @@ class RealEnvSearch:
         f, fo = st["f"], st["fo"]
         x = st["x"]
         lg0 = st["lg0"]
-        left = 299 - obs["step"]
+        # SI01：left = 权威剩余步（到终态 step299 还能推进的联合步数）
+        left = TERMINAL_STEP - obs["step"]
         # post-guard 标签反演（Feat.labels 与 decode/to_actions 逐槽互逆）
         y = f.labels(a0_actions)
         # 对手根动作（行 1553–1562 原式）
@@ -346,14 +420,16 @@ class RealEnvSearch:
                            full=full, t_now=st["T_now"], ot=st["ot"])
 
     # -- 候选生成（复刻行 1503–1551）＋三道准入 ------------------------------
-    def _generate_candidates(self, root: RootContext, a0_actions: dict):
-        """返回 (candidates, cand_labels, guard_vetoed)；候选不足 2 个返回 None。
+    # 拆分（SI02 分阶段计时）：_gen_candidates_raw 管生成＋截断（candgen
+    # 阶段），_guard_screen 管守卫一致准入（guard 阶段），
+    # _generate_candidates 是旧签名的合并包装（s1_battery 插桩版用）。
+    def _gen_candidates_raw(self, root: RootContext, a0_actions: dict):
+        """生成＋去重＋K≤4 截断，返回 (cand_actions, cand_labels) 或 None。
 
-        准入：① 根合法性＝生成端合法掩码＋seen 去重（原式）；② 守卫一致
-        ＝逐候选 guard.copy().apply(...)，被改写（或复核抛异常、无法证明
-        一致）者进 guard_vetoed（A0 豁免，不测）；③ 战术相关性截断＝
-        K≤4（含 A0，其余按根先验 lg0[偏离槽][强制标签] 降序、同分按
-        生成序）。bk/pk 两段纯 stats 计数分支不复刻（无行为影响）。
+        准入：① 根合法性＝生成端合法掩码＋seen 去重（原式）；③ 战术
+        相关性截断＝K≤4（含 A0，其余按根先验 lg0[偏离槽][强制标签]
+        降序、同分按生成序）。②守卫一致在 _guard_screen。
+        bk/pk 两段纯 stats 计数分支不复刻（无行为影响）。
         """
         inx, cfg = self.inx, self.cfg
         F = inx.F
@@ -424,9 +500,15 @@ class RealEnvSearch:
             keep = [0] + order
         cand_actions = [cand_actions[i] for i in keep]
         cand_labels = [cand_labels[i] for i in keep]
-        # ② 守卫一致：逐候选用 guard.copy() 跑 apply，被改写者 veto
+        return cand_actions, cand_labels
+
+    def _guard_screen(self, root: RootContext, cand_labels: list) -> set:
+        """② 守卫一致准入：逐候选用 guard.copy() 跑 apply，被改写（或
+        复核抛异常、无法证明一致）者进 veto 集（A0 豁免，不测）。"""
+        inx = self.inx
+        lg0 = root.lg0
         guard_vetoed = set()
-        for idx in range(1, len(cand_actions)):
+        for idx in range(1, len(cand_labels)):
             try:
                 g = inx.guard.copy()
                 out = g.apply(root.x, root.f.aux, cand_labels[idx].copy(), lg0,
@@ -437,17 +519,34 @@ class RealEnvSearch:
                 continue
             if not np.array_equal(np.asarray(out), cand_labels[idx]):
                 guard_vetoed.add(idx)
+        return guard_vetoed
+
+    def _generate_candidates(self, root: RootContext, a0_actions: dict):
+        """旧签名合并包装：返回 (candidates, cand_labels, guard_vetoed)，
+        候选不足 2 个返回 None。"""
+        raw = self._gen_candidates_raw(root, a0_actions)
+        if raw is None:
+            return None
+        cand_actions, cand_labels = raw
+        guard_vetoed = self._guard_screen(root, cand_labels)
         candidates = [Candidate(index=i, action=a, is_a0=(i == 0))
                       for i, a in enumerate(cand_actions)]
         return candidates, cand_labels, guard_vetoed
 
-    # -- rollout（复刻行 1571–1640 的单分支串行版） ---------------------------
+    # -- rollout（复刻行 1571–1640 的单分支串行版＋SI01/SI04） -----------------
     def _make_rollout(self, root: RootContext):
         inx = self.inx
+        cfg = self.cfg
         pool = inx.pool
         if not pool:
             pool.append(inx.FastCarbon())
         sim = pool[0]  # 串行复用：comparator 在下一次 rollout 前已消费叶状态
+
+        def is_terminal(s_) -> bool:
+            """SI01 权威终局：灭绝（vendor _terminal）或时间边界
+            （step_count 到达 TERMINAL_STEP）。旧实现只判灭绝，
+            H≥2 会越过 step299 继续推进并多调一拍策略。"""
+            return inx.terminal_fn(s_) or s_.step_count >= TERMINAL_STEP
 
         def rollout(state, action, horizon, scenario_seed):
             # scenario_seed 未消费（J=1 确定性），见 self.notes
@@ -456,19 +555,47 @@ class RealEnvSearch:
             s_._tid_counter = [c + 500 for c in s_._tid_counter]
             fm = inx.mod["feat_copy"](root.f)
             fop = inx.mod["feat_copy"](root.fo)
+            # SI04：续弈步的双席独立生产守卫。各从根守卫 copy，随步
+            # 演化各自的 lostw/prevw/guard_base，互不串扰（vendor 守卫
+            # 类 docstring 明示：绝不跨分支共享同一实例）。guards[0]
+            # 对应 fm 席（root.me），guards[1] 对应 fop 席（1-root.me）。
+            # 根步动作已在根处定型（我方候选经准入守卫复核、对方为根
+            # 预测），不在此重过；守卫只管 H≥2 的续弈步。
+            guards = None
+            if cfg.get("GUARD"):
+                guards = (inx.guard.copy(), inx.guard.copy())
+            self._last_rollout_guards = guards
             term_cash = list(s_.cash)     # F01：带入根步的 cash
             if root.me == 0:
                 s_.step(action, root.acts_o)
             else:
                 s_.step(root.acts_o, action)
             depth = 1
-            term = inx.terminal_fn(s_)
+            term = is_terminal(s_)
             hh = 1
             while hh < horizon and not term:
                 pc = list(s_.cash)        # F01：带入本步的 cash
                 xs = [fm.observe(s_.obs(root.me)), fop.observe(s_.obs(1 - root.me))]
                 lab = inx.mod["act_b"](inx.rpol, xs, [fm.aux, fop.aux],
                                        [root.t_now, root.ot])
+                if guards is not None:
+                    # SI04：act_b 后、step 前逐席过守卫（与 _inner 同序：
+                    # 先 reset_step 清 guard_base，再 apply）。守卫排序
+                    # 需要本步 logits：rpol.act 与 act_b 同源解码，取
+                    # 其 logits，labels 仍以 act_b 为准（多一次前向，
+                    # 成本记入 rollout_leaf 阶段）。
+                    lab = [np.asarray(lab[0]), np.asarray(lab[1])]
+                    for side, feat in ((0, fm), (1, fop)):
+                        teacher = root.t_now if side == 0 else root.ot
+                        _y, lg_seat, _v = inx.rpol.act(
+                            xs[side], feat.aux, teacher=teacher)
+                        g = guards[side]
+                        g.reset_step()
+                        out = g.apply(xs[side], feat.aux, lab[side], lg_seat,
+                                      inx.rpol, feat.own_uid, teacher)
+                        if not np.array_equal(np.asarray(out), lab[side]):
+                            self.rollout_guard_rewrites += 1
+                        lab[side] = out
                 am = fm.to_actions(lab[0])
                 ao = fop.to_actions(lab[1])
                 if root.me == 0:
@@ -477,51 +604,138 @@ class RealEnvSearch:
                     s_.step(ao, am)
                 depth += 1
                 hh += 1
-                if inx.terminal_fn(s_):
+                if is_terminal(s_):
                     term = True
                     term_cash = pc        # R02：终局步冻结，存活方按带入 cash 计
+            kind = None
+            if term:
+                # 灭绝优先（与 leaf 内 F01 分支的判定优先级一致）；
+                # 纯到时才标 "time"（走真实终态现金结算）。
+                kind = "extinct" if inx.terminal_fn(s_) else "time"
             leaf_left = max(0, root.left - depth)
-            return LeafState(sim=s_, me=root.me, left=leaf_left, prev_cash=term_cash)
+            return LeafState(sim=s_, me=root.me, left=leaf_left,
+                             prev_cash=term_cash, terminal_kind=kind)
 
         return rollout
 
     # -- 主入口 ----------------------------------------------------------------
     def decide_at_root(self, obs: dict, a0_actions: dict,
                        baseline_step_cost_s: float, horizon: int = 1,
-                       scenario_seed: int = 0) -> Optional[Decision]:
-        """在基线已定型的根上跑一次比较器；无候选根返回 None。
+                       scenario_seed: int = 0,
+                       horizons: Optional[list] = None) -> Optional[Decision]:
+        """在基线已定型的根上跑一次比较器；无候选根/已终局根返回 None。
 
-        budget 口径：总预算 = agent.cfg['BUDGET']（Echo4 包 0.7s），
-        比较器只拿总预算减去本步基线已耗（baseline_step_cost_s）后的
-        余量——与部署形态下搜索同基线共预算的口径一致；余量设 0.05s
-        下限防非正预算，下限触发时在 notes 里留痕。
+        SI02 唯一 deadline 口径：本入口产生唯一绝对 deadline，总预算
+        = agent.cfg['BUDGET']（Echo4 包 0.7s）覆盖全链——基线步耗
+        （baseline_step_cost_s，调用前已发生、按值计入）＋快照/根构造
+        （snapshot）＋候选生成（candgen）＋守卫准入（guard）＋比较器
+        （rollout_leaf）。旧实现的 0.05s 预算下限补齐已删除：全链
+        余额不足时直接回 A0（Decision, abort_reason="deadline"）且
+        不启动比较。遥测记总耗时与分阶段耗时（SI02），Decision 的
+        total_elapsed_s / phase_costs 同步填充。
+
+        SI01：已终局根（step>=TERMINAL_STEP 或根状态已灭绝）在入口
+        拒绝（返回 None、记 terminal_root 失败行与计数），不进比较。
+
+        horizons 非 None 时走 anytime 多轮（Comparator.decide_multi），
+        忽略 horizon 参数。
         """
-        root = self._build_root(obs, a0_actions)
-        gen = self._generate_candidates(root, a0_actions)
-        if gen is None:
-            return None
-        candidates, _labels, guard_vetoed = gen
-        total = float(self.cfg["BUDGET"])
-        budget_s = total - float(baseline_step_cost_s)
-        if budget_s < 0.05:
-            budget_s = 0.05
+        t_entry = time.monotonic()
+        total_budget = float(self.cfg["BUDGET"])
+        base_cost = float(baseline_step_cost_s)
+        phases: dict = {"baseline": base_cost}
+
+        def _finish(dec: Decision, leaf_calls: int,
+                    total_elapsed: float) -> Decision:
+            dec = replace(dec, total_elapsed_s=total_elapsed,
+                          phase_costs=dict(phases))
+            # 遥测：显式发布到独立 StatsCollector（活对象），不读快照
+            self.collector.record_decision({
+                "completed": dec.completed_rounds > 0,
+                "rounds": dec.completed_rounds,
+                "changed": bool(dec.changed),
+                "depth": dec.deepest_completed_h if dec.completed_rounds > 0 else None,
+                "leaf_calls": leaf_calls,
+                "cost_s": dec.elapsed_s,
+                "total_cost_s": total_elapsed,
+                "phase_costs": dict(phases),
+                "abort_reason": dec.abort_reason,
+            })
+            return dec
+
+        def _a0_decision(abort_reason: str) -> Decision:
+            return Decision(action=a0_actions, chosen_index=0,
+                            completed_rounds=0, deepest_completed_h=0,
+                            completed_comparisons=0, changed=False,
+                            elapsed_s=0.0, abort_reason=abort_reason)
+
+        # ---- SI01 入口拒绝：时间终局根 --------------------------------
+        if int(obs["step"]) >= TERMINAL_STEP:
+            self.terminal_roots_rejected += 1
             self.notes.append(
-                f"step {root.step}: 基线步耗 {baseline_step_cost_s:.3f}s ≥ 总预算 "
-                f"{total:.2f}s，比较器预算按下限 0.05s 给")
-        comp = Comparator(budget_s=budget_s, max_candidates=4)
+                f"step {obs['step']}: 已终局根（step>={TERMINAL_STEP}）拒绝比较")
+            total_elapsed = base_cost + (time.monotonic() - t_entry)
+            _finish(_a0_decision("terminal_root"), 0, total_elapsed)
+            return None
+
+        # ---- 根构造（快照/对手推断含在内） ------------------------------
+        t = time.monotonic()
+        root = self._build_root(obs, a0_actions)
+        phases["snapshot"] = time.monotonic() - t
+
+        # ---- SI01 入口拒绝：根状态已灭绝 --------------------------------
+        probe = self._probe_sim()
+        probe.load_observation(root.full)
+        if self.inx.terminal_fn(probe):
+            self.terminal_roots_rejected += 1
+            self.notes.append(
+                f"step {root.step}: 根状态已灭绝，拒绝比较")
+            total_elapsed = base_cost + (time.monotonic() - t_entry)
+            _finish(_a0_decision("terminal_root"), 0, total_elapsed)
+            return None
+
+        # ---- 候选生成（candgen）＋守卫准入（guard），分阶段计时 ---------
+        t = time.monotonic()
+        raw = self._gen_candidates_raw(root, a0_actions)
+        phases["candgen"] = time.monotonic() - t
+        if raw is None:
+            return None
+        cand_actions, cand_labels = raw
+        t = time.monotonic()
+        guard_vetoed = self._guard_screen(root, cand_labels)
+        phases["guard"] = time.monotonic() - t
+        candidates = [Candidate(index=i, action=a, is_a0=(i == 0))
+                      for i, a in enumerate(cand_actions)]
+
+        # ---- 唯一 deadline：余额不足直接回 A0、不启动比较 ----------------
+        elapsed = base_cost + (time.monotonic() - t_entry)
+        remaining = total_budget - elapsed
+        if remaining <= 0:
+            return _finish(_a0_decision("deadline"), 0, elapsed)
+        deadline_abs = t_entry + (total_budget - base_cost)
+        comp = Comparator(budget_s=remaining, max_candidates=4)
         rollout = self._make_rollout(root)
         leaf_calls_before = self.leaf_adapter.calls
-        dec = comp.decide(root.full, candidates, rollout, self.leaf_adapter,
-                          horizon=horizon, scenario_seed=scenario_seed,
-                          guard_vetoed=guard_vetoed)
-        # 遥测：显式发布到独立 StatsCollector（活对象），不读 last_stats 快照
-        self.collector.record_decision({
-            "completed": dec.completed_rounds > 0,
-            "rounds": dec.completed_rounds,
-            "changed": bool(dec.changed),
-            "depth": dec.deepest_completed_h if dec.completed_rounds > 0 else None,
-            "leaf_calls": self.leaf_adapter.calls - leaf_calls_before,
-            "cost_s": dec.elapsed_s,
-            "abort_reason": dec.abort_reason,
-        })
-        return dec
+        t = time.monotonic()
+        if horizons is not None:
+            dec = comp.decide_multi(
+                root.full, candidates, rollout, self.leaf_adapter,
+                horizons=horizons, scenario_seed=scenario_seed,
+                guard_vetoed=guard_vetoed,
+                est_candidate_cost_s=self._est_candidate_cost_s(),
+                deadline_abs=deadline_abs)
+        else:
+            dec = comp.decide(
+                root.full, candidates, rollout, self.leaf_adapter,
+                horizon=horizon, scenario_seed=scenario_seed,
+                guard_vetoed=guard_vetoed,
+                est_candidate_cost_s=self._est_candidate_cost_s(),
+                deadline_abs=deadline_abs)
+        phases["rollout_leaf"] = time.monotonic() - t
+        total_elapsed = base_cost + (time.monotonic() - t_entry)
+        leaf_calls = self.leaf_adapter.calls - leaf_calls_before
+        if leaf_calls > 0 and phases["rollout_leaf"] > 0:
+            # C_hi 成本样本：本根单候选（rollout+leaf）平均成本
+            self._cand_cost_sum += phases["rollout_leaf"] / leaf_calls
+            self._cand_cost_n += 1
+        return _finish(dec, leaf_calls, total_elapsed)
