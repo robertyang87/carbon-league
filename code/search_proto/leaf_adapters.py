@@ -9,6 +9,13 @@ reward = 2U - 1，U ∈ [0, 1]）。两种叶：
 超域纪律：映射后 U 若落在 [0, 1] 外，**不静默裁剪**——返回原值并置
 last_out_of_range 标志、累加 out_of_range_count 供遥测/验收读取。
 静默裁剪会把量纲错误伪装成正常值（旧嫁接线 2000·z 的教训之一）。
+
+有限性纪律（SI06，与超域检查分离）：已声明的原始分差尺度可以超出
+[0, 1]，但不可为非有限值。NaN / ±Inf 由 last_nonfinite 标志与
+nonfinite_count 单独记账，并**原样返回**给比较器——由比较器在整轮
+收齐后判该轮无效（abort_reason="nonfinite_leaf"）。适配器不把非有限
+值混进超域计数，也不把它裁剪/映射成合法端点（尤其 vnet 的 tanh：
+Inf 经 tanh 会变成合法的 1.0，必须在 tanh 之前拦截）。
 """
 
 from __future__ import annotations
@@ -40,11 +47,20 @@ class HeuristicLeafAdapter:
         self.b = b
         self.last_out_of_range = False
         self.out_of_range_count = 0
+        self.last_nonfinite = False
+        self.nonfinite_count = 0
         self.calls = 0
 
     def __call__(self, leaf_state: object) -> float:
         self.calls += 1
         u = self.a * float(self._fn(leaf_state)) + self.b
+        # 有限性与超域分离：非有限值单独记账、原样返回（比较器判轮无效）；
+        # 有限但超 [0,1] 只记超域（原始分差尺度的预期现象）。
+        self.last_nonfinite = not math.isfinite(u)
+        if self.last_nonfinite:
+            self.nonfinite_count += 1
+            self.last_out_of_range = False
+            return u
         self.last_out_of_range = not (0.0 <= u <= 1.0)
         if self.last_out_of_range:
             self.out_of_range_count += 1
@@ -74,6 +90,8 @@ class VNetLeafAdapter:
         self.state_md5 = str(state_md5)
         self._backend = backend
         self.last_out_of_range = False  # tanh 映射恒在 (0,1)，保留字段对齐接口
+        self.last_nonfinite = False
+        self.nonfinite_count = 0
         self.calls = 0
 
     def identity(self) -> dict:
@@ -86,4 +104,10 @@ class VNetLeafAdapter:
             )
         self.calls += 1
         z = float(self._backend(leaf_state))
+        # 有限性必须在 tanh 之前查：tanh(±Inf)=±1 会把坏值压成合法端点。
+        # 非有限 z 原样返回，比较器据此判整轮无效（nonfinite_leaf）。
+        self.last_nonfinite = not math.isfinite(z)
+        if self.last_nonfinite:
+            self.nonfinite_count += 1
+            return z
         return (math.tanh(z) + 1.0) / 2.0
