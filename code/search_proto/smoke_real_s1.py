@@ -5,8 +5,11 @@
 口径：
   - 权重来源：仓库 robertyang87/carbon-league main 树 code/packs/
     echo4_int8.py（整包 md5 须为 819250bfc82632786063dabd46a616bd，
-    不合即停，不用任何替代权重）。经 gh_api 的 git blob 通道取包
-    （contents API 对 4.6MB 文件返回空内容），缓存 /tmp/echo4_int8.py。
+    不合即停，不用任何替代权重）。取包顺序（R2-06）：--pack 显式
+    路径 → 本地缓存 /tmp/echo4_int8.py → 本脚本所在 checkout 的
+    code/packs/echo4_int8.py → gh_api 的 git blob 通道（contents
+    API 对 4.6MB 文件返回空内容）；任一来源都先验整包 md5 才用，
+    checkout 在场时完整离线链可跑通、不依赖机上 gh_api。
   - 对局：FastCarbon（包内嵌 fastsim，钉版 aefe6c83）自对弈，双座
     均由包按其自身口径构造的基线 agent 驱动（SEARCH=False 原样）；
     基线动作照常下发推进对局，比较器只在 seat0 的根上做判读。
@@ -19,7 +22,7 @@
     的候选按合同不可能被选，故 changed 恒为守卫一致的改子）、每根
     耗时分布、叶调用数、中止原因分布、外层规则层开关清单。
 
-运行：python3 smoke_real_s1.py [目标根数=12] [最多局数=3]
+运行：python3 smoke_real_s1.py [--pack PATH] [目标根数=12] [最多局数=3]
 退出码 0 = 跑通（至少 1 根完成比较），1 = 阻塞/无根。
 """
 
@@ -38,21 +41,70 @@ import real_env                               # noqa: E402
 
 PACK_REPO_PATH = "code/packs/echo4_int8.py"
 PACK_CACHE = "/tmp/echo4_int8.py"
-ROOTS_TARGET = int(sys.argv[1]) if len(sys.argv) > 1 else 12
-MAX_GAMES = int(sys.argv[2]) if len(sys.argv) > 2 else 3
+# checkout fallback（R2-06）：本脚本在仓内 code/search_proto/ 时，
+# 同 checkout 的钉版包在 ../../packs/echo4_int8.py。
+CHECKOUT_PACK_CANDIDATES = [
+    os.path.join(_HERE, "..", "..", "packs", "echo4_int8.py"),
+]
+
+# --pack 先于位置参数解析并从 argv 摘除（位置参数口径不变）。
+_argv = sys.argv[1:]
+PACK_ARG = None
+if "--pack" in _argv:
+    _i = _argv.index("--pack")
+    if _i + 1 >= len(_argv):
+        raise SystemExit("--pack 需要一个路径参数")
+    PACK_ARG = _argv[_i + 1]
+    del _argv[_i:_i + 2]
+ROOTS_TARGET = int(_argv[0]) if len(_argv) > 0 else 12
+MAX_GAMES = int(_argv[1]) if len(_argv) > 1 else 3
 SEED0 = 986200
 
 
-def fetch_pack() -> str:
-    """经 gh_api git blob 通道取 Echo4 包，验 md5 后落缓存。"""
+def _pack_md5_ok(path) -> bool:
+    import hashlib
+
+    try:
+        with open(path, "rb") as fh:
+            return hashlib.md5(fh.read()).hexdigest() == real_env.EXPECTED_PACK_MD5
+    except OSError:
+        return False
+
+
+def fetch_pack(pack_arg=None) -> str:
+    """取 Echo4 包并验整包 md5，返回本地路径（R2-06 取包顺序）。
+
+    顺序：pack_arg/--pack 显式路径 → PACK_CACHE → checkout 内钉版
+    包（CHECKOUT_PACK_CANDIDATES）→ gh_api git blob 通道落缓存。
+    显式路径与 checkout 候选 md5 不合即停（不许拿错包冒充）；缓存
+    不合则穿透到下一来源。在线通道不可用时报错并指向 checkout。
+    """
     import base64
     import hashlib
 
-    if os.path.exists(PACK_CACHE):
-        with open(PACK_CACHE, "rb") as fh:
-            if hashlib.md5(fh.read()).hexdigest() == real_env.EXPECTED_PACK_MD5:
-                return PACK_CACHE
-    from gh_api import req
+    explicit = pack_arg if pack_arg is not None else PACK_ARG
+    if explicit is not None:
+        if not _pack_md5_ok(explicit):
+            raise RuntimeError(
+                f"--pack 指定包 md5 不合（须 {real_env.EXPECTED_PACK_MD5}）："
+                f"{explicit} —— 停")
+        return explicit
+    if os.path.exists(PACK_CACHE) and _pack_md5_ok(PACK_CACHE):
+        return PACK_CACHE
+    for cand in CHECKOUT_PACK_CANDIDATES:
+        cand = os.path.normpath(cand)
+        if os.path.exists(cand):
+            if not _pack_md5_ok(cand):
+                raise RuntimeError(
+                    f"checkout 钉版包 md5 不合：{cand} —— 停")
+            return cand
+    try:
+        from gh_api import req
+    except ImportError as e:
+        raise RuntimeError(
+            "gh_api 不可用且缓存/checkout 均无钉版包；把本脚本置于仓 "
+            "checkout 内（code/search_proto/）或用 --pack 指定 —— 停"
+        ) from e
     tree = req("GET", "/repos/robertyang87/carbon-league/git/trees/main:code/packs")
     sha = None
     for t in tree["tree"]:
