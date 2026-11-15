@@ -11,9 +11,10 @@ expect_met 全灭也照样输出 BATTERY: PASS、退出 0。本版把正式判�
   A3 反例不取（expect_changed=False 的构造例 expect_met 必须全 True）
   A4 选中精确最优（每例 chosen_is_settlement_best 必须为 True）
   A5 叶↔结算误差阈内（leaf_vs_settlement_max_abs_err ≤ 1e-6，逐例）
-  A6 权威终局一致性（结算须按权威终局口径产出；当前采集口径为
-     SI01 修复前的 simulator step-to-300，恒记未验——终局修复落地
-     并按权威口径重做 fixture 后才可能 PASS，不许自签）
+  A6 权威终局一致性（结算按权威终局口径产出：SI01 修复已落地，
+     fixture 按权威终局重做——298 根逐候选独立真跑一步到终态
+     step299 对账、297 根 H=2 推进冻结于 299 并断言零越界策略
+     调用、299/300/灭绝根入口拒绝记账；口径标记 authoritative）
   A7 最低根数/局数（根 ≥ 40、局 ≥ 3，注册电池规模口径）
   A8 中止与异常为 0（中止根、守卫异常、构造例 error/exception、
      续弈 exception 均为 0）
@@ -26,11 +27,18 @@ expect_met 全灭也照样输出 BATTERY: PASS、退出 0。本版把正式判�
   --replay <旧证据 JSON>：不跑实局，对既有证据数据按正式闸回放
     判读（旧包缺自描述字段/权威结算口径者，相应断言记未验）。
 
-采集口径与 s1_battery 完全同源（import 其 decide_instrumented /
-run_b_case / craft_state / verify_changed_root 与全部规模常量），
-本版只换判读闸与证据包，不动采集语义。证据包单 JSON 原子落盘
-（临时文件 + os.replace），含 run_id、源码 md5 集、包 md5、CONF
-快照、fixture 身份（构造参数 hash）、逐根明细、逐项断言结果。
+采集规模常量与种子口径同 s1_battery（SEED0/ROOTS_TARGET 等）。
+正式实局口径（本版）：A 腿走 real_env.decide_at_root 公开入口
+（SI01/SI02 修复版：唯一 deadline 贯穿全链、终局根入口拒绝）；
+s1_battery.decide_instrumented 为 SI02 修复前插桩（0.05 s 预算
+下限补齐、候选生成在时钟外），与修复后公开入口不同口径，不用
+于正式采集。B 腿 fixture 按权威终局重做（见 A6）。预算口径：
+部署预算 cfg BUDGET=0.7 s 在本 VM 不可达（全链实测约 2–3 s/根），
+正式跑以显式声明的 VM 对照预算 RUN_BUDGET_S 采集，部署口径
+复验归 S2；预算口径随证据包 budget_caliber 字段同行。证据包单
+JSON 原子落盘（临时文件 + os.replace），含 run_id、源码 md5 集、
+包 md5、CONF 快照、fixture 身份（构造参数 hash）、逐根明细、
+逐项断言结果。
 
 运行：
   python3 s1_battery2.py [--mode diagnostic] [--out PATH]
@@ -69,13 +77,29 @@ from telemetry import StatsCollector         # noqa: E402
 MIN_ROOTS_FORMAL = 40
 MIN_GAMES_FORMAL = 3
 LEAF_SETTLE_TOL = 1e-6
-# 当前 B 结算由 FastCarbon 真跑一步到 step 300 产出，与 SI01 权威
-# 终局口径（最后有效动作观察 step298、终态 step299）不一致；
-# 核心组终局修复＋fixture 按权威口径重做前，此值不许改成权威。
-SETTLEMENT_RULE = "simulator_step_to_300_pre_SI01_fix"
+# SI01 修复已落地（real_env 权威终局：最后有效动作观察 step298、
+# 终态 step299、推进冻结、终局根入口拒绝），B 腿 fixture 已按权威
+# 口径重做（297/298/299/300×双席＋灭绝∩到时，见 run_b_case_auth /
+# run_rejection_case），叶值与结算对账均在权威轴上，故标记权威。
+SETTLEMENT_RULE = "authoritative_step299"
 AUTHORITATIVE_SETTLEMENT_RULE = "authoritative_step299"
 
 EXIT_PASS, EXIT_FAIL, EXIT_UNVERIFIED = 0, 2, 3
+
+# ---------------- 运行预算口径（显式声明，不许静默改数） ----------------
+# 部署口径：Echo4 包 CONF BUDGET=0.7 s（decide_at_root 的总预算）。
+# 本 VM 共享 CPU 上全链实测约 2–3 s/根（基线步耗 alone 0.42–0.69 s），
+# 0.7 s 在本机必然 deadline——正式跑以 VM 对照预算采集，部署口径
+# 考位复验归 S2。运行预算经环境变量可调，取值与声明随证据包同行。
+DEPLOYMENT_BUDGET_S = 0.7
+RUN_BUDGET_S = float(os.environ.get("S1B2_RUN_BUDGET_S", "6.0"))
+# 采集墙钟同属 VM 对照口径：b1 常量 COLLECT_WALL_S=330/HARD_WALL_S=
+# 470 在其源注释即标「参考值，非部署口径」；本 VM 负载下全链约
+# 3.5 s/根时 330 s 采不满注册规模（首趟实测 22/48 根、根序列与
+# 首轮逐根同序，纯墙钟截断）。正式跑可经环境变量显式放宽，实值
+# 随证据包 fixture_identity.collection_params 如实记录，不许静默。
+COLLECT_WALL_S = os.environ.get("S1B2_COLLECT_WALL_S")
+HARD_WALL_S = os.environ.get("S1B2_HARD_WALL_S")
 
 
 # ---------------- 证据包元数据 ----------------
@@ -249,9 +273,301 @@ def make_run_id(mode, payload) -> str:
     return f"s1b2-{mode}-{ts}-{_sha256_json(payload)[:10]}"
 
 
-# ---------------- 实局采集（口径同 s1_battery） ----------------
+# ---------------- B 腿权威终局 fixture（SI01 重做） ----------------
+def _craft_auth(FastCarbon, step, spec, carbon_cells=None):
+    """按 spec 造任意 step 的状态（tests_s1_fix.craft 同法）：无树、
+    碳图按 carbon_cells（默认全零）。返回 (sim, snap)。"""
+    sim = FastCarbon()
+    sim.reset(seed=b1.SEED0)
+    snap = sim.get_state()
+    snap["step"] = int(step)
+    snap["cash"] = [float(spec["cash"][0]), float(spec["cash"][1])]
+    carbon = [0.0] * 225
+    for pos, val in (carbon_cells or {}).items():
+        carbon[int(pos)] = float(val)
+    snap["carbon"] = carbon
+    snap["trees"] = {}
+    snap["trees_dict"] = {}
+    snap["tid_counter"] = [0, 0]
+    w = {}
+    wc = [0, 0]
+    for wid, (p, pos, cargo, kind) in spec["workers"].items():
+        w[wid] = {"player": p, "pos": int(pos), "carbon": float(cargo),
+                  "type": kind}
+        suffix = int(str(wid).rsplit("-", 1)[1])
+        wc[p] = max(wc[p], suffix + 1)
+    snap["workers"] = w
+    snap["wid_counter"] = wc
+    sim2 = FastCarbon()
+    sim2.set_state(snap)
+    assert sim2.step_count == step
+    return sim2, snap
+
+
+def _geom_spec(seat, kind, bases):
+    """正/反例几何（口径同首轮 P2/N1，按席位镜像）。
+
+    bases = (my_base, my_base_b, op_base, op_base_b, k_pos, far_pos)。
+    capture（正例期望）：敌 collector(8) 站我方基地格、我方
+    collector(44) 邻格，踏入捕获＋交付为期望动作。
+    deposit（反例期望）：敌 collector(8) 在远格、我方 collector(44)
+    邻基地格，A0 踏入交付 +44 唯一最优，期望 changed=False。
+    """
+    my_base, my_base_b, op_base, _op_base_b, k_pos, far_pos = bases
+    me, op = seat, 1 - seat
+    key = f"player-{me}-worker-0"
+    workers = {
+        f"player-{me}-worker-1": (me, my_base_b, 0, "COLLECTOR"),
+        f"player-{me}-worker-2": (me, my_base_b, 0, "COLLECTOR"),
+        f"player-{op}-worker-1": (op, op_base, 0, "COLLECTOR"),
+    }
+    if kind == "capture":
+        workers[key] = (me, k_pos, 44, "COLLECTOR")
+        workers[f"player-{op}-worker-0"] = (op, my_base, 8, "COLLECTOR")
+    else:
+        workers[key] = (me, k_pos, 44, "COLLECTOR")
+        workers[f"player-{op}-worker-0"] = (op, far_pos, 8, "COLLECTOR")
+    return {"cash": [100, 100], "workers": workers}, key
+
+
+def run_b_case_auth(pack_path, FastCarbon, F, name, step, seat, spec,
+                    key_uid, expect_changed, design_note):
+    """权威终局构造例：fresh agent → begin_step(obs) → 基线 A0 →
+    decide_at_root 正式判读 → 同根逐候选叶值与权威终态现金差对账。
+
+    结算口径：step298 根（H=1）逐候选独立真跑一步到终态 step299
+    的现金差（R2 双证口径）；step297 根（H=2）用 rollout 终态
+    （推进冻结于 299、terminal_kind=time）的真实终态现金差，并以
+    H=3 冻结探针断言零越界（act_b 调用数：298 根 0、297 根 1，
+    终步恰 299）。冻结断言失败记 error（正式闸 A8）。
+    """
+    out = {"case": name, "design": design_note, "me": seat,
+           "key_uid": key_uid, "expect_changed": expect_changed,
+           "root_step": step, "settlement_rule": SETTLEMENT_RULE}
+    _pack, agent = real_env.load_pack(pack_path)
+    harness = real_env.RealEnvSearch(agent, collector=StatsCollector())
+    harness.cfg["BUDGET"] = RUN_BUDGET_S
+    horizon = 1 if step >= 298 else 2
+    sim, snap = _craft_auth(FastCarbon, step, spec)
+    obs = sim.obs(seat)
+    harness.begin_step(obs)
+    t0 = time.perf_counter()
+    a0 = agent(obs)
+    base_cost = time.perf_counter() - t0
+    out["baseline_step_cost_s"] = base_cost
+    out["a0_action"] = a0
+    if not a0:
+        out["error"] = "基线 agent 返回空动作（冷启动 _inner 异常兜底）"
+        return out
+    dec = harness.decide_at_root(obs, a0, base_cost, horizon=horizon,
+                                 scenario_seed=b1.SEED0 + 900)
+    if dec is None:
+        out["error"] = "无候选根（key_units 未触发或去重后候选 <2）"
+        return out
+    out["changed"] = bool(dec.changed)
+    out["chosen_index"] = dec.chosen_index
+    out["abort_reason"] = dec.abort_reason
+    out["expect_met"] = (bool(dec.changed) == expect_changed)
+    # ---- 同根逐候选测量（确定性同候选集）：叶值＋权威结算 ----
+    root = harness._build_root(obs, a0)
+    gen = harness._generate_candidates(root, a0)
+    if gen is None:
+        out["error"] = "测量重建无候选（与 decide 不一致）"
+        return out
+    candidates, _labels, vetoed = gen
+    out["guard_vetoed"] = sorted(vetoed)
+    out["acts_o"] = root.acts_o
+    rollout = harness._make_rollout(root)
+    leaf_values, settlements = {}, {}
+    freeze_bad = []
+    for c in candidates:
+        ls = rollout(root.full, c.action, horizon, b1.SEED0 + 900)
+        leaf_values[c.index] = harness.leaf_adapter(ls)
+        if ls.sim.step_count != real_env.TERMINAL_STEP:
+            freeze_bad.append(f"候选{c.index} rollout 终步 "
+                              f"{ls.sim.step_count}≠299")
+        if step >= 298:
+            s2 = FastCarbon()
+            s2.set_state(snap)
+            if seat == 0:
+                s2.step(c.action, root.acts_o)
+            else:
+                s2.step(root.acts_o, c.action)
+            if s2.step_count != real_env.TERMINAL_STEP:
+                freeze_bad.append(f"候选{c.index} 独立结算终步 "
+                                  f"{s2.step_count}≠299")
+            settlements[c.index] = s2.cash[seat] - s2.cash[1 - seat]
+        else:
+            if ls.terminal_kind != "time":
+                freeze_bad.append(f"候选{c.index} 终局类型 "
+                                  f"{ls.terminal_kind}≠time")
+            settlements[c.index] = (float(ls.sim.cash[seat])
+                                    - float(ls.sim.cash[1 - seat]))
+    out["leaf_values"] = {str(k): v for k, v in leaf_values.items()}
+    out["settlements"] = {str(k): v for k, v in settlements.items()}
+    out["settlement_source"] = ("independent_step_to_299"
+                                if step >= 298
+                                else "rollout_terminal_frozen_299")
+    out["leaf_vs_settlement_max_abs_err"] = max(
+        abs(leaf_values[i] - settlements[i]) for i in leaf_values)
+    best_idx = max(settlements, key=lambda i: settlements[i])
+    out["settlement_best_index"] = best_idx
+    out["settlement_best_unique"] = (
+        sum(1 for v in settlements.values()
+            if v == settlements[best_idx]) == 1)
+    out["chosen_is_settlement_best"] = (dec.chosen_index == best_idx)
+    out["key_move_a0"] = a0.get(key_uid, "STAY")
+    out["key_move_chosen"] = \
+        candidates[dec.chosen_index].action.get(key_uid, "STAY")
+    # ---- 终局冻结探针（R1 口径）：H=3、act_b 计数、终步恰 299 ----
+    mod = harness.inx.mod
+    orig_act_b = mod["act_b"]
+    calls = {"n": 0}
+
+    def counting_act_b(*a, **k):
+        calls["n"] += 1
+        return orig_act_b(*a, **k)
+
+    mod["act_b"] = counting_act_b
+    try:
+        ls3 = rollout(root.full, candidates[0].action, 3, b1.SEED0 + 900)
+    finally:
+        mod["act_b"] = orig_act_b
+    want_calls = 0 if step >= 298 else 1
+    out["terminal_freeze"] = {
+        "h3_final_step": ls3.sim.step_count,
+        "act_b_calls": calls["n"], "expected_act_b_calls": want_calls,
+        "ok": (ls3.sim.step_count == real_env.TERMINAL_STEP
+               and calls["n"] == want_calls)}
+    if not out["terminal_freeze"]["ok"]:
+        freeze_bad.append(f"H=3 冻结探针 act_b={calls['n']}（期望 "
+                          f"{want_calls}）、终步 {ls3.sim.step_count}")
+    if freeze_bad:
+        out["error"] = "终局冻结断言失败：" + "；".join(freeze_bad)
+    return out
+
+
+def run_b9_extinction(pack_path, FastCarbon, F):
+    """灭绝∩到时重合例（R3 口径）：root298，我方唯一 collector
+    （载货 60、cash 10 不可招募）踏入敌轻载（2）格——同一步灭绝
+    且到时。自杀候选叶值须合 F01 恒等 −102（灭绝 pen −2 − 存活方
+    带入步前现金 100）；比较器不得改子取自杀动作。"""
+    name = "B9_extinct_time_coincide"
+    me = 0
+    key_uid = "player-0-worker-0"
+    spec = {"cash": [10, 100], "workers": {
+        key_uid: (0, 112, 60, "COLLECTOR"),
+        "player-1-worker-0": (1, 113, 2, "COLLECTOR"),
+        "player-1-worker-1": (1, 200, 0, "COLLECTOR")}}
+    out = {"case": name, "me": me, "key_uid": key_uid,
+           "expect_changed": False, "root_step": 298,
+           "settlement_rule": SETTLEMENT_RULE,
+           "design": "灭绝∩到时重合（R3 口径）：自杀候选叶值须合 F01 "
+                     "恒等 −102，终局类型 extinct、终步 299"}
+    _pack, agent = real_env.load_pack(pack_path)
+    harness = real_env.RealEnvSearch(agent, collector=StatsCollector())
+    harness.cfg["BUDGET"] = RUN_BUDGET_S
+    sim, _snap = _craft_auth(FastCarbon, 298, spec,
+                             carbon_cells={113: 100.0})
+    obs = sim.obs(me)
+    harness.begin_step(obs)
+    t0 = time.perf_counter()
+    a0 = agent(obs)
+    base_cost = time.perf_counter() - t0
+    out["baseline_step_cost_s"] = base_cost
+    if not a0:
+        out["error"] = "基线 agent 返回空动作"
+        return out
+    dec = harness.decide_at_root(obs, a0, base_cost, horizon=1,
+                                 scenario_seed=b1.SEED0 + 900)
+    out["decide_returned_none"] = dec is None
+    if dec is not None:
+        out["changed"] = bool(dec.changed)
+        out["chosen_index"] = dec.chosen_index
+        out["abort_reason"] = dec.abort_reason
+    root = harness._build_root(obs, a0)
+    slot = root.f.own_uid.index(key_uid)
+    dests = F.DEST[112]
+    move = None
+    for m in range(5):
+        if int(dests[m]) == 113:
+            move = m
+    if move is None:
+        out["error"] = "DEST[112] 无到 113 的移动"
+        return out
+    y = root.y.copy()
+    y[slot] = move
+    suicidal = root.f.to_actions(y)
+    out["suicidal_differs_from_a0"] = \
+        suicidal.get(key_uid) != a0.get(key_uid)
+    rollout = harness._make_rollout(root)
+    ls = rollout(root.full, suicidal, 1, b1.SEED0 + 900)
+    v = harness.leaf_adapter(ls)
+    en = ls.sim.workers.get("player-1-worker-0")
+    out["suicidal_leaf_value"] = v
+    out["suicidal_terminal"] = {
+        "step_count": ls.sim.step_count,
+        "terminal_kind": ls.terminal_kind,
+        "sim_terminal": bool(harness.inx.terminal_fn(ls.sim)),
+        "key_worker_alive": key_uid in ls.sim.workers,
+        "enemy_cargo": None if en is None else en.carbon}
+    out["f01_expected_leaf"] = -102.0
+    out["leaf_vs_settlement_max_abs_err"] = abs(v - (-102.0))
+    identity_ok = (ls.sim.step_count == real_env.TERMINAL_STEP
+                   and ls.terminal_kind == "extinct"
+                   and out["leaf_vs_settlement_max_abs_err"]
+                   <= LEAF_SETTLE_TOL
+                   and out["suicidal_differs_from_a0"])
+    out["expect_met"] = bool(identity_ok
+                             and (dec is None or not dec.changed))
+    if not identity_ok:
+        out["error"] = "灭绝∩到时 F01 恒等/终局断言失败（见 suicidal_terminal）"
+    return out
+
+
+def run_rejection_case(pack_path, FastCarbon, name, step, seat, spec=None):
+    """SI01 入口拒绝记账：step299/300 根与已灭绝根 → decide_at_root
+    返回 None 且 terminal_roots_rejected +1，如实入证据
+    （expect_changed=None，不入 A2/A3 正反例口径）。"""
+    out = {"case": name, "me": seat, "expect_changed": None,
+           "root_step": step, "kind": "terminal_rejection",
+           "settlement_rule": SETTLEMENT_RULE}
+    _pack, agent = real_env.load_pack(pack_path)
+    harness = real_env.RealEnvSearch(agent, collector=StatsCollector())
+    harness.cfg["BUDGET"] = RUN_BUDGET_S
+    if spec is None:
+        sim = FastCarbon()
+        sim.reset(seed=b1.SEED0)
+        snap = sim.get_state()
+        snap["step"] = int(step)
+        sim2 = FastCarbon()
+        sim2.set_state(snap)
+        assert sim2.step_count == step
+        sim = sim2
+    else:
+        sim, _snap = _craft_auth(FastCarbon, step, spec)
+    obs = sim.obs(seat)
+    harness.begin_step(obs)
+    a0 = agent(obs)
+    before = harness.terminal_roots_rejected
+    dec = harness.decide_at_root(obs, a0, baseline_step_cost_s=0.01)
+    out["decide_returned_none"] = dec is None
+    out["terminal_roots_rejected_delta"] = \
+        harness.terminal_roots_rejected - before
+    out["rejected"] = bool(dec is None
+                           and out["terminal_roots_rejected_delta"] == 1)
+    if not out["rejected"]:
+        out["error"] = "已终局根未被入口拒绝（SI01 闸失效）"
+    return out
+
+
+# ---------------- 实局采集（正式口径：decide_at_root＋权威 fixture） ----------------
 def run_live(mode):
     b1.T_START = time.time()
+    if COLLECT_WALL_S is not None:
+        b1.COLLECT_WALL_S = float(COLLECT_WALL_S)
+    if HARD_WALL_S is not None:
+        b1.HARD_WALL_S = float(HARD_WALL_S)
     print("== vendor md5 核验 ==")
     for k, v in real_env.verify_vendor().items():
         print(f"  {k}: {v}")
@@ -271,6 +587,12 @@ def run_live(mode):
     conf_snapshot = {str(k): (v if isinstance(v, (int, float, str, bool))
                               or v is None else str(v))
                      for k, v in harnesses[0].cfg.items()}
+    pack_conf_budget = float(harnesses[0].cfg["BUDGET"])
+    for h in harnesses:
+        h.cfg["BUDGET"] = RUN_BUDGET_S
+    print(f"== 预算口径声明：部署 BUDGET={pack_conf_budget}s（包 CONF）；"
+          f"本 VM 全链约 2–3 s/根、部署预算在本机不可达，本趟以 VM "
+          f"对照预算 {RUN_BUDGET_S}s 采集，部署口径考位复验归 S2 ==")
 
     roots, saved_verify = [], []
     games_played = 0
@@ -299,7 +621,7 @@ def run_live(mode):
             actions, decs, details = [None, None], [None, None], [None, None]
             for seat in (0, 1):
                 obs = sim.obs(seat)
-                harnesses[seat].begin_step()
+                harnesses[seat].begin_step(obs)
                 t0 = time.perf_counter()
                 act = agents[seat](obs)
                 base_cost = time.perf_counter() - t0
@@ -307,14 +629,35 @@ def run_live(mode):
                 steps_scanned += 1
                 if game_roots < b1.PER_GAME_ROOT_CAP \
                         and len(roots) < b1.ROOTS_TARGET:
-                    dec, detail = b1.decide_instrumented(
-                        harnesses[seat], obs, act, base_cost, horizon=1,
+                    leaf_before = harnesses[seat].leaf_adapter.calls
+                    dec = harnesses[seat].decide_at_root(
+                        obs, act, base_cost, horizon=1,
                         scenario_seed=b1.SEED0 + len(roots))
                     if dec is not None:
                         decs[seat] = dec
-                        details[seat] = detail
-                        roots.append(b1.root_record(
-                            g, seat, obs["step"], dec, detail, base_cost))
+                        roots.append({
+                            "game": g, "seat": seat, "step": obs["step"],
+                            "chosen_index": dec.chosen_index,
+                            "changed": bool(dec.changed),
+                            "completed_rounds": dec.completed_rounds,
+                            "completed_comparisons":
+                                dec.completed_comparisons,
+                            "deepest_completed_h": dec.deepest_completed_h,
+                            "abort_reason": dec.abort_reason,
+                            "elapsed_s": dec.elapsed_s,
+                            "total_elapsed_s": dec.total_elapsed_s,
+                            "phase_costs": dec.phase_costs,
+                            "baseline_step_cost_s": base_cost,
+                            "run_budget_total_s": RUN_BUDGET_S,
+                            "leaf_calls":
+                                harnesses[seat].leaf_adapter.calls
+                                - leaf_before,
+                            "n_guard_vetoed": None,
+                            "leaf_values": {},
+                            "detail_note": "正式入口 decide_at_root 口径："
+                                "逐候选叶值/守卫否决明细不经公开入口暴露，"
+                                "以 Decision 与 collector 遥测为准",
+                        })
                         game_roots += 1
             for seat in (0, 1):
                 if decs[seat] is not None and decs[seat].changed \
@@ -329,56 +672,74 @@ def run_live(mode):
         print(f"  局 {g} 完：本局根 {game_roots}，累计 {len(roots)}，"
               f"墙钟 {b1.wall():.0f}s")
 
-    print("== B. 精确终局正反例（fixture 同 s1_battery；结算口径见 A6） ==")
+    print("== B. 权威终局构造例（SI01 重做：297/298×双席正反例"
+          "＋灭绝∩到时＋299/300/灭绝根拒绝记账） ==")
     probe = FastCarbon()
     probe.reset(seed=b1.SEED0)
     base0 = probe.bases[0][0][1]
     base0b = probe.bases[0][1][1]
     base1 = probe.bases[1][0][1]
-    adj = [c for c in range(225) if float(F.DIST[c, base0]) == 1.0]
-    k_pos = adj[0]
-    far2 = [c for c in range(225)
-            if float(F.DIST[c, k_pos]) == 2.0
-            and float(F.DIST[c, base0]) >= 2.0
-            and c not in (base0, base0b, base1, probe.bases[1][1][1])]
-    e_pos_n1 = far2[0]
-    extras_me = {"player-0-worker-1": (0, base0b, 0, "COLLECTOR"),
-                 "player-0-worker-2": (0, base0b, 0, "COLLECTOR")}
-    extra_en = {"player-1-worker-1": (1, base1, 0, "COLLECTOR")}
-    case_defs = [
-        {"case": "P2_capture_deposit", "expect_changed": True, "me": 0,
-         "key_uid": "player-0-worker-0",
-         "spec": {"cash": [100, 100], "workers": {
-             "player-0-worker-0": (0, k_pos, 44, "COLLECTOR"),
-             "player-1-worker-0": (1, base0, 8, "COLLECTOR"),
-             **extras_me, **extra_en}},
-         "design_note": "敌 collector(8) 站我方基地格，我方 collector(44) 邻格；"
-                        "踏入捕获后交付为期望正例（同 s1_battery P2）。"},
-        {"case": "P1_light_capture", "expect_changed": True, "me": 0,
-         "key_uid": "player-0-worker-0",
-         "spec": {"cash": [100, 100], "workers": {
-             "player-0-worker-0": (0, k_pos, 12, "COLLECTOR"),
-             "player-1-worker-0": (1, base0, 44, "COLLECTOR"),
-             **extras_me, **extra_en}},
-         "design_note": "敌 collector(44) 站我方基地格，我方 collector(12) 邻格；"
-                        "踏入捕获交付为期望正例（同 s1_battery P1）。"},
-        {"case": "N1_deposit_optimal", "expect_changed": False, "me": 0,
-         "key_uid": "player-0-worker-0",
-         "spec": {"cash": [100, 100], "workers": {
-             "player-0-worker-0": (0, k_pos, 44, "COLLECTOR"),
-             "player-1-worker-0": (1, e_pos_n1, 8, "COLLECTOR"),
-             **extras_me, **extra_en}},
-         "design_note": "A0 踏入交付 +44 唯一最优，期望 changed=False"
-                        "（同 s1_battery N1）。"},
-    ]
+    base1b = probe.bases[1][1][1]
+
+    def _adj_far(base, my_b, op_b, op_bb):
+        adj = [c for c in range(225) if float(F.DIST[c, base]) == 1.0]
+        k = adj[0]
+        far = [c for c in range(225)
+               if float(F.DIST[c, k]) == 2.0
+               and float(F.DIST[c, base]) >= 2.0
+               and c not in (base, my_b, op_b, op_bb)]
+        return k, far[0]
+
+    k0, far0 = _adj_far(base0, base0b, base1, base1b)
+    k1, far1 = _adj_far(base1, base1b, base0, base0b)
+    bases_by_seat = {0: (base0, base0b, base1, base1b, k0, far0),
+                     1: (base1, base1b, base0, base0b, k1, far1)}
+    case_defs = []
+    for step in (298, 297):
+        for seat in (0, 1):
+            for kind, expect in (("capture", True), ("deposit", False)):
+                spec, key = _geom_spec(seat, kind, bases_by_seat[seat])
+                case_defs.append({
+                    "case": f"B_{kind}_step{step}_seat{seat}",
+                    "expect_changed": expect, "me": seat, "step": step,
+                    "key_uid": key, "spec": spec,
+                    "design_note":
+                        "敌 collector(8) 站我方基地格、我方 collector(44) "
+                        "邻格，踏入捕获＋交付为期望正例（首轮 P2 几何，"
+                        "根步移至权威轴 297/298）"
+                        if kind == "capture" else
+                        "A0 踏入交付 +44 唯一最优，期望 changed=False"
+                        "（首轮 N1 几何，根步移至权威轴 297/298）"})
+    b9_spec = {"step": 298, "seat": 0, "geometry": "extinct_time",
+               "cash": [10, 100],
+               "workers": {"player-0-worker-0": [0, 112, 60, "COLLECTOR"],
+                           "player-1-worker-0": [1, 113, 2, "COLLECTOR"],
+                           "player-1-worker-1": [1, 200, 0, "COLLECTOR"]},
+               "carbon_cells": {"113": 100.0}}
+    rej_defs = [{"case": "B9_extinct_time_coincide",
+                 "expect_changed": False, "spec": b9_spec}]
+    for step in (299, 300):
+        for seat in (0, 1):
+            rej_defs.append({
+                "case": f"REJ_step{step}_seat{seat}",
+                "expect_changed": None,
+                "spec": {"kind": "terminal_rejection", "step": step,
+                         "seat": seat, "layout": "reset_standard"}})
+    rej_defs.append({
+        "case": "REJ_extinct_step100_seat0", "expect_changed": None,
+        "spec": {"kind": "terminal_rejection", "step": 100, "seat": 0,
+                 "cash": [100, 10],
+                 "workers": {"player-0-worker-0": [0, 112, 40, "COLLECTOR"],
+                             "player-0-worker-1": [0, 10, 0, "COLLECTOR"]}}})
+    case_defs.extend(rej_defs)
+
     b_results = []
-    for cd in case_defs:
+    for cd in case_defs[:8]:
         try:
-            r = b1.run_b_case(pack_path, FastCarbon, F, cd["case"],
-                              cd["spec"], me=cd["me"],
-                              key_uid=cd["key_uid"],
-                              expect_changed=cd["expect_changed"],
-                              design_note=cd["design_note"])
+            r = run_b_case_auth(pack_path, FastCarbon, F, cd["case"],
+                                cd["step"], cd["me"], cd["spec"],
+                                cd["key_uid"], cd["expect_changed"],
+                                cd["design_note"])
             b_results.append(r)
             print(f"  {cd['case']}: changed={r.get('changed')} "
                   f"expect_met={r.get('expect_met')} err={r.get('error')}")
@@ -387,6 +748,34 @@ def run_live(mode):
                               "expect_changed": cd["expect_changed"],
                               "exception": repr(exc)})
             print(f"  {cd['case']} 异常：{exc!r}")
+    try:
+        r = run_b9_extinction(pack_path, FastCarbon, F)
+        b_results.append(r)
+        print(f"  B9_extinct_time_coincide: expect_met={r.get('expect_met')} "
+              f"leaf={r.get('suicidal_leaf_value')} err={r.get('error')}")
+    except Exception as exc:
+        b_results.append({"case": "B9_extinct_time_coincide",
+                          "expect_changed": False,
+                          "exception": repr(exc)})
+        print(f"  B9_extinct_time_coincide 异常：{exc!r}")
+    extinct_spec = {"cash": [100, 10], "workers": {
+        "player-0-worker-0": (0, 112, 40, "COLLECTOR"),
+        "player-0-worker-1": (0, 10, 0, "COLLECTOR")}}
+    for rd in rej_defs[1:]:
+        step = rd["spec"]["step"]
+        seat = rd["spec"]["seat"]
+        spec = extinct_spec if rd["case"].startswith("REJ_extinct") else None
+        try:
+            r = run_rejection_case(pack_path, FastCarbon, rd["case"],
+                                   step, seat, spec=spec)
+            b_results.append(r)
+            print(f"  {rd['case']}: rejected={r.get('rejected')} "
+                  f"err={r.get('error')}")
+        except Exception as exc:
+            b_results.append({"case": rd["case"],
+                              "expect_changed": None,
+                              "exception": repr(exc)})
+            print(f"  {rd['case']} 异常：{exc!r}")
 
     verifications = []
     for saved in saved_verify:
@@ -425,8 +814,7 @@ def run_live(mode):
         "aborted_roots": len(aborted),
         "abort_reasons": abort_dist,
         "changed_count": sum(1 for r in roots if r["changed"]),
-        "total_guard_vetoed_candidates":
-            sum(r["n_guard_vetoed"] for r in roots),
+        "total_guard_vetoed_candidates": None,
         "guard_exceptions_total":
             sum(h._guard_exceptions for h in harnesses),
         "total_leaf_calls": sum(r["leaf_calls"] for r in roots),
@@ -442,11 +830,26 @@ def run_live(mode):
         "collector_snapshots": [c.snapshot() for c in collectors],
         "wall_s_total": b1.wall(),
         "notes": [
-            "采集与判读口径同 s1_battery；本版只换正式闸与证据包（SI03）",
-            f"结算口径 settlement_rule={SETTLEMENT_RULE}：A6 恒未验，"
-            "SI01 终局修复并按权威口径重做 fixture 后另跑正式模式",
+            "采集规模/种子口径同 s1_battery；判读为正式断言闸（SI03）；"
+            "采集入口与 B 腿 fixture 已按 SI01/SI02 修复口径更新（见下）",
+            f"结算口径 settlement_rule={SETTLEMENT_RULE}：298 根逐候选"
+            "独立真跑一步到终态 299 对账、297 根 H=2 冻结于 299＋冻结"
+            "探针、299/300/灭绝根入口拒绝记账（SI01 权威轴）",
+            f"预算口径：部署 BUDGET={pack_conf_budget}s 在本 VM 不可达"
+            f"（全链约 2–3 s/根），本趟以 VM 对照预算 RUN_BUDGET_S="
+            f"{RUN_BUDGET_S}s 采集（decide_at_root 唯一 deadline 全链"
+            "口径）；部署口径考位复验归 S2，本包计时不作部署证据",
+            "A 腿走 decide_at_root 公开入口；s1_battery."
+            "decide_instrumented 为 SI02 修复前插桩（0.05s 下限补齐、"
+            "候选生成在时钟外），不同口径、未用于本趟",
+            "逐根守卫否决数不经公开入口暴露，"
+            "total_guard_vetoed_candidates 记 null（不冒充 0）；"
+            "守卫异常计数 guard_exceptions_total 仍逐根入账",
             "scenario_seed 未消费：sweep 路径无种子轴，J=1 确定性",
             "叶①为原始分差尺度 affine 恒等直通",
+            "采集墙钟为 VM 对照口径（S1B2_COLLECT_WALL_S/"
+            "S1B2_HARD_WALL_S 声明，实值见 fixture_identity."
+            "collection_params）；b1 原常量 330/470 为参考值",
             "墙钟为本 VM 共享 CPU 参考值，不作部署口径",
         ],
     }
@@ -465,6 +868,14 @@ def run_live(mode):
         "pack": {"md5": pack_md5, "bytes": pack_bytes,
                  "path_in_repo": "code/packs/echo4_int8.py"},
         "conf_snapshot": conf_snapshot,
+        "budget_caliber": {
+            "deployment_budget_s": pack_conf_budget,
+            "run_budget_s": RUN_BUDGET_S,
+            "caliber": "VM 对照口径（本机共享 CPU）",
+            "note": "部署预算 0.7 s 在本机不可达：全链实测约 2–3 s/根、"
+                    "基线步耗 alone 0.42–0.69 s；本趟以 run_budget_s 跑"
+                    "采集，部署口径考位复验归 S2，本包计时数不作部署证据",
+        },
         "fixture_identity": fixture_identity(case_defs, b1.SEED0,
                                              collection_params),
         "settlement_rule": SETTLEMENT_RULE,
