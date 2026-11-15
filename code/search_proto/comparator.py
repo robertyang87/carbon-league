@@ -19,10 +19,16 @@ Contract (preregistered, S0b prototype; SI02/SI06/anytime fixes applied):
     deadline_abs (production entry, so the budget covers the whole
     public call chain, not just this kernel). Budgets are per-call:
     nothing here banks leftover time across steps.
-  - C_hi whole-round admission: if est_candidate_cost_s > 0, a round is
-    only started when est_candidate_cost_s * n_eligible fits in the
-    remaining budget; otherwise the round is not started at all
-    (abort_reason="budget_gate") instead of being cancelled mid-flight.
+  - C_hi whole-round admission: if est_candidate_cost_s is a positive
+    number, a round is only started when est_candidate_cost_s *
+    n_eligible fits in the remaining budget; otherwise the round is
+    not started at all (abort_reason="budget_gate") instead of being
+    cancelled mid-flight. The estimate is the caller's high-cost bound
+    for THIS round's (n_candidates, horizon) shape (bucketed cost
+    model in real_env, R2-04); est_candidate_cost_s=None means cold
+    start (no sample for any shape yet): admission is waived for that
+    round -- explicitly NOT a measured zero cost -- and the in-round
+    deadline checks below still apply.
   - Finiteness is checked independently of scale: leaf values may lie
     outside [0, 1] (raw-margin leaves), but any NaN / +-Inf value makes
     the whole round invalid (abort_reason="nonfinite_leaf").
@@ -220,7 +226,9 @@ class Comparator:
             # Never start a round whose estimated whole-round cost does
             # not fit in the remaining budget; an un-cancellable call
             # discovered overrunning afterwards cannot refund its time.
-            if est_candidate_cost_s > 0:
+            # est=None is the documented cold start (no cost samples at
+            # all): admission waived, round still deadline-checked.
+            if est_candidate_cost_s is not None and est_candidate_cost_s > 0:
                 est_round = est_candidate_cost_s * len(eligible)
                 if est_round > deadline - time.monotonic():
                     abort_reason = "budget_gate"
