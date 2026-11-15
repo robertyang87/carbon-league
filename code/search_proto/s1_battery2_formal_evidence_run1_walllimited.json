@@ -1,0 +1,1351 @@
+{
+ "evidence_format": "s1_battery2/1",
+ "run_id": "s1b2-formal-20261115T180334Z-f0820b173e",
+ "mode": "formal",
+ "created_utc": "2026-11-15T18:03:34.622046+00:00",
+ "source_md5s": {
+  "comparator.py": "ad6652a3dc824708a8e3b02df7aa197c",
+  "real_env.py": "cb306051c8d577ceaa37d3e527228602",
+  "telemetry.py": "91a7121f02bc848045a5dcae9554ec0e",
+  "leaf_adapters.py": "a5852c73f7187bb3e179428a81a6fba9",
+  "pack_bridge.py": "326de8e1d2301f3c6ed8c99464fd3fe7",
+  "s1_battery.py": "6a78101a5a1d4403f1f89a053c1c0453",
+  "s1_battery2.py": "9066d6d4d464fe931abc35aa74459126",
+  "vendor/cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+  "vendor/cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+  "vendor/cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+  "vendor/fastsim.py": "aefe6c83826efae4de83bef8c643c80b"
+ },
+ "pack": {
+  "md5": "819250bfc82632786063dabd46a616bd",
+  "bytes": 4601242,
+  "path_in_repo": "code/packs/echo4_int8.py"
+ },
+ "conf_snapshot": {
+  "H": 5,
+  "KEY_R": 2,
+  "MAX_KEY": 3,
+  "MINC": 10.0,
+  "HUNT": true,
+  "MARGIN": 20.0,
+  "BUDGET": 0.7,
+  "MIN_DEPTH": 3,
+  "CARGO_W": 0.9,
+  "WORKER_V": 30.0,
+  "TREE_V": 2.0,
+  "ENDGAME_STOP": 1,
+  "TEACHER": 2,
+  "OPP_TEACHER": 1,
+  "ROLL": "self",
+  "PLANT": false,
+  "LOG": false,
+  "SEARCH": false,
+  "MAX_BR": 16,
+  "LOCAL_R": 0,
+  "ROBUST": 0.0,
+  "OPPID": false,
+  "MODE": "sweep",
+  "MIX": false,
+  "ONLINE_T": false,
+  "TEMPS": "(0.7, 1.0, 1.4, 2.0)",
+  "EPS": 0.001,
+  "C_PUCT": 1.5,
+  "OPEN_T": 0.0,
+  "OPEN_STEPS": 50,
+  "OPEN_SEED": 0,
+  "LEAF_Q": null,
+  "GUARD": true,
+  "LOWW": 2,
+  "GUARD_NARROW": true,
+  "GUARD_CASH": 40.0,
+  "RISK_TOL": null,
+  "START_DL": null,
+  "ABORT_DL": 0.95,
+  "MIN_N": 1,
+  "SE_K": 0.0,
+  "VS": 100.0,
+  "ROOT_S": 12,
+  "RSEED": 0,
+  "STYLES": "(0, 1, 2, 3, 4)",
+  "ID_DECAY": 0.97,
+  "ID_PRIOR": 3.0,
+  "ID_MIN": 5,
+  "PROJ": 1.3,
+  "CLOCK": "wall",
+  "HARD": 0.85,
+  "TEACHER_LATE": 2,
+  "LATE_STEP": 240
+ },
+ "budget_caliber": {
+  "deployment_budget_s": 0.7,
+  "run_budget_s": 15.0,
+  "caliber": "VM 对照口径（本机共享 CPU）",
+  "note": "部署预算 0.7 s 在本机不可达：全链实测约 2–3 s/根、基线步耗 alone 0.42–0.69 s；本趟以 run_budget_s 跑采集，部署口径考位复验归 S2，本包计时数不作部署证据"
+ },
+ "fixture_identity": {
+  "seed0": 986300,
+  "collection_params": {
+   "target": 48,
+   "max_games": 5,
+   "per_game_cap": 18,
+   "max_steps_per_game": 200,
+   "collect_wall_s": 330.0,
+   "hard_wall_s": 470.0
+  },
+  "part_b_cases": [
+   {
+    "case": "B_capture_step298_seat0",
+    "expect_changed": true,
+    "identity_sha256": "7ce01ad00c20c1ac0ccea8e5860cd668317c7fadde4f3efcb3936adb64673b52"
+   },
+   {
+    "case": "B_deposit_step298_seat0",
+    "expect_changed": false,
+    "identity_sha256": "3b7c4685f2b815360c3391f398db9477b2c1cdfbe7be0d04110ea9cebaf8b561"
+   },
+   {
+    "case": "B_capture_step298_seat1",
+    "expect_changed": true,
+    "identity_sha256": "5819790f219427513e620fda35e4fd10029c895ea321f5f77546b589394ece45"
+   },
+   {
+    "case": "B_deposit_step298_seat1",
+    "expect_changed": false,
+    "identity_sha256": "4ba27ff559f9e704af9207a6b15456244e5c93b6c503d13489cb700979014f74"
+   },
+   {
+    "case": "B_capture_step297_seat0",
+    "expect_changed": true,
+    "identity_sha256": "55bc653ee9cfc7dfb51ae68d06b6ccd70700ea10764f48be6248cb2882c08b31"
+   },
+   {
+    "case": "B_deposit_step297_seat0",
+    "expect_changed": false,
+    "identity_sha256": "54fd1542b4d50ea21b467389312d651654cf2507a343247e352d23903343d925"
+   },
+   {
+    "case": "B_capture_step297_seat1",
+    "expect_changed": true,
+    "identity_sha256": "c6c6ba31d61f87ba78570fde356243c0423141c53a40eb2981b2d87a469843e4"
+   },
+   {
+    "case": "B_deposit_step297_seat1",
+    "expect_changed": false,
+    "identity_sha256": "d19c5b881722ef52c2d43a789295e28096098a6cb1450ebcca7e1e0da9caa083"
+   },
+   {
+    "case": "B9_extinct_time_coincide",
+    "expect_changed": false,
+    "identity_sha256": "11033b17d1ed2ac11ac80d6290f1e664fae4ec9ad11c6157e233bac479422abc"
+   },
+   {
+    "case": "REJ_step299_seat0",
+    "expect_changed": false,
+    "identity_sha256": "22548dc208d61530e61e1dc6f4cd35fe722b21cca4ccc7f7403a8eefecec900c"
+   },
+   {
+    "case": "REJ_step299_seat1",
+    "expect_changed": false,
+    "identity_sha256": "f1a5f7252e497e53b99c1d5eef5ae62b080bbc5fa0740b4b3f0a18f83a78b8b7"
+   },
+   {
+    "case": "REJ_step300_seat0",
+    "expect_changed": false,
+    "identity_sha256": "9ae48735921beee466dcae711f900aa0496755ef17de0812a4cfff071ad9fad1"
+   },
+   {
+    "case": "REJ_step300_seat1",
+    "expect_changed": false,
+    "identity_sha256": "da68d518a549ace4761a5b06950cf59dced8cd6f70bd597ad7d03dda8fa8557f"
+   },
+   {
+    "case": "REJ_extinct_step100_seat0",
+    "expect_changed": false,
+    "identity_sha256": "9f172f4a513895057dadcab6de292417a41e58d016caf80db3e7550571e35650"
+   }
+  ]
+ },
+ "settlement_rule": "authoritative_step299",
+ "summary": {
+  "games_played": 3,
+  "steps_scanned": 134,
+  "total_roots": 22,
+  "completed_roots": 22,
+  "aborted_roots": 0,
+  "abort_reasons": {},
+  "changed_count": 8,
+  "total_guard_vetoed_candidates": null,
+  "guard_exceptions_total": 0,
+  "total_leaf_calls": 88,
+  "total_completed_comparisons": 88,
+  "elapsed_s_dist": {
+   "mean": 0.004785521772718807,
+   "p50": 0.0012708929999689644,
+   "p95": 0.016287100050055865,
+   "max": 0.052211325999905966
+  },
+  "depth_hist": {
+   "1": 22
+  },
+  "collector_snapshots": [
+   {
+    "calls": 11,
+    "completed_comparisons": 11,
+    "completed_rounds": 11,
+    "changed_count": 4,
+    "depth_hist": {
+     "1": 11
+    },
+    "leaf_calls": 44,
+    "cost_accum_s": 0.08984006799983035,
+    "total_cost_accum_s": 38.55170134399964,
+    "phase_cost_accum_s": {
+     "baseline": 12.097080074000132,
+     "snapshot": 12.04486927800076,
+     "candgen": 14.257730246000392,
+     "guard": 0.0011544040003172995,
+     "rollout_leaf": 0.08998629000006986
+    },
+    "abort_reasons": {}
+   },
+   {
+    "calls": 11,
+    "completed_comparisons": 11,
+    "completed_rounds": 11,
+    "changed_count": 4,
+    "depth_hist": {
+     "1": 11
+    },
+    "leaf_calls": 44,
+    "cost_accum_s": 0.015441410999983418,
+    "total_cost_accum_s": 39.57424378499945,
+    "phase_cost_accum_s": {
+     "baseline": 13.260290173999465,
+     "snapshot": 12.911072972999818,
+     "candgen": 13.383638479000183,
+     "guard": 0.0009935719999702997,
+     "rollout_leaf": 0.01557623399980912
+    },
+    "abort_reasons": {}
+   }
+  ],
+  "wall_s_total": 528.9972791671753,
+  "notes": [
+   "采集规模/种子口径同 s1_battery；判读为正式断言闸（SI03）；采集入口与 B 腿 fixture 已按 SI01/SI02 修复口径更新（见下）",
+   "结算口径 settlement_rule=authoritative_step299：298 根逐候选独立真跑一步到终态 299 对账、297 根 H=2 冻结于 299＋冻结探针、299/300/灭绝根入口拒绝记账（SI01 权威轴）",
+   "预算口径：部署 BUDGET=0.7s 在本 VM 不可达（全链约 2–3 s/根），本趟以 VM 对照预算 RUN_BUDGET_S=15.0s 采集（decide_at_root 唯一 deadline 全链口径）；部署口径考位复验归 S2，本包计时不作部署证据",
+   "A 腿走 decide_at_root 公开入口；s1_battery.decide_instrumented 为 SI02 修复前插桩（0.05s 下限补齐、候选生成在时钟外），不同口径、未用于本趟",
+   "逐根守卫否决数不经公开入口暴露，total_guard_vetoed_candidates 记 null（不冒充 0）；守卫异常计数 guard_exceptions_total 仍逐根入账",
+   "scenario_seed 未消费：sweep 路径无种子轴，J=1 确定性",
+   "叶①为原始分差尺度 affine 恒等直通",
+   "墙钟为本 VM 共享 CPU 参考值，不作部署口径"
+  ]
+ },
+ "roots": [
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 13,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0011839769999824057,
+   "total_elapsed_s": 2.9102267589998974,
+   "phase_costs": {
+    "baseline": 0.8981777809999585,
+    "snapshot": 1.0227470900001663,
+    "candgen": 0.9870722599998771,
+    "guard": 9.904900002766226e-05,
+    "rollout_leaf": 0.0012021249999634165
+   },
+   "baseline_step_cost_s": 0.8981777809999585,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 13,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0012239469999713037,
+   "total_elapsed_s": 2.8001495369999247,
+   "phase_costs": {
+    "baseline": 1.0069666089998464,
+    "snapshot": 0.8930309429999852,
+    "candgen": 0.8976906090001648,
+    "guard": 8.794300015324552e-05,
+    "rollout_leaf": 0.0012366460000521329
+   },
+   "baseline_step_cost_s": 1.0069666089998464,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 14,
+   "chosen_index": 1,
+   "changed": true,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0012402919999203732,
+   "total_elapsed_s": 3.0031594519998634,
+   "phase_costs": {
+    "baseline": 0.9111680139999407,
+    "snapshot": 1.1902121210000587,
+    "candgen": 0.9003277480001088,
+    "guard": 7.61839999086078e-05,
+    "rollout_leaf": 0.0012532920000012382
+   },
+   "baseline_step_cost_s": 0.9111680139999407,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 14,
+   "chosen_index": 1,
+   "changed": true,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0012241379999977653,
+   "total_elapsed_s": 3.4293994380000186,
+   "phase_costs": {
+    "baseline": 0.9991498829999728,
+    "snapshot": 1.3036405230000128,
+    "candgen": 1.1250987140001598,
+    "guard": 0.00011785700007749256,
+    "rollout_leaf": 0.0012366959999781102
+   },
+   "baseline_step_cost_s": 0.9991498829999728,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 15,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.052211325999905966,
+   "total_elapsed_s": 3.1518076109998674,
+   "phase_costs": {
+    "baseline": 0.8965689649999149,
+    "snapshot": 1.08020303100011,
+    "candgen": 1.1226162360001126,
+    "guard": 7.395100010398892e-05,
+    "rollout_leaf": 0.05222343400009777
+   },
+   "baseline_step_cost_s": 0.8965689649999149,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 15,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.00120858400009638,
+   "total_elapsed_s": 3.40304230799984,
+   "phase_costs": {
+    "baseline": 1.0470792209998763,
+    "snapshot": 1.2643964760000017,
+    "candgen": 1.0901401799999348,
+    "guard": 8.052099997257756e-05,
+    "rollout_leaf": 0.0012199809998492128
+   },
+   "baseline_step_cost_s": 1.0470792209998763,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 16,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.001191668999808826,
+   "total_elapsed_s": 3.6273179190000064,
+   "phase_costs": {
+    "baseline": 1.1003241089999847,
+    "snapshot": 1.2092355409999982,
+    "candgen": 1.316324687000133,
+    "guard": 7.960999982969952e-05,
+    "rollout_leaf": 0.0012028759999793692
+   },
+   "baseline_step_cost_s": 1.1003241089999847,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 16,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0012069320000591688,
+   "total_elapsed_s": 3.1723095620000095,
+   "phase_costs": {
+    "baseline": 1.0814324269999815,
+    "snapshot": 0.9212913720000415,
+    "candgen": 1.1681521810000959,
+    "guard": 8.198299997275171e-05,
+    "rollout_leaf": 0.0012191100001928135
+   },
+   "baseline_step_cost_s": 1.0814324269999815,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 17,
+   "chosen_index": 1,
+   "changed": true,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0011830960002043867,
+   "total_elapsed_s": 2.842672307999692,
+   "phase_costs": {
+    "baseline": 0.9045752059998904,
+    "snapshot": 1.032844490000116,
+    "candgen": 0.9038582890000271,
+    "guard": 7.511300009355182e-05,
+    "rollout_leaf": 0.0011957450001318648
+   },
+   "baseline_step_cost_s": 0.9045752059998904,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 17,
+   "chosen_index": 1,
+   "changed": true,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0012013430000479275,
+   "total_elapsed_s": 2.9992233119999128,
+   "phase_costs": {
+    "baseline": 0.9758819599999242,
+    "snapshot": 1.0835733609999352,
+    "candgen": 0.9383531969999694,
+    "guard": 7.593400005134754e-05,
+    "rollout_leaf": 0.0012134220000916685
+   },
+   "baseline_step_cost_s": 0.9758819599999242,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 35,
+   "chosen_index": 1,
+   "changed": true,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.008662876000016695,
+   "total_elapsed_s": 4.404179144000182,
+   "phase_costs": {
+    "baseline": 1.0101272540000537,
+    "snapshot": 1.0917198509998798,
+    "candgen": 2.2932793970001057,
+    "guard": 0.0002514870000140945,
+    "rollout_leaf": 0.008677447999843935
+   },
+   "baseline_step_cost_s": 1.0101272540000537,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 35,
+   "chosen_index": 1,
+   "changed": true,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0014331610000226647,
+   "total_elapsed_s": 4.098628709999957,
+   "phase_costs": {
+    "baseline": 1.1732668189999913,
+    "snapshot": 1.2238837119998607,
+    "candgen": 1.6998307659998773,
+    "guard": 7.816699985596642e-05,
+    "rollout_leaf": 0.0014468929998656677
+   },
+   "baseline_step_cost_s": 1.1732668189999913,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 54,
+   "chosen_index": 1,
+   "changed": true,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.001569106000033571,
+   "total_elapsed_s": 4.496748740999919,
+   "phase_costs": {
+    "baseline": 1.7913619139999355,
+    "snapshot": 1.2056272439999702,
+    "candgen": 1.4979404619998604,
+    "guard": 8.388600008402136e-05,
+    "rollout_leaf": 0.0015810539998710738
+   },
+   "baseline_step_cost_s": 1.7913619139999355,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 54,
+   "chosen_index": 1,
+   "changed": true,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0015422559999933583,
+   "total_elapsed_s": 5.034746421999898,
+   "phase_costs": {
+    "baseline": 2.126839325999981,
+    "snapshot": 1.5830398939999668,
+    "candgen": 1.3230284310000116,
+    "guard": 8.184299986169208e-05,
+    "rollout_leaf": 0.0015543229999366304
+   },
+   "baseline_step_cost_s": 2.126839325999981,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 55,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.002839482999888787,
+   "total_elapsed_s": 3.7724079869999514,
+   "phase_costs": {
+    "baseline": 0.9856810320000022,
+    "snapshot": 1.0943164800000886,
+    "candgen": 1.6892873059998692,
+    "guard": 0.00011258900008215278,
+    "rollout_leaf": 0.0028520619998744223
+   },
+   "baseline_step_cost_s": 0.9856810320000022,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 55,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0022785810001551,
+   "total_elapsed_s": 4.331883263999998,
+   "phase_costs": {
+    "baseline": 1.7075720579998688,
+    "snapshot": 1.30045059400004,
+    "candgen": 1.3212096710001333,
+    "guard": 8.044000014706398e-05,
+    "rollout_leaf": 0.002290207999976701
+   },
+   "baseline_step_cost_s": 1.7075720579998688,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 0,
+   "step": 56,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0017683739999938553,
+   "total_elapsed_s": 3.131525991999979,
+   "phase_costs": {
+    "baseline": 1.1159656520001136,
+    "snapshot": 1.004095118000123,
+    "candgen": 1.0094183800001701,
+    "guard": 9.935999992194411e-05,
+    "rollout_leaf": 0.0017814150000958762
+   },
+   "baseline_step_cost_s": 1.1159656520001136,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 0,
+   "seat": 1,
+   "step": 56,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.002050558999826535,
+   "total_elapsed_s": 3.187660588999961,
+   "phase_costs": {
+    "baseline": 0.9690398180000557,
+    "snapshot": 0.9340070529999593,
+    "candgen": 1.2822764990000906,
+    "guard": 9.408200003235834e-05,
+    "rollout_leaf": 0.0020633479998650728
+   },
+   "baseline_step_cost_s": 0.9690398180000557,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 1,
+   "seat": 0,
+   "step": 8,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0013014940000175557,
+   "total_elapsed_s": 3.484380554000154,
+   "phase_costs": {
+    "baseline": 1.096770835000143,
+    "snapshot": 0.9886244000001625,
+    "candgen": 1.397470913999996,
+    "guard": 9.618400008548633e-05,
+    "rollout_leaf": 0.0013143830001354218
+   },
+   "baseline_step_cost_s": 1.096770835000143,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 1,
+   "seat": 1,
+   "step": 8,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.0010006420000081562,
+   "total_elapsed_s": 3.6261540319999312,
+   "phase_costs": {
+    "baseline": 1.229448648000016,
+    "snapshot": 1.3807839319999857,
+    "candgen": 1.0146884819998832,
+    "guard": 0.00011769599996114266,
+    "rollout_leaf": 0.0010127410000677628
+   },
+   "baseline_step_cost_s": 1.229448648000016,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 1,
+   "seat": 0,
+   "step": 9,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.01668837500005793,
+   "total_elapsed_s": 3.727274877000127,
+   "phase_costs": {
+    "baseline": 1.3863593120001951,
+    "snapshot": 1.1252439120000872,
+    "candgen": 1.140134567000132,
+    "guard": 0.00010699100016609009,
+    "rollout_leaf": 0.016702456000075472
+   },
+   "baseline_step_cost_s": 1.3863593120001951,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  },
+  {
+   "game": 1,
+   "seat": 1,
+   "step": 9,
+   "chosen_index": 0,
+   "changed": false,
+   "completed_rounds": 1,
+   "completed_comparisons": 4,
+   "deepest_completed_h": 1,
+   "abort_reason": null,
+   "elapsed_s": 0.001071267999805059,
+   "total_elapsed_s": 3.4910466110000016,
+   "phase_costs": {
+    "baseline": 0.9436134049999509,
+    "snapshot": 1.0229751130000295,
+    "candgen": 1.5231697489998623,
+    "guard": 9.710599988466129e-05,
+    "rollout_leaf": 0.0010828659999333468
+   },
+   "baseline_step_cost_s": 0.9436134049999509,
+   "run_budget_total_s": 15.0,
+   "leaf_calls": 4,
+   "n_guard_vetoed": null,
+   "leaf_values": {},
+   "detail_note": "正式入口 decide_at_root 口径：逐候选叶值/守卫否决明细不经公开入口暴露，以 Decision 与 collector 遥测为准"
+  }
+ ],
+ "part_b": [
+  {
+   "case": "B_capture_step298_seat0",
+   "design": "敌 collector(8) 站我方基地格、我方 collector(44) 邻格，踏入捕获＋交付为期望正例（首轮 P2 几何，根步移至权威轴 297/298）",
+   "me": 0,
+   "key_uid": "player-0-worker-0",
+   "expect_changed": true,
+   "root_step": 298,
+   "settlement_rule": "authoritative_step299",
+   "baseline_step_cost_s": 1.1812465399998473,
+   "a0_action": {
+    "player-0-worker-0": "DOWN",
+    "player-0-worker-1": "RIGHT",
+    "player-0-worker-2": "UP"
+   },
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": null,
+   "expect_met": false,
+   "guard_vetoed": [],
+   "acts_o": {
+    "player-1-worker-0": "UP",
+    "player-1-worker-1": "DOWN"
+   },
+   "leaf_values": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlements": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlement_source": "independent_step_to_299",
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "settlement_best_index": 0,
+   "settlement_best_unique": true,
+   "chosen_is_settlement_best": true,
+   "key_move_a0": "DOWN",
+   "key_move_chosen": "DOWN",
+   "terminal_freeze": {
+    "h3_final_step": 299,
+    "act_b_calls": 0,
+    "expected_act_b_calls": 0,
+    "ok": true
+   }
+  },
+  {
+   "case": "B_deposit_step298_seat0",
+   "design": "A0 踏入交付 +44 唯一最优，期望 changed=False（首轮 N1 几何，根步移至权威轴 297/298）",
+   "me": 0,
+   "key_uid": "player-0-worker-0",
+   "expect_changed": false,
+   "root_step": 298,
+   "settlement_rule": "authoritative_step299",
+   "baseline_step_cost_s": 0.9661237100001472,
+   "a0_action": {
+    "player-0-worker-0": "DOWN",
+    "player-0-worker-1": "RIGHT",
+    "player-0-worker-2": "UP"
+   },
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": null,
+   "expect_met": true,
+   "guard_vetoed": [],
+   "acts_o": {
+    "player-1-worker-0": "DOWN",
+    "player-1-worker-1": "DOWN"
+   },
+   "leaf_values": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlements": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlement_source": "independent_step_to_299",
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "settlement_best_index": 0,
+   "settlement_best_unique": true,
+   "chosen_is_settlement_best": true,
+   "key_move_a0": "DOWN",
+   "key_move_chosen": "DOWN",
+   "terminal_freeze": {
+    "h3_final_step": 299,
+    "act_b_calls": 0,
+    "expected_act_b_calls": 0,
+    "ok": true
+   }
+  },
+  {
+   "case": "B_capture_step298_seat1",
+   "design": "敌 collector(8) 站我方基地格、我方 collector(44) 邻格，踏入捕获＋交付为期望正例（首轮 P2 几何，根步移至权威轴 297/298）",
+   "me": 1,
+   "key_uid": "player-1-worker-0",
+   "expect_changed": true,
+   "root_step": 298,
+   "settlement_rule": "authoritative_step299",
+   "baseline_step_cost_s": 1.4713843520000864,
+   "a0_action": {
+    "player-1-worker-0": "DOWN",
+    "player-1-worker-1": "LEFT",
+    "player-1-worker-2": "UP"
+   },
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": null,
+   "expect_met": false,
+   "guard_vetoed": [],
+   "acts_o": {
+    "player-0-worker-0": "UP",
+    "player-0-worker-1": "DOWN"
+   },
+   "leaf_values": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlements": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlement_source": "independent_step_to_299",
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "settlement_best_index": 0,
+   "settlement_best_unique": true,
+   "chosen_is_settlement_best": true,
+   "key_move_a0": "DOWN",
+   "key_move_chosen": "DOWN",
+   "terminal_freeze": {
+    "h3_final_step": 299,
+    "act_b_calls": 0,
+    "expected_act_b_calls": 0,
+    "ok": true
+   }
+  },
+  {
+   "case": "B_deposit_step298_seat1",
+   "design": "A0 踏入交付 +44 唯一最优，期望 changed=False（首轮 N1 几何，根步移至权威轴 297/298）",
+   "me": 1,
+   "key_uid": "player-1-worker-0",
+   "expect_changed": false,
+   "root_step": 298,
+   "settlement_rule": "authoritative_step299",
+   "baseline_step_cost_s": 1.0968040039999778,
+   "a0_action": {
+    "player-1-worker-0": "DOWN",
+    "player-1-worker-1": "LEFT",
+    "player-1-worker-2": "UP"
+   },
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": null,
+   "expect_met": true,
+   "guard_vetoed": [],
+   "acts_o": {
+    "player-0-worker-0": "DOWN",
+    "player-0-worker-1": "DOWN"
+   },
+   "leaf_values": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlements": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlement_source": "independent_step_to_299",
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "settlement_best_index": 0,
+   "settlement_best_unique": true,
+   "chosen_is_settlement_best": true,
+   "key_move_a0": "DOWN",
+   "key_move_chosen": "DOWN",
+   "terminal_freeze": {
+    "h3_final_step": 299,
+    "act_b_calls": 0,
+    "expected_act_b_calls": 0,
+    "ok": true
+   }
+  },
+  {
+   "case": "B_capture_step297_seat0",
+   "design": "敌 collector(8) 站我方基地格、我方 collector(44) 邻格，踏入捕获＋交付为期望正例（首轮 P2 几何，根步移至权威轴 297/298）",
+   "me": 0,
+   "key_uid": "player-0-worker-0",
+   "expect_changed": true,
+   "root_step": 297,
+   "settlement_rule": "authoritative_step299",
+   "baseline_step_cost_s": 1.0948861249999027,
+   "a0_action": {
+    "player-0-worker-0": "DOWN",
+    "player-0-worker-1": "RIGHT",
+    "player-0-worker-2": "UP"
+   },
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": "single_call_overrun",
+   "expect_met": false,
+   "guard_vetoed": [],
+   "acts_o": {
+    "player-1-worker-0": "UP",
+    "player-1-worker-1": "DOWN"
+   },
+   "leaf_values": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlements": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlement_source": "rollout_terminal_frozen_299",
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "settlement_best_index": 0,
+   "settlement_best_unique": true,
+   "chosen_is_settlement_best": true,
+   "key_move_a0": "DOWN",
+   "key_move_chosen": "DOWN",
+   "terminal_freeze": {
+    "h3_final_step": 299,
+    "act_b_calls": 1,
+    "expected_act_b_calls": 1,
+    "ok": true
+   }
+  },
+  {
+   "case": "B_deposit_step297_seat0",
+   "design": "A0 踏入交付 +44 唯一最优，期望 changed=False（首轮 N1 几何，根步移至权威轴 297/298）",
+   "me": 0,
+   "key_uid": "player-0-worker-0",
+   "expect_changed": false,
+   "root_step": 297,
+   "settlement_rule": "authoritative_step299",
+   "baseline_step_cost_s": 1.3013667800000803,
+   "a0_action": {
+    "player-0-worker-0": "DOWN",
+    "player-0-worker-1": "RIGHT",
+    "player-0-worker-2": "UP"
+   },
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": "single_call_overrun",
+   "expect_met": true,
+   "guard_vetoed": [],
+   "acts_o": {
+    "player-1-worker-0": "DOWN",
+    "player-1-worker-1": "DOWN"
+   },
+   "leaf_values": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlements": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlement_source": "rollout_terminal_frozen_299",
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "settlement_best_index": 0,
+   "settlement_best_unique": true,
+   "chosen_is_settlement_best": true,
+   "key_move_a0": "DOWN",
+   "key_move_chosen": "DOWN",
+   "terminal_freeze": {
+    "h3_final_step": 299,
+    "act_b_calls": 1,
+    "expected_act_b_calls": 1,
+    "ok": true
+   }
+  },
+  {
+   "case": "B_capture_step297_seat1",
+   "design": "敌 collector(8) 站我方基地格、我方 collector(44) 邻格，踏入捕获＋交付为期望正例（首轮 P2 几何，根步移至权威轴 297/298）",
+   "me": 1,
+   "key_uid": "player-1-worker-0",
+   "expect_changed": true,
+   "root_step": 297,
+   "settlement_rule": "authoritative_step299",
+   "baseline_step_cost_s": 0.9915216910003437,
+   "a0_action": {
+    "player-1-worker-0": "DOWN",
+    "player-1-worker-1": "LEFT",
+    "player-1-worker-2": "UP"
+   },
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": "single_call_overrun",
+   "expect_met": false,
+   "guard_vetoed": [],
+   "acts_o": {
+    "player-0-worker-0": "UP",
+    "player-0-worker-1": "DOWN"
+   },
+   "leaf_values": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlements": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlement_source": "rollout_terminal_frozen_299",
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "settlement_best_index": 0,
+   "settlement_best_unique": true,
+   "chosen_is_settlement_best": true,
+   "key_move_a0": "DOWN",
+   "key_move_chosen": "DOWN",
+   "terminal_freeze": {
+    "h3_final_step": 299,
+    "act_b_calls": 1,
+    "expected_act_b_calls": 1,
+    "ok": true
+   }
+  },
+  {
+   "case": "B_deposit_step297_seat1",
+   "design": "A0 踏入交付 +44 唯一最优，期望 changed=False（首轮 N1 几何，根步移至权威轴 297/298）",
+   "me": 1,
+   "key_uid": "player-1-worker-0",
+   "expect_changed": false,
+   "root_step": 297,
+   "settlement_rule": "authoritative_step299",
+   "baseline_step_cost_s": 1.3191793729997698,
+   "a0_action": {
+    "player-1-worker-0": "DOWN",
+    "player-1-worker-1": "LEFT",
+    "player-1-worker-2": "UP"
+   },
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": "single_call_overrun",
+   "expect_met": true,
+   "guard_vetoed": [],
+   "acts_o": {
+    "player-0-worker-0": "DOWN",
+    "player-0-worker-1": "DOWN"
+   },
+   "leaf_values": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlements": {
+    "0": 44.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "settlement_source": "rollout_terminal_frozen_299",
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "settlement_best_index": 0,
+   "settlement_best_unique": true,
+   "chosen_is_settlement_best": true,
+   "key_move_a0": "DOWN",
+   "key_move_chosen": "DOWN",
+   "terminal_freeze": {
+    "h3_final_step": 299,
+    "act_b_calls": 1,
+    "expected_act_b_calls": 1,
+    "ok": true
+   }
+  },
+  {
+   "case": "B9_extinct_time_coincide",
+   "me": 0,
+   "key_uid": "player-0-worker-0",
+   "expect_changed": false,
+   "root_step": 298,
+   "settlement_rule": "authoritative_step299",
+   "design": "灭绝∩到时重合（R3 口径）：自杀候选叶值须合 F01 恒等 −102，终局类型 extinct、终步 299",
+   "baseline_step_cost_s": 1.1112518449999698,
+   "decide_returned_none": false,
+   "changed": false,
+   "chosen_index": 0,
+   "abort_reason": null,
+   "suicidal_differs_from_a0": true,
+   "suicidal_leaf_value": -102.0,
+   "suicidal_terminal": {
+    "step_count": 299,
+    "terminal_kind": "extinct",
+    "sim_terminal": true,
+    "key_worker_alive": false,
+    "enemy_cargo": 92.0
+   },
+   "f01_expected_leaf": -102.0,
+   "leaf_vs_settlement_max_abs_err": 0.0,
+   "expect_met": true
+  },
+  {
+   "case": "REJ_step299_seat0",
+   "me": 0,
+   "expect_changed": null,
+   "root_step": 299,
+   "kind": "terminal_rejection",
+   "settlement_rule": "authoritative_step299",
+   "decide_returned_none": true,
+   "terminal_roots_rejected_delta": 1,
+   "rejected": true
+  },
+  {
+   "case": "REJ_step299_seat1",
+   "me": 1,
+   "expect_changed": null,
+   "root_step": 299,
+   "kind": "terminal_rejection",
+   "settlement_rule": "authoritative_step299",
+   "decide_returned_none": true,
+   "terminal_roots_rejected_delta": 1,
+   "rejected": true
+  },
+  {
+   "case": "REJ_step300_seat0",
+   "me": 0,
+   "expect_changed": null,
+   "root_step": 300,
+   "kind": "terminal_rejection",
+   "settlement_rule": "authoritative_step299",
+   "decide_returned_none": true,
+   "terminal_roots_rejected_delta": 1,
+   "rejected": true
+  },
+  {
+   "case": "REJ_step300_seat1",
+   "me": 1,
+   "expect_changed": null,
+   "root_step": 300,
+   "kind": "terminal_rejection",
+   "settlement_rule": "authoritative_step299",
+   "decide_returned_none": true,
+   "terminal_roots_rejected_delta": 1,
+   "rejected": true
+  },
+  {
+   "case": "REJ_extinct_step100_seat0",
+   "me": 0,
+   "expect_changed": null,
+   "root_step": 100,
+   "kind": "terminal_rejection",
+   "settlement_rule": "authoritative_step299",
+   "decide_returned_none": true,
+   "terminal_roots_rejected_delta": 1,
+   "rejected": true
+  }
+ ],
+ "verification": [],
+ "assertions": [
+  {
+   "id": "A1",
+   "name": "完成比较 > 0",
+   "status": "PASS",
+   "detail": "completed_comparisons 总和=88，完成根=22"
+  },
+  {
+   "id": "A2",
+   "name": "正例 expect_met 全过",
+   "status": "FAIL",
+   "detail": "正例 4 例，未达：['B_capture_step298_seat0', 'B_capture_step298_seat1', 'B_capture_step297_seat0', 'B_capture_step297_seat1']"
+  },
+  {
+   "id": "A3",
+   "name": "反例不取（expect_met 全过）",
+   "status": "PASS",
+   "detail": "反例 5 例，未达：无"
+  },
+  {
+   "id": "A4",
+   "name": "选中精确最优",
+   "status": "PASS",
+   "detail": "记录 8 例，未达：无"
+  },
+  {
+   "id": "A5",
+   "name": "叶↔结算误差阈内",
+   "status": "PASS",
+   "detail": "记录 9 例，tol=1e-06，超阈：[]"
+  },
+  {
+   "id": "A6",
+   "name": "权威终局一致性",
+   "status": "PASS",
+   "detail": "在案结算口径='authoritative_step299'；权威口径须为 'authoritative_step299'（SI01：根/结算时间轴须按 step298 最后有效动作、终态 step299 重做后才可签）"
+  },
+  {
+   "id": "A7",
+   "name": "最低根数/局数达标",
+   "status": "FAIL",
+   "detail": "根 22（须 ≥40），局 3（须 ≥3）"
+  },
+  {
+   "id": "A8",
+   "name": "中止与异常计数为 0",
+   "status": "PASS",
+   "detail": "中止/守卫异常/构造异常/续弈异常均 0"
+  },
+  {
+   "id": "A9",
+   "name": "证据自描述齐备",
+   "status": "PASS",
+   "detail": "run_id/源码 md5 集/包 md5/CONF 快照/fixture 身份须随证据包同行；本包齐备"
+  }
+ ],
+ "verdict": "FAIL"
+}
