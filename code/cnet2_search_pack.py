@@ -19,7 +19,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import cnet2_pack as P  # noqa: E402
 
-MODS = ["cnet2_feat", "cnet2_np", "fastsim", "cnet2_search"]
+# BUILD-LOCAL DELTA (switch trial build, SI11): the comparator module
+# joins the single-file embedding list, before cnet2_search so its
+# `from cnet2_comparator import ...` resolves during pack exec.
+# Stock MODS has 4 entries and does not know the module.
+MODS = ["cnet2_feat", "cnet2_np", "fastsim", "cnet2_comparator", "cnet2_search"]
 
 TEMPLATE = '''"""Carbon League: cnet2 b128 policy (v12) + cnet2_search test-time rollout search (pure NumPy)."""
 import os
@@ -98,6 +102,7 @@ def agent(observation, configuration):
         _AG = _S.make_search_agent(dict(CONF, ENS=_W[3]) if _W[3] else CONF, weights=_W[0], rweights=_W[1], oweights=_W[2])
     a = _AG(observation, configuration)
     agent.last_stats = _AG.stats      # local eval only (per-game search stats); harmless on the platform
+    agent.cmp_stats = getattr(_AG, "cmp_stats", None)   # comparator telemetry channel (resync R2-10); None on packs whose agent has none
     return a
 '''
 
