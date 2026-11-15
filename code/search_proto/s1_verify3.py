@@ -15,7 +15,10 @@
      双席 obs、双席基线动作与步耗、本步前现金，以及**双席完整策略
      记忆的双份快照**——pre-call（该步 agent 调用前）与 post-call
      （调用后）。记忆构成（实测解剖，见 results 的
-     memory_snapshot_composition）：
+     memory_snapshot_composition）。R2-03 修正：离线 decide 的
+     _fo_snap 取 **pre-call** 快照的 fo（post-call fo 已 observe 过
+     根步，再 observe 同一步会触发 Feat 整表重置、抹掉对手历史）；
+     rollout 对手席 guard 取快照中对手席自身 guard（R2-01）：
        · st 字典：f/fo 两个 Feat 信念体（est/last/last_step/hist/
          prev_w/prev_trees/inf/own_uid/aux）走厂商 feat_copy（其自用
          分支拷贝口径），并对 feat_copy 浅引用的 prev_w/prev_trees/
@@ -43,9 +46,14 @@
      （记忆按生产形态推进），根席执行臂动作（A0 臂＝基线动作／
      改子臂＝比较器所选动作）、对手席执行其调用返回动作；其后双
      席基线策略续弈至权威终局：step_count 到达 299（F04：真实终
-     态现金）或灭绝（F01：终局步冻结、按带入灭绝步前现金）。守
+     态现金）或灭绝（F01：权威逐席终局分数——灭绝席取
+     step_count−episodeSteps−1、存活席取带入灭绝步前现金，调用
+     make_terminal_score_fn，不再整组套用入步前现金，R2-02）。守
      卫全程在位——续弈走 agent 本体 _inner（含 BankruptcyGuard
      逐歩 apply），非 real_env rollout 的近似。
+     **差值口径标注（R2-11 本趟分工）**：本脚本输出的终局差与
+     chosen−A0 差均为**原始分差**（权威终局分数之差），不是
+     ΔU；逐根逐臂先算 U 再差的 ΔU 化归 S3 附则修订，本脚本不做。
      **恢复正确性硬检**：根步调用中，根席返回动作须与采集时该席
      基线动作（A0）逐字相等、对手席返回须与其记录动作相等；任一
      不等 → 该根记 restore_failed、差值无效（记忆快照不完整，不
@@ -206,27 +214,65 @@ def restore_agent(agent, mem, feat_copy):
     g = ci["guard"]
     vars(g).clear()
     vars(g).update(copy.deepcopy(mem["guard"]))
+    # R2-03 附带 P3：重绑别名——生产形态 st["guard_base"] 与
+    # guard.guard_base 是同一集合对象（vendor 行 642，reset_step
+    # 原地清、靠别名传导）；快照与恢复两侧各自 deepcopy 会打断
+    # 别名（恢复后 guard 的 guard_base 变动不再传到 st）。逐
+    # target 把 st 的 guard_base 换回本 agent guard 的集合对象；
+    # 两臂各用自己的 agent/guard，集合仍互独立。
+    for t in targets:
+        if "guard_base" in t:
+            t["guard_base"] = g.guard_base
 
 
 def offline_decide(harness, rec, feat_copy):
-    """在 post-call 快照上离线跑冻结版 decide_at_root。"""
+    """在 post-call 快照上离线跑冻结版 decide_at_root。
+
+    R2-03：_fo_snap 必须来自 **pre-call** 快照的 fo。post-call fo
+    已在基线调用中 observe 过根步；若走 begin_step（拷 post-call
+    fo）再在 _build_root 里 observe 同一步，Feat.observe 在
+    step<=self.step 时整表重置——对手历史被抹成 1 条、预测翻转
+    （实测 step11 根：在线 LEFT/历史 8 条，旧离线 RIGHT/历史 1
+    条、81 个 belief 格不同）。在线口径正是 begin_step 在基线调用
+    前取 pre-call fo 快照，两路必须同源。当前席的 x/lg0/f/fo 仍
+    取 post-call（decide 读的是调用后状态，与在线一致）。
+    R2-01：rollout 对手席 guard 取 post-call 快照中对手席自身的
+    guard 状态，经 set_opponent_guard 登记，不用根席 guard 顶替。
+    """
     seat = rec["seat"]
     mem = rec["post"][seat]
+    opp_mem = rec["post"][1 - seat]
     live = harness.inx
     guard_obj = copy.deepcopy(live.guard)
     vars(guard_obj).clear()
     vars(guard_obj).update(copy.deepcopy(mem["guard"]))
+    opp_guard_obj = copy.deepcopy(live.guard)
+    vars(opp_guard_obj).clear()
+    vars(opp_guard_obj).update(copy.deepcopy(opp_mem["guard"]))
     harness.inx = dataclasses.replace(
         live, st=build_st_copy(mem, feat_copy), guard=guard_obj)
+    prev_opp_guard = harness._opp_guard
+    harness.set_opponent_guard(opp_guard_obj)
     try:
         obs_copy = copy.deepcopy(rec["obs"][seat])
-        harness.begin_step(obs_copy)
+        pre_st = (rec.get("pre") or [None, None])[seat]
+        pre_fo = pre_st["st"].get("fo") if pre_st else None
+        if pre_fo is not None:
+            shallow = []
+            fo_snap = _copy_feat(pre_fo, feat_copy, shallow, "fo")
+            if int(getattr(fo_snap, "seat", -1)) != 1 - seat:
+                raise RuntimeError(
+                    "pre-call 快照 fo 席位不合（对手席快照错位）—— 停")
+            harness._fo_snap = fo_snap
+        else:
+            harness.begin_step(obs_copy)
         return harness.decide_at_root(
             obs_copy, rec["a0"],
             baseline_step_cost_s=rec["base_cost"], horizon=1,
             scenario_seed=rec["scenario_seed"])
     finally:
         harness.inx = live
+        harness._opp_guard = prev_opp_guard
 
 
 def seq_hash(seq):
@@ -234,17 +280,54 @@ def seq_hash(seq):
     return hashlib.md5(raw.encode("utf-8")).hexdigest()
 
 
+_MIRROR_ACT = {"LEFT": "RIGHT", "RIGHT": "LEFT"}
+
+
 def _norm_seat1(actions):
+    """席位归一化（§5 小项修正）：uid 前缀 player-1-→player-0- 之
+    外，动作值须按左右反射——双席面对面，seat1 的 LEFT 与 seat0
+    的 RIGHT 才是镜像等价动作；旧实现只换 player id，会把真镜像
+    动作误判为不同、把同向动作误判为镜像。"""
     out = {}
     for k, v in (actions or {}).items():
-        out[k.replace("player-1-", "player-0-", 1)] = v
+        out[k.replace("player-1-", "player-0-", 1)] = \
+            _MIRROR_ACT.get(v, v) if isinstance(v, str) else v
     return out
 
 
-def run_arm(pack_path, FastCarbon, terminal_fn, feat_copy, rec, my_action):
+def make_terminal_score_fn(inx):
+    """权威逐席终局分数（F01，vendor leaf 行 666–676 原口径）：
+    灭绝席 = step_count − episodeSteps − 1；存活席 = 入终局步前
+    现金（prev_cash）。逐席灭绝谓词 _extinct 取自 leaf 闭包的权威
+    实现（不复刻谓词本体）；本函数只复刻 rew 向量的组装式，且回
+    归里逐例与 leaf_fn 的分差交叉核对。返回
+    scores(sim, prev_cash) -> [s0, s1]。"""
+    extinct = real_env._cells(inx.leaf_fn).get("_extinct")
+    if extinct is None:
+        raise RuntimeError("leaf 闭包缺 _extinct（vendor 布局已变）—— 停")
+
+    def scores(sim, prev_cash):
+        pen = float(sim.step_count) \
+            - float(sim.config.get("episodeSteps", 300)) - 1.0
+        pc = prev_cash if prev_cash is not None else sim.cash
+        return [pen if extinct(sim, p) else float(pc[p]) for p in (0, 1)]
+
+    return scores
+
+
+def run_arm(pack_path, FastCarbon, terminal_fn, feat_copy, rec, my_action,
+            score_fn=None):
     """一臂续弈：双席 restore pre-call 记忆 → 根步调用双席 agent 处
     理根观测（根席执行臂动作、对手执行其返回动作）→ 基线续弈至权
-    威终局。返回臂记录（complete/终局现金/序列/复现检结果）。"""
+    威终局。返回臂记录（complete/终局分数/序列/复现检结果）。
+
+    终局口径：到时（step299）＝F04 真实终态现金；灭绝＝F01 权威
+    逐席分数（score_fn，灭绝席 pen、存活席入步前现金）——旧实现
+    灭绝时整组套用入步前现金，把灭绝席也按存活计分（R2-02 实测
+    chosen 应为 −102、旧输出 −90）。灭绝与到时同一步重合时灭绝
+    优先（先判 terminal_fn）。终局值统一记 final_scores 并以
+    final_basis 标明口径（F04_terminal_cash / F01_terminal_scores）。
+    """
     seat = rec["seat"]
     arm = {"complete": False, "extinct": False}
     t0 = time.time()
@@ -272,12 +355,22 @@ def run_arm(pack_path, FastCarbon, terminal_fn, feat_copy, rec, my_action):
         sim.step(exec_actions[0], exec_actions[1])
         seq = []
         final = None
+        final_basis = None
+
+        def extinct_final(prev_cash):
+            if score_fn is None:
+                raise RuntimeError(
+                    "灭绝结算缺权威逐席分数函数（score_fn 未传）—— 停")
+            return score_fn(sim, prev_cash)
+
         if terminal_fn(sim):
-            final = cash_before          # F01：灭绝步冻结
+            final = extinct_final(cash_before)   # F01：权威逐席分数
+            final_basis = "F01_terminal_scores"
             arm["extinct"] = True
         while final is None:
             if sim.step_count >= TERMINAL_STEP:
                 final = [float(sim.cash[0]), float(sim.cash[1])]   # F04
+                final_basis = "F04_terminal_cash"
                 break
             if wall() > ARM_DEADLINE_S:
                 arm["incomplete_reason"] = (
@@ -290,14 +383,16 @@ def run_arm(pack_path, FastCarbon, terminal_fn, feat_copy, rec, my_action):
             seq.append([b0, b1])
             sim.step(b0, b1)
             if terminal_fn(sim):
-                final = cb               # F01
+                final = extinct_final(cb)        # F01：权威逐席分数
+                final_basis = "F01_terminal_scores"
                 arm["extinct"] = True
         arm["seq"] = seq
         arm["seq_len"] = len(seq)
         arm["seq_hash"] = seq_hash(seq)
         arm["reached_step"] = sim.step_count
         if final is not None:
-            arm["final_cash"] = final
+            arm["final_scores"] = final
+            arm["final_basis"] = final_basis
             arm["final_diff_seat"] = float(final[seat] - final[1 - seat])
             arm["complete"] = True
         elif "incomplete_reason" not in arm:
@@ -309,14 +404,17 @@ def run_arm(pack_path, FastCarbon, terminal_fn, feat_copy, rec, my_action):
     return arm
 
 
-def verify_root(pack_path, FastCarbon, terminal_fn, feat_copy, rec):
+def verify_root(pack_path, FastCarbon, terminal_fn, feat_copy, rec,
+                score_fn=None):
     """两臂续弈验证一根。恢复复现检不过 → restore_failed、差值无
-    效；两臂都到终局才给有效差值。"""
+    效；两臂都到终局才给有效差值。差值口径＝原始分差（权威终局
+    分数之差），非 ΔU（R2-11 本趟分工，见 diff_scale 字段）。"""
     seat = rec["seat"]
     res = {"game": rec["game"], "seed": rec["seed"], "step": rec["step"],
            "seat": seat, "chosen_index": rec["dec"].chosen_index,
            "a0_action": rec["a0"], "chosen_action": rec["dec"].action,
            "opp_a0_action": rec["opp_a0"],
+           "diff_scale": "原始分差（权威终局分数差之差），非 ΔU",
            "valid": False}
     arms = {}
     for name, act in (("a0", rec["a0"]), ("chosen", rec["dec"].action)):
@@ -325,7 +423,7 @@ def verify_root(pack_path, FastCarbon, terminal_fn, feat_copy, rec):
                           "incomplete_reason": "验证起跑墙钟已过，未跑"}
             continue
         arms[name] = run_arm(pack_path, FastCarbon, terminal_fn,
-                             feat_copy, rec, act)
+                             feat_copy, rec, act, score_fn=score_fn)
     res["arms"] = arms
     a, c = arms.get("a0", {}), arms.get("chosen", {})
     repro_ok = all(
@@ -353,36 +451,51 @@ def verify_root(pack_path, FastCarbon, terminal_fn, feat_copy, rec):
 
 def tie_analysis(verifications):
     """镜像退化核查（必交行）：精确相等触发 → 序列比对；未触发明
-    写未复现。"""
+    写未复现；无完整臂时写「无可评估样本」（§5 小项：不许把空集
+    说成无退化迹象）。终局值取 final_scores（F04 现金或 F01 逐席
+    分数，同臂内同口径才可比）。根去重键含 game/seed/step/seat
+    （§5 小项：旧键只有 step/seat，跨局同 step 根会互相吞掉）。"""
+    n_complete = sum(
+        1 for v in verifications
+        for arm in (v.get("arms") or {}).values() if arm.get("complete"))
+    if n_complete == 0:
+        return {"seen": False, "evaluable_arms": 0,
+                "conclusion": "无可评估样本：本趟无完整臂（验证未跑"
+                              "或两臂均未到终局），镜像退化核查无从"
+                              "判定，不作「无退化」结论。"}
     triggers = []
     for v in verifications:
         arms = v.get("arms") or {}
         for name, arm in arms.items():
-            fc = arm.get("final_cash")
+            fc = arm.get("final_scores")
             if arm.get("complete") and fc and fc[0] == fc[1]:
                 triggers.append({"kind": "within_arm_exact_tie",
+                                 "game": v["game"], "seed": v["seed"],
                                  "root_step": v["step"], "seat": v["seat"],
-                                 "arm": name, "final_cash": fc})
+                                 "arm": name, "final_scores": fc})
         a, c = arms.get("a0", {}), arms.get("chosen", {})
         if a.get("complete") and c.get("complete") \
-                and a.get("final_cash") == c.get("final_cash"):
-            triggers.append({"kind": "cross_arm_identical_final_cash",
+                and a.get("final_scores") == c.get("final_scores"):
+            triggers.append({"kind": "cross_arm_identical_final_scores",
+                             "game": v["game"], "seed": v["seed"],
                              "root_step": v["step"], "seat": v["seat"],
-                             "final_cash": a.get("final_cash")})
+                             "final_scores": a.get("final_scores")})
     if not triggers:
-        return {"seen": False,
-                "conclusion": "未复现：本趟各完整臂终局现金无席内精确"
-                              "平局、两臂终局现金向量亦无精确相等，"
+        return {"seen": False, "evaluable_arms": n_complete,
+                "conclusion": "未复现：本趟各完整臂终局分数无席内精确"
+                              "平局、两臂终局分数向量亦无精确相等，"
                               "无镜像退化迹象。"}
-    out = {"seen": True, "triggers": triggers, "details": []}
+    out = {"seen": True, "evaluable_arms": n_complete,
+           "triggers": triggers, "details": []}
     seen_roots = set()
     for tr in triggers:
-        key = (tr["root_step"], tr["seat"])
+        key = (tr["game"], tr["seed"], tr["root_step"], tr["seat"])
         if key in seen_roots:
             continue
         seen_roots.add(key)
         v = next(x for x in verifications
-                 if x["step"] == tr["root_step"] and x["seat"] == tr["seat"])
+                 if x["game"] == tr["game"] and x["seed"] == tr["seed"]
+                 and x["step"] == tr["root_step"] and x["seat"] == tr["seat"])
         arms = v["arms"]
         a_seq = arms.get("a0", {}).get("seq") or []
         c_seq = arms.get("chosen", {}).get("seq") or []
@@ -487,6 +600,7 @@ def main():
     harness0 = real_env.RealEnvSearch(probe_agent, collector=StatsCollector())
     FastCarbon = harness0.inx.FastCarbon
     terminal_fn = harness0.inx.terminal_fn
+    score_fn = make_terminal_score_fn(harness0.inx)
     feat_copy = harness0.inx.mod["feat_copy"]
     key_units = harness0.inx.mod["key_units"]
     cfg = harness0.cfg
@@ -530,9 +644,12 @@ def main():
                "verify": "双臂各一对 fresh agent、逐席 restore "
                          "pre-call 记忆；根步调用双席 agent 处理根观"
                          "测后根席执行臂动作；续弈至权威终局 "
-                         "step299（F04）或灭绝冻结（F01）；守卫随 "
-                         "agent 本体全程在位；根步复现检不过则该根"
-                         "无效",
+                         "step299（F04：真实终态现金）或灭绝（F01："
+                         "权威逐席终局分数，灭绝席 "
+                         "step_count−episodeSteps−1、存活席入步前现"
+                         "金）；守卫随 agent 本体全程在位；根步复现"
+                         "检不过则该根无效；差值口径＝原始分差，非 "
+                         "ΔU",
                "seeds": [SEED0, SEED0 + 1],
                "snap_min_step": SNAP_MIN_STEP,
                "prefer_step": PREFER_STEP,
@@ -548,6 +665,12 @@ def main():
                "step299（非 300）",
                "decide 用冻结版 decide_at_root，不用 s1_battery 的 "
                "decide_instrumented（旧 0.05s 地板口径，SI02 已废）",
+               "R2-02/R2-03 修正：灭绝结算调用权威逐席终局分数"
+               "（make_terminal_score_fn）；离线 decide 的 _fo_snap "
+               "取 pre-call 快照、对手席 guard 取快照中对手席自身"
+               "状态；restore 后重绑 st/guard 的 guard_base 别名",
+               "差值口径（R2-11 本趟分工）：verify3 输出为原始分差"
+               "（终局分数差之差），不是 ΔU；ΔU 化归 S3 附则修订",
                "scenario_seed 未消费（J=1 确定性），仅作登记标签",
                "叶①为原始分差尺度 affine 恒等直通（decide_at_root "
                "内口径）",
@@ -627,7 +750,8 @@ def main():
               f"step={rec['step']} ==")
         try:
             verifications.append(verify_root(
-                pack_path, FastCarbon, terminal_fn, feat_copy, rec))
+                pack_path, FastCarbon, terminal_fn, feat_copy, rec,
+                score_fn=score_fn))
         except Exception as exc:
             verifications.append(
                 {"game": rec["game"], "seed": rec["seed"],
