@@ -1,0 +1,94 @@
+{
+ "protocol": {
+  "collect": "基线自对弈、不挂 decide；step≥240（硬线）且 key_units 触发存根记录（sim 状态/双席 obs/双席动作与步耗/pre-call 与 post-call 双份双席记忆快照）",
+  "decide": "快照上离线跑冻结版 decide_at_root（SI01/SI02 口径，post-call 快照换入 harness inx）",
+  "verify": "双臂各一对 fresh agent、逐席 restore pre-call 记忆；根步调用双席 agent 处理根观测后根席执行臂动作；续弈至权威终局 step299（F04）或灭绝冻结（F01）；守卫随 agent 本体全程在位；根步复现检不过则该根无效",
+  "seeds": [
+   986400,
+   986401
+  ],
+  "snap_min_step": 240,
+  "prefer_step": 260,
+  "verify_max_roots": 3,
+  "terminal_step": 299,
+  "hard_wall_s": 1440.0
+ },
+ "memory_snapshot_composition": {
+  "restored": [
+   "st 字典全键（逐键 deepcopy；键全集见各快照 st_keys）：含 f/fo 两个 Feat 信念体、x/lg0（根编码与先验）、ot/oprev/rec/sampled/T_now/oenc/opp_first（对手模型与教师状态）、guard_base/base_fix 等",
+   "Feat f/fo：厂商 feat_copy（est/last/last_step/hist/own_uid/inf 私有拷贝）＋ prev_w/prev_trees/aux 补 deepcopy（feat_copy 对此三项是浅引用，补深防跨臂污染）",
+   "BankruptcyGuard 实例状态：lostw/prevw/guard_base（__dict__ deepcopy 换入 fresh agent 的 live guard）"
+  ],
+  "not_restored_with_reason": [
+   "CachePolicy.last_enc/last_sig：内容签名寻址缓存，签名覆盖 encode 全部输入字段、不合即重编码——fresh 空缓存只影响速度不影响输出，不属策略记忆（由复现检兜底）",
+   "stats 字典：仅遥测计数，不影响动作",
+   "_search 的 FastCarbon pool：rollout 草稿 sim，非记忆",
+   "opp_model/opp_id/track_losses 等嵌套函数：是代码非状态，其状态（对手历史/风格识别）全在 st 与 fo 内、已恢复"
+  ],
+  "validation": "每臂根步调用复现检：恢复后 agent 对根观测的返回动作须与采集时基线动作逐字相等（双席、双臂各检一次）；不等 → 该根 restore_failed、差值无效。"
+ },
+ "scan_games": [
+  {
+   "game": 0,
+   "seed": 986400,
+   "records": 58,
+   "record_steps": [
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268
+   ],
+   "stop_reason": "记录已足（58 条、最高步 268），提前收局",
+   "reached_step": 269,
+   "decided": 58,
+   "changed": 0
+  },
+  {
+   "game": 1,
+   "seed": 986401,
+   "skipped": true,
+   "reason": "墙钟 678s 已过第二局起跑线（560s）"
+  }
+ ],
+ "changed_candidates": [],
+ "selected_roots": [],
+ "verifications": [],
+ "tie_check": {
+  "seen": false,
+  "conclusion": "未复现：本趟各完整臂终局现金无席内精确平局、两臂终局现金向量亦无精确相等，无镜像退化迹象。"
+ },
+ "notes": [
+  "本趟口径与 verify2/addendum 的根本差别：续弈恢复双席完整策略记忆（非冷启动）、终止按 SI01 权威终局 step299（非 300）",
+  "decide 用冻结版 decide_at_root，不用 s1_battery 的 decide_instrumented（旧 0.05s 地板口径，SI02 已废）",
+  "scenario_seed 未消费（J=1 确定性），仅作登记标签",
+  "叶①为原始分差尺度 affine 恒等直通（decide_at_root 内口径）",
+  "墙钟为本 VM 共享 CPU 参考值，不作部署口径"
+ ],
+ "wall_s_total": 678.2373204231262,
+ "valid_verifications": 0
+}
