@@ -1,0 +1,65 @@
+WARROOMSYNC2134B PROBE-BEGIN 2026-11-14 21:40:04 CST
+=== L20 follow-up ===
+MARKER-L20B
+bigeval.jsonl
+bigeval_live
+packs
+rl2
+rl3
+weights
+---FIND-TRAIN---
+/root/carbon/data/rl3/snipe_n1.log
+/root/ppo_attrib/train.jsonl
+/root/ppo_attrib/state/state_pre_termU_it74.pt
+---ALL-PYTHON---
+   2001  1-16:00:08 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   2115  1-16:00:08 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+  12161  1-15:01:08 /usr/bin/python3 -Es /usr/sbin/tuned -l -P
+---RL3---
+total 14212
+drwxr-xr-x 19 root root     4096 Nov 14 13:44 .
+drwxr-xr-x  7 root root     4096 Nov 13 02:06 ..
+-rw-r-----  1 root root     3595 Nov 13 13:25 codeswitch_a7ed.py
+-rw-r-----  1 root root     4844 Nov 13 15:12 codeswitch_b7e1.py
+-rw-r-----  1 root root     3650 Nov 13 14:47 codeswitch_d758.py
+-rw-r-----  1 root root     4074 Nov 13 15:10 codeswitch_d758v5.py
+-rw-r-----  1 root root     4848 Nov 13 15:11 codeswitch_d758v6.py
+-rw-r-----  1 root root     3593 Nov 13 14:19 codeswitch_p1fix.py
+-rw-r-----  1 root root     5657 Nov 13 16:38 codeswitch_s1v11.py
+-rw-r--r--  1 root root      362 Nov 11 19:16 e42.md5
+-rw-r--r--  1 root root   218668 Nov 13 06:13 gpu.log
+---END-L20B---
+L20B SSH-RC=0
+=== C1 wr1 staging follow-up ===
+MARKER-C1B
+---ALL-PYTHON---
+   3548  1-23:11:43 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   3626  1-23:11:43 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+  49831  1-15:28:18 /usr/bin/python3 -Es /usr/sbin/tuned -l -P
+---NEWFILES---
+---WR1PACK---
+/root/carbon/code/exp/m9xj570wr1.py
+/root/carbon/data/bigeval_live/m9xj570wr1_echo2.jsonl
+/root/carbon/data/bigeval_live/m9xj570wr1_smoke_echo2.jsonl
+/root/carbon/data/bigeval_live/m9xj570wr1_smoke.jsonl
+/root/carbon/data/bigeval_live/m9xj570wr1_m2.jsonl
+---EXAMDIR---
+---SNAPLOOP---
+111758 bash -c echo MARKER-C1B; echo ---ALL-PYTHON---; ps -eo pid,etime,args | grep -E "[p]ython|[b]igeval|[r]sync|[g]it" | grep -v k0_annotate | head -10; echo ---NEWFILES---; find /root/carbon /root -maxdepth 3 -newermt "2026-11-14 21:00" -type f 2>/dev/null | grep -v k0annot | head -15; echo ---WR1PACK---; find /root -maxdepth 4 \( -name "*m9xj570wr1*" -o -name "*570wr1*" \) 2>/dev/null | head; echo ---EXAMDIR---; ls /root/carbon/exp/ 2>/dev/null | tail -8; echo ---SNAPLOOP---; pgrep -af "snaploop|sync.*h29" | head -5; echo ---END-C1B---
+---END-C1B---
+C1B SSH-RC=0
+=== C2 shards correct path ===
+MARKER-C2B
+0
+total 24
+drwxr-xr-x  3 root root 4096 Nov 14 19:34 .
+drwxrwxr-x 13 1000 1000 4096 Nov 14 19:34 ..
+-rw-r--r--  1 root root 9157 Nov 14 19:34 progress.json
+drwxr-xr-x  2 root root 4096 Nov 14 19:34 shards
+---END-C2B---
+C2B SSH-RC=0
+=== Studio retry ===
+kex_exchange_identification: read: Connection reset by peer
+Connection reset by 198.19.0.1 port 3128
+StudioB SSH-RC=255
+WARROOMSYNC2134B PROBE-END 2026-11-14 21:40:44 CST

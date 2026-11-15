@@ -1,0 +1,31 @@
+L20SYNC1119 PROBE-BEGIN 2026-11-15 11:21:48 CST
+L20SYNC1119 L20-BEGIN 2026-11-15 11:21:52 CST
+--- EXAM-FILES ---
+-rw-r--r-- 1 root root 8877093 2026-11-15_11:16:03 /root/carbon/probe_m2/data/bigeval_live/ppou2_m_it20_e2.jsonl
+-rw-r--r-- 1 root root 8817935 2026-11-15_10:52:08 /root/carbon/probe_m2/data/bigeval_live/ppou2_m_it20_m2.jsonl
+--- ROWCOUNTS ---
+    2000 /root/carbon/probe_m2/data/bigeval_live/ppou2_m_it20_m2.jsonl
+    2000 /root/carbon/probe_m2/data/bigeval_live/ppou2_m_it20_e2.jsonl
+    4000 total
+--- E2-TAIL ---
+{"seed": 983999, "side": 1, "margin": -27.36, "err": null, "t": "11:16:03", "serr": 0, "berr": 0, "ah": "f4fff1638e51efd9e2c07720831627a4", "bh": "15b6d754e6e21de33870074d3983a16f", "hh": "354bcd1bc2dc8bc188c813f53d28c893", "sa": 8466.34, "sb": 8493.7, "win": false, "u": 0.24658021332636704, "dep": 8045, "odep": 8803, "lost": 312, "olost": 170, "tinc": 4325, "otinc": 3212, "pspend": 1874, "opspend
+--- DONE-MARKER ---
+ls: cannot access '/root/carbon/data/rl3/it20_done.txt': No such file or directory
+-rw-r--r-- 1 root root 5 2026-11-15_11:16:03 /root/carbon/probe_m2/it20_done.txt
+DONE
+--- EXAM-PROCS (expect none: fields done) ---
+--- TRAINER-PROCS ---
+ 221998       04:37 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --value-head tanh --init /root/carbon/data/weights/cnet2_m3s2r1L.npz --pool-autho
+--- GPU ---
+memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+1494 MiB, 46068 MiB, 36 %
+--- C-ARM-STATE ---
+-rw------- 1 root root 82589239 2026-11-15_11:03:23 /root/carbon/data/rl3/ppou2_c/state_last.pt
+4 /root/carbon/data/rl3/ppou2_c/train.jsonl
+{"it": 4, "t": 1794678778, "games": 4457, "srv": {"req": 23566, "pos": 81434, "fwd": 4027, "t_fwd": 29.91, "pos_per_fwd": 20.2, "models": 12, "servers": 1}, "dec": 1330252, "units": 14709038, "roll_s": 1305.3, "upd_s": 653.9, "buf_s": 1.5, "pre_s": 342.1, "games_per_min": 204.9, "dec_per_s": 1019.1,
+--- M-ARM-STATE ---
+20 /root/carbon/data/rl3/ppou2_m/train.jsonl
+{"it": 20, "t": 1794709642, "games": 4432, "srv": {"req": 22425, "pos": 78912, "fwd": 4019, "t_fwd": 29.92, "pos_per_fwd": 19.6, "models": 12, "servers": 1}, "dec": 1323083, "units": 14612235, "roll_s": 1437.8, "upd_s": 635.6, "buf_s": 1.4, "pre_s": 325.2, "games_per_min": 184.9, "dec_per_s": 920.2,
+--- SERIAL-DRIVER ---
+L20SYNC1119 L20-END 2026-11-15 11:21:52 CST
+L20SYNC1119 PROBE-END 2026-11-15 11:21:52 CST

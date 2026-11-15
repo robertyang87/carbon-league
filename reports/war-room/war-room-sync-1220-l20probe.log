@@ -1,0 +1,40 @@
+L20SYNC1220 PROBE-BEGIN 2026-11-15 12:21:38 CST
+L20SYNC1220 L20-BEGIN 2026-11-15 12:21:45 CST
+--- CONF-EXAM-FILES ---
+-rw-r--r-- 1 root root 2204170 2026-11-15 11:49 /root/carbon/probe_m2/data/bigeval_live/ppou2_conf_base_m2_a.jsonl
+-rw-r--r-- 1 root root 2204167 2026-11-15 11:54 /root/carbon/probe_m2/data/bigeval_live/ppou2_conf_base_m2_b.jsonl
+--- CONF-ROWCOUNTS ---
+    500 /root/carbon/probe_m2/data/bigeval_live/ppou2_conf_base_m2_a.jsonl
+    500 /root/carbon/probe_m2/data/bigeval_live/ppou2_conf_base_m2_b.jsonl
+   1000 total
+--- CONF-TAIL-B ---
+{"seed": 984499, "side": 1, "margin": 1109.74, "err": null, "t": "11:54:39", "serr": 0, "berr": 0, "ah": "11d8005930b298290c2e150949349647", "bh": "2aebfbc1008d3475ece8e178696e292d", "hh": "354bcd1bc2dc8bc188c813f53d28c893", "sa": 9471.34, "sb": 8361.6, "win": true, "u": 0.8760403181126086, "dep": 9
+--- EXAM-PROCS ---
+--- TRAINER-PROCS ---
+ 231481       09:08 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --value-head tanh --init /root/carbon/data/weights/cnet2_m3s2r1L.npz --pool-autho
+--- GPU ---
+memory.used [MiB], memory.total [MiB], utilization.gpu [%]
+1494 MiB, 46068 MiB, 31 %
+--- C-ARM-STATE ---
+5 /root/carbon/data/rl3/ppou2_c/train.jsonl
+{"it": 5, "t": 1794714184, "games": 4469, "srv": {"req": 24276, "pos": 83459, "fwd": 4032, "t_fwd": 29.93, "pos_per_fwd": 20.7, "models": 11, "servers": 1}, "dec": 1334304, "units": 14749553, "roll_s": 901.1, "upd_s": 644.6, "buf_s": 1.4, "pre_s": 33
+-rw------- 1 root root 82600176 Nov 15 11:43 /root/carbon/data/rl3/ppou2_c/state_last.pt
+--- M-ARM-STATE ---
+20 /root/carbon/data/rl3/ppou2_m/train.jsonl
+{"it": 20, "t": 1794709642, "games": 4432, "srv": {"req": 22425, "pos": 78912, "fwd": 4019, "t_fwd": 29.92, "pos_per_fwd": 19.6, "models": 12, "servers": 1}, "dec": 1323083, "units": 14612235, "roll_s": 1437.8, "upd_s": 635.6, "buf_s": 1.4, "pre_s": 
+--- SERIAL-DRIVER ---
+-rw-r--r-- 1 root root 13972532 Nov 15 10:27 /root/carbon/data/rl3/ppou2_m/ckpt_20.npz
+--- DRIVER-PID-22667 ---
+    PID     ELAPSED COMMAND
+--- CONF-VERDICT ---
+ls: cannot access '/root/carbon/probe_m2/*.json': No such file or directory
+-rw-r--r-- 1 root root 1055 2026-11-15 12:00 /root/carbon/probe_m2/conf_base_e2.log
+-rw-r--r-- 1 root root 1075 2026-11-15 11:49 /root/carbon/probe_m2/conf_base_m2_a.log
+-rw-r--r-- 1 root root 1076 2026-11-15 11:54 /root/carbon/probe_m2/conf_base_m2_b.log
+-rw-r--r-- 1 root root    0 2026-11-15 11:44 /root/carbon/probe_m2/conf_chain.log
+-rw-r--r-- 1 root root    5 2026-11-15 12:11 /root/carbon/probe_m2/conf_done.txt
+-rw-r--r-- 1 root root 1058 2026-11-15 12:11 /root/carbon/probe_m2/conf_it20_e2.log
+-rw-r--r-- 1 root root 1074 2026-11-15 12:05 /root/carbon/probe_m2/conf_it20_m2.log
+L20SYNC1220 L20-END 2026-11-15 12:21:45 CST
+L20SYNC1220 SSH-RC=0
+L20SYNC1220 PROBE-END 2026-11-15 12:21:44 CST

@@ -1,0 +1,56 @@
+SYNC1033 PROBE-BEGIN 2026-11-14 10:40:25 CST
+=== L20 root@100.79.251.87 ===
+---TRAIN---
+---PID---
+  45936    03:30:49 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --vwarm 3 --self-prior 0.5 --snap-prior 1 --workers 30 --lockstep 16 --dec-frac 0
+---GPU---
+7740 MiB, 13 %
+---SPAWN---
+31
+---STATE---
+L20 SSH-RC=0
+=== DGX arm@100.84.148.73 ===
+---HEAD---
+1d57e67
+---STATUS---
+6
+---SCREEN---
+---K0TRAIN---
+---CERTIFY---
+8ca25d62c51134a4eff0fc840bd81f62  /home/arm/junyang/carbon-repo/code/certify_pack.py
+zsh:1: no matches found: /home/arm/junyang/carbon-repo/code/exp/k0_train*.py
+8ca25d62c51134a4eff0fc840bd81f62  /home/arm/junyang/carbon/code/certify_pack.py
+---CONFLICTLIST---
+-rw-rw-r-- 1 arm arm 21514 Nov 14 10:28 /tmp/s1_conflict_list.txt
+---BACKUPDIR---
+---GPU---
+[N/A], 0 %, 37
+zsh:1: no matches found: /home/arm/junyang/carbon-repo-backup*
+DGX SSH-RC=0
+=== Studio arm@100.78.149.20 ===
+---PILOT---
+15696    03:09:31 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python data/gen1r_endgame_p1/p1_launch.py
+59060       25:57 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/arm/junyang/carbon/code/stage1_teacher_gate.py 
+65446       00:00 zsh -c echo ---PILOT---; ps -eo pid,etime,args | grep -E "[p]1_launch|[e]ndgame" | cut -c1-200 | head -5; echo ---WORKERS---; ps -eo pid,etime,%cpu,args | grep "[p]ilot_worker" | wc 
+---WORKERS---
+       0
+---LOAD---
+10:40  up 15 days, 18:32, 4 users, load averages: 12.32 12.48 12.11
+---P1B---
+ls: unrecognized option `--time-style=+%H:%M:%S'
+usage: ls [-@ABCFGHILOPRSTUWXabcdefghiklmnopqrstuvwxy1%,] [--color=when] [-D format] [file ...]
+---GATE---
+STUDIO SSH-RC=0
+=== C1 spot-29 root@100.65.8.27 ===
+iZuf63wxob7kzgyxkel2nlZ
+ 10:40:43 up 1 day, 12:12,  1 user,  load average: 0.00, 0.00, 0.07
+  88684       00:00 bash -c hostname; uptime; ps -eo pid,etime,args | grep -E "[r]l2_ppo|[b]igeval" | head -3 || echo NO-EXAM-PROC; ls /root/carbon/data/bigeval_live 2>/dev/null | wc -l
+39
+C1 SSH-RC=0
+=== C2 spot-31 root@100.98.67.20 ===
+iZuf6023700gydxbxk4zl6Z
+ 10:40:48 up 22:20,  1 user,  load average: 0.00, 0.00, 0.00
+  35986       00:00 bash -c hostname; uptime; ps -eo pid,etime,args | grep -E "[r]l2_ppo|[b]igeval" | head -3 || echo NO-EXAM-PROC; ls /root/carbon/data/bigeval_live 2>/dev/null | wc -l
+22
+C2 SSH-RC=0
+SYNC1033 PROBE-END 2026-11-14 10:40:47 CST

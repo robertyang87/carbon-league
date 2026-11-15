@@ -1,0 +1,48 @@
+STUDIOSTAT2227B8Q2 PROBE-BEGIN 2026-11-14 22:29:11 CST
+MARKER STUDIOSTAT2227B8Q2
+mac-studio.local
+22:29  up 16 days,  6:21, 4 users, load averages: 21.08 21.20 21.16
+--- MEM-DISK ---
+/dev/disk3s1s1   926Gi    12Gi   413Gi     3%    455k  4.3G    0%   /
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                              481643.
+Pages active:                           1639085.
+Pages inactive:                         1566966.
+Pages speculative:                       305369.
+Pages throttled:                              0.
+Pages wired down:                        147320.
+Pages purgeable:                          31695.
+--- GATE-PROCS ---
+  PID  ELAPSED  %CPU %MEM COMMAND
+72802 04:52:28   0.0  0.0 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python data/stageB_q/q_launch.py
+72804 04:52:28   0.0  0.1 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/arm/junyang/carbon/code/stage1_teacher_gate.py --mode du --belief sample --workers 20 --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/junyang/carbon/data/stageB_q/replays --split-manifest /Users/arm/junyang/carbon/data/stageB_q/split_gate.json --ds-games-file /Users/arm/junyang/carbon/data/stage1_pilot/ds_m3s2_games.txt --seed-scene 995300 --seed-teacher 7000 --seed-cont 995400 --seed-anchor 995310 --pilot-artifact /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v3.json.pilot.json --expect-pilot-run-id c49ccd42e06deafa --out /Users/arm/junyang/carbon/data/stageB_q/q_du_formal.json
+72804 04:52:28 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/arm/junyang/carbon/code/stage1_teacher_gate.py --mode du --belief sample --workers 20 --weights /Users/arm/s12test/heads_v2.npz --replays /Users/arm/junyang/carbon/data/stageB_q/replays --split-manifest /Users/arm/junyang/carbon/data/stageB_q/split_gate.json --ds-games-file /Users/arm/junyang/carbon/data/stage1_pilot/ds_m3s2_games.txt --seed-scene 995300 --seed-teacher 7000 --seed-cont 995400 --seed-anchor 995310 --pilot-artifact /Users/arm/junyang/carbon/data/stage1_formal/pilot_du_v3.json.pilot.json --expect-pilot-run-id c49ccd42e06deafa --out /Users/arm/junyang/carbon/data/stageB_q/q_du_formal.json
+--- WORKERS ---
+      20
+72836 04:52:22 287:15.17 98.1
+72837 04:52:22 287:24.63 97.3
+72838 04:52:22 287:25.77 97.6
+72839 04:52:22 287:20.76 100.0
+72840 04:52:22 287:29.57 99.4
+--- STAGEB_Q DIR ---
+ls: /Users/arm/junyang/carbon/data/stageB_q/q_du_formal.json: No such file or directory
+-rw-r--r--  1 arm  staff  13843 Nov 14 17:36 /Users/arm/junyang/carbon/data/stageB_q/q_du_formal.log
+total 400
+-rw-r--r--    1 arm  staff  13843 Nov 14 17:36 q_du_formal.log
+-rw-r--r--    1 arm  staff   1141 Nov 14 17:36 q_launch.json
+-rw-r--r--    1 arm  staff      0 Nov 14 17:36 q_launch.out
+-rw-r-----    1 arm  staff   3205 Nov 14 17:36 q_launch.py
+-rw-r--r--    1 arm  staff   1140 Nov 14 17:36 q_launch_run_c132bf81_void.json
+FRESH20-DONE
+2026-11-14 22:29:16 CST
+MARKER STUDIOSTAT2227B8Q2 END
+STUDIOSTAT2227B8Q2 SSH-RC=0
+STUDIOSTAT2227B8Q2 PROBE-END 2026-11-14 22:29:15 CST
+
+Studio 22:27 trip direct read (marker STUDIOSTAT2227B8Q2, 22:29 CST, Tailscale SSH RC=0)
+- mac-studio.local, up 16d 6:21, load 21.08/21.20/21.16, disk 413Gi free (unchanged)
+- q gate formal RUNNING, three-piece verified: launcher 72802 / gate 72804 etime 04:52:28 (from 04:37:35 at 22:14, +14:53 in step with wall); 20 spawn_main workers, CPU ~287:15-287:29 each (from ~272:38-272:49, +~14:30-14:40 each); argv re-verified formal gate (--mode du --belief sample --workers 20 --seed-cont 995400 --expect-pilot-run-id c49ccd42e06deafa --out .../stageB_q/q_du_formal.json), run_id 51972702c4f81c21
+- Progress ~268/1072 roots (25.0%), +~14 in ~15 min (~56 roots/h, consistent with ~55/h baseline). ETA center ~2026-11-15 14:30 (estimate), band 12:50-15:40 unchanged.
+- q_du_formal.log mtime 17:36 (PREREG only); no q_du_formal.json yet; no fresh files in stageB_q (latest 17:36). Memory ~7.9 GiB free pages.
+- War room: no new Studio items since 22:12 snapshot (DGX lag / L20 C-probe only); no new Studio assignment; no execution-order-like signal without a named executor.
+- Verdict: NO CHANGE vs 22:12 snapshot (~254 -> ~268 roots, normal +~14 at ~56 roots/h). QUIET END this trip: no repeat report, no war-room message. Next: routine 15-min checks; watch for q_du_formal.json.

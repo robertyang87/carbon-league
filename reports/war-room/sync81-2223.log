@@ -1,0 +1,51 @@
+VOID — DO NOT CITE. This driver used eval + single-quoted remote command; semicolons split the remote command to LOCAL execution on htch-runtime. Only the 'hostname' lines are remote data; every uptime/load/path line after them is the local VM, not the target machine. All v81 numbers come from SYNC81B (sync81b-2226.log) + follow-up direct reads. Marked 2026-11-14 22:33 by sync trip v81.
+
+SYNC81 PROBE-BEGIN 2026-11-14 22:23:55 CST
+=== L20 gpu-l20-6 100.79.251.87 ===
+gpu-l20-6
+ 22:23:59 up 49 min,  0 user,  load average: 0.93, 1.10, 1.88
+--procs--
+--examiner--
+ls: cannot access '/root/carbon/code/exp/master2_src.py': No such file or directory
+ls: cannot access '/root/carbon/code/exp/echo2.py': No such file or directory
+ls: cannot access '/root/carbon/data/weights/cnet2_m3w5L.npz': No such file or directory
+--recent--
+L20 SSH-RC=0
+=== DGX dgx-spark 100.84.148.73 ===
+spark-29db
+ 22:24:04 up 49 min,  0 user,  load average: 0.94, 1.09, 1.88
+--procs--
+--repo--
+fatal: cannot change to '/home/arm/junyang/carbon-repo': No such file or directory
+fatal: cannot change to '/home/arm/junyang/carbon-repo': No such file or directory
+--returns--
+0
+0
+DGX SSH-RC=0
+=== Studio mac-studio 100.78.149.20 ===
+mac-studio.local
+ 22:24:07 up 49 min,  0 user,  load average: 0.86, 1.07, 1.87
+--procs--
+   1739       48:16 /bin/bash --norc --noprofile -c umask 0007; bash ~/workspace/q_gate/q_watch.sh; echo WATCHER-EXIT-CODE $?
+   1740       48:16 bash /home/hatch/workspace/q_gate/q_watch.sh
+--progress--
+Studio SSH-RC=0
+=== C1 spot-29 100.65.8.27 ===
+iZuf63wxob7kzgyxkel2nlZ
+ 22:24:11 up 49 min,  0 user,  load average: 0.86, 1.07, 1.87
+0.86 1.07 1.87 1/451 8979
+--procs--
+   8981       00:00 grep -E [k]0_annotate|[a]nnotate
+0
+--out--
+C1 SSH-RC=0
+=== C2 spot-31 100.98.67.20 ===
+iZuf6023700gydxbxk4zl6Z
+ 22:24:15 up 49 min,  0 user,  load average: 0.87, 1.07, 1.86
+0.87 1.07 1.86 1/452 9006
+--procs--
+   9008       00:00 grep -E [k]0_annotate|[a]nnotate
+0
+--out--
+C2 SSH-RC=0
+SYNC81 PROBE-END 2026-11-14 22:24:15 CST

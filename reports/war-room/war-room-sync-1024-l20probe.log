@@ -1,0 +1,13 @@
+MARKER-L20SYNC1024
+Sun Nov 15 10:22:09 AM CST 2026
+ 104993    07:51:25 /root/carbon/.venv/bin/python rl2_ppo_train.py --adapter cnet2 --device cuda --server 1 --reward u --value-head tanh --init /root/carbon/data/weights/cnet2_m3s2r1L.npz --pool-authoritative --pool [["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2r1L.npz#T2", 1.1], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m3s2g1L.npz#T2", 0.55], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsr1L.npz#T2", 0.55], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260wr1_fromstudio.npz#T2", 0.5], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260r1.npz#T2", 0.45], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m6r1L.npz#T2", 0.45], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2r1.npz#T2", 0.425], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m9xj260g1.npz#T2", 0.35], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_m7bsv2g1.npz#T2", 0.3], ["SNAP:cnet2:/root/carbon/data/weights/cnet2_caragor1_ep19.npz#T2", 0.275]] --self-prior 0.5 --snap-prior 1 --snap-every 10 --max-snaps 2 --vwarm 3 --workers 14 --lockstep 16 --dec-frac 0.25 --epochs 1 --mb 768 --pre-mb 4096 --games 4000 --lr 1e-5 --kl 0.05 --gamma 1.0 --rscale 1.0 --ckpt-every 1 --eval-every 5 --eval-pairs 32 --eval-opps exp/opp_master2r.py,exp/opp_m3echo.py --seed0 3000000 --lam 0.95 --out /root/carbon/data/rl3/ppou2_m
+---
+-rw------- 1 root root 82589239 02:41:41 /root/carbon/data/rl3/ppou2_c/state_last.pt
+-rw------- 1 root root 82600176 10:03:20 /root/carbon/data/rl3/ppou2_m/state_last.pt
+---
+== ppou2_m
+{'it': 19, 'kl': 0.1211, 'kl_coef': 0.05, 'games': 4395, 'winrate': 0.596}
+== ppou2_c
+{'it': 4, 'kl': 0.0161, 'kl_coef': 0.2, 'games': 4457, 'winrate': 0.558}
+---
+11776 MiB, 100 %

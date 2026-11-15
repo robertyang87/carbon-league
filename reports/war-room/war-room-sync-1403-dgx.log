@@ -1,0 +1,27 @@
+WARROOMSYNC1403 14:06:30 CST
+Warning: Permanently added '100.84.148.73' (ED25519) to the list of known hosts.
+MARK-WARROOMSYNC1403
+spark-29db
+ 14:06:36 up 25 days, 19:10, 5772 users,  load average: 156.44, 119.49, 85.41
+0 %, 41
+---DISTILL-PROC---
+1605013    13:17:11 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/k0_calib_driver.py
+---CELL4-NPZ---
+-rw-rw-r-- 1 arm arm 13994760 2026-11-15 14:02 /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz
+---TRAIN-LOG-TAIL---
+{"update": 399, "loss": {"total": 2.9927412679913976, "ce": 2.8968165726343367, "anchor_kl_weighted": 0.0959246953570608}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.0959246953570608, "p99": 0.292274543167371}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "0594108e8dab3851efc36c8466b6757fe59543741b331359c5dc571061abaa38"}, "lr": 0.0002, "elapsed_s": 3910.18}
+{"update": 400, "loss": {"total": 2.9821940844939405, "ce": 2.886444238322308, "anchor_kl_weighted": 0.09574984617163217}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.09574984617163217, "p99": 0.3258772828864891}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "7ce695fd2396604b9845810094a36606ae3baed010391b21b7d12194d083dc26"}, "lr": 0.0002, "elapsed_s": 3919.96}
+{"candidate_features": {"cash_recovery_roots": 3054, "cash_ulp_roots": 91}}
+{"saved": {"checkpoint": "lr0.0002_s400_b1_seed7.npz", "sha256": "4bd1cd2d9ffefaa581c63e8617d6a191d3d8764204b8a2fbe1b8975e7fc8bbea", "md5": "9cedc781fb2df40fcfb2aa52d5e2eef0", "updates": 400, "complete": true, "time": 1794722549.8707263}}
+{"done": {"updates": 400, "elapsed_s": 3920.11}}
+---GATE2---
+12
+-rw-rw-r-- 1 arm arm 145 Nov 15 14:05 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_2.txt
+-rw-rw-r-- 1 arm arm 137 Nov 15 14:00 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_10.txt
+-rw-rw-r-- 1 arm arm 135 Nov 15 13:59 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_log_5.txt
+---DRIVER-LOG-TAIL---
+12:56:57 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_shard1_ds --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --out /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz --flatten-q --kl-beta 1.0 --lr 0.0002 --bs 256 --max-updates 400 --seed 7 --device cuda
+14:02:33 rc= 0 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py
+14:02:33 RUN /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_duel.py --student /home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz --parent /home/arm/junyang/k0_dist/pkg/weights/cnet2_m3s2r1_heads_v2.npz --roots /home/arm/junyang/k0_calib/roots_calib.json --out /home/arm/junyang/k0_calib/duels/lr0.0002_s400_b1_seed7.json --step-min 200 --step-max 299 --seed-cont 995400 --teacher-style 2 --workers 20
+---END---
+rc=0

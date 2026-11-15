@@ -1,0 +1,18 @@
+studio-status-report 2026-11-15 02:42 (read 02:44/02:45 CST)
+marker: STUDIOSTAT0242K9Q7 (probe), STUDIOSTAT0244W2V8 (verify), SSH RC=0 both
+channel: Tailscale SSH direct arm@100.78.149.20 (task-body cloud-assistant->L20 channel stale per snapshot note, not used)
+
+DIRECT READ (02:44):
+- mac-studio.local, up 16d 10:36, load 21.87/21.27/21.11
+- disk 412Gi free (unchanged); memory 452,709 free pages x 16KiB ~ 7.1 GiB free
+- gate run 51972702 RUNNING, three-piece verified:
+  (1) launcher PID 72802 etime 09:07:22, gate PID 72804 etime 09:07:22 (from 08:53:21 at 02:30, in step with wall)
+  (2) 20 spawn_main workers, CPU time 538:20-538:57 each (+~14 min each since 02:30 ~524:03-524:37, ~96-100% CPU)
+  (3) worker CPU-time total 646,345.5 s -> ~501.5/1072 roots (46.8%) at 1,288.8 CPU-s/root
+- progress: +13.3 roots in ~14 min vs 02:30 baseline 488.2 (~57 roots/h, consistent with ~55/h baseline)
+- remaining ~570.5 roots -> ETA center ~13:05 today (estimate, re-derived this trip; band 12:50-15:40 unchanged; 02:30 ETA was ~13:20, shift within noise)
+- no q_du_formal.json yet (lands only at completion); stageB_q files unchanged (Nov 14); PREREG log mtime Nov 14 17:36
+
+WAR ROOM: no new Studio assignment since 02:30 snapshot; recent messages are L20 ppou2 kl correction + owner GitHub sync orders, no execution-order signal for this line. No idle, no stall, no 30-min output gap.
+
+VERDICT: NO CHANGE vs 02:30 snapshot (~488 -> ~502 roots, normal +~13 at ~55-57 roots/h). QUIET END this trip: no repeat report, no war-room message. Next: routine 15-min checks; watch for q_du_formal.json.

@@ -1,0 +1,112 @@
+WARROOMSYNC2103 PROBE-BEGIN 2026-11-14 21:04:56 CST
+=== L20 root@100.79.251.87 ===
+MARKER-L20-2103
+gpu-l20-6
+ 21:05:12 up 1 day, 15:25,  1 user,  load average: 0.00, 0.00, 0.00
+0 %, 0 MiB
+---PROCS---
+---TRAIN-JSONL---
+ls: cannot access '/root/carbon/data/rl3/train.jsonl': No such file or directory
+---ARCHIVE---
+/root/ppo_attrib
+/root/ppo_attrib/code
+/root/ppo_attrib/kl_pass1_teacher6
+/root/ppo_attrib/kl
+/root/ppo_attrib/value-diag
+/root/ppo_attrib/value-diag/out
+/root/ppo_attrib/value-diag/__pycache__
+/root/ppo_attrib/value-diag/state
+/root/ppo_attrib/state
+/root/ppo_attrib/roots
+---END-L20---
+L20 SSH-RC=0
+=== C1 spot29 ===
+MARKER-C1K02103
+iZuf63wxob7kzgyxkel2nlZ
+ 21:05:25 up 1 day, 22:37,  2 users,  load average: 62.35, 62.35, 62.22
+62.35 62.35 62.22 64/1047 109538
+---PROCS---
+ 105045    01:35:50 bash -c rm -rf /root/carbon/k0annot/out_timing /root/carbon/k0annot/wave1_end.txt; cd /root/carbon/k0annot && setsid nohup ./run_full.sh /root/carbon/k0annot/games_wave1_c1.json wave1 > wave1_launch.log 2>&1 & sleep 10; echo "annotate procs: $(pgrep -cf "k0_annotate[.]py")"; ps -eo pid,ppid,pgid,args | grep "k0_annotate[.]py" | head -3
+ 105050    01:35:50 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+ 105052    01:35:48 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+annotate-count: 64
+---OUT---
+k0mon-exam-driver.log
+k0mon-exam.log
+k0mon-exam.sh
+k0mon-smoke.log
+k0mon-smoke.sh
+---SHARDS-C1---
+0
+---PROGRESS---
+
+---END-C1---
+C1 SSH-RC=0
+=== C2 spot31 ===
+MARKER-C2K02103
+iZuf6023700gydxbxk4zl6Z
+ 21:05:34 up 1 day,  8:45,  3 users,  load average: 62.48, 62.41, 62.21
+62.48 62.41 62.21 63/1054 46573
+---PROCS---
+  45462    01:31:32 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45467    01:31:28 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45468    01:31:28 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+annotate-count: 63
+---SHARDS-C2---
+0
+total 24
+drwxr-xr-x  3 root root 4096 Nov 14 19:34 .
+drwxrwxr-x 13 1000 1000 4096 Nov 14 19:34 ..
+-rw-r--r--  1 root root 9157 Nov 14 19:34 progress.json
+drwxr-xr-x  2 root root 4096 Nov 14 19:34 shards
+---PROGRESS---
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8544b78e51d16aa7660bc47b",
+   "stage0_teacher.py": "c6ade5ced42e2c54a77c1499163aa151",
+   "stage1_teacher_gate.py": "e922d9d890c3e1eff6643e947289acb0"
+  },
+  "config_sha256": "9a2b2440e9267680c9b27a1d51a50db9cacdbd04582ae101ef54abaa86d8d10c",
+  "games_sha256": "2c87b4956617ec98862514e173b7441476c9a5b929d54907dd057b47a58c0c76",
+  "pi0": 1.0,
+  "pi1": 1.0,
+  "replay_sha256": {
+   "selfplay-994508": "f9d9a5ec01b4c7c873826d4a3f55d85d893e6c889779ea2375da1cc257ed6034",
+   "selfplay-994509": "fe698dbea6
+---END-C2---
+C2 SSH-RC=0
+=== DGX dgx ===
+MARKER-DGX2103
+spark-29db
+ 21:05:48 up 25 days,  2:10, 4760 users,  load average: 0.11, 0.17, 2.61
+0 %, [N/A]
+---RETURNS---
+c1:
+total 16
+drwxr-xr-x 2 arm arm 4096 Nov 14 19:31 .
+drwxrwxr-x 4 arm arm 4096 Nov 14 19:06 ..
+-rw-r--r-- 1 arm arm 6457 Nov 14 19:29 progress_c1.json
+c2:
+total 28
+drwxrwxr-x 2 arm arm 4096 Nov 14 19:34 .
+drwxrwxr-x 4 arm arm 4096 Nov 14 19:06 ..
+-rw-r--r-- 1 arm arm 1949 Nov 14 19:34 games_c2_full.json
+-rw-r--r-- 1 arm arm  179 Nov 14 19:34 k0_annot_c2_full.meta
+-rw-r--r-- 1 arm arm 9157 Nov 14 21:05 progress.json
+---ARCHIVE---
+229
+---PROCS---
+NONE-ABOVE-MEANS-CLEAN
+---END-DGX---
+DGX SSH-RC=0
+=== Studio mac-studio ===
+kex_exchange_identification: read: Connection reset by peer
+Connection reset by 198.19.0.1 port 3128
+Studio SSH-RC=255
+WARROOMSYNC2103 PROBE-END 2026-11-14 21:05:49 CST

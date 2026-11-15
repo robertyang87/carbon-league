@@ -1,0 +1,27 @@
+DGXSYNC1335 PROBE-BEGIN 2026-11-15 13:36:33 CST
+DGXSYNC1335 DGX-BEGIN 2026-11-15 13:36:38 CST
+spark-29db
+ 13:36:38 up 25 days, 18:40, 5716 users,  load average: 81.17, 63.46, 43.65
+0 %, [N/A], 48
+--- distill train proc ---
+1822104       39:42  104 /home/arm/junyang/carbon/.venv/bin/python /home/arm/junyang/carbon-repo/code/k0_distill.py --data /home/arm/junyang/carbon/data/k0_r2_s
+1838085       00:00  0.0 grep -E [t]rain_lr0|lr0.0002_s400
+--- distill log tail ---
+{"update": 239, "loss": {"total": 3.007445105716046, "ce": 2.917472028393997, "anchor_kl_weighted": 0.08997307732204887}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.08997307732204887, "p99": 0.2608651468438756}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "8d434ecc0d63ebb7b5fd7a2bbfec264bbc6adbe0ed546fb4bd9dd81177e613fe"}, "lr": 0.0002, "elapsed_s": 2349.06}
+{"update": 240, "loss": {"total": 3.0488555101267267, "ce": 2.9589188735267427, "anchor_kl_weighted": 0.08993663659998394}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.08993663659998394, "p99": 0.2802146381998035}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "09387d22e2b9af8b7cff4d850627f3f5413770f746c73bfcaf3b29cbbbecac25"}, "lr": 0.0002, "elapsed_s": 2358.83}
+{"update": 241, "loss": {"total": 3.0804213809844647, "ce": 2.9917537341046976, "anchor_kl_weighted": 0.08866764687976768}, "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), mean over candidates of slot-summed KL", "mean": 0.08866764687976768, "p99": 0.33820933130604164}, "denominators": {"roots": 256, "candidates": 4096, "batch_sha256": "a0f55fddb0b7303bf51325f405dc43f1e5996d2bc3e6233e23c03607982bf4e0"}, "lr": 0.0002, "elapsed_s": 2368.58}
+ls: cannot access '/home/arm/junyang/k0_calib/cells/lr0.0002_s400_b1_seed7.npz': No such file or directory
+--- gate2 drivers (katago_probe_scratch) ---
+12
+1835208       10:09  149 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 0 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_0.json
+1835209       10:09  149 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 1 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_1.json
+1835210       10:09  149 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 2 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_2.json
+1835211       10:09  149 /home/arm/junyang/carbon/.venv/bin/python gate2_driver.py 3 12 /home/arm/junyang/katago_probe_scratch/gatesA/gate2_out_3.json
+ls: cannot access '/home/arm/junyang/carbon/katago_probe_scratch/gatesA/': No such file or directory
+--- duel cell latest ---
+-rw-rw-r-- 1 arm arm 4047451 Nov 15 12:56 /home/arm/junyang/k0_calib/duels/lr0.0005_s100_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4046164 Nov 15 08:31 /home/arm/junyang/k0_calib/duels/lr0.0002_s200_b1_seed7.json
+-rw-rw-r-- 1 arm arm 4044214 Nov 15 04:34 /home/arm/junyang/k0_calib/duels/lr0.0002_s100_b1_seed7.json
+DGXSYNC1335 DGX-END 2026-11-15 13:36:39 CST
+DGXSYNC1335 SSH-RC=0
+DGXSYNC1335 PROBE-END 2026-11-15 13:36:38 CST

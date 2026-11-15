@@ -1,0 +1,133 @@
+WARROOMSYNC1933 PROBE-BEGIN 2026-11-14 19:35:25 CST
+=== L20 root@100.79.251.87 ===
+MARKER-L20VD1933
+gpu-l20-6
+ 19:35:38 up 1 day, 13:55,  2 users,  load average: 0.00, 0.04, 0.00
+0 %, 0 MiB, 28
+---PROCS---
+---VD-DIR---
+total 80
+-rw-r----- 1 root root 5305 Nov 14 19:17 RECEIPT.md
+drwxr-xr-x 5 root root 4096 Nov 14 19:17 .
+-rw-r----- 1 root root 2117 Nov 14 19:16 PROVENANCE.md
+-rw-r----- 1 root root 7539 Nov 14 19:16 HEAD_MAP.md
+drwxr-xr-x 2 root root 4096 Nov 14 19:15 __pycache__
+-rw-r----- 1 root root 2576 Nov 14 19:15 run_all.py
+-rw-r----- 1 root root 2549 Nov 14 19:15 mech_check.py
+-rw-r----- 1 root root 9147 Nov 14 19:15 ab_tables.py
+-rw-r----- 1 root root 3045 Nov 14 19:15 extract_vhat.py
+-rw-r----- 1 root root 5420 Nov 14 19:15 realized_u.py
+-rw-r----- 1 root root 7217 Nov 14 19:15 common.py
+drwxr-xr-x 2 root root 4096 Nov 14 19:12 state
+drwxr-xr-x 8 root root 4096 Nov 14 19:12 ..
+drwxr-xr-x 2 root root 4096 Nov 14 19:12 out
+---VD-NEW-FILES---
+/root/ppo_attrib/value-diag/ab_tables.py
+/root/ppo_attrib/value-diag/HEAD_MAP.md
+/root/ppo_attrib/value-diag/realized_u.py
+/root/ppo_attrib/value-diag/__pycache__/common.cpython-312.pyc
+/root/ppo_attrib/value-diag/run_all.py
+/root/ppo_attrib/value-diag/common.py
+/root/ppo_attrib/value-diag/mech_check.py
+/root/ppo_attrib/value-diag/RECEIPT.md
+/root/ppo_attrib/value-diag/state/state_it78.pt
+/root/ppo_attrib/value-diag/state/state_it85.pt
+/root/ppo_attrib/value-diag/state/state_it79.pt
+/root/ppo_attrib/value-diag/state/state_it95.pt
+/root/ppo_attrib/value-diag/state/state_it74.pt
+/root/ppo_attrib/value-diag/PROVENANCE.md
+/root/ppo_attrib/value-diag/extract_vhat.py
+---END-L20---
+L20 SSH-RC=0
+=== C1 spot29 ===
+MARKER-C1K01933
+iZuf63wxob7kzgyxkel2nlZ
+ 19:35:50 up 1 day, 21:07,  2 users,  load average: 62.26, 45.04, 21.99
+62.26 45.04 21.99 63/1043 105496
+---PROCS---
+ 105045       06:16 bash -c rm -rf /root/carbon/k0annot/out_timing /root/carbon/k0annot/wave1_end.txt; cd /root/carbon/k0annot && setsid nohup ./run_full.sh /root/carbon/k0annot/games_wave1_c1.json wave1 > wave1_launch.log 2>&1 & sleep 10; echo "annotate procs: $(pgrep -cf "k0_annotate[.]py")"; ps -eo pid,ppid,pgid,args | grep "k0_annotate[.]py" | head -3
+ 105050       06:16 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+ 105052       06:13 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+ 105053       06:13 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0annot/pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0annot/pkg/replays --games /root/carbon/k0annot/games_wave1_c1.json --out /root/carbon/k0annot/out_timing --isolation-file /root/carbon/k0annot/pkg/iso_shard0.json --isolation-file /root/carbon/k0annot/pkg/iso_test323.json --workers 62
+annotate-count: 64
+---OUT---
+games_full_c1.json
+games_timing_c1.json
+games_wave1_c1.json
+games_wave2_c1.json
+out_timing
+pkg
+run_full.sh
+run_timing.sh
+timing.log
+timing_pgid.txt
+---PROGRESS---
+{
+ "games": {},
+ "identity": {
+  "code_md5s": {
+   "cnet2_feat.py": "2a45b08b6f97508541e62867e408748e",
+   "cnet2_np.py": "d8c15ad4fdd8ee079363cf215d52daf3",
+   "cnet2_search.py": "94f7fb6438bb7577b141e388f068e122",
+   "fastsim.py": "aefe6c83826efae4de83bef8c643c80b",
+   "k0_annotate.py": "7f567a2e8544b78e51d16aa7660bc47b",
+   "stage0_teacher.py": "c6ade5ced42e2c54a77c1499163aa151",
+   "stage1_teacher_gate.py": "e922d9d890c3e1eff6643e947289acb0"
+  },
+  "config_sha256": "9a2b2440e9267680c9b27a1d51a50db9cacdbd04582ae101ef54abaa86d8d10c",
+  "games_sha256": "7175b92149fd47db8ff16122c1f51cd79a9f1045d92726244c460a76849ef4a2",
+  "pi0": 1.0,
+  "pi1": 1.0,
+  "replay_sha256": {
+   "selfplay-994400": "55d713d64c002d6c204988280804da47b96c979464f4ae9740b2676338581436",
+   "selfplay-994401": "866a8ce7cc7125af8962e51f6db7b1a41686c3c13dbab35b2cec0c653a66baf5",
+   "selfplay-994402": "0712618c577d99eaa170b0faea279cc588ec89985f66849b5f431dab1b49d41f",
+   "selfplay-994403": "275d0c2dab97e13a9f613756c977cfe5ca40306f7447d847436ffd08e59204cf",
+   "selfplay-994404": "3cc7984b5ff49d9a0cf187ebaed509b5323d42a951e21b2234e30994e56650cd",
+   "selfplay-994405": "238305a1493a5868124dd7ce65a20a779d99a2f4eb31c44219
+---SHARDS---
+0
+---END-C1---
+C1 SSH-RC=0
+=== C2 spot31 ===
+MARKER-C2K01933
+iZuf6023700gydxbxk4zl6Z
+ 19:36:03 up 1 day,  7:16,  3 users,  load average: 53.21, 21.60, 9.42
+53.21 21.60 9.42 64/1067 45689
+---PROCS---
+  45462       02:01 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45467       01:57 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45468       01:57 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+  45469       01:57 /root/carbon/.venv/bin/python k0_annotate.py --weights /root/carbon/k0pkg/weights/cnet2_m3s2r1_heads_v2.npz --replays /root/carbon/k0pkg/replays --games /root/carbon/k0pkg/games_c2_full.json --out /root/carbon/data/k0_annot_c2 --isolation-file /root/carbon/k0pkg/iso_shard0.json --isolation-file /root/carbon/k0pkg/iso_test323.json --workers 62
+annotate-count: 63
+---OUT---
+ls: cannot access '/root/carbon/k0annot/': No such file or directory
+---PROGRESS---
+
+/root/carbon/k0annot/*/ shards: 0
+---END-C2---
+C2 SSH-RC=0
+=== DGX dgx ===
+MARKER-DGX1933
+spark-29db
+ 19:36:13 up 25 days, 40 min, 4584 users,  load average: 0.33, 0.20, 2.31
+0 %, [N/A], 36
+---ARCHIVE---
+total 24
+drwxrwxr-x  4 arm arm  4096 Nov 14 19:22 .
+drwxrwxr-x 34 arm arm 12288 Nov 14 19:22 ..
+drwxrwxr-x  2 arm arm  4096 Nov 14 19:22 ppo_attrib
+drwxrws---  2 arm arm  4096 Nov 14 19:36 run_dir
+30
+---RETURNS---
+c1:
+progress_c1.json
+c2:
+games_c2_full.json
+k0_annot_c2_full.meta
+progress.json
+---PROCS---
+NONE-ABOVE-MEANS-CLEAN
+---END-DGX---
+DGX SSH-RC=0
+WARROOMSYNC1933 PROBE-END 2026-11-14 19:36:13 CST
