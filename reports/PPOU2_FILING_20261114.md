@@ -199,3 +199,20 @@ ETA 必须开工前预估：以开工前的实测单价／同类任务速率为�
 - 残树：it=40 回执标 GAP（现有归档无终局观测输入，不代用近似场）；侧车在检查点场后补跑（每场前 100 种子升序、候选＋基线各一遍、身份闸逐局对 margin/win，任一失配即作废上报）。口径：终局 full_observation 里 players[p][3] 树字典全量计数，不按 owner 前缀过滤（26 局语料复算：胜均 2.941／负均 5.0／负 ≥7 且对手 ≤1 计 4 局）。
 - 未卖载货（13:59 扩展，并列记）：终局 full_observation 里 players[p][2] 工人字典各工人携带量（条目下标 1）之和；players[p][1] 是静态招募中心属性、无存货。口径复算证据：51 局 Echo4 天梯语料（echo4_pull51，按创建时间升序编号）逐值合——#46 361.79、#49 143.54、#42 115.64、哈基米 v2 pro 279.14、哈基米 v3 399.64（Echo4 按名认、席位按 order 对齐）。
 - 实现：remote_sidecar_trees.py（本地＝L20 md5 580cdd1439ba4c9f695996f94bd90587），逐局记 cand/opp trees 与 cargo（cargo_p0/p1 全量）；身份闸不变。验证（2026-11-15）：it=20 M2 场前 10 种子候选包重跑，gate 10/10，cargo 值域 4.73–281.99 正常。首跑在 it=40 场后；回执同报候选 vs 基线残树均值与未卖载货均值（同样本、胜/负分列）。
+
+## 分臂并行（2026-11-15，所有者令：抢占机分臂＋2 分钟同步）
+
+- 背景：所有者令租杭州 J 区抢占式 L20 试跑（carbon-l20-spot-1，实例 i-bp1dr7ogkb6kz5qav903，tailnet 100.92.60.120，实付 ¥6.5485/时），主臂留 gpu-l20-6、对照臂迁抢占机，结束串行排队（作战室 14:08 令、本线 14:11 方案）。
+- 目标机处置：裸镜像 Ubuntu 24.04.5／Python 3.12.3；DNS 被 tailscale MagicDNS 接管且无可用上行——持久修复＝resolved drop-in（DNS 223.5.5.5/223.6.6.6）＋tailscale accept-dns=false；apt 内网镜像 100.100.2.148 不可达，源改公网 mirrors.aliyun.com；unattended-upgrades 占 dpkg 锁，已停并 mask（防其后自动升级扰动）。驱动 nvidia-driver-580-server 装成（580.178.04、CUDA 13.0、MODPROBE_OK、nvidia-smi 验 L20 49140 MiB；与 gpu-l20-6 的 580.126.09 同分支不同小版，登记在案）。
+- 复制：gpu-l20-6 直连 rsync（spot_sync 钥）。首趟 venv rc=0 后 code/weights 两趟撞上本 VM 替换期的 tailnet 中断（broken pipe），run_copy.sh 的 rc 记录失真（rsync 报错仍记 rc=0）——以机上直读为准：code 1250/1388 文件、weights 0。补传后全量对账合：code 1388 文件、weights 36 文件、trainer 2c8262fb、本体 b6db08c9、launcher v5 539474bf、c 锚 573fb3af、state_last.pt 587ae5305cb7b497120c9a84704ce526、train.jsonl f0e724d5、league.json c9113cf5（两机逐字同）。教训：批量复制回执只认目标机直读计数＋md5，不认源端脚本自报 rc。
+- 切换：先拆串行 driver＋其看门狗 cron（ppou2-serial-driver-watchdog 已 remove），再停对照臂于 it=11 边界（state_match 真、sha fdbe7005；整组验收：组进程 0、spawn_main 0、GPU 0 MiB），终同步后 resume。
+- 2 分钟同步环（所有者 14:13 令）：拉式环跑 gpu-l20-6（PID/PGID 269975，落点 /root/carbon/data/rl3/ppou2_c_mirror/，环日志 /root/carbon/data/rl3/c_mirror_sync.log）。开训前验活通过：首趟镜像 state md5 与源逐字同、探针文件 sync_probe.txt（probe-20261115-split-v1）一个周期内到达且内容合；其后周期 rc=0/0/0。被回收恢复口径：以镜像 state 在 gpu-l20-6 续跑，损失 ≤约 2 分钟＋在飞半轮。
+- 开工三件套：对照臂（spot，PID/PGID 24804，launcher v5，kl 0.15，resume it=11 态，15:01 spot 机时）verify alive／GPU 426 MiB（rollout 相）／spawn_main 15／league 12 键与源机逐键同（SELF＋snap_10＋备案池 10；校验脚本「11」为首快照入盟前旧期望，已正）。主臂（gpu-l20-6，PID/PGID 270207，launcher v5，kl 0.15，resume it=20 态）verify alive／GPU 426 MiB／spawn_main 15／league 13 键（SELF＋snap_10＋snap_20＋池 10）。
+- 进度口径：两机各自 train.jsonl 轮次计数＋state mtime（外部可读）；检查点位置：主臂 /root/carbon/data/rl3/ppou2_m（gpu-l20-6）、对照臂 /root/carbon/data/rl3/ppou2_c（spot）＋镜像 ppou2_c_mirror（gpu-l20-6）。串行排程作废，两臂各自连续跑向 it=40 检查点。
+- KL 看守：serial driver 退役；kl_watcher.py（本 VM，每 60 秒双机直读 remote_kl_check）接棒——主臂 it=21 为其 0.15 首轮校准点（calib_done m=false），对照臂已校准（it=5，0.029）；≥0.10 当轮报、≥0.13 先停该臂＋kl_hold.flag 待裁（两臂均已 0.15，不自步进）。看门狗 cron ppou2-kl-watchdog（每 10 分钟）保 kl_watcher 与镜像环存活。时间盒不变：2026-11-20 12:00 硬停。
+
+## 主臂 it=21 0.15 首轮校准＋策略组裁定（2026-11-15 15:43–15:47）
+
+- 校准值：主臂 it=21 落地 15:43:11，达成 KL **0.1128** @ kl_coef 0.15（games 4324、winrate 0.607、clipfrac 0.174，直读 train.jsonl 末行；看守 15:43:36 记 KL15_CALIBRATION_HIGH）。对照 it=20：0.1288 @ 0.05——系数 ×3 换来达成 KL 约 12% 下降，响应弱（与约 0.18 幂响应一致），0.05–0.07 带仍不可由系数到达、从来不是闸。
+- 上报：按 10:49 裁定当轮报策略组（15:44 送出）；裁定 15:47：**HOLD 0.15，继续训**——it=22 在飞不拦，不动系数；单轮 ≥0.13、累计 KL 均值 >0.15 任一触发即停线后纠；已在 0.15 下若 ≥0.13 再现，按 10:49 裁 HOLD 待裁、不步进，当轮报策略组。
+- 节奏勘误（策略组接受）：it=17→20 间隔 24.2/23.7/24.0 分钟，ETA 口径 ~24 分钟/轮不变（主臂 it=40 约 23:20，估计）；it=21 的 41 分钟是 resume 首轮开销。进度汇报趟「it=18–20 约 40 分钟/轮」为误读，作废。
