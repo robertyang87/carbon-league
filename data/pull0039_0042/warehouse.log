@@ -1,0 +1,42 @@
+matches data/fable6_matches.json: 256 entries, md5 0342709ac19e704c8f7dd69efa8191f1
+matches data/lite-v8_matches.json: 268 entries, md5 9b2fa129992dcf19adb3699782b11025
+matches data/krypton-search256-v2_matches.json: 105 entries, md5 d84ffc6ede6dddac486f47e92c1df619
+matches data/krypton-cloudsearch_matches.json: 125 entries, md5 1070184666ea0cb0b85683fac97976a9
+payload: 292 files (288 corpus + 4 matches)
+local md5 check bad=0 []
+HEAD 44a851d7e044 base_tree 6c8a0131a562
+blobs 50/292
+blobs 100/292
+blobs 150/292
+blobs 200/292
+blobs 250/292
+blobs done: 292
+new commit: e3e30d529c08ef8f6722e71d448bbafd2316b7fd
+Traceback (most recent call last):
+  File "/home/hatch/workspace/carbon-incoming/warehouse_pull0039_0042.py", line 104, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/hatch/workspace/carbon-incoming/warehouse_pull0039_0042.py", line 87, in main
+    patched = gh_api.req('PATCH', f'/repos/{OWNER}/{REPO}/git/refs/heads/main',
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/gh_api.py", line 16, in req
+    with urllib.request.urlopen(r, timeout=30) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 422: Unprocessable Entity
