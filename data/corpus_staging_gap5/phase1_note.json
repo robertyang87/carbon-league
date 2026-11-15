@@ -1,0 +1,57 @@
+{
+ "board_at_dispatch": {
+  "endpoint": "117.72.210.134",
+  "rank": 23,
+  "rating": "2417+-18",
+  "wins_games": "169/313"
+ },
+ "corpus_on_dgx_clone": {
+  "count": 292,
+  "head": "1d57e6711c46c9d5ec1db5573fe0a11188451a58"
+ },
+ "corpus_on_main": {
+  "count": 292,
+  "path": "data/fable_corpus"
+ },
+ "dgx_order_chat": "ca3bf51b-50bb-45e3-bd71-bb29a310824d",
+ "dgx_order_submission": "4d70a927-d375-419a-b3e7-15629f944c98",
+ "dgx_paths": {
+  "completion_marker": "PULL_GAP5_ALL_DONE",
+  "list_snapshot": "/home/arm/junyang/gap5/fable_matches.json",
+  "manifest": "/home/arm/junyang/gap5/pull0033_fable_gap5.manifest",
+  "script": "/home/arm/junyang/gap5/dgx_pull_gap5.py",
+  "workdir": "/home/arm/junyang/gap5"
+ },
+ "gap": 20,
+ "hex": "2b4b44fd148fa7fdaa53bb0d110ae705",
+ "label": "fable",
+ "list_on_main": {
+  "entries": 312,
+  "path": "data/fable_matches.json",
+  "sha": "2f2470cddc1471cd9a72d56881e44388b6584635"
+ },
+ "pending": [
+  "DGX pull receipt (list count, want/have/missing/bad, manifest entries, completion line)",
+  "fetch missing files via scp to staging dir, verify md5=manifest + gzip -t + JSON + set equality vs main corpus diff",
+  "warehouse via Git Data API single commit (gap3 message style), corpus files only, do NOT touch data/fable_matches.json",
+  "read-back verification (count=list, set=manifest, >=2 three-way md5 spot checks)",
+  "final report: files pulled, warehouse commit sha, read-back numbers"
+ ],
+ "phase": "phase2-complete, warehoused + read-back verified",
+ "pull_script": "dgx_pull_gap5.py",
+ "pull_script_md5": "dd370ae05df0eac9098232f9ae6fcb57",
+ "staging": "/home/hatch/workspace/carbon-live/corpus_staging_gap5",
+ "strategy": "Fable5.2-Max-V5",
+ "warehouse_commit": "052ca43755e7025e9df3679eefcea0f35bd21bae",
+ "readback": {
+  "list_entries": 313,
+  "corpus_count": 313,
+  "set_equals_manifest": true,
+  "spot_checks": {
+   "a82e00106c2f0825ee7651ac456009fc-1.json.gz": "0d26c2906897d2b3d721c06e25e3bc67",
+   "1edba5d11f0f06c968b2adf4dfe93517-1.json.gz": "dfa437ccca517c54e75d7bc72a0a0de1"
+  },
+  "it570_untouched": true,
+  "dgx_clone_head": "1d57e6711c46c9d5ec1db5573fe0a11188451a58"
+ }
+}

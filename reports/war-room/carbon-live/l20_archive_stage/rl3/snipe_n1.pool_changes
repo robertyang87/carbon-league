@@ -1,0 +1,4 @@
+12:26:00 smoke OK (tattn sync from DGX + mb 512 OOM fix); start snipe_n1 from n1r (cnet2_m3n1L, TA=4 attention), pool W1 1.0 / W2 0.5 / m6r1 0.5 / self 0.5, mb 512, rest as snipe_b; snipe_b stopped at ckpt_110 per approved switch
+13:24:19 opt resume at it 4: mb 512->768, pre-mb 2048->4096 (speed; lr/kl/pool/dec-frac unchanged, amp still off for quality); baseline it1-3 pre~385s upd~640s wall~13min/it, mb512 peak 25.3GB, mb768 est peak ~33GB
+14:58:18 kl-fix resume at it 10: --kl 0.05->0.10 (kl drift it7 .073 it8 .076 it9 .087 over 0.08 band; hypothesis: coef x2 pulls kl back to ~0.05 within 2 its); pool unchanged; amp deferred until kl back in band; rollback anchor state_pre_klfix_it10.pt
+15:00:51 kl-fix relaunch (first attempt 14:57 died on pool-string JSON error in orchestrator: missing '[' on first pool item; fixed with literal pool string). --kl 0.10, old pool, resume it10 state.

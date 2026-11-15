@@ -1,0 +1,31 @@
+=== step 0: state copies + md5 verification ===
+state_it74.pt md5 OK (state_pre_termU_it74.pt)
+state_it78.pt md5 OK (state_pre_vhead_it78.pt)
+state_it79.pt md5 OK (state_pre_r18_it79.pt)
+state_it85.pt md5 OK (state_frozen_it85.pt)
+state_it95.pt md5 OK (state_previous.pt)
+six ckpt npz md5 OK (82 verified as an artifact; its vhat state is the documented gap)
+roots.npz / rootset32.json md5 OK
+=== step 1: realized U ===
+realized_u: OK n=6336 games=32 (self-checks 1-4 passed)
+=== step 2: vhat extraction ===
+ckpt_74: vhat extracted readout=tanh head=['value.weight', 'value.bias'] state_md5=683d87588ae597920fe20a8c095c6d14
+ckpt_78: vhat extracted readout=tanh head=['value.weight', 'value.bias'] state_md5=87cde228d00bfda6a90d27084e979d8d
+ckpt_79: vhat extracted readout=utility head=['utility.weight', 'utility.bias'] state_md5=0b643177c922313eb0895f429232c88b
+ckpt_82: ARTIFACT_MISSING (marker written)
+ckpt_85: vhat extracted readout=utility head=['utility.weight', 'utility.bias'] state_md5=fd9df2039fe95392db49a0836933e32e
+ckpt_95: vhat extracted readout=utility head=['utility.weight', 'utility.bias'] state_md5=414b3f20d6a62ad8554bee90314db21a
+=== step 3: A/B tables + verdicts ===
+{
+ "A_verdict": "证伪",
+ "B_verdict": "无判定（形态未达任一线）",
+ "C_trigger": false,
+ "delta_mae": -0.321587871100157,
+ "delta_abs_bias": 0.001764086728640403,
+ "missing": [
+  82
+ ]
+}
+results -> /root/ppo_attrib/value-diag/out/results.json
+=== DONE ===
+outputs: /root/ppo_attrib/value-diag/out

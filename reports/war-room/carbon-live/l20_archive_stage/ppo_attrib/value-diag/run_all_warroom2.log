@@ -1,0 +1,17 @@
+=== step 0: state copies + md5 verification ===
+state_it74.pt md5 OK (state_pre_termU_it74.pt)
+state_it78.pt md5 OK (state_pre_vhead_it78.pt)
+state_it79.pt md5 OK (state_pre_r18_it79.pt)
+state_it85.pt md5 OK (state_frozen_it85.pt)
+state_it95.pt md5 OK (state_previous.pt)
+six ckpt npz md5 OK (82 verified as an artifact; its vhat state is the documented gap)
+roots.npz / rootset32.json md5 OK
+=== step 1: realized U ===
+Traceback (most recent call last):
+  File "/root/ppo_attrib/value-diag/realized_u.py", line 139, in <module>
+    main()
+  File "/root/ppo_attrib/value-diag/realized_u.py", line 88, in main
+    final_step = total_steps[g["name"]] - 1
+                             ~^^^^^^^^
+KeyError: 'name'
+FAILED at step 1: realized U (rc=1)

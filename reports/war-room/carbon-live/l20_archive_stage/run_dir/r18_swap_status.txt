@@ -1,0 +1,17 @@
+00:22:56 WATCHER_START r18 swap base_it=78 staged train=c27b7ea5
+00:32:57 OVERWRITE_PROOF it79 util_fp=395e156d97f7b4d0f71512385f10cce5 it78bak_fp=395e156d97f7b4d0f71512385f10cce5 merged_fp=6e5af436f7b766aa6a55cf55d40399ea
+00:32:57 OVERWRITE_PROOF L2(it79,it78bak)=0 (one round of head updates; merged init is one round BEHIND the it78 backup, so a resume from merged values would sit ~2 rounds away)
+00:32:57 SWAP_START boundary_it=79 pid=30478
+00:32:57 TRAINER_STOPPED
+00:32:57 STATE_BACKUP /root/carbon/data/rl3/snipe_n1/state_pre_r18_it79.pt md5 0b643177c922313eb0895f429232c88b
+00:32:57 FILE_SWAPPED rl2_ppo_train.py live md5 c27b7ea5b74e5f0960bae620706fa272
+00:32:57 FILE_SWAPPED stage0_teacher.py live md5 c6ade5ced42e2c54a77c1499163aa151
+00:32:57 FILE_SWAPPED stage1_teacher_gate.py live md5 4969a9fc0c374e17cfe54eadc24dada9
+00:32:57 FILE_SWAPPED cnet2_build.py live md5 3b99ae47699eff7e232a83790956f757
+00:32:57 FILE_SWAPPED producer/selfplay_gen.py live md5 523963c2a7e6d14880c948b8b028a158
+00:32:57 PY_COMPILE rc=0
+00:32:57 RELAUNCHED pid=32720 utility_source=checkpoint resume_vwarm=1 init=ORIGINAL (ii retired)
+00:33:28 POSTCHECK30 alive=True last_it=79
+00:34:58 POSTCHECK120 alive=True last_it=79
+00:34:58 EFFECTIVE_PARAMS {  "lr": 1e-05,  "vlr": 0.0003,  "kl_coef": 0.15,  "resumed_from": "/root/carbon/data/rl3/snipe_n1/state_last.pt",  "it0": 79,  "reward": "u",  "gamma": 1.0,  "rscale": 1.0,  "value_head": "utility",  "u_mode_problems": [],  "utility_provenance": {   "source": "checkpoint",   "checkpoint_model": "vnet",   "path": "/root/carbon/data/rl3/snipe_n1/state_last.pt",   "initial_head_sha256": "c0261a4f14bf0d552f2f5d5e448bcc39c8dc576d43a9294dc85c7497a6495fb7",   "declaration": "explicit-checkpoint",   "previous_training": null,   "reset_critic_optimizer": false,   "calibration_verified": false,   "initial_critic_sha256": "5b75db991205392dc7f86ad987b82667e53dc631717710711da6664c7e5ae90e",   "source_file_sha256": "dbb99427b6a133541903fefabe89fe388a4c5d6c1424d3328491a0671fee9a85"  },  "critic_warmup_iters": 1 }
+00:34:58 SWAP_DONE
