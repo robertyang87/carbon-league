@@ -1,0 +1,94 @@
+{
+ "protocol": "S3_ROOT_LIST_FREEZE_PROTOCOL.md §7.5",
+ "estimand_py_md5": "3081a510d4e2bdae9c60e9d79aa2fe86",
+ "cases": [
+  {
+   "case": "R2-11 （修订 §1.4）",
+   "inputs": {
+    "a0_margins": [
+     10.0,
+     -1000.0
+    ],
+    "chg_margins": [
+     -10.0,
+     -900.0
+    ],
+    "note": "工作例输入为逐根逐臂终局分差 M；U 由 estimand.u_of_margin 按 §1.1 公式算"
+   },
+   "computed_raw": {
+    "per_root_delta_u": [
+     -0.5024999791668749,
+     0.010054538002500446
+    ],
+    "mean_delta_u": -0.24622272058218725,
+    "u_values": {
+     "U(10)": 0.7512499895834375,
+     "U(-10)": 0.2487500104165625,
+     "U(-900)": 0.144525248687498,
+     "U(-1000)": 0.13447071068499755
+    }
+   },
+   "formatted": {
+    "root1": "-0.50249998",
+    "root2": "0.01005454",
+    "mean": "-0.24622272"
+   },
+   "targets": {
+    "root1": "-0.50249998",
+    "root2": "0.01005454",
+    "mean": "-0.24622272"
+   },
+   "checks": {
+    "root1": true,
+    "root2": true,
+    "mean": true
+   },
+   "pass": true
+  },
+  {
+   "case": "R2-12 （修订 §2.5）",
+   "inputs": {
+    "game_A": "100 根、ΔU 全 +0.01、全有效、π=1",
+    "game_B": "1 根、ΔU −0.20、验证失败记无效",
+    "note": "工作例输入为逐根 ΔU 与有效性；聚合走 estimand.aggregate_games（与 analyze 同函数）"
+   },
+   "computed_raw": {
+    "point_estimate": 0.010000000000000007,
+    "worst_case_bounds": [
+     -0.495,
+     0.505
+    ],
+    "flags": {
+     "worst_case_bounds_cross_zero": true,
+     "missing_sensitive_not_adjudicable": true,
+     "zero_valid_game_fraction": 0.5,
+     "void_for_adjudication": true,
+     "no_data_games": false
+    },
+    "zero_valid_games": [
+     1
+    ]
+   },
+   "formatted": {
+    "point": "0.01",
+    "bound_lo": "-0.495",
+    "bound_hi": "0.505"
+   },
+   "targets": {
+    "point": "0.01",
+    "bound_lo": "-0.495",
+    "bound_hi": "0.505"
+   },
+   "checks": {
+    "point": true,
+    "bound_lo": true,
+    "bound_hi": true,
+    "downgrade_triggered": true
+   },
+   "pass": true,
+   "note_on_void_flag": "零有效根局占比 1/2 > 10%，§2.4 的作废标记（void_for_adjudication）亦触发，随证据同报；§7.5 第 2 则的判定要件为点估计＋最坏界＋降级触发，本则以此三项为准。"
+  }
+ ],
+ "verdict": "PASS",
+ "rule": "两则有一则不合，分析管线停用、先修代码；真实数据的 ΔU 与界由同一管线（estimand.py）算出。"
+}
