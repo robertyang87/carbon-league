@@ -14,6 +14,12 @@ Opponent spec strings:
                              SNAP_TEMP), played through that adapter's actor
     "SNAP:cnet2:<npz>#T5"    any cnet2 policy net as a cheap fixed opponent (style row 5): no rule layer, no
                              search, trunk on the inference server -- costs what a snapshot costs
+    "<any spec>@C<amount>"   the same opponent with a starting-cash head start of <amount> (e.g.
+                             "SNAP:cnet2:/w/m3s2r1L.npz#T2@C90"): a pressure variant. The suffix is stripped
+                             before the opponent is built, so it shares the base member's model (no extra
+                             server slot); the FULL spec stays the league key, so the variant has its own
+                             prior and its own n/wr/margin row. "SELF@C.." is refused (the mirrored record
+                             would no longer be a zero-sum pair). Margins stay the true game margins.
 """
 
 import os
@@ -129,6 +135,28 @@ class _SnapAgent:
         return self.actor.act([self.st], [obs], self.rng, max(self.temp, 1e-3), greedy)[0][0]
 
 
+_HANDICAP_RE = None
+
+
+def split_handicap(spec):
+    """"<base>@C<amount>" -> (base, amount); a spec without that exact suffix -> (spec, 0.0).
+    Only a trailing "@C<decimal number>" is a handicap (a path that merely contains "@C" is
+    left alone). The amount must be positive; SELF cannot carry a handicap."""
+    global _HANDICAP_RE
+    if _HANDICAP_RE is None:
+        import re
+        _HANDICAP_RE = re.compile(r"^(.*)@C(\d+(?:\.\d+)?)$", re.S)
+    m = _HANDICAP_RE.match(spec)
+    if m is None:
+        return spec, 0.0
+    base, amount = m.group(1), float(m.group(2))
+    if amount <= 0.0:
+        raise ValueError(f"opponent spec {spec!r}: handicap must be positive")
+    if base == "SELF" or not base:
+        raise ValueError(f"opponent spec {spec!r}: SELF (or an empty base) cannot carry a handicap")
+    return base, amount
+
+
 def make_opponent(spec, side, seed):
     if spec.startswith("SNAP:"):
         _, ad, path = spec.split(":", 2)
@@ -206,20 +234,27 @@ def play_batch(task):
     snap_temp = _snap_temp()
     games = []
     for opp, seed, side in task["games"]:
+        base, bonus = split_handicap(opp)
         random.seed(eval_v53.rng_seed(seed, side))
         sim = FastCarbon(CFG).reset(seed=seed)
+        if bonus:
+            # Pressure variant: the opponent starts ahead (same mechanism as the exam ruler
+            # EVAL_OPP_CASH in eval_v53.play_game). prev/prevw start at -bonus so the dense /
+            # worth per-step differences do not book the head start as a first-step loss;
+            # the game margin (and so the Terminal-U reward) is the true final margin.
+            sim.cash[1 - side] += bonus
         g = {"opp": opp, "seed": seed, "side": side, "sim": sim, "st": actor.new_game(side),
-             "recs": [], "R": [], "W": [], "dep": [], "lost": [], "prev": 0.0, "prevw": 0.0,
+             "recs": [], "R": [], "W": [], "dep": [], "lost": [], "prev": -bonus, "prevw": -bonus,
              "prevcash": [float(sim.cash[0]), float(sim.cash[1])], "term_margin": 0.0,
-             "kind": "bot", "op": None, "done": False, "term": False, "nsteps": 0}
-        if opp == "SELF":
+             "kind": "bot", "op": None, "done": False, "term": False, "nsteps": 0, "handicap": bonus}
+        if base == "SELF":
             g.update(kind="self", st2=actor.new_game(1 - side), recs2=[], dep2=[], lost2=[])
-        elif opp.startswith("SNAP:"):
-            _, ad_, path_ = opp.split(":", 2)
+        elif base.startswith("SNAP:"):
+            _, ad_, path_ = base.split(":", 2)
             sa = _actor(ad_, path_, role="snap")
             g.update(kind="snap", sactor=sa, st2=sa.new_game(1 - side))
         else:
-            g["op"] = make_opponent(opp, 1 - side, seed)
+            g["op"] = make_opponent(base, 1 - side, seed)
         games.append(g)
     rng = np.random.default_rng(task.get("rng_seed", 0))
     rng_s = np.random.default_rng(task.get("rng_seed", 0) * 13 + 5)
@@ -333,7 +368,7 @@ def play_batch(task):
         r = {"opp": g["opp"], "seed": g["seed"], "side": side,
              "my": float(st["cash"][side]), "op": float(st["cash"][1 - side]),
              "margin": float(g["term_margin"]) if g["term"] else float(st["cash"][side] - st["cash"][1 - side]),
-             "term": bool(g["term"]), "steps": g["nsteps"],
+             "term": bool(g["term"]), "steps": g["nsteps"], "handicap": g["handicap"],
              "planted": g.get("tp_my", 0), "planted_op": g.get("tp_op", 0)}
         if record:
             r.update(recs=g["recs"], dmargin=np.array(g["R"], np.float32), dworth=np.array(g["W"], np.float32),
