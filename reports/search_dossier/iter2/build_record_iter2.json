@@ -1,0 +1,197 @@
+{
+  "batch": "iter2 dose variants (D1/D2/D3)",
+  "base": "iter1 variant chain: comparator 39000607 / search b8c77aca / packer a1382d0e / quantizer 119e9bb9 / weights 3faf30a1; generators make_comparator_tau.py f9a82533 / make_search_cmp3.py 588773e4",
+  "five_sources": {
+    "feat": "2a45b08b",
+    "np": "d8c15ad4",
+    "fastsim": "aefe6c83",
+    "comparator": "39000607",
+    "search": "b8c77aca"
+  },
+  "packages": {
+    "d1": {
+      "path": "iter2/build_d1/echo4_search_int8_d1.py",
+      "md5": "e8ea1e0e95ca76aa88f330c18df1d1a5",
+      "bytes": 9045070,
+      "blob_sha1": "82644a8479e5554f5bb29e79ce4b55da5a03e85e",
+      "sha256": "5ecc1a4ab9251a33c07406063950c5a28fff794315c8dcaf986d857a606de9d1"
+    },
+    "d2": {
+      "path": "iter2/build_d2/echo4_search_int8_d2.py",
+      "md5": "e1c25c780d4f1d2221f11e37401d8ff9",
+      "bytes": 9045070,
+      "blob_sha1": "1e16f9fd8a85bbd90ec301f3d219682f37192c17",
+      "sha256": "a744dee8a643bd1af883e00025982201ad0aafb4f27bddafd5f9a681c079918a"
+    },
+    "d3": {
+      "path": "iter2/build_d3/echo4_search_int8_d3.py",
+      "md5": "0dcd7ae63740fe58e0d0ff2c5febf1d5",
+      "bytes": 9045070,
+      "blob_sha1": "21abdb39b05fdeb3fd71a77151b05d19abe13579",
+      "sha256": "68d8ee60e83c7c30dcb297c6b29600e4003872f640bf1747975d658d0df49d2e"
+    }
+  },
+  "conf_diffs_vs_v1": {
+    "d1": {
+      "CMP_TAU": [
+        150,
+        30
+      ]
+    },
+    "d2": {
+      "CMP_TAU": [
+        150,
+        60
+      ]
+    },
+    "d3": {
+      "CMP_TAU": [
+        150,
+        60
+      ],
+      "CMP_H": [
+        1,
+        2
+      ]
+    }
+  },
+  "verify_pack": {
+    "d1": {
+      "exit": 0,
+      "ok": true,
+      "mismatches": [],
+      "missing_embedded": [],
+      "record": "iter2/out/verify_d1.json"
+    },
+    "d2": {
+      "exit": 0,
+      "ok": true,
+      "mismatches": [],
+      "missing_embedded": [],
+      "record": "iter2/out/verify_d2.json"
+    },
+    "d3": {
+      "exit": 0,
+      "ok": true,
+      "mismatches": [],
+      "missing_embedded": [],
+      "record": "iter2/out/verify_d3.json"
+    }
+  },
+  "diagnostics": {
+    "form": "probe_runner, seed 7000, package seat 0 vs baseline 819250bf, BUDGET=30, VM caliber (1.5 shared CPU)",
+    "reference": {
+      "tau0_resync": {
+        "changed": 90,
+        "calls": 263,
+        "completed": 263,
+        "leaf": 1052,
+        "depth": {
+          "1": 263
+        },
+        "cash": [
+          7571.62,
+          8113.83
+        ]
+      },
+      "v1_tau150_h1": {
+        "changed": 1,
+        "calls": 263,
+        "completed": 263,
+        "leaf": 1052,
+        "depth": {
+          "1": 263
+        },
+        "cash": [
+          5153.66,
+          5226.65
+        ],
+        "wall_s": 480.06
+      }
+    },
+    "slope_operators": {
+      "ratio": "A-field total margin / A-field total changed (all seeds)",
+      "regression": "through-origin OLS slope sum(chg*margin)/sum(chg^2) over games; per-game variant margin: A-field margin, B-field -margin",
+      "note": "On single-game diagnostic data (n=1) ratio and regression coincide numerically by construction; the two operators separate only on field data (400 games). Do NOT mix operators across curves.",
+      "field_reference_400_games": {
+        "v1": {
+          "ratio": 132.9,
+          "regression": 85.6
+        },
+        "v2": {
+          "ratio": -6.85,
+          "regression": -6.89
+        }
+      }
+    },
+    "dose_table": [
+      {
+        "package": "D1",
+        "tau": 30,
+        "cmp_h": 1,
+        "searched": 263,
+        "completed": 263,
+        "completed_rounds": 263,
+        "changed": 1,
+        "leaf": 1052,
+        "depth_hist": {
+          "1": 263
+        },
+        "cash": [
+          5153.66,
+          5226.65
+        ],
+        "variant_margin": -72.99,
+        "wall_s": 405.46,
+        "slope_ratio": -72.99,
+        "slope_regression": -72.99,
+        "probe": "iter2/out/probe_d1_30.json"
+      },
+      {
+        "package": "D2",
+        "tau": 60,
+        "cmp_h": 1,
+        "searched": 263,
+        "completed": 263,
+        "completed_rounds": 263,
+        "changed": 1,
+        "leaf": 1052,
+        "depth_hist": {
+          "1": 263
+        },
+        "cash": [
+          5153.66,
+          5226.65
+        ],
+        "variant_margin": -72.99,
+        "wall_s": 569.2,
+        "slope_ratio": -72.99,
+        "slope_regression": -72.99,
+        "probe": "iter2/out/probe_d2_30.json"
+      },
+      {
+        "package": "D3",
+        "tau": 60,
+        "cmp_h": 2,
+        "searched": 247,
+        "completed": 247,
+        "completed_rounds": 494,
+        "changed": 2,
+        "leaf": 1976,
+        "depth_hist": {
+          "2": 247
+        },
+        "cash": [
+          7532.57,
+          7662.99
+        ],
+        "variant_margin": -130.42,
+        "wall_s": 2801.33,
+        "slope_ratio": -65.21,
+        "slope_regression": -65.21,
+        "probe": "iter2/out/probe_d3_30.json"
+      }
+    ]
+  },
+  "d3_probe_status": "DONE 2026-11-16 06:24:46 UTC rc=0"
+}
