@@ -26,6 +26,22 @@ exit-1 / CNET2_ALLOW_PARTIAL rules. Games excluded by those filters are
 legitimate filtering, not failures; scan counts them separately
 (filtered_games, by reason) and meta.json declares those counts.
 
+Ladder-frame mode (RULING_LADDER_BUILD_SCAN_20261117): the TEACHERS
+roster in _scan is a behaviour-cloning filter (keep only teacher
+sides), but the k0_join consumer is seat-complete -- a ladder game
+whose two players are both off-roster scanned to sides=[] and was
+filtered wholesale (no_teacher_side). CNET2_LADDER_FRAME=1 (default
+off; read in main like CNET2_WEIGHTED and passed down to _scan)
+makes the non-ours branch frame BOTH seats (sides=[0,1]) for games
+passing the remaining filters; the ours branch, the weighted
+branch, min_steps, the val split and provenance are untouched.
+LADDER_FRAME and WEIGHTED together are refused (the weighted
+caliber is unregistered for ladder corpora). The mode is declared
+in the generation meta and gen_key (ladder_frame) so ladder-frame
+generations are self-describing and never confused with standard
+ones. cnet2_feat is NOT modified: off-roster names keep the
+existing teacher_id fallback to "other".
+
 P3 publish discipline: merged arrays and meta.json are written to a
 temporary directory inside the output dir first and moved into place with
 os.replace (meta.json last, as the commit marker) only after every array
@@ -530,7 +546,7 @@ def _producer_provenance(entry, path, run_identity=None):
     return out
 
 
-def _scan(dirs, min_steps=200, weighted=False):
+def _scan(dirs, min_steps=200, weighted=False, ladder_frame=False):
     """Core scanner. Returns (games, missing, filtered):
     games    -- eligible games whose replay file exists;
     missing  -- eligible games (passed steps/teacher/ours filters) whose
@@ -539,7 +555,14 @@ def _scan(dirs, min_steps=200, weighted=False):
                 (duplicate / min_steps / no teacher side / ours-corpus
                 rules). Eligibility is decided from the index entry alone,
     BEFORE the existence check, so a missing file can only be classified
-    as missing when the game would otherwise have been built."""
+    as missing when the game would otherwise have been built.
+    ladder_frame=True: non-ours games frame both seats (sides=[0,1])
+    regardless of the TEACHERS roster (ladder-frame mode, ruling
+    20261117); every other filter is unchanged."""
+    if ladder_frame and weighted:
+        raise ValueError("ladder_frame and weighted must not be combined "
+                         "(RULING_LADDER_BUILD_SCAN_20261117: weighted caliber "
+                         "unregistered for ladder corpora)")
     games, seen = [], set()
     missing = []
     missing_by_key = {}
@@ -598,6 +621,10 @@ def _scan(dirs, min_steps=200, weighted=False):
                     _filtered("ours_not_qualified")
                     continue
                 sides = [o]
+            elif ladder_frame:
+                # Ladder-frame mode: frame both seats; the roster is
+                # not an eligibility filter for ladder games.
+                sides = [0, 1]
             else:
                 sides = [s for s in (0, 1) if names[s] in F.TEACHERS[:-1]]
             if not sides:
@@ -649,14 +676,15 @@ def _scan(dirs, min_steps=200, weighted=False):
     return games, missing, filtered
 
 
-def scan(dirs, min_steps=200, weighted=False):
+def scan(dirs, min_steps=200, weighted=False, ladder_frame=False):
     """weighted: per-side sample weight = (2 if side won) * (1.5 if both rated >= STRONG);
     dirs whose name contains 'ours_corpus' contribute only games our bot LOST, teacher = winning opponent
     (rated >= OURS_MIN_OPP or a listed teacher).
     Back-compatible wrapper over _scan: returns only the buildable games.
     Callers that publish data must use _scan (as main does) so missing
     eligible replays are accounted as failures, not silently dropped."""
-    games, _missing, _filtered = _scan(dirs, min_steps=min_steps, weighted=weighted)
+    games, _missing, _filtered = _scan(dirs, min_steps=min_steps, weighted=weighted,
+                                       ladder_frame=ladder_frame)
     return games
 
 
@@ -755,6 +783,7 @@ def _cfg_fingerprint():
         "step_min": STEP_MIN, "step_max": STEP_MAX,
         "uw": UW, "uw_plant": UW_PLANT, "uw_treelife": UW_TREELIFE,
         "weighted": os.environ.get("CNET2_WEIGHTED") == "1",
+        "ladder_frame": os.environ.get("CNET2_LADDER_FRAME") == "1",
         "teachers": list(F.TEACHERS),
         "fields": {k: [str(dt), list(sh)] for k, (dt, sh) in FIELDS.items()},
         "raw_fields_v1": {k: [str(dt), list(sh)] for k, (dt, sh) in RAW_FIELDS.items()},
@@ -1109,7 +1138,12 @@ def main(out, dirs):
         if stale.startswith(".staging-"):
             shutil.rmtree(os.path.join(out, "generations", stale), ignore_errors=True)
     weighted = os.environ.get("CNET2_WEIGHTED") == "1"
-    games, missing, filtered = _scan(dirs, weighted=weighted)
+    ladder_frame = os.environ.get("CNET2_LADDER_FRAME") == "1"
+    if ladder_frame and weighted:
+        raise SystemExit("CNET2_LADDER_FRAME=1 with CNET2_WEIGHTED=1 refused: "
+                         "weighted caliber unregistered for ladder corpora "
+                         "(RULING_LADDER_BUILD_SCAN_20261117)")
+    games, missing, filtered = _scan(dirs, weighted=weighted, ladder_frame=ladder_frame)
     # Mirror gate (spec SS14 item 2): a corpus whose same-policy self-play
     # games are mostly exact mirror games is not a supervision source --
     # refuse the whole batch before any shard is built or anything is
@@ -1314,6 +1348,7 @@ def main(out, dirs):
                  "approx_rows": total - exact_rows - unusable_rows,
                  "unusable_rows": unusable_rows, "rows": total}
     meta = {"games": games, "total": total, "teachers": F.TEACHERS, "cfg_fp": cfg_fp,
+            "ladder_frame": ladder_frame,
             "failed_games": failed, "partial": bool(failed),
             "valid_games": valid, "filtered_games": filtered,
             "labels": label_cov,
@@ -1341,7 +1376,8 @@ def main(out, dirs):
     # one atomic commit of the whole publish. A failure anywhere before
     # the pointer switch leaves the pointer certifying the previous
     # complete generation; resolve_dataset() consumers never see a mix.
-    gen_key = {"cfg_fp": cfg_fp, "weighted": weighted, "total": total,
+    gen_key = {"cfg_fp": cfg_fp, "weighted": weighted, "ladder_frame": ladder_frame,
+               "total": total,
                "valid": valid, "partial": bool(failed),
                "mirror_gate": mirror,
                "failed": [f_["key"] for f_ in failed],
@@ -1583,6 +1619,8 @@ def main(out, dirs):
     if raw_games:
         rep["labels"] = label_cov
     rep["generation"] = gen_id
+    if ladder_frame:
+        rep["ladder_frame"] = True
     if weighted:
         w = w_copy
         rep["ours_loss_games"] = sum(1 for g in games if g.get("ours_loss"))
