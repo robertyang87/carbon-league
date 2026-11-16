@@ -1,0 +1,106 @@
+{
+ "artifact": "S3 pilot band table - search-group independent verification",
+ "source_files": "reports/search_dossier/s3_test/pilot/results_lane0..7.jsonl (commit c2592c68), md5s verified 9/9 incl analysis_pilot.json 7b4e0433",
+ "analyze_rerun": "analyze.py --pilot (df6702e1) on merged 8 lanes: band table reproduced exactly (counts, means, SEs); CI endpoints differ from Studio's only at ~1e-9 (float summation order, Mac vs VM); verdict OK; control band le0 all-zero PASS",
+ "main_estimand": {
+  "delta_u": 0.008004,
+  "ci95": [
+   -0.0017,
+   0.0177
+  ],
+  "flags": "no void / no missing-sensitivity marks"
+ },
+ "band_table_verified": {
+  "<=0": {
+   "roots": 1784,
+   "changed": 0,
+   "delta_u": 0.0
+  },
+  "0-30": {
+   "roots": 1197,
+   "changed": 1197,
+   "delta_u": 0.0186,
+   "ci95": [
+    -0.0081,
+    0.0453
+   ]
+  },
+  "30-60": {
+   "roots": 9,
+   "changed": 9,
+   "delta_u": 0.2639,
+   "ci95": [
+    0.2402,
+    0.2877
+   ]
+  },
+  "60-100": {
+   "roots": 6,
+   "changed": 6,
+   "delta_u": 0.2584,
+   "ci95": [
+    0.248,
+    0.2687
+   ]
+  },
+  "100-150": {
+   "roots": 0
+  },
+  ">150": {
+   "roots": 0
+  }
+ },
+ "improvement_fractions_changed_roots": {
+  "0-30": {
+   "n": 1197,
+   "improve": 624,
+   "zero": 11,
+   "worse": 562,
+   "frac_pos": 0.5213
+  },
+  "30-60": {
+   "n": 9,
+   "improve": 9,
+   "zero": 0,
+   "worse": 0,
+   "frac_pos": 1.0
+  },
+  "60-100": {
+   "n": 6,
+   "improve": 6,
+   "zero": 0,
+   "worse": 0,
+   "frac_pos": 1.0
+  },
+  "30-100 combined": {
+   "n": 15,
+   "improve": 15,
+   "frac_pos": 1.0
+  },
+  "all_changed": {
+   "n": 1212,
+   "improve": 639,
+   "zero": 11,
+   "worse": 562,
+   "frac_pos": 0.5272
+  }
+ },
+ "decidable_subpopulation": {
+  "sampled": 32,
+  "valid": 28,
+  "invalid": 4,
+  "invalid_detail": "all 4 in game 9 (seed 986209), step 298, admission_floor_violation, leaf_margin None",
+  "valid_detail": "all 28 leaf_margin exactly 0.0, changed 0, delta_u all 0.0 -- comparator never changes at step-298 settlement roots; sub-population carries no signal"
+ },
+ "invalid_total": {
+  "n": 4,
+  "all": "admission_floor_violation, recorded invalid not 0 per ruling"
+ },
+ "cost": {
+  "per_root_mean_s": 4.86,
+  "p95": 9.82,
+  "max": 14.82,
+  "abort": "0/3000",
+  "stop_line_30s": "not triggered"
+ }
+}
