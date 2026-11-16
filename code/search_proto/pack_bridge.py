@@ -119,11 +119,37 @@ def fetch_vendor(names=None) -> dict:
     旧副本不被半成品覆盖（先全拉全验、后统一写）。
     返回 {name: vendor 路径}。
     """
+    # 钉版 blob 寻址（RULING_S1_BATTERY_RERUN 裁定·解冻一处）：按各源
+    # 钉版内容的 git blob sha 取数，不按 main 路径——权威位文件会被
+    # 后继注册替换（cnet2_search 已由 94f7fb64 换为 c3222eea），路径
+    # 取数取到的即错内容、自检只能停机。blob sha 是内容身份，与路
+    # 径/分支漂移无关；取回后仍走 _check 逐件 md5 自检，双重对位。
+    pinned_blobs = {
+        "cnet2_search": "4dba8196f3cbe3fc653c34eea38e30e9484a0234",
+        "cnet2_feat": "d95578445e3901464a6086637552c09ea708e53a",
+        "cnet2_np": "74f8443aa29a98396acec151bbd8972d82a73332",
+        "fastsim": "d839b4a7d51f20ecfa034c132ed760b74c7f7b89",
+    }
+    try:
+        sys.path.insert(0, os.path.expanduser("~/workspace"))
+        from gh_api import req
+    except ImportError as e:
+        raise RuntimeError(
+            "gh_api 不可用，无法在线拉取；改用离线 bootstrap："
+            "pack_bridge.bootstrap_offline(<本地冻结 checkout 目录>)"
+        ) from e
     names = list(names) if names else list(SOURCES)
     staged = {}
     for name in names:
-        raw = _fetch_remote(SOURCES[name][0])
-        staged[name] = _check(name, raw, f"github {SOURCES[name][0]}")
+        r = req("GET",
+                f"/repos/{OWNER}/{REPO}/git/blobs/{pinned_blobs[name]}")
+        if r.get("sha") != pinned_blobs[name]:
+            raise RuntimeError(
+                f"{name} blob 身份不合：got {r.get('sha')}，"
+                f"expected {pinned_blobs[name]} —— 停"
+            )
+        raw = base64.b64decode(r["content"])
+        staged[name] = _check(name, raw, f"github blob {pinned_blobs[name]}")
     os.makedirs(VENDOR_DIR, exist_ok=True)
     out = {}
     for name, code in staged.items():
