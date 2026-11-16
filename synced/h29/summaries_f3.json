@@ -48,5 +48,12 @@
   "berr": 0,
   "ab": 0,
   "bad_hh": 0
+ },
+ "correction_note": {
+  "supersedes": "original summaries_f3.json (paired_dU -0.00409778, se 0.00739396, criterion_2 true) \u2014 void per RULING_F3_ADJUDICATION_20261116 \u00a73; corrected values in this file match the ruling \u00a71 two-way independent recomputation",
+  "bug": "calc_f3.py paired_diffs (original) returned per-seed d_s = ua(s) - (1 - ub(s)) = ua + ub - 1, i.e. the mean of the composite's A-leg game-dU and Echo4's A-leg game-dU \u2014 the wrong legs averaged. Fixed to ua(s) - ub(s) (calc_s4.py:47-48 caliber: per-seed paired dU = mean of the two seats' variant-perspective game-dU)",
+  "se_0.0074_definition": "std(d_s, ddof=1)/sqrt(600) with d_s = ua + ub - 1 as above (std ~0.181); it is the standard error of the mis-defined quantity, not of the paired dU. That is why no correct definition (sequential pairing, S3-estimator U, WDL, per-game n=1200) reproduces it. Correct se = std(ua - ub, ddof=1)/sqrt(600) = 0.02065783",
+  "increment_definition": "per-seed (composite paired diff - D1 confirmation paired diff), same block 997800-998399, cf_d1_a/b archived (md5 d229aacf/33b75fc6); D1 confirmation paired-dU mean +0.0463; -0.0038 - 0.0463 = -0.0501",
+  "ruling": "reports/RULING_F3_ADJUDICATION_20261116.md commit d82f4769 md5 95f496de; criterion 1 FAIL, criterion 2 FAIL (lower -0.0214 vs -0.02, misses by 0.0014)"
  }
 }
