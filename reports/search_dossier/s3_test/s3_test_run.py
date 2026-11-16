@@ -48,6 +48,7 @@
 import argparse
 import copy
 import dataclasses
+import gc
 import hashlib
 import json
 import os
@@ -196,6 +197,8 @@ def run_arm_s3(ctx: Ctx, rec, my_action):
     arm = {"complete": False, "extinct": False}
     t0 = time.monotonic()
     deadline = t0 + ctx.arm_cap_s
+    agents = None
+    sim = None
     try:
         agents = [s1_verify3.make_fresh_agent(ctx.pack_path),
                   s1_verify3.make_fresh_agent(ctx.pack_path)]
@@ -253,6 +256,13 @@ def run_arm_s3(ctx: Ctx, rec, my_action):
     except Exception as exc:
         arm["incomplete_reason"] = f"异常：{exc!r}"
         arm.setdefault("reached_step", None)
+    finally:
+        # 逐臂回收：fresh agent 是闭包环图（引用计数解不开），且每臂
+        # 反量化权重约 13.9 MB；不主动 gc 则 RSS 逐根近线性涨
+        # （2026-11-16 先导实测 40–55 MB/根）。只回收死对象，
+        # 不改任何计算——同根结果逐字不变。
+        del agents, sim
+        gc.collect()
     arm["wall_s"] = time.monotonic() - t0
     return arm
 
@@ -599,6 +609,7 @@ def main():
             if todo:
                 run_game(ctx, game, entries_by_game[game], out_fh,
                          done_ids, stats)
+                gc.collect()  # 逐局回收内核 agent 等逐局对象
     walls = [w for w in stats["walls"] if w is not None]
     summary = {"shard": shard, "games": [g0, g1],
                "roots_processed_this_run": stats["roots_done"],
