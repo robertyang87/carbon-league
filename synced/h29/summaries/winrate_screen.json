@@ -1,0 +1,109 @@
+{
+  "exam": "winrate_screen_echo4_search_vs_echo4",
+  "registration": "reports/search_dossier/REGISTRATION_WINRATE_SCREEN_20261116.md @dd8e9656; amendment @47efd8e7 (full-parallel form)",
+  "level": "screen (not a ruling, not a certificate; S4 unchanged)",
+  "subject": {
+    "pack": "packs/echo4_search_int8.py",
+    "md5": "be96d457c8c6d5a5da41dea861e4639d"
+  },
+  "baseline": {
+    "pack": "packs/echo4_int8.py",
+    "md5": "819250bfc82632786063dabd46a616bd"
+  },
+  "harness_md5": "354bcd1bc2dc8bc188c813f53d28c893",
+  "seeds": "989200-989799",
+  "games": 1200,
+  "fields": {
+    "screen_search_a": {
+      "n": 600,
+      "wins_a": 13,
+      "losses_a": 581,
+      "draws_a": 6,
+      "mean_margin_a": -2237.78,
+      "mean_u_a": 0.0819,
+      "err": 0,
+      "bad_hh": 0
+    },
+    "screen_search_b": {
+      "n": 600,
+      "wins_a": 581,
+      "losses_a": 13,
+      "draws_a": 6,
+      "mean_margin_a": 2237.78,
+      "mean_u_a": 0.9181,
+      "err": 0,
+      "bad_hh": 0
+    }
+  },
+  "paired_delta_u": {
+    "pairs_seeds": 600,
+    "delta_u": -0.8361,
+    "se": 0.01,
+    "ci95_t": [
+      -0.8557,
+      -0.8165
+    ],
+    "ci95_bootstrap": [
+      -0.8549,
+      -0.8157
+    ],
+    "bootstrap_B": 20000,
+    "rng": 20261116
+  },
+  "screen_reading_per_registration": "negative (point <= 0 and CI95 upper < 0)",
+  "search_perspective_1200": {
+    "wins": 26,
+    "losses": 1162,
+    "draws": 12,
+    "mean_margin": -2237.78,
+    "mean_u": 0.0819
+  },
+  "per_seat_delta_u_sensitivity": {
+    "0": {
+      "games": 600,
+      "delta_u": -0.8361
+    },
+    "1": {
+      "games": 600,
+      "delta_u": -0.8361
+    }
+  },
+  "mirror_note": "596/600 seeds: B-field margin == -A-field margin exactly (deterministic seat-swap mirror); per-game and per-seat diffs therefore coincide with the cluster diff.",
+  "telemetry": {
+    "searched_total_Afield_search_as_A": 150765,
+    "changed_total_Afield_search_as_A": 70349,
+    "note_sided": "srch/chg in bigeval lines are A-side stats only; B-field search (B side) has no such fields, same limitation as branches.",
+    "errors": {
+      "serr_A": 0,
+      "berr_A": 0,
+      "serr_B": 0,
+      "berr_B": 0,
+      "bst_totals_A": {
+        "errors": 0,
+        "other_errors": 0
+      },
+      "bst_totals_B": {
+        "errors": 0,
+        "other_errors": 0
+      }
+    },
+    "aborted_games_total": 0,
+    "branches": "not present in pinned bigeval line fields or field summaries; recorded as not collectable per registration, does not block reading",
+    "search_games_Afield": 595,
+    "changed0_games_Afield": 1
+  },
+  "run": {
+    "start_cst": "2026-11-16 10:45:32",
+    "end_cst": "2026-11-16 11:04:02",
+    "form": "full-parallel bigeval, 62 workers, BLAS pinned 1",
+    "rc": {
+      "screen_search_a": 0,
+      "screen_search_b": 0
+    },
+    "fail": false,
+    "file_md5": {
+      "screen_search_a.jsonl": "aee34f7f05ea554b698a831b40ce3820",
+      "screen_search_b.jsonl": "e8f58b9b54097335e94a7d6a313fa406"
+    }
+  }
+}
