@@ -39,6 +39,24 @@ CFG = eval_v53.CFG
 _W_CACHE = {}      # (adapter, key) -> actor   (worker-local)
 
 
+def _snap_temp():
+    """The snapshot evaluation temperature (RL2_SNAP_TEMP; 0 = greedy),
+    validated in code: a typo'd environment value (negative, huge, NaN)
+    must fail loudly instead of silently changing what an evaluation
+    measures. Valid range [0, 2] -- operational values are 0 and 0.5,
+    and 2 is already near-uniform for these logit scales."""
+    raw = os.environ.get("RL2_SNAP_TEMP", "0")
+    t = float(raw)
+    if not (0.0 <= t <= 2.0):
+        raise ValueError(
+            f"RL2_SNAP_TEMP={raw!r} outside the valid range [0, 2] "
+            "(0 = greedy); refusing to play snapshots at an unvalidated temperature")
+    return t
+
+
+_snap_temp()   # fail fast at import when the launch environment is invalid
+
+
 _REMOTE = [None]   # rl2_ppo_server.Client of this worker (None: NumPy trunk in the worker)
 
 
@@ -114,7 +132,7 @@ class _SnapAgent:
 def make_opponent(spec, side, seed):
     if spec.startswith("SNAP:"):
         _, ad, path = spec.split(":", 2)
-        return _SnapAgent(ad, path, side, float(os.environ.get("RL2_SNAP_TEMP", "0")), seed * 13 + 5)
+        return _SnapAgent(ad, path, side, _snap_temp(), seed * 13 + 5)
     return load_bot(spec)
 
 
@@ -170,13 +188,22 @@ def play_batch(task):
     All positions that use the same model in one step go through ONE actor.act call (one server request).
     Returns list of per-game dicts (traj recs if record) + timing."""
     t0 = time.time()
-    actor = _actor(task["adapter"], task["wkey"], task.get("weights"), role="learner")
+    actor = _actor(task["adapter"], task["wkey"], task.get("weights"),
+                   role=task.get("primary_role", "learner"))
     # R04/F06: the task's primary actor is the learner(-side) actor -- the only one
     # CNET2_TEMP_KIND may govern. It is built with role="learner" (temp_kind=True);
     # snapshot actors built below (and _SnapAgent's) are separate cached objects
     # with temp_kind=False and play at the temperature they are handed, so the
     # learner's per-kind temperatures no longer leak into them.
-    snap_temp = float(os.environ.get("RL2_SNAP_TEMP", "0"))
+    # V04: the role is the CALLER's declaration, defaulting to "learner" (the
+    # trainer's tasks, unchanged). A caller that is not the trainer -- the
+    # standalone evaluator -- passes primary_role="eval": the evaluated net
+    # then plays at the temperature it is handed even when CNET2_TEMP_KIND
+    # is inherited from a trainer env, instead of silently sampling at the
+    # learner's per-kind temperatures. (Greedy was never affected either
+    # way: the per-slot argmax is invariant to a positive per-slot scalar;
+    # only sampling and the recorded logp are temperature-shaped.)
+    snap_temp = _snap_temp()
     games = []
     for opp, seed, side in task["games"]:
         random.seed(eval_v53.rng_seed(seed, side))
