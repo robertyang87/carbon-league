@@ -1,0 +1,131 @@
+{
+  "artifact": "echo4_search_int8_dedup.py (route-B alias dedup of echo4_search_int8.py)",
+  "built": "2026-11-16 (CST), search-group build line, strategy disposition 2026-11-16",
+  "control_rebuild": {
+    "byte_identical": true,
+    "bytes": 9030752,
+    "desc": "Pristine packer + same inputs + CONF literal extracted verbatim from the shipped pack reproduced the shipped pack byte-for-byte before the change was applied.",
+    "md5": "be96d457c8c6d5a5da41dea861e4639d"
+  },
+  "dedup_pack": {
+    "alias_slot2_emitted": true,
+    "bytes": 4628272,
+    "file": "dedup/echo4_search_int8_dedup.py",
+    "md5": "2dcd81ac3adee9bb906e34e11a7d1a6f",
+    "saved_bytes": 4402480,
+    "md5_pre_header": "4533601f7768d7da9d755a4217e39435",
+    "header_note": "Filed pack = agent pack + the header comment above only; all other bytes identical."
+  },
+  "embedded_src_md5": {
+    "cnet2_comparator": "ad3ec3e467ba5010ca76fbcbf47984ea",
+    "cnet2_feat": "2a45b08b6f97508541e62867e408748e",
+    "cnet2_np": "d8c15ad4fdd8ee079363cf215d52daf3",
+    "cnet2_search": "664744efb27cb8d47f888add77d6ffe4",
+    "fastsim": "aefe6c83826efae4de83bef8c643c80b"
+  },
+  "inputs": {
+    "conf": {
+      "ABORT_DL": 0.95,
+      "BUDGET": 0.7,
+      "CMP_H": 1,
+      "GUARD": true,
+      "GUARD_NARROW": true,
+      "HARD": 0.85,
+      "LATE_STEP": 240,
+      "MIX": false,
+      "MODE": "sweep",
+      "ROLL": "self",
+      "SEARCH": true,
+      "START_DL": null,
+      "TEACHER": 2,
+      "TEACHER_LATE": 2
+    },
+    "conf_literal_source": "CONF line of the shipped echo4_search_int8.py, verbatim",
+    "weights_npz": "build2/ckpt20_q8_from_echo4.npz (wp and wr, same file)",
+    "weights_npz_md5": "3faf30a13379a155900438f95929e54e"
+  },
+  "method": "Packer-side alias emission (investigation route B): when the rollout slot's quantised payload is byte-identical to the policy slot's, slot 2 is emitted as references (_Q2 = _Q1, _M2 = _M1, _B2 = _B1) instead of a second literal copy. Loader still dequantises _B2 into an independent weights dict; rpol stays an independent object.",
+  "original_pack": {
+    "bytes": 9030752,
+    "file": "switch/echo4_search_int8.py",
+    "md5": "be96d457c8c6d5a5da41dea861e4639d",
+    "repo_blob": "fd45f35b13e1827a794e47aec4708ceee92043b8"
+  },
+  "packer_change": {
+    "before_snapshot": "dedup/cnet2_search_pack.py.before",
+    "diff_file": "dedup/cnet2_search_pack_routeB.diff",
+    "file": "build2/cnet2_search_pack.py (build-mirror copy only; repo pinned files untouched)",
+    "md5_after": "056562048f703485cade1483232411eb",
+    "md5_before": "852483f2d5bab0743daa6e0b8b56bb0b",
+    "quantizer_unchanged": "build2/cnet2_pack.py md5 119e9bb9bf8413685b87721cff8cfe18 (pinned)",
+    "diff_md5": "ec74366ea4009d8ab00b7e378497ccb0"
+  },
+  "positioning": "Dedup equivalence evidence + candidate pack. Per R2-09 (production module vs prototype kernel fork), this pack is NOT stood up as a production-form candidate; it is to be merged when the production pack is rebuilt after the kernel re-sync.",
+  "regression": {
+    "evidence_file": "dedup/regression_evidence.json",
+    "section5_verdicts": {
+      "1_five_source_set_unchanged": "PASS",
+      "2_dequantized_weights_array_by_array": "PASS (187/187 per slot, both slots)",
+      "3_behavior_AB_incl_CMP_H_ge_2": "PASS (H2: 502 roots / 500 at depth 2 / 0 mismatches; H1: 503 roots / 0 mismatches; ship CONF: 472 roots / 0 mismatches)",
+      "4_certify_full_gates_rerun": "PASS as relative gate (identical failure profile = VM-speed artifact only; no new failure; dedup equal-or-better on all metrics)",
+      "5_verify_pack_R2_10": "Recorded: pre-existing failure on the original pack itself (mismatches=['cnet2_search'] only), identical for the dedup pack; NOT introduced by dedup; authority tree not modified."
+    },
+    "certify_records": [
+      "dedup/certify_records/cert_orig.json",
+      "dedup/certify_records/cert_dedup.json"
+    ],
+    "ab_records": [
+      "dedup/cmp_h2.json",
+      "dedup/cmp_h1.json",
+      "dedup/cmp_ship.json"
+    ],
+    "src_weights_record": "dedup/check_src_weights.json"
+  },
+  "run_id": "dedup-routeb-20261116",
+  "verify_pack_R2-10": {
+    "baseline_echo4_pack_819250bf": {
+      "exit": 0,
+      "mismatches": [],
+      "ok": true
+    },
+    "dedup_pack_4533601f": {
+      "exit": 1,
+      "mismatches": [
+        "cnet2_search"
+      ],
+      "note": "mismatch set identical to the original pack",
+      "ok": false
+    },
+    "gate": "code/packs/cnet2_search_pack.py --verify-pack PACK --auth-dir <repo code/ tree> (packs-route packer md5 48392e98; its MODS = feat/np/fastsim/search, comparator not included)",
+    "original_derived_pack_be96d457": {
+      "exit": 1,
+      "mismatches": [
+        "cnet2_search"
+      ],
+      "note": "embedded successor search 664744ef vs authoritative code/cnet2_search.py 94f7fb64",
+      "ok": false
+    },
+    "verdict": "R2-10 pre-existing failure, unrelated to dedup: the failure exists on the current original pack before dedup and is unchanged by dedup. No authority-tree fix attempted (per instruction). Records: dedup/verify_records/verify_{baseline,orig,dedup}.json + .stdout.txt"
+  },
+  "positioning_label": "去重技术已验＋尺寸已证（段 0 基底）；不是生产候选；不是 S2 被测件（S2 仍为 fd45f35b）；生产候选在生产注册时由权威源（比较器 385190bd／search c3222eea）重建并折入去重、§5 回归对重建工件重跑。CMP_H≥2 的 A/B 只证等价，不证 H≥2 行为正确。",
+  "alias_identity_test": {
+    "static": {
+      "_Q2 = _Q1": 1,
+      "_M2 = _M1": 1,
+      "_B2 = _B1": 1,
+      "occurrences_in_filed_pack": "each exactly once"
+    },
+    "runtime": {
+      "_B2 is _B1": true,
+      "_Q2 is _Q1": true,
+      "_M2 is _M1": true,
+      "verified_by": "search-group lead, direct import of the filed pack source"
+    },
+    "loader": "loader still dequantises _B2 into an independent weights dict (evidence §2: 187/187 per slot, both slots, zero mismatch)"
+  },
+  "quantizer": {
+    "md5": "119e9bb9",
+    "file": "build2/cnet2_pack.py",
+    "changed": false
+  }
+}
