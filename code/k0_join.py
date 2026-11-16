@@ -343,7 +343,10 @@ def _game_stem(key):
     name space the annotation games table uses."""
     for suf in (".json.gz", ".gz", ".json"):
         if key.endswith(suf):
-            return key[:-len(suf)]
+            stem = key[:-len(suf)]
+            if stem.endswith("-1"):
+                stem = stem[:-2]
+            return stem
     return key
 
 
