@@ -1,0 +1,105 @@
+==== file-level diff orig -> A (changed line numbers) ====
+replace orig[27..27] -> A[27..27]
+  - L27 len=224 head='CONF = {"SEARCH": False, "ROLL": "self", "GUARD": True, "GUARD_NARROW": True, "MODE": "sweep", "MIX": False, "'
+  + L27 len=223 head='CONF = {"SEARCH": True, "ROLL": "self", "GUARD": True, "GUARD_NARROW": True, "MODE": "sweep", "MIX": False, "T'
+payload _B1: identical=True len=4391296 md5=9c0b1f1f57f3
+payload _B2: identical=True len=0 md5=d41d8cd98f00
+payload _B3: identical=True len=0 md5=d41d8cd98f00
+payload _M1: identical=True len=247 md5=a297690e5d79
+payload _M2: identical=True len=0 md5=d41d8cd98f00
+payload _M3: identical=True len=0 md5=d41d8cd98f00
+decoded _B1 weights: 3596168 B identical=True md5=444cc54c0d88da5656ff4c7eef1ec8eb
+==== file-level diff orig -> B (changed line numbers) ====
+replace orig[8..8] -> B[8..8]
+  - L8 len=174474 head='_SRC = {\'cnet2_feat\': \'"""cnet2_feat -- full-board, seat-canonical features for the cnet2 policy.\\n\\nShared ve'
+  + L8 len=176023 head='_SRC = {\'cnet2_feat\': \'"""cnet2_feat -- full-board, seat-canonical features for the cnet2 policy.\\n\\nShared ve'
+replace orig[27..27] -> B[27..34]
+  - L27 len=224 head='CONF = {"SEARCH": False, "ROLL": "self", "GUARD": True, "GUARD_NARROW": True, "MODE": "sweep", "MIX": False, "'
+  + L27 len=86 head='# PROVISIONAL (KataGo probe-2 Part 1 prebuild, 2026-11-15): SEARCH=True, CLOCK="sims",'
+  + L28 len=87 head='# SIMS=200 and FIX_TRUNC=True below are placeholders; the final SIMS value is locked by'
+  + L29 len=84 head='# the construction-period calibration ladder (PREREG_SEARCH.md S1). Counting unit is'
+  + L30 len=88 head='# registered: 1 sim = one leaf evaluation; the counting point is the leaf() entry in the'
+  + L31 len=87 head='# embedded cnet2_search (stats["leaf_evals"]); stats["sims"]/stats["sims_steps"] record'
+  + L32 len=83 head='# measured per-step leaf deltas. Sweep budget enforcement is prospective: each kept'
+  + L33 len=66 head='# root candidate costs exactly one leaf evaluation at the horizon.'
+  + L34 len=272 head='CONF = {"SEARCH": True, "ROLL": "self", "GUARD": True, "GUARD_NARROW": True, "MODE": "sweep", "MIX": False, "T'
+payload _B1: identical=True len=4391296 md5=9c0b1f1f57f3
+payload _B2: identical=True len=0 md5=d41d8cd98f00
+payload _B3: identical=True len=0 md5=d41d8cd98f00
+payload _M1: identical=True len=247 md5=a297690e5d79
+payload _M2: identical=True len=0 md5=d41d8cd98f00
+payload _M3: identical=True len=0 md5=d41d8cd98f00
+decoded _B1 weights: 3596168 B identical=True md5=444cc54c0d88da5656ff4c7eef1ec8eb
+==== embedded cnet2_search decoded diff orig -> B ====
+module cnet2_feat: orig==A True  orig==B True
+module cnet2_np: orig==A True  orig==B True
+module fastsim: orig==A True  orig==B True
+module cnet2_search: orig==A True  orig==B False
+--- orig/cnet2_search
++++ B/cnet2_search
+@@ -37,3 +37,3 @@
+     CARGO_W=0.9, WORKER_V=30.0, TREE_V=2.0, ENDGAME_STOP=1, TEACHER=1, OPP_TEACHER=1, ROLL="s64",
+-    PLANT=False, LOG=False, SEARCH=True, MAX_BR=16, LOCAL_R=0, ROBUST=0.0, OPPID=False, MODE="sweep", MIX=False, ONLINE_T=False, TEMPS=(0.7, 1.0, 1.4, 2.0), EPS=1e-3, C_PUCT=1.5, OPEN_T=0.0, OPEN_STEPS=50, OPEN_SEED=0, LEAF_Q=None, GUARD=False, LOWW=2, GUARD_NARROW=True, GUARD_CASH=40.0, RISK_TOL=None, START_DL=None, ABORT_DL=None, MIN_N=1, SE_K=0.0, VS=100.0, ROOT_S=12, RSEED=0, STYLES=(0, 1, 2, 3, 4), ID_DECAY=0.97, ID_PRIOR=3.0, ID_MIN=5, PROJ=1.3, CLOCK="wall", HARD=0.6,
++    PLANT=False, LOG=False, SEARCH=True, MAX_BR=16, LOCAL_R=0, ROBUST=0.0, OPPID=False, MODE="sweep", MIX=False, ONLINE_T=False, TEMPS=(0.7, 1.0, 1.4, 2.0), EPS=1e-3, C_PUCT=1.5, OPEN_T=0.0, OPEN_STEPS=50, OPEN_SEED=0, LEAF_Q=None, GUARD=False, LOWW=2, GUARD_NARROW=True, GUARD_CASH=40.0, RISK_TOL=None, START_DL=None, ABORT_DL=None, MIN_N=1, SE_K=0.0, VS=100.0, ROOT_S=12, RSEED=0, STYLES=(0, 1, 2, 3, 4), ID_DECAY=0.97, ID_PRIOR=3.0, ID_MIN=5, PROJ=1.3, CLOCK="wall", HARD=0.6, SIMS=None,
+ )
+@@ -487,2 +487,3 @@
+     def leaf(sim, me, left):
++        stats["leaf_evals"] = stats.get("leaf_evals", 0) + 1  # SIMS COUNTING POINT (PREREG_SEARCH.md S1: 1 sim = 1 leaf evaluation)
+         m = [float(sim.cash[0]), float(sim.cash[1])]
+@@ -1041,2 +1042,3 @@
+         stats["searched"] += 1
++        _le0 = stats.get("leaf_evals", 0)
+         tok, ctx = pol.last_enc
+@@ -1127,3 +1129,4 @@
+         fixed = cfg["CLOCK"] == "sims"
+-        fix_n = cfg["FIX_SIMS"][min(step // 50, len(cfg["FIX_SIMS"]) - 1)] if fixed else 0
++        fix_n = (cfg["SIMS"] if cfg.get("SIMS") is not None else
++                 cfg["FIX_SIMS"][min(step // 50, len(cfg["FIX_SIMS"]) - 1)]) if fixed else 0
+         while True:
+@@ -1246,4 +1249,5 @@
+             per_sim = (clk() - now) / nb; per_wall = (time.time() - nw) / nb
+-        stats["sims"] = stats.get("sims", 0) + sims_done
+-        stats.setdefault("sims_steps", []).append((step, sims_done))   # per-step budget actually used (calibrates FIX_SIMS)
++        _used = stats.get("leaf_evals", 0) - _le0   # measured at the counting point: leaf evaluations this call
++        stats["sims"] = stats.get("sims", 0) + _used
++        stats.setdefault("sims_steps", []).append((step, _used))   # per-step budget actually used (calibrates FIX_SIMS)
+         stats["rounds"] = stats.get("rounds", 0) + rounds
+@@ -1306,2 +1310,3 @@
+         stats["searched"] += 1
++        _le0 = stats.get("leaf_evals", 0)
+         tok, ctx = pol.last_enc
+@@ -1368,2 +1373,9 @@
+         nc = len(cand)
++        fixed = cfg["CLOCK"] == "sims"
++        if fixed:       # sims clock (sweep): cap candidates at the sim budget (1 candidate = 1 leaf evaluation)
++            fix_n = (cfg["SIMS"] if cfg.get("SIMS") is not None else
++                     cfg["FIX_SIMS"][min(step // 50, len(cfg["FIX_SIMS"]) - 1)])
++            keep = max(1, -(-fix_n // len(models)))   # whole candidates per opponent model
++            if keep < nc:
++                cand = cand[:keep]; cmeta = cmeta[:keep]; nc = len(cand)
+         bl = [(mi, ci) for mi in range(len(models)) for ci in range(nc)]
+@@ -1392,7 +1404,7 @@
+             now = clk()
+-            if last_dt is not None and now - t0 + cfg["PROJ"] * last_dt > cfg["BUDGET"]:
++            if not fixed and last_dt is not None and now - t0 + cfg["PROJ"] * last_dt > cfg["BUDGET"]:
+                 break
+-            if last_dt is None and now - t0 > 0.45 * cfg["BUDGET"]:
++            if not fixed and last_dt is None and now - t0 > 0.45 * cfg["BUDGET"]:
+                 break
+-            if last_dt is not None and time.time() - tw + cfg["PROJ"] * last_wall > cfg["HARD"]:
++            if not fixed and last_dt is not None and time.time() - tw + cfg["PROJ"] * last_wall > cfg["HARD"]:
+                 break
+@@ -1431,2 +1443,6 @@
+             stats["shallow"] += 1
++            if fixed:       # sims clock: record leaf evaluations this step (none performed on this exit)
++                _used = stats.get("leaf_evals", 0) - _le0
++                stats["sims"] = stats.get("sims", 0) + _used
++                stats.setdefault("sims_steps", []).append((step, _used))
+             return acts
+@@ -1439,2 +1455,6 @@
+             sc = sc[0]
++        if fixed:       # sims clock: record leaf evaluations actually performed this step (counting point: leaf())
++            _used = stats.get("leaf_evals", 0) - _le0
++            stats["sims"] = stats.get("sims", 0) + _used
++            stats.setdefault("sims_steps", []).append((step, _used))
+         j = int(np.argmax(sc))

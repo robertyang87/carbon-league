@@ -1,0 +1,77 @@
+{
+ "format": "cnet2-k0-annotation/1",
+ "games": [
+  {
+   "build_gi": 0,
+   "build_key": "selfplay-994000.json.gz",
+   "game": "selfplay-994000",
+   "gid": 0,
+   "n_roots": 6
+  },
+  {
+   "build_gi": 1,
+   "build_key": "selfplay-994001.json.gz",
+   "game": "selfplay-994001",
+   "gid": 1,
+   "n_roots": 6
+  }
+ ],
+ "join": {
+  "candidates": 48,
+  "max_candidates": 4,
+  "sentinel_translation": {
+   "entries": 0,
+   "field": "arms",
+   "from": -2,
+   "roots": 12,
+   "roots_with_padding": 0,
+   "to": -1
+  }
+ },
+ "record_schema": {
+  "feature_files": "one .npy per k0_distill FEATURE_FIELDS entry, rows in annotation root order; gid rewritten to the annotation gid",
+  "games": "games table maps annotation gid <-> build gi by game name",
+  "policy_labels": "policy_labels.npz: game (=annotation gid), step, seat, arms (-1 = no action at that slot; padding arms all -1), n_arms, priors, q, pi0, pi1, pi",
+  "value_labels": "value_labels.npz: game, step, seat, Q"
+ },
+ "sources": {
+  "annotation": {
+   "generation": "gen-1dcc9611575bfbe3",
+   "manifest_sha256": "6fca0cad074f5848b520cd155c91ac037f57a1be5e2748e226aeaa7d450d1403"
+  },
+  "build": {
+   "cfg_fp": "fa04d3614c821115",
+   "generation": "gen-75de8ffbdd421e42",
+   "manifest_sha256": "e5611e45e8fcf4af8c1cbbf6691819e4cd0597b573b3d767f92e7dba0248b8cb"
+  }
+ },
+ "teacher": {
+  "belief": "sample",
+  "config": {
+   "H": 1,
+   "K": 4,
+   "M": 2,
+   "behavior_temp": 1.0,
+   "belief": "sample",
+   "guard_cfg": {
+    "GUARD": true,
+    "GUARD_CASH": 40.0,
+    "GUARD_NARROW": true,
+    "LOWW": 2
+   },
+   "scene_contract": "prefix-feat-guard-snapshot-v1",
+   "seed_teacher": 7000,
+   "teacher_style": 2,
+   "train_temp": 1.0,
+   "window": [
+    206,
+    209
+   ]
+  },
+  "config_sha256": "8b758f832e72032f9b9acb6e23f7c4b01b3ea410f15fa3d88e130ef9f2f347b0",
+  "version": "v3",
+  "weights": "/home/hatch/workspace/s12work/heads_v2.npz",
+  "weights_md5": "06a03d9cfeec239af3065a49fefec382"
+ },
+ "total": 12
+}

@@ -1,0 +1,18 @@
+cert_fix_noflag | overall: PASS | quota.source: None | cpu: None | mem: None | check.pass: None | missing: ['cpu', 'memory']
+cert_fix_req | overall: FAIL | quota.source: None | cpu: None | mem: None | check.pass: False | missing: ['cpu', 'memory']
+cert_fix_L1_req | overall: FAIL | quota.source: test_override | cpu: 150000 100000 | mem: 536870912 | check.pass: False | missing: ['test_override']
+cert_fix_L1_noflag | overall: PASS | quota.source: test_override | cpu: 150000 100000 | mem: 536870912 | check.pass: None | missing: ['test_override']
+cert_fix_LH_req | overall: FAIL | quota.source: test_override | cpu: 150000 100000 | mem: None | check.pass: False | missing: ['memory', 'test_override']
+
+--- field comparison: baseline vs fixed (real machine, no flag) ---
+identity.pack equal: True
+params minus quota equal: True
+quota keys base: ['affinity_cpus', 'ancestor_chain', 'cpu_max', 'memory_max', 'process_path', 'source'] 
+quota keys new : ['affinity_cpus', 'ancestor_chain', 'cpu_max', 'memory_max', 'process_path', 'source']
+quota values (non-chain) equal: True
+chain entry keys base: ['path', 'value'] | new: ['hier', 'mount', 'path', 'value']
+chain (path,value) projections equal: True True
+checks pass diffs: none
+quota_self_proof equal (real/no-flag): False
+games (timing/self-md5 scrubbed) equal: True
+harness md5 differs (expected, file changed): True

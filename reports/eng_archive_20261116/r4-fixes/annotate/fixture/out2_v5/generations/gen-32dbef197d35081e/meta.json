@@ -1,0 +1,95 @@
+{
+ "format": "k0-annotation-generation/1",
+ "games": [
+  {
+   "game": "selfplay-994000",
+   "gid": 0,
+   "n_roots": 4,
+   "pass": "A",
+   "selected_sha256": "c1505dcf8f3d4aaab5b913128565deb9b0fc65efcdfe0f309d55f0c1397ef721",
+   "shard_sha256": "be2693d994a0fc4d103550dbbee65433046c67ec405b449603db2ea928912a4e"
+  },
+  {
+   "game": "selfplay-994001",
+   "gid": 1,
+   "n_roots": 4,
+   "pass": "A",
+   "selected_sha256": "255f486bf8f5275f3ae862ba8c1eea0a979441a1464ef88e145405a9a14f0a3e",
+   "shard_sha256": "1e5ab2c0e7cbef42ed365a48884d7ea6de2ac794f68b83a9893c97709483f31d"
+  },
+  {
+   "game": "selfplay-994002",
+   "gid": 2,
+   "n_roots": 4,
+   "pass": "A",
+   "selected_sha256": "b92e1eb788dcd1aaee1129841a12592211fc5218e2e1facc7471d85cc8fffce7",
+   "shard_sha256": "5f0b4decac21134f9065028e050569135d5fb35c53b5ce0cf2e9f31dada51fd8"
+  }
+ ],
+ "record_schema": {
+  "aux_fields": {
+   "Q_std": "per-arm scenario std of Q",
+   "n_arms": "recorded arm count; arms/q/Q are padded beyond it (arms pad -2, q/priors pad 0, Q pad NaN)",
+   "priors": "P_A, the candidate prior q is built from (C arm q0 prop. to P_A**0.5)"
+  },
+  "per_root_fields": [
+   "game (via gid -> games)",
+   "step",
+   "seat",
+   "arms",
+   "Q",
+   "q",
+   "pi0",
+   "pi1",
+   "pi",
+   "teacher config hash (teacher.config_sha256, generation-level, seal-bound)",
+   "weights md5 (teacher.weights_md5, generation-level, seal-bound)",
+   "root belief condition (belief code + n_unknown per root)"
+  ],
+  "policy_label_files": [
+   "arms.npy",
+   "priors.npy",
+   "q.npy"
+  ],
+  "value_label_files": [
+   "Q.npy",
+   "Q_std.npy"
+  ]
+ },
+ "sampling": {
+  "pi0": 1.0,
+  "pi1": 1.0,
+  "rule": "pass A: game drawn w.p. pi0 (all roots); pass B: each root of an undrawn game drawn w.p. pi1; pi = pi0 + (1-pi0)*pi1",
+  "seed": 12345,
+  "selected_sha256": "14764c0eec9d6aecc91658d7eb7166a648045a5e84696414b75f36c43b92ac30"
+ },
+ "teacher": {
+  "belief": "sample",
+  "config": {
+   "H": 1,
+   "K": 4,
+   "M": 2,
+   "behavior_temp": 1.0,
+   "belief": "sample",
+   "guard_cfg": {
+    "GUARD": true,
+    "GUARD_CASH": 40.0,
+    "GUARD_NARROW": true,
+    "LOWW": 2
+   },
+   "scene_contract": "prefix-feat-guard-snapshot-v1",
+   "seed_teacher": 7000,
+   "teacher_style": 2,
+   "train_temp": 1.0,
+   "window": [
+    206,
+    208
+   ]
+  },
+  "config_sha256": "a2dce0ac6320b2966cba28a8a4f683a6faf2162f5e87fb339b794adf8887db3c",
+  "version": "v3",
+  "weights": "/home/hatch/workspace/s12work/heads_v2.npz",
+  "weights_md5": "06a03d9cfeec239af3065a49fefec382"
+ },
+ "total": 12
+}

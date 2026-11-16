@@ -1,0 +1,199 @@
+{
+ "tool": "certify_pack",
+ "pack": "/home/hatch/workspace/s3-cert-quota/fixture/tiny_pack.py",
+ "opp": null,
+ "identity": {
+  "pack": {
+   "md5": "5e2e691cd1b6255b2bd5a147c50571cc",
+   "bytes": 110,
+   "child_md5s": [
+    "5e2e691cd1b6255b2bd5a147c50571cc"
+   ],
+   "post_md5": "5e2e691cd1b6255b2bd5a147c50571cc",
+   "three_way_match": true
+  },
+  "opp": null,
+  "harness": {
+   "certify_pack_md5": "fc33be6cc0255d87d69c8eef8b9a2875",
+   "certify_pack_bytes": 52416,
+   "certify_pack_child_md5s": [
+    "fc33be6cc0255d87d69c8eef8b9a2875"
+   ],
+   "certify_pack_post_md5": "fc33be6cc0255d87d69c8eef8b9a2875",
+   "three_way_match": true,
+   "modules": {
+    "eval_v53.py": "45792dfbea3101812836fe77e6752706",
+    "fastsim.py": "aefe6c83826efae4de83bef8c643c80b"
+   }
+  },
+  "params": {
+   "seed0": 993000,
+   "games": 1,
+   "steps_per_game": 20,
+   "init_limit_s": 20.0,
+   "step_soft_ms": 1000.0,
+   "step_hard_ms": 3000.0,
+   "slow_max": 3,
+   "overage_limit_s": 5.0,
+   "game_limit_s": 1500.0,
+   "mem_limit_mib": null,
+   "require_quota": true,
+   "quota": {
+    "cpu_max": null,
+    "memory_max": null,
+    "affinity_cpus": 4,
+    "source": null,
+    "process_path": {
+     "cpu": "/",
+     "memory": "/"
+    },
+    "ancestor_chain": {
+     "cpu": [
+      {
+       "path": "/",
+       "value": null,
+       "mount": "/sys/fs/cgroup",
+       "hier": "v2"
+      }
+     ],
+     "memory": [
+      {
+       "path": "/",
+       "value": null,
+       "mount": "/sys/fs/cgroup",
+       "hier": "v2"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "games": [
+  {
+   "seed": 993000,
+   "fatal": null,
+   "init_wall_s": 0.32611469900001566,
+   "exec_ms": 6.9,
+   "harness": true,
+   "harness_mods": {
+    "eval_v53.py": "45792dfbea3101812836fe77e6752706",
+    "fastsim.py": "aefe6c83826efae4de83bef8c643c80b"
+   },
+   "opp_loaded": false,
+   "opp_id": null,
+   "child_pack_id": {
+    "md5": "5e2e691cd1b6255b2bd5a147c50571cc",
+    "bytes": 110
+   },
+   "child_self_md5": "fc33be6cc0255d87d69c8eef8b9a2875",
+   "first_call_ms": 0.0,
+   "game_wall_s": 0.3307949890000259,
+   "rc": 0,
+   "final_advance_ms": 0.1,
+   "a_errors": 0,
+   "err_by_cat": {},
+   "call_errors": 0,
+   "peak_rss_mib": 37.1,
+   "steps": 20,
+   "step_wall_ms": {
+    "mean": 0.1,
+    "p50": 0.1,
+    "p95": 0.2,
+    "max": 0.4
+   }
+  }
+ ],
+ "aggregate": {
+  "steps": 20,
+  "step_wall_ms": {
+   "mean": 0.1,
+   "p50": 0.1,
+   "p95": 0.2,
+   "p99": 0.4,
+   "max": 0.4
+  },
+  "slow_steps_over_soft": 0,
+  "overage_pool_s": 0.0,
+  "max_init_wall_s": 0.326,
+  "max_game_wall_s": 0.331,
+  "peak_rss_mib_child_self": 37.1,
+  "peak_rss_mib_parent_rusage_children": 37.1,
+  "a_errors": 0,
+  "fatals": []
+ },
+ "checks": {
+  "init_le_limit": {
+   "value_s": 0.326,
+   "limit_s": 20.0,
+   "pass": true
+  },
+  "step_hard_le_limit": {
+   "value_ms": 0.4,
+   "limit_ms": 3000.0,
+   "pass": true
+  },
+  "slow_count_le_limit": {
+   "value": 0,
+   "limit": 3,
+   "per_game": [
+    0
+   ],
+   "scope": "per game",
+   "pass": true
+  },
+  "overage_pool_le_limit": {
+   "value_s": 0.0,
+   "limit_s": 5.0,
+   "per_game_s": [
+    0.0
+   ],
+   "scope": "per game",
+   "pass": true
+  },
+  "game_wall_le_limit": {
+   "value_s": 0.331,
+   "limit_s": 1500.0,
+   "pass": true
+  },
+  "internal_errors_zero": {
+   "value": 0,
+   "limit": 0,
+   "pass": true
+  },
+  "identity_three_way": {
+   "pass": true,
+   "mismatches": [],
+   "note": "pre-run hash == child-loaded hash == post-run hash for pack, opponent and this harness file; certificate identity binds the PRE-run (actually executed) bytes"
+  },
+  "child_exit_clean": {
+   "value": [],
+   "limit": [],
+   "pass": true
+  },
+  "peak_rss": {
+   "value_mib": 37.1,
+   "limit_mib": null,
+   "pass": null,
+   "note": "child RUSAGE_SELF ru_maxrss; report-only unless --mem-limit-mib given"
+  },
+  "quota_self_proof": {
+   "require_quota": true,
+   "cpu_max": null,
+   "memory_max": null,
+   "affinity_cpus": 4,
+   "source": null,
+   "missing": [
+    "cpu",
+    "memory"
+   ],
+   "pass": false,
+   "note": "effective cgroup quota of the certifying process, recorded in identity.params.quota; report-only unless --require-quota given, in which case a null (unlimited or unreadable) cpu or memory quota -- or quota sourced from test-override files (source=test_override) -- fails the certification naming the item"
+  },
+  "step_p95_report": {
+   "value_ms": 0.2,
+   "pass": null,
+   "note": "reported metric, not a gate"
+  }
+ },
+ "overall": "FAIL"
+}

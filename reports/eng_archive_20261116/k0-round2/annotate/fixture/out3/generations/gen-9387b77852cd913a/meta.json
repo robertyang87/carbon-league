@@ -1,0 +1,79 @@
+{
+ "format": "k0-annotation-generation/1",
+ "games": [
+  {
+   "game": "selfplay-994003",
+   "gid": 0,
+   "n_roots": 2,
+   "pass": "B",
+   "selected_sha256": "d7c4b8b98e5d6bc686f325869f26fb1302aae4350891caf0135c5bc937cd2648",
+   "shard_sha256": "ab26cdf5e3b8ba769d5c02e949e16f423f43cc3f8e1cf6750e7c170740f1664e"
+  }
+ ],
+ "record_schema": {
+  "aux_fields": {
+   "Q_std": "per-arm scenario std of Q",
+   "n_arms": "recorded arm count; arms/q/Q are padded beyond it (arms pad -2, q/priors pad 0, Q pad NaN)",
+   "priors": "P_A, the candidate prior q is built from (C arm q0 prop. to P_A**0.5)"
+  },
+  "per_root_fields": [
+   "game (via gid -> games)",
+   "step",
+   "seat",
+   "arms",
+   "Q",
+   "q",
+   "pi0",
+   "pi1",
+   "pi",
+   "teacher config hash (teacher.config_sha256, generation-level, seal-bound)",
+   "weights md5 (teacher.weights_md5, generation-level, seal-bound)",
+   "root belief condition (belief code + n_unknown per root)"
+  ],
+  "policy_label_files": [
+   "arms.npy",
+   "priors.npy",
+   "q.npy"
+  ],
+  "value_label_files": [
+   "Q.npy",
+   "Q_std.npy"
+  ]
+ },
+ "sampling": {
+  "pi0": 0.0,
+  "pi1": 0.5,
+  "rule": "pass A: game drawn w.p. pi0 (all roots); pass B: each root of an undrawn game drawn w.p. pi1; pi = pi0 + (1-pi0)*pi1",
+  "seed": 7,
+  "selected_sha256": "d7c4b8b98e5d6bc686f325869f26fb1302aae4350891caf0135c5bc937cd2648"
+ },
+ "teacher": {
+  "belief": "sample",
+  "config": {
+   "H": 1,
+   "K": 4,
+   "M": 2,
+   "behavior_temp": 1.0,
+   "belief": "sample",
+   "guard_cfg": {
+    "GUARD": true,
+    "GUARD_CASH": 40.0,
+    "GUARD_NARROW": true,
+    "LOWW": 2
+   },
+   "scene_contract": "prefix-feat-guard-snapshot-v1",
+   "seed_teacher": 7000,
+   "teacher_style": 2,
+   "train_temp": 1.0,
+   "window": [
+    206,
+    208
+   ]
+  },
+  "config_sha256": "a2dce0ac6320b2966cba28a8a4f683a6faf2162f5e87fb339b794adf8887db3c",
+  "version": "v3",
+  "weights": "/home/hatch/workspace/s12work/heads_v2.npz",
+  "weights_md5": "06a03d9cfeec239af3065a49fefec382"
+ },
+ "total": 2
+}

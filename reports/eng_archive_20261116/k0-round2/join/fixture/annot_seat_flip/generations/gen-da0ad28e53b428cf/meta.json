@@ -1,0 +1,87 @@
+{
+ "format": "k0-annotation-generation/1",
+ "games": [
+  {
+   "game": "selfplay-994000",
+   "gid": 0,
+   "n_roots": 6,
+   "pass": "A",
+   "selected_sha256": "507ff35bfd7b3f0753f6cf61b815a57de1bb1f7f652a4386a70a8ab7e8fc5fbd",
+   "shard_sha256": "2db4f03b73015aa050de08c9718719a1cf3715301492af8109cfba958a1058b0"
+  },
+  {
+   "game": "selfplay-994001",
+   "gid": 1,
+   "n_roots": 6,
+   "pass": "A",
+   "selected_sha256": "50a95c10132b8d03876a480b7206b807ca25d60562e421c3510d7e0708cc6d3c",
+   "shard_sha256": "cd57b852941f3684bd49f00bf345d620f2768dadcff2cac434ccd07beda0568d"
+  }
+ ],
+ "record_schema": {
+  "aux_fields": {
+   "Q_std": "per-arm scenario std of Q",
+   "n_arms": "recorded arm count; arms/q/Q are padded beyond it (arms pad -2, q/priors pad 0, Q pad NaN)",
+   "priors": "P_A, the candidate prior q is built from (C arm q0 prop. to P_A**0.5)"
+  },
+  "per_root_fields": [
+   "game (via gid -> games)",
+   "step",
+   "seat",
+   "arms",
+   "Q",
+   "q",
+   "pi0",
+   "pi1",
+   "pi",
+   "teacher config hash (teacher.config_sha256, generation-level, seal-bound)",
+   "weights md5 (teacher.weights_md5, generation-level, seal-bound)",
+   "root belief condition (belief code + n_unknown per root)"
+  ],
+  "policy_label_files": [
+   "arms.npy",
+   "priors.npy",
+   "q.npy"
+  ],
+  "value_label_files": [
+   "Q.npy",
+   "Q_std.npy"
+  ]
+ },
+ "sampling": {
+  "pi0": 1.0,
+  "pi1": 1.0,
+  "rule": "pass A: game drawn w.p. pi0 (all roots); pass B: each root of an undrawn game drawn w.p. pi1; pi = pi0 + (1-pi0)*pi1",
+  "seed": 12345,
+  "selected_sha256": "687fcaef7896c96cf1fe20b17a3c966303603a8f06e079575a20298c93578017"
+ },
+ "teacher": {
+  "belief": "sample",
+  "config": {
+   "H": 1,
+   "K": 4,
+   "M": 2,
+   "behavior_temp": 1.0,
+   "belief": "sample",
+   "guard_cfg": {
+    "GUARD": true,
+    "GUARD_CASH": 40.0,
+    "GUARD_NARROW": true,
+    "LOWW": 2
+   },
+   "scene_contract": "prefix-feat-guard-snapshot-v1",
+   "seed_teacher": 7000,
+   "teacher_style": 2,
+   "train_temp": 1.0,
+   "window": [
+    206,
+    209
+   ]
+  },
+  "config_sha256": "8b758f832e72032f9b9acb6e23f7c4b01b3ea410f15fa3d88e130ef9f2f347b0",
+  "version": "v3",
+  "weights": "/home/hatch/workspace/s12work/heads_v2.npz",
+  "weights_md5": "06a03d9cfeec239af3065a49fefec382"
+ },
+ "total": 12
+}

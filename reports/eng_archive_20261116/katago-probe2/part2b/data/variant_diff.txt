@@ -1,0 +1,24 @@
+--- /home/hatch/workspace/katago-probe/impl/modules/cnet2_search_vleaf.py	2026-11-14 15:08:42.102699185 +0000
++++ part2b/modules/cnet2_search_vleaf.py	2026-11-15 04:44:38.751298182 +0000
+@@ -688,7 +688,11 @@
+             # u_hat = (tanh(z) + 1) / 2 with z the value head pre-activation of
+             # pol's own trunk on this leaf state (branch Feat history continued
+             # on a private copy -- the leaf must not advance branch state);
+-            # M_eq = 2000 * atanh(2*u_hat - 1) = 2000 * z exactly.
++            # M_eq = A_AFF * atanh(2*u_hat - 1) + B_AFF = A_AFF * z + B_AFF
++            # (A_AFF = 3687.9177926610573, B_AFF = -638.5907028300794:
++            #  Part 2b affine fit on the Part 2 held-out set, supplementary
++            #  trip 2026-11-15; this part2b copy is NOT the frozen probe-2
++            #  subject 4a3b5f1b).
+             if _lv == "const":
+                 return 0.0
+             if fm is None:
+@@ -697,7 +701,7 @@
+             xm_ = fc_.observe(sim.obs(me))
+             ctx_ = encode_b(pol, stack_x([xm_]), np.array([st.get("T_now", T)]))[1][0]
+             z_ = float(ctx_ @ pol.w["value.weightT"][:, 0] + pol.w["value.bias"][0])
+-            return 2000.0 * z_
++            return 3687.9177926610573 * z_ + (-638.5907028300794)
+         m = [float(sim.cash[0]), float(sim.cash[1])]
+         wv = cfg["WORKER_V"] * min(1.0, left / 100.0)
+         bases = {p: [b for _, b in sim.bases[p]] for p in (0, 1)}

@@ -1,0 +1,47 @@
+{
+ "checks": [
+  {
+   "name": "tie_deployed_later_epoch",
+   "pass": true,
+   "detail": {
+    "rule": "tie_later_epoch",
+    "tie_band": {
+     "top_epoch": 0,
+     "second_epoch": 1,
+     "d_u": 0.010000000000000009,
+     "se_diff": 0.12792042981336624
+    }
+   }
+  },
+  {
+   "name": "tie_naked_no_machinery",
+   "pass": true,
+   "detail": "tie_later_epoch_no_deployed"
+  },
+  {
+   "name": "tie_naked_duel_ran",
+   "pass": true,
+   "detail": {
+    "rule": "duel_deployed",
+    "duel": {
+     "machinery_usable": true,
+     "top": {
+      "epoch": 0,
+      "mean_u": 0.24250224919029495,
+      "se": 0.0,
+      "ok": true
+     },
+     "second": {
+      "epoch": 1,
+      "mean_u": 0.23608215419009607,
+      "se": 0.006420095000198882,
+      "ok": true
+     },
+     "d_u": 0.006420095000198883,
+     "se_diff": 0.006420095000198882
+    },
+    "duel_wall_s": 90.5
+   }
+  }
+ ]
+}
