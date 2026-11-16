@@ -121,6 +121,11 @@ def parse():
     a("--snap-prior", type=float, default=0.5)
     a("--max-snaps", type=int, default=6)
     a("--pfsp", type=float, default=1.0)
+    a("--round-opps", type=int, default=0,
+      help=">0: each iteration draws its games from at most this many distinct non-SELF league members "
+           "(drawn without replacement by the usual prior x PFSP weights, then sampled equally; SELF keeps its "
+           "full-pool share). The inference server runs one forward per distinct model per step, so "
+           "fewer models per iteration means larger batches. 0 (default): every active member, as before")
     a("--ckpt-every", type=int, default=10)
     a("--eval-every", type=int, default=10)
     a("--eval-pairs", type=int, default=8, help="paired seeds per eval opponent")
@@ -200,10 +205,37 @@ class League:
         for k in snaps[:-max_snaps]:
             self.tab[k]["prior"] = 0.0          # retired (row kept for the record)
 
-    def sample(self, rng):
-        keys = [k for k, v in self.tab.items() if v["prior"] > 0]
-        w = np.array([self.tab[k]["prior"] * (1.0 - self.tab[k]["wr"] + 0.05) ** self.pfsp for k in keys])
-        return keys[rng.choice(len(keys), p=w / w.sum())]
+    def _weights(self, keys):
+        return np.array([self.tab[k]["prior"] * (1.0 - self.tab[k]["wr"] + 0.05) ** self.pfsp for k in keys])
+
+    def sample(self, rng, keys=None, probs=None):
+        if keys is None:
+            keys = [k for k, v in self.tab.items() if v["prior"] > 0]
+        if probs is None:
+            w = self._weights(keys)
+            probs = w / w.sum()
+        return keys[rng.choice(len(keys), p=probs)]
+
+    def round_subset(self, rng, k):
+        """--round-opps: the members one iteration plays against, as (keys, probs) for sample().
+        SELF (when active) keeps exactly its full-pool probability. At most k other active members
+        are drawn without replacement by the sampling weights and then share the remaining mass
+        EQUALLY: weighting them again inside the subset would count the weights twice, while
+        weighted inclusion + equal split keeps each member's long-run share close to its
+        full-pool share. With k <= 0 or k >= the member count this is the ordinary full-pool draw."""
+        active = [key for key, v in self.tab.items() if v["prior"] > 0]
+        w = self._weights(active)
+        full = w / w.sum()
+        others = [i for i, key in enumerate(active) if key != "SELF"]
+        if k <= 0 or len(others) <= k:
+            return active, full
+        wo = w[others]
+        pick = rng.choice(len(others), size=k, replace=False, p=wo / wo.sum())
+        chosen = sorted(others[i] for i in pick)
+        p_self = float(sum(full[i] for i, key in enumerate(active) if key == "SELF"))
+        keys = [key for key in active if key == "SELF"] + [active[i] for i in chosen]
+        probs = np.array(([p_self] if "SELF" in keys else []) + [(1.0 - p_self) / k] * k)
+        return keys, probs / probs.sum()
 
     def update(self, opp, margin):
         e = self.tab[opp]
@@ -743,8 +775,9 @@ def main():
         if args.remote:
             return _Remote(), time.time()
         specs = []
+        _keys, _probs = league.round_subset(rng, args.round_opps) if args.round_opps > 0 else (None, None)
         for gi in range(args.games):
-            specs.append((league.sample(rng), seed + gi // 2, gi % 2))   # same seed both sides
+            specs.append((league.sample(rng, _keys, _probs), seed + gi // 2, gi % 2))   # same seed both sides
         seed += args.games
         tasks = []
         for i in range(0, len(specs), args.lockstep):
