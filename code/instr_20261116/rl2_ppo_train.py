@@ -64,7 +64,7 @@ def parse():
     a("--minutes", type=float, default=1e9)
     a("--workers", type=int, default=max(1, (os.cpu_count() or 4) - 1))
     a("--games", type=int, default=32, help="games per iteration")
-    a("--game-log", type=int, default=1, help="per-game jsonl log train_games_it<N>.jsonl (PREREG_PERGAME_LOGGING_20261116); 0 only for the equivalence gate")
+    a("--game-log", type=int, default=1, help="per-game jsonl log games.jsonl (PREREG_PERGAME_LOGGING_20261116); 0 only for the equivalence gate")
     a("--lockstep", type=int, default=4, help="concurrent games per worker task")
     a("--overlap", type=int, default=1, help="1: collect iteration k+1 while training on k (1-iter stale behaviour policy)")
     a("--device", default="mps")
@@ -925,24 +925,41 @@ def main():
             rec["warmup_batch"] = warm_done
             rec["phase"] = "warmup"
         if args.game_log and not resume_warm:
-            # Per-game log (PREREG_PERGAME_LOGGING_20261116): one line per collected
-            # game record, same `games` list the round row aggregates, so the file's
-            # line count equals the row's games count by construction. A write
-            # failure raises and stops the round -- no silent naked rounds.
-            gp = os.path.join(args.out, f"train_games_it{it}.jsonl")
-            with open(gp, "w") as gf:
-                for gi, g in enumerate(games):
-                    m = float(g["margin"])
-                    gf.write(json.dumps({
-                        "seed": g.get("seed"), "it": it, "game_idx": gi,
-                        "opp": g["opp"], "seat": int(g["side"]),
-                        "self_play": bool(g["opp"] == "SELF"),
-                        "own_deaths": g.get("dead_my"), "opp_deaths": g.get("dead_op"),
-                        "own_score": g["my"], "opp_score": g["op"], "margin": m,
-                        "result": "W" if m > 0 else ("L" if m < 0 else "T"),
-                        "terminal": g.get("terminal_kind"), "steps": int(g["steps"]),
-                        "own_trees": g.get("trees_my"), "opp_trees": g.get("trees_op"),
-                        "own_cargo": g.get("cargo_my"), "opp_cargo": g.get("cargo_op")}) + "\n")
+            # Per-game log (PREREG_PERGAME_LOGGING_20261116 + CONFIRMATION
+            # 526515e9): single games.jsonl, append, flush per game; one line per
+            # collected game record from the same `games` list the round row
+            # aggregates, count asserted against the row's games count at round
+            # end. Loud failure: a write failure leaves an error marker line in
+            # train.jsonl and stops the round with a nonzero exit; recovery
+            # resumes from the previous complete round boundary.
+            try:
+                gp = os.path.join(args.out, "games.jsonl")
+                written = 0
+                with open(gp, "a") as gf:
+                    for gi, g in enumerate(games):
+                        m = float(g["margin"])
+                        gf.write(json.dumps({
+                            "seed": g.get("seed"), "it": it, "game_idx": gi,
+                            "opp": g["opp"], "seat": int(g["side"]),
+                            "self_play": bool(g["opp"] == "SELF"),
+                            "own_deaths": g.get("dead_my"), "opp_deaths": g.get("dead_op"),
+                            "own_score": g["my"], "opp_score": g["op"], "margin": m,
+                            "result": "W" if m > 0 else ("L" if m < 0 else "T"),
+                            "terminal": g.get("terminal_kind"), "steps": int(g["steps"]),
+                            "own_trees": g.get("trees_my"), "opp_trees": g.get("trees_op"),
+                            "own_cargo": g.get("cargo_my"), "opp_cargo": g.get("cargo_op")}) + "\n")
+                        gf.flush()
+                        written += 1
+                if written != len(games):
+                    raise IOError(f"game log incomplete: {written}/{len(games)} lines for it {it}")
+            except Exception as e:
+                marker = {"it": it, "error": "game_log_write_failed", "detail": str(e)}
+                try:
+                    tlog.write(json.dumps(marker) + "\n"); tlog.flush()
+                except Exception:
+                    pass
+                print(json.dumps(marker), flush=True)
+                raise
         del buf, trajs, games, res
         if not resume_warm and it % args.snap_every == 0:
             sp = os.path.join(args.out, f"snap_{it}.npz")
