@@ -1,0 +1,4835 @@
+{
+ "protocol": {
+  "collect": "基线自对弈、不挂 decide；step≥240（硬线）且 key_units 触发存根记录（sim 状态/双席 obs/双席动作与步耗/pre-call 与 post-call 双份双席记忆快照）",
+  "decide": "快照上离线跑冻结版 decide_at_root（SI01/SI02 口径，post-call 快照换入 harness inx）",
+  "verify": "双臂各一对 fresh agent、逐席 restore pre-call 记忆；根步调用双席 agent 处理根观测后根席执行臂动作；续弈至权威终局 step299（F04：真实终态现金）或灭绝（F01：权威逐席终局分数，灭绝席 step_count−episodeSteps−1、存活席入步前现金）；守卫随 agent 本体全程在位；根步复现检不过则该根无效；差值口径＝原始分差，非 ΔU",
+  "seeds": [
+   986400,
+   986401
+  ],
+  "snap_min_step": 240,
+  "prefer_step": 260,
+  "verify_max_roots": 3,
+  "terminal_step": 299,
+  "hard_wall_s": 1440.0
+ },
+ "memory_snapshot_composition": {
+  "restored": [
+   "st 字典全键（逐键 deepcopy；键全集见各快照 st_keys）：含 f/fo 两个 Feat 信念体、x/lg0（根编码与先验）、ot/oprev/rec/sampled/T_now/oenc/opp_first（对手模型与教师状态）、guard_base/base_fix 等",
+   "Feat f/fo：厂商 feat_copy（est/last/last_step/hist/own_uid/inf 私有拷贝）＋ prev_w/prev_trees/aux 补 deepcopy（feat_copy 对此三项是浅引用，补深防跨臂污染）",
+   "BankruptcyGuard 实例状态：lostw/prevw/guard_base（__dict__ deepcopy 换入 fresh agent 的 live guard）"
+  ],
+  "not_restored_with_reason": [
+   "CachePolicy.last_enc/last_sig：内容签名寻址缓存，签名覆盖 encode 全部输入字段、不合即重编码——fresh 空缓存只影响速度不影响输出，不属策略记忆（由复现检兜底）",
+   "stats 字典：仅遥测计数，不影响动作",
+   "_search 的 FastCarbon pool：rollout 草稿 sim，非记忆",
+   "opp_model/opp_id/track_losses 等嵌套函数：是代码非状态，其状态（对手历史/风格识别）全在 st 与 fo 内、已恢复"
+  ],
+  "validation": "每臂根步调用复现检：恢复后 agent 对根观测的返回动作须与采集时基线动作逐字相等（双席、双臂各检一次）；不等 → 该根 restore_failed、差值无效。"
+ },
+ "scan_games": [
+  {
+   "game": 0,
+   "seed": 986400,
+   "records": 58,
+   "record_steps": [
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268
+   ],
+   "stop_reason": "记录已足（58 条、最高步 268），提前收局",
+   "reached_step": 269,
+   "decided": 58,
+   "changed": 24
+  },
+  {
+   "game": 1,
+   "seed": 986401,
+   "skipped": true,
+   "reason": "第一局 changed 候选已足 （24 个），留墙钟给验证"
+  }
+ ],
+ "changed_candidates": [
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 267,
+   "seat": 0,
+   "chosen_index": 2
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 267,
+   "seat": 1,
+   "chosen_index": 2
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 266,
+   "seat": 0,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 266,
+   "seat": 1,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 262,
+   "seat": 0,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 262,
+   "seat": 1,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 260,
+   "seat": 0,
+   "chosen_index": 2
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 260,
+   "seat": 1,
+   "chosen_index": 2
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 259,
+   "seat": 0,
+   "chosen_index": 2
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 259,
+   "seat": 1,
+   "chosen_index": 2
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 257,
+   "seat": 0,
+   "chosen_index": 3
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 257,
+   "seat": 1,
+   "chosen_index": 3
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 256,
+   "seat": 0,
+   "chosen_index": 2
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 256,
+   "seat": 1,
+   "chosen_index": 2
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 252,
+   "seat": 0,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 252,
+   "seat": 1,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 250,
+   "seat": 0,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 250,
+   "seat": 1,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 245,
+   "seat": 0,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 245,
+   "seat": 1,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 241,
+   "seat": 0,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 241,
+   "seat": 1,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 240,
+   "seat": 0,
+   "chosen_index": 1
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 240,
+   "seat": 1,
+   "chosen_index": 1
+  }
+ ],
+ "selected_roots": [
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 267,
+   "seat": 0,
+   "chosen_index": 2,
+   "a0_action": {
+    "player-0-worker-58": "UP",
+    "player-0-worker-45": "UP",
+    "player-0-worker-76": "UP",
+    "player-0-worker-84": "RIGHT",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "DOWN",
+    "player-0-worker-72": "DOWN",
+    "player-0-worker-85": "RIGHT",
+    "player-0-worker-80": "LEFT"
+   },
+   "chosen_action": {
+    "player-0-worker-58": "UP",
+    "player-0-worker-45": "UP",
+    "player-0-worker-84": "RIGHT",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "DOWN",
+    "player-0-worker-72": "DOWN",
+    "player-0-worker-85": "RIGHT",
+    "player-0-worker-80": "LEFT"
+   },
+   "opp_a0_action": {
+    "player-1-worker-58": "UP",
+    "player-1-worker-45": "UP",
+    "player-1-worker-76": "UP",
+    "player-1-worker-84": "LEFT",
+    "player-1-worker-86": "LEFT",
+    "player-1-worker-87": "UP",
+    "player-1-worker-81": "DOWN",
+    "player-1-worker-72": "DOWN",
+    "player-1-worker-85": "LEFT",
+    "player-1-worker-80": "RIGHT"
+   },
+   "snapshot_st_keys": [
+    "L",
+    "M",
+    "T_now",
+    "base_fix",
+    "f",
+    "fo",
+    "guard_base",
+    "lg0",
+    "lpost",
+    "lprior",
+    "ntrk",
+    "oenc",
+    "opp_first",
+    "oprev",
+    "orng",
+    "ot",
+    "ow",
+    "pw",
+    "rec",
+    "sampled",
+    "t1",
+    "ti",
+    "x",
+    "y0"
+   ],
+   "snapshot_shallow_keys": []
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 267,
+   "seat": 1,
+   "chosen_index": 2,
+   "a0_action": {
+    "player-1-worker-58": "UP",
+    "player-1-worker-45": "UP",
+    "player-1-worker-76": "UP",
+    "player-1-worker-84": "LEFT",
+    "player-1-worker-86": "LEFT",
+    "player-1-worker-87": "UP",
+    "player-1-worker-81": "DOWN",
+    "player-1-worker-72": "DOWN",
+    "player-1-worker-85": "LEFT",
+    "player-1-worker-80": "RIGHT"
+   },
+   "chosen_action": {
+    "player-1-worker-58": "UP",
+    "player-1-worker-45": "UP",
+    "player-1-worker-84": "LEFT",
+    "player-1-worker-86": "LEFT",
+    "player-1-worker-87": "UP",
+    "player-1-worker-81": "DOWN",
+    "player-1-worker-72": "DOWN",
+    "player-1-worker-85": "LEFT",
+    "player-1-worker-80": "RIGHT"
+   },
+   "opp_a0_action": {
+    "player-0-worker-58": "UP",
+    "player-0-worker-45": "UP",
+    "player-0-worker-76": "UP",
+    "player-0-worker-84": "RIGHT",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "DOWN",
+    "player-0-worker-72": "DOWN",
+    "player-0-worker-85": "RIGHT",
+    "player-0-worker-80": "LEFT"
+   },
+   "snapshot_st_keys": [
+    "L",
+    "M",
+    "T_now",
+    "base_fix",
+    "f",
+    "fo",
+    "guard_base",
+    "lg0",
+    "lpost",
+    "lprior",
+    "ntrk",
+    "oenc",
+    "opp_first",
+    "oprev",
+    "orng",
+    "ot",
+    "ow",
+    "pw",
+    "rec",
+    "sampled",
+    "t1",
+    "ti",
+    "x",
+    "y0"
+   ],
+   "snapshot_shallow_keys": []
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 266,
+   "seat": 0,
+   "chosen_index": 1,
+   "a0_action": {
+    "player-0-worker-45": "DOWN",
+    "player-0-worker-76": "DOWN",
+    "player-0-worker-84": "UP",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "LEFT",
+    "player-0-worker-72": "LEFT",
+    "player-0-worker-80": "DOWN"
+   },
+   "chosen_action": {
+    "player-0-worker-76": "DOWN",
+    "player-0-worker-84": "UP",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "LEFT",
+    "player-0-worker-72": "LEFT",
+    "player-0-worker-80": "DOWN"
+   },
+   "opp_a0_action": {
+    "player-1-worker-45": "DOWN",
+    "player-1-worker-76": "DOWN",
+    "player-1-worker-84": "UP",
+    "player-1-worker-86": "LEFT",
+    "player-1-worker-87": "UP",
+    "player-1-worker-81": "RIGHT",
+    "player-1-worker-72": "RIGHT",
+    "player-1-worker-80": "DOWN"
+   },
+   "snapshot_st_keys": [
+    "L",
+    "M",
+    "T_now",
+    "base_fix",
+    "f",
+    "fo",
+    "guard_base",
+    "lg0",
+    "lpost",
+    "lprior",
+    "ntrk",
+    "oenc",
+    "opp_first",
+    "oprev",
+    "orng",
+    "ot",
+    "ow",
+    "pw",
+    "rec",
+    "sampled",
+    "t1",
+    "ti",
+    "x",
+    "y0"
+   ],
+   "snapshot_shallow_keys": []
+  }
+ ],
+ "verifications": [
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 267,
+   "seat": 0,
+   "chosen_index": 2,
+   "a0_action": {
+    "player-0-worker-58": "UP",
+    "player-0-worker-45": "UP",
+    "player-0-worker-76": "UP",
+    "player-0-worker-84": "RIGHT",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "DOWN",
+    "player-0-worker-72": "DOWN",
+    "player-0-worker-85": "RIGHT",
+    "player-0-worker-80": "LEFT"
+   },
+   "chosen_action": {
+    "player-0-worker-58": "UP",
+    "player-0-worker-45": "UP",
+    "player-0-worker-84": "RIGHT",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "DOWN",
+    "player-0-worker-72": "DOWN",
+    "player-0-worker-85": "RIGHT",
+    "player-0-worker-80": "LEFT"
+   },
+   "opp_a0_action": {
+    "player-1-worker-58": "UP",
+    "player-1-worker-45": "UP",
+    "player-1-worker-76": "UP",
+    "player-1-worker-84": "LEFT",
+    "player-1-worker-86": "LEFT",
+    "player-1-worker-87": "UP",
+    "player-1-worker-81": "DOWN",
+    "player-1-worker-72": "DOWN",
+    "player-1-worker-85": "LEFT",
+    "player-1-worker-80": "RIGHT"
+   },
+   "diff_scale": "原始分差（权威终局分数差之差），非 ΔU",
+   "valid": true,
+   "arms": {
+    "a0": {
+     "complete": true,
+     "extinct": false,
+     "root_call_reproduced": {
+      "root_seat": true,
+      "opp_seat": true
+     },
+     "root_exec_actions": [
+      {
+       "player-0-worker-58": "UP",
+       "player-0-worker-45": "UP",
+       "player-0-worker-76": "UP",
+       "player-0-worker-84": "RIGHT",
+       "player-0-worker-86": "RIGHT",
+       "player-0-worker-87": "UP",
+       "player-0-worker-81": "DOWN",
+       "player-0-worker-72": "DOWN",
+       "player-0-worker-85": "RIGHT",
+       "player-0-worker-80": "LEFT"
+      },
+      {
+       "player-1-worker-58": "UP",
+       "player-1-worker-45": "UP",
+       "player-1-worker-76": "UP",
+       "player-1-worker-84": "LEFT",
+       "player-1-worker-86": "LEFT",
+       "player-1-worker-87": "UP",
+       "player-1-worker-81": "DOWN",
+       "player-1-worker-72": "DOWN",
+       "player-1-worker-85": "LEFT",
+       "player-1-worker-80": "RIGHT"
+      }
+     ],
+     "seq": [
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "DOWN",
+        "player-0-worker-85": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "DOWN",
+        "player-1-worker-85": "UP",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-80": "RIGHT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-90": "UP",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-90": "UP",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECPLANTER"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECPLANTER"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-92": "UP",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-92": "UP",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "UP",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "UP",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "RIGHT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-76": "UP",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-97": "LEFT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-98": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-76": "UP",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-97": "RIGHT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-98": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-97": "LEFT",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-98": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-97": "RIGHT",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-98": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-97": "UP",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-97": "UP",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-98": "DOWN",
+        "player-0-worker-58": "UP",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-98": "DOWN",
+        "player-1-worker-58": "UP",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "LEFT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-76": "RIGHT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-58": "UP",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-58": "UP",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "DOWN",
+        "player-0-worker-97": "DOWN",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "DOWN",
+        "player-1-worker-97": "DOWN",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-58": "UP",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-58": "UP",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-102": "UP",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-102": "UP",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-102": "UP",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-102": "UP",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "LEFT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "RIGHT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "LEFT",
+        "player-0-worker-100": "DOWN",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "RIGHT",
+        "player-1-worker-100": "DOWN",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-98": "UP",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-98": "UP",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-98": "UP",
+        "player-0-worker-58": "UP",
+        "player-0-worker-102": "DOWN",
+        "player-0-worker-81": "UP",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-98": "UP",
+        "player-1-worker-58": "UP",
+        "player-1-worker-102": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-102": "DOWN",
+        "player-0-worker-81": "UP",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-98": "UP",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-102": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-98": "UP",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-100": "UP",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-102": "RIGHT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-98": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-100": "UP",
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-102": "LEFT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-98": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "DOWN"
+       }
+      ]
+     ],
+     "seq_len": 31,
+     "seq_hash": "69fa484d3499635b0252433ae1082063",
+     "reached_step": 299,
+     "final_scores": [
+      5652.48,
+      5652.48
+     ],
+     "final_basis": "F04_terminal_cash",
+     "final_diff_seat": 0.0,
+     "wall_s": 3.372577667236328
+    },
+    "chosen": {
+     "complete": true,
+     "extinct": false,
+     "root_call_reproduced": {
+      "root_seat": true,
+      "opp_seat": true
+     },
+     "root_exec_actions": [
+      {
+       "player-0-worker-58": "UP",
+       "player-0-worker-45": "UP",
+       "player-0-worker-84": "RIGHT",
+       "player-0-worker-86": "RIGHT",
+       "player-0-worker-87": "UP",
+       "player-0-worker-81": "DOWN",
+       "player-0-worker-72": "DOWN",
+       "player-0-worker-85": "RIGHT",
+       "player-0-worker-80": "LEFT"
+      },
+      {
+       "player-1-worker-58": "UP",
+       "player-1-worker-45": "UP",
+       "player-1-worker-76": "UP",
+       "player-1-worker-84": "LEFT",
+       "player-1-worker-86": "LEFT",
+       "player-1-worker-87": "UP",
+       "player-1-worker-81": "DOWN",
+       "player-1-worker-72": "DOWN",
+       "player-1-worker-85": "LEFT",
+       "player-1-worker-80": "RIGHT"
+      }
+     ],
+     "seq": [
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "DOWN",
+        "player-0-worker-85": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "DOWN",
+        "player-1-worker-85": "UP",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-80": "RIGHT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-91": "UP",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-1": "RECPLANTER"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-45": "UP",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-91": "UP",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-91": "UP",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-80": "DOWN",
+        "player-0-worker-92": "DOWN"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-87": "UP",
+        "player-1-worker-91": "UP",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-87": "UP",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-worker-92": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-45": "UP",
+        "player-1-worker-87": "UP",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-80": "RIGHT",
+        "player-0-worker-92": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-worker-92": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-45": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-87": "UP",
+        "player-1-worker-93": "UP",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-95": "UP",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-80": "LEFT",
+        "player-0-worker-92": "DOWN"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-91": "UP",
+        "player-0-worker-87": "RIGHT",
+        "player-0-worker-93": "DOWN",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-80": "DOWN",
+        "player-0-worker-92": "DOWN"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-91": "UP",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-worker-92": "LEFT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-76": "UP",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-93": "DOWN",
+        "player-0-worker-90": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-87": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-80": "LEFT",
+        "player-0-worker-92": "DOWN"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-87": "RIGHT",
+        "player-0-worker-92": "DOWN",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-95": "UP",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-92": "DOWN"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-76": "RIGHT",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-94": "UP",
+        "player-0-worker-87": "LEFT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-95": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-92": "LEFT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-91": "RIGHT",
+        "player-1-worker-45": "UP",
+        "player-1-worker-93": "DOWN",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-95": "UP",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-92": "UP"
+       },
+       {
+        "player-1-worker-91": "DOWN",
+        "player-1-worker-45": "UP",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "DOWN",
+        "player-0-worker-81": "UP",
+        "player-0-worker-45": "UP",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-92": "UP",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-95": "DOWN",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-92": "UP",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-91": "RIGHT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "RIGHT",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "DOWN",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-95": "DOWN",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-80": "UP",
+        "player-0-worker-92": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-92": "DOWN"
+       },
+       {
+        "player-1-worker-91": "RIGHT",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-93": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-87": "UP",
+        "player-0-worker-92": "DOWN",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-95": "DOWN",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-87": "UP",
+        "player-0-worker-92": "UP",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-91": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-95": "DOWN",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "LEFT",
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-93": "UP",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-92": "UP",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-91": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-87": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "DOWN",
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-93": "UP",
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-95": "UP",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-worker-92": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-87": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-76": "RIGHT",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-95": "UP",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-87": "RIGHT",
+        "player-0-worker-80": "LEFT",
+        "player-0-worker-92": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-87": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-80": "LEFT",
+        "player-0-worker-92": "UP"
+       },
+       {
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-80": "UP"
+       }
+      ]
+     ],
+     "seq_len": 31,
+     "seq_hash": "ef1124d0495f7fd17b5ad19614731b4e",
+     "reached_step": 299,
+     "final_scores": [
+      5997.49,
+      5814.35
+     ],
+     "final_basis": "F04_terminal_cash",
+     "final_diff_seat": 183.13999999999942,
+     "wall_s": 3.3741092681884766
+    }
+   },
+   "restore_reproduction_ok": true,
+   "chosen_minus_a0_final_diff": 183.13999999999942
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 267,
+   "seat": 1,
+   "chosen_index": 2,
+   "a0_action": {
+    "player-1-worker-58": "UP",
+    "player-1-worker-45": "UP",
+    "player-1-worker-76": "UP",
+    "player-1-worker-84": "LEFT",
+    "player-1-worker-86": "LEFT",
+    "player-1-worker-87": "UP",
+    "player-1-worker-81": "DOWN",
+    "player-1-worker-72": "DOWN",
+    "player-1-worker-85": "LEFT",
+    "player-1-worker-80": "RIGHT"
+   },
+   "chosen_action": {
+    "player-1-worker-58": "UP",
+    "player-1-worker-45": "UP",
+    "player-1-worker-84": "LEFT",
+    "player-1-worker-86": "LEFT",
+    "player-1-worker-87": "UP",
+    "player-1-worker-81": "DOWN",
+    "player-1-worker-72": "DOWN",
+    "player-1-worker-85": "LEFT",
+    "player-1-worker-80": "RIGHT"
+   },
+   "opp_a0_action": {
+    "player-0-worker-58": "UP",
+    "player-0-worker-45": "UP",
+    "player-0-worker-76": "UP",
+    "player-0-worker-84": "RIGHT",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "DOWN",
+    "player-0-worker-72": "DOWN",
+    "player-0-worker-85": "RIGHT",
+    "player-0-worker-80": "LEFT"
+   },
+   "diff_scale": "原始分差（权威终局分数差之差），非 ΔU",
+   "valid": true,
+   "arms": {
+    "a0": {
+     "complete": true,
+     "extinct": false,
+     "root_call_reproduced": {
+      "root_seat": true,
+      "opp_seat": true
+     },
+     "root_exec_actions": [
+      {
+       "player-0-worker-58": "UP",
+       "player-0-worker-45": "UP",
+       "player-0-worker-76": "UP",
+       "player-0-worker-84": "RIGHT",
+       "player-0-worker-86": "RIGHT",
+       "player-0-worker-87": "UP",
+       "player-0-worker-81": "DOWN",
+       "player-0-worker-72": "DOWN",
+       "player-0-worker-85": "RIGHT",
+       "player-0-worker-80": "LEFT"
+      },
+      {
+       "player-1-worker-58": "UP",
+       "player-1-worker-45": "UP",
+       "player-1-worker-76": "UP",
+       "player-1-worker-84": "LEFT",
+       "player-1-worker-86": "LEFT",
+       "player-1-worker-87": "UP",
+       "player-1-worker-81": "DOWN",
+       "player-1-worker-72": "DOWN",
+       "player-1-worker-85": "LEFT",
+       "player-1-worker-80": "RIGHT"
+      }
+     ],
+     "seq": [
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "DOWN",
+        "player-0-worker-85": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "DOWN",
+        "player-1-worker-85": "UP",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-80": "RIGHT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-90": "UP",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-90": "UP",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECPLANTER"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECPLANTER"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-92": "UP",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-92": "UP",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "UP",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "UP",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "RIGHT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-76": "UP",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-97": "LEFT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-98": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-76": "UP",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-97": "RIGHT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-98": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-97": "LEFT",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-98": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-97": "RIGHT",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-98": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-97": "UP",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-97": "UP",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-98": "DOWN",
+        "player-0-worker-58": "UP",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-98": "DOWN",
+        "player-1-worker-58": "UP",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "LEFT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-76": "RIGHT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-58": "UP",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-58": "UP",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "DOWN",
+        "player-0-worker-97": "DOWN",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "DOWN",
+        "player-1-worker-97": "DOWN",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-58": "UP",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-58": "UP",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-102": "UP",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-102": "UP",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-102": "UP",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-102": "UP",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "LEFT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "RIGHT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "LEFT",
+        "player-0-worker-100": "DOWN",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "RIGHT",
+        "player-1-worker-100": "DOWN",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-98": "UP",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-98": "UP",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-98": "UP",
+        "player-0-worker-58": "UP",
+        "player-0-worker-102": "DOWN",
+        "player-0-worker-81": "UP",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-98": "UP",
+        "player-1-worker-58": "UP",
+        "player-1-worker-102": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-102": "DOWN",
+        "player-0-worker-81": "UP",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-98": "UP",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-102": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-98": "UP",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-100": "UP",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-102": "RIGHT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-98": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-100": "UP",
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-102": "LEFT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-98": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "DOWN"
+       }
+      ]
+     ],
+     "seq_len": 31,
+     "seq_hash": "69fa484d3499635b0252433ae1082063",
+     "reached_step": 299,
+     "final_scores": [
+      5652.48,
+      5652.48
+     ],
+     "final_basis": "F04_terminal_cash",
+     "final_diff_seat": 0.0,
+     "wall_s": 3.361837148666382
+    },
+    "chosen": {
+     "complete": true,
+     "extinct": false,
+     "root_call_reproduced": {
+      "root_seat": true,
+      "opp_seat": true
+     },
+     "root_exec_actions": [
+      {
+       "player-0-worker-58": "UP",
+       "player-0-worker-45": "UP",
+       "player-0-worker-76": "UP",
+       "player-0-worker-84": "RIGHT",
+       "player-0-worker-86": "RIGHT",
+       "player-0-worker-87": "UP",
+       "player-0-worker-81": "DOWN",
+       "player-0-worker-72": "DOWN",
+       "player-0-worker-85": "RIGHT",
+       "player-0-worker-80": "LEFT"
+      },
+      {
+       "player-1-worker-58": "UP",
+       "player-1-worker-45": "UP",
+       "player-1-worker-84": "LEFT",
+       "player-1-worker-86": "LEFT",
+       "player-1-worker-87": "UP",
+       "player-1-worker-81": "DOWN",
+       "player-1-worker-72": "DOWN",
+       "player-1-worker-85": "LEFT",
+       "player-1-worker-80": "RIGHT"
+      }
+     ],
+     "seq": [
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "DOWN",
+        "player-0-worker-85": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "DOWN",
+        "player-1-worker-85": "UP",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-80": "RIGHT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-45": "UP",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-91": "UP",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-91": "UP",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-1": "RECPLANTER"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-87": "UP",
+        "player-0-worker-91": "UP",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-91": "UP",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-80": "DOWN",
+        "player-1-worker-92": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-45": "UP",
+        "player-0-worker-87": "UP",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-87": "UP",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-worker-92": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-80": "LEFT",
+        "player-1-worker-92": "RIGHT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-45": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-87": "UP",
+        "player-0-worker-93": "UP",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-80": "LEFT",
+        "player-1-worker-92": "RIGHT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-95": "UP",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-80": "RIGHT",
+        "player-1-worker-92": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-91": "UP",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-91": "UP",
+        "player-1-worker-87": "LEFT",
+        "player-1-worker-93": "DOWN",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-80": "DOWN",
+        "player-1-worker-92": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-76": "UP",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-80": "LEFT",
+        "player-1-worker-92": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-93": "DOWN",
+        "player-1-worker-90": "UP",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-87": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-80": "RIGHT",
+        "player-1-worker-92": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-87": "LEFT",
+        "player-1-worker-92": "DOWN",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-76": "LEFT",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-95": "UP",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-92": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-95": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-94": "UP",
+        "player-1-worker-87": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "LEFT",
+        "player-0-worker-45": "UP",
+        "player-0-worker-93": "DOWN",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-95": "UP",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-92": "RIGHT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "DOWN",
+        "player-0-worker-45": "UP",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-91": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-92": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-91": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-45": "UP",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-92": "UP",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "LEFT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "LEFT",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-95": "DOWN",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-92": "UP",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-91": "DOWN",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-95": "DOWN",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-80": "UP",
+        "player-1-worker-92": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "LEFT",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-93": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-92": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-95": "DOWN",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-87": "UP",
+        "player-1-worker-92": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-87": "DOWN",
+        "player-0-worker-95": "DOWN",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-87": "UP",
+        "player-1-worker-92": "UP",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-91": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-87": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-91": "RIGHT",
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-93": "UP",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-92": "UP",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-87": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-76": "LEFT",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-91": "DOWN",
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-93": "UP",
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-95": "UP",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-80": "LEFT",
+        "player-1-worker-92": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-87": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-95": "UP",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-87": "LEFT",
+        "player-1-worker-80": "RIGHT",
+        "player-1-worker-92": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-87": "DOWN",
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-80": "RIGHT",
+        "player-1-worker-92": "UP"
+       }
+      ]
+     ],
+     "seq_len": 31,
+     "seq_hash": "d54be6c4041b6be398c9e6e113dc7e4b",
+     "reached_step": 299,
+     "final_scores": [
+      5814.35,
+      5997.49
+     ],
+     "final_basis": "F04_terminal_cash",
+     "final_diff_seat": 183.13999999999942,
+     "wall_s": 3.377978801727295
+    }
+   },
+   "restore_reproduction_ok": true,
+   "chosen_minus_a0_final_diff": 183.13999999999942
+  },
+  {
+   "game": 0,
+   "seed": 986400,
+   "step": 266,
+   "seat": 0,
+   "chosen_index": 1,
+   "a0_action": {
+    "player-0-worker-45": "DOWN",
+    "player-0-worker-76": "DOWN",
+    "player-0-worker-84": "UP",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "LEFT",
+    "player-0-worker-72": "LEFT",
+    "player-0-worker-80": "DOWN"
+   },
+   "chosen_action": {
+    "player-0-worker-76": "DOWN",
+    "player-0-worker-84": "UP",
+    "player-0-worker-86": "RIGHT",
+    "player-0-worker-87": "UP",
+    "player-0-worker-81": "LEFT",
+    "player-0-worker-72": "LEFT",
+    "player-0-worker-80": "DOWN"
+   },
+   "opp_a0_action": {
+    "player-1-worker-45": "DOWN",
+    "player-1-worker-76": "DOWN",
+    "player-1-worker-84": "UP",
+    "player-1-worker-86": "LEFT",
+    "player-1-worker-87": "UP",
+    "player-1-worker-81": "RIGHT",
+    "player-1-worker-72": "RIGHT",
+    "player-1-worker-80": "DOWN"
+   },
+   "diff_scale": "原始分差（权威终局分数差之差），非 ΔU",
+   "valid": true,
+   "arms": {
+    "a0": {
+     "complete": true,
+     "extinct": false,
+     "root_call_reproduced": {
+      "root_seat": true,
+      "opp_seat": true
+     },
+     "root_exec_actions": [
+      {
+       "player-0-worker-45": "DOWN",
+       "player-0-worker-76": "DOWN",
+       "player-0-worker-84": "UP",
+       "player-0-worker-86": "RIGHT",
+       "player-0-worker-87": "UP",
+       "player-0-worker-81": "LEFT",
+       "player-0-worker-72": "LEFT",
+       "player-0-worker-80": "DOWN"
+      },
+      {
+       "player-1-worker-45": "DOWN",
+       "player-1-worker-76": "DOWN",
+       "player-1-worker-84": "UP",
+       "player-1-worker-86": "LEFT",
+       "player-1-worker-87": "UP",
+       "player-1-worker-81": "RIGHT",
+       "player-1-worker-72": "RIGHT",
+       "player-1-worker-80": "DOWN"
+      }
+     ],
+     "seq": [
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-86": "RIGHT",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-72": "DOWN",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-86": "LEFT",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-72": "DOWN",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "DOWN",
+        "player-0-worker-85": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "DOWN",
+        "player-1-worker-85": "UP",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-80": "RIGHT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-90": "UP",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-90": "UP",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECPLANTER"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECPLANTER"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-92": "UP",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-92": "UP",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "UP",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "UP",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-92": "LEFT",
+        "player-1-worker-80": "RIGHT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-76": "UP",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-97": "LEFT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-98": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-76": "UP",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-97": "RIGHT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-98": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-97": "LEFT",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-98": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-97": "RIGHT",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-98": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-58": "RIGHT",
+        "player-0-worker-97": "UP",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-97": "UP",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-99": "RIGHT",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-99": "LEFT",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-98": "DOWN",
+        "player-0-worker-58": "UP",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-98": "DOWN",
+        "player-1-worker-58": "UP",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "LEFT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-76": "RIGHT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-58": "UP",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-58": "UP",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "DOWN",
+        "player-0-worker-97": "DOWN",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-101": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "DOWN",
+        "player-1-worker-97": "DOWN",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-101": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-58": "UP",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-58": "UP",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-102": "UP",
+        "player-0-worker-100": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-102": "UP",
+        "player-1-worker-100": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-102": "UP",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-102": "UP",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "LEFT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-58": "DOWN",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "RIGHT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-98": "LEFT",
+        "player-0-worker-100": "DOWN",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-98": "RIGHT",
+        "player-1-worker-100": "DOWN",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-98": "UP",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-97": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-98": "UP",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-97": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-98": "UP",
+        "player-0-worker-58": "UP",
+        "player-0-worker-102": "DOWN",
+        "player-0-worker-81": "UP",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-98": "UP",
+        "player-1-worker-58": "UP",
+        "player-1-worker-102": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-100": "LEFT",
+        "player-0-worker-102": "DOWN",
+        "player-0-worker-81": "UP",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-98": "UP",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-100": "RIGHT",
+        "player-1-worker-102": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-98": "UP",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-100": "UP",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-102": "RIGHT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-98": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-100": "UP",
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-102": "LEFT",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-98": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "DOWN"
+       }
+      ]
+     ],
+     "seq_len": 32,
+     "seq_hash": "2f3b428b7c4061a07ed42ce9cac6c729",
+     "reached_step": 299,
+     "final_scores": [
+      5652.48,
+      5652.48
+     ],
+     "final_basis": "F04_terminal_cash",
+     "final_diff_seat": 0.0,
+     "wall_s": 3.4817066192626953
+    },
+    "chosen": {
+     "complete": true,
+     "extinct": false,
+     "root_call_reproduced": {
+      "root_seat": true,
+      "opp_seat": true
+     },
+     "root_exec_actions": [
+      {
+       "player-0-worker-76": "DOWN",
+       "player-0-worker-84": "UP",
+       "player-0-worker-86": "RIGHT",
+       "player-0-worker-87": "UP",
+       "player-0-worker-81": "LEFT",
+       "player-0-worker-72": "LEFT",
+       "player-0-worker-80": "DOWN"
+      },
+      {
+       "player-1-worker-45": "DOWN",
+       "player-1-worker-76": "DOWN",
+       "player-1-worker-84": "UP",
+       "player-1-worker-86": "LEFT",
+       "player-1-worker-87": "UP",
+       "player-1-worker-81": "RIGHT",
+       "player-1-worker-72": "RIGHT",
+       "player-1-worker-80": "DOWN"
+      }
+     ],
+     "seq": [
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-86": "RIGHT",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-72": "DOWN",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-86": "LEFT",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-72": "DOWN",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-58": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-87": "UP",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "UP",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-87": "UP",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "DOWN",
+        "player-0-worker-85": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "DOWN",
+        "player-1-worker-85": "UP",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "DOWN",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-84": "DOWN",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-72": "LEFT",
+        "player-0-worker-85": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-84": "DOWN",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-72": "RIGHT",
+        "player-1-worker-85": "LEFT",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-76": "UP",
+        "player-0-worker-84": "RIGHT",
+        "player-0-worker-88": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-76": "UP",
+        "player-1-worker-84": "LEFT",
+        "player-1-worker-88": "LEFT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-58": "UP",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-76": "UP",
+        "player-0-worker-90": "UP",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-80": "DOWN",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "UP",
+        "player-1-worker-90": "UP",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-80": "UP",
+        "player-1-recrtCenter-0": "RECCOLLECTOR",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-87": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-89": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-87": "RIGHT",
+        "player-1-worker-90": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-89": "LEFT",
+        "player-1-worker-92": "RIGHT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "UP",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-58": "LEFT",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-76": "UP",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-92": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "DOWN",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-92": "UP",
+        "player-0-worker-91": "RIGHT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-91": "LEFT",
+        "player-1-worker-92": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "UP",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-94": "DOWN",
+        "player-0-worker-80": "RIGHT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR",
+        "player-0-recrtCenter-1": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-76": "UP",
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-58": "DOWN",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-1": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "DOWN",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-94": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-80": "LEFT",
+        "player-1-recrtCenter-0": "RECCOLLECTOR"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-93": "UP",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-94": "UP",
+        "player-1-worker-95": "DOWN",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-92": "LEFT",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-96": "UP",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-90": "UP",
+        "player-1-worker-81": "LEFT",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-95": "DOWN",
+        "player-1-worker-80": "LEFT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-94": "DOWN",
+        "player-0-worker-92": "LEFT",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-96": "UP",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-81": "UP",
+        "player-0-worker-92": "DOWN",
+        "player-0-worker-93": "DOWN",
+        "player-0-worker-96": "DOWN",
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-95": "UP",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-92": "LEFT",
+        "player-0-worker-96": "DOWN",
+        "player-0-worker-45": "LEFT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-93": "LEFT",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-96": "DOWN",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-90": "LEFT",
+        "player-1-worker-58": "LEFT",
+        "player-1-worker-76": "UP",
+        "player-1-worker-93": "RIGHT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-45": "RIGHT",
+        "player-1-worker-95": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-94": "UP",
+        "player-0-worker-93": "UP",
+        "player-0-worker-92": "UP",
+        "player-0-worker-96": "RIGHT",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-95": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-93": "UP",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-96": "RIGHT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-81": "UP",
+        "player-1-worker-96": "RIGHT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-95": "RIGHT",
+        "player-1-worker-80": "UP"
+       }
+      ],
+      [
+       {
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-96": "UP",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-58": "UP",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-95": "UP",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-92": "RIGHT",
+        "player-0-worker-76": "UP",
+        "player-0-worker-96": "RIGHT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-95": "LEFT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-76": "RIGHT",
+        "player-0-worker-96": "DOWN",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-81": "UP",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-45": "LEFT",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-93": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-94": "LEFT",
+        "player-0-worker-81": "DOWN",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-96": "DOWN"
+       },
+       {
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-94": "DOWN",
+        "player-1-worker-96": "LEFT",
+        "player-1-worker-76": "UP",
+        "player-1-worker-93": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-92": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-80": "LEFT",
+        "player-0-recrtCenter-0": "RECCOLLECTOR"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-96": "LEFT",
+        "player-1-worker-94": "UP",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-96": "UP",
+        "player-0-worker-97": "UP",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-81": "RIGHT",
+        "player-1-worker-96": "LEFT",
+        "player-1-worker-94": "UP",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-94": "UP",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-97": "UP",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-90": "RIGHT",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-96": "LEFT",
+        "player-1-worker-95": "UP",
+        "player-1-worker-45": "UP",
+        "player-1-worker-94": "LEFT",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "DOWN",
+        "player-0-worker-45": "RIGHT",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-93": "DOWN",
+        "player-0-worker-92": "LEFT",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-94": "DOWN",
+        "player-0-worker-80": "RIGHT"
+       },
+       {
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-96": "LEFT",
+        "player-1-worker-95": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-81": "DOWN",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-90": "LEFT",
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-92": "LEFT",
+        "player-0-worker-96": "LEFT",
+        "player-0-worker-95": "UP",
+        "player-0-worker-81": "LEFT",
+        "player-0-worker-80": "LEFT"
+       },
+       {
+        "player-1-worker-90": "DOWN",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-76": "RIGHT",
+        "player-1-worker-94": "RIGHT",
+        "player-1-worker-80": "RIGHT"
+       }
+      ],
+      [
+       {
+        "player-0-worker-93": "DOWN",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-90": "UP",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-76": "DOWN",
+        "player-1-worker-96": "DOWN",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-58": "RIGHT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-92": "DOWN",
+        "player-0-worker-96": "UP",
+        "player-0-worker-97": "DOWN",
+        "player-0-worker-94": "UP",
+        "player-0-worker-90": "UP",
+        "player-0-worker-95": "RIGHT",
+        "player-0-worker-80": "UP"
+       },
+       {
+        "player-1-worker-96": "LEFT",
+        "player-1-worker-94": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-45": "UP",
+        "player-1-worker-76": "LEFT",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ],
+      [
+       {
+        "player-0-worker-93": "RIGHT",
+        "player-0-worker-92": "LEFT",
+        "player-0-worker-96": "UP",
+        "player-0-worker-97": "DOWN",
+        "player-0-worker-81": "RIGHT",
+        "player-0-worker-90": "RIGHT",
+        "player-0-worker-94": "DOWN",
+        "player-0-worker-80": "DOWN"
+       },
+       {
+        "player-1-worker-96": "LEFT",
+        "player-1-worker-94": "DOWN",
+        "player-1-worker-81": "UP",
+        "player-1-worker-45": "DOWN",
+        "player-1-worker-95": "LEFT",
+        "player-1-worker-80": "DOWN"
+       }
+      ]
+     ],
+     "seq_len": 32,
+     "seq_hash": "9655507e934fe3a380c17c6adf0f6bba",
+     "reached_step": 299,
+     "final_scores": [
+      6090.32,
+      6090.46
+     ],
+     "final_basis": "F04_terminal_cash",
+     "final_diff_seat": -0.14000000000032742,
+     "wall_s": 3.478736639022827
+    }
+   },
+   "restore_reproduction_ok": true,
+   "chosen_minus_a0_final_diff": -0.14000000000032742
+  }
+ ],
+ "tie_check": {
+  "seen": true,
+  "evaluable_arms": 6,
+  "triggers": [
+   {
+    "kind": "within_arm_exact_tie",
+    "game": 0,
+    "seed": 986400,
+    "root_step": 267,
+    "seat": 0,
+    "arm": "a0",
+    "final_scores": [
+     5652.48,
+     5652.48
+    ]
+   },
+   {
+    "kind": "within_arm_exact_tie",
+    "game": 0,
+    "seed": 986400,
+    "root_step": 267,
+    "seat": 1,
+    "arm": "a0",
+    "final_scores": [
+     5652.48,
+     5652.48
+    ]
+   },
+   {
+    "kind": "within_arm_exact_tie",
+    "game": 0,
+    "seed": 986400,
+    "root_step": 266,
+    "seat": 0,
+    "arm": "a0",
+    "final_scores": [
+     5652.48,
+     5652.48
+    ]
+   }
+  ],
+  "details": [
+   {
+    "root_step": 267,
+    "seat": 0,
+    "root_action_diff_uids": 1,
+    "cross_arm_seq_identical_frac": 0.0,
+    "continuation_steps_compared": 31,
+    "tied_arm": "a0",
+    "within_arm_mirror_frac": 1.0
+   },
+   {
+    "root_step": 267,
+    "seat": 1,
+    "root_action_diff_uids": 1,
+    "cross_arm_seq_identical_frac": 0.0,
+    "continuation_steps_compared": 31,
+    "tied_arm": "a0",
+    "within_arm_mirror_frac": 1.0
+   },
+   {
+    "root_step": 266,
+    "seat": 0,
+    "root_action_diff_uids": 1,
+    "cross_arm_seq_identical_frac": 0.0,
+    "continuation_steps_compared": 32,
+    "tied_arm": "a0",
+    "within_arm_mirror_frac": 1.0
+   }
+  ],
+  "conclusion": "见 details：cross_arm_seq_identical_frac 为两臂续弈逐步全同率（根步动作本有差异，若续弈全同且终局现金全等则两臂退化同轨）；within_arm_mirror_frac 为平局臂内双席动作席位归一化后逐步相同率（近 1 表示双席镜像/同构推进）。"
+ },
+ "notes": [
+  "本趟口径与 verify2/addendum 的根本差别：续弈恢复双席完整策略记忆（非冷启动）、终止按 SI01 权威终局 step299（非 300）",
+  "decide 用冻结版 decide_at_root，不用 s1_battery 的 decide_instrumented（旧 0.05s 地板口径，SI02 已废）",
+  "R2-02/R2-03 修正：灭绝结算调用权威逐席终局分数（make_terminal_score_fn）；离线 decide 的 _fo_snap 取 pre-call 快照、对手席 guard 取快照中对手席自身状态；restore 后重绑 st/guard 的 guard_base 别名",
+  "差值口径（R2-11 本趟分工）：verify3 输出为原始分差（终局分数差之差），不是 ΔU；ΔU 化归 S3 附则修订",
+  "scenario_seed 未消费（J=1 确定性），仅作登记标签",
+  "叶①为原始分差尺度 affine 恒等直通（decide_at_root 内口径）",
+  "墙钟为本 VM 共享 CPU 参考值，不作部署口径"
+ ],
+ "wall_s_total": 54.879361152648926,
+ "valid_verifications": 3
+}
