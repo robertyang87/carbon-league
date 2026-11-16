@@ -1,0 +1,109 @@
+{
+  "exam": "winrate_screen_r2_resync_vs_echo4",
+  "registration": "reports/search_dossier/REGISTRATION_WINRATE_SCREEN_R2_RESYNC_20261116.md @bda12123 (incl. Amendment-One full-parallel form carried over)",
+  "level": "screen (not a ruling, not a certificate; S4 gate unchanged)",
+  "subject": {
+    "pack": "packs/echo4_search_int8_resync.py",
+    "md5": "cba5923c13fd629208a4991811723980",
+    "kernel": "comparator 385190bd / search c3222eea"
+  },
+  "baseline": {
+    "pack": "packs/echo4_int8.py",
+    "md5": "819250bfc82632786063dabd46a616bd"
+  },
+  "harness_md5": "354bcd1bc2dc8bc188c813f53d28c893",
+  "seeds": "998400-998999",
+  "games": 1200,
+  "fields": {
+    "screen_r2_a": {
+      "n": 600,
+      "wins_a": 104,
+      "losses_a": 494,
+      "draws_a": 2,
+      "mean_margin_a": -605.75,
+      "mean_u_a": 0.2704,
+      "err": 0,
+      "bad_hh": 0
+    },
+    "screen_r2_b": {
+      "n": 600,
+      "wins_a": 494,
+      "losses_a": 104,
+      "draws_a": 2,
+      "mean_margin_a": 605.75,
+      "mean_u_a": 0.7296,
+      "err": 0,
+      "bad_hh": 0
+    }
+  },
+  "paired_delta_u": {
+    "pairs_seeds": 600,
+    "delta_u": -0.4593,
+    "se": 0.0204,
+    "ci95_t": [
+      -0.4993,
+      -0.4192
+    ],
+    "ci95_bootstrap": [
+      -0.4989,
+      -0.4191
+    ],
+    "bootstrap_B": 20000,
+    "rng": 20261116
+  },
+  "screen_reading_per_registration": "negative (point <= 0 or CI95 upper < 0)",
+  "search_perspective_1200": {
+    "wins": 208,
+    "losses": 988,
+    "draws": 4,
+    "mean_margin": -605.75,
+    "mean_u": 0.2704
+  },
+  "per_seat_delta_u_sensitivity": {
+    "0": {
+      "games": 600,
+      "delta_u": -0.4593
+    },
+    "1": {
+      "games": 600,
+      "delta_u": -0.4593
+    }
+  },
+  "mirror_note": "599/600 seeds: B-field margin == -A-field margin exactly (deterministic seat-swap mirror).",
+  "control_chg0": {
+    "chg0_games_Afield": 2,
+    "chg0_mean_margin_Afield": 0.0,
+    "chgpos_games_Afield": 598,
+    "chgpos_mean_margin_Afield": -607.78,
+    "note": "A-field, subject perspective (subject is A). chg==0 includes games where search never ran or ran without changing; see search_games/changed0 split in telemetry."
+  },
+  "telemetry": {
+    "searched_total_Afield_search_as_A": 150986,
+    "changed_total_Afield_search_as_A": 56951,
+    "note_sided": "srch/chg in bigeval lines are A-side stats only; B-field search (B side) has no such fields, same limitation as branches.",
+    "errors": {
+      "serr_A": 0,
+      "berr_A": 0,
+      "serr_B": 0,
+      "berr_B": 0
+    },
+    "aborted_games_total": 0,
+    "branches": "not present in pinned bigeval line fields or field summaries; recorded as not collectable per registration, does not block reading",
+    "search_games_Afield": 598,
+    "changed0_games_among_searched_Afield": 0
+  },
+  "run": {
+    "start_cst": "2026-11-16 11:17:10",
+    "end_cst": "2026-11-16 11:35:40",
+    "form": "full-parallel bigeval, 62 workers, BLAS pinned 1",
+    "rc": {
+      "screen_r2_a": 0,
+      "screen_r2_b": 0
+    },
+    "fail": false,
+    "file_md5": {
+      "screen_r2_a.jsonl": "9cdec061a7f00671216796cc09a6d342",
+      "screen_r2_b.jsonl": "46ad6a0e8ea3ed96a2e6d52b55eea58e"
+    }
+  }
+}
