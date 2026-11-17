@@ -1,15 +1,15 @@
 {
-  "purpose": "Loop-0 baseline calibration seed blocks (war-room final ruling 2026-11-18 07:15-07:16; seed pinned to teacher 06a03d9c; executor L20; no arena; Studio line not involved)",
+  "purpose": "Loop-0 baseline calibration seed blocks (war-room rulings 2026-11-18 07:15-07:17, final ruling 07:17:36; seed pinned to teacher 06a03d9c; executor L20; no arena; Studio line not involved)",
   "registered": "2026-11-18",
   "registrar": "DGX line (custody/registry)",
-  "version": 2,
-  "supersedes": "v1 (commit 4cfadfca) which carried block 992000-992199 for the Master3s2 field; that block was a verbal reserve only, never consumed, and is VOID per the war-room ruling. v2 replaces it with 990000-990199. The Echo6 bridge block 993000-993199 is unchanged from v1.",
+  "version": 3,
+  "supersedes": "v2 (commit 13879d70). Ruling chain: v1 (4cfadfca) registered 992000 for the Master3s2 field; the 07:15 ruling voided 992000 and v2 registered 990000 (Master3s2) + 993000 (Echo6); the final 07:17 ruling reassigns 992000-992199 to the L20 Loop-0 baseline vs Master3s2 field and orders a fresh Echo6 bridge block. v3 is the current record; v2 blocks 990000/993000 were never consumed and are void.",
   "composition": "200 seeds x 1 game per seed; seats alternate by seed parity (100 games per side); harness bigeval.py 354bcd1b",
   "blocks": [
     {
       "field": "loop0_baseline_vs_master3s2",
-      "seed0": 990000,
-      "seeds": "990000-990199",
+      "seed0": 992000,
+      "seeds": "992000-992199",
       "n": 200,
       "assignee": "L20",
       "examiner": "Master3s2 (master3s2.py 57f9a594 + opp_master3s2.py b4cde262, _TEMP=1.0, _SEED=None, distribution readings only)",
@@ -17,8 +17,8 @@
     },
     {
       "field": "loop0_baseline_vs_echo6_bridge",
-      "seed0": 993000,
-      "seeds": "993000-993199",
+      "seed0": 998200,
+      "seeds": "998200-998399",
       "n": 200,
       "assignee": "L20",
       "examiner": "Echo6 (bridge)",
@@ -26,9 +26,10 @@
     }
   ],
   "void_blocks": [
-    {"seeds": "992000-992199", "reason": "verbal reserve in crossed messages 2026-11-18 07:11-07:14; never registered-consumed; voided by war-room ruling 07:15-07:16"}
+    {"seeds": "990000-990199", "reason": "registered in v2 for the Master3s2 field, superseded by the final 07:17 ruling (field reassigned to 992000); never consumed"},
+    {"seeds": "993000-993199", "reason": "registered in v1/v2 for the Echo6 bridge field, superseded by the final 07:17 ruling ordering a fresh block (998200-998399); never consumed"}
   ],
-  "zero_overlap_check": "Checked 2026-11-18 against DGX bigeval.jsonl full census (46 summary rows) plus all registered seed domains: 985000/986000 blocks, 987000-987031 K0 holdout, 988000-988999 box-final, 989000-989199 fastline preview, 990200-990399 leg-1 preview, 991000-991049 calib, 991050-991129 k0_64 measure, 994000-994199 shard0, 994400-994599 shard1, 996000/997000/998000/998400 blocks, 998600-998999 anchor fields, 999000-999599 student fields, spent points 999600/999800, 20291101-20291400, 20298101-20302100, 20350101-20352100. Both registered blocks: zero intersection.",
+  "zero_overlap_check": "Checked 2026-11-18 against DGX bigeval.jsonl full census (46 summary rows) plus all registered seed domains: 985000/986000 blocks, 987000-987031 K0 holdout, 988000-988999 box-final, 989000-989199 fastline preview, 990200-990399 leg-1 preview, 991000-991049 calib, 991050-991129 k0_64 measure, 994000-994199 shard0, 994400-994599 shard1, 996000/997000 blocks, 998000-998199 h2h fields, 998400-998459 cmp fields, 998600-998999 anchor fields, 999000-999599 student fields, spent points 999600/999800, 20291101-20291400, 20298101-20302100, 20350101-20352100. Both registered blocks: zero intersection (998200-998399 sits in the verified gap between the h2h block end 998199 and the cmp block start 998400).",
   "seed_examinee": "teacher weights cnet2_m3s2r1_heads_v2.npz md5 06a03d9cfeec239af3065a49fefec382 (canonical DGX /home/arm/junyang/k0_dist/pkg/weights/; L20 on-machine copy verified same md5 2026-11-18)",
   "supply_landed": "Master3s2 pack shipped DGX -> L20 /root/carbon/examiners/master3s2/ 2026-11-18, on-seat md5 verified (57f9a594/b4cde262/3644794d)"
 }
