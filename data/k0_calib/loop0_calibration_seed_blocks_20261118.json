@@ -2,16 +2,16 @@
   "purpose": "Loop-0 baseline calibration seed blocks (seed pinned to teacher 06a03d9c; executor L20; no arena; Studio line not involved)",
   "registered": "2026-11-18",
   "registrar": "DGX line (custody/registry)",
-  "version": "5-frozen",
+  "version": "4-frozen-final",
   "frozen": true,
-  "supersedes": "All earlier versions (file-internal v1-v6). Issued per war-room ruling 2026-11-18 07:27: v4 (984000/984200, based on a relayed stale correction) is not accepted; vs Master3s2 restores the v3 block 992000-992199 (live block, supply checklist already nodded item by item, pieces already in the L20 workspace; must not be voided); vs Echo6 follows the war-room 07:24 ruling = 992200-992399; 984000/984200 void (zero consumption); 998200 stays void. Block assignment content is identical to file-internal v6; this frozen version is the single current record. BLOCK NUMBERS FROZEN after this version.",
-  "standing_rule": "Registry amendments are made only on direct war-room orders. Corrections relayed by other lines are not orders; ask the war room before amending the registry (war-room rule 2026-11-18 07:27).",
+  "supersedes": "All other versions. War-room direct ruling 2026-11-18 07:29: v4 is accepted as the frozen final version (its content: Master3s2 984000-984199, Echo6 bridge 984200-984399, both satisfying registered / zero-overlap / unconsumed); the war room's own v5-restoration order of 07:27 is void; L20 had already aligned to v4 and was waiting to run. File-internal version history: v1 (4cfadfca) 992000+993000; v2 (13879d70) 990000+993000; v3 (0b3e8f02) 992000+998200; v4 (0e472ccc) 984000+984200; v5-file (d9e4c14f) 992000+998200; v6-file (40fe2542) 992000+992200; v5-frozen (aa86cdb8) 992000+992200; THIS frozen final = 984000+984200. No game has been played on any block in this chain (all switches happened before any launch). BLOCK NUMBERS FROZEN.",
+  "standing_rule": "Registry amendments are made only on direct war-room orders. Corrections relayed by other lines are not orders; ask the war room before amending the registry (war-room rule 2026-11-18 07:27, reaffirmed 07:29).",
   "composition": "200 seeds x 1 game per seed; seats alternate by seed parity (100 games per side); harness bigeval.py 354bcd1b",
   "blocks": [
     {
       "field": "loop0_baseline_vs_master3s2",
-      "seed0": 992000,
-      "seeds": "992000-992199",
+      "seed0": 984000,
+      "seeds": "984000-984199",
       "n": 200,
       "assignee": "L20",
       "examiner": "Master3s2 (master3s2.py 57f9a594 + opp_master3s2.py b4cde262, _TEMP=1.0, _SEED=None, distribution readings only)",
@@ -19,8 +19,8 @@
     },
     {
       "field": "loop0_baseline_vs_echo6_bridge",
-      "seed0": 992200,
-      "seeds": "992200-992399",
+      "seed0": 984200,
+      "seeds": "984200-984399",
       "n": 200,
       "assignee": "L20",
       "examiner": "Echo6 (echo4_search_int8_d1_homefix.py 25f144f3, on L20 /root/carbon/examiners/echo6/)",
@@ -28,14 +28,14 @@
     }
   ],
   "void_blocks": [
-    {"seeds": "984000-984199", "reason": "v4 Master3s2 block (relayed stale correction); void per war-room ruling 2026-11-18 07:27; zero consumption"},
-    {"seeds": "984200-984399", "reason": "v4 Echo6 block; void per war-room ruling 2026-11-18 07:27; zero consumption"},
-    {"seeds": "998200-998399", "reason": "v3/v5-file Echo6 block; stays void (replaced by 992200 per the 07:24 ruling); never consumed"},
+    {"seeds": "992000-992199", "reason": "v1/v3/v5-frozen Master3s2 block; superseded by the 2026-11-18 07:29 ruling accepting v4 as frozen final; never consumed"},
+    {"seeds": "992200-992399", "reason": "v6/v5-frozen Echo6 block; superseded by the 07:29 ruling; never consumed"},
+    {"seeds": "998200-998399", "reason": "v3/v5-file Echo6 block, superseded; never consumed"},
     {"seeds": "990000-990199", "reason": "v2 Master3s2 block, superseded; never consumed"},
     {"seeds": "993000-993199", "reason": "v1/v2 Echo6 block, superseded; never consumed"},
     {"seeds": "20371101-20371300", "reason": "L20 self-allocated 2026-11-18, retired unused (zero games) per L20 checklist note"}
   ],
-  "zero_overlap_check": "Checked 2026-11-18 against DGX bigeval.jsonl full census (46 summary rows) plus all registered seed domains: 985000/986000 blocks, 987000-987031 K0 holdout, 988000-988999 box-final, 989000-989199 fastline preview, 990200-990399 leg-1 preview, 991000-991049 calib, 991050-991129 k0_64 measure, 994000-994199 shard0, 994400-994599 shard1, 996000/997000 blocks, 998000-998199 h2h fields, 998400-998459 cmp fields, 998600-998999 anchor fields, 999000-999599 student fields, spent points 999600/999800, 20291101-20291400, 20298101-20302100, 20350101-20352100, and all void blocks above. Both frozen blocks (992000-992399, one contiguous range split by field) have zero intersection with every used domain.",
+  "zero_overlap_check": "Checked 2026-11-18 against DGX bigeval.jsonl full census (46 summary rows) plus all registered seed domains: 985000/986000 blocks, 987000-987031 K0 holdout, 988000-988999 box-final, 989000-989199 fastline preview, 990200-990399 leg-1 preview, 991000-991049 calib, 991050-991129 k0_64 measure, 994000-994199 shard0, 994400-994599 shard1, 996000/997000 blocks, 998000-998199 h2h fields, 998400-998459 cmp fields, 998600-998999 anchor fields, 999000-999599 student fields, spent points 999600/999800, 20291101-20291400, 20298101-20302100, 20350101-20352100, and all void blocks above. Both frozen blocks (984000-984399) sit below the lowest used modern domain (985000): zero intersection.",
   "seed_examinee": "teacher weights cnet2_m3s2r1_heads_v2.npz md5 06a03d9cfeec239af3065a49fefec382 (canonical DGX /home/arm/junyang/k0_dist/pkg/weights/; L20 on-machine copy verified same md5 2026-11-18); playing form arena_m3s2r1_int8.py md5 698a93a6 (packed from the canonical weights by cnet2_pack 18bf47b7, pin verified against repo code/packs/)",
   "supply_landed": "Master3s2 pack on L20: /root/carbon/examiners/master3s2/ (07:15, plus bigeval.py 354bcd1b added 07:27) and /root/carbon/katago/baseline_calib/ with bigeval.py 354bcd1b (07:24), on-seat md5 verified (57f9a594/b4cde262/3644794d/354bcd1b). Echo6 pack on L20 /root/carbon/examiners/echo6/ (07:22, md5 25f144f3 verified)."
 }
