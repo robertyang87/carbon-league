@@ -476,6 +476,139 @@
    ],
    "owner_line": "DGX",
    "status": "void/superseded"
+  },
+  {
+   "detail": "TOP1 fast line 138-chain student; trained on L20 2026-11-17 19:01:14-20:08 (3,333/3,333 steps, elapsed 4,012.3s) from joined138 gen-56e91737a08c5fb6; parent 06a03d9c, bs 128, lr 5e-4, beta 1.0, seed 7; final loss total 3.7277; prescan of the trained generation clean (0/0/0); size 13,994,764 B (war-room supplement 2026-11-17 20:35)",
+   "kind": "trained student weights",
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/katago/top1_fastline_student.npz"
+    }
+   ],
+   "md5": "41bc69e6e3c8d75d0a541944a50a13c2",
+   "name": "fastline_student_138",
+   "owner_line": "L20 (training) / DGX (registry)",
+   "sha256": "8f9d2a685a799d50545dc2302d9763f31dbe0fedbd372fe65496287d831775a6",
+   "status": "present",
+   "size_bytes": 13994764
+  },
+  {
+   "detail": "Formal reading pack for the 138 student (4,445,189 B); handed to war room for calibration readings",
+   "kind": "formal int8 pack",
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/katago/top1_fastline_int8.py"
+    }
+   ],
+   "md5": "c46f5ba34d5f330268229045d69b162a",
+   "name": "fastline_student_138_int8_pack",
+   "owner_line": "L20",
+   "status": "present",
+   "size_bytes": 4445189
+  },
+  {
+   "detail": "Pay-as-you-go + traffic billing (no reclaim); leg1_241 pkg3 (60 games) launched 2026-11-17 19:54:56; public 47.116.17.244, tailnet 100.78.228.103",
+   "kind": "compute seat (pay-as-you-go)",
+   "locations": [
+    {
+     "machine": "spot-60",
+     "path": "/root/carbon/leg1_batch/annot_train"
+    }
+   ],
+   "name": "seat_spot-60",
+   "owner_line": "war room / data group",
+   "status": "present"
+  },
+  {
+   "detail": "Pay-as-you-go + traffic billing (no reclaim); leg1_241 pkg2 (60 games), deployed DEPLOY_OK + mesh verified 2026-11-17 ~20:05; tailnet 100.119.232.115",
+   "kind": "compute seat (pay-as-you-go)",
+   "locations": [
+    {
+     "machine": "spot-61",
+     "path": "/root/carbon/leg1_batch/annot_train"
+    }
+   ],
+   "name": "seat_spot-61",
+   "owner_line": "war room / data group",
+   "status": "present"
+  },
+  {
+   "detail": "Pay-as-you-go + traffic billing (no reclaim); leg1_241 pkg4 (60 games), deployed DEPLOY_OK + mesh verified 2026-11-17 ~20:05; tailnet 100.125.214.99",
+   "kind": "compute seat (pay-as-you-go)",
+   "locations": [
+    {
+     "machine": "spot-62",
+     "path": "/root/carbon/leg1_batch/annot_train"
+    }
+   ],
+   "name": "seat_spot-62",
+   "owner_line": "war room / data group",
+   "status": "present"
+  },
+  {
+   "detail": "Reclaimed 2026-11-17 ~19:45 while running leg1_241 pkg2; 0 shards had landed, package re-run whole on spot-61; was public 47.117.56.75, tailnet 100.87.131.4",
+   "kind": "compute seat (spot, reclaimed)",
+   "locations": [],
+   "name": "seat_spot-55",
+   "owner_line": "war room",
+   "status": "lost-reclaimed"
+  },
+  {
+   "detail": "Reclaimed 2026-11-17 ~19:45 while running leg1_241 pkg3; 0 shards had landed, package re-run whole on spot-60; was public 47.117.56.54, tailnet 100.107.223.93",
+   "kind": "compute seat (spot, reclaimed)",
+   "locations": [],
+   "name": "seat_spot-56",
+   "owner_line": "war room",
+   "status": "lost-reclaimed"
+  },
+  {
+   "detail": "Reclaimed 2026-11-17 ~19:57 while running leg1_241 pkg4; 0 shards had landed, package re-run whole on spot-62; earlier hosted the 138 rebuild chain execution (all products delivered to L20 before the loss); was public 47.103.13.84, tailnet 100.107.254.102",
+   "kind": "compute seat (spot, reclaimed)",
+   "locations": [],
+   "name": "seat_spot-58",
+   "owner_line": "war room",
+   "status": "lost-reclaimed"
+  },
+  {
+   "name": "leg1_241_postchain_pkg",
+   "kind": "post-chain staging package",
+   "detail": "leg1_241 merge->build->join->prescan chain pre-staged 2026-11-17: order_train241.json affa20a3 (241 games), 7 pinned tools (merge 821fa780, merge_excl 57cc1310, cnet2_build 5c2dd58e + feat 2a45b08b, k0_join fac55acb, k0_distill 2728fee6, prescan 27aad536), CHAIN_MANIFEST.json 32537e4d, run_chain.sh fe4f1dd8 (refuses without CHAIN_GO); prescan rehearsed on joined138, output byte-identical to the reference report 7ec67ff2",
+   "locations": [
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/leg1_241/postchain/"
+    }
+   ],
+   "owner_line": "DGX",
+   "status": "present"
+  },
+  {
+   "name": "k0_64_measure_pkg",
+   "kind": "§6.4 leg-2 measurement production package",
+   "detail": "80 selfplay games seeds 991050-991129, parent weights 06a03d9cfeec239af3065a49fefec382, OPEN_SEED base 991050, zero-intersection PASS; SEEDS 71ed8987, PRODUCTION_PACKAGE.json efd22eb4, ZERO_INTERSECTION a4dd71d9, generator selfplay_gen.py bd62ead9; partition registered in annot registry (batch k0_64_leg2_measure, spot-62 single block); staged-not-launched, war-room morning launch order 2026-11-18",
+   "locations": [
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/k0_64_measure_pkg/"
+    },
+    {
+     "machine": "spot-62",
+     "path": "/root/carbon/k0_64_measure/",
+     "size_bytes_note": "staged copy, per-item md5 verified on seat 2026-11-17 20:36 CST"
+    }
+   ],
+   "owner_line": "DGX",
+   "status": "present"
+  },
+  {
+   "name": "seat_spot-59",
+   "kind": "compute seat (spot, reclaimed)",
+   "detail": "Spot seat bought 2026-11-17 19:05 (¥3.9214/h), ran leg1_241 pkg1 (61 games) from 19:17; release notice 20:26, offline confirmed by DGX-line direct read 2026-11-17 20:30:59 (SSH-FAIL; retries timed out, ping 100% loss; reachable 20:29:23); 0 shards had been pulled, pkg1 annotation lost in flight, replacement seat spot-63 being purchased by logistics; was public 8.153.18.148, tailnet 100.95.151.92; data-group offline verdict pending at registration time",
+   "locations": [],
+   "owner_line": "war room",
+   "status": "lost-reclaimed"
   }
  ],
  "created": "2026-11-17",
@@ -487,6 +620,6 @@
   "R3 release gate: a machine holding unique products is released only after the owning line confirms recovery in writing.",
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
- "version": 3,
+ "version": 4,
  "updated": "2026-11-17"
 }
