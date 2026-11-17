@@ -410,6 +410,8 @@ def join(annot_arg, build_arg):
     for g in a_meta["games"]:
         name = g["game"]
         bg = build_by_stem.get(name)
+        if bg is None and name.endswith("-1"):
+            bg = build_by_stem.get(name[:-2])
         if bg is None:
             _die(f"join: annotation game {name!r} (gid {g['gid']}) has "
                  f"no counterpart in the build generation "
