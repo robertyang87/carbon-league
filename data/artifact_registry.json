@@ -622,6 +622,18 @@
    ],
    "owner_line": "war room",
    "status": "present"
+  },
+  {
+   "name": "fastline_student_search_probe_pack",
+   "kind": "pack",
+   "md5": "dc49855da93344e37ea10c7ac7481ea3",
+   "detail": "Search-probe variant of the fastline student, built by DGX line 2026-11-17 (war-room dispatch, owner-approved probe): skeleton + embedded search modules transplanted verbatim from echo4_search_int8_resync.py (cba5923c); weights payload identical to the bare student pack c46f5ba3 (186 keys, dequantized arrays bit-equal verified). Embedded modules: cnet2_feat 2a45b08b, cnet2_np d8c15ad4, fastsim aefe6c83, cnet2_search c3222eea (the arm-embedded variant; differs from the standalone calib file 94f7fb64), cnet2_comparator 385190bd. CONF: SEARCH=True, MODE=sweep, BUDGET=0.7, TEACHER=2, TEACHER_LATE=2, LATE_STEP=240, ROLL=self, GUARD=True, GUARD_NARROW=True, HARD=0.85, ABORT_DL=0.95, CMP_H=1. rweights=None (ROLL=self rollouts use the student policy itself); no Echo4 rule layers. Smoke 2026-11-17 21:09 (2 games vs bare student, seeds 986000-986001): err 0, search errors 0, FAIL=false; searched 257/261 steps, changed 104/107 (~40%); A ms/step ~126-136 under load. Probe only -- NOT a submission candidate.",
+   "locations": [
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/search_probe_build/fastline_student_search_probe.py"
+    }
+   ]
   }
  ],
  "created": "2026-11-17",
@@ -633,6 +645,6 @@
   "R3 release gate: a machine holding unique products is released only after the owning line confirms recovery in writing.",
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
- "version": 4.1,
- "updated": "2026-11-17"
+ "version": "4.2",
+ "updated": "2026-11-17 (v4.2: + fastline_student_search_probe_pack dc49855d)"
 }
