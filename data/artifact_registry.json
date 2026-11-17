@@ -379,6 +379,103 @@
    "name": "fastline_pergame_table",
    "owner_line": "war-room",
    "status": "present"
+  },
+  {
+   "name": "fastline_merged138_gen",
+   "kind": "merged annotation generation (TOP1 fast line, 138 rebuild)",
+   "gen_id": "gen-adebe932da1eb6f5",
+   "detail": "138 games, 82524 roots, manifest_sha256 01f40a8bf14c403d589571a23d8f84ee00ac3b19ce784f9e1cad9506b22f98ea; voided game + 8 cash-threshold games excluded per rulings 757d17db + amendment 77623940 (owner 2026-11-17 18:38 one-shot exclusion); executed by war room on DGX 2026-11-17 18:54, independently verified by DGX line",
+   "locations": [
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/master5s_fastline/merged138/"
+    }
+   ],
+   "owner_line": "war-room",
+   "status": "present"
+  },
+  {
+   "name": "fastline_build138_gen",
+   "kind": "build generation (TOP1 fast line, 138 rebuild)",
+   "gen_id": "gen-75ed865a73fd02b1",
+   "detail": "138 games, 82524 samples, cfg_fp f982640561fc4fe4 (same as build146); chain-of-record build executed by war room on spot-58; an identical DGX copy exists at the DGX path but did not enter the delivery chain",
+   "locations": [
+    {
+     "machine": "spot-58",
+     "path": "/root/carbon/master5s_fastline/build138/"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/master5s_fastline/build138/"
+    }
+   ],
+   "owner_line": "war-room",
+   "status": "present"
+  },
+  {
+   "name": "fastline_joined138_gen",
+   "kind": "joined product (TOP1 fast line, 138 rebuild, formal)",
+   "gen_id": "gen-56e91737a08c5fb6",
+   "detail": "138 games, 82524 roots, manifest_sha256 b91e6f2f04de34c978cb1968f32d7019b39cb7d7e163c5aaffd36726b1b81016; --verify PASS; 9 excluded games zero entries; produced on spot-58 by war room; delivered to L20 (21/21 files md5 both ends); L20 retraining started 2026-11-17 19:01:14, 3333 steps, parent 06a03d9c / lr 5e-4 / beta 1.0 / seed 7",
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/data/master5s_fastline_joined138/"
+    },
+    {
+     "machine": "spot-58",
+     "path": "/root/carbon/master5s_fastline/joined138/"
+    }
+   ],
+   "owner_line": "war-room",
+   "status": "present"
+  },
+  {
+   "name": "fastline_rebuild138_record",
+   "kind": "execution record (138 rebuild chain: merge/build/join/delivery)",
+   "file": "REBUILD_RECORD.json",
+   "md5": "2fc83221577fc6b645ea1459b6540f12",
+   "detail": "War-room REBUILD_RECORD for the 138 chain, co-citing rulings 757d17db + 77623940; filed copy in repo data/k0_calib/rebuild138_REBUILD_RECORD.json; three generation manifests filed alongside (merged 00e734e7 / build e017c26b / joined 3720c6d0)",
+   "locations": [
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/master5s_fastline/merged138/REBUILD_RECORD.json"
+    },
+    {
+     "machine": "repo",
+     "path": "data/k0_calib/rebuild138_REBUILD_RECORD.json"
+    }
+   ],
+   "owner_line": "war-room",
+   "status": "present"
+  },
+  {
+   "name": "fastline_merged145_gen",
+   "kind": "merged annotation generation (superseded intermediate)",
+   "gen_id": "gen-4f80c4dc2f956ef6",
+   "detail": "145 games, 86710 roots; single-game (game 55) exclusion version, superseded by amendment 77623940 (8-game exclusion, 138 chain) before join; VOID - never join, never re-merge; kept on DGX as evidence only",
+   "locations": [
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/master5s_fastline/merged145/"
+    }
+   ],
+   "owner_line": "DGX",
+   "status": "void/superseded"
+  },
+  {
+   "name": "fastline_build145_gen",
+   "kind": "build generation (superseded intermediate)",
+   "gen_id": "gen-50aa24668b6d0ea1",
+   "detail": "145 games, 86710 samples, cfg_fp f982640561fc4fe4; build of the superseded 145 merge; VOID - never join; kept on DGX as evidence only",
+   "locations": [
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/master5s_fastline/build145/"
+    }
+   ],
+   "owner_line": "DGX",
+   "status": "void/superseded"
   }
  ],
  "created": "2026-11-17",
@@ -390,5 +487,6 @@
   "R3 release gate: a machine holding unique products is released only after the owning line confirms recovery in writing.",
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
- "version": 2
+ "version": 3,
+ "updated": "2026-11-17"
 }
