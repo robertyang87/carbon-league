@@ -47,3 +47,51 @@
 ## 5. 待决（请主线定）
 
 - 座位：请作战室／C3 确认 spot-36/37/38 当前是否在世、给出现行地址；或请策略组另批改席（观测：spot-64 在线 100.72.73.119、spot-63 离线，均未探）。座位一定，执行按提案 §2–§5 照序推进（身份机上核验→harness→对照闸→全量→比对入仓）。
+
+---
+
+## 6. v2 批复与准备执行（2026-11-18 02:53–03:25 CST，隧道未批，准备分支）
+
+### 6.1 批复验合与隧道状态
+
+- v2 批复 `reports/APPROVAL_SMALL_TEACHER_STAGE4D_RETRY_EXEC_V2_20261118.md`：commit `530c70e3`，md5 `0d124b21`，API 读回验过 ✓。v2 提案 `reports/eng_verify/STAGE4D_RETRY_TRUNK_PROPOSAL_V2.md`：commit `8d5fc52f`，md5 `24986e48`，API 读回验过 ✓。
+- 隧道审批 `14400c86-1ac6-444b-9ee3-02274cf55af5`（通往 spot-64 100.72.73.119，requested 2026-11-17T17:45:44Z）：**2026-11-18 ~03:25 再查，仍 pending**。按派单只做与座位无关的准备，不循环重试 SSH——**本轮未对 spot-64 发起任何 SSH 尝试**。无关待批 `df9d713b`（139.196.109.84，Dgx Status Report）未动。
+
+### 6.2 harness 已写＋入仓＋本地冒烟验过
+
+- 文件：`reports/eng_verify/retry_trunk_harness.py`，commit `46cf3202`，blob `6a248f62`，35,320 B，md5 `53df4f2e5e2ea3cff438a6129f5ca0ef`（API 读回验过 ✓）。
+- 机制（按提案 §1）：`evaluate_root` 拆两阶段——Phase 1 教师 trunk（信念场景＋对手根动作），Phase 2 参数化 trunk（续演＋聚合）；臂集／先验取教师分片透传，不调 `gen_candidates`；信念强制 sample（否则 fail closed）；输出与 k0_annotate 同 schema，identity 三件 verbatim＋caliber「换 trunk 重跑」等附加键；`--code-dir` 在钉版 import 之前解析进 sys.path（harness 文件本身可置于 code dir 之外）。
+- 钉版源读取验合（全合）：stage0_teacher `c6ade5ce`、k0_annotate `7f567a2e`、stage0_teacher_small `5c0dc757`、shard_compare_v4 `1e9ad085`、stage1_teacher_gate `e922d9d8`、cnet2_np `d8c15ad4`、cnet2_feat `2a45b08b`、fastsim `aefe6c83`。注意：main HEAD 的 cnet2_search 是 `c3222eea`（非钉版），钉版 `94f7fb64` 取自 L20 staged code dir；钉版 cnet2_search **不 import cnet2_comparator**（仅 main HEAD 有），钉版栈自包含。
+- `gen_candidates` 安全分析（源读验证，非假设）：`gen_candidates` 经 `guard.apply` 只改 root guard 的 `lostw`／`prevw`；`evaluate_root` 恢复的快照里 `prevw` 已是根步 worker uid 集、且 `gen_candidates` 对同一根观测 apply，`cur == prevw`，lostw 增量恰为 0；`guard_base` 在每次 guard 使用前由 `reset_step()` 清空，快照里的 `guard_base` 无关。对照闸实证仲裁；harness 另记每根恢复的 `me_snap` lostw 进 diagnostics.jsonl。
+- 本地 1 根对照冒烟（本机，教师 trunk，994400 / step 200 / seat 0）：RC=0，墙时约 5.0 分钟（本机 1.5 共享核，**非座位速率**）；身份核验全过；act 调用数 **648 恰与预测一致**（680 − 32 gen_candidates），诊断 `gen_candidates` 32 亦恰与预测一致（1 + 15 + 16）；`me_snap_lostw`=31；`n_unknown_cells`=0。
+- 同机确定性复跑：第二遍与第一遍 q／Q／Q_std／priors／arms **全部逐位一致**，分片 md5 相同（`7df7ab0f…`），generation id 相同（`gen-retry-trunk-1b24175869f5`）。本地证据目录 `~/workspace/small-teacher-distill/retry_trunk/smoke/` 与 `smoke2/`。
+
+### 6.3 对照闸口径的重要发现——跨机浮点噪声（须策略组定夺）
+
+- 本地 1 根对照 vs L20 教师分片：arms 逐位一致；priors 透传逐位一致（max|dp| = 0.0）；诊断 `gen_candidates` arms 一致、priors 最大差 **1.357e-06**（两次运行值完全相同——稳定的机器间差异，非随机噪声）；q 最大差 **2.20e-07**，Q 最大差 **7.03e-08**，argmax 相同（index 8）；Q_std 不一致。
+- 判定：**harness 确定、结构忠实**（调用数精确、臂集精确）；残差 ~1e-7 是跨机浮点噪声（L20 vs 本机，BLAS／指令集不同），不是机制错误。诊断 (a) 已排除（同机两次逐位一致）。
+- 但批复的对照闸原文要求「q 与 Q_mean 须逐位一致」，(b) 条的容忍上限是「偏差均匀 ≤1e-12」——1e-7 量级的跨机噪声既不满足逐位一致、也不在 (b) 的 1e-12 内。**spot-64 与 L20 是不同机器，座位上跑对照闸极大概率同样触发 (b) 停表**（报数字、停、等裁定），白耗一轮座位往返。
+- 建议（请主线转策略组定夺，执行方不擅自改闸）：**首选同机对照**——座位上另跑生产 `evaluate_root` 直接调用（教师 trunk，8 根对照根），与 harness 对照输出逐位比对，隔离 harness 忠实度与机器噪声；草稿脚本已备好（本地 `~/workspace/small-teacher-distill/retry_trunk/direct_control_roots.py`，md5 `09d2705e…`，py_compile 过，**未入仓、未获批前不用**）。备选：把 (b) 的容忍放宽到 max|dq| ≤1e-6 且 argmax 相同、arms 一致，记为「跨机噪声内一致」。任一方案都须策略组批复后才执行。
+
+### 6.4 源材料本地转运（L20 → 本机 staging，全合）
+
+- 目录 `~/workspace/small-teacher-distill/retry_trunk/stage/`（18M，SCP_RC=0）；逐件 md5 与 L20 直读值对账全合：code_teacher/ 10 件、code_student/（stage0_teacher `5c0dc757`、其余同）、student.npz `b22020ff`、shard_compare.py `17b4ec07`、shard_compare_v4.py `1e9ad085`、回放 md5、权重 `06a03d9c`、分片 `2aad09a5`／`ce7f84fc`、generation meta.json `3df9455d`、manifest.json `36c67887`。
+- 教师分片 `_meta` 身份块已全文读过：config_sha256 `9a2b2440…`、games_sha256 `c3649caa…`、replay_sha256、seed 12345、pi0/pi1=1.0、selected_sha256 `9117c25c…`、weights_md5 `06a03d9c…`、window [200,299]；字段 arms (198,16,12)、priors/q/Q (198,16)、n_arms 全 16、step 200–298（99 步 × 2 seat = 198 根／局——harness 按分片自带 step/seat 取根集，恰复现教师根集）。
+- **回放哈希标注纠正**：本报告 §3 及提案 v2 §4、4D 停报里写的回放「sha256 `6ed2623e…`／`6607fe5e…`」实际是文件的 **MD5**；真 sha256（sha256sum 实测，与教师 generation 身份块记录一致）：994400 → `55d713d64c002d6c204988280804da47b96c979464f4ae9740b2676338581436`；994401 → `866a8ce7cc7125af8962e51f6db7b1a41686c3c13dbab35b2cec0c653a66baf5`。生成身份自洽、只错 paperwork 标签。harness 双重核验（md5 == staging 记录 且 sha256 == generation 身份）。
+
+### 6.5 mesh 钥对已生成（本地）
+
+- 私钥 `/home/hatch/.ssh/spot64_mesh`（600，仅存本机，不写入报告、不贴进消息）；公钥 `/home/hatch/.ssh/spot64_mesh.pub`（644）。
+- 指纹：`SHA256:sLYABsIs9NxzauiUoehOW/sygVzvb3dcP2V2OhpKN0E`（ed25519 256，comment spot-64-mesh）。
+- 公钥分发＋逐一验通须等隧道批复后（提案 §3.3，座位直读闸通过后）。
+
+### 6.6 未做事项（缺隧道审批）
+
+- 未对 spot-64 做任何直读（座位直读闸未跑：CPU／内存／负载实测规格未知）；未分发 mesh 公钥、未验通；未做机上身份三件套核验；未跑座位对照闸；未跑全量；未跑比对；未提交结果件。
+- 墙时预算：提案的约 1 小时（估计，未校准）暂维持；本地冒烟 5.0 分钟／根是本机慢速，仅作 harness 正确性证据，不作座位速率——首分片落盘后按实测单价重钉 ETA。
+
+### 6.7 待决（请主线定）
+
+1. 隧道审批 `14400c86`：请所有者批准（2026-11-18 02:51 已请过一次，~03:25 再查仍 pending）。
+2. 对照闸口径：建议请策略组先行裁定同机对照方案（或放宽 (b) 容忍），避免座位上必触发 (b) 停表。草稿脚本已备好，批复后即用；未批复前执行方按原文闸跑、触发即停报。
+3. 审批一到，执行按提案 §7 照序：① 座位直读闸 → ② mesh 分发验通 → ③ 身份机上核验 → ④ 对照闸 → 全量 396 根 → v4 比对 → 结果入仓 → Tier 四项实测值报策略组（只报数）。开工四件套先报作战室。
