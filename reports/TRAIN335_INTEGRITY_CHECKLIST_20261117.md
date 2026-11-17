@@ -1,6 +1,6 @@
 # TOP4 leg-1 train 集（335）完整性总清单 — 2026-11-17
 
-执行：DGX 线。配套件：`data/train335_integrity_checklist.json`（逐局结果全表，md5 fb6bcc15db1db8d8244c002614427ef5）。
+执行：DGX 线。配套件：`data/train335_integrity_checklist.json`（逐局结果全表，md5 5254dba7dacbb5d4480674114a382712）。
 本清单与 train 回放集同批生效（策略组分工、作战室转达）：train 集已交付 L20，本清单为其完整性总凭据，供策略组抽验出确认件。
 
 ## 身份
@@ -20,5 +20,9 @@
 对组装集全量直跑结果：**checked=335，full=335，short-explained=0，anomalies=0，exit 0**。
 
 即 335 局全部为满 300 条目（299 步打满）的完整对局：步连续 335/335、状态形态 335/335、终局 rewards 335/335。无短局、无异常、无需处置项。逐局明细（条目数／连续性／状态／终局 rewards／分类）见配套 JSON 全表。
+
+## 身份来源标注（策略组抽验要求，2026-11-17 补）
+
+- 50d4b8cc634466307faae70afd999385-1：快线语料第 148 局（当时仅为快线在 DGX 留置，后裁定为 TOP4 池/train 合法成员）——其回放不在四家仓内清单中，身份以 DGX 在册记录为准：replay md5 e6381b5bc37972e4113f8643c770c6f6、252,513 B；交付 MANIFEST.md5 本体（已入仓 data/train335_delivery_MANIFEST.md5）含此局同值一行；本清单 JSON 全表该局条目带 identity_source 字段。审计结果：full PASS。
 
 注：快线作废局 8759f8217d439cc5127f10aa2139935a-1 不在 train 内（冻结时已硬排除），本清单无短局处置事项；此前分项检查（快线 147 审计、冻结增量 50 审计）与本总清单口径一致，本清单以交付字节全量直跑为准、取代分项证据作为 train 集的完整性凭据。
