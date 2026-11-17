@@ -1,0 +1,97 @@
+{
+ "task": "k0_64_zero_intersection_reverify",
+ "date": "2026-11-17",
+ "run_time_cst": "2026-11-17 20:14",
+ "measurement_domain": [
+  991050,
+  991129
+ ],
+ "n_measurement": 80,
+ "checks": [
+  {
+   "set": "shard0_gen1r_shard0",
+   "ref": "DGX carbon/data/gen1r_shard0/replays filenames",
+   "ref_size": 200,
+   "intersection": [],
+   "hits": 0,
+   "ref_range": [
+    994000,
+    994199
+   ]
+  },
+  {
+   "set": "shard1_gen1r_shard1_registry_v2",
+   "ref": "repo data/k0_consumed_gen1r_shard1_registry_v2.json games[].game",
+   "ref_size": 200,
+   "intersection": [],
+   "hits": 0,
+   "file_md5": "781cdf00ebb7ced505a245670ac7b466",
+   "blob": "b1827415b3062b5ff46ec53b65c65a9ae738ef34",
+   "dir_census_size": 200,
+   "registry_eq_dir_census": true,
+   "ref_range": [
+    994400,
+    994599
+   ]
+  },
+  {
+   "set": "stageB_pool_1525",
+   "ref": "repo stageB_split_N323_train (1202) + stageB_split_N323 test (323), id strings",
+   "ref_size": 1525,
+   "intersection": [],
+   "hits": 0,
+   "train_file_md5": "f7b50267fb9bca78feef346baa8bd51f",
+   "test_file_md5": "fd4cf14413be5273c131478cc1fdacc1",
+   "pool_md5_in_headers": "d6916c8000474990e235d806011c72f3"
+  },
+  {
+   "set": "calib_roots_991000_991049",
+   "ref": "range 991000-991049 + DGX k0_dist/diag_split_registry.json keys",
+   "ref_size": 50,
+   "intersection": [],
+   "hits": 0
+  },
+  {
+   "set": "k0_holdout_987000_987031",
+   "ref": "registered holdout seed range",
+   "ref_size": 32,
+   "intersection": [],
+   "hits": 0
+  },
+  {
+   "set": "dgx_selfplay_census_all",
+   "ref": "find carbon/data -name selfplay-*.json.gz (unique seeds)",
+   "ref_size": 810,
+   "intersection": [],
+   "hits": 0,
+   "domains": [
+    [
+     987000,
+     987031
+    ],
+    [
+     988000,
+     988127
+    ],
+    [
+     991000,
+     991049
+    ],
+    [
+     992000,
+     992199
+    ],
+    [
+     994000,
+     994199
+    ],
+    [
+     994400,
+     994599
+    ]
+   ]
+  }
+ ],
+ "total_hits": 0,
+ "verdict": "PASS"
+}
