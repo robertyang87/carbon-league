@@ -1,0 +1,484 @@
+{
+ "header": {
+  "purpose": "Small-teacher Tier 2 downstream-validation slice v4: first 50 games of the TOP4 pool v4 train split (ascending game id) after excluding all registered consumed sets; slice games must not enter the small teacher distillation training data (both routes). Replaces the v3 slice (data/small_teacher_tier2_slice50_v3.json, md5 acffb20a), whose credentials were voided for leg-1 and small-teacher datagen by the TOP4 ruling.",
+  "rule": "Construction carried over from reports/RULING_POOL_SWAP_TOP5_20261117.md (81168a1e) §4 as applied to the TOP4 v4 train: new slice from new train, ids ascending, after excluding every registered consumed set, first 50. Pool/split per reports/RULING_POOL_SWAP_TOP4_20261117.md (8f49d758) and the 2026-11-17 freeze (reports/SUPPLEMENT_TOP4_FREEZE_V4_20261117.md, md5 e1556e6c), strategy-verified PASS (commit 7a782bc7). Small-teacher datagen must not start before this slice is verified by the strategy group and a war-room dispatch is issued.",
+  "source_train_file": "data/top4_pool_v4_train.json",
+  "source_train_file_md5": "696060d7936ff73897de1fd89abc7b8f",
+  "registry_file": "data/annot_registry.json",
+  "registry_file_md5_at_build": "0910a7777c55b5b02996727283141a25",
+  "exclusions_vs_new_train": {
+   "annot_registry_fastline_fullwindow_146": 94,
+   "annot_registry_pre60_tailwindow_60": 40,
+   "old_train_1202": 0,
+   "old_test_323": 0,
+   "k0_registry_v2_200": 0
+  },
+  "exclusion_notes": "Registered consumed sets are the annotation registry records (207 games: fast-line 147 full-window incl. the voided game, which is not in the v4 pool, plus the 60 tail-window pre-annotations on spot-48). Old train/test and K0 registry v2 are 0 by the freeze exclusion recheck (strategy-verified, commit 7a782bc7). The v3 slice (50 games, never consumed: datagen never started) overlaps the v4 train in 19 games and this slice in 0 games; it is not an exclusion set.",
+  "leg1_overlap_marking": "The leg-1 registered scope is the full v4 train (335), so every slice game is marked leg1_partition_overlap=true by construction.",
+  "replay_md5_source": "Repo family corpus manifests where warehoused; otherwise the verified L20 train delivery manifest (MANIFEST.md5 md5 7dc459b4581f004130d8c4e4b4275bcf, 335/335 md5sum -c OK on L20). 7 of the 50 slice games are freeze-increment games not yet warehoused into family corpora (file=null with file_note).",
+  "n": 50,
+  "produced_at": "2026-11-17T17:19:12+08:00",
+  "produced_by": "DGX line (per strategy group request 2026-11-17: new Tier-2 slice from the verified v4 train, submitted for strategy verification)"
+ },
+ "games": [
+  {
+   "id": "0086c374beee82f59e6859be9f7c2fbd",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/0086c374beee82f59e6859be9f7c2fbd-1.json.gz",
+   "replay_md5": "7f7871a8188b84651fdc8c186721dcaf",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "077d383b994d3891094d90cc1b6a5d4b",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/077d383b994d3891094d90cc1b6a5d4b-1.json.gz",
+   "replay_md5": "d2347663ba1b175ae2ab761b9806a115",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "0ab08a78bade271a1cd647400de4930a",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": null,
+   "replay_md5": "1c6159f84c470a4de4f8e0a68449405d",
+   "file_note": "not yet warehoused in a family corpus; verified copy delivered at L20 /root/carbon/katago/top4_leg1_replays/0ab08a78bade271a1cd647400de4930a-1.json.gz",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "0bc5422fdbb7c4fd49d2a99eaaaf6a14",
+   "sources": [
+    "it720"
+   ],
+   "file": null,
+   "replay_md5": "6ea053457f57961d7e971a167cb32e4c",
+   "file_note": "not yet warehoused in a family corpus; verified copy delivered at L20 /root/carbon/katago/top4_leg1_replays/0bc5422fdbb7c4fd49d2a99eaaaf6a14-1.json.gz",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "0cea87e64ecc107c9bce51baab2f3a1f",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/0cea87e64ecc107c9bce51baab2f3a1f-1.json.gz",
+   "replay_md5": "4711ea3b7882fdf6a0a83b3b1c55bfe1",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "10230bcabe59fe9b8ebfc783b70fb528",
+   "sources": [
+    "fablev8",
+    "it720"
+   ],
+   "file": "data/it720_corpus/10230bcabe59fe9b8ebfc783b70fb528-1.json.gz",
+   "replay_md5": "51578529ac0de3c16322ff22cd8ae0e1",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "14969c801e585590703fa0b5cdc65d64",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/14969c801e585590703fa0b5cdc65d64-1.json.gz",
+   "replay_md5": "7320cb287b2797946077a4c38da0aacb",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "19e2fddf2ec9b58bddfa54341082cb80",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/19e2fddf2ec9b58bddfa54341082cb80-1.json.gz",
+   "replay_md5": "172b237f12b489c03f8a56080691bc3b",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "1e6ec11d3dbd2e8912e5ffb5726ca268",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/1e6ec11d3dbd2e8912e5ffb5726ca268-1.json.gz",
+   "replay_md5": "8b663fd473448abce0b5e2d32f3e7ba9",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "20253359836f589275da866d335a620b",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/20253359836f589275da866d335a620b-1.json.gz",
+   "replay_md5": "97b87373ede43b5a767b59c4c59d0899",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "205c50dac0422f6ca0fcd15e5b6329ee",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/205c50dac0422f6ca0fcd15e5b6329ee-1.json.gz",
+   "replay_md5": "e802418c8fe579af4030d5156590c517",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "207e8960bbe04bf23ed6f6bdf94ed7a6",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/207e8960bbe04bf23ed6f6bdf94ed7a6-1.json.gz",
+   "replay_md5": "087c93e6440bba4ecf7b8ceff9d1b3ba",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "23c43e8f8beb7f960cca51ed70c3d940",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/23c43e8f8beb7f960cca51ed70c3d940-1.json.gz",
+   "replay_md5": "94de64a05f25a8d7b8b01a5ce6afe8c7",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "23c7ac507a843dfc438d5c4d461fd66b",
+   "sources": [
+    "fablev8"
+   ],
+   "file": null,
+   "replay_md5": "2a90673e349d060b8009130ef33bdb9c",
+   "file_note": "not yet warehoused in a family corpus; verified copy delivered at L20 /root/carbon/katago/top4_leg1_replays/23c7ac507a843dfc438d5c4d461fd66b-1.json.gz",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "2a6eda437f91db75ee34d3a289a88c10",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": null,
+   "replay_md5": "90e4201ce95d605feed060a6adf15153",
+   "file_note": "not yet warehoused in a family corpus; verified copy delivered at L20 /root/carbon/katago/top4_leg1_replays/2a6eda437f91db75ee34d3a289a88c10-1.json.gz",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "2bf3313694a8ba25ac20c0b1d4901603",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/2bf3313694a8ba25ac20c0b1d4901603-1.json.gz",
+   "replay_md5": "1c09b783932859aacbd1629877d84a17",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "3562f366f8559cd8b90525481acfff94",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/3562f366f8559cd8b90525481acfff94-1.json.gz",
+   "replay_md5": "8c6ffa6ab5eaffc85be669036fde570e",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "3594e048dbd4dd4a9e52f569fb129490",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/3594e048dbd4dd4a9e52f569fb129490-1.json.gz",
+   "replay_md5": "a6fcec21c43d750751ea9a2ed6139869",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "35bb9b4aae72898f0e4c8600df932fee",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/35bb9b4aae72898f0e4c8600df932fee-1.json.gz",
+   "replay_md5": "c511abbab483cdf72abfc3fb4977b8a4",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "36724bd99bbe990d7be574866bfc9283",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/36724bd99bbe990d7be574866bfc9283-1.json.gz",
+   "replay_md5": "b381af39d156983c5a66d50c06140e8e",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "375424b7cb7d248bd1799b30d75d1046",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/375424b7cb7d248bd1799b30d75d1046-1.json.gz",
+   "replay_md5": "46a10e85af762a9d644be4e4efee23c8",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "37d2bd93148eed843877ba354f292211",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/37d2bd93148eed843877ba354f292211-1.json.gz",
+   "replay_md5": "b07cbc1922ce5c477801b7d243b33dd4",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "3833fa1afb989d75d6299490d28651cb",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/3833fa1afb989d75d6299490d28651cb-1.json.gz",
+   "replay_md5": "564bb3d37425566fd9c91e82d3150fa0",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "39d8e7b9e55d498e804b1ea26202b6b4",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/39d8e7b9e55d498e804b1ea26202b6b4-1.json.gz",
+   "replay_md5": "7fe12d6b0f54b98bf8d8413a12f3432b",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "3d8622bddf8ef1f55e58f173bd93f83b",
+   "sources": [
+    "fablev8",
+    "it720"
+   ],
+   "file": null,
+   "replay_md5": "8a77e87780b73a9c0abffd554b2c84d6",
+   "file_note": "not yet warehoused in a family corpus; verified copy delivered at L20 /root/carbon/katago/top4_leg1_replays/3d8622bddf8ef1f55e58f173bd93f83b-1.json.gz",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "3e904f2878006118dea201e854aeb17e",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/3e904f2878006118dea201e854aeb17e-1.json.gz",
+   "replay_md5": "c5779d776489b0ed6bfe8d0582721bd1",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "3fbb38d875b46e44d8872ad8bb90ae26",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/3fbb38d875b46e44d8872ad8bb90ae26-1.json.gz",
+   "replay_md5": "716b6999bebc6e498cfd3ec495f0e1bc",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "409e403cb691537038d17dba2b21745d",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": null,
+   "replay_md5": "b30a41ef4e5cebb7c5df7ef595be15f8",
+   "file_note": "not yet warehoused in a family corpus; verified copy delivered at L20 /root/carbon/katago/top4_leg1_replays/409e403cb691537038d17dba2b21745d-1.json.gz",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "40e03b3843b859f93cca421b55f34bce",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/40e03b3843b859f93cca421b55f34bce-1.json.gz",
+   "replay_md5": "ac1537f67fa154d1f026cd3a6b080b5c",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "42e2bd9ddcc27f4f730a3d5cc9e5320d",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/42e2bd9ddcc27f4f730a3d5cc9e5320d-1.json.gz",
+   "replay_md5": "094b3b8642e5392e781bdae871920b4b",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "448d88550ee5d213a65c6ab00be9cf8d",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/448d88550ee5d213a65c6ab00be9cf8d-1.json.gz",
+   "replay_md5": "9e9b102b03a6f7ada4b756eb299a69c7",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "45372c44ae8ae95a6a973727bfa897e6",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/45372c44ae8ae95a6a973727bfa897e6-1.json.gz",
+   "replay_md5": "81269cc61732d8aee8811b0d521612c5",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "4555a48119beafbede19e3d0db6dd6e9",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/4555a48119beafbede19e3d0db6dd6e9-1.json.gz",
+   "replay_md5": "3c55b69d9165b5503a4797f002437cad",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "46a6935ecf58233d7bdaf59d85342b2f",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/46a6935ecf58233d7bdaf59d85342b2f-1.json.gz",
+   "replay_md5": "e3955502f22390eb0e89046734ead0b2",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "47e1e9bb70c0a2c1d4abfd2f4ab69b61",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/47e1e9bb70c0a2c1d4abfd2f4ab69b61-1.json.gz",
+   "replay_md5": "5a31b0198fa0938344680d4431077e14",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "4b2821f61b4d0dbbee99c425d84526a9",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/4b2821f61b4d0dbbee99c425d84526a9-1.json.gz",
+   "replay_md5": "b994b238158255d5ce9593b8c52c807c",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "4d26ca55f5a2bfc554fa4714477a1163",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/4d26ca55f5a2bfc554fa4714477a1163-1.json.gz",
+   "replay_md5": "c0ffe57e96d2ad4aba3b902e9ff82361",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "4d40819585d0fafb9ffbbf2eb4642140",
+   "sources": [
+    "it720"
+   ],
+   "file": "data/it720_corpus/4d40819585d0fafb9ffbbf2eb4642140-1.json.gz",
+   "replay_md5": "7a1a6946af5f48682b51f48908c030af",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "4d6cddcfa6d06e3cb656951afe33e495",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/4d6cddcfa6d06e3cb656951afe33e495-1.json.gz",
+   "replay_md5": "98819a9546dbfb25573cb05b73a6de59",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "4d867f54e3d66a875325df7e05312dbe",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/4d867f54e3d66a875325df7e05312dbe-1.json.gz",
+   "replay_md5": "988af3a966a92e8e2b05726212877e7d",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "4e12e06a9a78fac4a78e9ee2beca45ed",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/4e12e06a9a78fac4a78e9ee2beca45ed-1.json.gz",
+   "replay_md5": "66a7ee2839aaaeb577902825f0108178",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "50d4b8cc634466307faae70afd999385",
+   "sources": [
+    "master5s"
+   ],
+   "file": null,
+   "replay_md5": "e6381b5bc37972e4113f8643c770c6f6",
+   "file_note": "not yet warehoused in a family corpus; verified copy delivered at L20 /root/carbon/katago/top4_leg1_replays/50d4b8cc634466307faae70afd999385-1.json.gz",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "531beda09dfe5c93eb17516bd32ecd3d",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/531beda09dfe5c93eb17516bd32ecd3d-1.json.gz",
+   "replay_md5": "152efae9d74415c7ed6f12bbb346bbc8",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "54a959d6bad9988f6621953bc03ab1e8",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/54a959d6bad9988f6621953bc03ab1e8-1.json.gz",
+   "replay_md5": "1c75d2780167f35c884a94896068649d",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "54f0ae69cf1828275eb0d37ed351d168",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/54f0ae69cf1828275eb0d37ed351d168-1.json.gz",
+   "replay_md5": "126a70bbcb5bd77e6264b86dc206e771",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "55a74782172241e5069edc5854e4dacb",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/55a74782172241e5069edc5854e4dacb-1.json.gz",
+   "replay_md5": "97e83a23a9b587e04c018dc8be933ccb",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "55c32e155865ee553747f317b282c544",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/55c32e155865ee553747f317b282c544-1.json.gz",
+   "replay_md5": "c4dad4798224d372fe6b9179ed0014b0",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "562b56b0f2734d8385249b6daac5e63f",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/562b56b0f2734d8385249b6daac5e63f-1.json.gz",
+   "replay_md5": "bc7601da80325e17d8ba6dc905914d8e",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "58981eba94dd0716f0acc229c4e2dde3",
+   "sources": [
+    "xiaofeiyu5-late1"
+   ],
+   "file": "data/xiaofeiyu5-late1_corpus/58981eba94dd0716f0acc229c4e2dde3-1.json.gz",
+   "replay_md5": "ebaa0b7c6aac5941a867b160a5ef0382",
+   "leg1_partition_overlap": true
+  },
+  {
+   "id": "593d31a01ff3e387a7e99f3995dcb2f7",
+   "sources": [
+    "fablev8"
+   ],
+   "file": "data/fablev8_corpus/593d31a01ff3e387a7e99f3995dcb2f7-1.json.gz",
+   "replay_md5": "f1c7fb56ab69f02cd18fdee10ff4bcdb",
+   "leg1_partition_overlap": true
+  }
+ ]
+}
