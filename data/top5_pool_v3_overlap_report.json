@@ -1,0 +1,261 @@
+{
+ "header": {
+  "purpose": "Zero-overlap report for the TOP5 pool v3 consumption registration (ruling 81168a1e §3): new union/train/test vs old train / old test / pilot registry / old Tier 2 slice / appendix games / each other, at game-id level and at replay-content-hash level.",
+  "content_hash_caliber": "replay content hash = the md5 of the replay file <game-id>-1.json.gz as recorded in the families' corpus manifests (data/*_corpus.manifest). New-side coverage: 682/682 union games have a manifest-registered replay md5. Old-side coverage is stated per set; where a set's games have no manifest registration, the content check covers the registered subset and is supplemented by the global manifest cross-check in the notes.",
+  "produced_at": "2026-11-17T09:51:46+08:00",
+  "produced_by": "DGX line v3 registration executor",
+  "inputs": {
+   "old_train_file": "data/stageB_split_N323_train.json (md5 f7b50267, 1202 games)",
+   "old_test_file": "data/stageB_split_N323.json (md5 fd4cf144, 323 games)",
+   "pilot_registry": "gen-1 pilot batch registry, 200 games, file md5 6c2199a2 (held by DGX line; 140 partitioned games warehoused in reports/gen1_pilot_partition_20261116/, verified 140/140 subset of old train; remaining 60 are inside old train by the partition arithmetic of ruling 81168a1e §1/§5)",
+   "old_slice_file": "data/small_teacher_tier2_slice50.json (md5 8f946da7, 50 games, per-game replay_md5 registered in the file itself)",
+   "k0_registry_v2_file": "data/k0_consumed_gen1r_shard1_registry_v2.json (md5 781cdf00, 200 self-play games, seeds 994400-994599, per-game replay md5 registered in the file itself)",
+   "appendix_games": "self-play seeds 994400 + 994401 (first two entries of the K0 registry v2)"
+  }
+ },
+ "id_level": {
+  "union": {
+   "vs_old_train_1202": 0,
+   "vs_old_test_323": 0,
+   "vs_pilot_partitioned_140": 0,
+   "vs_pilot_registry_200": 0,
+   "vs_old_tier2_slice_50": 0,
+   "vs_appendix_994400_994401": 0
+  },
+  "test": {
+   "vs_old_train_1202": 0,
+   "vs_old_test_323": 0,
+   "vs_pilot_partitioned_140": 0,
+   "vs_pilot_registry_200": 0,
+   "vs_old_tier2_slice_50": 0,
+   "vs_appendix_994400_994401": 0
+  },
+  "train": {
+   "vs_old_train_1202": 0,
+   "vs_old_test_323": 0,
+   "vs_pilot_partitioned_140": 0,
+   "vs_pilot_registry_200": 0,
+   "vs_old_tier2_slice_50": 0,
+   "vs_appendix_994400_994401": 0
+  },
+  "train_x_test": 0
+ },
+ "content_level": {
+  "union": {
+   "vs_old_slice_registered_md5s_50": 0,
+   "vs_k0_registry_v2_md5s_200": 0,
+   "vs_appendix_md5s": 0,
+   "vs_old_train_covered_subset": {
+    "old_side_coverage": "114/1202",
+    "intersection": 0
+   },
+   "vs_old_test_covered_subset": {
+    "old_side_coverage": "33/323",
+    "intersection": 0
+   },
+   "vs_pilot_partitioned_covered_subset": {
+    "old_side_coverage": "16/140",
+    "intersection": 0
+   }
+  },
+  "test": {
+   "vs_old_slice_registered_md5s_50": 0,
+   "vs_k0_registry_v2_md5s_200": 0,
+   "vs_appendix_md5s": 0,
+   "vs_old_train_covered_subset": {
+    "old_side_coverage": "114/1202",
+    "intersection": 0
+   },
+   "vs_old_test_covered_subset": {
+    "old_side_coverage": "33/323",
+    "intersection": 0
+   },
+   "vs_pilot_partitioned_covered_subset": {
+    "old_side_coverage": "16/140",
+    "intersection": 0
+   }
+  },
+  "train": {
+   "vs_old_slice_registered_md5s_50": 0,
+   "vs_k0_registry_v2_md5s_200": 0,
+   "vs_appendix_md5s": 0,
+   "vs_old_train_covered_subset": {
+    "old_side_coverage": "114/1202",
+    "intersection": 0
+   },
+   "vs_old_test_covered_subset": {
+    "old_side_coverage": "33/323",
+    "intersection": 0
+   },
+   "vs_pilot_partitioned_covered_subset": {
+    "old_side_coverage": "16/140",
+    "intersection": 0
+   }
+  }
+ },
+ "notes": [
+  "Pilot registry 200: the 140 partitioned games were checked directly (id intersection 0; content intersection 0 over the manifest-covered subset). The remaining 60 pilot games sit inside old train by registration arithmetic (leg-1 remainder 1,002 = 1,202 - 200; ruling 81168a1e §1, §5) and inherit old train's zero intersection at both levels.",
+  "Appendix games 994400/994401 and the K0 registry v2 live in the self-play seed namespace (integer seeds), disjoint from ladder match ids by construction; their registered replay md5s were nevertheless compared directly: intersection 0.",
+  "Global manifest cross-check: across all 30 corpus manifests in data/ (4918 distinct game ids), replay md5 <-> game id is bijective (0 md5s shared by two different game ids). No replay content registered anywhere in the corpus system appears under two different game ids; the new pool's 682 replay md5s collide with no other registered game id.",
+  "Old train/test content coverage is partial because most old-pool corpora (carago, fable, m6, m7bs, lite_v7, carago1, hakimi3, hakimi2, m9xj, m9xj320, m9xj460, godslayer_cvi) have no corpus manifest in the repo; the covered subsets (k4v2-corpus games and cross-registered games) show intersection 0, and the id-level intersection is exactly 0 for the full sets."
+ ],
+ "appendix_fastline_master5s": {
+  "duty": "reports/REGISTRATION_TOP1_FASTLINE_20261117.md (commit dd393926) §1: report per-game intersections of the fast line's 145 Master5s snapshot games with the new test/train split; the fast line is registered as an independent consumer (appendix form), its 145 games are NOT deducted from the split.",
+  "master5s_snapshot_n": 145,
+  "x_test_170": {
+   "count": 45,
+   "ids": [
+    "085fb2c7fa4673cb62a88582dd232fb1",
+    "0d0b6f119652e111da30364ca877a5d0",
+    "0ef7bb0a863a98c15a802fb6e08f5731",
+    "13015a90cc59fc48d8b26337df6b8161",
+    "139ce9f90d1cdbfbdaebe112cd95c8b8",
+    "1b3177fc72dcd87cf955642782c41a80",
+    "1c6592328becd1184b6cee0531afade5",
+    "1d8a5e60edfdb28ee1801eccbf220f6b",
+    "203462ddecf2ff126c4322c8250e77aa",
+    "2d712db8c7e48ee1c2ef8876c3866195",
+    "2ebe44bee72d74b66c5b69f09ce99575",
+    "2f90dcc6a2eb0ee40cd49bf10b800d6c",
+    "31568ffd9e7c703957f7345206e84308",
+    "39637cfc931f6c15cf156f2f4c26ac51",
+    "3a3d08498acbb03c5d8ea98479e9bb3b",
+    "3fa7ad1b32db4e8f57bb74b00ddb8fe4",
+    "4524e00b340d74ca29a1195d16e2a5a3",
+    "4d414c14de657213fb672a3022d2ac34",
+    "4f522ee8ab66b4ffc68bcf3822389e89",
+    "56eba1d3291f5e825fbbace1ab8bff3e",
+    "5a186082f07f6f0eca9094cfe678508c",
+    "63cf3ff281804e868d6f838873a23ed4",
+    "6c3380709cf63756a0b8b2f8cc58601d",
+    "737be0fd4cb3b9698190d1631af2d042",
+    "7edaeef85acdd6175b5151acfa9e4e16",
+    "7f008c50c2922c2e67e1a24f93fb8c31",
+    "81602de8cc2ab08aebf643830c60b33e",
+    "8759f8217d439cc5127f10aa2139935a",
+    "8caa0fdab6a29ebb41ddbe377dfe28ea",
+    "9581b889b5ffc67ed420ccc0b96d00b0",
+    "9bb4ea68a0933e630057edc70f8f5c29",
+    "a65c0a4a0c38eac49927b1fbf875dc6a",
+    "a763c2da406430867718486972898996",
+    "ac364a420640522907349a4f31ea09ef",
+    "afb1c0a51bddc547bbd00df00564aed1",
+    "b4c800a8147e3affd47317dd124f401c",
+    "b4e45fac9f2e948d644d2946aabb1f50",
+    "bdc8435261e23a96b1931a53c4c325f8",
+    "c4d761ec5af1ee73ab7cce2b9c6a2b08",
+    "db0193406ee795dba5018c02e6ebf506",
+    "dc3b757bc9fe90a93e6f377d255a70fc",
+    "dfade934a41b69385a7143b586c75759",
+    "ef8c2fbd6a5f7c9b58bb2b091a96d0c1",
+    "f405b1a0f7d7bb1c5b4e7a3e011e9b95",
+    "f84911d34421003cb704d4c8b82314d5"
+   ]
+  },
+  "x_train_512": {
+   "count": 100,
+   "ids": [
+    "00f7e221872bf7bc75a3847676e17b56",
+    "01b56d406361dbb513d6d7417dc0184f",
+    "04c4595fe42c3df466d898cf91ef89fc",
+    "0a815a4c86941b6d187c57727e3e6090",
+    "104c209f6b2076777f6f33df15edb997",
+    "12e2ff04a56cd951318d912e819b91ab",
+    "13811486e41e9a9b363469dba2bb378e",
+    "16246b994fa62016c8f673db3f47426a",
+    "1717d1fced6509c6c4d224172b8c5beb",
+    "17cf6cd3cc8ea8a27269047e2b56be8c",
+    "1f170a1fa6ae1bc79cf771cfe27f000f",
+    "1fd5e494424c26bd81a9e5f7ba2e6613",
+    "1fedcf34baee77b3e866de8065948aca",
+    "20ed2afd8245781230e23f73b9bddbfa",
+    "22c26fb4fc265297a69fb5ced1d15252",
+    "23353c8f6d169b431d678b6653804992",
+    "23e6019f321ed539386263c3e85b8e42",
+    "2b83af8293847872ec97be3d98d0f9b0",
+    "2bb0546c0fa8b5de7b4576b31a5b6383",
+    "2ca1a6e639af71704b87d036fefb18f4",
+    "2da59e846e326c701cabcd15fa6439bd",
+    "3025ca573d299f0d387c22fddc1fa2fd",
+    "30330fcb8982d57b36f4c168fb663ced",
+    "3263a59e9c56a0eee1fd769ff742e58b",
+    "333fd46d4296ba6efbaf68d77450790d",
+    "33ac4fb13a0bd6b4c118cdbeb5d43e5e",
+    "34822028068c905ca1bf90f45a005aef",
+    "3505ed9b6d524d71d58de58f2eabc315",
+    "3509e5b66ffc3e67f03739023d38a03b",
+    "36643173a8d08f3b96cd2818569c23a3",
+    "37768a0cb18b1a14d5b8103e0041de6b",
+    "392116cf7bf821f974683908f2924353",
+    "3b40cb24f17cc3852f7b5f234ffef623",
+    "3b5442e3b0936940f343013d4cb2179b",
+    "3e5b1e2e17d8b956b21c6e378d1cf861",
+    "3ed956099b0566c29e29e4847397fa4a",
+    "48eacdd8b11157127897278abf814953",
+    "4c086ee0a76d9dd2c26d5e2a13654119",
+    "4cab29b766a5a8f60b9a4347adb05863",
+    "4d36ff29c656ab7063f10e83734a2dc5",
+    "502cbf1c92561b42c2fa5b7135aa3daf",
+    "54ae0807115990474ee47ad8c8641b54",
+    "5a29ce1cf123531152fa0b074aa1af1b",
+    "5f2083216180fc1cf815f8d90abfc62c",
+    "6208b896bf5cfb902605cf049560d0e4",
+    "699fc9e24eab6af2666ea8e4f55d51d3",
+    "6ce0e3516c513493910bd7d4cdc86361",
+    "70cd568b536cf94ab703c8830cbd293e",
+    "7410f3684f58a457810e9b24835adea2",
+    "7981780bf487dcc1c83d7c94d5faea25",
+    "8297406e1276d00ed0357d1b978b1e1b",
+    "841d11240fa7482c6d21a4185099f049",
+    "85aa69e9678f9bd97020e27a8ef943e2",
+    "86c41fd46ad2b05fd5a732b06c587fb9",
+    "8f459a86f11b9b539c9b192448fe6bda",
+    "8f9d8139832d7879ef40268826673ddd",
+    "8fe94754c17c07ab3a959ef7e3314d70",
+    "8ff6e97e347abe2310e999bf7558acd5",
+    "902c19f0d9c27f6f2df9b80a09a2ec57",
+    "9123289768bfb40633b0c00668825ab2",
+    "94c0826751e649dcc2cfd54a8553cdd0",
+    "98b57c58a16d11b4fb0286774e18ba68",
+    "9d2ed003f12fa024fd5e05c8be1137d7",
+    "9e94753554981699b6547e96ec02898b",
+    "a0cf8dd343aba2e42e6970c919e20da5",
+    "a1de950526b7bfa32c15301e55ae8420",
+    "a203c2ece52f5d44e229e6f6e3a4a93a",
+    "a229117417d0cefbcc646b589530e8b3",
+    "a4cbf1fa9a498523f02de6c84dbdf14e",
+    "ab65ffdc07226a0ab6d7bee5997c719a",
+    "ad630693c26ae17b724092518d883ae1",
+    "b01e870a1892cd87e9bd4bbcb45b9b90",
+    "b0de87e741fd0279b0430033a1e7abaf",
+    "b219068ea91e04b1052c627147944446",
+    "bbe51a3424ac2226ed8d2252fe2201b9",
+    "c0308ebb4028594b4c7182308854dbe6",
+    "c2fd0dcd97929f12fe6bb3be60a89415",
+    "ca8a8a9cb60115f0514d249d92d048c9",
+    "caa5901be2e08abd0d666697dc542a84",
+    "cc55d20939336bf84566156754665648",
+    "d1d31ee963f6d9d35490c2a10bf9e023",
+    "d48fd1719afcfee8b77a6b8cb7ae2997",
+    "dbfe0909e055a4becb14f29d06d818ef",
+    "dc91a09f4e84928870bf76e09af19bc5",
+    "dd6aff420b28edf6960d7b467e529df3",
+    "e0c126311823190a38dc2bb5fabff800",
+    "e253a5af21dc27609f2972d4b62a29fd",
+    "e46fc0a3b033ea2662683665fc37c92d",
+    "eca9e0ff749ffd031fbc451255d158f1",
+    "ecdd3ad9e7a16a53aba5a4ed51e10b6e",
+    "eef68438eba8b4db68f1bb4b8fb918a3",
+    "f0795ca7e2d82fe3174ee167ea8585b4",
+    "f27bf25a57669091127e4eeaabea7b1b",
+    "f306679c3694d94f4bdb3e868fb15955",
+    "f39aed0b73cb0af85ac40496bc999a11",
+    "f3f127ffa006568bbfe06d2d84e51da8",
+    "f5a8339ea7846cd64b1a27a526341ba0",
+    "f7831333de4a7380c0527cf2af42701f",
+    "fe666a3489fc8b53b72bb64e5af9a18c",
+    "ff09b13031cfcd11d59631affed007d6"
+   ]
+  }
+ }
+}
