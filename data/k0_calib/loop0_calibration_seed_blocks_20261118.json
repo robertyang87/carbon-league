@@ -1,13 +1,15 @@
 {
-  "purpose": "Loop-0 baseline calibration seed blocks (war-room ruling 2026-11-18 07:15; seed pinned to teacher 06a03d9c; executor L20; no arena)",
+  "purpose": "Loop-0 baseline calibration seed blocks (war-room final ruling 2026-11-18 07:15-07:16; seed pinned to teacher 06a03d9c; executor L20; no arena; Studio line not involved)",
   "registered": "2026-11-18",
   "registrar": "DGX line (custody/registry)",
+  "version": 2,
+  "supersedes": "v1 (commit 4cfadfca) which carried block 992000-992199 for the Master3s2 field; that block was a verbal reserve only, never consumed, and is VOID per the war-room ruling. v2 replaces it with 990000-990199. The Echo6 bridge block 993000-993199 is unchanged from v1.",
   "composition": "200 seeds x 1 game per seed; seats alternate by seed parity (100 games per side); harness bigeval.py 354bcd1b",
   "blocks": [
     {
       "field": "loop0_baseline_vs_master3s2",
-      "seed0": 992000,
-      "seeds": "992000-992199",
+      "seed0": 990000,
+      "seeds": "990000-990199",
       "n": 200,
       "assignee": "L20",
       "examiner": "Master3s2 (master3s2.py 57f9a594 + opp_master3s2.py b4cde262, _TEMP=1.0, _SEED=None, distribution readings only)",
@@ -23,7 +25,10 @@
       "status": "registered-unused"
     }
   ],
-  "zero_overlap_check": "Checked 2026-11-18 against DGX bigeval.jsonl full census (46 summary rows) plus all registered seed domains: 985000/986000 blocks, 987000-987031 K0 holdout, 988000-988999 box-final, 989000-989199 fastline preview, 990200-990399 leg-1 preview, 991000-991049 calib, 991050-991129 k0_64 measure, 994000-994199 shard0, 994400-994599 shard1, 996000/997000/998000/998400 blocks, 998600-998999 anchor fields, 999000-999599 student fields, spent points 999600/999800, 20291101-20291400, 20298101-20302100, 20350101-20352100. Both new blocks: zero intersection.",
+  "void_blocks": [
+    {"seeds": "992000-992199", "reason": "verbal reserve in crossed messages 2026-11-18 07:11-07:14; never registered-consumed; voided by war-room ruling 07:15-07:16"}
+  ],
+  "zero_overlap_check": "Checked 2026-11-18 against DGX bigeval.jsonl full census (46 summary rows) plus all registered seed domains: 985000/986000 blocks, 987000-987031 K0 holdout, 988000-988999 box-final, 989000-989199 fastline preview, 990200-990399 leg-1 preview, 991000-991049 calib, 991050-991129 k0_64 measure, 994000-994199 shard0, 994400-994599 shard1, 996000/997000/998000/998400 blocks, 998600-998999 anchor fields, 999000-999599 student fields, spent points 999600/999800, 20291101-20291400, 20298101-20302100, 20350101-20352100. Both registered blocks: zero intersection.",
   "seed_examinee": "teacher weights cnet2_m3s2r1_heads_v2.npz md5 06a03d9cfeec239af3065a49fefec382 (canonical DGX /home/arm/junyang/k0_dist/pkg/weights/; L20 on-machine copy verified same md5 2026-11-18)",
   "supply_landed": "Master3s2 pack shipped DGX -> L20 /root/carbon/examiners/master3s2/ 2026-11-18, on-seat md5 verified (57f9a594/b4cde262/3644794d)"
 }
