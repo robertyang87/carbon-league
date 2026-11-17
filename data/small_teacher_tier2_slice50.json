@@ -1,0 +1,511 @@
+{
+  "header": {
+    "purpose": "Small-teacher Tier 2 downstream-validation slice: first 50 games of the Stage B train split (ascending game id) after excluding all registered consumed sets; slice games must not enter the small teacher distillation training data (both routes). Filed before any distillation data generation starts, per sign-off gate.",
+    "rule": "reports/SIGNOFF_SMALL_TEACHER_DESIGN_20261117.md item #7 (commit 28e06112, file md5 5fcdaab457e5a8afa2d963d74efc9f03); Tier 2 clause of reports/REGISTRATION_SMALL_TEACHER_DISTILL_20261117.md; strategy-group ruling 2026-11-17 08:43: overlap with the S6.4 leg-1 partition does not disqualify the slice (leg-1 annotation is a different line consumption, outside the Tier 2 downstream gate chain); leg-1 overlaps are marked per game.",
+    "selection": "train list ascending by game id; exclude pilot-consumed 200, appendix 994400/994401, and every registered consumed set; take first 50.",
+    "n_games": 50,
+    "source_files": {
+      "train": {
+        "path": "data/stageB_split_N323_train.json",
+        "md5": "f7b50267fb9bca78feef346baa8bd51f",
+        "games": 1202
+      },
+      "pilot_registry": {
+        "path": "/home/arm/junyang/gen1_pilot_registry_20261116.json",
+        "md5": "6c2199a24bbde8950b6d209ce5bbcad1",
+        "games": 200
+      },
+      "test_split": {
+        "path": "data/stageB_split_N323.json",
+        "md5": "fd4cf14413be5273c131478cc1fdacc1",
+        "games": 323
+      },
+      "registry_v2": {
+        "path": "data/k0_consumed_gen1r_shard1_registry_v2.json",
+        "md5": "781cdf00ebb7ced505a245670ac7b466",
+        "games": 200,
+        "set": "Condition E K0-annotation-consumed gen1r shard1, games 994400-994599 (appendix 994400/994401 included)"
+      }
+    },
+    "exclusion_accounting": {
+      "train_total": 1202,
+      "excluded_pilot200": 200,
+      "excluded_appendix_994400_994401": 0,
+      "excluded_appendix_note": "appendix games live in the numeric selfplay id space (994400/994401 are members of the registry-v2 consumed set); train ids are corpus content-hash ids - literal intersection 0, and content-hash intersection of all 1202 train replays vs the v2 set is 0, so the appendix exclusion removes 0 train games on both bases.",
+      "excluded_registry_v2_content": 0,
+      "excluded_shard0_content": 0,
+      "remainder": 1002,
+      "slice_taken": 50
+    },
+    "overlap_checks_zero": {
+      "vs_pilot200_registry_6c2199a2": 0,
+      "vs_measurement_991050_991129": 0,
+      "vs_calib_991000_991049": 0,
+      "vs_test_split_fd4cf144": 0,
+      "vs_holdout_987000_987031": 0,
+      "vs_appendix_994400_994401": 0,
+      "vs_registry_v2_781cdf00_literal_id": 0,
+      "vs_registry_v2_781cdf00_content_hash": 0,
+      "vs_shard0_994000_994199_content_hash": 0
+    },
+    "id_space_note": "Train/test/pilot ids are 32-hex corpus content ids. Measurement domain 991050-991129, calibration block 991000-991049, holdout 987000-987031, appendix 994400/994401 and registry-v2 games 994400-994599 are numeric selfplay/seed id spaces; intersections were nevertheless computed literally (all 0) and, for the two replay-file sets (registry v2, shard0), additionally by replay content hash over all 1202 train games (all 0).",
+    "leg1_partition_marking": {
+      "definition": "S6.4 leg-1 partition = train 1202 minus pilot 200 = 1002 games (annotation PAUSED, 0 games annotated as of filing)",
+      "slice_games_in_leg1_partition": 50,
+      "per_game_field": "leg1_partition_overlap"
+    }
+  },
+  "games": [
+    {
+      "id": "1b4a446b0435d2b25a2ddd850ccdaa50",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/1b4a446b0435d2b25a2ddd850ccdaa50-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "58471f81e7c80223d589a9acc3d793f5"
+    },
+    {
+      "id": "1b646bff317fa634035aea94ae8f258f",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/1b646bff317fa634035aea94ae8f258f-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "0d2f2da32114a0c12c04730e3d87271f"
+    },
+    {
+      "id": "20859449f4e090f8a0c8660322fa25ae",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/20859449f4e090f8a0c8660322fa25ae-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "9bfa819492abc55caa5e80d13a5a5035"
+    },
+    {
+      "id": "22125e96b744e24cd8b99ad33d24c2f7",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/22125e96b744e24cd8b99ad33d24c2f7-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "dfa910308bf37389b1aa9c9cb0aa17e4"
+    },
+    {
+      "id": "242133e41fd869037457cc745a5cc6ce",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/242133e41fd869037457cc745a5cc6ce-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "e8bcd07bbf3905bdeb18cdb91e7d0ad2"
+    },
+    {
+      "id": "24310d1be33ccb5d1b8a6960f7b71d68",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/24310d1be33ccb5d1b8a6960f7b71d68-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "de89fba9054731aa26321a8f23ecfd4d"
+    },
+    {
+      "id": "247a762ec860606802b7f8b3c34539fa",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/247a762ec860606802b7f8b3c34539fa-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "576b6aa5f5b3b71fd72595f4d97b1be9"
+    },
+    {
+      "id": "24c1033c3bebdddfcad3f6310f0f0d9c",
+      "sources": [
+        "hakimi3"
+      ],
+      "file": "/home/arm/junyang/carbon/data/hakimi3_corpus/replays/24c1033c3bebdddfcad3f6310f0f0d9c-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "acb94fd1a34c93e66c1e2464d0db4f67"
+    },
+    {
+      "id": "24c509e19bc71b43af8187660884fc68",
+      "sources": [
+        "k4v2"
+      ],
+      "file": "/home/arm/junyang/carbon/data/k4v2_corpus/replays/24c509e19bc71b43af8187660884fc68-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "c150ece9ee9ec198e730e560e1b80c1b"
+    },
+    {
+      "id": "25652efdf6249bb7bad20fee32253ecf",
+      "sources": [
+        "lite_v7"
+      ],
+      "file": "/home/arm/junyang/carbon/data/lite_v7_corpus/replays/25652efdf6249bb7bad20fee32253ecf-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "8e1a34016c3e4fdb364e364dda5a5bd9"
+    },
+    {
+      "id": "25ada5a9af6d5fb1ce10bf054ff0803a",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/25ada5a9af6d5fb1ce10bf054ff0803a-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "2eb52b49790848d575f7b601694479ef"
+    },
+    {
+      "id": "261133da7497615e8575ef9387a50c8b",
+      "sources": [
+        "lite_v7"
+      ],
+      "file": "/home/arm/junyang/carbon/data/lite_v7_corpus/replays/261133da7497615e8575ef9387a50c8b-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "aec1976ccd26947037ddaeab37595957"
+    },
+    {
+      "id": "2614fec50da006be9bd7e3d9a378d8c0",
+      "sources": [
+        "k4v2"
+      ],
+      "file": "/home/arm/junyang/carbon/data/k4v2_corpus/replays/2614fec50da006be9bd7e3d9a378d8c0-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "89f0b81ebb75d2b422baaf7f4f8cc6ff"
+    },
+    {
+      "id": "261ec260019bc785e259915463ea28f7",
+      "sources": [
+        "k4v2"
+      ],
+      "file": "/home/arm/junyang/carbon/data/k4v2_corpus/replays/261ec260019bc785e259915463ea28f7-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "69993251f1fec23af0dcf8cc2d9b911b"
+    },
+    {
+      "id": "2675b488b7f379c8dc0f3266c6deeeca",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/2675b488b7f379c8dc0f3266c6deeeca-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "045c12e8ca657cd8812899b3b4cad513"
+    },
+    {
+      "id": "2689b96ca46661b44933b281dda6b3b2",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/2689b96ca46661b44933b281dda6b3b2-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "79748ea0314f31c6ca96e8f0e5cbcfcd"
+    },
+    {
+      "id": "26c014016aa16f2c42f91080f51c23e1",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/26c014016aa16f2c42f91080f51c23e1-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "5cc51b444a1fc1e0e5c507cffb2e0eca"
+    },
+    {
+      "id": "272b322c293b3a48a560567ef1e4e95e",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/272b322c293b3a48a560567ef1e4e95e-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "e538a6e34d5520d225b342865e0d37d8"
+    },
+    {
+      "id": "27bb36ce897113967b5f912a5c1e62b5",
+      "sources": [
+        "k4v2"
+      ],
+      "file": "/home/arm/junyang/carbon/data/k4v2_corpus/replays/27bb36ce897113967b5f912a5c1e62b5-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "9856344e646732fc32363e5f0a7f2686"
+    },
+    {
+      "id": "29de0524a3f7aeb1b8ea6bbcae854ef9",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/29de0524a3f7aeb1b8ea6bbcae854ef9-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "1434a51aa1501badfa2df1185926f797"
+    },
+    {
+      "id": "2a062324747971303295bee8e10e0265",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/2a062324747971303295bee8e10e0265-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "700cb2a3e3c75786e77b4cb82c1fa54a"
+    },
+    {
+      "id": "2a1273f75f936a6340788cbdf95c6621",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/2a1273f75f936a6340788cbdf95c6621-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "00ac8d58c5ea55f4b5aa1c8114e5cee1"
+    },
+    {
+      "id": "2aa4669623693c30fa54e22cc3cde1cb",
+      "sources": [
+        "hakimi3"
+      ],
+      "file": "/home/arm/junyang/carbon/data/hakimi3_corpus/replays/2aa4669623693c30fa54e22cc3cde1cb-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "9f2ddfa86a5645bbb411a1712510adb5"
+    },
+    {
+      "id": "2aaeed8c73384be7f166e133546567f6",
+      "sources": [
+        "lite_v7"
+      ],
+      "file": "/home/arm/junyang/carbon/data/lite_v7_corpus/replays/2aaeed8c73384be7f166e133546567f6-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "4b4a5afcc233971a6187b9229c12da63"
+    },
+    {
+      "id": "2b25ef0e91ebb77f61c885b5abac119f",
+      "sources": [
+        "lite_v7"
+      ],
+      "file": "/home/arm/junyang/carbon/data/lite_v7_corpus/replays/2b25ef0e91ebb77f61c885b5abac119f-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "e247ecadf3d5feb20d19c67efa7cfd7e"
+    },
+    {
+      "id": "2ba66e094bc715e30ddd0dea24e2b4a7",
+      "sources": [
+        "m7bs"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m7bs_corpus/replays/2ba66e094bc715e30ddd0dea24e2b4a7-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "af5a0c9d75492d56095a312b972470ff"
+    },
+    {
+      "id": "2c3d997af205128d461dd4b19740aaf3",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/2c3d997af205128d461dd4b19740aaf3-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "d3529bce8f5fc5ad787560bf38edbd20"
+    },
+    {
+      "id": "2c81306681b46a70e471527a1f7479f2",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/2c81306681b46a70e471527a1f7479f2-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "09e5b036741260f00fa84d4b503e72ca"
+    },
+    {
+      "id": "2d4a16166b77995ff0bf9d9d429a9ad3",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/2d4a16166b77995ff0bf9d9d429a9ad3-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "038a7ff17f262544db46f454b8fed0df"
+    },
+    {
+      "id": "2d5b4fb8ee358aeb49321c24fdfcdb1a",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/2d5b4fb8ee358aeb49321c24fdfcdb1a-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "be803616ffafca391561dfc202c0e1a0"
+    },
+    {
+      "id": "2da410b7865b73e29ab605a41fa51187",
+      "sources": [
+        "hakimi3"
+      ],
+      "file": "/home/arm/junyang/carbon/data/hakimi3_corpus/replays/2da410b7865b73e29ab605a41fa51187-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "e63c7192bd84464555e2a5f05ef78c91"
+    },
+    {
+      "id": "2dfc3b659454cca0e93a11658e89a2c6",
+      "sources": [
+        "lite_v7"
+      ],
+      "file": "/home/arm/junyang/carbon/data/lite_v7_corpus/replays/2dfc3b659454cca0e93a11658e89a2c6-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "09de15f0ddd709315a67da5bffd790a5"
+    },
+    {
+      "id": "2e1040dc4b50af8524950dcc75c3a46c",
+      "sources": [
+        "m7bs"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m7bs_corpus/replays/2e1040dc4b50af8524950dcc75c3a46c-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "f0f3e483308831ae20fc5930ff6bc1e4"
+    },
+    {
+      "id": "2e62af0c33e7dc5fc6751830993df005",
+      "sources": [
+        "carago1",
+        "godslayer_cvi"
+      ],
+      "file": "/home/arm/junyang/carbon-repo/data/carago1_corpus/2e62af0c33e7dc5fc6751830993df005-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "c96c5f83c706703ee3cf79be187670f7"
+    },
+    {
+      "id": "2ea0272ed80219224aeb3d0a41e5a7e4",
+      "sources": [
+        "carago1"
+      ],
+      "file": "/home/arm/junyang/carbon-repo/data/carago1_corpus/2ea0272ed80219224aeb3d0a41e5a7e4-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "90cc395d69115478a9dffde9ce57f3c6"
+    },
+    {
+      "id": "2ec1e3c78e4d484b30df4d13926b96f4",
+      "sources": [
+        "hakimi3"
+      ],
+      "file": "/home/arm/junyang/carbon/data/hakimi3_corpus/replays/2ec1e3c78e4d484b30df4d13926b96f4-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "b9a5cddad9c28a56b1282df40e0dbc53"
+    },
+    {
+      "id": "2f3700a52a68c11deec1b3eac2f9e3a7",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/2f3700a52a68c11deec1b3eac2f9e3a7-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "51556608500afe292f40fad69933e7a8"
+    },
+    {
+      "id": "2f43ad2ce1aaea5387b780d1dc6161d7",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/2f43ad2ce1aaea5387b780d1dc6161d7-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "a2dcffd6fee10f83851c91e1a2219ea1"
+    },
+    {
+      "id": "2f57f9b2064b9f78f26240f3631d1044",
+      "sources": [
+        "godslayer_cvi"
+      ],
+      "file": "/home/arm/junyang/carbon-repo/data/godslayer_cvi_corpus/2f57f9b2064b9f78f26240f3631d1044-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "e718d283490e27949c46a016dd0b4638"
+    },
+    {
+      "id": "2fb4b9b1adcfd8587ccf899b55243a3c",
+      "sources": [
+        "m9xj320"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m9xj320_corpus/replays/2fb4b9b1adcfd8587ccf899b55243a3c-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "3fc14bda26d43f93b3e4136f9f970794"
+    },
+    {
+      "id": "2fbc548be13c9af713809190745538da",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/2fbc548be13c9af713809190745538da-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "c118e69f0adc339b7218a0cfd445f0e6"
+    },
+    {
+      "id": "3021ac661efa58f8ebb4ba929881e494",
+      "sources": [
+        "carago1"
+      ],
+      "file": "/home/arm/junyang/carbon-repo/data/carago1_corpus/3021ac661efa58f8ebb4ba929881e494-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "d50bc6e53f836d12d196bf9684676d94"
+    },
+    {
+      "id": "303e20768ec5f0d71a05952b18a20d72",
+      "sources": [
+        "m9xj"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m9xj_corpus/replays/303e20768ec5f0d71a05952b18a20d72-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "f7e3d2f2541c57c115c6964f82395066"
+    },
+    {
+      "id": "30403d6f15fed075c67476a3da458cc6",
+      "sources": [
+        "carago"
+      ],
+      "file": "/home/arm/junyang/carbon/data/carago_corpus/replays/30403d6f15fed075c67476a3da458cc6-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "3af387ac4705e4cd3b0ce14017f505c9"
+    },
+    {
+      "id": "305ccade2bb42df676b0a2f29259189d",
+      "sources": [
+        "m7bs"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m7bs_corpus/replays/305ccade2bb42df676b0a2f29259189d-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "8c3a81a10d4688d76e4d2a3ee5bb2202"
+    },
+    {
+      "id": "306798e23cfd8abef346739e77597cc1",
+      "sources": [
+        "lite_v7"
+      ],
+      "file": "/home/arm/junyang/carbon/data/lite_v7_corpus/replays/306798e23cfd8abef346739e77597cc1-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "d14ffb84b34d7416d83499f560bccbd3"
+    },
+    {
+      "id": "309ad7687c5dcb6b74144f9403bd5a5d",
+      "sources": [
+        "carago1"
+      ],
+      "file": "/home/arm/junyang/carbon-repo/data/carago1_corpus/309ad7687c5dcb6b74144f9403bd5a5d-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "5c3ba059eed31d012f43b6c348f3a2fe"
+    },
+    {
+      "id": "31f6b0e8b8de32e04d21d645c8949edb",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/31f6b0e8b8de32e04d21d645c8949edb-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "d156f53ec04798bd6f299c70ac02e729"
+    },
+    {
+      "id": "327d523be6f132fea93f7ca6913c0cc9",
+      "sources": [
+        "m9xj320"
+      ],
+      "file": "/home/arm/junyang/carbon-repo/data/m9xj320_corpus/327d523be6f132fea93f7ca6913c0cc9-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "ea768a7f3cdd0f92a301bdb4587fdae0"
+    },
+    {
+      "id": "3301291830545d9b8da458f0bf934fa0",
+      "sources": [
+        "m6"
+      ],
+      "file": "/home/arm/junyang/carbon/data/m6_corpus/replays/3301291830545d9b8da458f0bf934fa0-1.json.gz",
+      "leg1_partition_overlap": true,
+      "replay_md5": "b6412f5a463faf6b5ae36c8466a5de56"
+    }
+  ]
+}
