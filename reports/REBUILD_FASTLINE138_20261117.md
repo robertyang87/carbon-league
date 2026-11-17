@@ -31,3 +31,10 @@
 
 ## Join（未执行——座位阻塞）
 裁定承接的 join 座 spot-57 自 ~18:53 离线，DGX 线 19:0x 再次双路直读仍超时（tailnet 100.93.131.80＋公网 47.103.103.158 均 connect timeout）。merged138＋build138 已在 DGX 就绪；join 须改座（作战室 18:52 接手时自定 join 落 58，或新购座），改座令到即发座执行：钉版 k0_join_fallback.py（fac55acb）落座先 md5 直读复核、合才跑；验收照裁定（9 局零进入、--verify、逐局表、回退清单入 provenance），产物随后交付 L20 按 3,333 步重开训练。
+
+## Join 收口（补记 2026-11-17 19:16，取代上节「未执行」状态）
+- 执行人：**作战室**（端到端）；座：**spot-58**。上节「座位阻塞」为 19:0x 时点状态，现已收口。
+- 产物：**joined gen-56e91737a08c5fb6**（138 局／82,524 根，--verify PASS，作废局＋8 局零进入），已交付 L20。
+- L20 已于 **2026-11-17 19:01:14** 按 **3,333 步**从零重开训练（parent 06a03d9c／lr 5e-4／β 1.0／seed 7）。
+- 对齐件：作战室 REBUILD_RECORD 与三代 manifest 已入 data/k0_calib/（rebuild138_REBUILD_RECORD.json md5 2fc83221；rebuild138_merged138_manifest.json 00e734e7；rebuild138_build138_manifest.json e017c26b（58 版）；rebuild138_joined138_manifest.json 3720c6d0）。
+- DGX 线 build138 副本（同代 gen-75ed865a）未入交付链，留档。
