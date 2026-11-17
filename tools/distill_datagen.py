@@ -251,7 +251,7 @@ def collect_replay_positions(F, FastCarbon, CFG, steps):
     """Route A: replay with both seats' Feat trackers, one observe per step.
     Returns list of position dicts {x, aux, step, seat}."""
     from stage1_teacher_gate import first_terminal_step as gate_ft
-    ft = gate_ft(steps)
+    ft, _ft_cause = gate_ft(steps)  # contract: (index, cause) tuple
     n_steps = min(len(steps) - 1, ft)
     sim = FastCarbon(CFG).reset(seed=1, full_carbon=steps[0][0]["observation"]["full_carbon"])
     feats = [F.Feat(0), F.Feat(1)]
@@ -750,7 +750,7 @@ def main(argv=None):
 
     if a.workers > 1 and len(todo) > 1:
         import multiprocessing as mp
-        with mp.Pool(a.workers) as pool:  # fork: children inherit _G read-only
+        with mp.get_context("fork").Pool(a.workers) as pool:  # fork pinned: children inherit _G read-only (macOS defaults to spawn)
             for entry in pool.imap_unordered(_run_game, todo):
                 record(entry)
     else:
