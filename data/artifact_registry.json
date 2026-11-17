@@ -634,6 +634,88 @@
      "path": "/home/arm/junyang/k0_dist/search_probe_build/fastline_student_search_probe.py"
     }
    ]
+  },
+  {
+   "name": "leg1_merged238_gen",
+   "kind": "merged annotation generation",
+   "gen_id": "gen-181a281d2311f41b",
+   "detail": "TOP4 leg-1 rebuild238: 238 games, 142,324 roots, manifest_sha256 ab98fd7b139ca7a2253fc7a6cc715d8fb1d4c80af1d67b39b506f734a315516c; sources four re-sealed gens (spot-63 gen-455748998d7ec317 36,478 + spot-61 gen-a14a0c5de30bf61e 35,880 + spot-60 gen-d5f9b2cc1a00696b 35,880 + spot-62 gen-9b18eacafa23c7a5 35,880); merge_excl on L20 (merge_annot_gens_excl.py 57cc1310) after prescan of joined241 found 3 tripping roots; excluded 3 games (264e444df51624a0ec8747b1240e92e4-1, ac669558cc94d933c8ec7f715b3633e2-1, d9616829957abd5a4cd42b06e5f6893a-1; 598 roots each) per owner prescan hard gate (2026-11-17 19:10) + one-shot exclusion (2026-11-17 18:38); MERGE_RECORD.json in merged238/ (exclusion_ruling 6c98cc58); free byte audit AUDIT_PASS (142,324 rows, 0 mismatches, tail segments byte-equal excl. gid)",
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/leg1_chain/rebuild238/merged238/"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/leg1_241/postchain/work/srcs/spot-63/annot_train",
+     "note": "re-sealed source root pkg1"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/leg1_241/postchain/work/srcs/spot-61/annot_train",
+     "note": "re-sealed source root pkg2"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/leg1_241/postchain/work/srcs/spot-60/annot_train",
+     "note": "re-sealed source root pkg3"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/k0_dist/leg1_241/postchain/work/srcs/spot-62/annot_train",
+     "note": "re-sealed source root pkg4"
+    }
+   ],
+   "owner_line": "war room",
+   "status": "present"
+  },
+  {
+   "name": "leg1_build238_gen",
+   "kind": "build generation",
+   "gen_id": "gen-4e2a6937158479d5",
+   "detail": "TOP4 leg-1 rebuild238: 238 games, 142,324 samples, val_games 22, teacher_sides {other: 476}, cfg_fp f982640561fc4fe4, ladder_frame true, builder pin 5c2dd58e; built on L20 from build_src238 (238 entries, 0 short games)",
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/leg1_chain/rebuild238/build238/"
+    }
+   ],
+   "owner_line": "war room",
+   "status": "present"
+  },
+  {
+   "name": "leg1_joined238_gen",
+   "kind": "joined product (TOP4 leg-1, formal)",
+   "gen_id": "gen-1bb5e738c653c7fd",
+   "detail": "TOP4 leg-1 rebuild238: 142,324 roots, manifest_sha256 91d510cf2fcd6d3443bf6042dc7b44ac92143605970936989bdd4ab8316fb131, candidates 2,232,423; join two-step (k0_join.py fac55acb: join, then --out --verify) + k0_join_verified PASS; training steps 5,749 (=round(5.17*142324/128)); training started L20 2026-11-18 01:45, PID 19645, parent 06a03d9c / bs 128 / lr 5e-4 / beta 1.0 / seed 7, out /root/carbon/katago/gen1_leg1_student.npz; DGX holds NO joined238 copy",
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/leg1_chain/joined238/"
+    }
+   ],
+   "owner_line": "war room",
+   "status": "present"
+  },
+  {
+   "name": "leg1_prescan238",
+   "kind": "prescan report",
+   "gen_id": "gen-1bb5e738c653c7fd",
+   "md5": "93726dd317aa0e2716c73905d06529b7",
+   "detail": "Prescan of joined238 (gen-1bb5e738c653c7fd) on L20, 2026-11-18 01:35:45 (driver5): roots 142,324, inconsistent 0 / straddle 0 / tripping 0, PRESCAN238_CLEAN; criterion k0_distill._root_cash_set full scan, threshold 60.0 (cash straddles 2*RECRUIT_COST); prior joined241 prescan (prescan_leg1.json, md5 6eb5a92e, gen-58d88b621e239c92) found 3 tripping roots (roots 25161/105896/128638, games 42/177/215, cash 59.99-60.01, recruits_at_10) — the 3 games excluded in one shot before this rebuild",
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/leg1_chain/prescan238.json"
+    },
+    {
+     "machine": "L20",
+     "path": "/root/carbon/leg1_chain/rebuild238/logs/prescan5.log",
+     "note": "driver log line: gen gen-1bb5e738c653c7fd roots 142324 inconsistent 0 straddle 0 tripping 0, PRESCAN_DONE"
+    }
+   ],
+   "owner_line": "war room",
+   "status": "present"
   }
  ],
  "created": "2026-11-17",
@@ -645,6 +727,6 @@
   "R3 release gate: a machine holding unique products is released only after the owning line confirms recovery in writing.",
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
- "version": "4.2",
+ "version": "4.3",
  "updated": "2026-11-17 (v4.2: + fastline_student_search_probe_pack dc49855d)"
 }
