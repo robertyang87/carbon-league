@@ -95,3 +95,79 @@
 1. 隧道审批 `14400c86`：请所有者批准（2026-11-18 02:51 已请过一次，~03:25 再查仍 pending）。
 2. 对照闸口径：建议请策略组先行裁定同机对照方案（或放宽 (b) 容忍），避免座位上必触发 (b) 停表。草稿脚本已备好，批复后即用；未批复前执行方按原文闸跑、触发即停报。
 3. 审批一到，执行按提案 §7 照序：① 座位直读闸 → ② mesh 分发验通 → ③ 身份机上核验 → ④ 对照闸 → 全量 396 根 → v4 比对 → 结果入仓 → Tier 四项实测值报策略组（只报数）。开工四件套先报作战室。
+
+---
+
+## 7. v2 执行（2026-11-18 07:04–07:22 CST，闸 4 停报：同机直跑脚本异常）
+
+- **结论：停报，全量未开。** 闸 1–3 全过；闸 4(a) harness 对照跑完赛，且与 L20 教师分片逐位一致（见下）；闸 4(b) 同机直跑脚本 `direct_control_roots.py`（已批 md5 `09d2705e`）在 worker 内以 TypeError 异常退出、未产生分片，同机逐位比对无从执行。按纪律：不改写已批脚本、不以跨机读数替代同机硬闸（裁定 ef932ea3）放行。待策略组裁定（修脚本另批，或以本次跨机逐位一致读数改判放行口径）。
+
+### 7.1 闸 1 座位直读（通过）
+
+- 07:04 CST 直读：hostname `carbon-shanghai-spot-64`；64 vCPU；内存 121 GB（空闲 119）；load 0.00／0.00／0.00；磁盘 99G、余 91G；up 6:38；进程仅系统与云助手守护（aegis／aliyun-assist／tailscaled），无他人活。
+- 系统 python3.12.3 无 numpy；部署 venv `/root/carbon/.venv` 可用（Python 3.12.3、numpy 2.5.4、scipy 1.18.1），本趟全程用该 venv。
+- 首联曾遇一次 banner exchange 超时（ConnectTimeout 30s，exit 255），放宽至 60s 后连通——通道慢，非座位故障。
+
+### 7.2 闸 2 mesh（通过，验通范围如实）
+
+- 本机 `spot64_mesh.pub` 已入 spot-64 `~/.ssh/authorized_keys`；本机以该私钥免密登录验通（`MESH_KEY_LOGIN_OK carbon-shanghai-spot-64`）。
+- spot-64 本机 ed25519 钥对已生成（原无）：指纹 `SHA256:ABNuhNn3S2n5a9Hi/0INEPZiC7dbU+qpe2q3xFzfXmg`（comment spot-64）。
+- spot-64 公钥入 DGX `authorized_keys`（共 15 行，spot-64 恰 1 条）与 L20（共 13 行，恰 1 条）；从 spot-64 直连验通：DGX 回读主机名 `spark-29db`、L20 回读 `gpu-l20-6`，RC 均 0。
+- spot-29／spot-63 离线，未验（如实记录，不算通过项）。
+
+### 7.3 闸 3 身份机上核验（通过）
+
+- 转运 35 文件至座上 `/root/small_teacher_50k_retry/`（code／replays／teacher_shards／teacher_generation 等分目录），逐件 md5 直读全合：harness `53df4f2e`、direct `09d2705e`、比对器 v4 `1e9ad085`、学生 npz `b22020ff`、权重 `06a03d9c`、代码栈 stage0_teacher `c6ade5ce`／cnet2_np `d8c15ad4`／cnet2_search `94f7fb64`／cnet2_feat `2a45b08b`／fastsim `aefe6c83`／gate `e922d9d8`／k0_annotate `7f567a2e`／cnet2_model `3bb5857f`／eval_v53 `45792dfb`、carbon.json `cd55531b`、教师分片 `2aad09a5`／`ce7f84fc`。
+- 回放双验全合：md5 `6ed2623e`／`6607fe5e`，真 sha256 `55d713d64c002d6c204988280804da47b96c979464f4ae9740b2676338581436`／`866a8ce7cc7125af8962e51f6db7b1a41686c3c13dbab35b2cec0c653a66baf5`。
+- harness 启动时 `_verify_materials` 再验全过；config 重算 `config_sha256 = 9a2b2440e9267680c9b27a1d51a50db9cacdbd04582ae101ef54abaa86d8d10c`。
+
+### 7.4 闸 4(a) harness 对照跑（完赛）＋(d) 跨机参考读数
+
+- 对照跑 8／8 根完赛（教师 trunk，2 worker），墙时 1.09 分钟；每根 act 调用 648（min＝max＝mean，恰合预测 680−32）；generation `gen-retry-trunk-1b24175869f5`（与本地冒烟同 id）；`me_snap_lostw_zero_roots = 0`。
+- 诊断 gen_candidates（8 根全）：`arms_match = True`、`priors_max_abs_diff = 0.0`、调用数 32／根。
+- **跨机参考（harness 对照输出 vs L20 教师分片，8 根逐根对位）**：994400 max|dq| = 0.0、max|dQ| = 0.0；994401 max|dq| = 0.0、max|dQ| = 0.0；argmax 全同、arms 全同、priors 全同——**逐位一致**，强于裁定参考线（≤1e-6）。本机（VM）同根读数曾为 2.20e-07，系 VM 与 L20 的浮点环境差异；spot-64 与 L20 浮点环境一致、无此噪声。但裁定明示跨机比对仅参考、不作放行依据，执行方不据此放行。
+
+### 7.5 闸 4(b) 同机直跑异常（停表触发，原文照录）
+
+- 首次启动曾因本人命令 cwd 拼接失误（脚本相对路径在 /root 下未找到）未跑起来，已即刻以绝对工作目录重起；重起后脚本身份打印全合（七件代码 md5＋权重 `06a03d9c` 与座上直读一致），随后 worker 抛 TypeError 退出，`out_direct/shards` 未产生。异常与 harness 无关、非数值不等。
+- `direct.log` 关键段原文：
+
+```
+[direct] stage0_teacher.py c6ade5ced42e2c54a77c1499163aa151
+[direct] k0_annotate.py 7f567a2e8544b78e51d16aa7660bc47b
+[direct] cnet2_np.py d8c15ad4fdd8ee079363cf215d52daf3
+[direct] cnet2_search.py 94f7fb6438bb7577b141e388f068e122
+[direct] cnet2_feat.py 2a45b08b6f97508541e62867e408748e
+[direct] fastsim.py aefe6c83826efae4de83bef8c643c80b
+[direct] stage1_teacher_gate.py e922d9d890c3e1eff6643e947289acb0
+[direct] weights 06a03d9cfeec239af3065a49fefec382
+concurrent.futures.process._RemoteTraceback:
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/concurrent/futures/process.py", line 263, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+  File "/usr/lib/python3.12/concurrent/futures/process.py", line 212, in _process_chunk
+    return [fn(*args) for args in chunk]
+  File "/root/small_teacher_50k_retry/direct_control_roots.py", line 81, in _direct_root
+    feats = [F.Feat.observe(scene, 2, 7000)]
+TypeError: Feat.observe() takes 2 positional arguments but 3 were given
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/small_teacher_50k_retry/direct_control_roots.py", line 145, in <module>
+    main()
+  File "/root/small_teacher_50k_retry/direct_control_roots.py", line 130, in main
+    results = list(ex.map(_direct_root, tasks))
+  ...
+TypeError: Feat.observe() takes 2 positional arguments but 3 were given
+```
+
+- 定性：`direct_control_roots.py` L81 把钉版 `cnet2_feat.Feat.observe`（实例方法，签名 `(self, obs)`，共 2 个位置参数）当作类级工厂以 3 参调用——脚本与钉版栈 API 不兼容，自始不能运行。脚本本身即批复件（md5 `09d2705e`），执行方不自行改写。
+
+### 7.6 未做事项与收尾空载状态
+
+- 未做：全量 396 根未开；学生重跑确定性抽查未做；shard_compare v4 未跑；`compare_stage4_retry_trunk_396.json` 未产出；Tier 四项无读数、不判。
+- 收尾（所有者 07:03 接档裁定）：停报时刻 2026-11-18 07:21:57 CST spot-64 直读——本线进程零残留（`ps` 按 retry_trunk／direct_control／k0_annotate 扫为 0；harness 对照跑已完赛退出、direct 已异常退出），load average 0.01／0.15／0.09，座位空载，可供搜索组 §4 测速接档。§4 测速与探针 (b) 本线未起，等作战室通知。
+- 座上留存：`/root/small_teacher_50k_retry/`（备料＋out_control 对照产物＋control.log／direct.log），未删，供复核与续跑复用。
