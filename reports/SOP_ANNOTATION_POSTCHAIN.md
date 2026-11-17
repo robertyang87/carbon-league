@@ -1,6 +1,6 @@
 # SOP：标注后链标准流程（merge → build → join → prescan → 开训）
 
-版本：v1.1（2026-11-18 修订：build/join/prescan 座位改 L20，所有者 00:33 裁定；v1.0 于 2026-11-18 立，源于 leg-1 241 局后链实战复盘）
+版本：v1.2（2026-11-18 修订：§5 join 命令改两步式，--verify 为独立复核模式；v1.1 同日修订 build/join/prescan 座位改 L20，所有者 00:33 裁定；v1.0 于 2026-11-18 立，源于 leg-1 241 局后链实战复盘）
 适用：任何一批标注完成后的数据后链。执行人一名、端到端；作战室发 CHAIN_GO 后整链连跑，步间不许停顿等指令。
 
 ## 0. 总则
@@ -46,7 +46,7 @@
 
 - **join 落 L20 跑**（所有者 2026-11-18 裁定，取代 2026-11-17 21:52 的 CPU 座口径）：build 与 join 同机连跑，joined 就地供 L20 训练消费。护栏：只许开训前窗口执行，不与训练并发（防抢训练读数据的 CPU）。标注等其余 CPU 重活仍走 CPU 机队，本条只改 build/join/prescan 三步。
 - 开跑前机上直读：`k0_join.py` md5 必须 = 执行钉版（附录 A）；`PYTHONPATH=<L20 上 code 目录>`（join 的发布预检从脚本同目录 import k0_distill，缺 PYTHONPATH 必死）。
-- 命令：`k0_join.py --annot <merged> --build <build> --out <joined> --verify`，`--verify` PASS 才算完成。
+- 命令分两步：先 `k0_join.py --annot <merged> --build <build> --out <joined>`（publish 内含 consumer preflight、过了才落盘），再 `k0_join.py --out <joined> --verify` 独立复核；两步都 PASS 才算完成。⚠️ `--verify` 是独立复核模式（只对 --out 走 consumer 加载），与 --annot/--build 同用会直接走复核分支、根本不执行 join（2026-11-18 实测：对不存在的 out 报 not an annotation dataset root、RC=1）。
 - 回执：joined gen 号、manifest、根数、verify 结果。
 
 ## 6. 步骤五：prescan 硬闸（所有者 2026-11-17 19:10 定规，无报告不开训）
