@@ -91,7 +91,7 @@ TEACHER_VERSION = 3
 
 # Small-teacher identity (the only code-level addition vs c6ade5ce).
 STUDENT_MARKER = "SMALL_TEACHER_V1"
-STUDENT_CFG = dict(C=48, NB=4, D=96, NH=4, L=2, E=24, G=4, TA=2, TNH=4)
+STUDENT_CFG = dict(C=32, NB=3, D=64, NH=4, L=1, E=16, G=4, TA=1, TNH=4)
 DISTILLED_FROM = {"teacher_code_md5": "c6ade5ced42e2c54a77c1499163aa151",
                   "teacher_weights_md5": "06a03d9cfeec239af3065a49fefec382"}
 BELIEF_MODES = ("sample", "mean", "oracle")
