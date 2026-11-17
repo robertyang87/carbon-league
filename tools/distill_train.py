@@ -64,16 +64,21 @@ def load_shards(data_dir):
     positions = []
     for g in man["games"]:
         d = np.load(os.path.join(data_dir, g["shard"]), allow_pickle=False)
-        n = int(d["t_logits"].shape[0])
+        # Hoist: NpzFile does not cache members (d["x"] is not d["x"]), so
+        # every d[...] access re-reads and re-decompresses that member.
+        # Read each field exactly once per shard into memory, then index
+        # the in-memory arrays below. Values are unchanged.
+        cols = {k: d[k] for k in d.files}
+        n = int(cols["t_logits"].shape[0])
         for i in range(n):
             positions.append({
-                "x": {k: d["x_" + k][i] for k in X_FIELDS},
-                "cash": float(d["x_cash"][i]), "slots": float(d["x_slots"][i]),
-                "left": float(d["x_left"][i]),
-                "aux": {k: d["aux_" + k][i] for k in AUX_FIELDS},
-                "t_logits": d["t_logits"][i], "t_labels": d["t_labels"][i],
-                "t_u": float(d["t_u"][i]), "t_value": float(d["t_value"][i]),
-                "game": str(d["meta_game"][i])})
+                "x": {k: cols["x_" + k][i] for k in X_FIELDS},
+                "cash": float(cols["x_cash"][i]), "slots": float(cols["x_slots"][i]),
+                "left": float(cols["x_left"][i]),
+                "aux": {k: cols["aux_" + k][i] for k in AUX_FIELDS},
+                "t_logits": cols["t_logits"][i], "t_labels": cols["t_labels"][i],
+                "t_u": float(cols["t_u"][i]), "t_value": float(cols["t_value"][i]),
+                "game": str(cols["meta_game"][i])})
     return positions, md5_file(os.path.join(data_dir, "manifest.json"))
 
 
