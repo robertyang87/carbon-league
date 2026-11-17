@@ -1,6 +1,6 @@
 # SOP：标注后链标准流程（merge → build → join → prescan → 开训）
 
-版本：v1.0（2026-11-18 立，源于 leg-1 241 局后链实战复盘）
+版本：v1.1（2026-11-18 修订：build/join/prescan 座位改 L20，所有者 00:33 裁定；v1.0 于 2026-11-18 立，源于 leg-1 241 局后链实战复盘）
 适用：任何一批标注完成后的数据后链。执行人一名、端到端；作战室发 CHAIN_GO 后整链连跑，步间不许停顿等指令。
 
 ## 0. 总则
@@ -17,7 +17,7 @@
 - [ ] 标注前完整性检查已做（SOP 既有项）：逐局步数、步连续、两边 statuses DONE、终局 rewards 在位；异常局已列单、处置已定。
 - [ ] 工具钉版齐全且座上直读 md5 合（现行钉版见附录 A；同名不同代以任务件单为准，错代即退）。
 - [ ] order 文件（局序清单）在册，局集与冻结清单逐项对齐，test/train 不混装。
-- [ ] 目标座位（join 座）已定且释放闸已按本批调整（见 §6）。
+- [ ] L20 在位且处于开训前窗口（build/join/prescan 落 L20，见 §4–§6）；持有唯一产物的座位释放闸已按本批调整（见 §8）。
 
 ## 2. 步骤一：collect（收集封存代）
 
@@ -39,18 +39,19 @@
 ## 4. 步骤三：build_src 组装 + build
 
 - build_src：index 条目与 order 文件**逐项同序**；replays 件数 = 局数（逐件 md5 对拷源）；断言 0 短局（全 299 步）。
-- build：`cnet2_build.py`，环境 `CNET2_LADDER_FRAME=1`。
+- build：`cnet2_build.py`，环境 `CNET2_LADDER_FRAME=1`。**build 落 L20 跑**（所有者 2026-11-18 裁定：build+join 在 L20，产物就地供训练消费，省跨机搬运；只许开训前窗口、不与训练并发）。
 - 回执：build gen 号、样本数、cfg_fp、RC。
 
-## 5. 步骤四：join（落指定 CPU 座）
+## 5. 步骤四：join（落 L20）
 
-- join 只在裁定指定的 CPU 座跑（CPU 重活不上 DGX/L20，省事不是改席理由）。
-- 开跑前座上直读：`k0_join.py` md5 必须 = 执行钉版（附录 A）；`PYTHONPATH=<座上 code 目录>`（join 的发布预检从脚本同目录 import k0_distill，缺 PYTHONPATH 必死）。
+- **join 落 L20 跑**（所有者 2026-11-18 裁定，取代 2026-11-17 21:52 的 CPU 座口径）：build 与 join 同机连跑，joined 就地供 L20 训练消费。护栏：只许开训前窗口执行，不与训练并发（防抢训练读数据的 CPU）。标注等其余 CPU 重活仍走 CPU 机队，本条只改 build/join/prescan 三步。
+- 开跑前机上直读：`k0_join.py` md5 必须 = 执行钉版（附录 A）；`PYTHONPATH=<L20 上 code 目录>`（join 的发布预检从脚本同目录 import k0_distill，缺 PYTHONPATH 必死）。
 - 命令：`k0_join.py --annot <merged> --build <build> --out <joined> --verify`，`--verify` PASS 才算完成。
 - 回执：joined gen 号、manifest、根数、verify 结果。
 
 ## 6. 步骤五：prescan 硬闸（所有者 2026-11-17 19:10 定规，无报告不开训）
 
+- 座位：prescan 随 joined 在 **L20 就地跑**（读全集，不再搬运）。
 - 用训练器本人的拒训判据（k0_distill features 校验：root cash 在 f16 下跨 60.00 阈值不可判定一类）对 joined **全集逐根全扫**，不许抽样、不许只扫触发条件的一部分。
 - 报告必含：全集根数／问题根数／问题局清单。报告不出，训练不开。
 - 有问题根：其所在局**整局一次性全排除**（不论本代是否真触发），回步骤二重走 merge → build → join → prescan，全清才过闸。
