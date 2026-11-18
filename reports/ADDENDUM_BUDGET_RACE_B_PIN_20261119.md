@@ -12,3 +12,5 @@ Date: 2026-11-19 (CST). Filed by the war room (registry keeper).
 - Fields: vs Master3s2 seeds 962000-962199 (tag budgetB_3s2_962000); vs Echo6 seeds 962200-962399 (tag budgetB_echo6_962200); 200 games each, side=seed%2, identical (seed,side) set to the A field.
 - Fired: 2026-11-19 01:30:18 CST on Studio (driver PID 23131).
 - Record note: the identity values above were fixed and recorded before firing — in L20's plan-section-2 fill-in table (01:28 CST) and the war-room dispatch to Studio — and Studio's start-of-work receipt verified them on-machine verbatim before the field started. This addendum is the registry filing of those values.
+
+- Companion filing: reports/ADDENDUM_BUDGET_RACE_B_STUDENT_20261119.md (commit dbbce880, Studio) records the same pinned values. The two filings crossed in transit; all identity values agree verbatim. Either file may be cited as the pin record.
