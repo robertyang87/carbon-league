@@ -12,6 +12,8 @@ Example (CPU, fixed budget; creates a NEW output directory):
 
 Output trained.npz is compatible with cnet2_pack and BC_INIT, but has no strength
 certification. All weights/metrics use the declared style slot (default 2).
+Both registered init_sapling presets are accepted and strictly identified from
+the weight metadata and tensor shapes; no architecture override or fallback.
 """
 import argparse
 import gzip
@@ -169,7 +171,7 @@ def run(args):
     import cnet2_build as builder
     import cnet2_train as trainer
     from cnet2_model import CNet2
-    from init_sapling import SAPLING_CONFIG, EXPECTED_PARAMS
+    from init_sapling import resolve_preset_metadata
 
     torch.set_num_threads(args.threads)
     torch.manual_seed(args.optim_seed)
@@ -178,13 +180,13 @@ def run(args):
     with np.load(io.BytesIO(init_bytes), allow_pickle=False) as archive:
         meta = json.loads(str(archive["meta"]))
         state = {k: archive[k].copy() for k in archive.files if k != "meta"}
-    if any(meta["cfg"].get(k, 0 if k == "TA" else None) != v for k, v in SAPLING_CONFIG.items()):
-        raise ValueError("this diagnostic requires the exact 551187-parameter Sapling cfg")
+    preset, cfg, expected_params = resolve_preset_metadata(meta)
     trainer._check_finite_arrays(state, args.init)
-    net = CNet2(**SAPLING_CONFIG).cpu()
+    net = CNet2(**cfg).cpu()
     net.load_state_dict({k: torch.from_numpy(v) for k, v in state.items()}, strict=True)
     trainer._check_finite_arrays({k: v.detach().numpy() for k, v in net.state_dict().items()}, "loaded Sapling")
-    if sum(p.numel() for p in net.parameters()) != EXPECTED_PARAMS:
+    actual_params = sum(p.numel() for p in net.parameters())
+    if actual_params != expected_params:
         raise ValueError("unexpected Sapling parameter count")
 
     out = Path(args.out)
@@ -255,7 +257,7 @@ def run(args):
         raise ValueError("source changed during run; refusing publication")
     training_args = {k: v for k, v in vars(args).items() if k not in ("init", "out")}
     report = dict(format="sapling-own-policy-bootstrap/1", status="diagnostic_only",
-                  params=EXPECTED_PARAMS, cfg=net.cfg, style=args.style, args=training_args,
+                  params=actual_params, preset=preset, cfg=net.cfg, style=args.style, args=training_args,
                   invocation_paths={"init": str(Path(args.init).resolve()), "out": str(out.resolve())},
                   init_sha256=hashlib.sha256(init_bytes).hexdigest(), source_policy="policy_v0_5.py",
                   source_hashes=source_hashes,
@@ -267,7 +269,7 @@ def run(args):
                          "validation": diagnose(net, val, trainer, args.bs, out / "validation-after.npz")},
                   updates=losses, seconds=time.monotonic() - t0,
                   limitations="Few self-generated rule demonstrations; teacher-forced validation only. No A4 selection, U/value training, formal distillation or strength certification. Recruitment opportunity uses existing approximate Prefix legality.")
-    trainer.export(net, str(out / "trained.npz"), dict(cfg=net.cfg, model_name="Sapling", params=EXPECTED_PARAMS,
+    trainer.export(net, str(out / "trained.npz"), dict(cfg=net.cfg, model_name="Sapling", params=actual_params, preset=preset,
                    untrained=False, value_heads_untrained=True, training_status="policy_only_diagnostic",
                    sapling_bootstrap={k: report[k] for k in ("format", "status", "init_sha256", "source_hashes", "train_seeds", "validation_seeds", "style", "args")}))
     report["trained_sha256"] = sha(out / "trained.npz")

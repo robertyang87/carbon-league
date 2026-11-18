@@ -1,0 +1,1276 @@
+{
+  "format": "sapling-own-policy-bootstrap/1",
+  "status": "diagnostic_only",
+  "params": 1206476,
+  "preset": "sapling-1.2m",
+  "cfg": {
+    "C": 93,
+    "NB": 6,
+    "D": 96,
+    "NH": 4,
+    "L": 1,
+    "E": 32,
+    "G": 3,
+    "TA": 0
+  },
+  "style": 2,
+  "args": {
+    "train_games": 4,
+    "val_games": 2,
+    "steps": 120,
+    "updates": 64,
+    "bs": 16,
+    "lr": 0.0003,
+    "threads": 2,
+    "seed0": 620000000,
+    "optim_seed": 551187,
+    "style": 2,
+    "balance": "sqrt-role-action",
+    "weight_cap": 8.0
+  },
+  "init_sha256": "dafa4544e9934ed7c56d1e705de1374ff929e9896f848ed396ec42007c681f9c",
+  "source_policy": "policy_v0_5.py",
+  "source_hashes": {
+    "sapling_bootstrap.py": "7cb5f31733a98244db94fc21bfffd1e59af9e14de0a1227e82c31257b693773b",
+    "policy_v0_5.py": "4d435035e8e274c5c4d49dfcc71ca293c6b4989ebadc974796a90837f9f569c1",
+    "fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+    "cnet2_build.py": "edeb3222e3633673693311b7b771d0ebb451557caadc3fda4a9bf94e32651bbf",
+    "cnet2_train.py": "313f0237728e6db6f2be11800c7db2c7d0ed3b332a295bb42a85960916544bd6",
+    "cnet2_model.py": "3dc3b3aaaf083c8b7168299acaa0c573c3957d95a63074776d2f0f4aa52add8f",
+    "init_sapling.py": "1ca6e4e14fc8dc8cfbd5fc79c8a03f57cc43f32f9549a90f0d00fef6f96a1709",
+    "eval_v53.py": "ef3301e8e7d1cea39ce015e2a1c0e010c544842a7dfebefb398c458363f60d86"
+  },
+  "external_or_exam_replays_consumed": 0,
+  "train_seeds": [
+    620000000,
+    620000001,
+    620000002,
+    620000003
+  ],
+  "validation_seeds": [
+    620000004,
+    620000005
+  ],
+  "sources": [
+    {
+      "seed": 620000000,
+      "split": "train",
+      "transitions": 120,
+      "rows": 240,
+      "replay_sha256": "dda39670dffa618a7d8bb8f83690ad4f62e2c31c59e74be1959db24b3186dc6c",
+      "shard_sha256": "bbf52cb18a6938301c8e3c0b56e6a1e476f1995009c37dac1f03daabd9f359f6"
+    },
+    {
+      "seed": 620000001,
+      "split": "train",
+      "transitions": 120,
+      "rows": 240,
+      "replay_sha256": "8ebf695c13ac22fafa1a02e64bfe05a11503c27954c9f9a557762d93e693b83d",
+      "shard_sha256": "9e0236641bd61414208b255e8aa687a132da09c8f3920b601d5b6ebbf7f55dca"
+    },
+    {
+      "seed": 620000002,
+      "split": "train",
+      "transitions": 120,
+      "rows": 240,
+      "replay_sha256": "3e79bbc02a7214febd0bf5ddf59f3d1b198932848dea5bd78fb207ee40cafdb7",
+      "shard_sha256": "9861d93c00fde7aa3e33f9a18648b4f17210ce74e7bc8e821fe7ab14a19c3649"
+    },
+    {
+      "seed": 620000003,
+      "split": "train",
+      "transitions": 120,
+      "rows": 240,
+      "replay_sha256": "8aa9d8ab359edeada924bf26015dd516f4763bb8baf1218c95f183cbe2980634",
+      "shard_sha256": "07f04b6779e2706b61825544e4ce9641b876659e63ef52bc5124d5ade999b6ce"
+    },
+    {
+      "seed": 620000004,
+      "split": "validation",
+      "transitions": 120,
+      "rows": 240,
+      "replay_sha256": "bae26c3bd9840768247c3f6c8a2bee30ab58c0b10e7746ddc6d13ac494ca84ae",
+      "shard_sha256": "114abc3e883b23ed351e6731b60b3451950fb44ab1c6120086ad6e1296fdf4bb"
+    },
+    {
+      "seed": 620000005,
+      "split": "validation",
+      "transitions": 120,
+      "rows": 240,
+      "replay_sha256": "49bf0e221eb5da4201c8704aadb729411f9d9199ad68544e9976ce090432b8b4",
+      "shard_sha256": "aee030622cc4564bf044215a4c830300e1b4dd8b9fc347b6289764d8e2e6c02a"
+    }
+  ],
+  "weighting": {
+    "counts": [
+      [
+        2381,
+        707,
+        519,
+        465,
+        588
+      ],
+      [
+        472,
+        622,
+        424,
+        290,
+        409
+      ],
+      [
+        1809,
+        57,
+        54,
+        0,
+        0
+      ]
+    ],
+    "multipliers": [
+      [
+        0.28030624985694885,
+        0.9440016746520996,
+        1.2859522104263306,
+        1.435288667678833,
+        1.1350497007369995
+      ],
+      [
+        1.414002537727356,
+        1.0730050802230835,
+        1.5740782022476196,
+        2.3014109134674072,
+        1.6318073272705078
+      ],
+      [
+        0.6148970127105713,
+        9.104138374328613,
+        9.104138374328613,
+        0.0,
+        0.0
+      ]
+    ],
+    "cap_before_normalization": 8.0,
+    "normalization": 0.878721296787262,
+    "effective_unit_weights_sha256": "b2ef2b7d24514e1c6e7c6944ab7f159c85f2109b7991738f293670371844be08",
+    "effective_formula": "sqrt(role-action weights), re-normalized to mean 1 on valid labels"
+  },
+  "effective_balance": "sqrt-role-action",
+  "loss": "existing cnet2_train.losses policy CE only",
+  "value_labels_used": false,
+  "unused_output_heads_bitwise_unchanged": true,
+  "before": {
+    "train": {
+      "collector": {
+        "n": 4660,
+        "label_counts": [
+          2381,
+          707,
+          519,
+          465,
+          588
+        ],
+        "prediction_counts": [
+          2442,
+          14,
+          420,
+          1729,
+          55
+        ],
+        "confusion_label_by_pred": [
+          [
+            1152,
+            8,
+            199,
+            992,
+            30
+          ],
+          [
+            407,
+            1,
+            65,
+            229,
+            5
+          ],
+          [
+            294,
+            2,
+            45,
+            171,
+            7
+          ],
+          [
+            261,
+            2,
+            39,
+            155,
+            8
+          ],
+          [
+            328,
+            1,
+            72,
+            182,
+            5
+          ]
+        ],
+        "accuracy": 0.2914163090128755,
+        "macro_recall_supported_actions": 0.18275733751130996
+      },
+      "planter": {
+        "n": 2217,
+        "label_counts": [
+          472,
+          622,
+          424,
+          290,
+          409
+        ],
+        "prediction_counts": [
+          1028,
+          7,
+          424,
+          747,
+          11
+        ],
+        "confusion_label_by_pred": [
+          [
+            216,
+            2,
+            64,
+            189,
+            1
+          ],
+          [
+            287,
+            0,
+            129,
+            204,
+            2
+          ],
+          [
+            206,
+            0,
+            79,
+            134,
+            5
+          ],
+          [
+            148,
+            0,
+            69,
+            71,
+            2
+          ],
+          [
+            171,
+            5,
+            83,
+            149,
+            1
+          ]
+        ],
+        "accuracy": 0.16553901668921966,
+        "macro_recall_supported_actions": 0.1782440894686013
+      },
+      "base": {
+        "n": 1920,
+        "label_counts": [
+          1809,
+          57,
+          54,
+          0,
+          0
+        ],
+        "prediction_counts": [
+          1391,
+          181,
+          348,
+          0,
+          0
+        ],
+        "confusion_label_by_pred": [
+          [
+            1391,
+            135,
+            283,
+            0,
+            0
+          ],
+          [
+            0,
+            20,
+            37,
+            0,
+            0
+          ],
+          [
+            0,
+            26,
+            28,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "accuracy": 0.7494791666666667,
+        "macro_recall_supported_actions": 0.5461096079058897
+      },
+      "base_recruit_available": {
+        "n": 531,
+        "teacher_recruits": 111,
+        "predicted_recruits": 529,
+        "correct": 50
+      },
+      "base_forced_none_n": 1389,
+      "unweighted_policy_ce": 1.332557355597356,
+      "interpretation": "teacher-forced replay diagnostic; not closed-loop strength"
+    },
+    "validation": {
+      "collector": {
+        "n": 2292,
+        "label_counts": [
+          1142,
+          315,
+          300,
+          234,
+          301
+        ],
+        "prediction_counts": [
+          1183,
+          14,
+          211,
+          867,
+          17
+        ],
+        "confusion_label_by_pred": [
+          [
+            573,
+            10,
+            93,
+            462,
+            4
+          ],
+          [
+            175,
+            2,
+            32,
+            103,
+            3
+          ],
+          [
+            154,
+            1,
+            30,
+            111,
+            4
+          ],
+          [
+            115,
+            1,
+            27,
+            88,
+            3
+          ],
+          [
+            166,
+            0,
+            29,
+            103,
+            3
+          ]
+        ],
+        "accuracy": 0.3036649214659686,
+        "macro_recall_supported_actions": 0.1988271346622668
+      },
+      "planter": {
+        "n": 1110,
+        "label_counts": [
+          176,
+          365,
+          228,
+          128,
+          213
+        ],
+        "prediction_counts": [
+          566,
+          6,
+          192,
+          342,
+          4
+        ],
+        "confusion_label_by_pred": [
+          [
+            97,
+            1,
+            33,
+            45,
+            0
+          ],
+          [
+            185,
+            1,
+            60,
+            118,
+            1
+          ],
+          [
+            118,
+            1,
+            33,
+            74,
+            2
+          ],
+          [
+            68,
+            0,
+            29,
+            31,
+            0
+          ],
+          [
+            98,
+            3,
+            37,
+            74,
+            1
+          ]
+        ],
+        "accuracy": 0.14684684684684685,
+        "macro_recall_supported_actions": 0.18909905348995504
+      },
+      "base": {
+        "n": 960,
+        "label_counts": [
+          905,
+          29,
+          26,
+          0,
+          0
+        ],
+        "prediction_counts": [
+          706,
+          101,
+          153,
+          0,
+          0
+        ],
+        "confusion_label_by_pred": [
+          [
+            706,
+            79,
+            120,
+            0,
+            0
+          ],
+          [
+            0,
+            11,
+            18,
+            0,
+            0
+          ],
+          [
+            0,
+            11,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "accuracy": 0.7625,
+        "macro_recall_supported_actions": 0.5787813063294107
+      },
+      "base_recruit_available": {
+        "n": 254,
+        "teacher_recruits": 55,
+        "predicted_recruits": 254,
+        "correct": 26
+      },
+      "base_forced_none_n": 706,
+      "unweighted_policy_ce": 1.3312404620324947,
+      "interpretation": "teacher-forced replay diagnostic; not closed-loop strength"
+    }
+  },
+  "after": {
+    "train": {
+      "collector": {
+        "n": 4660,
+        "label_counts": [
+          2381,
+          707,
+          519,
+          465,
+          588
+        ],
+        "prediction_counts": [
+          3005,
+          440,
+          400,
+          183,
+          632
+        ],
+        "confusion_label_by_pred": [
+          [
+            1885,
+            141,
+            105,
+            48,
+            202
+          ],
+          [
+            371,
+            151,
+            75,
+            21,
+            89
+          ],
+          [
+            242,
+            41,
+            135,
+            25,
+            76
+          ],
+          [
+            241,
+            42,
+            34,
+            76,
+            72
+          ],
+          [
+            266,
+            65,
+            51,
+            13,
+            193
+          ]
+        ],
+        "accuracy": 0.5236051502145923,
+        "macro_recall_supported_actions": 0.35141008533847284
+      },
+      "planter": {
+        "n": 2217,
+        "label_counts": [
+          472,
+          622,
+          424,
+          290,
+          409
+        ],
+        "prediction_counts": [
+          841,
+          352,
+          458,
+          165,
+          401
+        ],
+        "confusion_label_by_pred": [
+          [
+            213,
+            74,
+            71,
+            29,
+            85
+          ],
+          [
+            195,
+            139,
+            131,
+            49,
+            108
+          ],
+          [
+            155,
+            60,
+            126,
+            24,
+            59
+          ],
+          [
+            98,
+            41,
+            63,
+            45,
+            43
+          ],
+          [
+            180,
+            38,
+            67,
+            18,
+            106
+          ]
+        ],
+        "accuracy": 0.2837167343256653,
+        "macro_recall_supported_actions": 0.27725095690426094
+      },
+      "base": {
+        "n": 1920,
+        "label_counts": [
+          1809,
+          57,
+          54,
+          0,
+          0
+        ],
+        "prediction_counts": [
+          1896,
+          16,
+          8,
+          0,
+          0
+        ],
+        "confusion_label_by_pred": [
+          [
+            1803,
+            6,
+            0,
+            0,
+            0
+          ],
+          [
+            47,
+            10,
+            0,
+            0,
+            0
+          ],
+          [
+            46,
+            0,
+            8,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "accuracy": 0.9484375,
+        "macro_recall_supported_actions": 0.4400899983513233
+      },
+      "base_recruit_available": {
+        "n": 531,
+        "teacher_recruits": 111,
+        "predicted_recruits": 24,
+        "correct": 432
+      },
+      "base_forced_none_n": 1389,
+      "unweighted_policy_ce": 1.1279345871549282,
+      "interpretation": "teacher-forced replay diagnostic; not closed-loop strength"
+    },
+    "validation": {
+      "collector": {
+        "n": 2292,
+        "label_counts": [
+          1142,
+          315,
+          300,
+          234,
+          301
+        ],
+        "prediction_counts": [
+          1480,
+          244,
+          197,
+          75,
+          296
+        ],
+        "confusion_label_by_pred": [
+          [
+            885,
+            88,
+            53,
+            21,
+            95
+          ],
+          [
+            148,
+            81,
+            41,
+            7,
+            38
+          ],
+          [
+            158,
+            21,
+            77,
+            7,
+            37
+          ],
+          [
+            136,
+            32,
+            7,
+            37,
+            22
+          ],
+          [
+            153,
+            22,
+            19,
+            3,
+            104
+          ]
+        ],
+        "accuracy": 0.5165794066317626,
+        "macro_recall_supported_actions": 0.3584800698516334
+      },
+      "planter": {
+        "n": 1110,
+        "label_counts": [
+          176,
+          365,
+          228,
+          128,
+          213
+        ],
+        "prediction_counts": [
+          494,
+          141,
+          219,
+          87,
+          169
+        ],
+        "confusion_label_by_pred": [
+          [
+            113,
+            13,
+            17,
+            8,
+            25
+          ],
+          [
+            130,
+            70,
+            84,
+            19,
+            62
+          ],
+          [
+            91,
+            25,
+            55,
+            29,
+            28
+          ],
+          [
+            59,
+            15,
+            23,
+            19,
+            12
+          ],
+          [
+            101,
+            18,
+            40,
+            12,
+            42
+          ]
+        ],
+        "accuracy": 0.2693693693693694,
+        "macro_recall_supported_actions": 0.28413498904605017
+      },
+      "base": {
+        "n": 960,
+        "label_counts": [
+          905,
+          29,
+          26,
+          0,
+          0
+        ],
+        "prediction_counts": [
+          950,
+          6,
+          4,
+          0,
+          0
+        ],
+        "confusion_label_by_pred": [
+          [
+            903,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            25,
+            4,
+            0,
+            0,
+            0
+          ],
+          [
+            22,
+            0,
+            4,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "accuracy": 0.9489583333333333,
+        "macro_recall_supported_actions": 0.42985574785917713
+      },
+      "base_recruit_available": {
+        "n": 254,
+        "teacher_recruits": 55,
+        "predicted_recruits": 10,
+        "correct": 205
+      },
+      "base_forced_none_n": 706,
+      "unweighted_policy_ce": 1.1130057408797638,
+      "interpretation": "teacher-forced replay diagnostic; not closed-loop strength"
+    }
+  },
+  "updates": [
+    {
+      "update": 1,
+      "policy_loss": 1.3695253133773804,
+      "grad_norm": 1.1149394512176514
+    },
+    {
+      "update": 2,
+      "policy_loss": 1.3943626880645752,
+      "grad_norm": 1.1065406799316406
+    },
+    {
+      "update": 3,
+      "policy_loss": 1.329809546470642,
+      "grad_norm": 1.064510464668274
+    },
+    {
+      "update": 4,
+      "policy_loss": 1.3331034183502197,
+      "grad_norm": 0.5892888307571411
+    },
+    {
+      "update": 5,
+      "policy_loss": 1.3556724786758423,
+      "grad_norm": 1.0765949487686157
+    },
+    {
+      "update": 6,
+      "policy_loss": 1.35799241065979,
+      "grad_norm": 1.1655066013336182
+    },
+    {
+      "update": 7,
+      "policy_loss": 1.3051633834838867,
+      "grad_norm": 0.6104061603546143
+    },
+    {
+      "update": 8,
+      "policy_loss": 1.3544470071792603,
+      "grad_norm": 0.7238051295280457
+    },
+    {
+      "update": 9,
+      "policy_loss": 1.3064054250717163,
+      "grad_norm": 0.8904693722724915
+    },
+    {
+      "update": 10,
+      "policy_loss": 1.3108470439910889,
+      "grad_norm": 0.9291855096817017
+    },
+    {
+      "update": 11,
+      "policy_loss": 1.3009835481643677,
+      "grad_norm": 0.5390065908432007
+    },
+    {
+      "update": 12,
+      "policy_loss": 1.2655032873153687,
+      "grad_norm": 0.9011479020118713
+    },
+    {
+      "update": 13,
+      "policy_loss": 1.3178272247314453,
+      "grad_norm": 0.9585681557655334
+    },
+    {
+      "update": 14,
+      "policy_loss": 1.3135651350021362,
+      "grad_norm": 0.5740432143211365
+    },
+    {
+      "update": 15,
+      "policy_loss": 1.2988464832305908,
+      "grad_norm": 0.9103608727455139
+    },
+    {
+      "update": 16,
+      "policy_loss": 1.2825168371200562,
+      "grad_norm": 1.146905541419983
+    },
+    {
+      "update": 17,
+      "policy_loss": 1.2481857538223267,
+      "grad_norm": 0.6701855063438416
+    },
+    {
+      "update": 18,
+      "policy_loss": 1.3362518548965454,
+      "grad_norm": 0.5582481622695923
+    },
+    {
+      "update": 19,
+      "policy_loss": 1.3159059286117554,
+      "grad_norm": 0.8212052583694458
+    },
+    {
+      "update": 20,
+      "policy_loss": 1.2971513271331787,
+      "grad_norm": 1.4183911085128784
+    },
+    {
+      "update": 21,
+      "policy_loss": 1.2861251831054688,
+      "grad_norm": 0.8677489161491394
+    },
+    {
+      "update": 22,
+      "policy_loss": 1.2860132455825806,
+      "grad_norm": 1.1572729349136353
+    },
+    {
+      "update": 23,
+      "policy_loss": 1.2467243671417236,
+      "grad_norm": 1.5534965991973877
+    },
+    {
+      "update": 24,
+      "policy_loss": 1.285019040107727,
+      "grad_norm": 0.9921469688415527
+    },
+    {
+      "update": 25,
+      "policy_loss": 1.2476187944412231,
+      "grad_norm": 0.7825915217399597
+    },
+    {
+      "update": 26,
+      "policy_loss": 1.2608689069747925,
+      "grad_norm": 0.6453992128372192
+    },
+    {
+      "update": 27,
+      "policy_loss": 1.2786377668380737,
+      "grad_norm": 0.7745651006698608
+    },
+    {
+      "update": 28,
+      "policy_loss": 1.2377532720565796,
+      "grad_norm": 0.7853808999061584
+    },
+    {
+      "update": 29,
+      "policy_loss": 1.2437617778778076,
+      "grad_norm": 1.0139164924621582
+    },
+    {
+      "update": 30,
+      "policy_loss": 1.3311498165130615,
+      "grad_norm": 0.9186348915100098
+    },
+    {
+      "update": 31,
+      "policy_loss": 1.2047470808029175,
+      "grad_norm": 0.9835878014564514
+    },
+    {
+      "update": 32,
+      "policy_loss": 1.2181227207183838,
+      "grad_norm": 0.9166494011878967
+    },
+    {
+      "update": 33,
+      "policy_loss": 1.369559407234192,
+      "grad_norm": 1.0649298429489136
+    },
+    {
+      "update": 34,
+      "policy_loss": 1.2512092590332031,
+      "grad_norm": 0.8678173422813416
+    },
+    {
+      "update": 35,
+      "policy_loss": 1.302510142326355,
+      "grad_norm": 0.9555762410163879
+    },
+    {
+      "update": 36,
+      "policy_loss": 1.321457862854004,
+      "grad_norm": 1.1226091384887695
+    },
+    {
+      "update": 37,
+      "policy_loss": 1.2526744604110718,
+      "grad_norm": 0.798734724521637
+    },
+    {
+      "update": 38,
+      "policy_loss": 1.2316665649414062,
+      "grad_norm": 1.6056418418884277
+    },
+    {
+      "update": 39,
+      "policy_loss": 1.2077102661132812,
+      "grad_norm": 0.7589457631111145
+    },
+    {
+      "update": 40,
+      "policy_loss": 1.2653753757476807,
+      "grad_norm": 0.5385974645614624
+    },
+    {
+      "update": 41,
+      "policy_loss": 1.2282788753509521,
+      "grad_norm": 1.0933644771575928
+    },
+    {
+      "update": 42,
+      "policy_loss": 1.2143442630767822,
+      "grad_norm": 0.9160714745521545
+    },
+    {
+      "update": 43,
+      "policy_loss": 1.2120226621627808,
+      "grad_norm": 0.8644459843635559
+    },
+    {
+      "update": 44,
+      "policy_loss": 1.1548861265182495,
+      "grad_norm": 0.7585886716842651
+    },
+    {
+      "update": 45,
+      "policy_loss": 1.2001641988754272,
+      "grad_norm": 0.7727859020233154
+    },
+    {
+      "update": 46,
+      "policy_loss": 1.1957517862319946,
+      "grad_norm": 0.7678446769714355
+    },
+    {
+      "update": 47,
+      "policy_loss": 1.2949745655059814,
+      "grad_norm": 0.8208081722259521
+    },
+    {
+      "update": 48,
+      "policy_loss": 1.2399221658706665,
+      "grad_norm": 0.8124630451202393
+    },
+    {
+      "update": 49,
+      "policy_loss": 1.2865488529205322,
+      "grad_norm": 1.117305874824524
+    },
+    {
+      "update": 50,
+      "policy_loss": 1.2535085678100586,
+      "grad_norm": 1.2876931428909302
+    },
+    {
+      "update": 51,
+      "policy_loss": 1.2148704528808594,
+      "grad_norm": 0.8549625277519226
+    },
+    {
+      "update": 52,
+      "policy_loss": 1.2504758834838867,
+      "grad_norm": 0.6982109546661377
+    },
+    {
+      "update": 53,
+      "policy_loss": 1.2428114414215088,
+      "grad_norm": 0.7696425318717957
+    },
+    {
+      "update": 54,
+      "policy_loss": 1.2713228464126587,
+      "grad_norm": 1.041749358177185
+    },
+    {
+      "update": 55,
+      "policy_loss": 1.2423006296157837,
+      "grad_norm": 1.369925618171692
+    },
+    {
+      "update": 56,
+      "policy_loss": 1.1950591802597046,
+      "grad_norm": 1.0909963846206665
+    },
+    {
+      "update": 57,
+      "policy_loss": 1.172451138496399,
+      "grad_norm": 0.9360317587852478
+    },
+    {
+      "update": 58,
+      "policy_loss": 1.2142890691757202,
+      "grad_norm": 1.0382168292999268
+    },
+    {
+      "update": 59,
+      "policy_loss": 1.2898893356323242,
+      "grad_norm": 0.7335062026977539
+    },
+    {
+      "update": 60,
+      "policy_loss": 1.2898147106170654,
+      "grad_norm": 0.9286471009254456
+    },
+    {
+      "update": 61,
+      "policy_loss": 1.2775075435638428,
+      "grad_norm": 1.2910674810409546
+    },
+    {
+      "update": 62,
+      "policy_loss": 1.2368537187576294,
+      "grad_norm": 1.1923062801361084
+    },
+    {
+      "update": 63,
+      "policy_loss": 1.1700661182403564,
+      "grad_norm": 0.8699817657470703
+    },
+    {
+      "update": 64,
+      "policy_loss": 1.1888024806976318,
+      "grad_norm": 0.9295880198478699
+    }
+  ],
+  "seconds": 30.70672687499973,
+  "limitations": "Few self-generated rule demonstrations; teacher-forced validation only. No A4 selection, U/value training, formal distillation or strength certification. Recruitment opportunity uses existing approximate Prefix legality.",
+  "trained_sha256": "65f576c933929db00448ea2e276140f82571957e818ba6141c7d53e1cf58a5fb",
+  "runtime": {
+    "torch": "2.5.1+cpu",
+    "numpy": "1.26.4",
+    "python": "3.12.14"
+  },
+  "pack": {
+    "out": "data/weights/sapling_1200k/agent_int8.py",
+    "bytes": 1728363,
+    "opts": {
+      "teacher": 2,
+      "shield": false,
+      "nocollide": false,
+      "endgame": false,
+      "pshield": false,
+      "rguard": false
+    },
+    "src_sha256": {
+      "cnet2_feat": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+      "cnet2_np": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+      "cnet2_agent": "ac159979644b37d57f59db33bd4cb5713fa54f79d6d92220b6bf5f7c774cbe5c"
+    },
+    "pack_src_sha256": "1cdaa40c12c4c623193307408ee0a568d18a503facab7e8d328fd43b8d96cc86"
+  },
+  "files": {
+    "agent_int8.py": {
+      "sha256": "f260f05dd229f84df2ad1d478a9f4861b7e24f6e0c4f6b74e9885212ea430ad3",
+      "bytes": 1728363
+    },
+    "initial.npz": {
+      "sha256": "dafa4544e9934ed7c56d1e705de1374ff929e9896f848ed396ec42007c681f9c",
+      "bytes": 4854182
+    },
+    "sqrt64.npz": {
+      "sha256": "65f576c933929db00448ea2e276140f82571957e818ba6141c7d53e1cf58a5fb",
+      "bytes": 4860662
+    }
+  },
+  "sources_note": "Replays are generated locally. A gzip container timestamp can change its digest between runs; array-level hashes below compare the actual training inputs.",
+  "size_comparison": {
+    "small_reference": "data/weights/sapling_bootstrap/sqrt.npz",
+    "small_sha256": "35463ca5248ac4ef5258afa43121cc532849efb3196a870a51b70283b622660e",
+    "identical_demo_arrays": [
+      {
+        "seed": 620000000,
+        "array_sha256": "85863174e24018573ee5fc7e7afc50656fccbc139ccecb4962f43606e05c3724"
+      },
+      {
+        "seed": 620000001,
+        "array_sha256": "2855b222fe3f0c113071e8af0f69d2d37241d270aa0ae7ca6950a258b4610a7f"
+      },
+      {
+        "seed": 620000002,
+        "array_sha256": "b4e2643ce017fb7b0a2b48cb2bff2d5007518bda588c165a7275d791a26b4e05"
+      },
+      {
+        "seed": 620000003,
+        "array_sha256": "b6a406e71a0ce3c7513311cad5f449ba3d97d5239ea511352252733393f672d3"
+      },
+      {
+        "seed": 620000004,
+        "array_sha256": "3514415eec31ec6f80bcbbfd1b231db0cb8783ad338be25b3b6ff15785c05d36"
+      },
+      {
+        "seed": 620000005,
+        "array_sha256": "6bf99d23616c7eb4390613c915e9c5612495f93e4c1f8ee9d3699ab253c37b32"
+      }
+    ],
+    "same_effective_unit_weight_file": true,
+    "note": "Same demonstrations, split, sample count, update budget, loader sampling seed and weight formula. Initialization and the Torch augmentation RNG stream can differ with architecture."
+  }
+}

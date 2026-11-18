@@ -1,0 +1,407 @@
+{
+  "schema_version": "sapling-export-parity-v1",
+  "status": "PASS",
+  "tolerance_abs": 3e-05,
+  "device": "CPU",
+  "torch_threads": 1,
+  "python": "3.12.14",
+  "numpy": "1.26.4",
+  "torch": "2.5.1+cpu",
+  "replay_source": {
+    "path": "data/master6s_corpus/21f9889b21072db820926c967d5bdb85-1.json.gz",
+    "compressed_sha256": "954063d6378a61edf7a47317070e8d447a1cb83588c8c86ad8f501c678508583",
+    "roots": [
+      {
+        "seat": 0,
+        "step": 0,
+        "cash": 80.0,
+        "free_slots": 10
+      },
+      {
+        "seat": 0,
+        "step": 1,
+        "cash": 20.0,
+        "free_slots": 8
+      },
+      {
+        "seat": 0,
+        "step": 12,
+        "cash": 11.69,
+        "free_slots": 8
+      },
+      {
+        "seat": 0,
+        "step": 16,
+        "cash": 40.04,
+        "free_slots": 7
+      },
+      {
+        "seat": 0,
+        "step": 49,
+        "cash": 231.93,
+        "free_slots": 1
+      },
+      {
+        "seat": 0,
+        "step": 50,
+        "cash": 210.26,
+        "free_slots": 0
+      },
+      {
+        "seat": 0,
+        "step": 150,
+        "cash": 2805.29,
+        "free_slots": 0
+      },
+      {
+        "seat": 0,
+        "step": 294,
+        "cash": 6580.96,
+        "free_slots": 2
+      },
+      {
+        "seat": 1,
+        "step": 0,
+        "cash": 80.0,
+        "free_slots": 10
+      },
+      {
+        "seat": 1,
+        "step": 1,
+        "cash": 20.0,
+        "free_slots": 8
+      },
+      {
+        "seat": 1,
+        "step": 12,
+        "cash": 17.59,
+        "free_slots": 8
+      },
+      {
+        "seat": 1,
+        "step": 13,
+        "cash": 36.66,
+        "free_slots": 8
+      },
+      {
+        "seat": 1,
+        "step": 41,
+        "cash": 191.22,
+        "free_slots": 1
+      },
+      {
+        "seat": 1,
+        "step": 50,
+        "cash": 345.13,
+        "free_slots": 0
+      },
+      {
+        "seat": 1,
+        "step": 150,
+        "cash": 3935.11,
+        "free_slots": 0
+      },
+      {
+        "seat": 1,
+        "step": 294,
+        "cash": 7711.76,
+        "free_slots": 2
+      }
+    ],
+    "hidden_carbon_passed_to_policy": false,
+    "feature_history": "Sequential public observations from step0."
+  },
+  "weights": {
+    "initial": {
+      "input_filename": "sapling120-initial.npz",
+      "input_sha256": "dafa4544e9934ed7c56d1e705de1374ff929e9896f848ed396ec42007c681f9c",
+      "fp32_numeric_checks": {
+        "parameter_count": 1206476,
+        "cfg": {
+          "C": 93,
+          "NB": 6,
+          "D": 96,
+          "NH": 4,
+          "L": 1,
+          "E": 32,
+          "G": 3,
+          "TA": 0
+        },
+        "numpy_group_count": 3,
+        "torch_group_count": 3,
+        "roots": 16,
+        "legal_joint_candidates": 38,
+        "candidates_changing_prefix_features": 21,
+        "candidates_changing_prefix_legality": 4,
+        "max_abs_errors": {
+          "torch_np_logits": 3.427267074584961e-07,
+          "torch_np_value": 4.771212706866645e-07,
+          "torch_np_utility": 8.711489307700049e-08,
+          "torch_sequence_logits": 0.0,
+          "torch_sequence_value": 0.0,
+          "np_batch_tokens": 2.3245811462402344e-06,
+          "np_batch_context": 7.152557373046875e-07,
+          "np_batch_forced_logits": 3.2782554626464844e-07
+        },
+        "batch_greedy_label_differences": 0
+      },
+      "int8_export": {
+        "pack_bytes": 1716047,
+        "pack_md5": "1ff7136924f2502616aa5fa474add3fe",
+        "pack_sha256": "734b22b8b26dee9336968562179ba3505473893d6bce17807b3ba916c136e683",
+        "dequantized_sha256": "72e2c4d8d80236f5d9b86467a6341e3980c41627355cbd9ffaec60899b6671f0",
+        "metadata_group_count": 3,
+        "actual_pack_deq_calls": 590,
+        "actual_pack_deq_action_differences": 0,
+        "dequantized_numeric_checks": {
+          "parameter_count": 1206476,
+          "cfg": {
+            "C": 93,
+            "NB": 6,
+            "D": 96,
+            "NH": 4,
+            "L": 1,
+            "E": 32,
+            "G": 3,
+            "TA": 0
+          },
+          "numpy_group_count": 3,
+          "torch_group_count": 3,
+          "roots": 16,
+          "legal_joint_candidates": 38,
+          "candidates_changing_prefix_features": 21,
+          "candidates_changing_prefix_legality": 4,
+          "max_abs_errors": {
+            "torch_np_logits": 3.8743019104003906e-07,
+            "torch_np_value": 4.0233093997525345e-07,
+            "torch_np_utility": 8.486314884148527e-08,
+            "torch_sequence_logits": 0.0,
+            "torch_sequence_value": 0.0,
+            "np_batch_tokens": 2.4437904357910156e-06,
+            "np_batch_context": 8.344650268554688e-07,
+            "np_batch_forced_logits": 4.470348358154297e-07
+          },
+          "batch_greedy_label_differences": 0
+        },
+        "quantization_diagnostic": {
+          "max_abs_same_prefix_logits_change": 0.005633682012557983,
+          "greedy_changed_slots": 8,
+          "active_slots": 119,
+          "note": "FP32/int8 may differ; this is not a claim of preserved game strength."
+        }
+      }
+    },
+    "legacy": {
+      "input_filename": "sapling_seed551187.npz",
+      "input_sha256": "fae95a7240198a2e25582096a530dc8f3e4216a3a22724b1b78e9142370bedb3",
+      "fp32_numeric_checks": {
+        "parameter_count": 551187,
+        "cfg": {
+          "C": 64,
+          "NB": 4,
+          "D": 96,
+          "NH": 4,
+          "L": 1,
+          "E": 32,
+          "G": 8,
+          "TA": 0
+        },
+        "numpy_group_count": 8,
+        "torch_group_count": 8,
+        "roots": 16,
+        "legal_joint_candidates": 38,
+        "candidates_changing_prefix_features": 17,
+        "candidates_changing_prefix_legality": 5,
+        "max_abs_errors": {
+          "torch_np_logits": 3.7997961044311523e-07,
+          "torch_np_value": 2.427983111785714e-07,
+          "torch_np_utility": 6.635804095100895e-08,
+          "torch_sequence_logits": 0.0,
+          "torch_sequence_value": 0.0,
+          "np_batch_tokens": 3.2186508178710938e-06,
+          "np_batch_context": 8.344650268554688e-07,
+          "np_batch_forced_logits": 4.023313522338867e-07
+        },
+        "batch_greedy_label_differences": 0
+      },
+      "int8_export": {
+        "pack_bytes": 837152,
+        "pack_md5": "8a397c59022624d7cb4c5f06c923fb33",
+        "pack_sha256": "d90c765414b03fd077db1ed0dc7fc230579005abb9117db1327e8353636ede1b",
+        "dequantized_sha256": "24acd55215ecccf6aee327cc1c07d40c34042e017a0813a36d7a32b518e0a2b7",
+        "metadata_group_count": 8,
+        "actual_pack_deq_calls": 590,
+        "actual_pack_deq_action_differences": 0,
+        "dequantized_numeric_checks": {
+          "parameter_count": 551187,
+          "cfg": {
+            "C": 64,
+            "NB": 4,
+            "D": 96,
+            "NH": 4,
+            "L": 1,
+            "E": 32,
+            "G": 8,
+            "TA": 0
+          },
+          "numpy_group_count": 8,
+          "torch_group_count": 8,
+          "roots": 16,
+          "legal_joint_candidates": 38,
+          "candidates_changing_prefix_features": 17,
+          "candidates_changing_prefix_legality": 5,
+          "max_abs_errors": {
+            "torch_np_logits": 3.8743019104003906e-07,
+            "torch_np_value": 1.7481942699015818e-07,
+            "torch_np_utility": 6.940755248319164e-08,
+            "torch_sequence_logits": 0.0,
+            "torch_sequence_value": 0.0,
+            "np_batch_tokens": 3.159046173095703e-06,
+            "np_batch_context": 8.940696716308594e-07,
+            "np_batch_forced_logits": 3.5762786865234375e-07
+          },
+          "batch_greedy_label_differences": 0
+        },
+        "quantization_diagnostic": {
+          "max_abs_same_prefix_logits_change": 0.00536714494228363,
+          "greedy_changed_slots": 0,
+          "active_slots": 119,
+          "note": "FP32/int8 may differ; this is not a claim of preserved game strength."
+        }
+      }
+    },
+    "trained": {
+      "input_filename": "trained.npz",
+      "input_sha256": "65f576c933929db00448ea2e276140f82571957e818ba6141c7d53e1cf58a5fb",
+      "fp32_numeric_checks": {
+        "parameter_count": 1206476,
+        "cfg": {
+          "C": 93,
+          "NB": 6,
+          "D": 96,
+          "NH": 4,
+          "L": 1,
+          "E": 32,
+          "G": 3,
+          "TA": 0
+        },
+        "numpy_group_count": 3,
+        "torch_group_count": 3,
+        "roots": 16,
+        "legal_joint_candidates": 38,
+        "candidates_changing_prefix_features": 16,
+        "candidates_changing_prefix_legality": 5,
+        "max_abs_errors": {
+          "torch_np_logits": 9.5367431640625e-07,
+          "torch_np_value": 2.756596094721786e-07,
+          "torch_np_utility": 1.8328201545347866e-07,
+          "torch_sequence_logits": 0.0,
+          "torch_sequence_value": 0.0,
+          "np_batch_tokens": 1.1920928955078125e-06,
+          "np_batch_context": 1.9073486328125e-06,
+          "np_batch_forced_logits": 9.5367431640625e-07
+        },
+        "batch_greedy_label_differences": 0
+      },
+      "int8_export": {
+        "pack_bytes": 1728363,
+        "pack_md5": "f760e9dffde94f7fc15e139afab8f7dd",
+        "pack_sha256": "f260f05dd229f84df2ad1d478a9f4861b7e24f6e0c4f6b74e9885212ea430ad3",
+        "dequantized_sha256": "6174991d224129f33cd02fac00438922c605299242c946d9319a7f614b54361a",
+        "metadata_group_count": 3,
+        "actual_pack_deq_calls": 590,
+        "actual_pack_deq_action_differences": 0,
+        "dequantized_numeric_checks": {
+          "parameter_count": 1206476,
+          "cfg": {
+            "C": 93,
+            "NB": 6,
+            "D": 96,
+            "NH": 4,
+            "L": 1,
+            "E": 32,
+            "G": 3,
+            "TA": 0
+          },
+          "numpy_group_count": 3,
+          "torch_group_count": 3,
+          "roots": 16,
+          "legal_joint_candidates": 38,
+          "candidates_changing_prefix_features": 16,
+          "candidates_changing_prefix_legality": 5,
+          "max_abs_errors": {
+            "torch_np_logits": 9.5367431640625e-07,
+            "torch_np_value": 3.0100247716546846e-07,
+            "torch_np_utility": 1.2678550165290403e-07,
+            "torch_sequence_logits": 0.0,
+            "torch_sequence_value": 0.0,
+            "np_batch_tokens": 8.344650268554688e-07,
+            "np_batch_context": 1.9073486328125e-06,
+            "np_batch_forced_logits": 7.152557373046875e-07
+          },
+          "batch_greedy_label_differences": 0
+        },
+        "quantization_diagnostic": {
+          "max_abs_same_prefix_logits_change": 0.006387084722518921,
+          "greedy_changed_slots": 0,
+          "active_slots": 119,
+          "note": "FP32/int8 may differ; this is not a claim of preserved game strength."
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "code/cnet2_model.py": "3dc3b3aaaf083c8b7168299acaa0c573c3957d95a63074776d2f0f4aa52add8f",
+    "code/cnet2_np.py": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+    "code/cnet2_search.py": "9b3fdd874e20bfae66deeabeae8902019707a4d4659c75077237fb8166056060",
+    "code/cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+    "code/cnet2_agent.py": "ac159979644b37d57f59db33bd4cb5713fa54f79d6d92220b6bf5f7c774cbe5c",
+    "code/cnet2_pack.py": "f40ddcd749603bdd0e664d544165c307c17b8f901ac7b7fb0f1c58d1fae1aecc",
+    "code/rl2_ppo_cnet2.py": "14ea28a005bcedea8cc793a4620556f136dbd4fbf9f4a6aed523a2c686748a9f"
+  },
+  "limitations": [
+    "Numerical/export acceptance only; no training, strength assessment or platform-resource certification.",
+    "Preserve complete cfg.G metadata. The legacy no-config fallback is G=8 and is not suitable for C=93."
+  ],
+  "execution_batches": [
+    [
+      "initial",
+      "legacy"
+    ],
+    [
+      "trained"
+    ]
+  ],
+  "expected_architectures_verified": {
+    "initial": {
+      "params": 1206476,
+      "C": 93,
+      "NB": 6,
+      "G": 3,
+      "D": 96
+    },
+    "trained": {
+      "params": 1206476,
+      "C": 93,
+      "NB": 6,
+      "G": 3,
+      "D": 96
+    },
+    "legacy": {
+      "params": 551187,
+      "C": 64,
+      "NB": 4,
+      "G": 8,
+      "D": 96
+    }
+  },
+  "input_files_unchanged_after_checks": true,
+  "static_groupnorm_inspection": {
+    "numpy": "Policy.G reads meta.cfg.G; scalar gn reshapes using self.G. No-config legacy fallback is 8.",
+    "batch": "cnet2_search._gn uses pol.G for grouping/count/affine expansion.",
+    "torch": "CNet2 uses cfg.G when constructing stem and residual GroupNorm.",
+    "pack": "Actual pack _WMETA and dequantized meta preserve G=3 for both new artifacts, G=8 for legacy."
+  },
+  "acceptance_script_sha256": "c0a37fe7eded4c37c1b73d0727c40b4729751a73f8844e4f3b9373260e5998ee",
+  "source_snapshot_verified_at_commit": "1ff922d64a21250fa29c60cc8199f9ad50617b18"
+}

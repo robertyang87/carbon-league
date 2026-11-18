@@ -1,0 +1,763 @@
+{
+  "status": "complete",
+  "protocol": {
+    "version": 1,
+    "small": "551187-param sqrt-role-action BC baseline",
+    "large": "new architecture sqrt-role-action BC candidate",
+    "teacher": 2,
+    "optional_guards": false,
+    "quantization": "int8",
+    "steps": 60,
+    "behavior_seeds": [
+      620040000,
+      620040001,
+      620040002,
+      620040003
+    ],
+    "timing_seeds": [
+      620041000,
+      620041001,
+      620041002,
+      620041003
+    ],
+    "training_validation_seeds_excluded": [
+      620000000,
+      620000001,
+      620000002,
+      620000003,
+      620000004,
+      620000005
+    ],
+    "timing": "Independent rule-vs-rule observations. Each model owns persistent history. Deepcopy outside timer. Model order alternates; first calls and module loads reported separately. No inference warmup omitted from accounting.",
+    "behavior": "4 maps x both candidate seats, fixed policy_v0_5; t30/t60 observed, early terminal carried forward explicitly; no terminal-strength inference.",
+    "source_sha256": {
+      "cnet2_pack.py": "f40ddcd749603bdd0e664d544165c307c17b8f901ac7b7fb0f1c58d1fae1aecc",
+      "cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+      "cnet2_np.py": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+      "cnet2_agent.py": "ac159979644b37d57f59db33bd4cb5713fa54f79d6d92220b6bf5f7c774cbe5c",
+      "fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+      "policy_v0_5.py": "4d435035e8e274c5c4d49dfcc71ca293c6b4989ebadc974796a90837f9f569c1"
+    },
+    "observer_sha256": "22fe541c27e92d5e89bc3421769e48bf6c4d3da7e0508410bc0ad20b2ab4058e",
+    "script_sha256": "c084dcc7b6355aa13dc254ceba628307a52ddf3c36dd3646adfbd100201be97e",
+    "scope": "Local single-core diagnostic, not 1.5-core/512MiB platform resource certification or strength trial"
+  },
+  "identity": {
+    "small": {
+      "label": "small",
+      "weight_filename": "sqrt.npz",
+      "weight_sha256": "35463ca5248ac4ef5258afa43121cc532849efb3196a870a51b70283b622660e",
+      "numeric_tensor_count": 89,
+      "numeric_parameter_count": 551187,
+      "cfg": {
+        "C": 64,
+        "NB": 4,
+        "D": 96,
+        "NH": 4,
+        "L": 1,
+        "E": 32,
+        "G": 8,
+        "TA": 0
+      },
+      "pack_bytes": 845288,
+      "pack_md5": "f92b1823f3de47555f6158eecd0cfb23",
+      "pack_sha256": "7c4ff4dcf38166a84e1090091813597da774b3e86d3b4afa2647294f97655e82"
+    },
+    "large": {
+      "label": "large",
+      "weight_filename": "trained.npz",
+      "weight_sha256": "65f576c933929db00448ea2e276140f82571957e818ba6141c7d53e1cf58a5fb",
+      "numeric_tensor_count": 105,
+      "numeric_parameter_count": 1206476,
+      "cfg": {
+        "C": 93,
+        "NB": 6,
+        "D": 96,
+        "NH": 4,
+        "L": 1,
+        "E": 32,
+        "G": 3,
+        "TA": 0
+      },
+      "pack_bytes": 1728363,
+      "pack_md5": "f760e9dffde94f7fc15e139afab8f7dd",
+      "pack_sha256": "f260f05dd229f84df2ad1d478a9f4861b7e24f6e0c4f6b74e9885212ea430ad3"
+    }
+  },
+  "self_checks": {
+    "harvest_delivery_trace_parity": true,
+    "friendly_merge_30_carbon_preserved": true,
+    "post_empty_enemy_cargo_not_second_loop": true
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "1.26.4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "cpu_affinity": [
+      0
+    ],
+    "thread_env": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "blas_backends": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libopenblas",
+        "version": "0.3.23.dev",
+        "threading_layer": "pthreads",
+        "architecture": "Cooperlake"
+      }
+    ]
+  },
+  "timing_summary": {
+    "small": {
+      "cold_first_agent_call": {
+        "n": 8,
+        "mean_ms": 13.650479625,
+        "p50_ms": 12.1237645,
+        "p95_ms": 20.2426384,
+        "max_ms": 20.770108,
+        "p95_method": "numpy linear percentile"
+      },
+      "warm_agent_calls": {
+        "n": 472,
+        "mean_ms": 5.261209845338984,
+        "p50_ms": 5.152197,
+        "p95_ms": 6.36942835,
+        "max_ms": 12.042885,
+        "p95_method": "numpy linear percentile"
+      },
+      "module_load_shared_interpreter": {
+        "n": 8,
+        "mean_ms": 3.6322613749999997,
+        "p50_ms": 0.633455,
+        "p95_ms": 15.348071449999988,
+        "max_ms": 22.267331,
+        "p95_method": "numpy linear percentile"
+      },
+      "warm_calls_per_wall_second": 190.07035062209522
+    },
+    "large": {
+      "cold_first_agent_call": {
+        "n": 8,
+        "mean_ms": 39.023301875,
+        "p50_ms": 26.4264535,
+        "p95_ms": 83.15149214999997,
+        "max_ms": 102.639062,
+        "p95_method": "numpy linear percentile"
+      },
+      "warm_agent_calls": {
+        "n": 472,
+        "mean_ms": 10.351503019067795,
+        "p50_ms": 10.070772999999999,
+        "p95_ms": 11.91624955,
+        "max_ms": 90.24697,
+        "p95_method": "numpy linear percentile"
+      },
+      "module_load_shared_interpreter": {
+        "n": 8,
+        "mean_ms": 5.5641725,
+        "p50_ms": 3.5158035,
+        "p95_ms": 14.682797249999993,
+        "max_ms": 18.610212,
+        "p95_method": "numpy linear percentile"
+      },
+      "warm_calls_per_wall_second": 96.60432868134882
+    },
+    "large_over_small_warm_mean": 1.967513808299893,
+    "warm_paired_ratios_mean": 1.9700868767572925,
+    "same_actions_count": 130,
+    "same_actions_denominator": 480,
+    "unit_regimes": {
+      "0-2": {
+        "small": {
+          "n": 277,
+          "mean_ms": 5.016428758122743,
+          "p50_ms": 4.838561,
+          "p95_ms": 6.217646199999999,
+          "max_ms": 10.406106,
+          "p95_method": "numpy linear percentile"
+        },
+        "large": {
+          "n": 277,
+          "mean_ms": 9.959736379061372,
+          "p50_ms": 9.716953,
+          "p95_ms": 11.823898999999999,
+          "max_ms": 14.500613,
+          "p95_method": "numpy linear percentile"
+        }
+      },
+      "3-6": {
+        "small": {
+          "n": 51,
+          "mean_ms": 5.347263764705882,
+          "p50_ms": 5.231455,
+          "p95_ms": 6.503788,
+          "max_ms": 7.555935,
+          "p95_method": "numpy linear percentile"
+        },
+        "large": {
+          "n": 51,
+          "mean_ms": 10.280567411764705,
+          "p50_ms": 9.947605,
+          "p95_ms": 12.5211745,
+          "max_ms": 13.835636,
+          "p95_method": "numpy linear percentile"
+        }
+      },
+      "7-50": {
+        "small": {
+          "n": 144,
+          "mean_ms": 5.701596034722223,
+          "p50_ms": 5.586596500000001,
+          "p95_ms": 6.571291799999999,
+          "max_ms": 12.042885,
+          "p95_method": "numpy linear percentile"
+        },
+        "large": {
+          "n": 144,
+          "mean_ms": 11.130232708333333,
+          "p50_ms": 10.413852,
+          "p95_ms": 11.848345149999998,
+          "max_ms": 90.24697,
+          "p95_method": "numpy linear percentile"
+        }
+      }
+    }
+  },
+  "behavior_summary": {
+    "small": {
+      "30": {
+        "candidate": {
+          "scheduled_games": 8,
+          "games_with_snapshot": 8,
+          "completed_loop_games": 2,
+          "games_with_positive_delivery": 2,
+          "games_with_positive_cargo_collectors": 2,
+          "recruited_total": {
+            "sum": 16,
+            "mean": 2.0,
+            "denominator_games": 8
+          },
+          "new_trees_planted": {
+            "sum": 6,
+            "mean": 0.75,
+            "denominator_games": 8
+          },
+          "positive_cargo_collectors": {
+            "sum": 2,
+            "mean": 0.25,
+            "denominator_games": 8
+          },
+          "collectors_ever_collected": {
+            "sum": 4,
+            "mean": 0.5,
+            "denominator_games": 8
+          },
+          "collected_carbon": {
+            "sum": 112.8948,
+            "mean": 14.11185,
+            "denominator_games": 8
+          },
+          "positive_delivery_events": {
+            "sum": 2.0,
+            "mean": 0.25,
+            "denominator_games": 8
+          },
+          "own_positive_delivery_carbon": {
+            "sum": 50.187,
+            "mean": 6.273375,
+            "denominator_games": 8
+          },
+          "cash": {
+            "sum": 124.95,
+            "mean": 15.61875,
+            "denominator_games": 8
+          },
+          "cargo": {
+            "sum": 55.20354462,
+            "mean": 6.9004430775,
+            "denominator_games": 8
+          },
+          "alive_trees": {
+            "sum": 6,
+            "mean": 0.75,
+            "denominator_games": 8
+          },
+          "alive_collectors": {
+            "sum": 8,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "agent_errors": 0
+        },
+        "opponent": {
+          "scheduled_games": 8,
+          "games_with_snapshot": 8,
+          "completed_loop_games": 0,
+          "games_with_positive_delivery": 0,
+          "games_with_positive_cargo_collectors": 8,
+          "recruited_total": {
+            "sum": 18,
+            "mean": 2.25,
+            "denominator_games": 8
+          },
+          "new_trees_planted": {
+            "sum": 26,
+            "mean": 3.25,
+            "denominator_games": 8
+          },
+          "positive_cargo_collectors": {
+            "sum": 8,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "collectors_ever_collected": {
+            "sum": 8,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "collected_carbon": {
+            "sum": 1336.0725,
+            "mean": 167.0090625,
+            "denominator_games": 8
+          },
+          "positive_delivery_events": {
+            "sum": 0.0,
+            "mean": 0.0,
+            "denominator_games": 8
+          },
+          "own_positive_delivery_carbon": {
+            "sum": 0.0,
+            "mean": 0.0,
+            "denominator_games": 8
+          },
+          "cash": {
+            "sum": 299.84000000000003,
+            "mean": 37.480000000000004,
+            "denominator_games": 8
+          },
+          "cargo": {
+            "sum": 1336.0725,
+            "mean": 167.0090625,
+            "denominator_games": 8
+          },
+          "alive_trees": {
+            "sum": 26,
+            "mean": 3.25,
+            "denominator_games": 8
+          },
+          "alive_collectors": {
+            "sum": 9,
+            "mean": 1.125,
+            "denominator_games": 8
+          },
+          "agent_errors": 0
+        }
+      },
+      "60": {
+        "candidate": {
+          "scheduled_games": 8,
+          "games_with_snapshot": 8,
+          "completed_loop_games": 4,
+          "games_with_positive_delivery": 4,
+          "games_with_positive_cargo_collectors": 5,
+          "recruited_total": {
+            "sum": 21,
+            "mean": 2.625,
+            "denominator_games": 8
+          },
+          "new_trees_planted": {
+            "sum": 10,
+            "mean": 1.25,
+            "denominator_games": 8
+          },
+          "positive_cargo_collectors": {
+            "sum": 6,
+            "mean": 0.75,
+            "denominator_games": 8
+          },
+          "collectors_ever_collected": {
+            "sum": 6,
+            "mean": 0.75,
+            "denominator_games": 8
+          },
+          "collected_carbon": {
+            "sum": 421.3734,
+            "mean": 52.671675,
+            "denominator_games": 8
+          },
+          "positive_delivery_events": {
+            "sum": 6.0,
+            "mean": 0.75,
+            "denominator_games": 8
+          },
+          "own_positive_delivery_carbon": {
+            "sum": 184.58334462,
+            "mean": 23.0729180775,
+            "denominator_games": 8
+          },
+          "cash": {
+            "sum": 94.5,
+            "mean": 11.8125,
+            "denominator_games": 8
+          },
+          "cargo": {
+            "sum": 206.3614542,
+            "mean": 25.795181775,
+            "denominator_games": 8
+          },
+          "alive_trees": {
+            "sum": 10,
+            "mean": 1.25,
+            "denominator_games": 8
+          },
+          "alive_collectors": {
+            "sum": 12,
+            "mean": 1.5,
+            "denominator_games": 8
+          },
+          "agent_errors": 0
+        },
+        "opponent": {
+          "scheduled_games": 8,
+          "games_with_snapshot": 8,
+          "completed_loop_games": 7,
+          "games_with_positive_delivery": 7,
+          "games_with_positive_cargo_collectors": 8,
+          "recruited_total": {
+            "sum": 75,
+            "mean": 9.375,
+            "denominator_games": 8
+          },
+          "new_trees_planted": {
+            "sum": 85,
+            "mean": 10.625,
+            "denominator_games": 8
+          },
+          "positive_cargo_collectors": {
+            "sum": 48,
+            "mean": 6.0,
+            "denominator_games": 8
+          },
+          "collectors_ever_collected": {
+            "sum": 49,
+            "mean": 6.125,
+            "denominator_games": 8
+          },
+          "collected_carbon": {
+            "sum": 8347.9764,
+            "mean": 1043.49705,
+            "denominator_games": 8
+          },
+          "positive_delivery_events": {
+            "sum": 12.0,
+            "mean": 1.5,
+            "denominator_games": 8
+          },
+          "own_positive_delivery_carbon": {
+            "sum": 2324.007,
+            "mean": 290.500875,
+            "denominator_games": 8
+          },
+          "cash": {
+            "sum": 2454.25,
+            "mean": 306.78125,
+            "denominator_games": 8
+          },
+          "cargo": {
+            "sum": 6016.14396,
+            "mean": 752.017995,
+            "denominator_games": 8
+          },
+          "alive_trees": {
+            "sum": 78,
+            "mean": 9.75,
+            "denominator_games": 8
+          },
+          "alive_collectors": {
+            "sum": 51,
+            "mean": 6.375,
+            "denominator_games": 8
+          },
+          "agent_errors": 0
+        }
+      }
+    },
+    "large": {
+      "30": {
+        "candidate": {
+          "scheduled_games": 8,
+          "games_with_snapshot": 8,
+          "completed_loop_games": 4,
+          "games_with_positive_delivery": 4,
+          "games_with_positive_cargo_collectors": 2,
+          "recruited_total": {
+            "sum": 16,
+            "mean": 2.0,
+            "denominator_games": 8
+          },
+          "new_trees_planted": {
+            "sum": 6,
+            "mean": 0.75,
+            "denominator_games": 8
+          },
+          "positive_cargo_collectors": {
+            "sum": 2,
+            "mean": 0.25,
+            "denominator_games": 8
+          },
+          "collectors_ever_collected": {
+            "sum": 4,
+            "mean": 0.5,
+            "denominator_games": 8
+          },
+          "collected_carbon": {
+            "sum": 102.04889999999999,
+            "mean": 12.756112499999999,
+            "denominator_games": 8
+          },
+          "positive_delivery_events": {
+            "sum": 7.0,
+            "mean": 0.875,
+            "denominator_games": 8
+          },
+          "own_positive_delivery_carbon": {
+            "sum": 79.1925,
+            "mean": 9.8990625,
+            "denominator_games": 8
+          },
+          "cash": {
+            "sum": 150.06,
+            "mean": 18.7575,
+            "denominator_games": 8
+          },
+          "cargo": {
+            "sum": 22.8564,
+            "mean": 2.85705,
+            "denominator_games": 8
+          },
+          "alive_trees": {
+            "sum": 6,
+            "mean": 0.75,
+            "denominator_games": 8
+          },
+          "alive_collectors": {
+            "sum": 8,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "agent_errors": 0
+        },
+        "opponent": {
+          "scheduled_games": 8,
+          "games_with_snapshot": 8,
+          "completed_loop_games": 0,
+          "games_with_positive_delivery": 0,
+          "games_with_positive_cargo_collectors": 8,
+          "recruited_total": {
+            "sum": 16,
+            "mean": 2.0,
+            "denominator_games": 8
+          },
+          "new_trees_planted": {
+            "sum": 28,
+            "mean": 3.5,
+            "denominator_games": 8
+          },
+          "positive_cargo_collectors": {
+            "sum": 8,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "collectors_ever_collected": {
+            "sum": 8,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "collected_carbon": {
+            "sum": 1308.2364,
+            "mean": 163.52955,
+            "denominator_games": 8
+          },
+          "positive_delivery_events": {
+            "sum": 0.0,
+            "mean": 0.0,
+            "denominator_games": 8
+          },
+          "own_positive_delivery_carbon": {
+            "sum": 0.0,
+            "mean": 0.0,
+            "denominator_games": 8
+          },
+          "cash": {
+            "sum": 270.6,
+            "mean": 33.825,
+            "denominator_games": 8
+          },
+          "cargo": {
+            "sum": 1308.2364,
+            "mean": 163.52955,
+            "denominator_games": 8
+          },
+          "alive_trees": {
+            "sum": 28,
+            "mean": 3.5,
+            "denominator_games": 8
+          },
+          "alive_collectors": {
+            "sum": 8,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "agent_errors": 0
+        }
+      },
+      "60": {
+        "candidate": {
+          "scheduled_games": 8,
+          "games_with_snapshot": 8,
+          "completed_loop_games": 4,
+          "games_with_positive_delivery": 4,
+          "games_with_positive_cargo_collectors": 3,
+          "recruited_total": {
+            "sum": 17,
+            "mean": 2.125,
+            "denominator_games": 8
+          },
+          "new_trees_planted": {
+            "sum": 8,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "positive_cargo_collectors": {
+            "sum": 4,
+            "mean": 0.5,
+            "denominator_games": 8
+          },
+          "collectors_ever_collected": {
+            "sum": 5,
+            "mean": 0.625,
+            "denominator_games": 8
+          },
+          "collected_carbon": {
+            "sum": 583.4450999999999,
+            "mean": 72.93063749999999,
+            "denominator_games": 8
+          },
+          "positive_delivery_events": {
+            "sum": 8.0,
+            "mean": 1.0,
+            "denominator_games": 8
+          },
+          "own_positive_delivery_carbon": {
+            "sum": 90.6207,
+            "mean": 11.3275875,
+            "denominator_games": 8
+          },
+          "cash": {
+            "sum": 124.09,
+            "mean": 15.51125,
+            "denominator_games": 8
+          },
+          "cargo": {
+            "sum": 397.1529766036923,
+            "mean": 49.64412207546154,
+            "denominator_games": 8
+          },
+          "alive_trees": {
+            "sum": 7,
+            "mean": 0.875,
+            "denominator_games": 8
+          },
+          "alive_collectors": {
+            "sum": 9,
+            "mean": 1.125,
+            "denominator_games": 8
+          },
+          "agent_errors": 0
+        },
+        "opponent": {
+          "scheduled_games": 8,
+          "games_with_snapshot": 8,
+          "completed_loop_games": 7,
+          "games_with_positive_delivery": 7,
+          "games_with_positive_cargo_collectors": 8,
+          "recruited_total": {
+            "sum": 75,
+            "mean": 9.375,
+            "denominator_games": 8
+          },
+          "new_trees_planted": {
+            "sum": 83,
+            "mean": 10.375,
+            "denominator_games": 8
+          },
+          "positive_cargo_collectors": {
+            "sum": 49,
+            "mean": 6.125,
+            "denominator_games": 8
+          },
+          "collectors_ever_collected": {
+            "sum": 49,
+            "mean": 6.125,
+            "denominator_games": 8
+          },
+          "collected_carbon": {
+            "sum": 8034.8829,
+            "mean": 1004.3603625,
+            "denominator_games": 8
+          },
+          "positive_delivery_events": {
+            "sum": 9.0,
+            "mean": 1.125,
+            "denominator_games": 8
+          },
+          "own_positive_delivery_carbon": {
+            "sum": 1930.4628,
+            "mean": 241.30785,
+            "denominator_games": 8
+          },
+          "cash": {
+            "sum": 2623.64,
+            "mean": 327.955,
+            "denominator_games": 8
+          },
+          "cargo": {
+            "sum": 6104.420099999999,
+            "mean": 763.0525124999999,
+            "denominator_games": 8
+          },
+          "alive_trees": {
+            "sum": 75,
+            "mean": 9.375,
+            "denominator_games": 8
+          },
+          "alive_collectors": {
+            "sum": 51,
+            "mean": 6.375,
+            "denominator_games": 8
+          },
+          "agent_errors": 0
+        }
+      }
+    }
+  },
+  "cost": {
+    "timing_and_reference_cpu_seconds": 9.364200852,
+    "timing_and_reference_wall_seconds": 9.423117897000338,
+    "behavior_cpu_seconds": 10.098025999999999,
+    "behavior_wall_seconds": 10.114337324001099,
+    "excludes": "packaging/self-test; observer adds overhead to behavior only"
+  },
+  "artifacts": {
+    "protocol.json": "f34fa1cf4ae642b42d4631001cd303fee3ed44d087d128dd7f13b1caf9a6015e",
+    "timing.json": "4e7edd4fa5922d257a3f98aca901d1714c2eb46fd854573089a4a899f6c35f93",
+    "behavior.json": "c708267662ce36a8df957ad357cf797c59f464fb79605a2547575cfacc942bc4"
+  }
+}

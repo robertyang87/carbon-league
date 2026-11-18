@@ -1,0 +1,324 @@
+{
+  "status": "PASS",
+  "purpose": "SYNTHETIC COMPATIBILITY ONLY \u2014 not production training or strength evidence",
+  "source_sha": "1ff922d64a21250fa29c60cc8199f9ad50617b18",
+  "initial": {
+    "path": "/tmp/sapling120-initial.npz",
+    "bytes": 4854182,
+    "md5": "8ccf907325d113d48cf206ac8a02e9d3",
+    "sha256": "dafa4544e9934ed7c56d1e705de1374ff929e9896f848ed396ec42007c681f9c"
+  },
+  "student_cfg": {
+    "C": 93,
+    "NB": 6,
+    "D": 96,
+    "NH": 4,
+    "L": 1,
+    "E": 32,
+    "G": 3,
+    "TA": 0
+  },
+  "student_parameter_count": 1206476,
+  "synthetic_anchor": {
+    "path": "/tmp/sapling120-distill-smoke/synthetic-anchor.npz",
+    "bytes": 123754,
+    "md5": "10865718ad0f8fc5863858ea4d3a93f0",
+    "sha256": "ff6492e70e2564ac2b92d1dfc5bc7879479495b3fecedbcb2d2f8959fcbe7aa8"
+  },
+  "synthetic_anchor_cfg": {
+    "C": 16,
+    "NB": 1,
+    "D": 16,
+    "NH": 2,
+    "L": 1,
+    "E": 8,
+    "G": 4
+  },
+  "fixture": {
+    "roots": 3,
+    "candidate_counts": [
+      4,
+      2,
+      3
+    ],
+    "seats": [
+      0,
+      1,
+      0
+    ],
+    "method": "code/test_k0_distill_u_shared_encode.py::fixture; real FastCarbon/Feat/Prefix observation tensors and legal actions; invented Q and terminal labels; all q from the real construct_target.",
+    "terminal_u": [
+      0.9087872505187988,
+      0.5,
+      0.1659061163663864
+    ],
+    "terminal_wdl": [
+      0,
+      1,
+      2
+    ],
+    "terminal_margin": [
+      1500.0,
+      0.0,
+      -700.0
+    ],
+    "generation_manifest": {
+      "path": "/tmp/sapling120-distill-smoke/synthetic-joined/gen-synthetic-only/manifest.json",
+      "bytes": 3776,
+      "md5": "12f3c17a82bfca1d4b6ba5494c39a929",
+      "sha256": "dc151496dce9230af35981e4af1e98b8c48bbdb76f4c247b499edfcd7bb4a6df"
+    },
+    "consumption": {
+      "path": "/tmp/sapling120-distill-smoke/synthetic-joined/CONSUMPTION.json",
+      "bytes": 392,
+      "md5": "f8c7b7eceeed859c2259627a47b4419a",
+      "sha256": "900f3cf9ea8bf522e44d681eebb883b9156e41f9eb28d9f99f34836594cb1f13"
+    },
+    "consumption_scope": "Manual synthetic self-seal checked by real trainer; tools/consume_preflight.py and production annotator/join not executed."
+  },
+  "production_boundary": {
+    "150_game_joined": "External L20 /root/carbon/katago/loop_pilot/joined_u; gen-90faee2ef4221d59; source arrays not accessible in local workspace/Git HEAD.",
+    "135_15_split": "External L20 /root/sparse_impl/data/base_all1_train; gen-8e357f53df68137e; no local source arrays to verify.",
+    "250_game_loop2": "External L20 /root/carbon/katago/loop2; no accessible sealed joined product locally.",
+    "production_data_used": false,
+    "real_terminal_labels_verified": false,
+    "playing_strength_evaluated": false,
+    "train_holdout_validation": "Not assessed: synthetic fixture only; no production train/holdout split consumed."
+  },
+  "code": {
+    "code/k0_distill_u.py": {
+      "path": "/workspace/carbon-league/code/k0_distill_u.py",
+      "bytes": 79245,
+      "md5": "0f55120f2feb1dba6ddfc87d1be51bf1",
+      "sha256": "ce9489f92ae4e70f80b28b7fd594e012cf605390c151dd3669a72d0b13172037"
+    },
+    "code/k0_distill_u_sparse.py": {
+      "path": "/workspace/carbon-league/code/k0_distill_u_sparse.py",
+      "bytes": 99467,
+      "md5": "794d1c19ec5e49f2983ecb61ab8830af",
+      "sha256": "981a797b98b0f58d0f84752ad3ed4498cf599be54bfc6e2e7a180c06d4ccc7fc"
+    },
+    "code/k0_distill_models.py": {
+      "path": "/workspace/carbon-league/code/k0_distill_models.py",
+      "bytes": 7092,
+      "md5": "fc5f53e119397ec262c8bb1561e48101",
+      "sha256": "1c2031a2db5c13c9c9eb29ee8d6666b2c4c8007f3399cbaecb81b6f835ca51e6"
+    },
+    "code/test_k0_distill_u_shared_encode.py": {
+      "path": "/workspace/carbon-league/code/test_k0_distill_u_shared_encode.py",
+      "bytes": 14395,
+      "md5": "cb72066731cdbae04811219ac4d0592f",
+      "sha256": "811be1816544fc78160bc957e0956a0e99ef4eb002382b776de633048d076b22"
+    }
+  },
+  "smokes": [
+    {
+      "trainer": "k0_distill_u.py",
+      "format_exercised": "cnet2-k0-annotation/2 (dense labels; sparse CLI compatibility path)",
+      "command": "PYTHONDONTWRITEBYTECODE=1 BC_DEVICE=cpu BC_GPU_AUG=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /workspace/carbon-review-venv/bin/python /workspace/carbon-league/code/k0_distill_u.py --data /tmp/sapling120-distill-smoke/synthetic-joined --label-teacher /tmp/sapling120-distill-smoke/synthetic-anchor.npz --student-init /tmp/sapling120-initial.npz --kl-reference /tmp/sapling120-distill-smoke/synthetic-anchor.npz --out /tmp/sapling120-distill-smoke/k0_distill_u-student.npz --max-updates 2 --bs 3 --device cpu --seed 7",
+      "returncode": 0,
+      "elapsed_seconds": 4.143343081001149,
+      "updates": [
+        {
+          "update": 1,
+          "loss": {
+            "total": 6.396868992754501,
+            "ce": 5.232393459058661,
+            "anchor_kl_weighted": 0.0925165507523417,
+            "utility_mse": 0.0870715148073582,
+            "wdl_ce": 1.106418490409851,
+            "margin_mse": 0.8633564458624291,
+            "terminal_weighted": 1.0719589829434983
+          },
+          "kl_monitor": {
+            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
+            "mean": 0.0925165507523417,
+            "p99": 0.16600654370539242
+          },
+          "denominators": {
+            "roots": 3,
+            "candidates": 9,
+            "batch_sha256": "b3db6650e4598ca51942f83e2b5f5adc1d65b806fb1224619d7c385d3642de1c"
+          },
+          "lr": 0.0003,
+          "elapsed_s": 0.14
+        },
+        {
+          "update": 2,
+          "loss": {
+            "total": 5.8528935685220675,
+            "ce": 4.589520320815443,
+            "anchor_kl_weighted": 0.19631260133791117,
+            "utility_mse": 0.08915012112537712,
+            "wdl_ce": 1.1071982383728027,
+            "margin_mse": 0.8486228121138707,
+            "terminal_weighted": 1.0670606463687138
+          },
+          "kl_monitor": {
+            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
+            "mean": 0.19631260133791117,
+            "p99": 0.3385593498906742
+          },
+          "denominators": {
+            "roots": 3,
+            "candidates": 9,
+            "batch_sha256": "ab25350e3e65efebe24584461683ecda68725576e825e550038b90e7b1479946"
+          },
+          "lr": 0.0003,
+          "elapsed_s": 0.24
+        }
+      ],
+      "output": {
+        "path": "/tmp/sapling120-distill-smoke/k0_distill_u-student.npz",
+        "bytes": 4879694,
+        "md5": "c752b617c5cfe1cd4ea9ead2a723a1e3",
+        "sha256": "c90a90a0abfc20701d5ab8555c60e6ef8737b29876bd0db5ce1d081ffc17586f"
+      },
+      "complete_marker": {
+        "path": "/tmp/sapling120-distill-smoke/k0_distill_u-student.npz.complete.json",
+        "bytes": 223,
+        "md5": "15d654891635f96394ac2df37f7bca76",
+        "sha256": "ccb51a6f420f47f93099d2962c60d89cf91707f22835403fdac0f959c47c9ab6"
+      },
+      "parameter_tensors_changed": 101,
+      "frozen_tensors_unchanged": [
+        "aux.weight",
+        "aux.bias"
+      ],
+      "all_output_parameters_finite": true,
+      "unfreeze_reconciliation": {
+        "heads": {
+          "utility": {
+            "max_abs_delta": 0.0005998983979225159,
+            "updated": true
+          },
+          "wdl": {
+            "max_abs_delta": 0.000600386701989919,
+            "updated": true
+          },
+          "margin": {
+            "max_abs_delta": 0.0005945712327957153,
+            "updated": true
+          }
+        },
+        "aux_bitwise_identical": true
+      },
+      "log": {
+        "path": "/tmp/sapling120-distill-smoke/k0_distill_u-student.npz.log.jsonl",
+        "bytes": 5619,
+        "md5": "23e25d43c241b844a43e936e5a0cbf88",
+        "sha256": "1bec9dfc04cb159b78915c97135fd53a05826b1f1a7438b60cfef1484f9fb2b8"
+      }
+    },
+    {
+      "trainer": "k0_distill_u_sparse.py",
+      "format_exercised": "cnet2-k0-annotation/2 (dense labels; sparse CLI compatibility path)",
+      "command": "PYTHONDONTWRITEBYTECODE=1 BC_DEVICE=cpu BC_GPU_AUG=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /workspace/carbon-review-venv/bin/python /workspace/carbon-league/code/k0_distill_u_sparse.py --data /tmp/sapling120-distill-smoke/synthetic-joined --label-teacher /tmp/sapling120-distill-smoke/synthetic-anchor.npz --student-init /tmp/sapling120-initial.npz --kl-reference /tmp/sapling120-distill-smoke/synthetic-anchor.npz --out /tmp/sapling120-distill-smoke/k0_distill_u_sparse-student.npz --max-updates 2 --bs 3 --device cpu --seed 7",
+      "returncode": 0,
+      "elapsed_seconds": 4.175986116999411,
+      "updates": [
+        {
+          "update": 1,
+          "loss": {
+            "total": 6.396868992754501,
+            "ce": 5.232393459058661,
+            "anchor_kl_weighted": 0.0925165507523417,
+            "utility_mse": 0.0870715148073582,
+            "wdl_ce": 1.106418490409851,
+            "margin_mse": 0.8633564458624291,
+            "terminal_weighted": 1.0719589829434983
+          },
+          "kl_monitor": {
+            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
+            "mean": 0.0925165507523417,
+            "p99": 0.16600654370539242
+          },
+          "denominators": {
+            "roots": 3,
+            "candidates": 9,
+            "batch_sha256": "b3db6650e4598ca51942f83e2b5f5adc1d65b806fb1224619d7c385d3642de1c"
+          },
+          "lr": 0.0003,
+          "elapsed_s": 0.17
+        },
+        {
+          "update": 2,
+          "loss": {
+            "total": 5.8528935685220675,
+            "ce": 4.589520320815443,
+            "anchor_kl_weighted": 0.19631260133791117,
+            "utility_mse": 0.08915012112537712,
+            "wdl_ce": 1.1071982383728027,
+            "margin_mse": 0.8486228121138707,
+            "terminal_weighted": 1.0670606463687138
+          },
+          "kl_monitor": {
+            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
+            "mean": 0.19631260133791117,
+            "p99": 0.3385593498906742
+          },
+          "denominators": {
+            "roots": 3,
+            "candidates": 9,
+            "batch_sha256": "ab25350e3e65efebe24584461683ecda68725576e825e550038b90e7b1479946"
+          },
+          "lr": 0.0003,
+          "elapsed_s": 0.3
+        }
+      ],
+      "output": {
+        "path": "/tmp/sapling120-distill-smoke/k0_distill_u_sparse-student.npz",
+        "bytes": 4879726,
+        "md5": "1d7ed58943d906e63f6b75d45a532d83",
+        "sha256": "e811ba801ddda21cb7a5393052a4ca500f1abdffe082a013b4ef1ee25531e115"
+      },
+      "complete_marker": {
+        "path": "/tmp/sapling120-distill-smoke/k0_distill_u_sparse-student.npz.complete.json",
+        "bytes": 230,
+        "md5": "81a8e804ba260f5b8d81a898af48a4c1",
+        "sha256": "1725c6b7f342659f62873cc93e508674a1c941e48efd907f3d916c2d714b69af"
+      },
+      "parameter_tensors_changed": 101,
+      "frozen_tensors_unchanged": [
+        "aux.weight",
+        "aux.bias"
+      ],
+      "all_output_parameters_finite": true,
+      "unfreeze_reconciliation": {
+        "heads": {
+          "utility": {
+            "max_abs_delta": 0.0005998983979225159,
+            "updated": true
+          },
+          "wdl": {
+            "max_abs_delta": 0.000600386701989919,
+            "updated": true
+          },
+          "margin": {
+            "max_abs_delta": 0.0005945712327957153,
+            "updated": true
+          }
+        },
+        "aux_bitwise_identical": true
+      },
+      "log": {
+        "path": "/tmp/sapling120-distill-smoke/k0_distill_u_sparse-student.npz.log.jsonl",
+        "bytes": 5634,
+        "md5": "5faba43a3ccb1289a3535f9210528ec9",
+        "sha256": "cc763af2f178bd12cb750f9663d3b040f73930170bab3df3ee1b33c4b4a69bc6"
+      }
+    }
+  ],
+  "scope_limits": [
+    "Synthetic teacher Q and synthetic terminal labels do not validate teacher quality, production labels or playing strength.",
+    "Sparse CLI exercised its /2 compatibility path only; /3 sparse weighting and production sidecar provenance were not tested.",
+    "Fresh optimizer with two CPU updates; no long-run stability, optimizer resume or GPU throughput claim."
+  ],
+  "source_sha_after": "1ff922d64a21250fa29c60cc8199f9ad50617b18",
+  "reproduction_script": {
+    "path": "/tmp/sapling120-distill-smoke.py",
+    "bytes": 9559,
+    "md5": "ebb9e3b6d7f60103600c73b6be089a4d",
+    "sha256": "00cda1bd78c622b4ee9002deafa0966ef3ecbd4c76363cd4b727f98c75b82ac8"
+  }
+}
