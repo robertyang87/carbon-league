@@ -720,7 +720,7 @@
   {
    "name": "katago_pilot_loop_selfplay_150",
    "kind": "selfplay corpus (KataGo pilot loop)",
-   "detail": "KataGo pilot loop self-play production on L20, completed 2026-11-18 07:55 (launched 07:39, producer original selfplay_gen bd62ead9 supplied by DGX line to /root/carbon/katago/loop_pilot/). 150 games, seeds 300002-300151, open-seed base 20261118. Integrity (L20 report, war-room registration 07:55): bad games 0, mirror 0, total steps 45,000, step band step>=200 totals 15,000 steps. Contents: replays x150 + index.json. Owning line: L20.",
+   "detail": "KataGo pilot loop self-play production on L20, completed 2026-11-18 07:55 (launched 07:39, producer original selfplay_gen bd62ead9 supplied by DGX line to /root/carbon/katago/loop_pilot/). 150 games, seeds 300002-300151, open-seed base 20261118. Integrity (L20 report, war-room registration 07:55): bad games 0, mirror 0, total steps 45,000, step band step>=200 totals 15,000 steps. Contents: replays x150 + index.json. Owning line: L20. Per-file MANIFEST.md5 (151 entries: 150 replays + index.json) md5 ed822e5df814f7c3046025adba469336.",
    "identity": {
     "weights_md5": "06a03d9cfeec239af3065a49fefec382",
     "producer": "selfplay_gen.py bd62ead949c93d70afaa7dc10b9d5e8e",
@@ -734,7 +734,13 @@
      "machine": "L20",
      "path": "/root/carbon/katago/loop_pilot/prod_self/"
     }
-   ]
+   ],
+   "manifest": {
+    "file": "MANIFEST.md5 (in prod_self/)",
+    "md5": "ed822e5df814f7c3046025adba469336",
+    "entries": 151,
+    "note": "150 replays + index.json, per-file md5 list supplied by L20 2026-11-18"
+   }
   },
   {
    "name": "katago_loop_smoke_student_10upd",
@@ -779,6 +785,6 @@
   "R3 release gate: a machine holding unique products is released only after the owning line confirms recovery in writing.",
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
- "version": "4.6",
- "updated": "2026-11-18 (v4.6: + arena_w96_int8_pack 232c8d1f, ring-0 sparring asset)"
+ "version": "4.7",
+ "updated": "2026-11-18 (v4.7: pilot selfplay entry + MANIFEST.md5 ed822e5d, 151 entries)"
 }
