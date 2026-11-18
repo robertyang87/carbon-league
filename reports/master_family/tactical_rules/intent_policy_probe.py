@@ -35,7 +35,7 @@ def friendly_conflicts(obs, action):
             for i, a in enumerate(members) for b in members[i + 1:]}
 
 
-def choose(features, inputs, obs, previous, config, policy, weights, enabled):
+def choose(features, inputs, obs, previous, config, policy, weights, enabled, *, intent_filter=None):
     side = obs["player"]
     _, bases, workers, trees = obs["players"][side]
     enemy_cash, _, foes, _ = obs["players"][1 - side]
@@ -45,6 +45,8 @@ def choose(features, inputs, obs, previous, config, policy, weights, enabled):
     eligible = targets and enemy_cash >= config["seizeCost"]
     board = DefenseBoard(obs, config) if eligible else None
     probabilities = predict(obs, weights, previous) if eligible else {}
+    if eligible and intent_filter is not None:
+        probabilities = intent_filter(obs, config, probabilities)
     moves = sys.modules["cnet2_feat"]
     logs = []
 

@@ -1,0 +1,1045 @@
+{
+  "score_sha256": "5b13d5efd211174127d3ea645f6a49b81a130ca675d0079cd347b3c3ff3b5e19",
+  "script_sha256": "3dc6b310660ba5b30a97a1831ddc815b8378644fadc09577e9f0515b093b9f89",
+  "matches": 1056,
+  "appearances": 1157,
+  "ranks": [
+    "claude-AlphaCarbon-Master5s",
+    "claude-AlphaCarbon-Master6",
+    "RyanX-AIPowercore-it720-preview",
+    "RyanX-AIPowercore-M9XJ-630",
+    "ClaudeFable5.2-v7"
+  ],
+  "scope": "Descriptive census of the pinned heavy-ladder snapshot. Same-game decisions are correlated.",
+  "analysis": {
+    "units": "Current worker-turn; selected = observed action, including workers that die on that turn. Actions for state t come from frame t+1; no hidden carbon. Each count also reports games with exposure.",
+    "rules": {
+      "stay_exposed_choose_safe": "Loaded collector; staying reachable by enemy collector with cargo <= ours; at least one potential non-lethal alternative with no current ally there; no enemy base in neighborhood. Selected means any chosen non-lethal landing; selected_free_safe additionally excludes ally-occupied cells. Actual allied arrivals exclude recruits. Reach includes an opponent staying or moving one cell.",
+      "home": "Cargo >=100, off base and exactly one home adjacent, home currently empty; at least one other unoccupied-by-other-allies and non-lethal alternative; neighborhood disjoint from enemy bases. Selected = actually commanded into home. Stratify by minimum cargo of any enemy collector which could arrive there (zero moveCost), or planter-only reach, or no enemy can arrive. Last10 = t289..298.",
+      "chase": "Empty collector adjacent to exactly one viable positive-cargo enemy collector on a non-base square. No enemy zero-cargo collector can counterreach the target (a tie for minimum kills all; only a unique lightest collector survives). Selected = command into the opponent's current square. A recorded capture requires that enemy stayed, target disappeared and attacking collector survived. This does not label a worker's intention or success elsewhere after its target moves."
+    },
+    "by_model": {
+      "ClaudeFable5.2-v7": {
+        "appearances": 280,
+        "cells": {
+          "chase_30to100": {
+            "n": 34947,
+            "selected": 26113,
+            "prey_stayed_when_chased": 3,
+            "prey_removed_and_hunter_survived": 3,
+            "games": 278
+          },
+          "home_no_enemy_all": {
+            "n": 8230,
+            "selected": 6569,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 70,
+            "ally_arrival_when_entered": 98,
+            "games": 278
+          },
+          "home_no_enemy_before_last10": {
+            "n": 7637,
+            "selected": 6073,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 4,
+            "games": 277
+          },
+          "chase_under30": {
+            "n": 15036,
+            "selected": 11065,
+            "prey_stayed_when_chased": 9,
+            "prey_removed_and_hunter_survived": 9,
+            "games": 276
+          },
+          "stay_exposed_choose_safe": {
+            "n": 72657,
+            "selected": 72099,
+            "selected_free_safe": 70420,
+            "moved": 72600,
+            "remained_exposed": 558,
+            "actual_equal_or_lighter_arrivals": 91,
+            "died_any_cause": 117,
+            "other_own_worker_same_destination": 69,
+            "games": 280
+          },
+          "chase_100plus": {
+            "n": 13928,
+            "selected": 10017,
+            "prey_stayed_when_chased": 0,
+            "prey_removed_and_hunter_survived": 0,
+            "games": 277
+          },
+          "home_lethal_collector_all": {
+            "n": 503,
+            "selected": 431,
+            "actual_enemy_arrivals_when_entered": 2,
+            "actual_equal_or_lighter_when_entered": 2,
+            "disappeared_when_entered": 8,
+            "ally_arrival_when_entered": 8,
+            "games": 220
+          },
+          "home_lethal_collector_before_last10": {
+            "n": 464,
+            "selected": 396,
+            "actual_enemy_arrivals_when_entered": 1,
+            "actual_equal_or_lighter_when_entered": 1,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 1,
+            "games": 215
+          },
+          "home_no_enemy_last10": {
+            "n": 593,
+            "selected": 496,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 68,
+            "ally_arrival_when_entered": 94,
+            "games": 239
+          },
+          "home_planter_only_all": {
+            "n": 98,
+            "selected": 73,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 72
+          },
+          "home_planter_only_before_last10": {
+            "n": 84,
+            "selected": 61,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 62
+          },
+          "home_lethal_collector_last10": {
+            "n": 39,
+            "selected": 35,
+            "actual_enemy_arrivals_when_entered": 1,
+            "actual_equal_or_lighter_when_entered": 1,
+            "disappeared_when_entered": 6,
+            "ally_arrival_when_entered": 7,
+            "games": 34
+          },
+          "home_only_heavier_collectors_all": {
+            "n": 48,
+            "selected": 39,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 1,
+            "ally_arrival_when_entered": 1,
+            "games": 44
+          },
+          "home_only_heavier_collectors_before_last10": {
+            "n": 47,
+            "selected": 38,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 43
+          },
+          "home_planter_only_last10": {
+            "n": 14,
+            "selected": 12,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 13
+          },
+          "home_only_heavier_collectors_last10": {
+            "n": 1,
+            "selected": 1,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 1,
+            "ally_arrival_when_entered": 1,
+            "games": 1
+          }
+        },
+        "paired_game_contrasts": {
+          "enter_home_lethal_minus_clear": {
+            "games_with_both": 220,
+            "mean_paired_rate_difference": 0.06012688145629954,
+            "negative": 51,
+            "positive": 160
+          },
+          "enter_home_planter_minus_lethal": {
+            "games_with_both": 62,
+            "mean_paired_rate_difference": -0.07741935483870968,
+            "negative": 15,
+            "positive": 12
+          },
+          "enter_home_heavier_minus_lethal": {
+            "games_with_both": 37,
+            "mean_paired_rate_difference": -0.006306306306306305,
+            "negative": 4,
+            "positive": 9
+          },
+          "chase_heavy_minus_light": {
+            "games_with_both": 275,
+            "mean_paired_rate_difference": -0.007408787492823952,
+            "negative": 149,
+            "positive": 126
+          },
+          "enter_lethal_home_deadline_minus_earlier": {
+            "games_with_both": 29,
+            "mean_paired_rate_difference": 0.04351395730706076,
+            "negative": 2,
+            "positive": 6
+          }
+        },
+        "examples": {
+          "escape": {
+            "match": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "t": 57,
+            "actor": "player-0-worker-20",
+            "cargo": 29.9427,
+            "cell": 156,
+            "chosen": 171,
+            "enemy_min_if_stay": 0,
+            "safe_alternatives": 3
+          },
+          "risk_diversion": {
+            "match": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "t": 241,
+            "actor": "player-0-worker-45",
+            "cargo": 293.7225,
+            "cell": 175,
+            "home": 160,
+            "enemy_min_at_home": 39.78569999999999,
+            "chosen": 175,
+            "stayed": true
+          }
+        }
+      },
+      "RyanX-AIPowercore-it720-preview": {
+        "appearances": 203,
+        "cells": {
+          "stay_exposed_choose_safe": {
+            "n": 53296,
+            "selected": 51991,
+            "selected_free_safe": 50905,
+            "moved": 53031,
+            "remained_exposed": 1305,
+            "actual_equal_or_lighter_arrivals": 164,
+            "died_any_cause": 178,
+            "other_own_worker_same_destination": 41,
+            "games": 203
+          },
+          "chase_under30": {
+            "n": 9225,
+            "selected": 6582,
+            "prey_stayed_when_chased": 18,
+            "prey_removed_and_hunter_survived": 18,
+            "games": 202
+          },
+          "chase_30to100": {
+            "n": 25869,
+            "selected": 19003,
+            "prey_stayed_when_chased": 0,
+            "prey_removed_and_hunter_survived": 0,
+            "games": 203
+          },
+          "chase_100plus": {
+            "n": 11008,
+            "selected": 7300,
+            "prey_stayed_when_chased": 1,
+            "prey_removed_and_hunter_survived": 1,
+            "games": 203
+          },
+          "home_no_enemy_all": {
+            "n": 6828,
+            "selected": 5461,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 84,
+            "ally_arrival_when_entered": 96,
+            "games": 203
+          },
+          "home_no_enemy_before_last10": {
+            "n": 6396,
+            "selected": 5096,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 5,
+            "ally_arrival_when_entered": 6,
+            "games": 203
+          },
+          "home_lethal_collector_all": {
+            "n": 350,
+            "selected": 292,
+            "actual_enemy_arrivals_when_entered": 1,
+            "actual_equal_or_lighter_when_entered": 1,
+            "disappeared_when_entered": 5,
+            "ally_arrival_when_entered": 6,
+            "games": 146
+          },
+          "home_lethal_collector_before_last10": {
+            "n": 328,
+            "selected": 273,
+            "actual_enemy_arrivals_when_entered": 1,
+            "actual_equal_or_lighter_when_entered": 1,
+            "disappeared_when_entered": 1,
+            "ally_arrival_when_entered": 0,
+            "games": 141
+          },
+          "home_no_enemy_last10": {
+            "n": 432,
+            "selected": 365,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 79,
+            "ally_arrival_when_entered": 90,
+            "games": 177
+          },
+          "home_only_heavier_collectors_all": {
+            "n": 45,
+            "selected": 36,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 35
+          },
+          "home_only_heavier_collectors_before_last10": {
+            "n": 45,
+            "selected": 36,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 35
+          },
+          "home_planter_only_all": {
+            "n": 68,
+            "selected": 50,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 2,
+            "games": 54
+          },
+          "home_planter_only_before_last10": {
+            "n": 59,
+            "selected": 42,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 46
+          },
+          "home_planter_only_last10": {
+            "n": 9,
+            "selected": 8,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 2,
+            "games": 9
+          },
+          "home_lethal_collector_last10": {
+            "n": 22,
+            "selected": 19,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 4,
+            "ally_arrival_when_entered": 6,
+            "games": 18
+          }
+        },
+        "paired_game_contrasts": {
+          "enter_home_lethal_minus_clear": {
+            "games_with_both": 146,
+            "mean_paired_rate_difference": 0.05532986355924571,
+            "negative": 34,
+            "positive": 106
+          },
+          "enter_home_planter_minus_lethal": {
+            "games_with_both": 37,
+            "mean_paired_rate_difference": -0.011711711711711707,
+            "negative": 10,
+            "positive": 10
+          },
+          "enter_home_heavier_minus_lethal": {
+            "games_with_both": 31,
+            "mean_paired_rate_difference": -0.08494623655913978,
+            "negative": 8,
+            "positive": 6
+          },
+          "chase_heavy_minus_light": {
+            "games_with_both": 202,
+            "mean_paired_rate_difference": -0.030530176228451496,
+            "negative": 117,
+            "positive": 85
+          },
+          "enter_lethal_home_deadline_minus_earlier": {
+            "games_with_both": 13,
+            "mean_paired_rate_difference": 0.025641025641025644,
+            "negative": 2,
+            "positive": 4
+          }
+        },
+        "examples": {
+          "escape": {
+            "match": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "t": 20,
+            "actor": "player-1-worker-3",
+            "cargo": 31.1085,
+            "cell": 157,
+            "chosen": 156,
+            "enemy_min_if_stay": 0,
+            "safe_alternatives": 3
+          },
+          "risk_diversion": {
+            "match": "011008e4dee32c2fdbfa37044c3c2608-1",
+            "seat": 0,
+            "t": 201,
+            "actor": "player-0-worker-46",
+            "cargo": 111.4515,
+            "cell": 161,
+            "home": 160,
+            "enemy_min_at_home": 30.0,
+            "chosen": 161,
+            "stayed": true
+          },
+          "interception": {
+            "match": "7063b155c805afae3855a9428c39e922-1",
+            "seat": 1,
+            "t": 70,
+            "actor": "player-1-worker-18",
+            "actor_from": 114,
+            "cell": 129,
+            "victim": "player-0-worker-12",
+            "cargo": 126.13666200000002
+          }
+        }
+      },
+      "claude-AlphaCarbon-Master5s": {
+        "appearances": 196,
+        "cells": {
+          "stay_exposed_choose_safe": {
+            "n": 45634,
+            "selected": 44912,
+            "selected_free_safe": 43638,
+            "moved": 45532,
+            "remained_exposed": 722,
+            "actual_equal_or_lighter_arrivals": 132,
+            "died_any_cause": 144,
+            "other_own_worker_same_destination": 33,
+            "games": 196
+          },
+          "chase_30to100": {
+            "n": 23979,
+            "selected": 16596,
+            "prey_stayed_when_chased": 3,
+            "prey_removed_and_hunter_survived": 3,
+            "games": 196
+          },
+          "chase_under30": {
+            "n": 10452,
+            "selected": 7215,
+            "prey_stayed_when_chased": 8,
+            "prey_removed_and_hunter_survived": 8,
+            "games": 195
+          },
+          "home_no_enemy_all": {
+            "n": 6172,
+            "selected": 4881,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 47,
+            "ally_arrival_when_entered": 58,
+            "games": 196
+          },
+          "home_no_enemy_before_last10": {
+            "n": 5715,
+            "selected": 4502,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 2,
+            "games": 196
+          },
+          "chase_100plus": {
+            "n": 8926,
+            "selected": 5878,
+            "prey_stayed_when_chased": 0,
+            "prey_removed_and_hunter_survived": 0,
+            "games": 195
+          },
+          "home_lethal_collector_all": {
+            "n": 258,
+            "selected": 209,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 1,
+            "ally_arrival_when_entered": 2,
+            "games": 138
+          },
+          "home_lethal_collector_before_last10": {
+            "n": 241,
+            "selected": 195,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 130
+          },
+          "home_planter_only_all": {
+            "n": 74,
+            "selected": 58,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 58
+          },
+          "home_planter_only_before_last10": {
+            "n": 63,
+            "selected": 48,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 49
+          },
+          "home_no_enemy_last10": {
+            "n": 457,
+            "selected": 379,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 45,
+            "ally_arrival_when_entered": 56,
+            "games": 169
+          },
+          "home_only_heavier_collectors_all": {
+            "n": 24,
+            "selected": 19,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 19
+          },
+          "home_only_heavier_collectors_before_last10": {
+            "n": 23,
+            "selected": 18,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 18
+          },
+          "home_lethal_collector_last10": {
+            "n": 17,
+            "selected": 14,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 1,
+            "ally_arrival_when_entered": 2,
+            "games": 13
+          },
+          "home_planter_only_last10": {
+            "n": 11,
+            "selected": 10,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 10
+          },
+          "home_only_heavier_collectors_last10": {
+            "n": 1,
+            "selected": 1,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 1
+          }
+        },
+        "paired_game_contrasts": {
+          "enter_home_lethal_minus_clear": {
+            "games_with_both": 138,
+            "mean_paired_rate_difference": 0.04474208591648985,
+            "negative": 38,
+            "positive": 100
+          },
+          "enter_home_planter_minus_lethal": {
+            "games_with_both": 41,
+            "mean_paired_rate_difference": -0.05934959349593496,
+            "negative": 8,
+            "positive": 5
+          },
+          "enter_home_heavier_minus_lethal": {
+            "games_with_both": 14,
+            "mean_paired_rate_difference": -0.047619047619047616,
+            "negative": 3,
+            "positive": 2
+          },
+          "chase_heavy_minus_light": {
+            "games_with_both": 195,
+            "mean_paired_rate_difference": -0.03774180051259575,
+            "negative": 115,
+            "positive": 79
+          },
+          "enter_lethal_home_deadline_minus_earlier": {
+            "games_with_both": 5,
+            "mean_paired_rate_difference": 0.0,
+            "negative": 2,
+            "positive": 2
+          }
+        },
+        "examples": {
+          "escape": {
+            "match": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "t": 33,
+            "actor": "player-1-worker-6",
+            "cargo": 73.64877,
+            "cell": 34,
+            "chosen": 19,
+            "enemy_min_if_stay": 0,
+            "safe_alternatives": 2
+          },
+          "risk_diversion": {
+            "match": "01b56d406361dbb513d6d7417dc0184f-1",
+            "seat": 0,
+            "t": 251,
+            "actor": "player-0-worker-84",
+            "cargo": 105.0024,
+            "cell": 159,
+            "home": 160,
+            "enemy_min_at_home": 45.3117,
+            "chosen": 159,
+            "stayed": true
+          }
+        }
+      },
+      "claude-AlphaCarbon-Master6": {
+        "appearances": 178,
+        "cells": {
+          "stay_exposed_choose_safe": {
+            "n": 24287,
+            "selected": 23516,
+            "selected_free_safe": 22753,
+            "moved": 24222,
+            "remained_exposed": 771,
+            "actual_equal_or_lighter_arrivals": 104,
+            "died_any_cause": 113,
+            "other_own_worker_same_destination": 26,
+            "games": 173
+          },
+          "chase_under30": {
+            "n": 8522,
+            "selected": 6575,
+            "prey_stayed_when_chased": 14,
+            "prey_removed_and_hunter_survived": 14,
+            "games": 174
+          },
+          "chase_100plus": {
+            "n": 7280,
+            "selected": 4971,
+            "prey_stayed_when_chased": 1,
+            "prey_removed_and_hunter_survived": 1,
+            "games": 165
+          },
+          "chase_30to100": {
+            "n": 16179,
+            "selected": 11854,
+            "prey_stayed_when_chased": 5,
+            "prey_removed_and_hunter_survived": 5,
+            "games": 176
+          },
+          "home_no_enemy_all": {
+            "n": 6686,
+            "selected": 4465,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 92,
+            "ally_arrival_when_entered": 125,
+            "games": 176
+          },
+          "home_no_enemy_before_last10": {
+            "n": 6015,
+            "selected": 4038,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 4,
+            "ally_arrival_when_entered": 5,
+            "games": 176
+          },
+          "home_lethal_collector_all": {
+            "n": 204,
+            "selected": 174,
+            "actual_enemy_arrivals_when_entered": 1,
+            "actual_equal_or_lighter_when_entered": 1,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 2,
+            "games": 97
+          },
+          "home_lethal_collector_before_last10": {
+            "n": 190,
+            "selected": 164,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 1,
+            "ally_arrival_when_entered": 1,
+            "games": 95
+          },
+          "home_no_enemy_last10": {
+            "n": 671,
+            "selected": 427,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 88,
+            "ally_arrival_when_entered": 120,
+            "games": 168
+          },
+          "home_planter_only_all": {
+            "n": 98,
+            "selected": 63,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 2,
+            "games": 61
+          },
+          "home_planter_only_before_last10": {
+            "n": 83,
+            "selected": 56,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 55
+          },
+          "home_lethal_collector_last10": {
+            "n": 14,
+            "selected": 10,
+            "actual_enemy_arrivals_when_entered": 1,
+            "actual_equal_or_lighter_when_entered": 1,
+            "disappeared_when_entered": 1,
+            "ally_arrival_when_entered": 1,
+            "games": 14
+          },
+          "home_only_heavier_collectors_all": {
+            "n": 20,
+            "selected": 16,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 15
+          },
+          "home_only_heavier_collectors_before_last10": {
+            "n": 19,
+            "selected": 15,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 14
+          },
+          "home_planter_only_last10": {
+            "n": 15,
+            "selected": 7,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 2,
+            "games": 14
+          },
+          "home_only_heavier_collectors_last10": {
+            "n": 1,
+            "selected": 1,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 1
+          }
+        },
+        "paired_game_contrasts": {
+          "enter_home_lethal_minus_clear": {
+            "games_with_both": 97,
+            "mean_paired_rate_difference": 0.10989080187827938,
+            "negative": 24,
+            "positive": 69
+          },
+          "enter_home_planter_minus_lethal": {
+            "games_with_both": 45,
+            "mean_paired_rate_difference": -0.2117989417989418,
+            "negative": 19,
+            "positive": 7
+          },
+          "enter_home_heavier_minus_lethal": {
+            "games_with_both": 11,
+            "mean_paired_rate_difference": 0.19242424242424241,
+            "negative": 1,
+            "positive": 6
+          },
+          "chase_heavy_minus_light": {
+            "games_with_both": 164,
+            "mean_paired_rate_difference": -0.0937664986048341,
+            "negative": 121,
+            "positive": 43
+          },
+          "enter_lethal_home_deadline_minus_earlier": {
+            "games_with_both": 12,
+            "mean_paired_rate_difference": -0.15277777777777776,
+            "negative": 3,
+            "positive": 3
+          }
+        },
+        "examples": {
+          "escape": {
+            "match": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "t": 20,
+            "actor": "player-0-worker-0",
+            "cargo": 38.5218,
+            "cell": 36,
+            "chosen": 35,
+            "enemy_min_if_stay": 0,
+            "safe_alternatives": 3
+          },
+          "risk_diversion": {
+            "match": "043181cc87f4e8d569a46681c3c617a7-1",
+            "seat": 1,
+            "t": 232,
+            "actor": "player-1-worker-59",
+            "cargo": 124.08209999999998,
+            "cell": 55,
+            "home": 70,
+            "enemy_min_at_home": 28.5018,
+            "chosen": 55,
+            "stayed": true
+          },
+          "interception": {
+            "match": "bf1723a977f4ae066fed92292ec7e6a7-1",
+            "seat": 1,
+            "t": 94,
+            "actor": "player-1-worker-2",
+            "actor_from": 87,
+            "cell": 86,
+            "victim": "player-0-worker-22",
+            "cargo": 185.78249999999997
+          }
+        }
+      },
+      "RyanX-AIPowercore-M9XJ-630": {
+        "appearances": 300,
+        "cells": {
+          "stay_exposed_choose_safe": {
+            "n": 64398,
+            "selected": 61972,
+            "selected_free_safe": 60661,
+            "moved": 63963,
+            "remained_exposed": 2426,
+            "actual_equal_or_lighter_arrivals": 316,
+            "died_any_cause": 321,
+            "other_own_worker_same_destination": 21,
+            "games": 300
+          },
+          "chase_30to100": {
+            "n": 37676,
+            "selected": 28351,
+            "prey_stayed_when_chased": 4,
+            "prey_removed_and_hunter_survived": 4,
+            "games": 300
+          },
+          "home_no_enemy_all": {
+            "n": 9683,
+            "selected": 7543,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 300
+          },
+          "home_no_enemy_before_last10": {
+            "n": 8988,
+            "selected": 6993,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 300
+          },
+          "chase_100plus": {
+            "n": 18637,
+            "selected": 12835,
+            "prey_stayed_when_chased": 0,
+            "prey_removed_and_hunter_survived": 0,
+            "games": 299
+          },
+          "home_lethal_collector_all": {
+            "n": 662,
+            "selected": 548,
+            "actual_enemy_arrivals_when_entered": 3,
+            "actual_equal_or_lighter_when_entered": 3,
+            "disappeared_when_entered": 3,
+            "ally_arrival_when_entered": 0,
+            "games": 258
+          },
+          "home_lethal_collector_before_last10": {
+            "n": 614,
+            "selected": 508,
+            "actual_enemy_arrivals_when_entered": 2,
+            "actual_equal_or_lighter_when_entered": 2,
+            "disappeared_when_entered": 2,
+            "ally_arrival_when_entered": 0,
+            "games": 253
+          },
+          "chase_under30": {
+            "n": 12368,
+            "selected": 9005,
+            "prey_stayed_when_chased": 9,
+            "prey_removed_and_hunter_survived": 9,
+            "games": 295
+          },
+          "home_planter_only_all": {
+            "n": 101,
+            "selected": 75,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 81
+          },
+          "home_planter_only_before_last10": {
+            "n": 85,
+            "selected": 61,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 71
+          },
+          "home_no_enemy_last10": {
+            "n": 695,
+            "selected": 550,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 264
+          },
+          "home_only_heavier_collectors_all": {
+            "n": 94,
+            "selected": 76,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 80
+          },
+          "home_only_heavier_collectors_before_last10": {
+            "n": 92,
+            "selected": 74,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 79
+          },
+          "home_lethal_collector_last10": {
+            "n": 48,
+            "selected": 40,
+            "actual_enemy_arrivals_when_entered": 1,
+            "actual_equal_or_lighter_when_entered": 1,
+            "disappeared_when_entered": 1,
+            "ally_arrival_when_entered": 0,
+            "games": 42
+          },
+          "home_planter_only_last10": {
+            "n": 16,
+            "selected": 14,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 14
+          },
+          "home_only_heavier_collectors_last10": {
+            "n": 2,
+            "selected": 2,
+            "actual_enemy_arrivals_when_entered": 0,
+            "actual_equal_or_lighter_when_entered": 0,
+            "disappeared_when_entered": 0,
+            "ally_arrival_when_entered": 0,
+            "games": 2
+          }
+        },
+        "paired_game_contrasts": {
+          "enter_home_lethal_minus_clear": {
+            "games_with_both": 258,
+            "mean_paired_rate_difference": 0.07107171306556787,
+            "negative": 74,
+            "positive": 175
+          },
+          "enter_home_planter_minus_lethal": {
+            "games_with_both": 70,
+            "mean_paired_rate_difference": -0.08619047619047619,
+            "negative": 20,
+            "positive": 18
+          },
+          "enter_home_heavier_minus_lethal": {
+            "games_with_both": 70,
+            "mean_paired_rate_difference": -0.013809523809523806,
+            "negative": 14,
+            "positive": 22
+          },
+          "chase_heavy_minus_light": {
+            "games_with_both": 295,
+            "mean_paired_rate_difference": -0.019347086661116123,
+            "negative": 183,
+            "positive": 111
+          },
+          "enter_lethal_home_deadline_minus_earlier": {
+            "games_with_both": 37,
+            "mean_paired_rate_difference": -0.042792792792792786,
+            "negative": 6,
+            "positive": 8
+          }
+        },
+        "examples": {
+          "escape": {
+            "match": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "t": 32,
+            "actor": "player-0-worker-3",
+            "cargo": 45.802499999999995,
+            "cell": 213,
+            "chosen": 198,
+            "enemy_min_if_stay": 0,
+            "safe_alternatives": 3
+          },
+          "risk_diversion": {
+            "match": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "t": 210,
+            "actor": "player-0-worker-29",
+            "cargo": 301.7469,
+            "cell": 49,
+            "home": 64,
+            "enemy_min_at_home": 25.400519999999997,
+            "chosen": 49,
+            "stayed": true
+          }
+        }
+      }
+    }
+  }
+}

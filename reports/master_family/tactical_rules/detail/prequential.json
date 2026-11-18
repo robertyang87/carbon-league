@@ -1,0 +1,1750 @@
+{
+  "score_sha256": "5b13d5efd211174127d3ea645f6a49b81a130ca675d0079cd347b3c3ff3b5e19",
+  "sources_sha256": {
+    "prequential.py": "c60631c7351cc7e68c4797e9c2b4a59114f929191f3b5059142a85fc045409d4",
+    "tree_adaptation.py": "fae77dac6e6ff1e8d9ea92dc0594020766ddb4183d321b0c07f4199250ae2d78",
+    "opponent_intent.json": "1e5fb803c8f3c1f3478e456db80e94ff83748f6170439665ae9ccbed180a5bf1"
+  },
+  "prior_weight": 6.0,
+  "decay_half_life_decisions": 40.0,
+  "reference_games": [
+    "20ed2afd8245781230e23f73b9bddbfa-1",
+    "fe666a3489fc8b53b72bb64e5af9a18c-1",
+    "16246b994fa62016c8f673db3f47426a-1",
+    "3505ed9b6d524d71d58de58f2eabc315-1",
+    "31568ffd9e7c703957f7345206e84308-1",
+    "a65c0a4a0c38eac49927b1fbf875dc6a-1",
+    "6c3380709cf63756a0b8b2f8cc58601d-1",
+    "9d2ed003f12fa024fd5e05c8be1137d7-1",
+    "cc5df60d50f8dd9f4e527acb7373a187-1",
+    "590146b91a6be88c74092d74b54d1e6c-1",
+    "2c62cc5c7d86a9bd7554001a972f15b2-1",
+    "bd11332a58f618d3f3750b1193eace81-1",
+    "176aab183f1b1f586ed4a0a6f6fece30-1",
+    "bef6d5664071eef80955b1a5855f05f7-1",
+    "d1982baa7f56397eca02d7fc882e9a33-1",
+    "a76284dd75a05d851d42e1d97582fb17-1",
+    "c7a6bfd37cd827404e5399bce3c3ec6b-1",
+    "1ad7349326f426eb8f5120bf5b3fc0e1-1",
+    "7c5ffb00cbbacaafd3713c1fa8a7fc3e-1",
+    "07e8c3a4765b318539a62ed27bb1a712-1",
+    "5d8eb74cde4af92452d2b7d2b79437f6-1",
+    "b2da0b46976874be16fe5fcd0e9c9e69-1",
+    "00cf90e4ffcb535b73ad9e3928446479-1",
+    "b8090c134fc8f13f7ec115e6ff8bcde3-1",
+    "83b0cfed6f7c694a4f332c6f5780ffdd-1",
+    "699215a83ce4184a3888b198680382d0-1",
+    "d4ed7ba4a5e456aeebc9e2a5af8e398c-1",
+    "99b70911a16e374692f19cfdbc7d7e6f-1",
+    "856f3849d2c0d2a053e50f70b7c1e65a-1",
+    "7bb3e67400971b6cb649422afc869839-1",
+    "cc15cf6d163bc0c91cbf0150956f87bb-1",
+    "7d26464a3b382e1867261ccd426cb658-1",
+    "5e990475adc9a87cda80b44a7aced113-1",
+    "7be27eff3b3fc67bcd5d79348af49b24-1",
+    "fb7bef8dcf29ddbe7e91589d2e33f1b0-1",
+    "f9310bbeb0ef89b75c569524e77cb4cd-1",
+    "cb99842641e4453b1c79dd68cf1be16a-1",
+    "54a165ddb36f6b614c78b353e652d141-1",
+    "7e608da37692ccd8aaadd570c71e3f3b-1",
+    "d8ec95e6ad628fe433a20a263afc4683-1"
+  ],
+  "historical_survivor_counts_by_uncovered_covered": [
+    {
+      "1": 780,
+      "0": 72
+    },
+    {
+      "1": 31,
+      "0": 831
+    }
+  ],
+  "reference_rates": [
+    0.914519906323185,
+    0.037037037037037035
+  ],
+  "protocol": "40 reference, disjoint 40 diagnostic games; 4 per seat per player. Fresh state each match. No enemy submissions supplied to live module. Score every eligible command, including workers that die. Global baseline uses other 40 games with identical effective evidence weight by context. Observation contexts shared across all enemy planters in a game.",
+  "groups": {
+    "all": {
+      "observations": 2037,
+      "actual_stays": 997,
+      "frozen": {
+        "mean_forecast": 0.468265801213941,
+        "brier": 0.19327902958652185,
+        "nll": 0.5684252945793264
+      },
+      "online": {
+        "mean_forecast": 0.44174308466153406,
+        "brier": 0.11143422373573555,
+        "nll": 0.3808494155907319
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4395728078981082,
+        "brier": 0.1151705186177719,
+        "nll": 0.39278204675645195
+      },
+      "global_context": {
+        "mean_forecast": 0.422578111171108,
+        "brier": 0.08997497567631214,
+        "nll": 0.35066113113286274
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    "covered": {
+      "observations": 1142,
+      "actual_stays": 148,
+      "frozen": {
+        "mean_forecast": 0.4084264518743014,
+        "brier": 0.17766417725869063,
+        "nll": 0.5304437212908131
+      },
+      "online": {
+        "mean_forecast": 0.23726884565123785,
+        "brier": 0.11044213565688406,
+        "nll": 0.36783369358028895
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.2456595235593063,
+        "brier": 0.1113493802686272,
+        "nll": 0.3736082687003863
+      },
+      "global_context": {
+        "mean_forecast": 0.037037037037037035,
+        "brier": 0.1213691475739864,
+        "nll": 0.4599805097929867
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    "uncovered": {
+      "observations": 895,
+      "actual_stays": 849,
+      "frozen": {
+        "mean_forecast": 0.5446194737791573,
+        "brier": 0.21320323222158694,
+        "nll": 0.616888933345228
+      },
+      "online": {
+        "mean_forecast": 0.7026476443819343,
+        "brier": 0.11270010595478405,
+        "nll": 0.397457186021934
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.6870018254566689,
+        "brier": 0.12004620576271409,
+        "nll": 0.4172473590916776
+      },
+      "global_context": {
+        "mean_forecast": 0.9145199063231851,
+        "brier": 0.049916713880620536,
+        "nll": 0.2111720468536879
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    "first_observations": {
+      "observations": 91,
+      "actual_stays": 53,
+      "frozen": {
+        "mean_forecast": 0.5008584511589824,
+        "brier": 0.19307248372310037,
+        "nll": 0.5694592393319057
+      },
+      "online": {
+        "mean_forecast": 0.5008584511589824,
+        "brier": 0.19307248372310037,
+        "nll": 0.5694592393319057
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5008584511589824,
+        "brier": 0.19307248372310037,
+        "nll": 0.5694592393319057
+      },
+      "global_context": {
+        "mean_forecast": 0.43238646166046635,
+        "brier": 0.12614592219505638,
+        "nll": 0.49063486436598214
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    "history_ge_3": {
+      "observations": 1472,
+      "actual_stays": 666,
+      "frozen": {
+        "mean_forecast": 0.4562063759029961,
+        "brier": 0.1896770301792774,
+        "nll": 0.560149537870153
+      },
+      "online": {
+        "mean_forecast": 0.4162687988096771,
+        "brier": 0.0948552877414667,
+        "nll": 0.3397635696904192
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.41510036578238935,
+        "brier": 0.098910661691301,
+        "nll": 0.3536174347745307
+      },
+      "global_context": {
+        "mean_forecast": 0.3970911491626033,
+        "brier": 0.08095809675952051,
+        "nll": 0.3185016525043328
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    "claude-AlphaCarbon-Master5s": {
+      "observations": 423,
+      "actual_stays": 239,
+      "frozen": {
+        "mean_forecast": 0.490520081264993,
+        "brier": 0.1975441144457477,
+        "nll": 0.5785878913305768
+      },
+      "online": {
+        "mean_forecast": 0.4959752635005144,
+        "brier": 0.11628685039636326,
+        "nll": 0.3951031479845043
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4871775202767279,
+        "brier": 0.12057339004340717,
+        "nll": 0.40739527889153254
+      },
+      "global_context": {
+        "mean_forecast": 0.47889011306055834,
+        "brier": 0.10276159713903738,
+        "nll": 0.39704713639053535
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    "claude-AlphaCarbon-Master6": {
+      "observations": 237,
+      "actual_stays": 138,
+      "frozen": {
+        "mean_forecast": 0.5224150549725773,
+        "brier": 0.22050869378276125,
+        "nll": 0.6289479862036671
+      },
+      "online": {
+        "mean_forecast": 0.5034535919368565,
+        "brier": 0.15233258655464754,
+        "nll": 0.48409585174929287
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4979806999874744,
+        "brier": 0.15316196929200285,
+        "nll": 0.4867945268145717
+      },
+      "global_context": {
+        "mean_forecast": 0.4739272419980727,
+        "brier": 0.1491082504389211,
+        "nll": 0.5521137265686571
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    "RyanX-AIPowercore-it720-preview": {
+      "observations": 438,
+      "actual_stays": 202,
+      "frozen": {
+        "mean_forecast": 0.44643776651705247,
+        "brier": 0.18377372182558208,
+        "nll": 0.5469136317950993
+      },
+      "online": {
+        "mean_forecast": 0.4141902111821708,
+        "brier": 0.1109695216500724,
+        "nll": 0.3764578220891615
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.41156219864814564,
+        "brier": 0.11284811004588499,
+        "nll": 0.38434335027432903
+      },
+      "global_context": {
+        "mean_forecast": 0.38762950764223314,
+        "brier": 0.09287486805202247,
+        "nll": 0.3620030101617025
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    "RyanX-AIPowercore-M9XJ-630": {
+      "observations": 441,
+      "actual_stays": 175,
+      "frozen": {
+        "mean_forecast": 0.43868674788399853,
+        "brier": 0.18340224241512643,
+        "nll": 0.5452126630143568
+      },
+      "online": {
+        "mean_forecast": 0.3909267137333258,
+        "brier": 0.08930905441593776,
+        "nll": 0.32570579157328244
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.3982203811684934,
+        "brier": 0.09366098581087184,
+        "nll": 0.34055298434097175
+      },
+      "global_context": {
+        "mean_forecast": 0.389224038995423,
+        "brier": 0.04730881801398106,
+        "nll": 0.19682952437853615
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    "ClaudeFable5.2-v7": {
+      "observations": 498,
+      "actual_stays": 243,
+      "frozen": {
+        "mean_forecast": 0.46898489381102954,
+        "brier": 0.1938039826626579,
+        "nll": 0.5704659019666665
+      },
+      "online": {
+        "mean_forecast": 0.43554343865784084,
+        "brier": 0.10785021995666653,
+        "nll": 0.3723014677458289
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4325961076529431,
+        "brier": 0.11359126259265737,
+        "nll": 0.3893017467915585
+      },
+      "global_context": {
+        "mean_forecast": 0.4105839613114615,
+        "brier": 0.08620448505594225,
+        "nll": 0.3416379388070543
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    }
+  },
+  "games": [
+    {
+      "key": "c2fd0dcd97929f12fe6bb3be60a89415-1",
+      "model": "claude-AlphaCarbon-Master5s",
+      "seat": 0,
+      "resolved_through_final_decision": 13,
+      "censored_through_final_decision": 2,
+      "observations": 15,
+      "actual_stays": 13,
+      "frozen": {
+        "mean_forecast": 0.542281762295838,
+        "brier": 0.17192030762595426,
+        "nll": 0.5312880486123778
+      },
+      "online": {
+        "mean_forecast": 0.5993313390523186,
+        "brier": 0.12610288011775708,
+        "nll": 0.4314616788624733
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.587117492572053,
+        "brier": 0.13432474226815735,
+        "nll": 0.450521173637344
+      },
+      "global_context": {
+        "mean_forecast": 0.6805244745135455,
+        "brier": 0.1291809420577834,
+        "nll": 0.510004724760805
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "8dd781b85a33e6a28d8476c0dcac9e11-1",
+      "model": "claude-AlphaCarbon-Master5s",
+      "seat": 0,
+      "resolved_through_final_decision": 70,
+      "censored_through_final_decision": 4,
+      "observations": 74,
+      "actual_stays": 32,
+      "frozen": {
+        "mean_forecast": 0.47350018633336155,
+        "brier": 0.18569882112582795,
+        "nll": 0.5521553632646267
+      },
+      "online": {
+        "mean_forecast": 0.4105451904433184,
+        "brier": 0.11737439188378485,
+        "nll": 0.3961739135324747
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4092381510085372,
+        "brier": 0.11388997514739072,
+        "nll": 0.3880245455045573
+      },
+      "global_context": {
+        "mean_forecast": 0.38091545878431127,
+        "brier": 0.11238245857555822,
+        "nll": 0.4182238701074125
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    {
+      "key": "3b40cb24f17cc3852f7b5f234ffef623-1",
+      "model": "claude-AlphaCarbon-Master5s",
+      "seat": 0,
+      "resolved_through_final_decision": 58,
+      "censored_through_final_decision": 4,
+      "observations": 62,
+      "actual_stays": 31,
+      "frozen": {
+        "mean_forecast": 0.48027108468556684,
+        "brier": 0.19443422320946327,
+        "nll": 0.5690399659006803
+      },
+      "online": {
+        "mean_forecast": 0.4579881947645648,
+        "brier": 0.11335406922422873,
+        "nll": 0.38590513370796126
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4430726604791186,
+        "brier": 0.12069569335024447,
+        "nll": 0.40458252878433976
+      },
+      "global_context": {
+        "mean_forecast": 0.41916667366164995,
+        "brier": 0.0919994398293197,
+        "nll": 0.36119553330351956
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599455
+      }
+    },
+    {
+      "key": "d1d31ee963f6d9d35490c2a10bf9e023-1",
+      "model": "claude-AlphaCarbon-Master5s",
+      "seat": 0,
+      "resolved_through_final_decision": 31,
+      "censored_through_final_decision": 1,
+      "observations": 32,
+      "actual_stays": 20,
+      "frozen": {
+        "mean_forecast": 0.43452995056013316,
+        "brier": 0.17318424815282718,
+        "nll": 0.5259712916921019
+      },
+      "online": {
+        "mean_forecast": 0.5008948547163218,
+        "brier": 0.08023298485583771,
+        "nll": 0.3168776621761537
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.48698213738365054,
+        "brier": 0.09256566490616677,
+        "nll": 0.34831924452201446
+      },
+      "global_context": {
+        "mean_forecast": 0.5580424906756873,
+        "brier": 0.03383089547728585,
+        "nll": 0.17020267615085274
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "a1de950526b7bfa32c15301e55ae8420-1",
+      "model": "claude-AlphaCarbon-Master5s",
+      "seat": 1,
+      "resolved_through_final_decision": 51,
+      "censored_through_final_decision": 6,
+      "observations": 57,
+      "actual_stays": 38,
+      "frozen": {
+        "mean_forecast": 0.5338930745941736,
+        "brier": 0.2113613320260432,
+        "nll": 0.610445088817259
+      },
+      "online": {
+        "mean_forecast": 0.574856766665254,
+        "brier": 0.12531544243673365,
+        "nll": 0.42052436563551243
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5375528202926939,
+        "brier": 0.13409344354831745,
+        "nll": 0.4420484723983717
+      },
+      "global_context": {
+        "mean_forecast": 0.49887012613500964,
+        "brier": 0.13444999713849748,
+        "nll": 0.5221832013714954
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "c4d761ec5af1ee73ab7cce2b9c6a2b08-1",
+      "model": "claude-AlphaCarbon-Master5s",
+      "seat": 1,
+      "resolved_through_final_decision": 30,
+      "censored_through_final_decision": 3,
+      "observations": 33,
+      "actual_stays": 19,
+      "frozen": {
+        "mean_forecast": 0.5231095282022431,
+        "brier": 0.21644038331623983,
+        "nll": 0.6209771138157768
+      },
+      "online": {
+        "mean_forecast": 0.5133684197073669,
+        "brier": 0.1964017890928479,
+        "nll": 0.5761576965974652
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5303511252516749,
+        "brier": 0.18641191397394205,
+        "nll": 0.5540737215589487
+      },
+      "global_context": {
+        "mean_forecast": 0.5156640566476632,
+        "brier": 0.19220977299393954,
+        "nll": 0.6762802117873462
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "23e6019f321ed539386263c3e85b8e42-1",
+      "model": "claude-AlphaCarbon-Master5s",
+      "seat": 1,
+      "resolved_through_final_decision": 73,
+      "censored_through_final_decision": 3,
+      "observations": 76,
+      "actual_stays": 36,
+      "frozen": {
+        "mean_forecast": 0.474988196054806,
+        "brier": 0.20881983371137858,
+        "nll": 0.6011992158180436
+      },
+      "online": {
+        "mean_forecast": 0.4491615092975073,
+        "brier": 0.11114129535142615,
+        "nll": 0.38311881221501637
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.46190315964629336,
+        "brier": 0.11165113539978269,
+        "nll": 0.38634454270587715
+      },
+      "global_context": {
+        "mean_forecast": 0.4526868172252124,
+        "brier": 0.07345807067310654,
+        "nll": 0.2843561505475267
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    {
+      "key": "139ce9f90d1cdbfbdaebe112cd95c8b8-1",
+      "model": "claude-AlphaCarbon-Master5s",
+      "seat": 1,
+      "resolved_through_final_decision": 67,
+      "censored_through_final_decision": 7,
+      "observations": 74,
+      "actual_stays": 50,
+      "frozen": {
+        "mean_forecast": 0.4978562959574212,
+        "brier": 0.19707282859443712,
+        "nll": 0.5786965673162269
+      },
+      "online": {
+        "mean_forecast": 0.569716899985524,
+        "brier": 0.09386086491270332,
+        "nll": 0.3401825780580102
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5497977587128926,
+        "brier": 0.1058672256073216,
+        "nll": 0.3754439919741647
+      },
+      "global_context": {
+        "mean_forecast": 0.5469257313519609,
+        "brier": 0.09240810652450437,
+        "nll": 0.37593156518135995
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    {
+      "key": "791ae149851d64f1b7252c0e44fa5b99-1",
+      "model": "claude-AlphaCarbon-Master6",
+      "seat": 0,
+      "resolved_through_final_decision": 16,
+      "censored_through_final_decision": 2,
+      "observations": 18,
+      "actual_stays": 11,
+      "frozen": {
+        "mean_forecast": 0.5249253608280551,
+        "brier": 0.24442032302949007,
+        "nll": 0.6818541424183908
+      },
+      "online": {
+        "mean_forecast": 0.5355428985997925,
+        "brier": 0.20962191799303836,
+        "nll": 0.6100579921838366
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5417147677524928,
+        "brier": 0.21395015330329406,
+        "nll": 0.619752443478685
+      },
+      "global_context": {
+        "mean_forecast": 0.5732765682674609,
+        "brier": 0.19999494347205218,
+        "nll": 0.694640181819067
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "0a93f327e9ef8200ba227adfe97bd8a8-1",
+      "model": "claude-AlphaCarbon-Master6",
+      "seat": 0,
+      "resolved_through_final_decision": 23,
+      "censored_through_final_decision": 3,
+      "observations": 26,
+      "actual_stays": 19,
+      "frozen": {
+        "mean_forecast": 0.5089813559529393,
+        "brier": 0.18481973424466316,
+        "nll": 0.5574166517859415
+      },
+      "online": {
+        "mean_forecast": 0.5585947391891274,
+        "brier": 0.1392174764840583,
+        "nll": 0.45923726953615335
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5396568038986848,
+        "brier": 0.14127730813596232,
+        "nll": 0.4641818748711201
+      },
+      "global_context": {
+        "mean_forecast": 0.5432771539328917,
+        "brier": 0.14724598319869117,
+        "nll": 0.5687642468896349
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599452
+      }
+    },
+    {
+      "key": "d77adda4082645819a97e5f71e2c541e-1",
+      "model": "claude-AlphaCarbon-Master6",
+      "seat": 0,
+      "resolved_through_final_decision": 39,
+      "censored_through_final_decision": 3,
+      "observations": 42,
+      "actual_stays": 16,
+      "frozen": {
+        "mean_forecast": 0.48327858209368507,
+        "brier": 0.21841470785755973,
+        "nll": 0.6226430725537133
+      },
+      "online": {
+        "mean_forecast": 0.42217509267076864,
+        "brier": 0.1404531733727476,
+        "nll": 0.45431959196377825
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4415395955446441,
+        "brier": 0.13559633245893762,
+        "nll": 0.4456961084279831
+      },
+      "global_context": {
+        "mean_forecast": 0.41310112387395764,
+        "brier": 0.08517834309606122,
+        "nll": 0.3067290553991334
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599452
+      }
+    },
+    {
+      "key": "2d7af73e124320d425f26eac812e0ad0-1",
+      "model": "claude-AlphaCarbon-Master6",
+      "seat": 0,
+      "resolved_through_final_decision": 11,
+      "censored_through_final_decision": 2,
+      "observations": 13,
+      "actual_stays": 11,
+      "frozen": {
+        "mean_forecast": 0.530629726106297,
+        "brier": 0.1578247172228244,
+        "nll": 0.49134943420288396
+      },
+      "online": {
+        "mean_forecast": 0.5752550775673307,
+        "brier": 0.12380378800245641,
+        "nll": 0.420566909140675
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5535732668222096,
+        "brier": 0.13673667851718987,
+        "nll": 0.44615617107067096
+      },
+      "global_context": {
+        "mean_forecast": 0.5770264950592818,
+        "brier": 0.2186993276661668,
+        "nll": 0.8213722773515196
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "7d651b81bb589a01eca3ff86a2b5f3c7-1",
+      "model": "claude-AlphaCarbon-Master6",
+      "seat": 1,
+      "resolved_through_final_decision": 43,
+      "censored_through_final_decision": 2,
+      "observations": 45,
+      "actual_stays": 16,
+      "frozen": {
+        "mean_forecast": 0.5449249608590673,
+        "brier": 0.26657265395056734,
+        "nll": 0.7250938931931153
+      },
+      "online": {
+        "mean_forecast": 0.4032674298730821,
+        "brier": 0.17420820208105814,
+        "nll": 0.5315969715405084
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.3966391995578762,
+        "brier": 0.17025715181876305,
+        "nll": 0.5231624892716547
+      },
+      "global_context": {
+        "mean_forecast": 0.2905320881641464,
+        "brier": 0.1428132001314841,
+        "nll": 0.5200007372061465
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599452
+      }
+    },
+    {
+      "key": "8576857b881006a65658502aa0fce156-1",
+      "model": "claude-AlphaCarbon-Master6",
+      "seat": 1,
+      "resolved_through_final_decision": 16,
+      "censored_through_final_decision": 4,
+      "observations": 20,
+      "actual_stays": 18,
+      "frozen": {
+        "mean_forecast": 0.5591468265016746,
+        "brier": 0.21159594979374208,
+        "nll": 0.6144906301331633
+      },
+      "online": {
+        "mean_forecast": 0.6208463429703978,
+        "brier": 0.15678230086906536,
+        "nll": 0.5001895949607343
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.6054042905792267,
+        "brier": 0.1680784957501757,
+        "nll": 0.5249013750139195
+      },
+      "global_context": {
+        "mean_forecast": 0.6074009020730332,
+        "brier": 0.23671104139059856,
+        "nll": 0.8858146778661414
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "918874a5a3fe275ed997dd773123ce62-1",
+      "model": "claude-AlphaCarbon-Master6",
+      "seat": 1,
+      "resolved_through_final_decision": 25,
+      "censored_through_final_decision": 5,
+      "observations": 30,
+      "actual_stays": 27,
+      "frozen": {
+        "mean_forecast": 0.5272187786713334,
+        "brier": 0.1980042640116349,
+        "nll": 0.5794019082132328
+      },
+      "online": {
+        "mean_forecast": 0.6414798585601105,
+        "brier": 0.11257102737081787,
+        "nll": 0.39370084472429434
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.6192415754023941,
+        "brier": 0.12534893520620422,
+        "nll": 0.42536264237311805
+      },
+      "global_context": {
+        "mean_forecast": 0.6805244745135457,
+        "brier": 0.16004513958864766,
+        "nll": 0.6186079426948542
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.693147180559945
+      }
+    },
+    {
+      "key": "88b749bbc6652916deca09c1a44cfad9-1",
+      "model": "claude-AlphaCarbon-Master6",
+      "seat": 1,
+      "resolved_through_final_decision": 40,
+      "censored_through_final_decision": 3,
+      "observations": 43,
+      "actual_stays": 20,
+      "frozen": {
+        "mean_forecast": 0.5212368898295647,
+        "brier": 0.22471456101648135,
+        "nll": 0.638484150829295
+      },
+      "online": {
+        "mean_forecast": 0.4683078845179967,
+        "brier": 0.15928710798024348,
+        "nll": 0.5005588454827792
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.46428536373944684,
+        "brier": 0.15160096195761688,
+        "nll": 0.4843149897487828
+      },
+      "global_context": {
+        "mean_forecast": 0.4043554474358897,
+        "brier": 0.12854883993670843,
+        "nll": 0.4726635944213861
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599452
+      }
+    },
+    {
+      "key": "2fc87c2c27e3c05652e05ed579a4ca92-1",
+      "model": "RyanX-AIPowercore-it720-preview",
+      "seat": 0,
+      "resolved_through_final_decision": 40,
+      "censored_through_final_decision": 1,
+      "observations": 41,
+      "actual_stays": 20,
+      "frozen": {
+        "mean_forecast": 0.4715658800245659,
+        "brier": 0.19127981254791593,
+        "nll": 0.5634264302067162
+      },
+      "online": {
+        "mean_forecast": 0.4656443381812177,
+        "brier": 0.1375481698124709,
+        "nll": 0.446670390213305
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.46057527585230673,
+        "brier": 0.12400670379222276,
+        "nll": 0.4134460779168261
+      },
+      "global_context": {
+        "mean_forecast": 0.4436754398769593,
+        "brier": 0.11231380027878256,
+        "nll": 0.4156725141975235
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "ce38317785d0cbe4c6604e09de4d7ec6-1",
+      "model": "RyanX-AIPowercore-it720-preview",
+      "seat": 0,
+      "resolved_through_final_decision": 51,
+      "censored_through_final_decision": 5,
+      "observations": 56,
+      "actual_stays": 35,
+      "frozen": {
+        "mean_forecast": 0.5024879373322745,
+        "brier": 0.1946256071509062,
+        "nll": 0.572725180587709
+      },
+      "online": {
+        "mean_forecast": 0.5518048463382341,
+        "brier": 0.11275771853910745,
+        "nll": 0.3878940577324231
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5085009014339291,
+        "brier": 0.11018186554370916,
+        "nll": 0.3840358876119224
+      },
+      "global_context": {
+        "mean_forecast": 0.49144780863164933,
+        "brier": 0.1036516274754912,
+        "nll": 0.41355166711041785
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "42d3e7dcf8afd6b1184f02b43268ab3f-1",
+      "model": "RyanX-AIPowercore-it720-preview",
+      "seat": 0,
+      "resolved_through_final_decision": 43,
+      "censored_through_final_decision": 5,
+      "observations": 48,
+      "actual_stays": 19,
+      "frozen": {
+        "mean_forecast": 0.43003688205904966,
+        "brier": 0.1696556056160773,
+        "nll": 0.5159030554089834
+      },
+      "online": {
+        "mean_forecast": 0.33678521164657865,
+        "brier": 0.13383246505413182,
+        "nll": 0.4208697692192866
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.34287519857341014,
+        "brier": 0.139325203427106,
+        "nll": 0.43820932292896736
+      },
+      "global_context": {
+        "mean_forecast": 0.2746886474687021,
+        "brier": 0.11871990693515451,
+        "nll": 0.4589816516430007
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "07f75372fbdbbeba13f0b309d5509df1-1",
+      "model": "RyanX-AIPowercore-it720-preview",
+      "seat": 0,
+      "resolved_through_final_decision": 30,
+      "censored_through_final_decision": 3,
+      "observations": 33,
+      "actual_stays": 16,
+      "frozen": {
+        "mean_forecast": 0.46267725796259096,
+        "brier": 0.18867391199150246,
+        "nll": 0.5605614046037085
+      },
+      "online": {
+        "mean_forecast": 0.4288922114394016,
+        "brier": 0.15325058871767197,
+        "nll": 0.47991635133092553
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.44896832976147594,
+        "brier": 0.14576745398675756,
+        "nll": 0.46480005015827713
+      },
+      "global_context": {
+        "mean_forecast": 0.4358928867125589,
+        "brier": 0.13848943810061107,
+        "nll": 0.5010359877082284
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "e654ace72cd3bba051e7d2438960bb6c-1",
+      "model": "RyanX-AIPowercore-it720-preview",
+      "seat": 1,
+      "resolved_through_final_decision": 66,
+      "censored_through_final_decision": 6,
+      "observations": 72,
+      "actual_stays": 40,
+      "frozen": {
+        "mean_forecast": 0.41930201715118653,
+        "brier": 0.16225920061716864,
+        "nll": 0.5011168054805286
+      },
+      "online": {
+        "mean_forecast": 0.44268353668946847,
+        "brier": 0.10189128173854729,
+        "nll": 0.3547258301519839
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.43178924773744476,
+        "brier": 0.10803900636291469,
+        "nll": 0.37187933936911327
+      },
+      "global_context": {
+        "mean_forecast": 0.4514039475332737,
+        "brier": 0.10570944822933472,
+        "nll": 0.411792075450721
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "0cea87e64ecc107c9bce51baab2f3a1f-1",
+      "model": "RyanX-AIPowercore-it720-preview",
+      "seat": 1,
+      "resolved_through_final_decision": 63,
+      "censored_through_final_decision": 8,
+      "observations": 71,
+      "actual_stays": 34,
+      "frozen": {
+        "mean_forecast": 0.49999112036642274,
+        "brier": 0.22668301078297853,
+        "nll": 0.6414365382777198
+      },
+      "online": {
+        "mean_forecast": 0.42709855721790685,
+        "brier": 0.11774565682660634,
+        "nll": 0.39918394544031605
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.42478894020781544,
+        "brier": 0.12650541823029557,
+        "nll": 0.42310834856164625
+      },
+      "global_context": {
+        "mean_forecast": 0.37072770563881174,
+        "brier": 0.09491722517796689,
+        "nll": 0.37858962512697886
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599455
+      }
+    },
+    {
+      "key": "c75e95bdff9633fcc0e0ef78e6810ee2-1",
+      "model": "RyanX-AIPowercore-it720-preview",
+      "seat": 1,
+      "resolved_through_final_decision": 76,
+      "censored_through_final_decision": 1,
+      "observations": 77,
+      "actual_stays": 20,
+      "frozen": {
+        "mean_forecast": 0.37121221234160284,
+        "brier": 0.15827599654934552,
+        "nll": 0.48667185850325057
+      },
+      "online": {
+        "mean_forecast": 0.27621287230115044,
+        "brier": 0.05521952324192802,
+        "nll": 0.2316098389678207
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.2849259970408613,
+        "brier": 0.06348897167082936,
+        "nll": 0.25911629051565177
+      },
+      "global_context": {
+        "mean_forecast": 0.253558784003749,
+        "brier": 0.01486126039395942,
+        "nll": 0.09278961553318708
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    {
+      "key": "c1d4100873bba6ed377e4904f0d03f57-1",
+      "model": "RyanX-AIPowercore-it720-preview",
+      "seat": 1,
+      "resolved_through_final_decision": 38,
+      "censored_through_final_decision": 2,
+      "observations": 40,
+      "actual_stays": 18,
+      "frozen": {
+        "mean_forecast": 0.44709102950124224,
+        "brier": 0.1854316933767783,
+        "nll": 0.5504266661561585
+      },
+      "online": {
+        "mean_forecast": 0.44095216823955197,
+        "brier": 0.13053745806139933,
+        "nll": 0.4274426707279443
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4610624859998385,
+        "brier": 0.12564332892424962,
+        "nll": 0.4186169952831699
+      },
+      "global_context": {
+        "mean_forecast": 0.4538413999479573,
+        "brier": 0.11266519890095117,
+        "nll": 0.40292129811963573
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "ec0c8f7faf069a10c53d5cad26da3118-1",
+      "model": "RyanX-AIPowercore-M9XJ-630",
+      "seat": 0,
+      "resolved_through_final_decision": 42,
+      "censored_through_final_decision": 2,
+      "observations": 44,
+      "actual_stays": 24,
+      "frozen": {
+        "mean_forecast": 0.5177354847946798,
+        "brier": 0.24029815144754815,
+        "nll": 0.6703613980015954
+      },
+      "online": {
+        "mean_forecast": 0.5259513272693532,
+        "brier": 0.16499709606634522,
+        "nll": 0.5131368760081936
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5454306119162511,
+        "brier": 0.15790460080526098,
+        "nll": 0.4971106152626934
+      },
+      "global_context": {
+        "mean_forecast": 0.5555496416152154,
+        "brier": 0.12233364698299881,
+        "nll": 0.43180088539023576
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599452
+      }
+    },
+    {
+      "key": "b113140a80083e5e8f475161d44c886b-1",
+      "model": "RyanX-AIPowercore-M9XJ-630",
+      "seat": 0,
+      "resolved_through_final_decision": 45,
+      "censored_through_final_decision": 1,
+      "observations": 46,
+      "actual_stays": 15,
+      "frozen": {
+        "mean_forecast": 0.40256614148881775,
+        "brier": 0.1510278236543847,
+        "nll": 0.47549561696413556
+      },
+      "online": {
+        "mean_forecast": 0.3489904759283902,
+        "brier": 0.07614945055241087,
+        "nll": 0.2934294389327312
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.3597577159271711,
+        "brier": 0.07918481505510722,
+        "nll": 0.30597200186878604
+      },
+      "global_context": {
+        "mean_forecast": 0.3613241843819178,
+        "brier": 0.039610359469775924,
+        "nll": 0.15986421034817785
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599451
+      }
+    },
+    {
+      "key": "27fc4ccb6cf8deb1d6d829dd137ddfda-1",
+      "model": "RyanX-AIPowercore-M9XJ-630",
+      "seat": 0,
+      "resolved_through_final_decision": 37,
+      "censored_through_final_decision": 1,
+      "observations": 38,
+      "actual_stays": 22,
+      "frozen": {
+        "mean_forecast": 0.4500915546214321,
+        "brier": 0.1893696186548929,
+        "nll": 0.5610542451553769
+      },
+      "online": {
+        "mean_forecast": 0.501849039658253,
+        "brier": 0.08603771326471799,
+        "nll": 0.3341426288640571
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.48900765171386407,
+        "brier": 0.09834206151000342,
+        "nll": 0.36483869948662695
+      },
+      "global_context": {
+        "mean_forecast": 0.5219617805899084,
+        "brier": 0.02901813990929138,
+        "nll": 0.1520041851751696
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599451
+      }
+    },
+    {
+      "key": "369fe4fc276ae06b1af2d57c024f8d3d-1",
+      "model": "RyanX-AIPowercore-M9XJ-630",
+      "seat": 0,
+      "resolved_through_final_decision": 45,
+      "censored_through_final_decision": 3,
+      "observations": 48,
+      "actual_stays": 26,
+      "frozen": {
+        "mean_forecast": 0.5162841591087305,
+        "brier": 0.2261754134428893,
+        "nll": 0.6387608507674468
+      },
+      "online": {
+        "mean_forecast": 0.5296932183698391,
+        "brier": 0.13126973567028588,
+        "nll": 0.436215097813298
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5313020771476523,
+        "brier": 0.1344383667773937,
+        "nll": 0.44428901442494273
+      },
+      "global_context": {
+        "mean_forecast": 0.5123402579003672,
+        "brier": 0.07771016271685703,
+        "nll": 0.3002076844108161
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "7205d2bba8517704f74331f0413ee482-1",
+      "model": "RyanX-AIPowercore-M9XJ-630",
+      "seat": 1,
+      "resolved_through_final_decision": 70,
+      "censored_through_final_decision": 1,
+      "observations": 71,
+      "actual_stays": 25,
+      "frozen": {
+        "mean_forecast": 0.4441667836923708,
+        "brier": 0.19117204184615802,
+        "nll": 0.5618313551036852
+      },
+      "online": {
+        "mean_forecast": 0.3488714560311495,
+        "brier": 0.057186748381473584,
+        "nll": 0.24671179257697598
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.3521518436907436,
+        "brier": 0.06732332259618856,
+        "nll": 0.2780669562067221
+      },
+      "global_context": {
+        "mean_forecast": 0.33365096468305894,
+        "brier": 0.016419184777078155,
+        "nll": 0.10107657757730293
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599455
+      }
+    },
+    {
+      "key": "a15b33a2c99634f0cff050ad81dfb048-1",
+      "model": "RyanX-AIPowercore-M9XJ-630",
+      "seat": 1,
+      "resolved_through_final_decision": 74,
+      "censored_through_final_decision": 2,
+      "observations": 76,
+      "actual_stays": 21,
+      "frozen": {
+        "mean_forecast": 0.3771374999241297,
+        "brier": 0.13603795459597032,
+        "nll": 0.44163968185474684
+      },
+      "online": {
+        "mean_forecast": 0.2890717780053625,
+        "brier": 0.05185482046872043,
+        "nll": 0.22515270459627437
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.29723991931960914,
+        "brier": 0.05961110058854108,
+        "nll": 0.2514734743371047
+      },
+      "global_context": {
+        "mean_forecast": 0.2679535815860234,
+        "brier": 0.015116847533222455,
+        "nll": 0.09419310242156045
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    {
+      "key": "70acbfe3c16f97cbea8e2378be50f855-1",
+      "model": "RyanX-AIPowercore-M9XJ-630",
+      "seat": 1,
+      "resolved_through_final_decision": 69,
+      "censored_through_final_decision": 0,
+      "observations": 69,
+      "actual_stays": 23,
+      "frozen": {
+        "mean_forecast": 0.4103617441374274,
+        "brier": 0.1804069125461258,
+        "nll": 0.5356393705997183
+      },
+      "online": {
+        "mean_forecast": 0.34485063922278053,
+        "brier": 0.09448870078401206,
+        "nll": 0.3320632026158702
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.3629921282370764,
+        "brier": 0.09092619287183533,
+        "nll": 0.3284144553638844
+      },
+      "global_context": {
+        "mean_forecast": 0.3676827558984842,
+        "brier": 0.06508765353823326,
+        "nll": 0.24180653070608776
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    {
+      "key": "3349967f89a1a16a24771102499d358d-1",
+      "model": "RyanX-AIPowercore-M9XJ-630",
+      "seat": 1,
+      "resolved_through_final_decision": 46,
+      "censored_through_final_decision": 3,
+      "observations": 49,
+      "actual_stays": 19,
+      "frozen": {
+        "mean_forecast": 0.4441649241364013,
+        "brier": 0.18259894924650352,
+        "nll": 0.544402933458492
+      },
+      "online": {
+        "mean_forecast": 0.37089183392004593,
+        "brier": 0.09247387314410702,
+        "nll": 0.33437201946738276
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.3743494724782688,
+        "brier": 0.10081314315750797,
+        "nll": 0.3577797612969703
+      },
+      "global_context": {
+        "mean_forecast": 0.34146986923835376,
+        "brier": 0.04122375486747456,
+        "nll": 0.18863135344132845
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "f5cdec9a1b11cf2a267ac4dfde017149-1",
+      "model": "ClaudeFable5.2-v7",
+      "seat": 0,
+      "resolved_through_final_decision": 78,
+      "censored_through_final_decision": 5,
+      "observations": 83,
+      "actual_stays": 36,
+      "frozen": {
+        "mean_forecast": 0.44274057139475237,
+        "brier": 0.17180051392978077,
+        "nll": 0.521386203611083
+      },
+      "online": {
+        "mean_forecast": 0.36890826662758064,
+        "brier": 0.09886969717958098,
+        "nll": 0.3427591449438466
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.37700198861997897,
+        "brier": 0.1006985441896174,
+        "nll": 0.3533246677487924
+      },
+      "global_context": {
+        "mean_forecast": 0.36477160267403214,
+        "brier": 0.08051130357730052,
+        "nll": 0.32109914884751367
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    {
+      "key": "a02b0cafe009ebf2846ddc4138312b72-1",
+      "model": "ClaudeFable5.2-v7",
+      "seat": 0,
+      "resolved_through_final_decision": 34,
+      "censored_through_final_decision": 5,
+      "observations": 39,
+      "actual_stays": 26,
+      "frozen": {
+        "mean_forecast": 0.5299169110145627,
+        "brier": 0.21190331153101793,
+        "nll": 0.6123389326973244
+      },
+      "online": {
+        "mean_forecast": 0.5597794782875728,
+        "brier": 0.1575970366288358,
+        "nll": 0.49232676720900326
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.5546447873132481,
+        "brier": 0.16105832341334467,
+        "nll": 0.5008433395053148
+      },
+      "global_context": {
+        "mean_forecast": 0.5320273735574284,
+        "brier": 0.14468563280302937,
+        "nll": 0.5453337677277575
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.693147180559945
+      }
+    },
+    {
+      "key": "99c097c32badf1606d1e9ab29e1ff40b-1",
+      "model": "ClaudeFable5.2-v7",
+      "seat": 0,
+      "resolved_through_final_decision": 54,
+      "censored_through_final_decision": 3,
+      "observations": 57,
+      "actual_stays": 27,
+      "frozen": {
+        "mean_forecast": 0.48319885609535224,
+        "brier": 0.1958306245182284,
+        "nll": 0.5772778436693146
+      },
+      "online": {
+        "mean_forecast": 0.4566520855641822,
+        "brier": 0.10445439480140709,
+        "nll": 0.36902973564985836
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.45222083115903533,
+        "brier": 0.11443006107465872,
+        "nll": 0.39581460936923857
+      },
+      "global_context": {
+        "mean_forecast": 0.43729238092194667,
+        "brier": 0.08190104237451595,
+        "nll": 0.31592505862432063
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "3bfbe8ab9abc5e95f6dcd49fee9f1f1a-1",
+      "model": "ClaudeFable5.2-v7",
+      "seat": 0,
+      "resolved_through_final_decision": 60,
+      "censored_through_final_decision": 6,
+      "observations": 66,
+      "actual_stays": 29,
+      "frozen": {
+        "mean_forecast": 0.5063265574184761,
+        "brier": 0.21489353860195337,
+        "nll": 0.6187491680370802
+      },
+      "online": {
+        "mean_forecast": 0.44021397703651605,
+        "brier": 0.10149988194473732,
+        "nll": 0.36228352030981764
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.43859516899026785,
+        "brier": 0.11122133948453994,
+        "nll": 0.3887527360913699
+      },
+      "global_context": {
+        "mean_forecast": 0.3694169117666386,
+        "brier": 0.05973661046500646,
+        "nll": 0.25475213178946593
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    },
+    {
+      "key": "5c77e80b452007274aab910bbe3ee917-1",
+      "model": "ClaudeFable5.2-v7",
+      "seat": 1,
+      "resolved_through_final_decision": 49,
+      "censored_through_final_decision": 7,
+      "observations": 56,
+      "actual_stays": 30,
+      "frozen": {
+        "mean_forecast": 0.46287211468901673,
+        "brier": 0.18910203498685174,
+        "nll": 0.5589234601713724
+      },
+      "online": {
+        "mean_forecast": 0.4584151148439924,
+        "brier": 0.1454499578453187,
+        "nll": 0.4581547331729476
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.4521499245147705,
+        "brier": 0.14722712234716004,
+        "nll": 0.46267642951313903
+      },
+      "global_context": {
+        "mean_forecast": 0.42877046082549597,
+        "brier": 0.14937064772564493,
+        "nll": 0.5526921151736307
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "3d3dd7a0d809bd4de365bed248717e16-1",
+      "model": "ClaudeFable5.2-v7",
+      "seat": 1,
+      "resolved_through_final_decision": 49,
+      "censored_through_final_decision": 7,
+      "observations": 56,
+      "actual_stays": 29,
+      "frozen": {
+        "mean_forecast": 0.45316625917663483,
+        "brier": 0.17973846291676185,
+        "nll": 0.5401311626481718
+      },
+      "online": {
+        "mean_forecast": 0.4323758043503024,
+        "brier": 0.12326798652779516,
+        "nll": 0.4097990029547144
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.413475561624114,
+        "brier": 0.12446514635716935,
+        "nll": 0.41411800545455957
+      },
+      "global_context": {
+        "mean_forecast": 0.3817624499708809,
+        "brier": 0.11944413097206845,
+        "nll": 0.46527999793647534
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "b46151326adb9aeaa65f0d9e2a029c35-1",
+      "model": "ClaudeFable5.2-v7",
+      "seat": 1,
+      "resolved_through_final_decision": 48,
+      "censored_through_final_decision": 2,
+      "observations": 50,
+      "actual_stays": 29,
+      "frozen": {
+        "mean_forecast": 0.5024004344113917,
+        "brier": 0.22551706347588094,
+        "nll": 0.6399334961780525
+      },
+      "online": {
+        "mean_forecast": 0.5171846475546981,
+        "brier": 0.12704709213082813,
+        "nll": 0.42835834209835566
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.516036075693488,
+        "brier": 0.1318049768609335,
+        "nll": 0.4397139234224069
+      },
+      "global_context": {
+        "mean_forecast": 0.5108777864515569,
+        "brier": 0.07671305024432348,
+        "nll": 0.30850092105962174
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599453
+      }
+    },
+    {
+      "key": "c73703cae164f4833e983ea85371f58c-1",
+      "model": "ClaudeFable5.2-v7",
+      "seat": 1,
+      "resolved_through_final_decision": 87,
+      "censored_through_final_decision": 4,
+      "observations": 91,
+      "actual_stays": 37,
+      "frozen": {
+        "mean_forecast": 0.4259581529501068,
+        "brier": 0.1836755094336019,
+        "nll": 0.5456014289899896
+      },
+      "online": {
+        "mean_forecast": 0.3694838621331467,
+        "brier": 0.05828008835737879,
+        "nll": 0.25041367456456776
+      },
+      "global_same_weight": {
+        "mean_forecast": 0.3682401133254516,
+        "brier": 0.06880282651165245,
+        "nll": 0.28250697135110575
+      },
+      "global_context": {
+        "mean_forecast": 0.3648877794076858,
+        "brier": 0.03411428413515604,
+        "nll": 0.1644350967400965
+      },
+      "always_half": {
+        "mean_forecast": 0.5,
+        "brier": 0.25,
+        "nll": 0.6931471805599454
+      }
+    }
+  ],
+  "paired": {
+    "frozen": {
+      "rank_then_game_equal_weight_mean_brier_delta_online_minus_comparator": -0.07545739511454334,
+      "improved_games": 40,
+      "eligible_games": 40,
+      "ci95_stratified_game_bootstrap": [
+        -0.0832013490978447,
+        -0.06787983797871841
+      ]
+    },
+    "global_same_weight": {
+      "rank_then_game_equal_weight_mean_brier_delta_online_minus_comparator": -0.003502996477996071,
+      "improved_games": 29,
+      "eligible_games": 40,
+      "ci95_stratified_game_bootstrap": [
+        -0.00555133370949658,
+        -0.001397500501076409
+      ]
+    },
+    "global_context": {
+      "rank_then_game_equal_weight_mean_brier_delta_online_minus_comparator": 0.016498874710849733,
+      "improved_games": 8,
+      "eligible_games": 40,
+      "ci95_stratified_game_bootstrap": [
+        0.008159130729863387,
+        0.024525820443133704
+      ]
+    }
+  }
+}

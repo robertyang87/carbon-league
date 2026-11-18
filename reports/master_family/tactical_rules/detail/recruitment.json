@@ -1,0 +1,3619 @@
+{
+  "score_sha256": "5b13d5efd211174127d3ea645f6a49b81a130ca675d0079cd347b3c3ff3b5e19",
+  "script_sha256": "5e2ba0c097d8be26a5eb9bfeeda3369ab69036f2a9b4efc79de2cfcfe55330cf",
+  "matches": 1056,
+  "appearances": 1157,
+  "ranks": [
+    "claude-AlphaCarbon-Master5s",
+    "claude-AlphaCarbon-Master6",
+    "RyanX-AIPowercore-it720-preview",
+    "RyanX-AIPowercore-M9XJ-630",
+    "ClaudeFable5.2-v7"
+  ],
+  "scope": "Descriptive census of the pinned heavy-ladder snapshot. Same-game decisions are correlated.",
+  "analysis": {
+    "scope": "Decision steps 30–199 inclusive, price per role 30, workforce <10 and cash >=30. A row is a team decision. Outcomes are submitted orders before simultaneous settlement.",
+    "definitions": {
+      "hire": "2–8 total existing workers. Did the team order at least one worker of the specified role when none vs at least two of that role remain? Waiting included.",
+      "replace": "Both roles alive, exactly one remaining worker of the given role, team 2–9. Compare an immediately preceding disappearance of existing worker IDs of only that role vs no disappearance. This cannot detect a newborn killed in its first transition. A replacement may be ordered in addition to another type.",
+      "double": "2–8 existing workers, both bases empty, no enemy can reach either in one step. Order at both bases when 60 <= cash < 90 vs cash >=120. Both groups can afford both orders.",
+      "single": "Exactly one recruit order, both bases empty. Under threat = at least one visible enemy worker in the cross around the base. Reach does not imply attack. Zero-cargo collector would tie a sole newborn collector if it moves there. For exposed hires, also measure selected hire role and the opposing submitted arrival after the decision (co-arrival is not intent). Loaded teammate side uses current positions; incoming uses actual same team's joint action at that decision (not enemy actions or next-state input).",
+      "comparison": "Within-game contrasts use only appearances with opportunities in both conditions. Means/medians across games do not control for progression, opponent response or state distribution. Counts are repeated steps."
+    },
+    "models": {
+      "ClaudeFable5.2-v7": {
+        "conditions": {
+          "double_cash120plus": {
+            "hit": 430,
+            "n": 594,
+            "appearances": 227,
+            "pooled_rate": 0.7239057239057239,
+            "mean_game_rate": 0.7237151248164464
+          },
+          "double_cash60to89": {
+            "hit": 50,
+            "n": 100,
+            "appearances": 73,
+            "pooled_rate": 0.5,
+            "mean_game_rate": 0.5527397260273973
+          },
+          "exposed_hire_enemy_commands_same_cell": {
+            "hit": 1,
+            "n": 572,
+            "appearances": 235,
+            "pooled_rate": 0.0017482517482517483,
+            "mean_game_rate": 0.0005319148936170213
+          },
+          "exposed_hire_is_collector": {
+            "hit": 343,
+            "n": 572,
+            "appearances": 235,
+            "pooled_rate": 0.5996503496503497,
+            "mean_game_rate": 0.5908510638297872
+          },
+          "hire_collector_no_collector": {
+            "hit": 19,
+            "n": 67,
+            "appearances": 8,
+            "pooled_rate": 0.2835820895522388,
+            "mean_game_rate": 0.3219017094017094
+          },
+          "hire_collector_two_plus": {
+            "hit": 1393,
+            "n": 2870,
+            "appearances": 278,
+            "pooled_rate": 0.4853658536585366,
+            "mean_game_rate": 0.5217486453569878
+          },
+          "hire_planter_no_planter": {
+            "hit": 86,
+            "n": 105,
+            "appearances": 76,
+            "pooled_rate": 0.819047619047619,
+            "mean_game_rate": 0.925125313283208
+          },
+          "hire_planter_two_plus": {
+            "hit": 921,
+            "n": 2466,
+            "appearances": 275,
+            "pooled_rate": 0.3734793187347932,
+            "mean_game_rate": 0.44911208125882135
+          },
+          "replace_collector_after_loss": {
+            "hit": 15,
+            "n": 36,
+            "appearances": 12,
+            "pooled_rate": 0.4166666666666667,
+            "mean_game_rate": 0.3736111111111111
+          },
+          "replace_collector_no_loss": {
+            "hit": 58,
+            "n": 208,
+            "appearances": 12,
+            "pooled_rate": 0.27884615384615385,
+            "mean_game_rate": 0.4804158649991983
+          },
+          "replace_planter_after_loss": {
+            "hit": 1190,
+            "n": 1561,
+            "appearances": 260,
+            "pooled_rate": 0.7623318385650224,
+            "mean_game_rate": 0.7358862903852782
+          },
+          "replace_planter_no_loss": {
+            "hit": 155,
+            "n": 376,
+            "appearances": 130,
+            "pooled_rate": 0.4122340425531915,
+            "mean_game_rate": 0.6582932622932622
+          },
+          "single_hire_at_enemy_reachable_base": {
+            "hit": 572,
+            "n": 840,
+            "appearances": 262,
+            "pooled_rate": 0.680952380952381,
+            "mean_game_rate": 0.6836513994910941
+          },
+          "single_hire_at_incoming_loaded_teammate": {
+            "hit": 2,
+            "n": 974,
+            "appearances": 269,
+            "pooled_rate": 0.002053388090349076,
+            "mean_game_rate": 0.0018587360594795538
+          },
+          "single_hire_at_loaded_teammate_side": {
+            "hit": 130,
+            "n": 1298,
+            "appearances": 273,
+            "pooled_rate": 0.10015408320493066,
+            "mean_game_rate": 0.09421041921041921
+          },
+          "single_hire_at_threat_with_zero_collector": {
+            "hit": 109,
+            "n": 145,
+            "appearances": 107,
+            "pooled_rate": 0.7517241379310344,
+            "mean_game_rate": 0.7604361370716511
+          },
+          "single_hire_at_threat_without_zero_collector": {
+            "hit": 463,
+            "n": 695,
+            "appearances": 248,
+            "pooled_rate": 0.6661870503597123,
+            "mean_game_rate": 0.6679435483870968
+          }
+        },
+        "within_game_contrasts": {
+          "missing_planter_minus_already_two": {
+            "both_conditions_appearances": 74,
+            "higher": 65,
+            "equal": 6,
+            "lower": 3,
+            "median_difference": 0.5555555555555556
+          },
+          "missing_collector_minus_already_two": {
+            "both_conditions_appearances": 8,
+            "higher": 4,
+            "equal": 0,
+            "lower": 4,
+            "median_difference": -0.0056925184043828125
+          },
+          "two_free_slots_cash120_plus_minus_cash60_to89": {
+            "both_conditions_appearances": 54,
+            "higher": 22,
+            "equal": 16,
+            "lower": 16,
+            "median_difference": 0.0
+          },
+          "after_visible_planter_loss_minus_no_loss": {
+            "both_conditions_appearances": 124,
+            "higher": 48,
+            "equal": 11,
+            "lower": 65,
+            "median_difference": -0.10555555555555558
+          },
+          "after_visible_collector_loss_minus_no_loss": {
+            "both_conditions_appearances": 12,
+            "higher": 6,
+            "equal": 0,
+            "lower": 6,
+            "median_difference": 0.005303030303030309
+          }
+        },
+        "examples": {
+          "hire_collector_two_plus_yes": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 31,
+            "cash": 68.97,
+            "workers": {
+              "COLLECTOR": 3,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 31,
+            "cash": 68.97,
+            "workers": {
+              "COLLECTOR": 3,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_collector_two_plus_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 32,
+            "cash": 96.73,
+            "workers": {
+              "COLLECTOR": 4,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_yes": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 32,
+            "cash": 96.73,
+            "workers": {
+              "COLLECTOR": 4,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash60to89_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 40,
+            "cash": 62.61,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": []
+          },
+          "double_cash60to89_yes": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 41,
+            "cash": 72.65,
+            "workers": {
+              "COLLECTOR": 4,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 46,
+            "cash": 53.31,
+            "workers": {
+              "COLLECTOR": 3,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_incoming_loaded_teammate_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 46,
+            "cash": 53.31,
+            "workers": {
+              "COLLECTOR": 3,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_yes": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 82,
+            "cash": 472.26,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_yes": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 82,
+            "cash": 472.26,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 82,
+            "cash": 472.26,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "exposed_hire_enemy_commands_same_cell_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 82,
+            "cash": 472.26,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 108,
+            "cash": 1181.3,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 4
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 108,
+            "cash": 1181.3,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 4
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 144,
+            "cash": 2012.04,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": []
+          },
+          "replace_planter_no_loss_no": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 145,
+            "cash": 2037.2,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_yes": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 158,
+            "cash": 2293.43,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_yes": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 174,
+            "cash": 2960.79,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_yes": {
+            "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+            "seat": 0,
+            "step": 183,
+            "cash": 3037.84,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "double_cash120plus_no": {
+            "key": "005827404b63ed26c4dcd7d1082d77e5-1",
+            "seat": 0,
+            "step": 45,
+            "cash": 166.34,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash120plus_yes": {
+            "key": "005827404b63ed26c4dcd7d1082d77e5-1",
+            "seat": 0,
+            "step": 162,
+            "cash": 2867.84,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_with_zero_collector_yes": {
+            "key": "005d6cdb471761b6fcd1598fd4dc7839-1",
+            "seat": 0,
+            "step": 158,
+            "cash": 3096.44,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_no_loss_yes": {
+            "key": "01b56d406361dbb513d6d7417dc0184f-1",
+            "seat": 1,
+            "step": 42,
+            "cash": 83.71,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_yes": {
+            "key": "01ec00f9bd7f9672285aeabfb775a39f-1",
+            "seat": 1,
+            "step": 186,
+            "cash": 4160.35,
+            "workers": {
+              "COLLECTOR": 8
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "replace_collector_no_loss_no": {
+            "key": "04dfaebcbcfd2f4365b62fcc2ce4f06f-1",
+            "seat": 0,
+            "step": 47,
+            "cash": 30.93,
+            "workers": {
+              "PLANTER": 2,
+              "COLLECTOR": 1
+            },
+            "lost_roles": [],
+            "orders": []
+          },
+          "replace_collector_no_loss_yes": {
+            "key": "04dfaebcbcfd2f4365b62fcc2ce4f06f-1",
+            "seat": 0,
+            "step": 53,
+            "cash": 38.14,
+            "workers": {
+              "PLANTER": 2,
+              "COLLECTOR": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_with_zero_collector_no": {
+            "key": "04dfaebcbcfd2f4365b62fcc2ce4f06f-1",
+            "seat": 0,
+            "step": 53,
+            "cash": 38.14,
+            "workers": {
+              "PLANTER": 2,
+              "COLLECTOR": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_collector_after_loss_no": {
+            "key": "04dfaebcbcfd2f4365b62fcc2ce4f06f-1",
+            "seat": 0,
+            "step": 56,
+            "cash": 32.76,
+            "workers": {
+              "PLANTER": 2,
+              "COLLECTOR": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": []
+          },
+          "hire_collector_no_collector_yes": {
+            "key": "04dfaebcbcfd2f4365b62fcc2ce4f06f-1",
+            "seat": 0,
+            "step": 59,
+            "cash": 64.11,
+            "workers": {
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_collector_no_collector_no": {
+            "key": "04dfaebcbcfd2f4365b62fcc2ce4f06f-1",
+            "seat": 0,
+            "step": 61,
+            "cash": 55.37,
+            "workers": {
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": []
+          },
+          "replace_collector_after_loss_yes": {
+            "key": "04dfaebcbcfd2f4365b62fcc2ce4f06f-1",
+            "seat": 0,
+            "step": 90,
+            "cash": 45.08,
+            "workers": {
+              "COLLECTOR": 1,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_no": {
+            "key": "1ffbe35d8e8506e1da1f9808bcb66912-1",
+            "seat": 1,
+            "step": 46,
+            "cash": 150.99,
+            "workers": {
+              "COLLECTOR": 8
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_incoming_loaded_teammate_yes": {
+            "key": "6e9aa1e87c61685897a9a92b5b2703ac-1",
+            "seat": 0,
+            "step": 172,
+            "cash": 2741.51,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "exposed_hire_enemy_commands_same_cell_yes": {
+            "key": "89d2c9398291b7a502866766678ee990-1",
+            "seat": 1,
+            "step": 136,
+            "cash": 2665.88,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          }
+        }
+      },
+      "RyanX-AIPowercore-M9XJ-630": {
+        "conditions": {
+          "double_cash120plus": {
+            "hit": 955,
+            "n": 1155,
+            "appearances": 281,
+            "pooled_rate": 0.8268398268398268,
+            "mean_game_rate": 0.8307153206619399
+          },
+          "double_cash60to89": {
+            "hit": 43,
+            "n": 60,
+            "appearances": 50,
+            "pooled_rate": 0.7166666666666667,
+            "mean_game_rate": 0.7366666666666667
+          },
+          "exposed_hire_enemy_commands_same_cell": {
+            "hit": 0,
+            "n": 371,
+            "appearances": 209,
+            "pooled_rate": 0.0,
+            "mean_game_rate": 0.0
+          },
+          "exposed_hire_is_collector": {
+            "hit": 243,
+            "n": 371,
+            "appearances": 209,
+            "pooled_rate": 0.6549865229110512,
+            "mean_game_rate": 0.6594896331738437
+          },
+          "hire_collector_no_collector": {
+            "hit": 2,
+            "n": 3,
+            "appearances": 2,
+            "pooled_rate": 0.6666666666666666,
+            "mean_game_rate": 0.75
+          },
+          "hire_collector_two_plus": {
+            "hit": 1708,
+            "n": 2990,
+            "appearances": 300,
+            "pooled_rate": 0.57123745819398,
+            "mean_game_rate": 0.5520243725036131
+          },
+          "hire_planter_no_planter": {
+            "hit": 107,
+            "n": 134,
+            "appearances": 90,
+            "pooled_rate": 0.7985074626865671,
+            "mean_game_rate": 0.807037037037037
+          },
+          "hire_planter_two_plus": {
+            "hit": 1437,
+            "n": 2273,
+            "appearances": 296,
+            "pooled_rate": 0.6322041355037396,
+            "mean_game_rate": 0.6669967773905734
+          },
+          "replace_collector_after_loss": {
+            "hit": 4,
+            "n": 7,
+            "appearances": 4,
+            "pooled_rate": 0.5714285714285714,
+            "mean_game_rate": 0.625
+          },
+          "replace_collector_no_loss": {
+            "hit": 8,
+            "n": 8,
+            "appearances": 3,
+            "pooled_rate": 1.0,
+            "mean_game_rate": 1.0
+          },
+          "replace_planter_after_loss": {
+            "hit": 457,
+            "n": 952,
+            "appearances": 230,
+            "pooled_rate": 0.4800420168067227,
+            "mean_game_rate": 0.46456521739130435
+          },
+          "replace_planter_no_loss": {
+            "hit": 298,
+            "n": 1139,
+            "appearances": 204,
+            "pooled_rate": 0.26163301141352063,
+            "mean_game_rate": 0.36944717854790066
+          },
+          "single_hire_at_enemy_reachable_base": {
+            "hit": 371,
+            "n": 647,
+            "appearances": 263,
+            "pooled_rate": 0.5734157650695518,
+            "mean_game_rate": 0.5902589172551149
+          },
+          "single_hire_at_incoming_loaded_teammate": {
+            "hit": 0,
+            "n": 659,
+            "appearances": 259,
+            "pooled_rate": 0.0,
+            "mean_game_rate": 0.0
+          },
+          "single_hire_at_loaded_teammate_side": {
+            "hit": 73,
+            "n": 828,
+            "appearances": 270,
+            "pooled_rate": 0.08816425120772947,
+            "mean_game_rate": 0.08940182245737802
+          },
+          "single_hire_at_threat_with_zero_collector": {
+            "hit": 0,
+            "n": 62,
+            "appearances": 44,
+            "pooled_rate": 0.0,
+            "mean_game_rate": 0.0
+          },
+          "single_hire_at_threat_without_zero_collector": {
+            "hit": 371,
+            "n": 585,
+            "appearances": 254,
+            "pooled_rate": 0.6341880341880342,
+            "mean_game_rate": 0.6511529808773904
+          }
+        },
+        "within_game_contrasts": {
+          "missing_planter_minus_already_two": {
+            "both_conditions_appearances": 88,
+            "higher": 57,
+            "equal": 12,
+            "lower": 19,
+            "median_difference": 0.25
+          },
+          "missing_collector_minus_already_two": {
+            "both_conditions_appearances": 2,
+            "higher": 1,
+            "equal": 1,
+            "lower": 0,
+            "median_difference": 0.2857142857142857
+          },
+          "two_free_slots_cash120_plus_minus_cash60_to89": {
+            "both_conditions_appearances": 48,
+            "higher": 14,
+            "equal": 17,
+            "lower": 17,
+            "median_difference": 0.0
+          },
+          "after_visible_planter_loss_minus_no_loss": {
+            "both_conditions_appearances": 190,
+            "higher": 103,
+            "equal": 17,
+            "lower": 70,
+            "median_difference": 0.047619047619047616
+          },
+          "after_visible_collector_loss_minus_no_loss": {
+            "both_conditions_appearances": 2,
+            "higher": 0,
+            "equal": 1,
+            "lower": 1,
+            "median_difference": -0.25
+          }
+        },
+        "examples": {
+          "hire_collector_two_plus_no": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 30,
+            "cash": 114.77,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 30,
+            "cash": 114.77,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_collector_two_plus_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 39,
+            "cash": 190.24,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash120plus_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 39,
+            "cash": 190.24,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_no": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 44,
+            "cash": 141.85,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_incoming_loaded_teammate_no": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 44,
+            "cash": 141.85,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 128,
+            "cash": 2600.46,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 4
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 128,
+            "cash": 2600.46,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 4
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 128,
+            "cash": 2600.46,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 4
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_enemy_commands_same_cell_no": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 128,
+            "cash": 2600.46,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 4
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_no": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 135,
+            "cash": 2817.53,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "double_cash120plus_no": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 145,
+            "cash": 2961.91,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 146,
+            "cash": 2973.06,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_no": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 150,
+            "cash": 2987.72,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": []
+          },
+          "replace_planter_no_loss_no": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 151,
+            "cash": 3127.86,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": []
+          },
+          "replace_planter_no_loss_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 158,
+            "cash": 3344.11,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_yes": {
+            "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+            "seat": 0,
+            "step": 175,
+            "cash": 3681.83,
+            "workers": {
+              "COLLECTOR": 8
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash60to89_yes": {
+            "key": "01fb1d98632d33c432a6a49670db165a-1",
+            "seat": 0,
+            "step": 36,
+            "cash": 86.93,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_yes": {
+            "key": "01fb1d98632d33c432a6a49670db165a-1",
+            "seat": 0,
+            "step": 71,
+            "cash": 946.52,
+            "workers": {
+              "COLLECTOR": 4,
+              "PLANTER": 5
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_no": {
+            "key": "01fb1d98632d33c432a6a49670db165a-1",
+            "seat": 0,
+            "step": 109,
+            "cash": 2417.91,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_no": {
+            "key": "01fb1d98632d33c432a6a49670db165a-1",
+            "seat": 0,
+            "step": 109,
+            "cash": 2417.91,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_no": {
+            "key": "070c42a947d64325e75f46d0cc0c5a9f-1",
+            "seat": 1,
+            "step": 95,
+            "cash": 1502.41,
+            "workers": {
+              "COLLECTOR": 4,
+              "PLANTER": 5
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_no": {
+            "key": "09a12e7f6169d13d2b6a924468e0f205-1",
+            "seat": 1,
+            "step": 63,
+            "cash": 34.5,
+            "workers": {
+              "COLLECTOR": 5
+            },
+            "lost_roles": [],
+            "orders": []
+          },
+          "replace_collector_no_loss_yes": {
+            "key": "09a12e7f6169d13d2b6a924468e0f205-1",
+            "seat": 1,
+            "step": 103,
+            "cash": 30.79,
+            "workers": {
+              "PLANTER": 1,
+              "COLLECTOR": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_collector_no_collector_no": {
+            "key": "09a12e7f6169d13d2b6a924468e0f205-1",
+            "seat": 1,
+            "step": 119,
+            "cash": 32.87,
+            "workers": {
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": []
+          },
+          "hire_collector_no_collector_yes": {
+            "key": "09a12e7f6169d13d2b6a924468e0f205-1",
+            "seat": 1,
+            "step": 120,
+            "cash": 38.79,
+            "workers": {
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_with_zero_collector_no": {
+            "key": "09a12e7f6169d13d2b6a924468e0f205-1",
+            "seat": 1,
+            "step": 125,
+            "cash": 34.7,
+            "workers": {
+              "PLANTER": 2,
+              "COLLECTOR": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "double_cash60to89_no": {
+            "key": "0c36a30b149d4ba55016571f99a5c296-1",
+            "seat": 0,
+            "step": 37,
+            "cash": 88.36,
+            "workers": {
+              "COLLECTOR": 4,
+              "PLANTER": 4
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "replace_collector_after_loss_yes": {
+            "key": "1359247345c9f23c19af46240c47ffa5-1",
+            "seat": 1,
+            "step": 43,
+            "cash": 105.71,
+            "workers": {
+              "COLLECTOR": 1,
+              "PLANTER": 6
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_collector_after_loss_no": {
+            "key": "5a5f72bc66bdafbc4d8d90edc9870f8e-1",
+            "seat": 0,
+            "step": 179,
+            "cash": 123.54,
+            "workers": {
+              "PLANTER": 3,
+              "COLLECTOR": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          }
+        }
+      },
+      "RyanX-AIPowercore-it720-preview": {
+        "conditions": {
+          "double_cash120plus": {
+            "hit": 428,
+            "n": 547,
+            "appearances": 185,
+            "pooled_rate": 0.7824497257769653,
+            "mean_game_rate": 0.7992985842985842
+          },
+          "double_cash60to89": {
+            "hit": 13,
+            "n": 34,
+            "appearances": 30,
+            "pooled_rate": 0.38235294117647056,
+            "mean_game_rate": 0.4111111111111111
+          },
+          "exposed_hire_enemy_commands_same_cell": {
+            "hit": 0,
+            "n": 257,
+            "appearances": 139,
+            "pooled_rate": 0.0,
+            "mean_game_rate": 0.0
+          },
+          "exposed_hire_is_collector": {
+            "hit": 173,
+            "n": 257,
+            "appearances": 139,
+            "pooled_rate": 0.6731517509727627,
+            "mean_game_rate": 0.6934052757793765
+          },
+          "hire_collector_no_collector": {
+            "hit": 0,
+            "n": 0,
+            "appearances": 0,
+            "pooled_rate": null,
+            "mean_game_rate": null
+          },
+          "hire_collector_two_plus": {
+            "hit": 1048,
+            "n": 1715,
+            "appearances": 203,
+            "pooled_rate": 0.6110787172011661,
+            "mean_game_rate": 0.6212481066270337
+          },
+          "hire_planter_no_planter": {
+            "hit": 75,
+            "n": 93,
+            "appearances": 68,
+            "pooled_rate": 0.8064516129032258,
+            "mean_game_rate": 0.9147058823529411
+          },
+          "hire_planter_two_plus": {
+            "hit": 433,
+            "n": 1142,
+            "appearances": 200,
+            "pooled_rate": 0.37915936952714535,
+            "mean_game_rate": 0.39836535792993594
+          },
+          "replace_collector_after_loss": {
+            "hit": 0,
+            "n": 0,
+            "appearances": 0,
+            "pooled_rate": null,
+            "mean_game_rate": null
+          },
+          "replace_collector_no_loss": {
+            "hit": 4,
+            "n": 7,
+            "appearances": 3,
+            "pooled_rate": 0.5714285714285714,
+            "mean_game_rate": 0.6666666666666666
+          },
+          "replace_planter_after_loss": {
+            "hit": 789,
+            "n": 1225,
+            "appearances": 198,
+            "pooled_rate": 0.6440816326530612,
+            "mean_game_rate": 0.6214428108367502
+          },
+          "replace_planter_no_loss": {
+            "hit": 238,
+            "n": 484,
+            "appearances": 159,
+            "pooled_rate": 0.49173553719008267,
+            "mean_game_rate": 0.579095978013847
+          },
+          "single_hire_at_enemy_reachable_base": {
+            "hit": 257,
+            "n": 444,
+            "appearances": 176,
+            "pooled_rate": 0.5788288288288288,
+            "mean_game_rate": 0.566314935064935
+          },
+          "single_hire_at_incoming_loaded_teammate": {
+            "hit": 0,
+            "n": 632,
+            "appearances": 187,
+            "pooled_rate": 0.0,
+            "mean_game_rate": 0.0
+          },
+          "single_hire_at_loaded_teammate_side": {
+            "hit": 63,
+            "n": 822,
+            "appearances": 197,
+            "pooled_rate": 0.07664233576642336,
+            "mean_game_rate": 0.07530489814753774
+          },
+          "single_hire_at_threat_with_zero_collector": {
+            "hit": 0,
+            "n": 27,
+            "appearances": 18,
+            "pooled_rate": 0.0,
+            "mean_game_rate": 0.0
+          },
+          "single_hire_at_threat_without_zero_collector": {
+            "hit": 257,
+            "n": 417,
+            "appearances": 174,
+            "pooled_rate": 0.6163069544364509,
+            "mean_game_rate": 0.5861111111111111
+          }
+        },
+        "within_game_contrasts": {
+          "missing_planter_minus_already_two": {
+            "both_conditions_appearances": 66,
+            "higher": 60,
+            "equal": 3,
+            "lower": 3,
+            "median_difference": 0.5634920634920635
+          },
+          "missing_collector_minus_already_two": {
+            "both_conditions_appearances": 0,
+            "higher": 0,
+            "equal": 0,
+            "lower": 0,
+            "median_difference": null
+          },
+          "two_free_slots_cash120_plus_minus_cash60_to89": {
+            "both_conditions_appearances": 26,
+            "higher": 14,
+            "equal": 7,
+            "lower": 5,
+            "median_difference": 0.7083333333333333
+          },
+          "after_visible_planter_loss_minus_no_loss": {
+            "both_conditions_appearances": 159,
+            "higher": 69,
+            "equal": 10,
+            "lower": 80,
+            "median_difference": -0.016666666666666663
+          },
+          "after_visible_collector_loss_minus_no_loss": {
+            "both_conditions_appearances": 0,
+            "higher": 0,
+            "equal": 0,
+            "lower": 0,
+            "median_difference": null
+          }
+        },
+        "examples": {
+          "hire_collector_two_plus_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 30,
+            "cash": 37.84,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "replace_planter_no_loss_yes": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 30,
+            "cash": 37.84,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_yes": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 33,
+            "cash": 55.79,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 2
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_collector_two_plus_yes": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 34,
+            "cash": 75.35,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 34,
+            "cash": 75.35,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "double_cash120plus_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 47,
+            "cash": 192.25,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash120plus_yes": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 50,
+            "cash": 251.62,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 65,
+            "cash": 710.79,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_yes": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 74,
+            "cash": 1016.98,
+            "workers": {
+              "COLLECTOR": 9
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_yes": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 74,
+            "cash": 1016.98,
+            "workers": {
+              "COLLECTOR": 9
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 74,
+            "cash": 1016.98,
+            "workers": {
+              "COLLECTOR": 9
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "exposed_hire_enemy_commands_same_cell_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 74,
+            "cash": 1016.98,
+            "workers": {
+              "COLLECTOR": 9
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 78,
+            "cash": 1086.44,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_incoming_loaded_teammate_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 78,
+            "cash": 1086.44,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_yes": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 82,
+            "cash": 1437.27,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "replace_planter_no_loss_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 134,
+            "cash": 2988.57,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": []
+          },
+          "single_hire_at_enemy_reachable_base_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 139,
+            "cash": 2947.68,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_no": {
+            "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+            "seat": 1,
+            "step": 139,
+            "cash": 2947.68,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_yes": {
+            "key": "00c42eee5a8baade6fb29c5d055f792f-1",
+            "seat": 0,
+            "step": 83,
+            "cash": 1054.07,
+            "workers": {
+              "COLLECTOR": 8
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_yes": {
+            "key": "00cf90e4ffcb535b73ad9e3928446479-1",
+            "seat": 1,
+            "step": 119,
+            "cash": 2081.16,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_yes": {
+            "key": "011008e4dee32c2fdbfa37044c3c2608-1",
+            "seat": 0,
+            "step": 95,
+            "cash": 1678.61,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "double_cash60to89_yes": {
+            "key": "06591c01cd12b7f46c7215d5b464fb9b-1",
+            "seat": 1,
+            "step": 37,
+            "cash": 71.18,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_with_zero_collector_no": {
+            "key": "14969c801e585590703fa0b5cdc65d64-1",
+            "seat": 0,
+            "step": 76,
+            "cash": 1522.62,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash60to89_no": {
+            "key": "18c99b06fc0190724cee62ce7c2d9287-1",
+            "seat": 0,
+            "step": 40,
+            "cash": 86.95,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_no": {
+            "key": "3668515b808112e8e24e74b6505d0f8a-1",
+            "seat": 0,
+            "step": 187,
+            "cash": 3616.38,
+            "workers": {
+              "COLLECTOR": 8
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_collector_no_loss_no": {
+            "key": "5a436ad4ca6114fa2fe7a948f0990d87-1",
+            "seat": 1,
+            "step": 53,
+            "cash": 40.26,
+            "workers": {
+              "COLLECTOR": 1,
+              "PLANTER": 2
+            },
+            "lost_roles": [],
+            "orders": []
+          },
+          "replace_collector_no_loss_yes": {
+            "key": "5a436ad4ca6114fa2fe7a948f0990d87-1",
+            "seat": 1,
+            "step": 54,
+            "cash": 50.23,
+            "workers": {
+              "COLLECTOR": 1,
+              "PLANTER": 2
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          }
+        }
+      },
+      "claude-AlphaCarbon-Master5s": {
+        "conditions": {
+          "double_cash120plus": {
+            "hit": 278,
+            "n": 445,
+            "appearances": 156,
+            "pooled_rate": 0.6247191011235955,
+            "mean_game_rate": 0.6029227716727716
+          },
+          "double_cash60to89": {
+            "hit": 21,
+            "n": 71,
+            "appearances": 49,
+            "pooled_rate": 0.29577464788732394,
+            "mean_game_rate": 0.32653061224489793
+          },
+          "exposed_hire_enemy_commands_same_cell": {
+            "hit": 1,
+            "n": 335,
+            "appearances": 146,
+            "pooled_rate": 0.0029850746268656717,
+            "mean_game_rate": 0.0013698630136986301
+          },
+          "exposed_hire_is_collector": {
+            "hit": 228,
+            "n": 335,
+            "appearances": 146,
+            "pooled_rate": 0.6805970149253732,
+            "mean_game_rate": 0.6771526418786693
+          },
+          "hire_collector_no_collector": {
+            "hit": 0,
+            "n": 0,
+            "appearances": 0,
+            "pooled_rate": null,
+            "mean_game_rate": null
+          },
+          "hire_collector_two_plus": {
+            "hit": 1135,
+            "n": 1760,
+            "appearances": 195,
+            "pooled_rate": 0.6448863636363636,
+            "mean_game_rate": 0.642643311468627
+          },
+          "hire_planter_no_planter": {
+            "hit": 67,
+            "n": 115,
+            "appearances": 63,
+            "pooled_rate": 0.5826086956521739,
+            "mean_game_rate": 0.8321308321308322
+          },
+          "hire_planter_two_plus": {
+            "hit": 387,
+            "n": 1128,
+            "appearances": 190,
+            "pooled_rate": 0.34308510638297873,
+            "mean_game_rate": 0.36631629378533404
+          },
+          "replace_collector_after_loss": {
+            "hit": 0,
+            "n": 0,
+            "appearances": 0,
+            "pooled_rate": null,
+            "mean_game_rate": null
+          },
+          "replace_collector_no_loss": {
+            "hit": 1,
+            "n": 1,
+            "appearances": 1,
+            "pooled_rate": 1.0,
+            "mean_game_rate": 1.0
+          },
+          "replace_planter_after_loss": {
+            "hit": 832,
+            "n": 1242,
+            "appearances": 192,
+            "pooled_rate": 0.6698872785829307,
+            "mean_game_rate": 0.6478124161717912
+          },
+          "replace_planter_no_loss": {
+            "hit": 107,
+            "n": 204,
+            "appearances": 106,
+            "pooled_rate": 0.5245098039215687,
+            "mean_game_rate": 0.5822102425876011
+          },
+          "single_hire_at_enemy_reachable_base": {
+            "hit": 335,
+            "n": 523,
+            "appearances": 164,
+            "pooled_rate": 0.6405353728489483,
+            "mean_game_rate": 0.6365030971738289
+          },
+          "single_hire_at_incoming_loaded_teammate": {
+            "hit": 0,
+            "n": 733,
+            "appearances": 188,
+            "pooled_rate": 0.0,
+            "mean_game_rate": 0.0
+          },
+          "single_hire_at_loaded_teammate_side": {
+            "hit": 106,
+            "n": 946,
+            "appearances": 193,
+            "pooled_rate": 0.11205073995771671,
+            "mean_game_rate": 0.12259530912380653
+          },
+          "single_hire_at_threat_with_zero_collector": {
+            "hit": 48,
+            "n": 71,
+            "appearances": 53,
+            "pooled_rate": 0.676056338028169,
+            "mean_game_rate": 0.6823899371069182
+          },
+          "single_hire_at_threat_without_zero_collector": {
+            "hit": 287,
+            "n": 452,
+            "appearances": 158,
+            "pooled_rate": 0.6349557522123894,
+            "mean_game_rate": 0.6253541289933695
+          }
+        },
+        "within_game_contrasts": {
+          "missing_planter_minus_already_two": {
+            "both_conditions_appearances": 63,
+            "higher": 53,
+            "equal": 5,
+            "lower": 5,
+            "median_difference": 0.625
+          },
+          "missing_collector_minus_already_two": {
+            "both_conditions_appearances": 0,
+            "higher": 0,
+            "equal": 0,
+            "lower": 0,
+            "median_difference": null
+          },
+          "two_free_slots_cash120_plus_minus_cash60_to89": {
+            "both_conditions_appearances": 42,
+            "higher": 21,
+            "equal": 12,
+            "lower": 9,
+            "median_difference": 0.08333333333333331
+          },
+          "after_visible_planter_loss_minus_no_loss": {
+            "both_conditions_appearances": 106,
+            "higher": 48,
+            "equal": 4,
+            "lower": 54,
+            "median_difference": -0.05416666666666664
+          },
+          "after_visible_collector_loss_minus_no_loss": {
+            "both_conditions_appearances": 0,
+            "higher": 0,
+            "equal": 0,
+            "lower": 0,
+            "median_difference": null
+          }
+        },
+        "examples": {
+          "hire_collector_two_plus_yes": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 36,
+            "cash": 69.41,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_no": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 36,
+            "cash": 69.41,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "double_cash60to89_yes": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 36,
+            "cash": 69.41,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_yes": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 40,
+            "cash": 96.2,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_yes": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 57,
+            "cash": 277.67,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_yes": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 57,
+            "cash": 277.67,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_yes": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 57,
+            "cash": 277.67,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_enemy_commands_same_cell_no": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 57,
+            "cash": 277.67,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_collector_two_plus_no": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 77,
+            "cash": 859.58,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_no": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 77,
+            "cash": 859.58,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_no": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 77,
+            "cash": 859.58,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_no": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 89,
+            "cash": 792.73,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_incoming_loaded_teammate_no": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 100,
+            "cash": 1272.67,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_no": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 114,
+            "cash": 1751.01,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_yes": {
+            "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+            "seat": 1,
+            "step": 149,
+            "cash": 2926.85,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash60to89_no": {
+            "key": "00f7e221872bf7bc75a3847676e17b56-1",
+            "seat": 1,
+            "step": 32,
+            "cash": 61.18,
+            "workers": {
+              "COLLECTOR": 4,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": []
+          },
+          "double_cash120plus_yes": {
+            "key": "00f7e221872bf7bc75a3847676e17b56-1",
+            "seat": 1,
+            "step": 74,
+            "cash": 908.88,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_yes": {
+            "key": "00f7e221872bf7bc75a3847676e17b56-1",
+            "seat": 1,
+            "step": 136,
+            "cash": 2935.63,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_yes": {
+            "key": "01b56d406361dbb513d6d7417dc0184f-1",
+            "seat": 0,
+            "step": 159,
+            "cash": 3054.08,
+            "workers": {
+              "COLLECTOR": 8
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_no_loss_no": {
+            "key": "02ab03aeb1de04e89d030d0e71b280ec-1",
+            "seat": 0,
+            "step": 55,
+            "cash": 34.96,
+            "workers": {
+              "PLANTER": 1,
+              "COLLECTOR": 6
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_no_loss_yes": {
+            "key": "02ab03aeb1de04e89d030d0e71b280ec-1",
+            "seat": 0,
+            "step": 58,
+            "cash": 42.37,
+            "workers": {
+              "PLANTER": 1,
+              "COLLECTOR": 8
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_with_zero_collector_yes": {
+            "key": "02ab03aeb1de04e89d030d0e71b280ec-1",
+            "seat": 0,
+            "step": 74,
+            "cash": 60.27,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_no": {
+            "key": "04c4595fe42c3df466d898cf91ef89fc-1",
+            "seat": 1,
+            "step": 31,
+            "cash": 64.93,
+            "workers": {
+              "COLLECTOR": 3
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_no": {
+            "key": "04c4595fe42c3df466d898cf91ef89fc-1",
+            "seat": 1,
+            "step": 141,
+            "cash": 2397.89,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash120plus_no": {
+            "key": "04c4595fe42c3df466d898cf91ef89fc-1",
+            "seat": 1,
+            "step": 176,
+            "cash": 3644.16,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_with_zero_collector_no": {
+            "key": "0ef7bb0a863a98c15a802fb6e08f5731-1",
+            "seat": 1,
+            "step": 119,
+            "cash": 2559.62,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_collector_no_loss_yes": {
+            "key": "3136eab484b5d37bf5699ab34fc9e3a7-1",
+            "seat": 0,
+            "step": 140,
+            "cash": 32.49,
+            "workers": {
+              "PLANTER": 1,
+              "COLLECTOR": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_enemy_commands_same_cell_yes": {
+            "key": "bd77b6501308994195123c0a2fb3f0dd-1",
+            "seat": 1,
+            "step": 81,
+            "cash": 206.63,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          }
+        }
+      },
+      "claude-AlphaCarbon-Master6": {
+        "conditions": {
+          "double_cash120plus": {
+            "hit": 250,
+            "n": 327,
+            "appearances": 134,
+            "pooled_rate": 0.764525993883792,
+            "mean_game_rate": 0.7472636815920398
+          },
+          "double_cash60to89": {
+            "hit": 48,
+            "n": 121,
+            "appearances": 73,
+            "pooled_rate": 0.39669421487603307,
+            "mean_game_rate": 0.4324200913242009
+          },
+          "exposed_hire_enemy_commands_same_cell": {
+            "hit": 1,
+            "n": 188,
+            "appearances": 99,
+            "pooled_rate": 0.005319148936170213,
+            "mean_game_rate": 0.010101010101010102
+          },
+          "exposed_hire_is_collector": {
+            "hit": 135,
+            "n": 188,
+            "appearances": 99,
+            "pooled_rate": 0.7180851063829787,
+            "mean_game_rate": 0.7124579124579125
+          },
+          "hire_collector_no_collector": {
+            "hit": 0,
+            "n": 0,
+            "appearances": 0,
+            "pooled_rate": null,
+            "mean_game_rate": null
+          },
+          "hire_collector_two_plus": {
+            "hit": 1291,
+            "n": 1937,
+            "appearances": 176,
+            "pooled_rate": 0.6664945792462571,
+            "mean_game_rate": 0.6885423837116874
+          },
+          "hire_planter_no_planter": {
+            "hit": 45,
+            "n": 56,
+            "appearances": 45,
+            "pooled_rate": 0.8035714285714286,
+            "mean_game_rate": 0.8444444444444444
+          },
+          "hire_planter_two_plus": {
+            "hit": 292,
+            "n": 1380,
+            "appearances": 176,
+            "pooled_rate": 0.21159420289855072,
+            "mean_game_rate": 0.21825168445229684
+          },
+          "replace_collector_after_loss": {
+            "hit": 0,
+            "n": 0,
+            "appearances": 0,
+            "pooled_rate": null,
+            "mean_game_rate": null
+          },
+          "replace_collector_no_loss": {
+            "hit": 2,
+            "n": 2,
+            "appearances": 2,
+            "pooled_rate": 1.0,
+            "mean_game_rate": 1.0
+          },
+          "replace_planter_after_loss": {
+            "hit": 533,
+            "n": 839,
+            "appearances": 169,
+            "pooled_rate": 0.635280095351609,
+            "mean_game_rate": 0.6053354108087836
+          },
+          "replace_planter_no_loss": {
+            "hit": 148,
+            "n": 288,
+            "appearances": 121,
+            "pooled_rate": 0.5138888888888888,
+            "mean_game_rate": 0.5865013774104684
+          },
+          "single_hire_at_enemy_reachable_base": {
+            "hit": 188,
+            "n": 338,
+            "appearances": 114,
+            "pooled_rate": 0.5562130177514792,
+            "mean_game_rate": 0.5828007518796993
+          },
+          "single_hire_at_incoming_loaded_teammate": {
+            "hit": 0,
+            "n": 503,
+            "appearances": 165,
+            "pooled_rate": 0.0,
+            "mean_game_rate": 0.0
+          },
+          "single_hire_at_loaded_teammate_side": {
+            "hit": 109,
+            "n": 704,
+            "appearances": 170,
+            "pooled_rate": 0.15482954545454544,
+            "mean_game_rate": 0.14472922502334268
+          },
+          "single_hire_at_threat_with_zero_collector": {
+            "hit": 27,
+            "n": 43,
+            "appearances": 37,
+            "pooled_rate": 0.627906976744186,
+            "mean_game_rate": 0.6216216216216216
+          },
+          "single_hire_at_threat_without_zero_collector": {
+            "hit": 161,
+            "n": 295,
+            "appearances": 102,
+            "pooled_rate": 0.5457627118644067,
+            "mean_game_rate": 0.5637488328664799
+          }
+        },
+        "within_game_contrasts": {
+          "missing_planter_minus_already_two": {
+            "both_conditions_appearances": 45,
+            "higher": 37,
+            "equal": 5,
+            "lower": 3,
+            "median_difference": 0.7894736842105263
+          },
+          "missing_collector_minus_already_two": {
+            "both_conditions_appearances": 0,
+            "higher": 0,
+            "equal": 0,
+            "lower": 0,
+            "median_difference": null
+          },
+          "two_free_slots_cash120_plus_minus_cash60_to89": {
+            "both_conditions_appearances": 54,
+            "higher": 31,
+            "equal": 13,
+            "lower": 10,
+            "median_difference": 0.5
+          },
+          "after_visible_planter_loss_minus_no_loss": {
+            "both_conditions_appearances": 114,
+            "higher": 51,
+            "equal": 12,
+            "lower": 51,
+            "median_difference": 0.0
+          },
+          "after_visible_collector_loss_minus_no_loss": {
+            "both_conditions_appearances": 0,
+            "higher": 0,
+            "equal": 0,
+            "lower": 0,
+            "median_difference": null
+          }
+        },
+        "examples": {
+          "hire_collector_two_plus_yes": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 34,
+            "cash": 36.29,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_no": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 34,
+            "cash": 36.29,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_no": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 37,
+            "cash": 38.44,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_incoming_loaded_teammate_no": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 37,
+            "cash": 38.44,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 3
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "double_cash60to89_no": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 41,
+            "cash": 61.33,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_yes": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 58,
+            "cash": 185.31,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_two_plus_yes": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 64,
+            "cash": 226.42,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash120plus_yes": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 64,
+            "cash": 226.42,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 3
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "replace_planter_after_loss_no": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 115,
+            "cash": 805.41,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_yes": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 115,
+            "cash": 805.41,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_with_zero_collector_yes": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 115,
+            "cash": 805.41,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_yes": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 115,
+            "cash": 805.41,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_enemy_commands_same_cell_no": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 115,
+            "cash": 805.41,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_enemy_reachable_base_no": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 137,
+            "cash": 1565.63,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_with_zero_collector_no": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "step": 137,
+            "cash": 1565.63,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "replace_planter_no_loss_no": {
+            "key": "00b853aabfec65bd9ecee24c0b8bb7dc-1",
+            "seat": 0,
+            "step": 38,
+            "cash": 110.5,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_no": {
+            "key": "00b853aabfec65bd9ecee24c0b8bb7dc-1",
+            "seat": 0,
+            "step": 75,
+            "cash": 1081.52,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_planter_no_loss_yes": {
+            "key": "00b853aabfec65bd9ecee24c0b8bb7dc-1",
+            "seat": 0,
+            "step": 104,
+            "cash": 1368.04,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "PLANTER"
+              ]
+            ]
+          },
+          "single_hire_at_threat_without_zero_collector_yes": {
+            "key": "00b853aabfec65bd9ecee24c0b8bb7dc-1",
+            "seat": 0,
+            "step": 192,
+            "cash": 2815.4,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "replace_collector_no_loss_yes": {
+            "key": "011008e4dee32c2fdbfa37044c3c2608-1",
+            "seat": 1,
+            "step": 33,
+            "cash": 80.27,
+            "workers": {
+              "COLLECTOR": 1,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_collector_two_plus_no": {
+            "key": "011008e4dee32c2fdbfa37044c3c2608-1",
+            "seat": 1,
+            "step": 40,
+            "cash": 101.01,
+            "workers": {
+              "COLLECTOR": 4,
+              "PLANTER": 1
+            },
+            "lost_roles": [],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash120plus_no": {
+            "key": "011008e4dee32c2fdbfa37044c3c2608-1",
+            "seat": 1,
+            "step": 97,
+            "cash": 1406.01,
+            "workers": {
+              "COLLECTOR": 6,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "single_hire_at_loaded_teammate_side_yes": {
+            "key": "0241b43180b3840ce9e07ccdeddda374-1",
+            "seat": 1,
+            "step": 185,
+            "cash": 3700.69,
+            "workers": {
+              "PLANTER": 2,
+              "COLLECTOR": 7
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_is_collector_no": {
+            "key": "02ab03aeb1de04e89d030d0e71b280ec-1",
+            "seat": 1,
+            "step": 187,
+            "cash": 3466.51,
+            "workers": {
+              "COLLECTOR": 8,
+              "PLANTER": 1
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "double_cash60to89_yes": {
+            "key": "043181cc87f4e8d569a46681c3c617a7-1",
+            "seat": 1,
+            "step": 30,
+            "cash": 67.32,
+            "workers": {
+              "COLLECTOR": 5,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_yes": {
+            "key": "081e11502d87f9fe69ced1e56620e891-1",
+            "seat": 0,
+            "step": 133,
+            "cash": 1448.81,
+            "workers": {
+              "COLLECTOR": 8
+            },
+            "lost_roles": [
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "PLANTER"
+              ]
+            ]
+          },
+          "hire_planter_no_planter_no": {
+            "key": "176aab183f1b1f586ed4a0a6f6fece30-1",
+            "seat": 1,
+            "step": 153,
+            "cash": 2882.38,
+            "workers": {
+              "COLLECTOR": 8
+            },
+            "lost_roles": [
+              "COLLECTOR",
+              "PLANTER"
+            ],
+            "orders": [
+              [
+                0,
+                "COLLECTOR"
+              ],
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          },
+          "exposed_hire_enemy_commands_same_cell_yes": {
+            "key": "7d2f125ddec4e3fb476907dadec6883e-1",
+            "seat": 0,
+            "step": 165,
+            "cash": 3073.15,
+            "workers": {
+              "COLLECTOR": 7,
+              "PLANTER": 2
+            },
+            "lost_roles": [
+              "COLLECTOR"
+            ],
+            "orders": [
+              [
+                1,
+                "COLLECTOR"
+              ]
+            ]
+          }
+        }
+      }
+    }
+  }
+}

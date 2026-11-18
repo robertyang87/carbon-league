@@ -1,0 +1,1484 @@
+{
+  "score_sha256": "5b13d5efd211174127d3ea645f6a49b81a130ca675d0079cd347b3c3ff3b5e19",
+  "script_sha256": "bf60d8a31ec17bd1f7ce0e501f4b38c9cd1df64ae17b8c86b8c970d95777d410",
+  "matches": 1056,
+  "appearances": 1157,
+  "ranks": [
+    "claude-AlphaCarbon-Master5s",
+    "claude-AlphaCarbon-Master6",
+    "RyanX-AIPowercore-it720-preview",
+    "RyanX-AIPowercore-M9XJ-630",
+    "ClaudeFable5.2-v7"
+  ],
+  "scope": "Descriptive census of the pinned heavy-ladder snapshot. Same-game decisions are correlated.",
+  "analysis": {
+    "rules": {
+      "P1_visible_carbon": {
+        "a": "plant.poor4",
+        "b": "plant.rich4",
+        "eligibility": "At t30..199, planter on non-base cell with no tree of either side, opening cash covers current planting price, no enemy worker within one step.",
+        "contrast": "Four orthogonal neighbors' mean visible carbon <10 vs >=30. Planter itself makes all four visible.",
+        "choice": "Stay on this cell.",
+        "realization": "Stays, survives, creates its own new tree here (new ID and creator verified)."
+      },
+      "P2_time_left": {
+        "a": "plant.mid",
+        "b": "plant.last20",
+        "eligibility": "Planter on empty non-base site, cash covers price, no enemy worker within one step; mean visible carbon on four neighbors >=10.",
+        "contrast": "t100..199 vs 1..20 remaining transitions (t279..298 in 300-state games).",
+        "choice": "Stay on this cell.",
+        "realization": "Stays, survives, creates own new tree here."
+      },
+      "P3_cash_buffer": {
+        "a": "plant.tight",
+        "b": "plant.buffer",
+        "eligibility": "Same quiet, affordable, empty non-base site; t30..199 and mean adjacent visible carbon >=10.",
+        "contrast": "Seat's pre-action cash / per-planter market price in [1, 2) vs >=4.",
+        "choice": "Stay on this cell.",
+        "realization": "Stays, survives, creates own new tree here."
+      },
+      "P4_invasion": {
+        "a": "raid.approach_clear",
+        "b": "raid.approach_guarded",
+        "eligibility": "Planter off enemy trees; one adjacent enemy tree in total, no other worker currently on target; treasury could pay seizeCost. Tree & match each have >=10 further transitions.",
+        "contrast": "No enemy worker can reach target in one step vs an enemy collector can reach target in one step. Excludes cases with only enemy planters nearby.",
+        "choice": "Move onto that tree.",
+        "realization": "The planter survives the step and occupies the target. Ownership can only transfer after a subsequent stay."
+      },
+      "P5_seize_or_escape": {
+        "a": "raid.stay_clear",
+        "b": "raid.stay_guarded",
+        "eligibility": "Planter already on living enemy tree, pre-action cash >= seizeCost; at least 10 further turns in tree and game.",
+        "contrast": "No enemy worker within one step vs enemy collector within one step. Enemy action still unknown.",
+        "choice": "Stay on that enemy tree.",
+        "realization": "Stays, survives and that same tree ID is on our side next step."
+      },
+      "P6_tree_age": {
+        "a": "raid.young",
+        "b": "raid.expiring",
+        "eligibility": "Planter already on enemy tree, cash covers seizure, no enemy worker in one step, at least 30 transitions left in match.",
+        "contrast": "Tree has >=30 vs 1..5 further transitions before removal after aging.",
+        "choice": "Stay on that enemy tree.",
+        "realization": "Stays, survives and the same tree ID belongs to us next step."
+      }
+    },
+    "by_model": {
+      "ClaudeFable5.2-v7": {
+        "P1_visible_carbon": {
+          "strata": {
+            "plant.poor4": {
+              "appearances_exposed": 278,
+              "opportunities": 11604,
+              "selected": 20,
+              "realized": 19,
+              "selection_rate": 0.001723543605653223,
+              "realization_rate": 0.0016373664253705618
+            },
+            "plant.rich4": {
+              "appearances_exposed": 279,
+              "opportunities": 6658,
+              "selected": 3001,
+              "realized": 2880,
+              "selection_rate": 0.4507359567437669,
+              "realization_rate": 0.4325623310303394
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 277,
+            "positive": 276,
+            "negative": 0,
+            "ties": 1,
+            "mean": 0.476309754019133
+          }
+        },
+        "P2_time_left": {
+          "strata": {
+            "plant.mid": {
+              "appearances_exposed": 276,
+              "opportunities": 14059,
+              "selected": 2162,
+              "realized": 2157,
+              "selection_rate": 0.1537804964791237,
+              "realization_rate": 0.15342485240771037
+            },
+            "plant.last20": {
+              "appearances_exposed": 229,
+              "opportunities": 2415,
+              "selected": 315,
+              "realized": 315,
+              "selection_rate": 0.13043478260869565,
+              "realization_rate": 0.13043478260869565
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 227,
+            "positive": 72,
+            "negative": 151,
+            "ties": 4,
+            "mean": -0.024756755883195758
+          }
+        },
+        "P3_cash_buffer": {
+          "strata": {
+            "plant.tight": {
+              "appearances_exposed": 274,
+              "opportunities": 2854,
+              "selected": 528,
+              "realized": 404,
+              "selection_rate": 0.18500350385423966,
+              "realization_rate": 0.14155571128241065
+            },
+            "plant.buffer": {
+              "appearances_exposed": 270,
+              "opportunities": 18908,
+              "selected": 2982,
+              "realized": 2982,
+              "selection_rate": 0.15771102178971863,
+              "realization_rate": 0.15771102178971863
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 264,
+            "positive": 126,
+            "negative": 138,
+            "ties": 0,
+            "mean": -0.027182267462548853
+          }
+        },
+        "P4_invasion": {
+          "strata": {
+            "raid.approach_clear": {
+              "appearances_exposed": 280,
+              "opportunities": 11934,
+              "selected": 9594,
+              "realized": 9594,
+              "selection_rate": 0.803921568627451,
+              "realization_rate": 0.803921568627451
+            },
+            "raid.approach_guarded": {
+              "appearances_exposed": 270,
+              "opportunities": 1662,
+              "selected": 115,
+              "realized": 71,
+              "selection_rate": 0.06919374247894103,
+              "realization_rate": 0.04271961492178099
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 270,
+            "positive": 2,
+            "negative": 268,
+            "ties": 0,
+            "mean": -0.7351224884641049
+          }
+        },
+        "P5_seize_or_escape": {
+          "strata": {
+            "raid.stay_clear": {
+              "appearances_exposed": 279,
+              "opportunities": 6591,
+              "selected": 6414,
+              "realized": 6376,
+              "selection_rate": 0.973145197997269,
+              "realization_rate": 0.9673797602791686
+            },
+            "raid.stay_guarded": {
+              "appearances_exposed": 279,
+              "opportunities": 7286,
+              "selected": 73,
+              "realized": 49,
+              "selection_rate": 0.010019214932747735,
+              "realization_rate": 0.006725226461707384
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 278,
+            "positive": 0,
+            "negative": 278,
+            "ties": 0,
+            "mean": -0.9581831746446582
+          }
+        },
+        "P6_tree_age": {
+          "strata": {
+            "raid.young": {
+              "appearances_exposed": 279,
+              "opportunities": 4294,
+              "selected": 4251,
+              "realized": 4222,
+              "selection_rate": 0.9899860270144387,
+              "realization_rate": 0.9832324173265021
+            },
+            "raid.expiring": {
+              "appearances_exposed": 117,
+              "opportunities": 151,
+              "selected": 59,
+              "realized": 59,
+              "selection_rate": 0.39072847682119205,
+              "realization_rate": 0.39072847682119205
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 117,
+            "positive": 2,
+            "negative": 73,
+            "ties": 42,
+            "mean": -0.5783479836175641
+          }
+        }
+      },
+      "RyanX-AIPowercore-M9XJ-630": {
+        "P1_visible_carbon": {
+          "strata": {
+            "plant.poor4": {
+              "appearances_exposed": 299,
+              "opportunities": 13039,
+              "selected": 38,
+              "realized": 38,
+              "selection_rate": 0.002914333921312984,
+              "realization_rate": 0.002914333921312984
+            },
+            "plant.rich4": {
+              "appearances_exposed": 298,
+              "opportunities": 10071,
+              "selected": 4359,
+              "realized": 4195,
+              "selection_rate": 0.43282692880548107,
+              "realization_rate": 0.41654254790984013
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 298,
+            "positive": 297,
+            "negative": 0,
+            "ties": 1,
+            "mean": 0.45480824428663913
+          }
+        },
+        "P2_time_left": {
+          "strata": {
+            "plant.mid": {
+              "appearances_exposed": 298,
+              "opportunities": 17085,
+              "selected": 3412,
+              "realized": 3411,
+              "selection_rate": 0.1997073456248171,
+              "realization_rate": 0.1996488147497805
+            },
+            "plant.last20": {
+              "appearances_exposed": 213,
+              "opportunities": 2099,
+              "selected": 353,
+              "realized": 353,
+              "selection_rate": 0.16817532158170556,
+              "realization_rate": 0.16817532158170556
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 212,
+            "positive": 88,
+            "negative": 120,
+            "ties": 4,
+            "mean": 0.022663354452098956
+          }
+        },
+        "P3_cash_buffer": {
+          "strata": {
+            "plant.tight": {
+              "appearances_exposed": 276,
+              "opportunities": 2861,
+              "selected": 514,
+              "realized": 352,
+              "selection_rate": 0.17965746242572528,
+              "realization_rate": 0.12303390422929046
+            },
+            "plant.buffer": {
+              "appearances_exposed": 298,
+              "opportunities": 26158,
+              "selected": 4886,
+              "realized": 4886,
+              "selection_rate": 0.1867879807324719,
+              "realization_rate": 0.1867879807324719
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 274,
+            "positive": 156,
+            "negative": 115,
+            "ties": 3,
+            "mean": 0.0013610792160833663
+          }
+        },
+        "P4_invasion": {
+          "strata": {
+            "raid.approach_clear": {
+              "appearances_exposed": 300,
+              "opportunities": 12572,
+              "selected": 9130,
+              "realized": 9130,
+              "selection_rate": 0.726216990136812,
+              "realization_rate": 0.726216990136812
+            },
+            "raid.approach_guarded": {
+              "appearances_exposed": 296,
+              "opportunities": 1851,
+              "selected": 147,
+              "realized": 134,
+              "selection_rate": 0.07941653160453808,
+              "realization_rate": 0.07239330091842247
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 296,
+            "positive": 1,
+            "negative": 295,
+            "ties": 0,
+            "mean": -0.6473462594954553
+          }
+        },
+        "P5_seize_or_escape": {
+          "strata": {
+            "raid.stay_clear": {
+              "appearances_exposed": 300,
+              "opportunities": 5350,
+              "selected": 5197,
+              "realized": 5131,
+              "selection_rate": 0.9714018691588785,
+              "realization_rate": 0.9590654205607476
+            },
+            "raid.stay_guarded": {
+              "appearances_exposed": 300,
+              "opportunities": 6246,
+              "selected": 119,
+              "realized": 99,
+              "selection_rate": 0.01905219340377842,
+              "realization_rate": 0.01585014409221902
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 300,
+            "positive": 0,
+            "negative": 300,
+            "ties": 0,
+            "mean": -0.9484770782345484
+          }
+        },
+        "P6_tree_age": {
+          "strata": {
+            "raid.young": {
+              "appearances_exposed": 300,
+              "opportunities": 3137,
+              "selected": 3125,
+              "realized": 3078,
+              "selection_rate": 0.9961746891934969,
+              "realization_rate": 0.9811922218680268
+            },
+            "raid.expiring": {
+              "appearances_exposed": 114,
+              "opportunities": 161,
+              "selected": 21,
+              "realized": 21,
+              "selection_rate": 0.13043478260869565,
+              "realization_rate": 0.13043478260869565
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 114,
+            "positive": 0,
+            "negative": 100,
+            "ties": 14,
+            "mean": -0.8503924284395199
+          }
+        }
+      },
+      "RyanX-AIPowercore-it720-preview": {
+        "P1_visible_carbon": {
+          "strata": {
+            "plant.poor4": {
+              "appearances_exposed": 202,
+              "opportunities": 7360,
+              "selected": 37,
+              "realized": 37,
+              "selection_rate": 0.005027173913043478,
+              "realization_rate": 0.005027173913043478
+            },
+            "plant.rich4": {
+              "appearances_exposed": 203,
+              "opportunities": 4485,
+              "selected": 2066,
+              "realized": 1978,
+              "selection_rate": 0.46064659977703454,
+              "realization_rate": 0.441025641025641
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 202,
+            "positive": 202,
+            "negative": 0,
+            "ties": 0,
+            "mean": 0.48125338350185365
+          }
+        },
+        "P2_time_left": {
+          "strata": {
+            "plant.mid": {
+              "appearances_exposed": 202,
+              "opportunities": 9683,
+              "selected": 1710,
+              "realized": 1707,
+              "selection_rate": 0.1765981617267376,
+              "realization_rate": 0.1762883403903749
+            },
+            "plant.last20": {
+              "appearances_exposed": 147,
+              "opportunities": 1015,
+              "selected": 184,
+              "realized": 184,
+              "selection_rate": 0.1812807881773399,
+              "realization_rate": 0.1812807881773399
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 146,
+            "positive": 71,
+            "negative": 73,
+            "ties": 2,
+            "mean": 0.04533469632052366
+          }
+        },
+        "P3_cash_buffer": {
+          "strata": {
+            "plant.tight": {
+              "appearances_exposed": 187,
+              "opportunities": 1300,
+              "selected": 266,
+              "realized": 181,
+              "selection_rate": 0.20461538461538462,
+              "realization_rate": 0.13923076923076924
+            },
+            "plant.buffer": {
+              "appearances_exposed": 201,
+              "opportunities": 13469,
+              "selected": 2328,
+              "realized": 2327,
+              "selection_rate": 0.172841339371891,
+              "realization_rate": 0.17276709481030514
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 185,
+            "positive": 91,
+            "negative": 93,
+            "ties": 1,
+            "mean": -0.044835637948146025
+          }
+        },
+        "P4_invasion": {
+          "strata": {
+            "raid.approach_clear": {
+              "appearances_exposed": 203,
+              "opportunities": 8448,
+              "selected": 6530,
+              "realized": 6530,
+              "selection_rate": 0.7729640151515151,
+              "realization_rate": 0.7729640151515151
+            },
+            "raid.approach_guarded": {
+              "appearances_exposed": 199,
+              "opportunities": 1213,
+              "selected": 73,
+              "realized": 66,
+              "selection_rate": 0.060181368507831824,
+              "realization_rate": 0.05441055234954658
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 199,
+            "positive": 0,
+            "negative": 199,
+            "ties": 0,
+            "mean": -0.7128508405233067
+          }
+        },
+        "P5_seize_or_escape": {
+          "strata": {
+            "raid.stay_clear": {
+              "appearances_exposed": 203,
+              "opportunities": 4269,
+              "selected": 4181,
+              "realized": 4154,
+              "selection_rate": 0.979386273131881,
+              "realization_rate": 0.9730616069337081
+            },
+            "raid.stay_guarded": {
+              "appearances_exposed": 203,
+              "opportunities": 4724,
+              "selected": 86,
+              "realized": 71,
+              "selection_rate": 0.018204911092294666,
+              "realization_rate": 0.015029635901778153
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 203,
+            "positive": 0,
+            "negative": 203,
+            "ties": 0,
+            "mean": -0.959425614443468
+          }
+        },
+        "P6_tree_age": {
+          "strata": {
+            "raid.young": {
+              "appearances_exposed": 203,
+              "opportunities": 2770,
+              "selected": 2760,
+              "realized": 2736,
+              "selection_rate": 0.9963898916967509,
+              "realization_rate": 0.9877256317689531
+            },
+            "raid.expiring": {
+              "appearances_exposed": 85,
+              "opportunities": 102,
+              "selected": 22,
+              "realized": 22,
+              "selection_rate": 0.21568627450980393,
+              "realization_rate": 0.21568627450980393
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 85,
+            "positive": 1,
+            "negative": 70,
+            "ties": 14,
+            "mean": -0.7843646549528902
+          }
+        }
+      },
+      "claude-AlphaCarbon-Master5s": {
+        "P1_visible_carbon": {
+          "strata": {
+            "plant.poor4": {
+              "appearances_exposed": 195,
+              "opportunities": 7820,
+              "selected": 38,
+              "realized": 37,
+              "selection_rate": 0.004859335038363171,
+              "realization_rate": 0.004731457800511509
+            },
+            "plant.rich4": {
+              "appearances_exposed": 196,
+              "opportunities": 5506,
+              "selected": 2331,
+              "realized": 2267,
+              "selection_rate": 0.4233563385397748,
+              "realization_rate": 0.41173265528514347
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 195,
+            "positive": 195,
+            "negative": 0,
+            "ties": 0,
+            "mean": 0.4583403743458262
+          }
+        },
+        "P2_time_left": {
+          "strata": {
+            "plant.mid": {
+              "appearances_exposed": 195,
+              "opportunities": 10087,
+              "selected": 1757,
+              "realized": 1757,
+              "selection_rate": 0.17418459403192227,
+              "realization_rate": 0.17418459403192227
+            },
+            "plant.last20": {
+              "appearances_exposed": 125,
+              "opportunities": 882,
+              "selected": 128,
+              "realized": 128,
+              "selection_rate": 0.14512471655328799,
+              "realization_rate": 0.14512471655328799
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 125,
+            "positive": 48,
+            "negative": 77,
+            "ties": 0,
+            "mean": -0.002512537063379689
+          }
+        },
+        "P3_cash_buffer": {
+          "strata": {
+            "plant.tight": {
+              "appearances_exposed": 195,
+              "opportunities": 1985,
+              "selected": 310,
+              "realized": 244,
+              "selection_rate": 0.1561712846347607,
+              "realization_rate": 0.12292191435768261
+            },
+            "plant.buffer": {
+              "appearances_exposed": 195,
+              "opportunities": 13685,
+              "selected": 2460,
+              "realized": 2460,
+              "selection_rate": 0.17975886006576544,
+              "realization_rate": 0.17975886006576544
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 194,
+            "positive": 121,
+            "negative": 71,
+            "ties": 2,
+            "mean": 0.03453934989523664
+          }
+        },
+        "P4_invasion": {
+          "strata": {
+            "raid.approach_clear": {
+              "appearances_exposed": 196,
+              "opportunities": 7068,
+              "selected": 5032,
+              "realized": 5032,
+              "selection_rate": 0.7119411431805319,
+              "realization_rate": 0.7119411431805319
+            },
+            "raid.approach_guarded": {
+              "appearances_exposed": 181,
+              "opportunities": 880,
+              "selected": 21,
+              "realized": 16,
+              "selection_rate": 0.023863636363636365,
+              "realization_rate": 0.01818181818181818
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 181,
+            "positive": 0,
+            "negative": 181,
+            "ties": 0,
+            "mean": -0.6966927296433397
+          }
+        },
+        "P5_seize_or_escape": {
+          "strata": {
+            "raid.stay_clear": {
+              "appearances_exposed": 196,
+              "opportunities": 4737,
+              "selected": 4522,
+              "realized": 4511,
+              "selection_rate": 0.9546126240236437,
+              "realization_rate": 0.9522904792062487
+            },
+            "raid.stay_guarded": {
+              "appearances_exposed": 195,
+              "opportunities": 3055,
+              "selected": 50,
+              "realized": 33,
+              "selection_rate": 0.016366612111292964,
+              "realization_rate": 0.010801963993453356
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 195,
+            "positive": 0,
+            "negative": 195,
+            "ties": 0,
+            "mean": -0.9401408429512439
+          }
+        },
+        "P6_tree_age": {
+          "strata": {
+            "raid.young": {
+              "appearances_exposed": 196,
+              "opportunities": 3206,
+              "selected": 3149,
+              "realized": 3140,
+              "selection_rate": 0.9822208359326263,
+              "realization_rate": 0.9794135995009358
+            },
+            "raid.expiring": {
+              "appearances_exposed": 67,
+              "opportunities": 92,
+              "selected": 27,
+              "realized": 27,
+              "selection_rate": 0.29347826086956524,
+              "realization_rate": 0.29347826086956524
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 67,
+            "positive": 6,
+            "negative": 54,
+            "ties": 7,
+            "mean": -0.6882598328402639
+          }
+        }
+      },
+      "claude-AlphaCarbon-Master6": {
+        "P1_visible_carbon": {
+          "strata": {
+            "plant.poor4": {
+              "appearances_exposed": 177,
+              "opportunities": 8017,
+              "selected": 121,
+              "realized": 120,
+              "selection_rate": 0.015092927529000873,
+              "realization_rate": 0.014968192590744668
+            },
+            "plant.rich4": {
+              "appearances_exposed": 177,
+              "opportunities": 7615,
+              "selected": 3156,
+              "realized": 3039,
+              "selection_rate": 0.4144451739986868,
+              "realization_rate": 0.399080761654629
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 177,
+            "positive": 177,
+            "negative": 0,
+            "ties": 0,
+            "mean": 0.4548233227076548
+          }
+        },
+        "P2_time_left": {
+          "strata": {
+            "plant.mid": {
+              "appearances_exposed": 175,
+              "opportunities": 12293,
+              "selected": 2458,
+              "realized": 2457,
+              "selection_rate": 0.19995119173513382,
+              "realization_rate": 0.1998698446270235
+            },
+            "plant.last20": {
+              "appearances_exposed": 132,
+              "opportunities": 1635,
+              "selected": 144,
+              "realized": 144,
+              "selection_rate": 0.08807339449541285,
+              "realization_rate": 0.08807339449541285
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 132,
+            "positive": 32,
+            "negative": 99,
+            "ties": 1,
+            "mean": -0.06979375009211582
+          }
+        },
+        "P3_cash_buffer": {
+          "strata": {
+            "plant.tight": {
+              "appearances_exposed": 175,
+              "opportunities": 2151,
+              "selected": 476,
+              "realized": 350,
+              "selection_rate": 0.22129242212924222,
+              "realization_rate": 0.16271501627150162
+            },
+            "plant.buffer": {
+              "appearances_exposed": 176,
+              "opportunities": 15150,
+              "selected": 3226,
+              "realized": 3226,
+              "selection_rate": 0.21293729372937295,
+              "realization_rate": 0.21293729372937295
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 174,
+            "positive": 86,
+            "negative": 87,
+            "ties": 1,
+            "mean": -0.016589640072207673
+          }
+        },
+        "P4_invasion": {
+          "strata": {
+            "raid.approach_clear": {
+              "appearances_exposed": 177,
+              "opportunities": 4056,
+              "selected": 2972,
+              "realized": 2972,
+              "selection_rate": 0.7327416173570019,
+              "realization_rate": 0.7327416173570019
+            },
+            "raid.approach_guarded": {
+              "appearances_exposed": 132,
+              "opportunities": 472,
+              "selected": 33,
+              "realized": 19,
+              "selection_rate": 0.06991525423728813,
+              "realization_rate": 0.04025423728813559
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 132,
+            "positive": 3,
+            "negative": 127,
+            "ties": 2,
+            "mean": -0.6577917218225803
+          }
+        },
+        "P5_seize_or_escape": {
+          "strata": {
+            "raid.stay_clear": {
+              "appearances_exposed": 176,
+              "opportunities": 2429,
+              "selected": 2242,
+              "realized": 2214,
+              "selection_rate": 0.9230135858377934,
+              "realization_rate": 0.9114862083161795
+            },
+            "raid.stay_guarded": {
+              "appearances_exposed": 162,
+              "opportunities": 1545,
+              "selected": 119,
+              "realized": 60,
+              "selection_rate": 0.07702265372168285,
+              "realization_rate": 0.038834951456310676
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 161,
+            "positive": 1,
+            "negative": 158,
+            "ties": 2,
+            "mean": -0.8309863384797762
+          }
+        },
+        "P6_tree_age": {
+          "strata": {
+            "raid.young": {
+              "appearances_exposed": 174,
+              "opportunities": 1548,
+              "selected": 1478,
+              "realized": 1455,
+              "selection_rate": 0.9547803617571059,
+              "realization_rate": 0.939922480620155
+            },
+            "raid.expiring": {
+              "appearances_exposed": 54,
+              "opportunities": 69,
+              "selected": 9,
+              "realized": 9,
+              "selection_rate": 0.13043478260869565,
+              "realization_rate": 0.13043478260869565
+            }
+          },
+          "within_game_b_minus_a": {
+            "games": 54,
+            "positive": 0,
+            "negative": 47,
+            "ties": 7,
+            "mean": -0.8125099369982411
+          }
+        }
+      }
+    },
+    "examples": {
+      "raid.young_selected": {
+        "model": "ClaudeFable5.2-v7",
+        "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+        "seat": 0,
+        "t": 29,
+        "planter": "player-0-worker-4",
+        "cell": 215,
+        "stratum": "raid.young",
+        "cash": 32.77,
+        "plant_price": 20,
+        "action": "NONE",
+        "selected": true,
+        "realized": true,
+        "target_cell": 215,
+        "steps_left": 270,
+        "current_tree_id_and_age": [
+          "player-1-tree-0",
+          10
+        ],
+        "own_visible_neighbor_carbon": [
+          41.024,
+          0.0,
+          1.245,
+          29.836
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.approach_guarded_declined": {
+        "model": "ClaudeFable5.2-v7",
+        "key": "005827404b63ed26c4dcd7d1082d77e5-1",
+        "seat": 0,
+        "t": 55,
+        "planter": "player-0-worker-8",
+        "cell": 206,
+        "stratum": "raid.approach_guarded",
+        "cash": 348.44,
+        "plant_price": 82.9468,
+        "action": "DOWN",
+        "selected": false,
+        "realized": false,
+        "target_cell": 207,
+        "steps_left": 244,
+        "current_tree_id_and_age": [
+          "player-1-tree-8",
+          10
+        ],
+        "own_visible_neighbor_carbon": [
+          46.263,
+          0,
+          0.0,
+          12.314
+        ],
+        "enemy_collector_can_reach_target": true
+      },
+      "plant.rich4_declined": {
+        "model": "ClaudeFable5.2-v7",
+        "key": "005d6cdb471761b6fcd1598fd4dc7839-1",
+        "seat": 0,
+        "t": 36,
+        "planter": "player-0-worker-9",
+        "cell": 117,
+        "stratum": "plant.rich4",
+        "cash": 44.46,
+        "plant_price": 37.7407,
+        "action": "RIGHT",
+        "selected": false,
+        "realized": false,
+        "target_cell": 117,
+        "steps_left": 263,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          50.588,
+          0.0,
+          78.254,
+          0
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.tight_selected": {
+        "model": "RyanX-AIPowercore-it720-preview",
+        "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+        "seat": 1,
+        "t": 30,
+        "planter": "player-1-worker-4",
+        "cell": 218,
+        "stratum": "plant.tight",
+        "cash": 37.84,
+        "plant_price": 27.6261,
+        "action": "NONE",
+        "selected": true,
+        "realized": false,
+        "target_cell": 218,
+        "steps_left": 269,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          82.528,
+          92.232,
+          0.0,
+          87.381
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.last20_declined": {
+        "model": "claude-AlphaCarbon-Master6",
+        "key": "00b853aabfec65bd9ecee24c0b8bb7dc-1",
+        "seat": 0,
+        "t": 280,
+        "planter": "player-0-worker-57",
+        "cell": 203,
+        "stratum": "plant.last20",
+        "cash": 4688.48,
+        "plant_price": 61.2705,
+        "action": "UP",
+        "selected": false,
+        "realized": false,
+        "target_cell": 203,
+        "steps_left": 19,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          40.775,
+          8.558,
+          0,
+          0.0
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.approach_clear_selected": {
+        "model": "RyanX-AIPowercore-it720-preview",
+        "key": "00cf90e4ffcb535b73ad9e3928446479-1",
+        "seat": 1,
+        "t": 47,
+        "planter": "player-1-worker-10",
+        "cell": 117,
+        "stratum": "raid.approach_clear",
+        "cash": 48.8,
+        "plant_price": 53.4174,
+        "action": "RIGHT",
+        "selected": true,
+        "realized": true,
+        "target_cell": 118,
+        "steps_left": 252,
+        "current_tree_id_and_age": [
+          "player-0-tree-4",
+          8
+        ],
+        "own_visible_neighbor_carbon": [
+          0.0,
+          0,
+          0.0,
+          76.23
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.mid_declined": {
+        "model": "claude-AlphaCarbon-Master5s",
+        "key": "00f7e221872bf7bc75a3847676e17b56-1",
+        "seat": 1,
+        "t": 102,
+        "planter": "player-1-worker-28",
+        "cell": 163,
+        "stratum": "plant.mid",
+        "cash": 2112.09,
+        "plant_price": 70.969,
+        "action": "DOWN",
+        "selected": false,
+        "realized": false,
+        "target_cell": 163,
+        "steps_left": 197,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          0,
+          0.0,
+          0.0,
+          52.195
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.tight_declined": {
+        "model": "RyanX-AIPowercore-M9XJ-630",
+        "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+        "seat": 0,
+        "t": 34,
+        "planter": "player-0-worker-10",
+        "cell": 19,
+        "stratum": "plant.tight",
+        "cash": 58.98,
+        "plant_price": 34.365,
+        "action": "UP",
+        "selected": false,
+        "realized": false,
+        "target_cell": 19,
+        "steps_left": 265,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          0.0,
+          87.419,
+          19.12,
+          0.0
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.poor4_declined": {
+        "model": "ClaudeFable5.2-v7",
+        "key": "016b3656026449ddb8489f916afb78a4-1",
+        "seat": 1,
+        "t": 31,
+        "planter": "player-1-worker-2",
+        "cell": 66,
+        "stratum": "plant.poor4",
+        "cash": 95.69,
+        "plant_price": 37.7407,
+        "action": "UP",
+        "selected": false,
+        "realized": false,
+        "target_cell": 66,
+        "steps_left": 268,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          0.0,
+          0.0,
+          0.0,
+          28.881
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.rich4_selected": {
+        "model": "claude-AlphaCarbon-Master6",
+        "key": "036cb350850848e47b66b5032fab60e9-1",
+        "seat": 0,
+        "t": 48,
+        "planter": "player-0-worker-15",
+        "cell": 105,
+        "stratum": "plant.rich4",
+        "cash": 124.65,
+        "plant_price": 47.0586,
+        "action": "NONE",
+        "selected": true,
+        "realized": true,
+        "target_cell": 105,
+        "steps_left": 251,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          76.491,
+          57.857,
+          100,
+          53.721
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.stay_guarded_declined": {
+        "model": "RyanX-AIPowercore-M9XJ-630",
+        "key": "038037a1c4844e22cba0fd94bc1ac850-1",
+        "seat": 0,
+        "t": 41,
+        "planter": "player-0-worker-12",
+        "cell": 37,
+        "stratum": "raid.stay_guarded",
+        "cash": 26.51,
+        "plant_price": 47.0586,
+        "action": "UP",
+        "selected": false,
+        "realized": false,
+        "target_cell": 37,
+        "steps_left": 258,
+        "current_tree_id_and_age": [
+          "player-1-tree-4",
+          11
+        ],
+        "own_visible_neighbor_carbon": [
+          0.0,
+          56.313,
+          9.938,
+          56.313
+        ],
+        "enemy_collector_can_reach_target": true
+      },
+      "plant.mid_selected": {
+        "model": "RyanX-AIPowercore-it720-preview",
+        "key": "06591c01cd12b7f46c7215d5b464fb9b-1",
+        "seat": 1,
+        "t": 100,
+        "planter": "player-1-worker-25",
+        "cell": 12,
+        "stratum": "plant.mid",
+        "cash": 1150.45,
+        "plant_price": 41.9098,
+        "action": "NONE",
+        "selected": true,
+        "realized": true,
+        "target_cell": 12,
+        "steps_left": 199,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          40.994,
+          16.659,
+          0.0,
+          53.313
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.stay_clear_selected": {
+        "model": "RyanX-AIPowercore-it720-preview",
+        "key": "07e8c3a4765b318539a62ed27bb1a712-1",
+        "seat": 0,
+        "t": 37,
+        "planter": "player-0-worker-11",
+        "cell": 129,
+        "stratum": "raid.stay_clear",
+        "cash": 100.62,
+        "plant_price": 41.9098,
+        "action": "NONE",
+        "selected": true,
+        "realized": true,
+        "target_cell": 129,
+        "steps_left": 262,
+        "current_tree_id_and_age": [
+          "player-1-tree-0",
+          22
+        ],
+        "own_visible_neighbor_carbon": [
+          16.759,
+          12.557,
+          0.0,
+          2.633
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.buffer_declined": {
+        "model": "claude-AlphaCarbon-Master6",
+        "key": "0912c5589f78c5e0510783b1ada9b3e4-1",
+        "seat": 0,
+        "t": 74,
+        "planter": "player-0-worker-20",
+        "cell": 41,
+        "stratum": "plant.buffer",
+        "cash": 311.39,
+        "plant_price": 70.969,
+        "action": "LEFT",
+        "selected": false,
+        "realized": false,
+        "target_cell": 41,
+        "steps_left": 225,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          0,
+          61.637,
+          0.0,
+          0.0
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.approach_clear_declined": {
+        "model": "RyanX-AIPowercore-M9XJ-630",
+        "key": "09a12e7f6169d13d2b6a924468e0f205-1",
+        "seat": 1,
+        "t": 30,
+        "planter": "player-1-worker-4",
+        "cell": 6,
+        "stratum": "raid.approach_clear",
+        "cash": 77.24,
+        "plant_price": 31.6316,
+        "action": "DOWN",
+        "selected": false,
+        "realized": false,
+        "target_cell": 7,
+        "steps_left": 269,
+        "current_tree_id_and_age": [
+          "player-0-tree-2",
+          3
+        ],
+        "own_visible_neighbor_carbon": [
+          28.748,
+          0,
+          0,
+          36.408
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.last20_selected": {
+        "model": "RyanX-AIPowercore-it720-preview",
+        "key": "0cea87e64ecc107c9bce51baab2f3a1f-1",
+        "seat": 1,
+        "t": 289,
+        "planter": "player-1-worker-64",
+        "cell": 50,
+        "stratum": "plant.last20",
+        "cash": 6928.05,
+        "plant_price": 61.2705,
+        "action": "NONE",
+        "selected": true,
+        "realized": true,
+        "target_cell": 50,
+        "steps_left": 10,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          28.952,
+          33.107,
+          0.0,
+          0
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.approach_guarded_selected": {
+        "model": "ClaudeFable5.2-v7",
+        "key": "109570e2df6f6c8fe60811543a35ceda-1",
+        "seat": 0,
+        "t": 62,
+        "planter": "player-0-worker-16",
+        "cell": 47,
+        "stratum": "raid.approach_guarded",
+        "cash": 296.82,
+        "plant_price": 97.7393,
+        "action": "LEFT",
+        "selected": true,
+        "realized": false,
+        "target_cell": 46,
+        "steps_left": 237,
+        "current_tree_id_and_age": [
+          "player-1-tree-4",
+          14
+        ],
+        "own_visible_neighbor_carbon": [
+          20.267,
+          25.351,
+          0.0,
+          0
+        ],
+        "enemy_collector_can_reach_target": true
+      },
+      "raid.stay_clear_declined": {
+        "model": "claude-AlphaCarbon-Master6",
+        "key": "1359247345c9f23c19af46240c47ffa5-1",
+        "seat": 0,
+        "t": 139,
+        "planter": "player-0-worker-33",
+        "cell": 191,
+        "stratum": "raid.stay_clear",
+        "cash": 1712.9,
+        "plant_price": 20,
+        "action": "RIGHT",
+        "selected": false,
+        "realized": false,
+        "target_cell": 191,
+        "steps_left": 160,
+        "current_tree_id_and_age": [
+          "player-1-tree-15",
+          13
+        ],
+        "own_visible_neighbor_carbon": [
+          52.449,
+          5.143,
+          0.0,
+          19.702
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.expiring_selected": {
+        "model": "claude-AlphaCarbon-Master5s",
+        "key": "1c6592328becd1184b6cee0531afade5-1",
+        "seat": 0,
+        "t": 173,
+        "planter": "player-0-worker-63",
+        "cell": 46,
+        "stratum": "raid.expiring",
+        "cash": 4255.39,
+        "plant_price": 61.2705,
+        "action": "NONE",
+        "selected": true,
+        "realized": true,
+        "target_cell": 46,
+        "steps_left": 126,
+        "current_tree_id_and_age": [
+          "player-1-tree-9",
+          47
+        ],
+        "own_visible_neighbor_carbon": [
+          0.0,
+          0.0,
+          9.441,
+          6.011
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.expiring_declined": {
+        "model": "claude-AlphaCarbon-Master6",
+        "key": "1fce7056bf01172a1bdf026799141f24-1",
+        "seat": 1,
+        "t": 252,
+        "planter": "player-1-worker-66",
+        "cell": 164,
+        "stratum": "raid.expiring",
+        "cash": 5455.96,
+        "plant_price": 61.2705,
+        "action": "LEFT",
+        "selected": false,
+        "realized": false,
+        "target_cell": 164,
+        "steps_left": 47,
+        "current_tree_id_and_age": [
+          "player-1-tree-20",
+          47
+        ],
+        "own_visible_neighbor_carbon": [
+          0.986,
+          2.165,
+          0.0,
+          0.871
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "plant.buffer_selected": {
+        "model": "RyanX-AIPowercore-M9XJ-630",
+        "key": "306b5c3a65a3d2a413aa2b66f73a9ecd-1",
+        "seat": 1,
+        "t": 40,
+        "planter": "player-1-worker-10",
+        "cell": 59,
+        "stratum": "plant.buffer",
+        "cash": 193.53,
+        "plant_price": 47.0586,
+        "action": "NONE",
+        "selected": true,
+        "realized": true,
+        "target_cell": 59,
+        "steps_left": 259,
+        "current_tree_id_and_age": null,
+        "own_visible_neighbor_carbon": [
+          100,
+          0,
+          68.5,
+          61.982
+        ],
+        "enemy_collector_can_reach_target": false
+      },
+      "raid.stay_guarded_selected": {
+        "model": "claude-AlphaCarbon-Master6",
+        "key": "4d6f8e4e72a28532c2b4e9b82e317390-1",
+        "seat": 0,
+        "t": 37,
+        "planter": "player-0-worker-7",
+        "cell": 202,
+        "stratum": "raid.stay_guarded",
+        "cash": 117.15,
+        "plant_price": 41.9098,
+        "action": "NONE",
+        "selected": true,
+        "realized": false,
+        "target_cell": 202,
+        "steps_left": 262,
+        "current_tree_id_and_age": [
+          "player-1-tree-3",
+          5
+        ],
+        "own_visible_neighbor_carbon": [
+          72.932,
+          33.149,
+          0,
+          33.149
+        ],
+        "enemy_collector_can_reach_target": true
+      },
+      "raid.young_declined": {
+        "model": "ClaudeFable5.2-v7",
+        "key": "d0f5e89c975909cd491a987567d751bb-1",
+        "seat": 1,
+        "t": 67,
+        "planter": "player-1-worker-11",
+        "cell": 69,
+        "stratum": "raid.young",
+        "cash": 23.1,
+        "plant_price": 41.9098,
+        "action": "LEFT",
+        "selected": false,
+        "realized": false,
+        "target_cell": 69,
+        "steps_left": 232,
+        "current_tree_id_and_age": [
+          "player-0-tree-6",
+          16
+        ],
+        "own_visible_neighbor_carbon": [
+          15.981,
+          0,
+          10.181,
+          0.0
+        ],
+        "enemy_collector_can_reach_target": false
+      }
+    },
+    "limitations": [
+      "Affordability is measured before simultaneous base recruits, deposits and other planters. Do not convert it to a guarantee of settlement.",
+      "Planter sees its four orthogonal neighbors. This is a partial measure of resources, not the absorption of all eight neighbors.",
+      "One opportunity is one planter at one decision. Conditional rates are observational, exposure is correlated within games; within-game contrasts use only games exposing both strata.",
+      "Tree approach is a motion command; the target can only be seized after a later stay. This report cross-checks its immediate arrival, not subsequent ownership."
+    ]
+  }
+}

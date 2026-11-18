@@ -1,0 +1,480 @@
+{
+  "ranking_score_table_sha256": "5b13d5efd211174127d3ea645f6a49b81a130ca675d0079cd347b3c3ff3b5e19",
+  "simulator_sha256": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+  "selection": "First case per player/bucket by sorted match key, decision t and worker ID, with original next players and clock exactly reproduced. Cargo >=100, no base at source or chosen destination. At least one visible opposing collector of equal or smaller load can reach the original cell, none can reach the selected destination. Attacked bucket also requires the governing collision to transfer the load to a surviving enemy collector if we stay; negative control requires nobody on the opposing side actually chose that cell and the staying worker survives.",
+  "intervention": "Change this collector's recorded move to NONE. Keep all other submitted simultaneous actions fixed. Oracle ground carbon only restores the simulator after selection of the public-position threat. Entry worker list format is [cell, cargo, role]. A collision row is [losing ID, owner, cargo, cargo recipient, winning collector owner]. Endpoints are the next step only; not closed-loop estimates.",
+  "replay_canonical_sha256": {
+    "003aed5cd8b63c5c4d82dc67e7dd78f2-1": "74b80cb37fbbcf6f49de4d682b585f639b9307d1f04015a2b1ddf4415926ce62",
+    "0086c374beee82f59e6859be9f7c2fbd-1": "cc3e5d12d2cb731b4f4365444c9dfb600861869b99d988df84604db0b565e4ac",
+    "009446f3e4b5231b5bcc5650aeba7214-1": "6bae596ee54a4a5665b497d2d90ccaa11dc8bc11989486655e45b02c8f10b375",
+    "00b853aabfec65bd9ecee24c0b8bb7dc-1": "5095b252595fac862996d4db6e02b23916a2911d21524a8b045aff3f334e2e04",
+    "010f22a50ffb9be93e7dc3dbab51d9a6-1": "9c641030c1823f10a1c7f0850f8e8adb44feba9fa1ad44e8b5e87bbd486640eb"
+  },
+  "examples": {
+    "claude-AlphaCarbon-Master5s": {
+      "threat_not_realized": {
+        "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+        "seat": 1,
+        "t": 48,
+        "worker": "player-1-worker-14",
+        "cell": 182,
+        "cargo": 118.2231,
+        "recorded_action": "UP",
+        "chosen_destination": 167,
+        "observable_reaching_collectors": [
+          [
+            "player-0-worker-6",
+            183,
+            86.97711
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            167,
+            118.2231,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            104.82,
+            117.94
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": [
+            182,
+            124.8378,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            104.82,
+            117.94
+          ],
+          "worker_collision": null
+        }
+      },
+      "attacked_if_stay": {
+        "key": "009446f3e4b5231b5bcc5650aeba7214-1",
+        "seat": 1,
+        "t": 54,
+        "worker": "player-1-worker-0",
+        "cell": 122,
+        "cargo": 213.01679999999996,
+        "recorded_action": "RIGHT",
+        "chosen_destination": 123,
+        "observable_reaching_collectors": [
+          [
+            "player-0-worker-6",
+            107,
+            86.97711
+          ],
+          [
+            "player-0-worker-16",
+            137,
+            0
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [
+          "player-0-worker-6"
+        ],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            123,
+            213.01679999999996,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            283.41,
+            256.89
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": null,
+          "cash_by_seat_after": [
+            283.41,
+            256.89
+          ],
+          "worker_collision": [
+            "player-1-worker-0",
+            1,
+            213.01679999999996,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "claude-AlphaCarbon-Master6": {
+      "attacked_if_stay": {
+        "key": "00b853aabfec65bd9ecee24c0b8bb7dc-1",
+        "seat": 0,
+        "t": 46,
+        "worker": "player-0-worker-5",
+        "cell": 198,
+        "cargo": 200.38709999999998,
+        "recorded_action": "UP",
+        "chosen_destination": 183,
+        "observable_reaching_collectors": [
+          [
+            "player-1-worker-1",
+            199,
+            9.684980783999999
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [
+          "player-1-worker-1"
+        ],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            183,
+            200.38709999999998,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            220.52,
+            219.98
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": null,
+          "cash_by_seat_after": [
+            220.52,
+            219.98
+          ],
+          "worker_collision": [
+            "player-0-worker-5",
+            0,
+            200.38709999999998,
+            1,
+            1
+          ]
+        }
+      },
+      "threat_not_realized": {
+        "key": "00b853aabfec65bd9ecee24c0b8bb7dc-1",
+        "seat": 0,
+        "t": 50,
+        "worker": "player-0-worker-5",
+        "cell": 170,
+        "cargo": 200.38709999999998,
+        "recorded_action": "RIGHT",
+        "chosen_destination": 171,
+        "observable_reaching_collectors": [
+          [
+            "player-1-worker-1",
+            169,
+            9.684980783999999
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            171,
+            200.38709999999998,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            260.83,
+            293.57
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": [
+            170,
+            208.27859999999998,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            260.83,
+            293.57
+          ],
+          "worker_collision": null
+        }
+      }
+    },
+    "RyanX-AIPowercore-it720-preview": {
+      "threat_not_realized": {
+        "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+        "seat": 1,
+        "t": 73,
+        "worker": "player-1-worker-17",
+        "cell": 147,
+        "cargo": 174.891,
+        "recorded_action": "LEFT",
+        "chosen_destination": 146,
+        "observable_reaching_collectors": [
+          [
+            "player-0-worker-19",
+            132,
+            0
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            146,
+            174.891,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            1185.77,
+            1016.98
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": [
+            147,
+            181.28459999999998,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            1185.77,
+            1016.98
+          ],
+          "worker_collision": null
+        }
+      },
+      "attacked_if_stay": {
+        "key": "0086c374beee82f59e6859be9f7c2fbd-1",
+        "seat": 1,
+        "t": 75,
+        "worker": "player-1-worker-16",
+        "cell": 74,
+        "cargo": 126.9204,
+        "recorded_action": "LEFT",
+        "chosen_destination": 73,
+        "observable_reaching_collectors": [
+          [
+            "player-0-worker-16",
+            60,
+            0
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [
+          "player-0-worker-16"
+        ],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            73,
+            126.9204,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            1189.19,
+            1004.71
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": null,
+          "cash_by_seat_after": [
+            1189.19,
+            1004.71
+          ],
+          "worker_collision": [
+            "player-1-worker-16",
+            1,
+            126.9204,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "RyanX-AIPowercore-M9XJ-630": {
+      "attacked_if_stay": {
+        "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+        "seat": 0,
+        "t": 43,
+        "worker": "player-0-worker-3",
+        "cell": 182,
+        "cargo": 145.9059,
+        "recorded_action": "DOWN",
+        "chosen_destination": 197,
+        "observable_reaching_collectors": [
+          [
+            "player-1-worker-14",
+            183,
+            0
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [
+          "player-1-worker-14"
+        ],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            197,
+            145.9059,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            141.85,
+            67.39
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": null,
+          "cash_by_seat_after": [
+            141.85,
+            67.39
+          ],
+          "worker_collision": [
+            "player-0-worker-3",
+            0,
+            145.9059,
+            1,
+            1
+          ]
+        }
+      },
+      "threat_not_realized": {
+        "key": "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+        "seat": 0,
+        "t": 45,
+        "worker": "player-0-worker-3",
+        "cell": 196,
+        "cargo": 145.9059,
+        "recorded_action": "UP",
+        "chosen_destination": 181,
+        "observable_reaching_collectors": [
+          [
+            "player-1-worker-14",
+            197,
+            0
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            181,
+            145.9059,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            160.01,
+            41.97
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": [
+            196,
+            145.9059,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            160.01,
+            41.97
+          ],
+          "worker_collision": null
+        }
+      }
+    },
+    "ClaudeFable5.2-v7": {
+      "attacked_if_stay": {
+        "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+        "seat": 0,
+        "t": 90,
+        "worker": "player-0-worker-18",
+        "cell": 181,
+        "cargo": 198.3963,
+        "recorded_action": "RIGHT",
+        "chosen_destination": 182,
+        "observable_reaching_collectors": [
+          [
+            "player-1-worker-25",
+            166,
+            0
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [
+          "player-1-worker-25"
+        ],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            182,
+            198.3963,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            832.65,
+            844.26
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": null,
+          "cash_by_seat_after": [
+            832.65,
+            844.26
+          ],
+          "worker_collision": [
+            "player-0-worker-18",
+            0,
+            198.3963,
+            1,
+            1
+          ]
+        }
+      },
+      "threat_not_realized": {
+        "key": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+        "seat": 0,
+        "t": 136,
+        "worker": "player-0-worker-36",
+        "cell": 156,
+        "cargo": 144.1821,
+        "recorded_action": "RIGHT",
+        "chosen_destination": 157,
+        "observable_reaching_collectors": [
+          [
+            "player-1-worker-16",
+            155,
+            97.85114282496
+          ]
+        ],
+        "enemy_actually_entered_old_cell": [],
+        "original_players_and_clock_exact": true,
+        "recorded": {
+          "worker_after": [
+            157,
+            144.1821,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            1792.12,
+            2062.96
+          ],
+          "worker_collision": null
+        },
+        "force_stay": {
+          "worker_after": [
+            156,
+            151.6581,
+            "COLLECTOR"
+          ],
+          "cash_by_seat_after": [
+            1791.18,
+            2062.96
+          ],
+          "worker_collision": null
+        }
+      }
+    }
+  }
+}

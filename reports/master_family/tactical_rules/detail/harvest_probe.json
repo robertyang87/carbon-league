@@ -1,0 +1,1923 @@
+{
+  "seeds": [
+    620101000,
+    620101001,
+    620101002,
+    620101003
+  ],
+  "horizon": 100,
+  "source_sha256": {
+    "agent_int8.py": "f260f05dd229f84df2ad1d478a9f4861b7e24f6e0c4f6b74e9885212ea430ad3",
+    "policy_v0_5.py": "4d435035e8e274c5c4d49dfcc71ca293c6b4989ebadc974796a90837f9f569c1",
+    "fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "smoke_ab.py": "22fe541c27e92d5e89bc3421769e48bf6c4d3da7e0508410bc0ad20b2ab4058e",
+    "opening_probe.json": "beb16f48a750c7d57f8827ed3e75007cbe6f756ba87e96444fd81755745666b8",
+    "harvest_probe.py": "b04dcebd2a3a80d18e549203dedc4deddfaa150a00106da03246d3dadb84079d",
+    "intent_policy_probe.py": "e04823a2a510102e7eb80bd566f6799cdb0c09f57e7c847b3f6faad6459b9a9a",
+    "defense.py": "f7955615a79feb8ada4a71b44e51d7ce70c23070c7b5ab392207f1a2917a1d09"
+  },
+  "diagnosis_previous_zero_delivery_t60": [
+    {
+      "seed": 620098002,
+      "seat": 0,
+      "harvest": 369.95969999999994,
+      "carried": 69.5957059252224
+    },
+    {
+      "seed": 620098002,
+      "seat": 1,
+      "harvest": 388.49219999999997,
+      "carried": 236.96408303999996
+    },
+    {
+      "seed": 620098003,
+      "seat": 1,
+      "harvest": 0.0,
+      "carried": 0
+    }
+  ],
+  "protocol": {
+    "safe_harvest": "t<30; empty collector on visible ground >=30, no base/tree. Favor staying by min(carbon/60,1).",
+    "working_capital_return": "cash below one default hire, cargo covers at least one hire, distance 2..5 to nearest own base. Favor all safe moves decreasing distance by one by min(cargo/(2*hire),1).",
+    "shared": "Reject reserved, enemy-base, vulnerable-to-collision and enemy-tree-exposed target; reject joint conflicts introduced by a change. Two separate arms. Shipped pack verified every baseline call; responsive opponent on separate maps only. All arms end at t100 or extinction. Counterfactual post-intervention trajectories diverge; opportunities are arm-specific. Summary economy columns are sums per arm, cash at actual stop, action counters are not independent trials. No claims about wins."
+  },
+  "summary": {
+    "original": {
+      "totals": {
+        "collector_deaths_all_causes": 0,
+        "joint_rejections": 0,
+        "changed_joint_turns": 0,
+        "collector_turns": 1038,
+        "collector_on_positive_carbon": 439,
+        "loaded_turns": 515,
+        "working_capital_return_opportunities": 102,
+        "loaded_adjacent_own_base": 66,
+        "steps": 800,
+        "games_with_loop": 4,
+        "activated_games": 0,
+        "direct_flips": 0,
+        "safe_harvest_opportunities": 2
+      },
+      "economics": {
+        "own": {
+          "cash": 268.39,
+          "total_harvest": 3053.8635000000004,
+          "normal_deposits": 5,
+          "delivered": 129.7695,
+          "completed_loop": 4,
+          "remaining_cargo": 1846.0648564126218
+        },
+        "opponent": {
+          "cash": 19848.33,
+          "total_harvest": 26667.998699999986,
+          "normal_deposits": 63,
+          "delivered": 14714.736719999999,
+          "completed_loop": 8,
+          "remaining_cargo": 11787.05308137949
+        }
+      }
+    },
+    "safe_harvest": {
+      "totals": {
+        "collector_deaths_all_causes": 0,
+        "joint_rejections": 0,
+        "changed_joint_turns": 0,
+        "collector_turns": 1038,
+        "collector_on_positive_carbon": 439,
+        "loaded_turns": 515,
+        "working_capital_return_opportunities": 102,
+        "loaded_adjacent_own_base": 66,
+        "steps": 800,
+        "games_with_loop": 4,
+        "activated_games": 0,
+        "direct_flips": 0,
+        "safe_harvest_opportunities": 2
+      },
+      "economics": {
+        "own": {
+          "cash": 268.39,
+          "total_harvest": 3053.8635000000004,
+          "normal_deposits": 5,
+          "delivered": 129.7695,
+          "completed_loop": 4,
+          "remaining_cargo": 1846.0648564126218
+        },
+        "opponent": {
+          "cash": 19848.33,
+          "total_harvest": 26667.998699999986,
+          "normal_deposits": 63,
+          "delivered": 14714.736719999999,
+          "completed_loop": 8,
+          "remaining_cargo": 11787.05308137949
+        }
+      }
+    },
+    "working_capital_return": {
+      "totals": {
+        "collector_deaths_all_causes": 0,
+        "joint_rejections": 0,
+        "changed_joint_turns": 35,
+        "collector_turns": 996,
+        "collector_on_positive_carbon": 396,
+        "loaded_turns": 483,
+        "working_capital_return_opportunities": 98,
+        "loaded_adjacent_own_base": 78,
+        "steps": 800,
+        "games_with_loop": 5,
+        "activated_games": 5,
+        "direct_flips": 38,
+        "safe_harvest_opportunities": 2
+      },
+      "economics": {
+        "own": {
+          "cash": 507.77,
+          "total_harvest": 2776.7568,
+          "normal_deposits": 8,
+          "delivered": 336.6349805109863,
+          "completed_loop": 5,
+          "remaining_cargo": 1329.2857694851625
+        },
+        "opponent": {
+          "cash": 20823.44,
+          "total_harvest": 27316.594799999984,
+          "normal_deposits": 65,
+          "delivered": 15889.35372,
+          "completed_loop": 8,
+          "remaining_cargo": 11166.00074215129
+        }
+      }
+    }
+  },
+  "pairs": [
+    {
+      "seed": 620101000,
+      "seat": 0,
+      "original": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 38,
+          "loaded_adjacent_state": 50
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 189,
+          "collector_on_positive_carbon": 115,
+          "loaded_turns": 135,
+          "working_capital_return_opportunities": 39,
+          "loaded_adjacent_own_base": 26
+        },
+        "final": {
+          "own": {
+            "cash": 14.7,
+            "total_harvest": 642.7401000000004,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 495.11495473536814
+          },
+          "opponent": {
+            "cash": 3146.81,
+            "total_harvest": 3209.2278,
+            "normal_deposits": 9,
+            "delivered": 2364.8286,
+            "completed_loop": true,
+            "remaining_cargo": 844.3991999999998
+          }
+        },
+        "changes": [],
+        "joint_sha256": "c3ee31f7914b36d6e7c713e677fe8f7ec174bfd8405794679346052a25f85728"
+      },
+      "safe_harvest": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 38,
+          "loaded_adjacent_state": 50
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 189,
+          "collector_on_positive_carbon": 115,
+          "loaded_turns": 135,
+          "working_capital_return_opportunities": 39,
+          "loaded_adjacent_own_base": 26
+        },
+        "final": {
+          "own": {
+            "cash": 14.7,
+            "total_harvest": 642.7401000000004,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 495.11495473536814
+          },
+          "opponent": {
+            "cash": 3146.81,
+            "total_harvest": 3209.2278,
+            "normal_deposits": 9,
+            "delivered": 2364.8286,
+            "completed_loop": true,
+            "remaining_cargo": 844.3991999999998
+          }
+        },
+        "changes": [],
+        "joint_sha256": "c3ee31f7914b36d6e7c713e677fe8f7ec174bfd8405794679346052a25f85728"
+      },
+      "working_capital_return": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 38,
+          "loaded_adjacent_state": 40,
+          "deposit_resolution": 77
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 6,
+          "collector_turns": 152,
+          "collector_on_positive_carbon": 82,
+          "loaded_turns": 106,
+          "working_capital_return_opportunities": 11,
+          "loaded_adjacent_own_base": 24
+        },
+        "final": {
+          "own": {
+            "cash": 142.16,
+            "total_harvest": 558.0672,
+            "normal_deposits": 3,
+            "delivered": 176.6446805109863,
+            "completed_loop": true,
+            "remaining_cargo": 113.69753583926835
+          },
+          "opponent": {
+            "cash": 2727.41,
+            "total_harvest": 3623.7665999999977,
+            "normal_deposits": 8,
+            "delivered": 1884.2961,
+            "completed_loop": true,
+            "remaining_cargo": 1739.4705
+          }
+        },
+        "changes": [
+          {
+            "rule": "working_capital_return",
+            "uid": "player-0-worker-0",
+            "cell": 62,
+            "pre_cash": 5.82,
+            "pre_cargo": 51.0,
+            "visible_carbon": 49.0,
+            "pre_distance": 2,
+            "bonus": 0.85,
+            "baseline": 1,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 39,
+            "submitted": "RIGHT",
+            "original_action": "UP",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": {
+              "step": 82,
+              "player": 0,
+              "worker": "player-0-worker-0",
+              "event": "deposit",
+              "amount": 21.337941510986283
+            }
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-0-worker-0",
+            "cell": 78,
+            "pre_cash": 16.81,
+            "pre_cargo": 51.0,
+            "visible_carbon": 70.555,
+            "pre_distance": 2,
+            "bonus": 0.85,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 41,
+            "submitted": "UP",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": {
+              "step": 82,
+              "player": 0,
+              "worker": "player-0-worker-0",
+              "event": "deposit",
+              "amount": 21.337941510986283
+            }
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-0-worker-0",
+            "cell": 78,
+            "pre_cash": 27.0,
+            "pre_cargo": 51.0,
+            "visible_carbon": 74.852,
+            "pre_distance": 2,
+            "bonus": 0.85,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 43,
+            "submitted": "UP",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": {
+              "step": 82,
+              "player": 0,
+              "worker": "player-0-worker-0",
+              "event": "deposit",
+              "amount": 21.337941510986283
+            }
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-0-worker-2",
+            "cell": 82,
+            "pre_cash": 19.23,
+            "pre_cargo": 91.410039,
+            "visible_carbon": 0.0,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 1,
+            "preferred": 4,
+            "safe_candidates": [
+              4
+            ],
+            "t": 73,
+            "submitted": "LEFT",
+            "original_action": "UP",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": {
+              "step": 77,
+              "player": 0,
+              "worker": "player-0-worker-2",
+              "event": "deposit",
+              "amount": 91.410039
+            }
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-0-worker-2",
+            "cell": 81,
+            "pre_cash": 23.36,
+            "pre_cargo": 91.410039,
+            "visible_carbon": 0.0,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 1,
+            "preferred": 4,
+            "safe_candidates": [
+              4
+            ],
+            "t": 74,
+            "submitted": "LEFT",
+            "original_action": "UP",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": {
+              "step": 77,
+              "player": 0,
+              "worker": "player-0-worker-2",
+              "event": "deposit",
+              "amount": 91.410039
+            }
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-0-worker-2",
+            "cell": 80,
+            "pre_cash": 27.28,
+            "pre_cargo": 91.410039,
+            "visible_carbon": 0.0,
+            "pre_distance": 2,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 4,
+            "safe_candidates": [
+              4
+            ],
+            "t": 75,
+            "submitted": "LEFT",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": {
+              "step": 77,
+              "player": 0,
+              "worker": "player-0-worker-2",
+              "event": "deposit",
+              "amount": 91.410039
+            }
+          }
+        ],
+        "joint_sha256": "e13f1934e4ef9cf29a5b73889f47884b48cd45aa658141de15cf57709a22dd8f"
+      }
+    },
+    {
+      "seed": 620101000,
+      "seat": 1,
+      "original": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 38,
+          "loaded_adjacent_state": 47
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 154,
+          "collector_on_positive_carbon": 97,
+          "loaded_turns": 115,
+          "working_capital_return_opportunities": 22,
+          "loaded_adjacent_own_base": 5
+        },
+        "final": {
+          "own": {
+            "cash": 6.43,
+            "total_harvest": 970.5962999999999,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 627.5034724509206
+          },
+          "opponent": {
+            "cash": 2953.69,
+            "total_harvest": 3455.340599999998,
+            "normal_deposits": 9,
+            "delivered": 2336.0847,
+            "completed_loop": true,
+            "remaining_cargo": 1119.2558999999999
+          }
+        },
+        "changes": [],
+        "joint_sha256": "8977a3c23fbc9c1066001c01c5600e9b0379d531e0d860eae2adb6c2537b871e"
+      },
+      "safe_harvest": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 38,
+          "loaded_adjacent_state": 47
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 154,
+          "collector_on_positive_carbon": 97,
+          "loaded_turns": 115,
+          "working_capital_return_opportunities": 22,
+          "loaded_adjacent_own_base": 5
+        },
+        "final": {
+          "own": {
+            "cash": 6.43,
+            "total_harvest": 970.5962999999999,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 627.5034724509206
+          },
+          "opponent": {
+            "cash": 2953.69,
+            "total_harvest": 3455.340599999998,
+            "normal_deposits": 9,
+            "delivered": 2336.0847,
+            "completed_loop": true,
+            "remaining_cargo": 1119.2558999999999
+          }
+        },
+        "changes": [],
+        "joint_sha256": "8977a3c23fbc9c1066001c01c5600e9b0379d531e0d860eae2adb6c2537b871e"
+      },
+      "working_capital_return": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 38,
+          "loaded_adjacent_state": 40
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 4,
+          "collector_turns": 152,
+          "collector_on_positive_carbon": 88,
+          "loaded_turns": 113,
+          "working_capital_return_opportunities": 12,
+          "loaded_adjacent_own_base": 8
+        },
+        "final": {
+          "own": {
+            "cash": 101.88,
+            "total_harvest": 754.4664,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 441.6620437514002
+          },
+          "opponent": {
+            "cash": 3486.26,
+            "total_harvest": 3548.4770999999982,
+            "normal_deposits": 10,
+            "delivered": 2981.3034,
+            "completed_loop": true,
+            "remaining_cargo": 472.66691847180005
+          }
+        },
+        "changes": [
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 72,
+            "pre_cash": 5.82,
+            "pre_cargo": 51.0,
+            "visible_carbon": 49.0,
+            "pre_distance": 2,
+            "bonus": 0.85,
+            "baseline": 1,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 39,
+            "submitted": "LEFT",
+            "original_action": "UP",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 86,
+            "pre_cash": 16.81,
+            "pre_cargo": 51.0,
+            "visible_carbon": 70.555,
+            "pre_distance": 2,
+            "bonus": 0.85,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 41,
+            "submitted": "UP",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 86,
+            "pre_cash": 27.0,
+            "pre_cargo": 51.0,
+            "visible_carbon": 74.852,
+            "pre_distance": 2,
+            "bonus": 0.85,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 43,
+            "submitted": "UP",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 165,
+            "pre_cash": 5.99,
+            "pre_cargo": 375.9966,
+            "visible_carbon": 91.029,
+            "pre_distance": 5,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              4
+            ],
+            "t": 92,
+            "submitted": "UP",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          }
+        ],
+        "joint_sha256": "1b5818e211fd2ef89289f45ddb59412f997d81157184fabdeb6cd7d7e48021c0"
+      }
+    },
+    {
+      "seed": 620101001,
+      "seat": 0,
+      "original": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 65,
+          "loaded_adjacent_state": 65,
+          "deposit_resolution": 67
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 99,
+          "collector_on_positive_carbon": 6,
+          "loaded_turns": 4,
+          "loaded_adjacent_own_base": 4
+        },
+        "final": {
+          "own": {
+            "cash": 41.11,
+            "total_harvest": 41.1105,
+            "normal_deposits": 2,
+            "delivered": 41.1105,
+            "completed_loop": true,
+            "remaining_cargo": 0
+          },
+          "opponent": {
+            "cash": 1944.29,
+            "total_harvest": 3033.0956999999976,
+            "normal_deposits": 8,
+            "delivered": 1675.5735,
+            "completed_loop": true,
+            "remaining_cargo": 1357.5221999999999
+          }
+        },
+        "changes": [],
+        "joint_sha256": "be26d2d8ad4fc0bc056c902bc0031de57514e5d33713d942a9cb7ba999bf7721"
+      },
+      "safe_harvest": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 65,
+          "loaded_adjacent_state": 65,
+          "deposit_resolution": 67
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 99,
+          "collector_on_positive_carbon": 6,
+          "loaded_turns": 4,
+          "loaded_adjacent_own_base": 4
+        },
+        "final": {
+          "own": {
+            "cash": 41.11,
+            "total_harvest": 41.1105,
+            "normal_deposits": 2,
+            "delivered": 41.1105,
+            "completed_loop": true,
+            "remaining_cargo": 0
+          },
+          "opponent": {
+            "cash": 1944.29,
+            "total_harvest": 3033.0956999999976,
+            "normal_deposits": 8,
+            "delivered": 1675.5735,
+            "completed_loop": true,
+            "remaining_cargo": 1357.5221999999999
+          }
+        },
+        "changes": [],
+        "joint_sha256": "be26d2d8ad4fc0bc056c902bc0031de57514e5d33713d942a9cb7ba999bf7721"
+      },
+      "working_capital_return": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 65,
+          "loaded_adjacent_state": 65,
+          "deposit_resolution": 67
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 99,
+          "collector_on_positive_carbon": 6,
+          "loaded_turns": 4,
+          "loaded_adjacent_own_base": 4
+        },
+        "final": {
+          "own": {
+            "cash": 41.11,
+            "total_harvest": 41.1105,
+            "normal_deposits": 2,
+            "delivered": 41.1105,
+            "completed_loop": true,
+            "remaining_cargo": 0
+          },
+          "opponent": {
+            "cash": 1944.29,
+            "total_harvest": 3033.0956999999976,
+            "normal_deposits": 8,
+            "delivered": 1675.5735,
+            "completed_loop": true,
+            "remaining_cargo": 1357.5221999999999
+          }
+        },
+        "changes": [],
+        "joint_sha256": "be26d2d8ad4fc0bc056c902bc0031de57514e5d33713d942a9cb7ba999bf7721"
+      }
+    },
+    {
+      "seed": 620101001,
+      "seat": 1,
+      "original": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 69,
+          "loaded_adjacent_state": 81,
+          "deposit_resolution": 85
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 120,
+          "collector_on_positive_carbon": 34,
+          "loaded_turns": 46,
+          "working_capital_return_opportunities": 6,
+          "loaded_adjacent_own_base": 11
+        },
+        "final": {
+          "own": {
+            "cash": 60.38,
+            "total_harvest": 145.3506,
+            "normal_deposits": 1,
+            "delivered": 48.517199999999995,
+            "completed_loop": true,
+            "remaining_cargo": 39.65162424323099
+          },
+          "opponent": {
+            "cash": 1567.46,
+            "total_harvest": 3087.157499999998,
+            "normal_deposits": 4,
+            "delivered": 1141.6269000000002,
+            "completed_loop": true,
+            "remaining_cargo": 1945.5305999999998
+          }
+        },
+        "changes": [],
+        "joint_sha256": "37e935d951f9c1530a53c1b5c796ff62cc082a93a9ec07ee44edf81ce24e2ed4"
+      },
+      "safe_harvest": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 69,
+          "loaded_adjacent_state": 81,
+          "deposit_resolution": 85
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 120,
+          "collector_on_positive_carbon": 34,
+          "loaded_turns": 46,
+          "working_capital_return_opportunities": 6,
+          "loaded_adjacent_own_base": 11
+        },
+        "final": {
+          "own": {
+            "cash": 60.38,
+            "total_harvest": 145.3506,
+            "normal_deposits": 1,
+            "delivered": 48.517199999999995,
+            "completed_loop": true,
+            "remaining_cargo": 39.65162424323099
+          },
+          "opponent": {
+            "cash": 1567.46,
+            "total_harvest": 3087.157499999998,
+            "normal_deposits": 4,
+            "delivered": 1141.6269000000002,
+            "completed_loop": true,
+            "remaining_cargo": 1945.5305999999998
+          }
+        },
+        "changes": [],
+        "joint_sha256": "37e935d951f9c1530a53c1b5c796ff62cc082a93a9ec07ee44edf81ce24e2ed4"
+      },
+      "working_capital_return": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 69,
+          "loaded_adjacent_state": 91,
+          "deposit_resolution": 98
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 3,
+          "collector_turns": 110,
+          "collector_on_positive_carbon": 29,
+          "loaded_turns": 38,
+          "working_capital_return_opportunities": 6,
+          "loaded_adjacent_own_base": 7
+        },
+        "final": {
+          "own": {
+            "cash": 78.53,
+            "total_harvest": 178.5636,
+            "normal_deposits": 1,
+            "delivered": 78.73799999999999,
+            "completed_loop": true,
+            "remaining_cargo": 85.76883
+          },
+          "opponent": {
+            "cash": 2048.78,
+            "total_harvest": 3108.750599999998,
+            "normal_deposits": 5,
+            "delivered": 1686.8313,
+            "completed_loop": true,
+            "remaining_cargo": 1421.9192999999998
+          }
+        },
+        "changes": [
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 41,
+            "pre_cash": 20.0,
+            "pre_cargo": 30.0,
+            "visible_carbon": 70.0,
+            "pre_distance": 3,
+            "bonus": 0.5,
+            "baseline": 0,
+            "preferred": 2,
+            "safe_candidates": [
+              2,
+              3
+            ],
+            "t": 69,
+            "submitted": "LEFT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 87,
+            "pre_cash": 6.31,
+            "pre_cargo": 77.20383,
+            "visible_carbon": 8.168,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 95,
+            "submitted": "UP",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 57,
+            "pre_cash": 29.79,
+            "pre_cargo": 77.20383,
+            "visible_carbon": 0.0,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 4,
+            "preferred": 3,
+            "safe_candidates": [
+              2,
+              3
+            ],
+            "t": 97,
+            "submitted": "DOWN",
+            "original_action": "RIGHT",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          }
+        ],
+        "joint_sha256": "8598c680ffa8eae5ab5acc0a50c401fa10fb3ad2e7cce3c71f9ee70b7f8d1e99"
+      }
+    },
+    {
+      "seed": 620101002,
+      "seat": 0,
+      "original": {
+        "steps": 100,
+        "first": {},
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 99
+        },
+        "final": {
+          "own": {
+            "cash": 99.43,
+            "total_harvest": 0,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 0
+          },
+          "opponent": {
+            "cash": 2252.68,
+            "total_harvest": 3259.6667999999986,
+            "normal_deposits": 7,
+            "delivered": 1628.2707,
+            "completed_loop": true,
+            "remaining_cargo": 1528.902803379491
+          }
+        },
+        "changes": [],
+        "joint_sha256": "064160429e309c97b02462418ba9a584e16a7ece5d0ce1db0e6655cec32135ba"
+      },
+      "safe_harvest": {
+        "steps": 100,
+        "first": {},
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 99
+        },
+        "final": {
+          "own": {
+            "cash": 99.43,
+            "total_harvest": 0,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 0
+          },
+          "opponent": {
+            "cash": 2252.68,
+            "total_harvest": 3259.6667999999986,
+            "normal_deposits": 7,
+            "delivered": 1628.2707,
+            "completed_loop": true,
+            "remaining_cargo": 1528.902803379491
+          }
+        },
+        "changes": [],
+        "joint_sha256": "064160429e309c97b02462418ba9a584e16a7ece5d0ce1db0e6655cec32135ba"
+      },
+      "working_capital_return": {
+        "steps": 100,
+        "first": {},
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 99
+        },
+        "final": {
+          "own": {
+            "cash": 99.43,
+            "total_harvest": 0,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 0
+          },
+          "opponent": {
+            "cash": 2252.68,
+            "total_harvest": 3259.6667999999986,
+            "normal_deposits": 7,
+            "delivered": 1628.2707,
+            "completed_loop": true,
+            "remaining_cargo": 1528.902803379491
+          }
+        },
+        "changes": [],
+        "joint_sha256": "064160429e309c97b02462418ba9a584e16a7ece5d0ce1db0e6655cec32135ba"
+      }
+    },
+    {
+      "seed": 620101002,
+      "seat": 1,
+      "original": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 79
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 125,
+          "collector_on_positive_carbon": 39,
+          "loaded_turns": 38,
+          "working_capital_return_opportunities": 19
+        },
+        "final": {
+          "own": {
+            "cash": 20.11,
+            "total_harvest": 243.75570000000002,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 238.19724
+          },
+          "opponent": {
+            "cash": 2433.4,
+            "total_harvest": 3541.9364999999984,
+            "normal_deposits": 8,
+            "delivered": 1833.01722,
+            "completed_loop": true,
+            "remaining_cargo": 1692.0708
+          }
+        },
+        "changes": [],
+        "joint_sha256": "81293dd1ca53ee93bf9155745d7da07f44da056346bf89f77998eaf5653aafe7"
+      },
+      "safe_harvest": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 79
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 125,
+          "collector_on_positive_carbon": 39,
+          "loaded_turns": 38,
+          "working_capital_return_opportunities": 19
+        },
+        "final": {
+          "own": {
+            "cash": 20.11,
+            "total_harvest": 243.75570000000002,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 238.19724
+          },
+          "opponent": {
+            "cash": 2433.4,
+            "total_harvest": 3541.9364999999984,
+            "normal_deposits": 8,
+            "delivered": 1833.01722,
+            "completed_loop": true,
+            "remaining_cargo": 1692.0708
+          }
+        },
+        "changes": [],
+        "joint_sha256": "81293dd1ca53ee93bf9155745d7da07f44da056346bf89f77998eaf5653aafe7"
+      },
+      "working_capital_return": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 79
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 8,
+          "collector_turns": 125,
+          "collector_on_positive_carbon": 35,
+          "loaded_turns": 38,
+          "working_capital_return_opportunities": 22
+        },
+        "final": {
+          "own": {
+            "cash": 20.11,
+            "total_harvest": 227.0304,
+            "normal_deposits": 0,
+            "delivered": 0,
+            "completed_loop": false,
+            "remaining_cargo": 189.5766672
+          },
+          "opponent": {
+            "cash": 2451.6,
+            "total_harvest": 3546.0839999999985,
+            "normal_deposits": 8,
+            "delivered": 1833.01722,
+            "completed_loop": true,
+            "remaining_cargo": 1696.2182999999998
+          }
+        },
+        "changes": [
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 102,
+            "pre_cash": 19.44,
+            "pre_cargo": 75.2247,
+            "visible_carbon": 43.451,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 89,
+            "submitted": "UP",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 87,
+            "pre_cash": 19.51,
+            "pre_cargo": 75.2247,
+            "visible_carbon": 0.0,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 90,
+            "submitted": "UP",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 59,
+            "pre_cash": 19.58,
+            "pre_cargo": 90.10794000000001,
+            "visible_carbon": 36.389,
+            "pre_distance": 5,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 2,
+            "safe_candidates": [
+              2,
+              3
+            ],
+            "t": 91,
+            "submitted": "LEFT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 57,
+            "pre_cash": 19.65,
+            "pre_cargo": 75.2247,
+            "visible_carbon": 0.0,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 1,
+            "preferred": 2,
+            "safe_candidates": [
+              2,
+              3
+            ],
+            "t": 92,
+            "submitted": "LEFT",
+            "original_action": "UP",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 41,
+            "pre_cash": 19.78,
+            "pre_cargo": 75.2247,
+            "visible_carbon": 14.107,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 4,
+            "preferred": 2,
+            "safe_candidates": [
+              2,
+              3
+            ],
+            "t": 94,
+            "submitted": "LEFT",
+            "original_action": "RIGHT",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 73,
+            "pre_cash": 19.84,
+            "pre_cargo": 129.50484,
+            "visible_carbon": 37.852,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 95,
+            "submitted": "LEFT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 73,
+            "pre_cash": 19.96,
+            "pre_cargo": 129.50484,
+            "visible_carbon": 40.158,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 97,
+            "submitted": "LEFT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 73,
+            "pre_cash": 20.06,
+            "pre_cargo": 129.50484,
+            "visible_carbon": 42.604,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 99,
+            "submitted": "LEFT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          }
+        ],
+        "joint_sha256": "80c452402148524ce75b085594b913dc2d76434196b80f273da69538febe5c71"
+      }
+    },
+    {
+      "seed": 620101003,
+      "seat": 0,
+      "original": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 8,
+          "loaded_adjacent_state": 8,
+          "deposit_resolution": 10
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 118,
+          "collector_on_positive_carbon": 64,
+          "safe_harvest_opportunities": 1,
+          "loaded_turns": 79,
+          "loaded_adjacent_own_base": 15
+        },
+        "final": {
+          "own": {
+            "cash": 8.22,
+            "total_harvest": 419.70390000000003,
+            "normal_deposits": 1,
+            "delivered": 20.070899999999995,
+            "completed_loop": true,
+            "remaining_cargo": 194.78115282624
+          },
+          "opponent": {
+            "cash": 2685.16,
+            "total_harvest": 3822.186299999998,
+            "normal_deposits": 10,
+            "delivered": 1982.4836999999998,
+            "completed_loop": true,
+            "remaining_cargo": 1796.0121299999998
+          }
+        },
+        "changes": [],
+        "joint_sha256": "298c84c7947d00796b5493d40382993486cb79a2db69d21cdd5d22b57c445a92"
+      },
+      "safe_harvest": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 8,
+          "loaded_adjacent_state": 8,
+          "deposit_resolution": 10
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 118,
+          "collector_on_positive_carbon": 64,
+          "safe_harvest_opportunities": 1,
+          "loaded_turns": 79,
+          "loaded_adjacent_own_base": 15
+        },
+        "final": {
+          "own": {
+            "cash": 8.22,
+            "total_harvest": 419.70390000000003,
+            "normal_deposits": 1,
+            "delivered": 20.070899999999995,
+            "completed_loop": true,
+            "remaining_cargo": 194.78115282624
+          },
+          "opponent": {
+            "cash": 2685.16,
+            "total_harvest": 3822.186299999998,
+            "normal_deposits": 10,
+            "delivered": 1982.4836999999998,
+            "completed_loop": true,
+            "remaining_cargo": 1796.0121299999998
+          }
+        },
+        "changes": [],
+        "joint_sha256": "298c84c7947d00796b5493d40382993486cb79a2db69d21cdd5d22b57c445a92"
+      },
+      "working_capital_return": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 8,
+          "loaded_adjacent_state": 8,
+          "deposit_resolution": 10
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 118,
+          "collector_on_positive_carbon": 64,
+          "safe_harvest_opportunities": 1,
+          "loaded_turns": 79,
+          "loaded_adjacent_own_base": 15
+        },
+        "final": {
+          "own": {
+            "cash": 8.22,
+            "total_harvest": 419.70390000000003,
+            "normal_deposits": 1,
+            "delivered": 20.070899999999995,
+            "completed_loop": true,
+            "remaining_cargo": 194.78115282624
+          },
+          "opponent": {
+            "cash": 2685.16,
+            "total_harvest": 3822.186299999998,
+            "normal_deposits": 10,
+            "delivered": 1982.4836999999998,
+            "completed_loop": true,
+            "remaining_cargo": 1796.0121299999998
+          }
+        },
+        "changes": [],
+        "joint_sha256": "298c84c7947d00796b5493d40382993486cb79a2db69d21cdd5d22b57c445a92"
+      }
+    },
+    {
+      "seed": 620101003,
+      "seat": 1,
+      "original": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 8,
+          "loaded_adjacent_state": 8,
+          "deposit_resolution": 10
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 134,
+          "collector_on_positive_carbon": 84,
+          "safe_harvest_opportunities": 1,
+          "loaded_turns": 98,
+          "loaded_adjacent_own_base": 5,
+          "working_capital_return_opportunities": 16
+        },
+        "final": {
+          "own": {
+            "cash": 18.01,
+            "total_harvest": 590.6063999999999,
+            "normal_deposits": 1,
+            "delivered": 20.070899999999995,
+            "completed_loop": true,
+            "remaining_cargo": 250.81641215686204
+          },
+          "opponent": {
+            "cash": 2864.84,
+            "total_harvest": 3259.3874999999975,
+            "normal_deposits": 8,
+            "delivered": 1752.8514,
+            "completed_loop": true,
+            "remaining_cargo": 1503.3594479999997
+          }
+        },
+        "changes": [],
+        "joint_sha256": "15d691c30e343eb8410103343c7f801ec1d6fc4c56fe5f4bfdae65e0a2be0416"
+      },
+      "safe_harvest": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 8,
+          "loaded_adjacent_state": 8,
+          "deposit_resolution": 10
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 0,
+          "collector_turns": 134,
+          "collector_on_positive_carbon": 84,
+          "safe_harvest_opportunities": 1,
+          "loaded_turns": 98,
+          "loaded_adjacent_own_base": 5,
+          "working_capital_return_opportunities": 16
+        },
+        "final": {
+          "own": {
+            "cash": 18.01,
+            "total_harvest": 590.6063999999999,
+            "normal_deposits": 1,
+            "delivered": 20.070899999999995,
+            "completed_loop": true,
+            "remaining_cargo": 250.81641215686204
+          },
+          "opponent": {
+            "cash": 2864.84,
+            "total_harvest": 3259.3874999999975,
+            "normal_deposits": 8,
+            "delivered": 1752.8514,
+            "completed_loop": true,
+            "remaining_cargo": 1503.3594479999997
+          }
+        },
+        "changes": [],
+        "joint_sha256": "15d691c30e343eb8410103343c7f801ec1d6fc4c56fe5f4bfdae65e0a2be0416"
+      },
+      "working_capital_return": {
+        "steps": 100,
+        "first": {
+          "collect_resolution": 8,
+          "loaded_adjacent_state": 8,
+          "deposit_resolution": 10
+        },
+        "counts": {
+          "collector_deaths_all_causes": 0,
+          "joint_rejections": 0,
+          "changed_joint_turns": 14,
+          "collector_turns": 141,
+          "collector_on_positive_carbon": 92,
+          "safe_harvest_opportunities": 1,
+          "loaded_turns": 105,
+          "loaded_adjacent_own_base": 20,
+          "working_capital_return_opportunities": 47
+        },
+        "final": {
+          "own": {
+            "cash": 16.33,
+            "total_harvest": 597.8148,
+            "normal_deposits": 1,
+            "delivered": 20.070899999999995,
+            "completed_loop": true,
+            "remaining_cargo": 303.79953986825393
+          },
+          "opponent": {
+            "cash": 3227.26,
+            "total_harvest": 3374.5676999999987,
+            "normal_deposits": 9,
+            "delivered": 2217.5778,
+            "completed_loop": true,
+            "remaining_cargo": 1153.2885903
+          }
+        },
+        "changes": [
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 60,
+            "pre_cash": 7.64,
+            "pre_cargo": 128.05906920959998,
+            "visible_carbon": 49.072,
+            "pre_distance": 5,
+            "bonus": 1.0,
+            "baseline": 1,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 62,
+            "submitted": "LEFT",
+            "original_action": "UP",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 89,
+            "pre_cash": 26.85,
+            "pre_cargo": 179.05906920959998,
+            "visible_carbon": 0.0,
+            "pre_distance": 5,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 2,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 68,
+            "submitted": "LEFT",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 88,
+            "pre_cash": 29.64,
+            "pre_cargo": 179.05906920959998,
+            "visible_carbon": 100.0,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 2,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 69,
+            "submitted": "LEFT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 88,
+            "pre_cash": 9.81,
+            "pre_cargo": 239.05906920959998,
+            "visible_carbon": 70.0,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 2,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 73,
+            "submitted": "LEFT",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 102,
+            "pre_cash": 18.54,
+            "pre_cargo": 239.05906920959998,
+            "visible_carbon": 0.0,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 4,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 77,
+            "submitted": "UP",
+            "original_action": "RIGHT",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 86,
+            "pre_cash": 18.54,
+            "pre_cargo": 56.8575,
+            "visible_carbon": 70.0,
+            "pre_distance": 2,
+            "bonus": 0.947625,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 77,
+            "submitted": "UP",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 87,
+            "pre_cash": 20.52,
+            "pre_cargo": 239.05906920959998,
+            "visible_carbon": 86.093,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 2,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 78,
+            "submitted": "LEFT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 87,
+            "pre_cash": 24.27,
+            "pre_cargo": 239.05906920959998,
+            "visible_carbon": 91.336,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 2,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 80,
+            "submitted": "LEFT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 88,
+            "pre_cash": 2.48,
+            "pre_cargo": 259.62945228864,
+            "visible_carbon": 99.805,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 85,
+            "submitted": "LEFT",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 88,
+            "pre_cash": 5.34,
+            "pre_cargo": 233.666507059776,
+            "visible_carbon": 100.0,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 87,
+            "submitted": "LEFT",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 99,
+            "pre_cash": 5.34,
+            "pre_cargo": 143.2347,
+            "visible_carbon": 26.197,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 4,
+            "safe_candidates": [
+              1,
+              4
+            ],
+            "t": 87,
+            "submitted": "RIGHT",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 88,
+            "pre_cash": 8.13,
+            "pre_cargo": 210.2998563537984,
+            "visible_carbon": 100.0,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 89,
+            "submitted": "LEFT",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 116,
+            "pre_cash": 10.2,
+            "pre_cargo": 143.2347,
+            "visible_carbon": 23.914,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 4,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 90,
+            "submitted": "UP",
+            "original_action": "RIGHT",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-0",
+            "cell": 88,
+            "pre_cash": 10.92,
+            "pre_cargo": 189.26987071841856,
+            "visible_carbon": 100.0,
+            "pre_distance": 4,
+            "bonus": 1.0,
+            "baseline": 3,
+            "preferred": 2,
+            "safe_candidates": [
+              2
+            ],
+            "t": 91,
+            "submitted": "LEFT",
+            "original_action": "DOWN",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 101,
+            "pre_cash": 10.92,
+            "pre_cargo": 143.2347,
+            "visible_carbon": 63.809,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 91,
+            "submitted": "UP",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 87,
+            "pre_cash": 13.56,
+            "pre_cargo": 177.4887,
+            "visible_carbon": 44.665,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 4,
+            "preferred": 2,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 95,
+            "submitted": "LEFT",
+            "original_action": "RIGHT",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          },
+          {
+            "rule": "working_capital_return",
+            "uid": "player-1-worker-2",
+            "cell": 101,
+            "pre_cash": 14.74,
+            "pre_cargo": 177.4887,
+            "visible_carbon": 76.192,
+            "pre_distance": 3,
+            "bonus": 1.0,
+            "baseline": 0,
+            "preferred": 1,
+            "safe_candidates": [
+              1,
+              2
+            ],
+            "t": 97,
+            "submitted": "UP",
+            "original_action": "NONE",
+            "alive_after": true,
+            "collected": 0,
+            "next_normal_deposit_before_stop": null
+          }
+        ],
+        "joint_sha256": "743796de045f6014f553f56282e6a85afc35d2ba225eb4f8706e4033efbc71c7"
+      }
+    }
+  ]
+}

@@ -1,0 +1,748 @@
+{
+  "score_sha256": "5b13d5efd211174127d3ea645f6a49b81a130ca675d0079cd347b3c3ff3b5e19",
+  "script_sha256": "8723dc3dfeea1ed44f37fccf12b06363f341a153bcfcaa164d13bf5db12788fe",
+  "matches": 1056,
+  "appearances": 1157,
+  "ranks": [
+    "claude-AlphaCarbon-Master5s",
+    "claude-AlphaCarbon-Master6",
+    "RyanX-AIPowercore-it720-preview",
+    "RyanX-AIPowercore-M9XJ-630",
+    "ClaudeFable5.2-v7"
+  ],
+  "scope": "Descriptive census of the pinned heavy-ladder snapshot. Same-game decisions are correlated.",
+  "analysis": {
+    "definitions": {
+      "choices": "Submitted STAY among existing collectors on cells with no tree or depot. Ground is from the collector's own seat's masked carbon at the current cell. Stage t<200. Distance to own nearest base >=2.",
+      "ground": "Own cargo <30, no reachable enemy collector lighter than or tied with ours. Carbon bands [0,10),[10,30),[30,60),[60,infinity).",
+      "cargo": "Ground >=60, no reachable lighter or equal enemy collector. Own cargo [0,30),[30,100),[100,infinity).",
+      "threat": "0<cargo<100, ground>=30. No reachable enemy collector, only strictly heavier ones, or at least one lighter/tied; reach includes the present cell and cardinal neighbors.",
+      "repeat": "Same uid also submitted STAY at previous decision, with current lighter/equal enemy reach absent. Contrast field carbon <10 versus >=60; cargo unrestricted.",
+      "escape": "Any stage, loaded collector leaving a presently threatened field; 1–3 of four cardinal exits safe from all reachable lighter/equal enemy collectors, no adjacent enemy depot. Compare actual chosen safe-exit rate to uniform over four exits on same decision. Excludes stayed, no-safe and all-safe cases. Ignores friendly conflicts and economic value.",
+      "accounting": "All stages; positive-ground stay on a field with no other standing worker at or within one step of it before action and no live enemy tree in the post-state 3x3. Survivors' observed cargo delta compared with the rule 0.3*C to tolerance 0.02, not inferred by counting all waits.",
+      "units": "Repeated decisions inside games. Paired contrasts use equal weight among model appearances with both observed conditions; choice does not establish causal utility."
+    },
+    "models": {
+      "ClaudeFable5.2-v7": {
+        "appearances": 280,
+        "stay_choices": {
+          "cargo_heavy": {
+            "stay": 7187,
+            "decisions": 7466,
+            "games_exposed": 273,
+            "rate": 0.96263
+          },
+          "cargo_light": {
+            "stay": 10808,
+            "decisions": 22590,
+            "games_exposed": 280,
+            "rate": 0.47844
+          },
+          "cargo_medium": {
+            "stay": 9968,
+            "decisions": 10609,
+            "games_exposed": 279,
+            "rate": 0.93958
+          },
+          "ground_lean": {
+            "stay": 312,
+            "decisions": 34496,
+            "games_exposed": 280,
+            "rate": 0.00904
+          },
+          "ground_low": {
+            "stay": 2399,
+            "decisions": 17523,
+            "games_exposed": 280,
+            "rate": 0.13691
+          },
+          "ground_mid": {
+            "stay": 8647,
+            "decisions": 28564,
+            "games_exposed": 280,
+            "rate": 0.30272
+          },
+          "ground_rich": {
+            "stay": 10808,
+            "decisions": 22590,
+            "games_exposed": 280,
+            "rate": 0.47844
+          },
+          "repeat_lean": {
+            "stay": 343,
+            "decisions": 1186,
+            "games_exposed": 256,
+            "rate": 0.28921
+          },
+          "repeat_rich": {
+            "stay": 7144,
+            "decisions": 7628,
+            "games_exposed": 280,
+            "rate": 0.93655
+          },
+          "threat_lighter_or_tie": {
+            "stay": 10,
+            "decisions": 16734,
+            "games_exposed": 280,
+            "rate": 0.0006
+          },
+          "threat_none": {
+            "stay": 33874,
+            "decisions": 42981,
+            "games_exposed": 280,
+            "rate": 0.78812
+          },
+          "threat_only_heavier": {
+            "stay": 2078,
+            "decisions": 3191,
+            "games_exposed": 269,
+            "rate": 0.65121
+          }
+        },
+        "paired_contrasts": {
+          "rich_minus_lean": {
+            "eligible_appearances": 280,
+            "above": 280,
+            "below": 0,
+            "mean_game_delta": 0.49482
+          },
+          "cargo_heavy_minus_light_on_rich": {
+            "eligible_appearances": 273,
+            "above": 271,
+            "below": 1,
+            "mean_game_delta": 0.46803
+          },
+          "threat_minus_no_reachable_collector": {
+            "eligible_appearances": 280,
+            "above": 0,
+            "below": 280,
+            "mean_game_delta": -0.78761
+          },
+          "threat_lighter_minus_only_heavier": {
+            "eligible_appearances": 269,
+            "above": 0,
+            "below": 269,
+            "mean_game_delta": -0.69583
+          },
+          "repeat_rich_minus_repeat_lean": {
+            "eligible_appearances": 256,
+            "above": 255,
+            "below": 1,
+            "mean_game_delta": 0.71871
+          }
+        },
+        "escape": {
+          "safe_chosen": 71547,
+          "decisions": 72050,
+          "pooled_rate": 0.99302,
+          "uniform_cardinal_reference": 0.69947
+        },
+        "observed_clean_harvest": {
+          "clean_positive_ground_stays": 120744,
+          "survived": 120744,
+          "positive_cargo_delta": 120744,
+          "rule_gain_within_002": 120744
+        },
+        "examples": {
+          "safe_exit": {
+            "key": "1f170a1fa6ae1bc79cf771cfe27f000f-1",
+            "seat": 0,
+            "t": 24,
+            "uid": "player-0-worker-4",
+            "cell": 5,
+            "action": "DOWN",
+            "cargo": 24.430499999999995,
+            "lowest_reachable_enemy_cargo": 0,
+            "safe_exits": 3
+          },
+          "observable_harvest": {
+            "key": "1f170a1fa6ae1bc79cf771cfe27f000f-1",
+            "seat": 0,
+            "t": 26,
+            "uid": "player-0-worker-3",
+            "cell": 194,
+            "ground": 69.011,
+            "cargo_before": 0,
+            "cargo_after": 20.7033
+          }
+        }
+      },
+      "RyanX-AIPowercore-M9XJ-630": {
+        "appearances": 300,
+        "stay_choices": {
+          "cargo_heavy": {
+            "stay": 7958,
+            "decisions": 8390,
+            "games_exposed": 300,
+            "rate": 0.94851
+          },
+          "cargo_light": {
+            "stay": 12431,
+            "decisions": 25369,
+            "games_exposed": 300,
+            "rate": 0.49001
+          },
+          "cargo_medium": {
+            "stay": 11987,
+            "decisions": 13169,
+            "games_exposed": 300,
+            "rate": 0.91024
+          },
+          "ground_lean": {
+            "stay": 361,
+            "decisions": 36660,
+            "games_exposed": 300,
+            "rate": 0.00985
+          },
+          "ground_low": {
+            "stay": 2016,
+            "decisions": 16162,
+            "games_exposed": 300,
+            "rate": 0.12474
+          },
+          "ground_mid": {
+            "stay": 8790,
+            "decisions": 28546,
+            "games_exposed": 300,
+            "rate": 0.30792
+          },
+          "ground_rich": {
+            "stay": 12431,
+            "decisions": 25369,
+            "games_exposed": 300,
+            "rate": 0.49001
+          },
+          "repeat_lean": {
+            "stay": 239,
+            "decisions": 1065,
+            "games_exposed": 265,
+            "rate": 0.22441
+          },
+          "repeat_rich": {
+            "stay": 9260,
+            "decisions": 9834,
+            "games_exposed": 300,
+            "rate": 0.94163
+          },
+          "threat_lighter_or_tie": {
+            "stay": 121,
+            "decisions": 13721,
+            "games_exposed": 300,
+            "rate": 0.00882
+          },
+          "threat_none": {
+            "stay": 36597,
+            "decisions": 47418,
+            "games_exposed": 300,
+            "rate": 0.7718
+          },
+          "threat_only_heavier": {
+            "stay": 1923,
+            "decisions": 3462,
+            "games_exposed": 296,
+            "rate": 0.55546
+          }
+        },
+        "paired_contrasts": {
+          "rich_minus_lean": {
+            "eligible_appearances": 300,
+            "above": 300,
+            "below": 0,
+            "mean_game_delta": 0.49476
+          },
+          "cargo_heavy_minus_light_on_rich": {
+            "eligible_appearances": 300,
+            "above": 300,
+            "below": 0,
+            "mean_game_delta": 0.45099
+          },
+          "threat_minus_no_reachable_collector": {
+            "eligible_appearances": 300,
+            "above": 0,
+            "below": 300,
+            "mean_game_delta": -0.76486
+          },
+          "threat_lighter_minus_only_heavier": {
+            "eligible_appearances": 296,
+            "above": 0,
+            "below": 296,
+            "mean_game_delta": -0.58528
+          },
+          "repeat_rich_minus_repeat_lean": {
+            "eligible_appearances": 265,
+            "above": 261,
+            "below": 3,
+            "mean_game_delta": 0.77012
+          }
+        },
+        "escape": {
+          "safe_chosen": 61020,
+          "decisions": 62952,
+          "pooled_rate": 0.96931,
+          "uniform_cardinal_reference": 0.70315
+        },
+        "observed_clean_harvest": {
+          "clean_positive_ground_stays": 124782,
+          "survived": 124782,
+          "positive_cargo_delta": 124782,
+          "rule_gain_within_002": 124782
+        },
+        "examples": {
+          "observable_harvest": {
+            "key": "0c5d3c4cd3eb474716f4be47ba8ef45e-1",
+            "seat": 0,
+            "t": 19,
+            "uid": "player-0-worker-0",
+            "cell": 95,
+            "ground": 63.127,
+            "cargo_before": 0,
+            "cargo_after": 18.9381
+          },
+          "safe_exit": {
+            "key": "0c5d3c4cd3eb474716f4be47ba8ef45e-1",
+            "seat": 0,
+            "t": 35,
+            "uid": "player-0-worker-9",
+            "cell": 152,
+            "action": "UP",
+            "cargo": 33.654042,
+            "lowest_reachable_enemy_cargo": 0,
+            "safe_exits": 3
+          }
+        }
+      },
+      "RyanX-AIPowercore-it720-preview": {
+        "appearances": 203,
+        "stay_choices": {
+          "cargo_heavy": {
+            "stay": 4757,
+            "decisions": 4921,
+            "games_exposed": 201,
+            "rate": 0.96667
+          },
+          "cargo_light": {
+            "stay": 8663,
+            "decisions": 16470,
+            "games_exposed": 203,
+            "rate": 0.52599
+          },
+          "cargo_medium": {
+            "stay": 7667,
+            "decisions": 8126,
+            "games_exposed": 203,
+            "rate": 0.94351
+          },
+          "ground_lean": {
+            "stay": 306,
+            "decisions": 26092,
+            "games_exposed": 203,
+            "rate": 0.01173
+          },
+          "ground_low": {
+            "stay": 1777,
+            "decisions": 12806,
+            "games_exposed": 203,
+            "rate": 0.13876
+          },
+          "ground_mid": {
+            "stay": 7374,
+            "decisions": 22164,
+            "games_exposed": 203,
+            "rate": 0.3327
+          },
+          "ground_rich": {
+            "stay": 8663,
+            "decisions": 16470,
+            "games_exposed": 203,
+            "rate": 0.52599
+          },
+          "repeat_lean": {
+            "stay": 223,
+            "decisions": 1070,
+            "games_exposed": 197,
+            "rate": 0.20841
+          },
+          "repeat_rich": {
+            "stay": 5509,
+            "decisions": 5781,
+            "games_exposed": 203,
+            "rate": 0.95295
+          },
+          "threat_lighter_or_tie": {
+            "stay": 94,
+            "decisions": 12659,
+            "games_exposed": 203,
+            "rate": 0.00743
+          },
+          "threat_none": {
+            "stay": 27903,
+            "decisions": 34343,
+            "games_exposed": 203,
+            "rate": 0.81248
+          },
+          "threat_only_heavier": {
+            "stay": 1465,
+            "decisions": 2274,
+            "games_exposed": 201,
+            "rate": 0.64424
+          }
+        },
+        "paired_contrasts": {
+          "rich_minus_lean": {
+            "eligible_appearances": 203,
+            "above": 203,
+            "below": 0,
+            "mean_game_delta": 0.53038
+          },
+          "cargo_heavy_minus_light_on_rich": {
+            "eligible_appearances": 201,
+            "above": 201,
+            "below": 0,
+            "mean_game_delta": 0.4293
+          },
+          "threat_minus_no_reachable_collector": {
+            "eligible_appearances": 203,
+            "above": 0,
+            "below": 203,
+            "mean_game_delta": -0.80667
+          },
+          "threat_lighter_minus_only_heavier": {
+            "eligible_appearances": 201,
+            "above": 0,
+            "below": 201,
+            "mean_game_delta": -0.6702
+          },
+          "repeat_rich_minus_repeat_lean": {
+            "eligible_appearances": 197,
+            "above": 195,
+            "below": 2,
+            "mean_game_delta": 0.79601
+          }
+        },
+        "escape": {
+          "safe_chosen": 51422,
+          "decisions": 52432,
+          "pooled_rate": 0.98074,
+          "uniform_cardinal_reference": 0.70305
+        },
+        "observed_clean_harvest": {
+          "clean_positive_ground_stays": 95423,
+          "survived": 95423,
+          "positive_cargo_delta": 95423,
+          "rule_gain_within_002": 95423
+        },
+        "examples": {
+          "observable_harvest": {
+            "key": "19e2fddf2ec9b58bddfa54341082cb80-1",
+            "seat": 1,
+            "t": 22,
+            "uid": "player-1-worker-2",
+            "cell": 53,
+            "ground": 67.06,
+            "cargo_before": 21.4638,
+            "cargo_after": 41.5818
+          },
+          "safe_exit": {
+            "key": "19e2fddf2ec9b58bddfa54341082cb80-1",
+            "seat": 1,
+            "t": 51,
+            "uid": "player-1-worker-9",
+            "cell": 142,
+            "action": "LEFT",
+            "cargo": 91.47312000000001,
+            "lowest_reachable_enemy_cargo": 0,
+            "safe_exits": 3
+          }
+        }
+      },
+      "claude-AlphaCarbon-Master5s": {
+        "appearances": 196,
+        "stay_choices": {
+          "cargo_heavy": {
+            "stay": 5705,
+            "decisions": 5961,
+            "games_exposed": 196,
+            "rate": 0.95705
+          },
+          "cargo_light": {
+            "stay": 7827,
+            "decisions": 18461,
+            "games_exposed": 196,
+            "rate": 0.42397
+          },
+          "cargo_medium": {
+            "stay": 7480,
+            "decisions": 7979,
+            "games_exposed": 196,
+            "rate": 0.93746
+          },
+          "ground_lean": {
+            "stay": 501,
+            "decisions": 28156,
+            "games_exposed": 196,
+            "rate": 0.01779
+          },
+          "ground_low": {
+            "stay": 1673,
+            "decisions": 13736,
+            "games_exposed": 196,
+            "rate": 0.1218
+          },
+          "ground_mid": {
+            "stay": 5524,
+            "decisions": 21317,
+            "games_exposed": 196,
+            "rate": 0.25914
+          },
+          "ground_rich": {
+            "stay": 7827,
+            "decisions": 18461,
+            "games_exposed": 196,
+            "rate": 0.42397
+          },
+          "repeat_lean": {
+            "stay": 341,
+            "decisions": 1545,
+            "games_exposed": 194,
+            "rate": 0.22071
+          },
+          "repeat_rich": {
+            "stay": 5853,
+            "decisions": 6305,
+            "games_exposed": 196,
+            "rate": 0.92831
+          },
+          "threat_lighter_or_tie": {
+            "stay": 10,
+            "decisions": 8892,
+            "games_exposed": 196,
+            "rate": 0.00112
+          },
+          "threat_none": {
+            "stay": 23643,
+            "decisions": 29830,
+            "games_exposed": 196,
+            "rate": 0.79259
+          },
+          "threat_only_heavier": {
+            "stay": 1405,
+            "decisions": 2144,
+            "games_exposed": 192,
+            "rate": 0.65532
+          }
+        },
+        "paired_contrasts": {
+          "rich_minus_lean": {
+            "eligible_appearances": 196,
+            "above": 196,
+            "below": 0,
+            "mean_game_delta": 0.42072
+          },
+          "cargo_heavy_minus_light_on_rich": {
+            "eligible_appearances": 196,
+            "above": 195,
+            "below": 1,
+            "mean_game_delta": 0.52124
+          },
+          "threat_minus_no_reachable_collector": {
+            "eligible_appearances": 196,
+            "above": 0,
+            "below": 196,
+            "mean_game_delta": -0.79225
+          },
+          "threat_lighter_minus_only_heavier": {
+            "eligible_appearances": 192,
+            "above": 0,
+            "below": 189,
+            "mean_game_delta": -0.69198
+          },
+          "repeat_rich_minus_repeat_lean": {
+            "eligible_appearances": 194,
+            "above": 194,
+            "below": 0,
+            "mean_game_delta": 0.74658
+          }
+        },
+        "escape": {
+          "safe_chosen": 44373,
+          "decisions": 44976,
+          "pooled_rate": 0.98659,
+          "uniform_cardinal_reference": 0.70241
+        },
+        "observed_clean_harvest": {
+          "clean_positive_ground_stays": 89353,
+          "survived": 89353,
+          "positive_cargo_delta": 89353,
+          "rule_gain_within_002": 89353
+        },
+        "examples": {
+          "observable_harvest": {
+            "key": "1f170a1fa6ae1bc79cf771cfe27f000f-1",
+            "seat": 1,
+            "t": 23,
+            "uid": "player-1-worker-1",
+            "cell": 181,
+            "ground": 80.919,
+            "cargo_before": 0,
+            "cargo_after": 24.275699999999997
+          },
+          "safe_exit": {
+            "key": "1f170a1fa6ae1bc79cf771cfe27f000f-1",
+            "seat": 1,
+            "t": 37,
+            "uid": "player-1-worker-4",
+            "cell": 208,
+            "action": "LEFT",
+            "cargo": 108.4419,
+            "lowest_reachable_enemy_cargo": 86.8749,
+            "safe_exits": 3
+          }
+        }
+      },
+      "claude-AlphaCarbon-Master6": {
+        "appearances": 178,
+        "stay_choices": {
+          "cargo_heavy": {
+            "stay": 7216,
+            "decisions": 8841,
+            "games_exposed": 176,
+            "rate": 0.8162
+          },
+          "cargo_light": {
+            "stay": 6099,
+            "decisions": 27969,
+            "games_exposed": 177,
+            "rate": 0.21806
+          },
+          "cargo_medium": {
+            "stay": 7733,
+            "decisions": 9291,
+            "games_exposed": 177,
+            "rate": 0.83231
+          },
+          "ground_lean": {
+            "stay": 512,
+            "decisions": 38312,
+            "games_exposed": 177,
+            "rate": 0.01336
+          },
+          "ground_low": {
+            "stay": 1039,
+            "decisions": 12088,
+            "games_exposed": 177,
+            "rate": 0.08595
+          },
+          "ground_mid": {
+            "stay": 3480,
+            "decisions": 18879,
+            "games_exposed": 177,
+            "rate": 0.18433
+          },
+          "ground_rich": {
+            "stay": 6099,
+            "decisions": 27969,
+            "games_exposed": 177,
+            "rate": 0.21806
+          },
+          "repeat_lean": {
+            "stay": 376,
+            "decisions": 1685,
+            "games_exposed": 170,
+            "rate": 0.22315
+          },
+          "repeat_rich": {
+            "stay": 6643,
+            "decisions": 8774,
+            "games_exposed": 177,
+            "rate": 0.75712
+          },
+          "threat_lighter_or_tie": {
+            "stay": 14,
+            "decisions": 5535,
+            "games_exposed": 163,
+            "rate": 0.00253
+          },
+          "threat_none": {
+            "stay": 17737,
+            "decisions": 25366,
+            "games_exposed": 177,
+            "rate": 0.69924
+          },
+          "threat_only_heavier": {
+            "stay": 604,
+            "decisions": 927,
+            "games_exposed": 119,
+            "rate": 0.65156
+          }
+        },
+        "paired_contrasts": {
+          "rich_minus_lean": {
+            "eligible_appearances": 177,
+            "above": 177,
+            "below": 0,
+            "mean_game_delta": 0.26304
+          },
+          "cargo_heavy_minus_light_on_rich": {
+            "eligible_appearances": 176,
+            "above": 176,
+            "below": 0,
+            "mean_game_delta": 0.58892
+          },
+          "threat_minus_no_reachable_collector": {
+            "eligible_appearances": 163,
+            "above": 0,
+            "below": 163,
+            "mean_game_delta": -0.69893
+          },
+          "threat_lighter_minus_only_heavier": {
+            "eligible_appearances": 117,
+            "above": 1,
+            "below": 109,
+            "mean_game_delta": -0.6696
+          },
+          "repeat_rich_minus_repeat_lean": {
+            "eligible_appearances": 170,
+            "above": 169,
+            "below": 1,
+            "mean_game_delta": 0.67014
+          }
+        },
+        "escape": {
+          "safe_chosen": 23321,
+          "decisions": 23996,
+          "pooled_rate": 0.97187,
+          "uniform_cardinal_reference": 0.7048
+        },
+        "observed_clean_harvest": {
+          "clean_positive_ground_stays": 66509,
+          "survived": 66509,
+          "positive_cargo_delta": 66509,
+          "rule_gain_within_002": 66509
+        },
+        "examples": {
+          "observable_harvest": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "t": 18,
+            "uid": "player-0-worker-4",
+            "cell": 114,
+            "ground": 71.503,
+            "cargo_before": 0,
+            "cargo_after": 21.4509
+          },
+          "safe_exit": {
+            "key": "00b490c13c7f3afd6419725df29a09a4-1",
+            "seat": 0,
+            "t": 20,
+            "uid": "player-0-worker-0",
+            "cell": 36,
+            "action": "LEFT",
+            "cargo": 38.5218,
+            "lowest_reachable_enemy_cargo": 0,
+            "safe_exits": 3
+          }
+        }
+      }
+    }
+  }
+}
