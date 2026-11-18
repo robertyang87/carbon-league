@@ -15,7 +15,7 @@
 | code/search_proto/s1_verify3.py | 17310cc1dfc2f32519bef6521f38048b |
 | code/search_proto/s1_battery2.py | fc9d35572a55d006b84a872287d494c1 |
 | code/search_proto/s1_battery.py | 6a78101a5a1d4403f1f89a053c1c0453 |
-| code/search_proto/smoke_real_s1.py | 2425f34066c1b2b56208bdd4a2b7ac10 |
+| code/search_proto/smoke_real_s1.py | 0fbc6016751369980bbd8aea6dde9281 |
 | code/search_proto/pack_bridge.py | ad522153d32b7cbc5008ef0b59638c0f |
 | code/search_proto/comparator.py（未动，钉版） | 53e5c1a1dd6ccc1a1f3343a47fc9b589 |
 | code/search_proto/leaf_adapters.py（未动） | a5852c73f7187bb3e179428a81a6fba9 |
@@ -24,6 +24,8 @@
 | code/search_proto/tests_s1_fix_r2.py | 5206e4c3199dcbb3c2688f3a68d5bc22 |
 | code/packs/echo4_int8.py | 819250bfc82632786063dabd46a616bd |
 | vendor 钉版（search/feat/np/fastsim） | 94f7fb64 / 2a45b08b / d8c15ad4 / aefe6c83 |
+
+注：smoke_real_s1.py 一行于 2026-11-18 由 97b52b8d 更新（原 2425f340），见 §6；其余 16 件冻结值不变。
 
 ## 2. 回归结果（自有回归，两文件均 exit 0）
 
@@ -71,3 +73,9 @@ bootstrap_offline 对当前 checkout 在 cnet2_search 一件上 fail-close（其
   跑需占正式考场座位与墙钟，请作战室排座后本线执行。
 - R2-04 的公开入口全链 deadline 属 §5 第 3 步（S2）范围；R2-08 属策略组裁量；
   R2-09/10 归工程组——均不在本批。
+
+## 6. 更正（2026-11-18 22:35）：R2-06 离线链候选路径缺陷与座位验证
+
+本报告 §2/§3 曾据本地复测称离线取包链可跑通（G10 通过、bridge 探针 smoke 取包成功）。该结论在本地被掩盖：本机 `/tmp/echo4_int8.py` 缓存（md5 819250bf）在，`fetch_pack` 根本没走到 checkout 候选；且本机 `sys.path` 有 `gh_api` 可走在线通道。2026-11-18 22:15 spot-72 座位验证首跑 （无缓存、无 gh_api）即暴露：`smoke_real_s1.py` 的 `CHECKOUT_PACK_CANDIDATES` 写成 `../../packs/echo4_int8.py`，归一化为不存在的 `<checkout>/packs/`，钉版包实际在 `code/packs/`，差一级——首跑 FAIL（G10 FAIL、`tests_r2_fix.py` import 时 `fetch_pack()` 即崩，11 项 0 跑；冻结 17/17 合、G1–G9 实质项全过）。根因是 R2-06 离线链的潜伏缺陷，非座位问题。
+
+修正：`smoke_real_s1.py` 一行 `../../packs` → `../packs`，提交 97b52b8d（主干读回 md5 0fbc6016）；本地缓存移开后重跑两套 21/21（确证走通修正后的 checkout 路径）；重打验证包上 spot-72 重跑 PASS——2026-11-18 22:27:11–22:27:15 CST，墙钟 4 秒，冻结 17/17、tests_s1_fix_r2 10/10、tests_r2_fix 11/11。§1 冻结表 smoke 一行已同步更新为 0fbc6016。§4「完整 checkout 离线 bootstrap 可跑通」一句指 pack_bridge bootstrap，与 smoke 取包是两条链：前者的原标注（只在钉版文件在场时成立）不变；后者的 checkout fallback 在修正前并不通、修正后在无缓存无 gh_api 的座上跑通。详见 `reports/ADDENDUM_RETEST_R2_FIXES_SEATVAL_20261118.md`（commit beb68b27）。
