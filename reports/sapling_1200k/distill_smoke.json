@@ -1,9 +1,9 @@
 {
   "status": "PASS",
-  "purpose": "SYNTHETIC COMPATIBILITY ONLY \u2014 not production training or strength evidence",
-  "source_sha": "1ff922d64a21250fa29c60cc8199f9ad50617b18",
+  "purpose": "SYNTHETIC COMPATIBILITY ONLY; no production training or strength evidence",
+  "source_sha": "dde594d67d0a9377ba0374bb7a9f62a98c6cb787",
   "initial": {
-    "path": "/tmp/sapling120-initial.npz",
+    "path": "/workspace/carbon-league/data/weights/sapling_1200k/initial.npz",
     "bytes": 4854182,
     "md5": "8ccf907325d113d48cf206ac8a02e9d3",
     "sha256": "dafa4544e9934ed7c56d1e705de1374ff929e9896f848ed396ec42007c681f9c"
@@ -20,7 +20,7 @@
   },
   "student_parameter_count": 1206476,
   "synthetic_anchor": {
-    "path": "/tmp/sapling120-distill-smoke/synthetic-anchor.npz",
+    "path": "/workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz",
     "bytes": 123754,
     "md5": "10865718ad0f8fc5863858ea4d3a93f0",
     "sha256": "ff6492e70e2564ac2b92d1dfc5bc7879479495b3fecedbcb2d2f8959fcbe7aa8"
@@ -36,17 +36,12 @@
   },
   "fixture": {
     "roots": 3,
-    "candidate_counts": [
-      4,
-      2,
-      3
-    ],
     "seats": [
       0,
       1,
       0
     ],
-    "method": "code/test_k0_distill_u_shared_encode.py::fixture; real FastCarbon/Feat/Prefix observation tensors and legal actions; invented Q and terminal labels; all q from the real construct_target.",
+    "method": "repository shared_encode fixture: real Feat/Prefix tensors and legal actions; invented Q and terminal labels; real construct_target",
     "terminal_u": [
       0.9087872505187988,
       0.5,
@@ -62,28 +57,62 @@
       0.0,
       -700.0
     ],
-    "generation_manifest": {
-      "path": "/tmp/sapling120-distill-smoke/synthetic-joined/gen-synthetic-only/manifest.json",
-      "bytes": 3776,
-      "md5": "12f3c17a82bfca1d4b6ba5494c39a929",
-      "sha256": "dc151496dce9230af35981e4af1e98b8c48bbdb76f4c247b499edfcd7bb4a6df"
+    "dense_v2": {
+      "manifest": {
+        "path": "/workspace/sapling120-distill-repro-20261118/dense-v2/generation/manifest.json",
+        "bytes": 3776,
+        "md5": "1f7c293a8339402619a1173701906827",
+        "sha256": "d0ad063d69576d17b372be6f3b8a75e2d45ea4d591b8ee515e2be23105852744"
+      },
+      "consumption": {
+        "path": "/workspace/sapling120-distill-repro-20261118/dense-v2/CONSUMPTION.json",
+        "bytes": 392,
+        "md5": "0104d26af9ec4f331e417aae1b211960",
+        "sha256": "ec7f69e5d1dbf751769b2a0137cf4eb3d9bdd8d639a6e8ca5c4cad0c7b4daa84"
+      }
     },
-    "consumption": {
-      "path": "/tmp/sapling120-distill-smoke/synthetic-joined/CONSUMPTION.json",
-      "bytes": 392,
-      "md5": "f8c7b7eceeed859c2259627a47b4419a",
-      "sha256": "900f3cf9ea8bf522e44d681eebb883b9156e41f9eb28d9f99f34836594cb1f13"
+    "sparse_v3": {
+      "manifest": {
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse-v3/generation/manifest.json",
+        "bytes": 3777,
+        "md5": "7139fdee59f6c541e3c75bb47b33fd49",
+        "sha256": "bca1ecdabc2514e1298cfdcafb01b65c0ecd49cb16530633af6c9e9ee251be3b"
+      },
+      "consumption": {
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse-v3/CONSUMPTION.json",
+        "bytes": 393,
+        "md5": "b61c5005ae459f23e9ef74736254f141",
+        "sha256": "aa0004b9348ef7fd3d48911b7915301dd2707497d057d7b1ace552440107b095"
+      }
     },
-    "consumption_scope": "Manual synthetic self-seal checked by real trainer; tools/consume_preflight.py and production annotator/join not executed."
+    "has_q": [
+      1,
+      0,
+      1
+    ],
+    "p_q": [
+      0.5,
+      0.5,
+      0.25
+    ],
+    "policy_ipw_expected_and_actual": [
+      2.0,
+      0.0,
+      4.0
+    ],
+    "consumption_scope": "synthetic fixture self-seal passes actual trainer hook; production annotator/join/consume_preflight not executed"
   },
   "production_boundary": {
-    "150_game_joined": "External L20 /root/carbon/katago/loop_pilot/joined_u; gen-90faee2ef4221d59; source arrays not accessible in local workspace/Git HEAD.",
-    "135_15_split": "External L20 /root/sparse_impl/data/base_all1_train; gen-8e357f53df68137e; no local source arrays to verify.",
-    "250_game_loop2": "External L20 /root/carbon/katago/loop2; no accessible sealed joined product locally.",
     "production_data_used": false,
     "real_terminal_labels_verified": false,
     "playing_strength_evaluated": false,
-    "train_holdout_validation": "Not assessed: synthetic fixture only; no production train/holdout split consumed."
+    "availability": "150/250-game production arrays were not available to the earlier local review; this rerun does not access or re-verify external machines.",
+    "references": [
+      "L20: /root/carbon/katago/loop_pilot/joined_u, gen-90faee2ef4221d59",
+      "L20: /root/sparse_impl/data/base_all1_train, gen-8e357f53df68137e",
+      "L20: /root/carbon/katago/loop2"
+    ],
+    "train_holdout_validation": "not assessed; no production split consumed"
   },
   "code": {
     "code/k0_distill_u.py": {
@@ -113,11 +142,12 @@
   },
   "smokes": [
     {
+      "case": "dense_v2",
       "trainer": "k0_distill_u.py",
-      "format_exercised": "cnet2-k0-annotation/2 (dense labels; sparse CLI compatibility path)",
-      "command": "PYTHONDONTWRITEBYTECODE=1 BC_DEVICE=cpu BC_GPU_AUG=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /workspace/carbon-review-venv/bin/python /workspace/carbon-league/code/k0_distill_u.py --data /tmp/sapling120-distill-smoke/synthetic-joined --label-teacher /tmp/sapling120-distill-smoke/synthetic-anchor.npz --student-init /tmp/sapling120-initial.npz --kl-reference /tmp/sapling120-distill-smoke/synthetic-anchor.npz --out /tmp/sapling120-distill-smoke/k0_distill_u-student.npz --max-updates 2 --bs 3 --device cpu --seed 7",
+      "format_exercised": "cnet2-k0-annotation/2",
+      "command": "PYTHONDONTWRITEBYTECODE=1 BC_DEVICE=cpu BC_GPU_AUG=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /workspace/carbon-review-venv/bin/python /workspace/carbon-league/code/k0_distill_u.py --data /workspace/sapling120-distill-repro-20261118/dense-v2 --label-teacher /workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz --student-init /workspace/carbon-league/data/weights/sapling_1200k/initial.npz --kl-reference /workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz --out /workspace/sapling120-distill-repro-20261118/dense_v2-student.npz --max-updates 2 --bs 3 --device cpu --seed 7",
       "returncode": 0,
-      "elapsed_seconds": 4.143343081001149,
+      "elapsed_seconds": 3.540526239999963,
       "updates": [
         {
           "update": 1,
@@ -141,7 +171,107 @@
             "batch_sha256": "b3db6650e4598ca51942f83e2b5f5adc1d65b806fb1224619d7c385d3642de1c"
           },
           "lr": 0.0003,
-          "elapsed_s": 0.14
+          "elapsed_s": 0.16
+        },
+        {
+          "update": 2,
+          "loss": {
+            "total": 5.8528935685220675,
+            "ce": 4.589520320815443,
+            "anchor_kl_weighted": 0.19631260133791117,
+            "utility_mse": 0.08915012112537712,
+            "wdl_ce": 1.1071982383728027,
+            "margin_mse": 0.8486228121138707,
+            "terminal_weighted": 1.0670606463687138
+          },
+          "kl_monitor": {
+            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
+            "mean": 0.19631260133791117,
+            "p99": 0.3385593498906742
+          },
+          "denominators": {
+            "roots": 3,
+            "candidates": 9,
+            "batch_sha256": "ab25350e3e65efebe24584461683ecda68725576e825e550038b90e7b1479946"
+          },
+          "lr": 0.0003,
+          "elapsed_s": 0.27
+        }
+      ],
+      "output": {
+        "path": "/workspace/sapling120-distill-repro-20261118/dense_v2-student.npz",
+        "bytes": 4879982,
+        "md5": "f0f6892198c779d29bfe3c29ccee94a0",
+        "sha256": "f22f50d60f59b5d816068b6f077539ce16f9e93fc3a1f4d46ddf845355544354"
+      },
+      "complete_marker": {
+        "path": "/workspace/sapling120-distill-repro-20261118/dense_v2-student.npz.complete.json",
+        "bytes": 219,
+        "md5": "00ce550f88699b7633d8cbaa336c790d",
+        "sha256": "36d081088eb2a342a839c34ae4f8b64048d1da0613bd3dabbe010ecd3387db75"
+      },
+      "parameter_tensors_changed": 101,
+      "frozen_tensors_unchanged": [
+        "aux.weight",
+        "aux.bias"
+      ],
+      "all_output_parameters_finite": true,
+      "unfreeze_reconciliation": {
+        "heads": {
+          "utility": {
+            "max_abs_delta": 0.0005998983979225159,
+            "updated": true
+          },
+          "wdl": {
+            "max_abs_delta": 0.000600386701989919,
+            "updated": true
+          },
+          "margin": {
+            "max_abs_delta": 0.0005945712327957153,
+            "updated": true
+          }
+        },
+        "aux_bitwise_identical": true
+      },
+      "sparse": null,
+      "log": {
+        "path": "/workspace/sapling120-distill-repro-20261118/dense_v2-student.npz.log.jsonl",
+        "bytes": 5688,
+        "md5": "e895a68017e5a0699d0ecd1e612eb1a6",
+        "sha256": "62b20b3114ee3cb5a1ee12ed265e9afb0dddd2e230ffaf7ec68a01f3ea56a95b"
+      }
+    },
+    {
+      "case": "sparse_v2_compat",
+      "trainer": "k0_distill_u_sparse.py",
+      "format_exercised": "cnet2-k0-annotation/2",
+      "command": "PYTHONDONTWRITEBYTECODE=1 BC_DEVICE=cpu BC_GPU_AUG=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /workspace/carbon-review-venv/bin/python /workspace/carbon-league/code/k0_distill_u_sparse.py --data /workspace/sapling120-distill-repro-20261118/dense-v2 --label-teacher /workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz --student-init /workspace/carbon-league/data/weights/sapling_1200k/initial.npz --kl-reference /workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz --out /workspace/sapling120-distill-repro-20261118/sparse_v2_compat-student.npz --max-updates 2 --bs 3 --device cpu --seed 7",
+      "returncode": 0,
+      "elapsed_seconds": 3.0266527839994524,
+      "updates": [
+        {
+          "update": 1,
+          "loss": {
+            "total": 6.396868992754501,
+            "ce": 5.232393459058661,
+            "anchor_kl_weighted": 0.0925165507523417,
+            "utility_mse": 0.0870715148073582,
+            "wdl_ce": 1.106418490409851,
+            "margin_mse": 0.8633564458624291,
+            "terminal_weighted": 1.0719589829434983
+          },
+          "kl_monitor": {
+            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
+            "mean": 0.0925165507523417,
+            "p99": 0.16600654370539242
+          },
+          "denominators": {
+            "roots": 3,
+            "candidates": 9,
+            "batch_sha256": "b3db6650e4598ca51942f83e2b5f5adc1d65b806fb1224619d7c385d3642de1c"
+          },
+          "lr": 0.0003,
+          "elapsed_s": 0.12
         },
         {
           "update": 2,
@@ -169,16 +299,16 @@
         }
       ],
       "output": {
-        "path": "/tmp/sapling120-distill-smoke/k0_distill_u-student.npz",
-        "bytes": 4879694,
-        "md5": "c752b617c5cfe1cd4ea9ead2a723a1e3",
-        "sha256": "c90a90a0abfc20701d5ab8555c60e6ef8737b29876bd0db5ce1d081ffc17586f"
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v2_compat-student.npz",
+        "bytes": 4880014,
+        "md5": "2fa4393680ca944232b67aefe8345a6d",
+        "sha256": "69ed5dfcda7785db325a38617e889b87bddab2333ffe1e9e5cde6d8c3a4f4ef0"
       },
       "complete_marker": {
-        "path": "/tmp/sapling120-distill-smoke/k0_distill_u-student.npz.complete.json",
-        "bytes": 223,
-        "md5": "15d654891635f96394ac2df37f7bca76",
-        "sha256": "ccb51a6f420f47f93099d2962c60d89cf91707f22835403fdac0f959c47c9ab6"
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v2_compat-student.npz.complete.json",
+        "bytes": 227,
+        "md5": "d45116751f78e6c169c26daa4eaaec03",
+        "sha256": "768facad8d224e3ea7f89a80bd5dfeb394f898c3ad7ddd54a74d92c970d9b6fd"
       },
       "parameter_tensors_changed": 101,
       "frozen_tensors_unchanged": [
@@ -203,80 +333,62 @@
         },
         "aux_bitwise_identical": true
       },
+      "sparse": null,
       "log": {
-        "path": "/tmp/sapling120-distill-smoke/k0_distill_u-student.npz.log.jsonl",
-        "bytes": 5619,
-        "md5": "23e25d43c241b844a43e936e5a0cbf88",
-        "sha256": "1bec9dfc04cb159b78915c97135fd53a05826b1f1a7438b60cfef1484f9fb2b8"
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v2_compat-student.npz.log.jsonl",
+        "bytes": 5704,
+        "md5": "c3fe4162ad4809f2078c0c7413ba4aa0",
+        "sha256": "01af38ed914370a18834101c16d2d26365f872b16d9dade160576ef5dc42b66f"
       }
     },
     {
+      "case": "sparse_v3_ipw_mixed",
       "trainer": "k0_distill_u_sparse.py",
-      "format_exercised": "cnet2-k0-annotation/2 (dense labels; sparse CLI compatibility path)",
-      "command": "PYTHONDONTWRITEBYTECODE=1 BC_DEVICE=cpu BC_GPU_AUG=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /workspace/carbon-review-venv/bin/python /workspace/carbon-league/code/k0_distill_u_sparse.py --data /tmp/sapling120-distill-smoke/synthetic-joined --label-teacher /tmp/sapling120-distill-smoke/synthetic-anchor.npz --student-init /tmp/sapling120-initial.npz --kl-reference /tmp/sapling120-distill-smoke/synthetic-anchor.npz --out /tmp/sapling120-distill-smoke/k0_distill_u_sparse-student.npz --max-updates 2 --bs 3 --device cpu --seed 7",
+      "format_exercised": "cnet2-k0-annotation/3",
+      "command": "PYTHONDONTWRITEBYTECODE=1 BC_DEVICE=cpu BC_GPU_AUG=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /workspace/carbon-review-venv/bin/python /workspace/carbon-league/code/k0_distill_u_sparse.py --data /workspace/sapling120-distill-repro-20261118/sparse-v3 --label-teacher /workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz --student-init /workspace/carbon-league/data/weights/sapling_1200k/initial.npz --kl-reference /workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz --out /workspace/sapling120-distill-repro-20261118/sparse_v3_ipw_mixed-student.npz --max-updates 1 --bs 3 --device cpu --seed 7 --weighting-caliber ipw",
       "returncode": 0,
-      "elapsed_seconds": 4.175986116999411,
+      "elapsed_seconds": 3.1509895369999867,
       "updates": [
         {
           "update": 1,
           "loss": {
-            "total": 6.396868992754501,
-            "ce": 5.232393459058661,
-            "anchor_kl_weighted": 0.0925165507523417,
+            "total": 7.923259068683633,
+            "ce": 5.557957523503344,
+            "anchor_kl_weighted": 0.1056871777658389,
             "utility_mse": 0.0870715148073582,
-            "wdl_ce": 1.106418490409851,
-            "margin_mse": 0.8633564458624291,
-            "terminal_weighted": 1.0719589829434983
+            "wdl_ce": 1.1064184109369914,
+            "margin_mse": 0.8633564270857065,
+            "terminal_weighted": 1.0719589338187072,
+            "policy": 6.851300134864926,
+            "value": 1.0719589338187072
           },
           "kl_monitor": {
             "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
-            "mean": 0.0925165507523417,
-            "p99": 0.16600654370539242
+            "mean": 0.1056871777658389,
+            "p99": 0.16679678094362022
           },
           "denominators": {
-            "roots": 3,
-            "candidates": 9,
+            "roots_total": 3,
+            "roots_q": 2,
+            "candidates_q": 7,
+            "ess_q": 1.8,
             "batch_sha256": "b3db6650e4598ca51942f83e2b5f5adc1d65b806fb1224619d7c385d3642de1c"
           },
           "lr": 0.0003,
-          "elapsed_s": 0.17
-        },
-        {
-          "update": 2,
-          "loss": {
-            "total": 5.8528935685220675,
-            "ce": 4.589520320815443,
-            "anchor_kl_weighted": 0.19631260133791117,
-            "utility_mse": 0.08915012112537712,
-            "wdl_ce": 1.1071982383728027,
-            "margin_mse": 0.8486228121138707,
-            "terminal_weighted": 1.0670606463687138
-          },
-          "kl_monitor": {
-            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
-            "mean": 0.19631260133791117,
-            "p99": 0.3385593498906742
-          },
-          "denominators": {
-            "roots": 3,
-            "candidates": 9,
-            "batch_sha256": "ab25350e3e65efebe24584461683ecda68725576e825e550038b90e7b1479946"
-          },
-          "lr": 0.0003,
-          "elapsed_s": 0.3
+          "elapsed_s": 0.14
         }
       ],
       "output": {
-        "path": "/tmp/sapling120-distill-smoke/k0_distill_u_sparse-student.npz",
-        "bytes": 4879726,
-        "md5": "1d7ed58943d906e63f6b75d45a532d83",
-        "sha256": "e811ba801ddda21cb7a5393052a4ca500f1abdffe082a013b4ef1ee25531e115"
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v3_ipw_mixed-student.npz",
+        "bytes": 4884614,
+        "md5": "c7d8cd39ccdbd8cc6c65493853babd01",
+        "sha256": "f4c8d0c0ec22c5b80a1173f9baaec2e9244e470d57e5b35ef865ee744e4aab3a"
       },
       "complete_marker": {
-        "path": "/tmp/sapling120-distill-smoke/k0_distill_u_sparse-student.npz.complete.json",
-        "bytes": 230,
-        "md5": "81a8e804ba260f5b8d81a898af48a4c1",
-        "sha256": "1725c6b7f342659f62873cc93e508674a1c941e48efd907f3d916c2d714b69af"
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v3_ipw_mixed-student.npz.complete.json",
+        "bytes": 229,
+        "md5": "d685682b18ebcbc26eba16c3e886fc00",
+        "sha256": "331360ac5b8fd6e5554f1fb8acafa9185be7d1e5859c27ac255e9fcaeff46c92"
       },
       "parameter_tensors_changed": 101,
       "frozen_tensors_unchanged": [
@@ -287,38 +399,184 @@
       "unfreeze_reconciliation": {
         "heads": {
           "utility": {
-            "max_abs_delta": 0.0005998983979225159,
+            "max_abs_delta": 0.0003000088036060333,
             "updated": true
           },
           "wdl": {
-            "max_abs_delta": 0.000600386701989919,
+            "max_abs_delta": 0.00030000507831573486,
             "updated": true
           },
           "margin": {
-            "max_abs_delta": 0.0005945712327957153,
+            "max_abs_delta": 0.00030000507831573486,
             "updated": true
           }
         },
         "aux_bitwise_identical": true
       },
+      "sparse": {
+        "format": "cnet2-k0-annotation/3",
+        "weighting": {
+          "active": true,
+          "caliber": "ipw",
+          "estimand": "Hajek self-normalised IPW on the total inclusion probability p_total = p_q * pi (approximately unbiased / consistent; NOT exactly unbiased)",
+          "weight_source": "p_q (sampler record) * pi (annotator record), q roots only",
+          "roots_q": 2,
+          "p_total_min": 0.25,
+          "p_total_p50": 0.375,
+          "p_total_p99": 0.4975,
+          "p_total_max": 0.5,
+          "weight_clip": "off (clipping is a separate registered recipe decision)"
+        },
+        "roots_q": 2,
+        "roots_total": 3,
+        "n_value_roots": 3,
+        "zero_q_policy_skipped_updates": 0
+      },
       "log": {
-        "path": "/tmp/sapling120-distill-smoke/k0_distill_u_sparse-student.npz.log.jsonl",
-        "bytes": 5634,
-        "md5": "5faba43a3ccb1289a3535f9210528ec9",
-        "sha256": "cc763af2f178bd12cb750f9663d3b040f73930170bab3df3ee1b33c4b4a69bc6"
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v3_ipw_mixed-student.npz.log.jsonl",
+        "bytes": 5763,
+        "md5": "b4298e7bf1fa5971b793dbba3d0170db",
+        "sha256": "a3ab809661a5cb73f621f2480dd17899ecb1a7c392751b54f1153aa7dc66b9be"
+      }
+    },
+    {
+      "case": "sparse_v3_zero_q_batch",
+      "trainer": "k0_distill_u_sparse.py",
+      "format_exercised": "cnet2-k0-annotation/3",
+      "command": "PYTHONDONTWRITEBYTECODE=1 BC_DEVICE=cpu BC_GPU_AUG=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /workspace/carbon-review-venv/bin/python /workspace/carbon-league/code/k0_distill_u_sparse.py --data /workspace/sapling120-distill-repro-20261118/sparse-v3 --label-teacher /workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz --student-init /workspace/carbon-league/data/weights/sapling_1200k/initial.npz --kl-reference /workspace/sapling120-distill-repro-20261118/synthetic-anchor.npz --out /workspace/sapling120-distill-repro-20261118/sparse_v3_zero_q_batch-student.npz --max-updates 2 --bs 1 --device cpu --seed 7 --weighting-caliber ipw",
+      "returncode": 0,
+      "elapsed_seconds": 3.251653761999478,
+      "updates": [
+        {
+          "update": 1,
+          "loss": {
+            "total": 10.374727456858059,
+            "ce": 9.058567149067564,
+            "anchor_kl_weighted": 0.16804389185791316,
+            "utility_mse": 0.15683992129850588,
+            "wdl_ce": 1.2383519411087036,
+            "margin_mse": 0.7442010481594482,
+            "terminal_weighted": 1.1481164159325818,
+            "policy": 9.226611040925476,
+            "value": 1.1481164159325818
+          },
+          "kl_monitor": {
+            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
+            "mean": 0.16804389185791316,
+            "p99": 0.16804389185791316
+          },
+          "denominators": {
+            "roots_total": 1,
+            "roots_q": 1,
+            "candidates_q": 3,
+            "ess_q": 1.0,
+            "batch_sha256": "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+          },
+          "lr": 0.0003,
+          "elapsed_s": 0.06
+        },
+        {
+          "update": 2,
+          "loss": {
+            "total": 0.9357277367249353,
+            "ce": 0.0,
+            "anchor_kl_weighted": 0.0,
+            "utility_mse": 0.00012060774601252433,
+            "wdl_ce": 0.9569500684738159,
+            "margin_mse": 0.9142641894840295,
+            "terminal_weighted": 0.9357277367249353,
+            "policy": null,
+            "value": 0.9357277367249353
+          },
+          "kl_monitor": {
+            "definition": "per-root KL(pi_student||pi_kl_reference), mean over candidates of slot-summed KL",
+            "mean": 0.0,
+            "p99": 0.0
+          },
+          "denominators": {
+            "roots_total": 1,
+            "roots_q": 0,
+            "candidates_q": 0,
+            "ess_q": 0.0,
+            "batch_sha256": "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+          },
+          "lr": 0.0003,
+          "elapsed_s": 0.1,
+          "policy_skipped_zero_q": true
+        }
+      ],
+      "output": {
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v3_zero_q_batch-student.npz",
+        "bytes": 4884602,
+        "md5": "3157b8ad9a5875963e8ed596e216ad73",
+        "sha256": "5693cc2a5ef732839aecf659465cdffc890a700acb823f21fd5f27b4db97bbd2"
+      },
+      "complete_marker": {
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v3_zero_q_batch-student.npz.complete.json",
+        "bytes": 233,
+        "md5": "087f77ed7911bf4f7f8fbe5edb1cb77b",
+        "sha256": "e745697d290a5aad1edfbcb9c7aca13ec725e1011bf7389026cc1d9c3b5e09b4"
+      },
+      "parameter_tensors_changed": 101,
+      "frozen_tensors_unchanged": [
+        "aux.weight",
+        "aux.bias"
+      ],
+      "all_output_parameters_finite": true,
+      "unfreeze_reconciliation": {
+        "heads": {
+          "utility": {
+            "max_abs_delta": 0.0005010291934013367,
+            "updated": true
+          },
+          "wdl": {
+            "max_abs_delta": 0.000600375235080719,
+            "updated": true
+          },
+          "margin": {
+            "max_abs_delta": 0.0005010291934013367,
+            "updated": true
+          }
+        },
+        "aux_bitwise_identical": true
+      },
+      "sparse": {
+        "format": "cnet2-k0-annotation/3",
+        "weighting": {
+          "active": true,
+          "caliber": "ipw",
+          "estimand": "Hajek self-normalised IPW on the total inclusion probability p_total = p_q * pi (approximately unbiased / consistent; NOT exactly unbiased)",
+          "weight_source": "p_q (sampler record) * pi (annotator record), q roots only",
+          "roots_q": 2,
+          "p_total_min": 0.25,
+          "p_total_p50": 0.375,
+          "p_total_p99": 0.4975,
+          "p_total_max": 0.5,
+          "weight_clip": "off (clipping is a separate registered recipe decision)"
+        },
+        "roots_q": 2,
+        "roots_total": 3,
+        "n_value_roots": 3,
+        "zero_q_policy_skipped_updates": 1
+      },
+      "log": {
+        "path": "/workspace/sapling120-distill-repro-20261118/sparse_v3_zero_q_batch-student.npz.log.jsonl",
+        "bytes": 6417,
+        "md5": "bd225fb622931dce2fa3ef7d82ede7d2",
+        "sha256": "bbf69fe034aabebbae9f3323b95f655fd174911fa37118d59313c1110647eb7a"
       }
     }
   ],
-  "scope_limits": [
-    "Synthetic teacher Q and synthetic terminal labels do not validate teacher quality, production labels or playing strength.",
-    "Sparse CLI exercised its /2 compatibility path only; /3 sparse weighting and production sidecar provenance were not tested.",
-    "Fresh optimizer with two CPU updates; no long-run stability, optimizer resume or GPU throughput claim."
-  ],
-  "source_sha_after": "1ff922d64a21250fa29c60cc8199f9ad50617b18",
   "reproduction_script": {
-    "path": "/tmp/sapling120-distill-smoke.py",
-    "bytes": 9559,
-    "md5": "ebb9e3b6d7f60103600c73b6be089a4d",
-    "sha256": "00cda1bd78c622b4ee9002deafa0966ef3ecbd4c76363cd4b727f98c75b82ac8"
-  }
+    "path": "/workspace/carbon-league/reports/sapling_1200k/distill_smoke.py",
+    "bytes": 14560,
+    "md5": "54162a4e047424cfd6561ee322ad22a2",
+    "sha256": "2a3579e03e9d818545ef657c0b2ca1b9eaa4446214dcab03f6fd230e8e64ab8c"
+  },
+  "source_sha_after": "dde594d67d0a9377ba0374bb7a9f62a98c6cb787",
+  "scope_limits": [
+    "Synthetic labels do not validate teacher quality, terminal data or playing strength.",
+    "Production provenance chain, GPU throughput, optimizer resume and long-run stability not tested.",
+    "Zero-q batch skips new policy gradients; AdamW momentum from an earlier policy update can still move policy parameters."
+  ]
 }

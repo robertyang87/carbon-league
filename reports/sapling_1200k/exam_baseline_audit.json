@@ -1,0 +1,312 @@
+{
+  "schema": "sapling-exam-baseline-audit/1",
+  "audited_at_utc": "2026-11-18T17:02:19.228910+00:00",
+  "scope": "只读核算已归档的 historical initial 及刚入仓的三变体整场考试；未重跑、未训练、未从耗时或中间快照推算局长。",
+  "sources": {
+    "historical_report_ref": "358063d1ae9665ba95e7b401867390bed6aa7d3b",
+    "round2_report_and_archive_ref": "83f54e2d5bc286a2ed535b59372a95f172ed538b",
+    "reports": [
+      "reports/EXAM_SAPLING_VS_MASTER3S2_20261119.md",
+      "reports/EXAM_SAPLING_VARIANTS_VS_MASTER3S2_20261119.md"
+    ],
+    "archives": {
+      "reports/sapling_exam_results.tgz": {
+        "bytes": 970006,
+        "md5": "ad60478c408d5d2ada1cf960952d9fda",
+        "sha256": "c4fb4d6f3159f483312fd66e721572197577c2073fa7cdb4ee504c575566ebe2"
+      },
+      "reports/sapling_exam_r2_results.tgz": {
+        "bytes": 9800557,
+        "md5": "b56f27184cd5445a48218a1c46911770",
+        "sha256": "e994978427c936fda74861ea6237e236c17074610207664d3deb8c5ce9139d5c"
+      }
+    },
+    "pinned_source_ref": "358063d1ae9665ba95e7b401867390bed6aa7d3b",
+    "pinned_source_hashes": {
+      "code/bigeval.py": {
+        "md5": "354bcd1bc2dc8bc188c813f53d28c893",
+        "sha256": "b5666ae56733068d9a8e5a39404abe7db35a1be644c291edfa1f18057bee37ba"
+      },
+      "code/eval_v53.py": {
+        "md5": "45792dfbea3101812836fe77e6752706",
+        "sha256": "ef3301e8e7d1cea39ce015e2a1c0e010c544842a7dfebefb398c458363f60d86"
+      }
+    },
+    "identity_limit": "bigeval 的 md5 逐行核对；eval_v53 的 git blob md5 与历史报告标注 45792dfb 前缀吻合，该 runner 文件未包含于两个归档。"
+  },
+  "integrity": {
+    "all_checks_passed": true,
+    "shards_per_arm": 10,
+    "games_per_shard": 100,
+    "unique_seeds_per_arm": 1000,
+    "seed_min": 20291101,
+    "seed_max": 20292100,
+    "seats_per_arm": [
+      500,
+      500
+    ],
+    "seat_rule": "seed % 2；每 seed 仅一席，不是同 seed 双席配对",
+    "summary_vs_live": "all 4000 six-field game records match",
+    "all_shards_FAIL": false,
+    "reported_internal_or_outer_errors": 0,
+    "archived_candidate_pack_md5_matches_live": true
+  },
+  "recorded_scores_and_derived_termination": {
+    "initial": {
+      "n": 1000,
+      "candidate_official_score_mean": -148.64352,
+      "opponent_official_score_mean": 4671.14843,
+      "margin_mean": -4819.79195,
+      "margin_se": 99.80216115700655,
+      "margin_ci95_normal": [
+        -5015.404185867733,
+        -4624.179714132267
+      ],
+      "margin_identity_max_abs_error": 1.8189894035458565e-12,
+      "w_d_l": [
+        0,
+        0,
+        1000
+      ],
+      "seat0_margin_mean": -4544.16274,
+      "seat1_margin_mean": -5095.42116,
+      "positive_rounded_deposit_games": 18,
+      "rounded_deposit_mean": 0.089,
+      "terminal_fields_directly_recorded": {
+        "end_step": 0,
+        "nsteps": 0,
+        "extinct": 0,
+        "wall_s": 0
+      },
+      "candidate_extinction_derived_from_negative_official_score": {
+        "games": 862,
+        "fraction": 0.862,
+        "end_step_mean": 125.34802784222738,
+        "end_step_median": 114.0,
+        "end_step_min": 11,
+        "end_step_max": 298,
+        "opponent_score_mean": 3818.129361948956
+      },
+      "neither_side_extinct_under_pinned_scoring": {
+        "games": 138,
+        "opponent_score_mean": 9999.426956521738,
+        "exact_end_step": null
+      }
+    },
+    "natural": {
+      "n": 1000,
+      "candidate_official_score_mean": 14.44044,
+      "opponent_official_score_mean": 9695.49846,
+      "margin_mean": -9681.05802,
+      "margin_se": 54.13478654456953,
+      "margin_ci95_normal": [
+        -9787.162201627356,
+        -9574.953838372645
+      ],
+      "margin_identity_max_abs_error": 1.8189894035458565e-12,
+      "w_d_l": [
+        0,
+        0,
+        1000
+      ],
+      "seat0_margin_mean": -9593.40322,
+      "seat1_margin_mean": -9768.71282,
+      "positive_rounded_deposit_games": 0,
+      "rounded_deposit_mean": 0,
+      "terminal_fields_directly_recorded": {
+        "end_step": 0,
+        "nsteps": 0,
+        "extinct": 0,
+        "wall_s": 0
+      },
+      "candidate_extinction_derived_from_negative_official_score": {
+        "games": 105,
+        "fraction": 0.105,
+        "end_step_mean": 189.46666666666667,
+        "end_step_median": 199,
+        "end_step_min": 40,
+        "end_step_max": 284,
+        "opponent_score_mean": 6216.416285714286
+      },
+      "neither_side_extinct_under_pinned_scoring": {
+        "games": 895,
+        "opponent_score_mean": 10103.658938547485,
+        "exact_end_step": null
+      }
+    },
+    "full": {
+      "n": 1000,
+      "candidate_official_score_mean": 1.56148,
+      "opponent_official_score_mean": 9451.37431,
+      "margin_mean": -9449.81283,
+      "margin_se": 55.42423402029321,
+      "margin_ci95_normal": [
+        -9558.444328679776,
+        -9341.181331320226
+      ],
+      "margin_identity_max_abs_error": 1.8189894035458565e-12,
+      "w_d_l": [
+        0,
+        0,
+        1000
+      ],
+      "seat0_margin_mean": -9427.08662,
+      "seat1_margin_mean": -9472.53904,
+      "positive_rounded_deposit_games": 730,
+      "rounded_deposit_mean": 81.004,
+      "terminal_fields_directly_recorded": {
+        "end_step": 0,
+        "nsteps": 0,
+        "extinct": 0,
+        "wall_s": 0
+      },
+      "candidate_extinction_derived_from_negative_official_score": {
+        "games": 58,
+        "fraction": 0.058,
+        "end_step_mean": 170.06896551724137,
+        "end_step_median": 168.5,
+        "end_step_min": 43,
+        "end_step_max": 291,
+        "opponent_score_mean": 5235.208620689656
+      },
+      "neither_side_extinct_under_pinned_scoring": {
+        "games": 942,
+        "opponent_score_mean": 9710.968375796177,
+        "exact_end_step": null
+      }
+    },
+    "sqrt": {
+      "n": 1000,
+      "candidate_official_score_mean": -12.6123,
+      "opponent_official_score_mean": 8866.28736,
+      "margin_mean": -8878.89966,
+      "margin_se": 75.51181257753669,
+      "margin_ci95_normal": [
+        -9026.902812651972,
+        -8730.896507348027
+      ],
+      "margin_identity_max_abs_error": 1.8189894035458565e-12,
+      "w_d_l": [
+        0,
+        0,
+        1000
+      ],
+      "seat0_margin_mean": -8843.25848,
+      "seat1_margin_mean": -8914.54084,
+      "positive_rounded_deposit_games": 693,
+      "rounded_deposit_mean": 61.49,
+      "terminal_fields_directly_recorded": {
+        "end_step": 0,
+        "nsteps": 0,
+        "extinct": 0,
+        "wall_s": 0
+      },
+      "candidate_extinction_derived_from_negative_official_score": {
+        "games": 149,
+        "fraction": 0.149,
+        "end_step_mean": 146.34228187919464,
+        "end_step_median": 140,
+        "end_step_min": 38,
+        "end_step_max": 295,
+        "opponent_score_mean": 4246.0643624161075
+      },
+      "neither_side_extinct_under_pinned_scoring": {
+        "games": 851,
+        "opponent_score_mean": 9675.23357226792,
+        "exact_end_step": null
+      }
+    }
+  },
+  "scoring_and_length": {
+    "extinction_rule": "无 worker、无 tree，且无基地或现金小于两类最低招募成本；eval_v53.py:55–65,494–499 在任一方消亡后立即 break。",
+    "original_rule_reference": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/carbon.py:168–200 at pinned_source_ref",
+    "official_extinct_score": "t - episodeSteps - 1 = t - 301（episodeSteps=300）",
+    "survivor_score_on_extinction": "终止转移前现金；不会更新为终止转移后现金。无消亡正常到达设定 horizon 时才取最终现金。",
+    "negative_score_inversion": "t = sa + 301，仅对消亡负分局作精确代数反解；没有使用 cash100/cash200、时间戳、单步耗时或墙钟。",
+    "why_no_direct_lengths": "eval_v53.py:535–539 返回 end_step/nsteps/extinct/wall_s，但该版 bigeval.py:85–107,164–176 未将它们保存。",
+    "default_horizon": 299,
+    "nonextinct_length_limit": "EVAL_STEPS 可以覆盖默认值；两个归档未提供主考进程的该环境值，因此不把其余各局的实际长度补写为 299，也不宣称所有新变体都拖满。"
+  },
+  "report_interpretation": {
+    "approximately_4930_to_9105_9922": "新报告明确标成台账近似分解，不能当作 raw sa/sb。已归档的官方分数可直接复算，应优先用本 JSON 真值。",
+    "confirmed": "消亡比例从 initial 的 86.2% 降至 natural 10.5%、full 5.8%、sqrt 14.9%；历史基线与三变体的整场 margin 比较明显受终止机制影响。主尺 margin 数值和三变体内部排序与报告吻合。",
+    "not_established": "这些数据不能单独识别对手增收有多少由局长、交互策略或考官随机性造成；未建立固定时长反事实，也不把同地图当成随机考官的配对因果证据。",
+    "full_npz_sha256_in_round2_archive": "f2ce353286447a9b93850ee9cc5bbfb6614781d6386547f14be74e9a65d2830a",
+    "full_npz_report_suffix_note": "报告写 f2ce3532…a65d，前缀正确，但 a65d 不是归档文件 SHA256 的结尾。",
+    "short_runs_excluded": "历史 smoke20 和两个 4 局对照均不计入主考；reports/sapling_bootstrap/transfer_3s2.json 是两臂各 4 局、最多 60 转移的研究探针，formal_72_reexamination=false，并非此次三变体各 1000 局。"
+  },
+  "conditional_full_horizon_inference": {
+    "classification": "明确条件下的控制流/得分推断，不是归档直接记录的 end_step；本节仅覆盖 55 万参数四臂，不含 120 万新短探针。",
+    "conditions": [
+      "接受两报告的整场考试口径，并假定主考进程未用 EVAL_STEPS 覆盖钉版默认 NSTEPS=299。",
+      "使用钉版 eval_v53 的 score 规则；其循环唯一正常提前 break 是任一方消亡。",
+      "两边 sa/sb 非负且无错误的局，在上述条件下未走消亡分支，因此走满 299；本批所有 sb 均为正。"
+    ],
+    "derivation": "负 sa 用 t=sa+301；其余补 t=299；对这 1000 个条件终止步直接求平均、中位数和 t=299 数量。",
+    "arms": {
+      "initial": {
+        "games": 1000,
+        "conditional_end_step_mean": 149.312,
+        "conditional_end_step_median": 129.0,
+        "conditional_full_299_games": 138,
+        "conditional_early_extinction_games": 862,
+        "full_299_opponent_official_score_mean": 9999.426956521738,
+        "early_extinction_opponent_official_score_mean": 3818.129361948956
+      },
+      "natural": {
+        "games": 1000,
+        "conditional_end_step_mean": 287.499,
+        "conditional_end_step_median": 299.0,
+        "conditional_full_299_games": 895,
+        "conditional_early_extinction_games": 105,
+        "full_299_opponent_official_score_mean": 10103.658938547485,
+        "early_extinction_opponent_official_score_mean": 6216.416285714286
+      },
+      "full": {
+        "games": 1000,
+        "conditional_end_step_mean": 291.522,
+        "conditional_end_step_median": 299.0,
+        "conditional_full_299_games": 942,
+        "conditional_early_extinction_games": 58,
+        "full_299_opponent_official_score_mean": 9710.968375796177,
+        "early_extinction_opponent_official_score_mean": 5235.208620689656
+      },
+      "sqrt": {
+        "games": 1000,
+        "conditional_end_step_mean": 276.254,
+        "conditional_end_step_median": 299.0,
+        "conditional_full_299_games": 851,
+        "conditional_early_extinction_games": 149,
+        "full_299_opponent_official_score_mean": 9675.23357226792,
+        "early_extinction_opponent_official_score_mean": 4246.0643624161075
+      }
+    },
+    "causal_limit": "按终止方式分组的对手分数差也是选择后的相关性，不能单独分离时长、交互策略、地图或考官随机性的因果贡献。"
+  },
+  "shared_map_and_seat_full_horizon_subset": {
+    "definition": "Inner join by identical seed and seat. Retain only pairs where both official scores are nonnegative on both runs. Interpreted at t299 conditional on the reported cap and pinned termination rules. Selection on the two observed outcomes and stochastic opponent make this a descriptive subset.",
+    "arms": {
+      "full": {
+        "n": 128,
+        "initial_mean_opponent_score": 9990.16671875,
+        "variant_mean_opponent_score": 9799.307734375,
+        "mean_opponent_score_change": -190.858984375,
+        "mean_margin_change": 179.5289062500001
+      },
+      "natural": {
+        "n": 127,
+        "initial_mean_opponent_score": 9982.613149606299,
+        "variant_mean_opponent_score": 10222.866141732284,
+        "mean_opponent_score_change": 240.25299212598426,
+        "mean_margin_change": -233.3903149606299
+      },
+      "sqrt": {
+        "n": 118,
+        "initial_mean_opponent_score": 9982.309152542373,
+        "variant_mean_opponent_score": 9682.16559322034,
+        "mean_opponent_score_change": -300.14355932203387,
+        "mean_margin_change": 292.5625423728813
+      }
+    }
+  }
+}
