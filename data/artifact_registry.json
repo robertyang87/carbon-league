@@ -849,6 +849,35 @@
     }
    ],
    "status": "released"
+  },
+  {
+   "name": "echo4_search_int8_pack_gen1",
+   "kind": "pack",
+   "md5": "be96d457c8c6d5a5da41dea861e4639d",
+   "detail": "First-generation production-derived Echo4 search pack: code/packs/echo4_search_int8.py, 9,030,752 B, build commit ffd813bd (R2 review object; identity per reports/search_dossier/REVIEW_SEARCH_IMPLEMENTATION_R2_20261116.md S7 and engineering inventory reports/INVENTORY_R2_09_10_20261118.md; DGX clone copy re-measured 2026-11-18, md5 matches). Embedded: feat 2a45b08b / np d8c15ad4 / fastsim aefe6c83 (pinned, match), comparator = section-0 hand-written fork ad3ec3e4 (deprecated by RESYNC_R2_BATCH3 S1), search = generated variant 664744ef (code/search_proto/cnet2_search_cmp.py, an unregistered transform descendant of pinned 94f7fb64) - both differ from the successor authoritative set (search c3222eea / comparator 385190bd), so this pack FAILs --verify-pack on [comparator, search] by design of its supersession. SUPERSEDED by the batch-3 resync pack echo4_search_int8_resync.py (cba5923c13fd629208a4991811723980) and the successor authoritative registration of 2026-11-16. Marked SUPERSEDED 2026-11-18 per war-room order (engineering inventory closing item 1: mark only, do not delete - the R2 evidence chain cites this file).",
+   "locations": [
+    {
+     "machine": "repo",
+     "path": "code/packs/echo4_search_int8.py"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/carbon-repo/code/packs/echo4_search_int8.py"
+    }
+   ],
+   "status": "superseded"
+  },
+  {
+   "name": "echo4_search_int8_pack_s2_era",
+   "kind": "pack",
+   "detail": "S2-era current production Echo4 search pack, cited in the fleet record by md5 prefix fd45f35b only (reports/search_dossier/RESYNC_R2_BATCH3.md S7: the then-current pack, run under diagnostic caliber for the S2 deployment-timing ladder on C1, 2026-11-17, seeds 986500-986519). Full md5 is not present in any reachable record: repo documents cite the prefix only, and a 2026-11-18 DGX scan of all pack-sized .py files under carbon-repo/code, carbon/code and k0_dist found no file with this prefix (the S2 seat C1/spot-29 is released). Against the successor authoritative tree this pack FAILs --verify-pack on [comparator, search] (RESYNC_R2_BATCH3 S5 control run). SUPERSEDED by the batch-3 resync pack echo4_search_int8_resync.py (cba5923c13fd629208a4991811723980) and the successor authoritative registration of 2026-11-16. Marked SUPERSEDED 2026-11-18 per war-room order (engineering inventory reports/INVENTORY_R2_09_10_20261118.md closing item 1). If the full md5 surfaces from another line's records, this entry's md5 field is to be completed by amendment.",
+   "locations": [
+    {
+     "machine": "C1 (spot-29, released)",
+     "path": "S2 execution seat copy (seat released, copy not recoverable)"
+    }
+   ],
+   "status": "superseded"
   }
  ],
  "created": "2026-11-17",
@@ -860,6 +889,6 @@
   "R3 release gate: a machine holding unique products is released only after the owning line confirms recovery in writing.",
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
- "version": "4.9",
- "updated": "2026-11-18 (v4.9: spot-74 deployment+release recorded - deployed 19:31:36, never assigned, released 19:40 by owner order; 54 artifacts)"
+ "version": "5.0",
+ "updated": "2026-11-18"
 }
