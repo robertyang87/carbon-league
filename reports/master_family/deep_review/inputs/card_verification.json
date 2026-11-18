@@ -1,0 +1,102 @@
+{
+  "schema": "carbon-independent-card-verification/1",
+  "verified_at_utc": "2026-11-18T16:25:29.254752+00:00",
+  "revision": "37965ea578851b5f3ff88ffc42d7119ff716b5cc",
+  "scope": "all parsed cards",
+  "models_in_scope": [
+    "Master5s",
+    "Master6"
+  ],
+  "method": "Independent parser and direct replay-state calculations; no imports from the report generator or its event/spatial analyzers.",
+  "dimensions": [
+    "one Markdown card per full matchid-game, no duplicate anchors",
+    "one CSV row and one correct INDEX link per analyzed game",
+    "top-two-only focus models and summary/page-count reconciliation",
+    "no executor-specific absolute paths in published text or scripts",
+    "official score-table seat/order, score, opponent and win/loss labels",
+    "CSV/card/source URL consistency and replay compressed-byte SHA256",
+    "contiguous observation steps and actual final step, no end padding",
+    "every displayed cash/worker/tree/cargo snapshot",
+    "first enemy-zone entry, enemy-near entry and own-tree state",
+    "last cash-sign reversal/stability step and direct-match uniqueness",
+    "per-model appearances and outcome totals, including both direct-match seats"
+  ],
+  "counts": {
+    "cards": 352,
+    "csv_rows": 352,
+    "index_game_links": 352,
+    "verified_games": 352,
+    "verified_snapshots": 2447,
+    "first_event_checks": 1056,
+    "direct_top2_games": 2,
+    "late_reversal_games": 20,
+    "early_terminal_games": 5
+  },
+  "model_appearances": {
+    "Master6": {
+      "games": 163,
+      "wins": 144,
+      "losses": 18,
+      "draws": 1
+    },
+    "Master5s": {
+      "games": 191,
+      "wins": 180,
+      "losses": 11
+    }
+  },
+  "complete_replay_coverage": true,
+  "missing_replay_keys": [],
+  "direct_top2_keys": [
+    "02ab03aeb1de04e89d030d0e71b280ec-1",
+    "e71d5897d9c7908e11c4fb3a870c994f-1"
+  ],
+  "late_reversal_definition": "The displayed focus side's cash gap at state 250 has the opposite sign from its official final score margin.",
+  "late_reversal_keys": [
+    "0e4aac28e06ddc63f8b082966d71f12f-1",
+    "0f74bbe00b507097182c2cb9655006b9-1",
+    "13015a90cc59fc48d8b26337df6b8161-1",
+    "14919682e511adc8098c338d7a01be90-1",
+    "1b3177fc72dcd87cf955642782c41a80-1",
+    "217b7ffa09cd5838cedbe2cd7b6d45dd-1",
+    "3d375fad2dd0c7d6e168c5316563e621-1",
+    "4d414c14de657213fb672a3022d2ac34-1",
+    "6a978d3f2ded0608d1b52c9b17ab0986-1",
+    "6b77b77327fb186f176c76b876c1aea9-1",
+    "73a884b4a7adc8d2feb37d845e50648a-1",
+    "81602de8cc2ab08aebf643830c60b33e-1",
+    "a229117417d0cefbcc646b589530e8b3-1",
+    "b58c6f50466bff30fc183256041de011-1",
+    "cbdb85bb656b406dd338629b90b6f816-1",
+    "d1982baa7f56397eca02d7fc882e9a33-1",
+    "d1ecca5e86110600b6dd0add400fe723-1",
+    "dd6aff420b28edf6960d7b467e529df3-1",
+    "ddd8bf4ef175473cec7ff9d7480be558-1",
+    "edb585cf77ed804bcf68276515b1f78e-1"
+  ],
+  "early_terminal": [
+    {
+      "key": "3cefb5267a6300ebe841eed28fbd9766-1",
+      "last_state": 98
+    },
+    {
+      "key": "7e4939bdbff00f87c862ba6ceab0d3a8-1",
+      "last_state": 55
+    },
+    {
+      "key": "8759f8217d439cc5127f10aa2139935a-1",
+      "last_state": 104
+    },
+    {
+      "key": "8a563a5e59432d54074bbef70c9d8a54-1",
+      "last_state": 17
+    },
+    {
+      "key": "c78a918ebd92a08149b394ef8959d161-1",
+      "last_state": 262
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "passed": true
+}
