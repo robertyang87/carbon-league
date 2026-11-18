@@ -13,4 +13,4 @@ Date: 2026-11-19 (CST). Filed by the war room (registry keeper).
 - Fired: 2026-11-19 01:30:18 CST on Studio (driver PID 23131).
 - Record note: the identity values above were fixed and recorded before firing — in L20's plan-section-2 fill-in table (01:28 CST) and the war-room dispatch to Studio — and Studio's start-of-work receipt verified them on-machine verbatim before the field started. This addendum is the registry filing of those values.
 
-- Companion filing note: Studio's parallel addendum (commit dbbce880) recorded the same pinned values, then was withdrawn by Studio (deletion commit 4c756514) to leave a single pin record. This file is the sole pin record; all identity values in the withdrawn filing agreed verbatim.
+- Companion filing: reports/ADDENDUM_BUDGET_RACE_B_STUDENT_20261119.md (Studio; filed dbbce880, briefly withdrawn 4c756514 in a crossed message, restored verbatim 3361af45) records the same pinned values. The two filings coexist on main; all identity values agree verbatim. Either file may be cited as the pin record.
