@@ -49,6 +49,40 @@
 #         remapped on merge). ANY byte difference dies, naming the
 #         root (game, step, seat) and the differing fields. Never
 #         silently keep one copy, never average, never splice.
+#   * Maintenance batch (strategy-group ruling
+#     reports/CLEAR_MERGE_PUBLISHER_CONDITION_20261118.md, 43907b6a
+#     SS2.2; future publishes only -- already-published generations
+#     and identity hashes are untouched):
+#     (a) GAMES PROVENANCE CARRY: the merged games table carries each
+#         source game's provenance triple (pass / selected_sha256 /
+#         shard_sha256) so per-game traceability is self-contained
+#         in the merged generation. A game present in several
+#         sources must record the SAME triple in every source; the
+#         agreed values are carried verbatim. Any disagreement --
+#         differing values, or a field recorded by one source and
+#         absent from another -- dies naming the game and the field;
+#         no source is ever silently preferred. A field absent from
+#         every source for a game is simply not carried.
+#     (c) SEED STORAGE FORM: the registration seed's STORED form
+#         (/sampling/seed in meta, "seed" in REGISTRATION.json) is
+#         an int when the seed string is the canonical decimal
+#         representation of that int, else the string itself --
+#         matching the source generations' int seed. The derivation
+#         byte caliber NEVER depends on the storage form: derivation
+#         always feeds utf8 of the canonical seed string (the exact
+#         registration seed string), REGISTRATION.json records that
+#         string explicitly as "seed_canonical", and str(stored
+#         form) == canonical string in every case, so --verify
+#         recomputes the same derived seeds for new (int-form) and
+#         legacy (str-form, no seed_canonical field) registrations.
+#     Format note (ruling 43907b6a SS2.1, in-register semantic
+#     note): the merged generation's sampling block carries "seed"
+#     and "seed_derivation" INSTEAD OF the annotator's pi0 / pi1 /
+#     selected_sha256 -- pi* records the annotator's internal
+#     two-stage sampling (the source-generation layer), while the
+#     merge draw is a second, separate layer governed by the
+#     registered seed derivation; the two layers are never recorded
+#     in each other's terms.
 #
 # What the tool does:
 #   1. Loads >= 2 sealed annotation generations through the REAL
@@ -199,6 +233,32 @@ def derived_seed(registration_seed, generation_id):
     return int.from_bytes(digest[:8], "big")
 
 
+PROVENANCE_FIELDS = ("pass", "selected_sha256", "shard_sha256")
+
+
+def _seed_forms(registration_seed):
+    """(stored_form, canonical_str) for a registration seed
+    (maintenance item (c), ruling 43907b6a SS2.2). The canonical
+    string -- the exact registration seed string -- is the ONLY byte
+    input to seed derivation, for every generation ever published.
+    The stored form is an int iff the string is that int's canonical
+    decimal representation (str(int(s)) == s), so str(stored_form)
+    == canonical_str in every case and derivation bytes can never
+    depend on the storage type. Legacy registrations carry no
+    seed_canonical field; their stored form is the seed string
+    itself, so str(stored) recovers the canonical string there too.
+    """
+    s = registration_seed if isinstance(registration_seed, str) \
+        else str(registration_seed)
+    try:
+        v = int(s)
+    except (TypeError, ValueError):
+        return s, s
+    if str(v) == s:
+        return v, s
+    return s, s
+
+
 # --------------------------- source loading -------------------------------
 
 
@@ -230,13 +290,14 @@ def load_source(arg, mode, rate, registration_seed):
     if not (isinstance(window, list) and len(window) == 2):
         _die(f"{where}: config window {window!r} is not a [lo, hi) pair")
     # games table: gid -> name, name -> gid; both must be unambiguous.
-    gid2name, name2gid = {}, {}
+    gid2name, name2gid, name2gentry = {}, {}, {}
     for g in meta.get("games", []):
         gid, name = int(g["gid"]), str(g["game"])
         if gid in gid2name or name in name2gid:
             _die(f"{where}: games table has duplicate gid/name ({gid}, {name!r})")
         gid2name[gid] = name
         name2gid[name] = gid
+        name2gentry[name] = g
     n = int(arrs["step"].shape[0])
     keys = []
     for i in range(n):
@@ -258,7 +319,8 @@ def load_source(arg, mode, rate, registration_seed):
     return {"arg": arg, "generation": gen, "summary": summary, "meta": meta,
             "man": man, "prod": prod, "config": config, "codes": codes,
             "weights_md5": prod.get("weights_md5"), "arrs": arrs,
-            "gid2name": gid2name, "keys": keys, "n_roots": n,
+            "gid2name": gid2name, "name2gentry": name2gentry,
+            "keys": keys, "n_roots": n,
             "mode": mode, "rate": eff_rate, "selected": selected,
             "sample_seed": dseed}
 
@@ -356,9 +418,34 @@ def merge_sources(sources, registration_seed):
     counts = {}
     for _, _, k in order:
         counts[k[0]] = counts.get(k[0], 0) + 1
-    games_meta = [{"game": name, "gid": new_gid[name],
-                   "n_roots": counts.get(new_gid[name], 0)}
-                  for name in names]
+    # Games provenance carry (maintenance item (a), ruling 43907b6a
+    # SS2.2): each merged games entry carries the source provenance
+    # triple (pass / selected_sha256 / shard_sha256). Caliber: the
+    # sources recording the game must AGREE on each field -- the
+    # agreed value is carried verbatim; a field absent from every
+    # recording source is not carried; ANY disagreement (differing
+    # values, or recorded by one source and absent from another)
+    # dies naming the game and the field. No silent preference.
+    absent = object()
+    games_meta = []
+    for name in names:
+        entry = {"game": name, "gid": new_gid[name],
+                 "n_roots": counts.get(new_gid[name], 0)}
+        holders = [s for s in sources if name in s["name2gentry"]]
+        for f in PROVENANCE_FIELDS:
+            vals = {s["generation"]: s["name2gentry"][name].get(
+                f, absent) for s in holders}
+            present = {g: v for g, v in vals.items() if v is not absent}
+            if len(set(present.values())) > 1 \
+                    or 0 < len(present) < len(vals):
+                detail = {g: ("<absent>" if v is absent else v)
+                          for g, v in vals.items()}
+                _die(f"game {name!r}: provenance field {f!r} "
+                     f"disagrees across sources {detail} -- refusing "
+                     f"to carry one source's value silently")
+            if present:
+                entry[f] = next(iter(present.values()))
+        games_meta.append(entry)
     entries = []
     for s in sorted(sources, key=lambda s: s["generation"]):
         entries.append({
@@ -403,7 +490,7 @@ def _seal_staging(staging_root, arrs, games_meta, entries, merged_config,
                                  "per-source deterministic draw under "
                                  "the registered seed; full sources "
                                  "contribute every root",
-                         "seed": registration_seed,
+                         "seed": _seed_forms(registration_seed)[0],
                          "seed_derivation": SEED_DERIVATION},
             "merged_from": entries,
             "merge": {"tool": "merge_annot_generations.py",
@@ -501,16 +588,25 @@ def _land_registration(out_dir, gen_id, merged_hash, entries,
     """Registration gate: REGISTRATION.json must land in the dataset
     root before the pointer flips. An existing registration for the
     same generation must agree exactly; it is never overwritten."""
+    stored_seed, canonical_seed = _seed_forms(registration_seed)
     reg = {"format": REGISTRATION_FORMAT, "generation": gen_id,
-           "teacher_config_hash": merged_hash, "seed": registration_seed,
+           "teacher_config_hash": merged_hash, "seed": stored_seed,
+           "seed_canonical": canonical_seed,
            "seed_derivation": SEED_DERIVATION, "merged_from": entries,
            "created": time.time()}
     reg_path = os.path.join(out_dir, "REGISTRATION.json")
     if os.path.exists(reg_path):
         old = json.load(open(reg_path))
+        # Seed agreement is judged on the canonical string, so a
+        # legacy (str-form, no seed_canonical) registration and this
+        # publish agree iff they name the same registration seed.
+        old_canonical = old.get("seed_canonical")
+        if old_canonical is None:
+            old_canonical = _seed_forms(old.get("seed"))[1] \
+                if old.get("seed") is not None else None
         same = (old.get("generation") == gen_id
                 and old.get("teacher_config_hash") == merged_hash
-                and old.get("seed") == registration_seed
+                and old_canonical == canonical_seed
                 and _canonical(old.get("merged_from")) == _canonical(entries))
         if not same:
             _die(f"publish: existing REGISTRATION.json in {out_dir!r} "
@@ -626,11 +722,26 @@ def verify_dataset(root, require_registration=True):
                  "byte-identical (canonical bytes) to the "
                  "in-generation merged_from list")
         seed = reg.get("seed")
-        if not seed:
+        if seed is None or seed == "":
             _die("verify: REGISTRATION.json carries no registration "
                  "seed")
+        # Derived seeds recompute from the canonical seed string
+        # ONLY (maintenance item (c)): new registrations record it
+        # explicitly as seed_canonical and store the seed in
+        # normalized (possibly int) form; legacy registrations have
+        # no seed_canonical and store the string itself, recovered
+        # via str(stored). Both forms must yield the same string.
+        canonical = reg.get("seed_canonical")
+        if canonical is None:
+            canonical = seed if isinstance(seed, str) else str(seed)
+        elif not isinstance(canonical, str) \
+                or str(seed) != canonical:
+            _die(f"verify: REGISTRATION.json seed {seed!r} is "
+                 f"inconsistent with its seed_canonical "
+                 f"{canonical!r}; refusing to recompute derived "
+                 f"seeds from an ambiguous registration")
         for e in entries:
-            want = derived_seed(str(seed), e["generation"])
+            want = derived_seed(canonical, e["generation"])
             if e.get("sample_seed") != want:
                 _die(f"verify: source {e['generation']} recorded "
                      f"sample_seed {e.get('sample_seed')!r} != "
