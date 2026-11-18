@@ -29,8 +29,7 @@
 #      Head shapes are the pinned cnet2_model heads(ctx) outputs:
 #      utility [B] in [0,1], wdl logits [B,3] (win/draw/loss),
 #      margin [B] (= E[margin]/1000). encode() ignores the candidate
-#      axis, so ctx rows repeat per candidate; the heads are read
-#      off candidate slot 0 of each root.
+#      axis; all candidates share one root encoding and value prediction.
 #   5. save_checkpoint refuses to publish unless the aux bitwise gate
 #      passes (inherited) and records an unfreeze reconciliation:
 #      per-head max|delta| for utility/wdl/margin vs the student_init
@@ -211,6 +210,9 @@ import sys
 import time
 
 import numpy as np
+
+import k0_distill_models
+from k0_distill_models import _build_role_model, _read_weights_file, candidate_outputs
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -1113,44 +1115,6 @@ def check_frozen(net, snap):
 # unit proofs, and each identity file is read exactly once.
 # --------------------------------------------------------------------------
 
-def _read_weights_file(path, role):
-    """One byte read of a weights .npz for one identity role; the
-    identity (md5/sha256) and the parse share that read. Returns
-    {file, md5, sha256, meta, meta_cfg, arrays} (arrays excludes the
-    'meta' entry). Refuses by role name: unreadable or unparseable
-    file, or a non-finite float array (the /1 finite gate, applied to
-    every identity file alike)."""
-    try:
-        raw = open(path, "rb").read()
-    except OSError as e:
-        raise SystemExit(f"k0_distill_u: {role} file {path!r} is "
-                         f"unreadable: {e}; refusing to start")
-    md5 = hashlib.md5(raw).hexdigest()
-    sha = hashlib.sha256(raw).hexdigest()
-    try:
-        w = np.load(io.BytesIO(raw))
-        names = list(w.files)
-        arrays = {k: np.asarray(w[k]) for k in names if k != "meta"}
-    except Exception as e:
-        raise SystemExit(f"k0_distill_u: {role} file {path!r} is not a "
-                         f"readable .npz export ({e}); refusing to start")
-    for k, a in arrays.items():
-        if np.issubdtype(a.dtype, np.floating) \
-                and not np.isfinite(a.astype(np.float64)).all():
-            raise SystemExit(
-                f"k0_distill_u finite gate: {role} array {k!r} has "
-                f"non-finite entries; refusing to start")
-    meta = None
-    if "meta" in names:
-        try:
-            meta = json.loads(str(w["meta"]))
-        except Exception:
-            meta = None
-    meta_cfg = meta.get("cfg") if isinstance(meta, dict) else None
-    return {"file": path, "md5": md5, "sha256": sha, "meta": meta,
-            "meta_cfg": meta_cfg, "arrays": arrays}
-
-
 def check_label_teacher(data_teacher_md5, label_teacher_md5):
     """The label-teacher identity gate (the /1 --parent gate,
     re-pointed at its proper object): the consumed generation's
@@ -1208,6 +1172,42 @@ def anchor_continuity(prev_md5, this_md5):
 # Training entry (torch below this line)
 # --------------------------------------------------------------------------
 
+def dense_forward(net, anchor, batch, ds, target, weights, root_idx, args):
+    """Joint policy/KL and per-root terminal losses for a dense candidate batch."""
+    import torch
+    import torch.nn.functional as Fn
+
+    idx = np.asarray(root_idx)
+    K = ds["arms"].shape[1]
+    dev = batch["maps"].device
+    logits_s, logits_p, ctx_root = candidate_outputs(net, anchor, batch, K)
+    arms_b = torch.from_numpy(
+        ds["arms"][idx].reshape(-1, ds["arms"].shape[2])).to(dev)
+    joint, kl = joint_logp_kl(logits_s, logits_p, arms_b)
+    Br = len(idx)
+    joint = joint.reshape(Br, K)
+    kl = kl.reshape(Br, K)
+    tgt = torch.from_numpy(target[idx]).to(dev)
+    narr = torch.from_numpy(ds["n_arms"][idx]).to(dev)
+    ce_root = -(tgt * joint).sum(dim=1)
+    kl_root = kl.sum(dim=1) / narr.double()
+    # Terminal labels belong to roots and keep their original IPW weights.
+    u_r, wdl_r, m_r = net.heads(ctx_root)
+    tu = torch.from_numpy(ds["terminal_u"][idx]).to(dev)
+    tw = torch.from_numpy(ds["terminal_wdl"][idx]).to(dev)
+    tm = torch.from_numpy(ds["terminal_margin"][idx] / 1000.0).to(dev)
+    mse_u = (u_r - tu) ** 2
+    ce_w = Fn.cross_entropy(wdl_r, tw, reduction="none")
+    mse_m = (m_r - tm) ** 2
+    w_t = torch.from_numpy(weights[idx]).to(dev)
+    loss_root = (ce_root + float(args.kl_beta) * kl_root
+                 + float(args.lambda_u) * mse_u
+                 + float(args.lambda_w) * ce_w
+                 + float(args.lambda_m) * mse_m)
+    loss = (w_t * loss_root).sum() / w_t.sum()
+    return loss, ce_root, kl_root, joint, mse_u, ce_w, mse_m
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="K0 round-2 joint-q distillation (arm S; --flatten-q = arm C)")
@@ -1259,7 +1259,10 @@ def main():
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--save-every", type=int, default=0,
                     help="also save every N updates (0 = final only)")
-    ap.add_argument("--cfg", default=None, help="CNet2 cfg JSON (default: student-init meta cfg)")
+    ap.add_argument("--cfg", default=None,
+                    help="student CNet2 cfg JSON (default: student-init meta cfg); "
+                         "the KL anchor uses its own meta cfg, or the student cfg "
+                         "for legacy exports without meta cfg")
     ap.add_argument("--device", default="cpu")
     args = ap.parse_args()
 
@@ -1277,7 +1280,6 @@ def main():
     os.environ["BC_DEVICE"] = args.device          # cnet2_train reads this at import
     import torch
     import cnet2_train as T
-    from cnet2_model import CNet2, migrate_state_dict
 
     dev = torch.device(args.device)
     torch.manual_seed(args.seed)
@@ -1309,21 +1311,11 @@ def main():
     recipe_change = ["auto: " + c for c in auto_changes] \
         + ["declared: " + c for c in args.recipe_change]
 
-    cfg = si["meta_cfg"]
-    if args.cfg:
-        cfg = json.loads(args.cfg)
-    init_sd = {k: torch.from_numpy(np.ascontiguousarray(a))
-               for k, a in si["arrays"].items()}
-    anchor_sd = {k: torch.from_numpy(np.ascontiguousarray(a))
-                 for k, a in kl["arrays"].items()}
-
-    net = CNet2(**(cfg or {})).to(dev)
-    mig = migrate_state_dict(net, init_sd, allow_missing_prefixes=("tattn.",),
-                             source="--student-init")
-    anchor = CNet2(**(cfg or {})).to(dev)
-    mig_anchor = migrate_state_dict(anchor, anchor_sd,
-                                    allow_missing_prefixes=("tattn.",),
-                                    source="--kl-reference")
+    net, mig, student_model = _build_role_model(
+        si, "--student-init", dev, cfg_override=args.cfg)
+    anchor, mig_anchor, anchor_model = _build_role_model(
+        kl, "--kl-reference", dev, legacy_cfg=net.cfg,
+        cfg_override=args.cfg if anchor_relation == "same_file" else None)
     anchor.eval()
     for p in anchor.parameters():
         p.requires_grad_(False)
@@ -1350,7 +1342,8 @@ def main():
     eff = {"k0_distill_u_effective": {
         "format": "k0-distill-u/3",
         "trainer": {"file": "k0_distill_u.py", "version": TRAINER_VERSION,
-                    "md5": code_md5},
+                    "md5": code_md5,
+                    "model_helpers_md5": _md5_file(k0_distill_models.__file__)},
         "annotation_format": ANNOTATION_FORMAT,
         "terminal_targets": {
             "utility": "MSE vs terminal_u (producer per-game terminal "
@@ -1368,10 +1361,14 @@ def main():
                 "teacher_config_hash": info["teacher_config_hash"],
                 "belief": info["belief"]},
             "student_init": {
-                "file": si["file"], "md5": si["md5"], "sha256": si["sha256"]},
+                "file": si["file"], "md5": si["md5"], "sha256": si["sha256"],
+                "model": student_model},
             "kl_reference": {
                 "file": kl["file"], "md5": kl["md5"], "sha256": kl["sha256"],
-                "relation_to_student_init": anchor_relation}},
+                "relation_to_student_init": anchor_relation,
+                "model": anchor_model,
+                "same_configuration_as_student":
+                    anchor_model["cfg_sha256"] == student_model["cfg_sha256"]}},
         "anchor_continuity": {"status": cont_status,
                               "previous_kl_reference_md5": prev_anchor},
         "recipe_change": recipe_change,
@@ -1421,63 +1418,15 @@ def main():
 
     emit(eff)
 
-    feats = ds["feats"]
-    arms_t = ds["arms"]
     n_arms = ds["n_arms"]
-    target_t = target
-
     feat_stats = {"cash_recovery_roots": set(), "cash_ulp_roots": set()}
 
-    def expanded_batch(root_idx):
-        """Root rows repeated once per candidate slot (fixed K, padded
-        candidates masked downstream), y = the candidate arms -- each
-        candidate is teacher-forced under its OWN prefix, with the
-        action-effect-derived features recomputed for that prefix
-        (expand_candidate_batch, r4 X01)."""
-        b, rep, stats = expand_candidate_batch(feats, arms_t, root_idx, K)
+    def forward_terms(root_idx):
+        batch, _, stats = expand_candidate_batch(ds["feats"], ds["arms"], root_idx, K)
         for key in feat_stats:
             feat_stats[key].update(stats[key])
-        return T.to_dev(b, aug=False), rep
-
-    def forward_terms(root_idx):
-        b, _ = expanded_batch(root_idx)
-        tok, ctx, _ = net.encode(b)
-        logits_s = net.decode(b, tok, ctx)
-        with torch.no_grad():
-            tok_p, ctx_p, _ = anchor.encode(b)
-            logits_p = anchor.decode(b, tok_p, ctx_p)
-        arms_b = torch.from_numpy(
-            arms_t[np.asarray(root_idx)].reshape(-1, arms_t.shape[2])).to(dev)
-        joint, kl = joint_logp_kl(logits_s, logits_p, arms_b)
-        Br = len(root_idx)
-        joint = joint.reshape(Br, K)
-        kl = kl.reshape(Br, K)
-        tgt = torch.from_numpy(target_t[np.asarray(root_idx)]).to(dev)
-        narr = torch.from_numpy(n_arms[np.asarray(root_idx)]).to(dev)
-        ce_root = -(tgt * joint).sum(dim=1)
-        kl_root = kl.sum(dim=1) / narr.double()
-        # Terminal supervision (DESIGN_K0_DISTILL_U SS3): the three
-        # value heads read off candidate slot 0 of each root (ctx is
-        # candidate-invariant: encode() never sees the candidate axis).
-        import torch.nn.functional as Fn
-        u_pred, wdl_logits, margin_pred = net.heads(ctx)
-        u_r = u_pred.reshape(Br, K)[:, 0]
-        wdl_r = wdl_logits.reshape(Br, K, 3)[:, 0]
-        m_r = margin_pred.reshape(Br, K)[:, 0]
-        ridx = np.asarray(root_idx)
-        tu = torch.from_numpy(ds["terminal_u"][ridx]).to(dev)
-        tw = torch.from_numpy(ds["terminal_wdl"][ridx]).to(dev)
-        tm = torch.from_numpy(ds["terminal_margin"][ridx] / 1000.0).to(dev)
-        mse_u = (u_r - tu) ** 2
-        ce_w = Fn.cross_entropy(wdl_r, tw, reduction="none")
-        mse_m = (m_r - tm) ** 2
-        w_t = torch.from_numpy(ipw_w[np.asarray(root_idx)]).to(dev)
-        loss_root = (ce_root + float(args.kl_beta) * kl_root
-                     + float(args.lambda_u) * mse_u
-                     + float(args.lambda_w) * ce_w
-                     + float(args.lambda_m) * mse_m)
-        loss = (w_t * loss_root).sum() / w_t.sum()
-        return loss, ce_root, kl_root, joint, mse_u, ce_w, mse_m
+        return dense_forward(net, anchor, T.to_dev(batch, aug=False),
+                             ds, target, ipw_w, root_idx, args)
 
     def save_checkpoint(updates):
         ok, moved = check_frozen(net, snap)
