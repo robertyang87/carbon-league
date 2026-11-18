@@ -33,10 +33,36 @@
 #      off candidate slot 0 of each root.
 #   5. save_checkpoint refuses to publish unless the aux bitwise gate
 #      passes (inherited) and records an unfreeze reconciliation:
-#      per-head max|delta| for utility/wdl/margin vs the parent
+#      per-head max|delta| for utility/wdl/margin vs the student_init
 #      snapshot and the aux bitwise-identical verdict.
+#   6. THREE-IDENTITY HOT START (k0-distill-u/2, DECISION_REVIEW_
+#      FOR_LOOP3_20261118 SS1): the /1 --parent argument fused three
+#      roles -- student initialisation, KL anchor, and the label-
+#      teacher identity the data gate binds to -- so a segment chain
+#      could not run (segment 2's student_init is not the teacher).
+#      The roles are now three explicit identities:
+#        --label-teacher  weights file that produced the consumed
+#          generation's labels; IDENTITY ANCHOR ONLY (never loaded
+#          into a net); its md5 must equal the generation producer's
+#          teacher_weights_md5 -- the /1 gate, re-pointed, not removed.
+#        --student-init   this segment's student initial weights
+#          (segment 1: the ring parent net; later: the previous
+#          segment's student product), independently registered.
+#        --kl-reference   the KL anchor's weights (default: the
+#          --student-init file); ring posture is one fixed anchor --
+#          if a segment's anchor md5 differs from the anchor the
+#          student_init product registered, the run mechanically
+#          records a recipe_change entry (anchor moves are never
+#          hidden inside an init argument).
+#      Every segment start is hot_start_weights + fresh_optimizer:
+#      weights only from student_init, a NEW AdamW per segment, no
+#      optimizer state carried. The frozen (aux.) reference object is
+#      the student_init state: the publish gate verifies aux. is
+#      bitwise-identical to what student_init carried at segment
+#      start. --parent is refused with a migration message.
 # The pinned docstring below is retained; where it describes the /1
-# format or the four frozen prefixes, this header governs.
+# format, the four frozen prefixes, or the --parent interface, this
+# header governs.
 # =====================================================================
 """k0_distill -- K0 round-2 joint-q distillation entry (design draft
 K0_ROUND2_DESIGN_DRAFT_20261114 SS6/SS10 item 2, ruling
@@ -79,7 +105,8 @@ Recipe (draft SS6, verbatim where it pins the math):
     hard-label CE anywhere.
   * Frozen (k0_distill_u delta): ONLY the aux (true-carbon) conv --
     prefix aux. -- is frozen (requires_grad=False, excluded from the
-    optimizer, bitwise-verified against the parent before publish).
+    optimizer, bitwise-verified against the student_init state --
+    the student's own state at segment start -- before publish).
     The utility / wdl / margin heads TRAIN on the terminal labels
     (terminal_u / terminal_wdl / terminal_margin); see header.
   * Monitoring (draft SS6.5): per update, the per-root KL defined
@@ -134,24 +161,30 @@ schema; the annotator of SS10 item 1 publishes to it):
   unqualified by SS13-C and refuses the load, naming the root. The
   bundle keys must agree with each other and with the feature rows'
   gid/step, row by row. The producer's teacher_weights_md5 must equal
-  the md5 of the --parent file bytes: the priors and q in the product
-  were computed under those weights, and the student initialises from
-  them -- a different parent refuses the start.
+  the md5 of the --label-teacher file bytes: the priors and q in the
+  product were computed under those weights -- a different label
+  teacher refuses the start. (k0-distill-u/2: the label teacher is an
+  identity anchor only; the student initialises from --student-init
+  and the KL anchor loads --kl-reference -- three separate files,
+  three separate registrations.)
 
 Product: <out>.npz, a standard cnet2 export (cnet2_train.export
 format: float32 state arrays + meta JSON), loadable by the existing
 tools and by root-continuation drivers; meta carries cfg and the full
-provenance under "k0_distill". Beside it, <out>.complete.json (the
+provenance under "k0_distill_u". Beside it, <out>.complete.json (the
 fleet atomic-save marker) and <out>.log.jsonl whose first line is the
-effective config. This entry has no resume: round-2 runs are short,
-single-generation, and restart from the parent by design.
+effective config. Every start is hot_start_weights + fresh_optimizer:
+weights only from the registered --student-init, a new AdamW built
+per segment; no optimizer state is ever carried across segments.
 
 Usage:
-  python3 k0_distill.py --data ANNOT_DS --parent PARENT.npz \
+  python3 k0_distill_u.py --data ANNOT_DS --label-teacher TEACHER.npz \
+      --student-init PARENT.npz --kl-reference PARENT.npz \
       --out RUN/student_s_seed7.npz --seed 7 --max-updates 200
-  python3 k0_distill.py --data ANNOT_DS --parent PARENT.npz \
-      --out RUN/student_c_seed7.npz --seed 7 --max-updates 200 \
-      --flatten-q        # control arm C: identical but for the switch
+  # segment 2: init from segment 1's product, anchor held at the parent
+  python3 k0_distill_u.py --data ANNOT_DS_SEG2 --label-teacher TEACHER.npz \
+      --student-init RUN/student_s_seed7.npz --kl-reference PARENT.npz \
+      --out RUN/student_seg2.npz --seed 7 --max-updates 200
 """
 
 import argparse
@@ -176,11 +209,11 @@ FROZEN_PREFIXES = ("aux.",)
 # k0_distill_u: the three value heads train under terminal-label
 # supervision; only aux. stays frozen (DESIGN_K0_DISTILL_U SS2).
 TERMINAL_FIELDS = ("terminal_u", "terminal_wdl", "terminal_margin")
-TRAINER_VERSION = "k0-distill-u/1"
+TRAINER_VERSION = "k0-distill-u/2"
 LAMBDA_U_DEFAULT = 1.0
 LAMBDA_W_DEFAULT = 0.5
 LAMBDA_M_DEFAULT = 0.5
-KL_DEFINITION = ("KL(pi_student || pi_parent): per-slot categorical KL "
+KL_DEFINITION = ("KL(pi_student || pi_kl_reference): per-slot categorical KL "
                  "summed over each candidate's valid slots, averaged "
                  "over the root's candidates")
 RECRUIT_COST = 30.0            # cnet2_feat.Prefix.advance / fastsim recruit cost
@@ -689,15 +722,15 @@ def targets_with_flatten(ds, flatten, q_temp=Q_TEMP_DEFAULT):
 
 def joint_logp_kl(logits_s, logits_p, arms):
     """Per-candidate joint logp under the student and per-candidate
-    KL(pi_student || pi_parent), teacher-forced on the candidate's own
-    prefix -- the loss path's core, shared by training and the
+    KL(pi_student || pi_kl_reference), teacher-forced on the candidate's
+    own prefix -- the loss path's core, shared by training and the
     fixtures. logits_s / logits_p: float tensors [M, OWN, 5] from the
-    student / parent decode of the SAME expanded batch (y = arms);
+    student / KL-reference decode of the SAME expanded batch (y = arms);
     arms: int64 [M, OWN]. Computed in float64 (the Stage-A screen's
     caliber). Returns (joint_logp [M], kl [M]) where
       joint_logp = sum over valid slots s of log pi_student(a_s|a_<s),
       kl         = sum over valid slots s of the categorical
-                   KL(pi_student(.|a_<s) || pi_parent(.|a_<s)),
+                   KL(pi_student(.|a_<s) || pi_kl_reference(.|a_<s)),
     a slot being valid iff arms[:, s] >= 0 (the teacher's joint_logp
     skips exactly those slots)."""
     import torch
@@ -989,6 +1022,103 @@ def check_frozen(net, snap):
 
 
 # --------------------------------------------------------------------------
+# Three-identity hot start (k0-distill-u/2): pure helpers. No torch in
+# this section -- the file stage is shared verbatim by main() and the
+# unit proofs, and each identity file is read exactly once.
+# --------------------------------------------------------------------------
+
+def _read_weights_file(path, role):
+    """One byte read of a weights .npz for one identity role; the
+    identity (md5/sha256) and the parse share that read. Returns
+    {file, md5, sha256, meta, meta_cfg, arrays} (arrays excludes the
+    'meta' entry). Refuses by role name: unreadable or unparseable
+    file, or a non-finite float array (the /1 finite gate, applied to
+    every identity file alike)."""
+    try:
+        raw = open(path, "rb").read()
+    except OSError as e:
+        raise SystemExit(f"k0_distill_u: {role} file {path!r} is "
+                         f"unreadable: {e}; refusing to start")
+    md5 = hashlib.md5(raw).hexdigest()
+    sha = hashlib.sha256(raw).hexdigest()
+    try:
+        w = np.load(io.BytesIO(raw))
+        names = list(w.files)
+        arrays = {k: np.asarray(w[k]) for k in names if k != "meta"}
+    except Exception as e:
+        raise SystemExit(f"k0_distill_u: {role} file {path!r} is not a "
+                         f"readable .npz export ({e}); refusing to start")
+    for k, a in arrays.items():
+        if np.issubdtype(a.dtype, np.floating) \
+                and not np.isfinite(a.astype(np.float64)).all():
+            raise SystemExit(
+                f"k0_distill_u finite gate: {role} array {k!r} has "
+                f"non-finite entries; refusing to start")
+    meta = None
+    if "meta" in names:
+        try:
+            meta = json.loads(str(w["meta"]))
+        except Exception:
+            meta = None
+    meta_cfg = meta.get("cfg") if isinstance(meta, dict) else None
+    return {"file": path, "md5": md5, "sha256": sha, "meta": meta,
+            "meta_cfg": meta_cfg, "arrays": arrays}
+
+
+def check_label_teacher(data_teacher_md5, label_teacher_md5):
+    """The label-teacher identity gate (the /1 --parent gate,
+    re-pointed at its proper object): the consumed generation's
+    recorded teacher_weights_md5 must equal the --label-teacher
+    file's md5. The priors/q in the product were computed under the
+    recorded weights; a different label teacher refuses the start."""
+    if data_teacher_md5 != label_teacher_md5:
+        raise SystemExit(
+            f"k0_distill_u: annotation producer teacher_weights_md5 "
+            f"{data_teacher_md5!r} != --label-teacher file md5 "
+            f"{label_teacher_md5!r}; the recorded priors/q were computed "
+            f"under different weights than the declared label teacher; "
+            f"refusing to start")
+
+
+def previous_anchor_md5(student_init_meta):
+    """The KL anchor md5 the student_init file's own run registered,
+    when student_init is itself a product of this trainer: the /2
+    layout (identities.kl_reference.md5), or the /1 layout
+    (parent.md5 -- in /1 the anchor WAS the parent file, so the
+    reading is exact). None when the file carries no such provenance
+    (a ring parent net: segment 1)."""
+    if not isinstance(student_init_meta, dict):
+        return None
+    prov = student_init_meta.get("k0_distill_u")
+    if not isinstance(prov, dict):
+        return None
+    ids = prov.get("identities")
+    if isinstance(ids, dict):
+        kl = ids.get("kl_reference")
+        if isinstance(kl, dict) and kl.get("md5"):
+            return kl["md5"]
+    par = prov.get("parent")
+    if isinstance(par, dict) and par.get("md5"):
+        return par["md5"]
+    return None
+
+
+def anchor_continuity(prev_md5, this_md5):
+    """(status, auto recipe_change entries): this segment's anchor
+    against the anchor the student_init product registered. An anchor
+    move is a recipe change and is registered mechanically -- it can
+    never hide inside an init argument, the two being separate
+    parameters by construction."""
+    if prev_md5 is None:
+        return "ring_anchor_baseline", []
+    if prev_md5 == this_md5:
+        return "held", []
+    return "moved", ["kl_reference_moved: "
+                     f"{prev_md5} -> {this_md5} (recipe change, "
+                     f"DECISION_REVIEW_FOR_LOOP3 SS1)"]
+
+
+# --------------------------------------------------------------------------
 # Training entry (torch below this line)
 # --------------------------------------------------------------------------
 
@@ -997,15 +1127,33 @@ def main():
         description="K0 round-2 joint-q distillation (arm S; --flatten-q = arm C)")
     ap.add_argument("--data", required=True,
                     help="annotation dataset root (sealed generation via current.json)")
-    ap.add_argument("--parent", required=True,
-                    help="parent checkpoint .npz (cnet2 export); the student "
-                         "initialises from it and the anchor binds to it")
+    ap.add_argument("--parent", default=None,
+                    help="REMOVED in k0-distill-u/2: the fused /1 interface. "
+                         "Passing it refuses with the three-identity migration map")
+    ap.add_argument("--label-teacher", required=True,
+                    help="weights .npz that produced the consumed generation's "
+                         "labels; identity anchor only (never loaded into a "
+                         "net); its md5 must equal the generation producer's "
+                         "teacher_weights_md5")
+    ap.add_argument("--student-init", required=True,
+                    help="weights .npz the student initialises from "
+                         "(hot_start_weights): segment 1 = the ring parent "
+                         "net, later segments = the previous segment's student")
+    ap.add_argument("--kl-reference", default=None,
+                    help="weights .npz for the KL anchor net; default: the "
+                         "--student-init file. Ring posture: one fixed anchor "
+                         "for the whole ring; a moved anchor is registered "
+                         "mechanically as a recipe change")
+    ap.add_argument("--recipe-change", action="append", default=[],
+                    help="declare a recipe change for this segment (verbatim "
+                         "into the run registration; repeatable). Anchor moves "
+                         "are additionally auto-detected and need no declaration")
     ap.add_argument("--out", required=True, help="student checkpoint output (.npz)")
     ap.add_argument("--flatten-q", action="store_true",
                     help="arm C: flatten every candidate's Q before the shared "
                          "target construction (target degenerates to q0 ∝ P_A^0.5)")
     ap.add_argument("--kl-beta", type=float, default=1.0,
-                    help="anchor coefficient on KL(pi_student||pi_parent)")
+                    help="anchor coefficient on KL(pi_student||pi_kl_reference)")
     ap.add_argument("--lambda-u", type=float, default=LAMBDA_U_DEFAULT,
                     help="weight of MSE(utility, terminal_u)")
     ap.add_argument("--lambda-w", type=float, default=LAMBDA_W_DEFAULT,
@@ -1025,9 +1173,20 @@ def main():
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--save-every", type=int, default=0,
                     help="also save every N updates (0 = final only)")
-    ap.add_argument("--cfg", default=None, help="CNet2 cfg JSON (default: parent meta cfg)")
+    ap.add_argument("--cfg", default=None, help="CNet2 cfg JSON (default: student-init meta cfg)")
     ap.add_argument("--device", default="cpu")
     args = ap.parse_args()
+
+    if args.parent is not None:
+        raise SystemExit(
+            "k0_distill_u: --parent was removed in k0-distill-u/2 -- it "
+            "fused three identities that segment training must keep "
+            "apart. Migration: --parent F meant all three roles at "
+            "once; write --label-teacher F --student-init F "
+            "--kl-reference F only when the three roles really are the "
+            "one file. In a segment chain: --label-teacher stays the "
+            "ring's label teacher, --student-init takes the previous "
+            "segment's student, --kl-reference stays the ring anchor")
 
     os.environ["BC_DEVICE"] = args.device          # cnet2_train reads this at import
     import torch
@@ -1044,43 +1203,42 @@ def main():
     target = targets_with_flatten(ds, args.flatten_q, q_temp=args.q_temp)
     R, K = info["roots"], info["max_candidates"]
 
-    # ---- parent: one byte read; identities and the parse share it ----
-    parent_raw = open(args.parent, "rb").read()
-    parent_md5 = hashlib.md5(parent_raw).hexdigest()
-    parent_sha = hashlib.sha256(parent_raw).hexdigest()
-    if info["teacher_weights_md5"] != parent_md5:
-        raise SystemExit(
-            f"k0_distill_u: annotation producer teacher_weights_md5 "
-            f"{info['teacher_weights_md5']!r} != --parent file md5 {parent_md5!r}; "
-            f"the recorded priors/q were computed under different weights than "
-            f"the declared parent; refusing to start")
-    w = np.load(io.BytesIO(parent_raw))
-    for k in w.files:
-        if k != "meta":
-            a = np.asarray(w[k])
-            if np.issubdtype(a.dtype, np.floating) and not np.isfinite(a.astype(np.float64)).all():
-                raise SystemExit(
-                    f"k0_distill_u finite gate: parent array {k!r} has non-finite "
-                    f"entries; refusing to start")
-    cfg = None
-    if "meta" in w.files:
-        try:
-            cfg = json.loads(str(w["meta"])).get("cfg")
-        except Exception:
-            cfg = None
+    # ---- three identities (k0-distill-u/2): the /1 --parent fused the
+    # label teacher, the student init and the KL anchor into one file;
+    # here each role reads its own file exactly once ----
+    # Label teacher: identity anchor only. Its weights produced the
+    # consumed generation's labels; they never enter a net here.
+    lt = _read_weights_file(args.label_teacher, "--label-teacher")
+    check_label_teacher(info["teacher_weights_md5"], lt["md5"])
+    # Student init and KL reference: separate files, separate loads.
+    si = _read_weights_file(args.student_init, "--student-init")
+    kl_path = args.kl_reference if args.kl_reference else args.student_init
+    kl = si if kl_path == args.student_init else _read_weights_file(
+        kl_path, "--kl-reference")
+    anchor_relation = "same_file" if kl["md5"] == si["md5"] \
+        else "independent_file"
+    prev_anchor = previous_anchor_md5(si["meta"])
+    cont_status, auto_changes = anchor_continuity(prev_anchor, kl["md5"])
+    recipe_change = ["auto: " + c for c in auto_changes] \
+        + ["declared: " + c for c in args.recipe_change]
+
+    cfg = si["meta_cfg"]
     if args.cfg:
         cfg = json.loads(args.cfg)
-    start_sd = {k: torch.from_numpy(np.ascontiguousarray(w[k]))
-                for k in w.files if k != "meta"}
+    init_sd = {k: torch.from_numpy(np.ascontiguousarray(a))
+               for k, a in si["arrays"].items()}
+    anchor_sd = {k: torch.from_numpy(np.ascontiguousarray(a))
+                 for k, a in kl["arrays"].items()}
 
     net = CNet2(**(cfg or {})).to(dev)
-    mig = migrate_state_dict(net, start_sd, allow_missing_prefixes=("tattn.",),
-                             source="--parent")
-    parent = CNet2(**(cfg or {})).to(dev)
-    migrate_state_dict(parent, start_sd, allow_missing_prefixes=("tattn.",),
-                       source="--parent")
-    parent.eval()
-    for p in parent.parameters():
+    mig = migrate_state_dict(net, init_sd, allow_missing_prefixes=("tattn.",),
+                             source="--student-init")
+    anchor = CNet2(**(cfg or {})).to(dev)
+    mig_anchor = migrate_state_dict(anchor, anchor_sd,
+                                    allow_missing_prefixes=("tattn.",),
+                                    source="--kl-reference")
+    anchor.eval()
+    for p in anchor.parameters():
         p.requires_grad_(False)
 
     # ---- freeze list (SS6.3): out of the optimizer, bitwise at the end ----
@@ -1103,7 +1261,7 @@ def main():
 
     code_md5 = _md5_file(os.path.abspath(__file__))
     eff = {"k0_distill_u_effective": {
-        "format": "k0-distill-u/1",
+        "format": "k0-distill-u/2",
         "trainer": {"file": "k0_distill_u.py", "version": TRAINER_VERSION,
                     "md5": code_md5},
         "annotation_format": ANNOTATION_FORMAT,
@@ -1115,7 +1273,21 @@ def main():
                       "final margin, unclipped)"},
         "arm": "C" if args.flatten_q else "S",
         "flatten_q": bool(args.flatten_q),
-        "parent": {"file": args.parent, "md5": parent_md5, "sha256": parent_sha},
+        "start_mode": "hot_start_weights",
+        "identities": {
+            "label_teacher": {
+                "file": lt["file"], "md5": lt["md5"], "sha256": lt["sha256"],
+                "matched_against": "annotation producer teacher_weights_md5",
+                "teacher_config_hash": info["teacher_config_hash"],
+                "belief": info["belief"]},
+            "student_init": {
+                "file": si["file"], "md5": si["md5"], "sha256": si["sha256"]},
+            "kl_reference": {
+                "file": kl["file"], "md5": kl["md5"], "sha256": kl["sha256"],
+                "relation_to_student_init": anchor_relation}},
+        "anchor_continuity": {"status": cont_status,
+                              "previous_kl_reference_md5": prev_anchor},
+        "recipe_change": recipe_change,
         "data": {"dir": args.data, "generation": info["generation"],
                  "gen_dir": ds["gen_dir"], "roots": R,
                  "candidates": info["candidates"],
@@ -1134,11 +1306,16 @@ def main():
                    "lr": args.lr, "wd": args.wd, "bs": args.bs,
                    "max_updates": args.max_updates, "seed": args.seed,
                    "frozen_prefixes": list(FROZEN_PREFIXES),
-                   "frozen_params": frozen_names},
+                   "frozen_params": frozen_names,
+                   "optimizer": {"type": "AdamW",
+                                 "mode": "hot_start_weights + fresh_optimizer",
+                                 "state_carried": False,
+                                 "lr": args.lr, "wd": args.wd}},
         "ipw": {"active": info["ipw_active"], "pi_min": info["pi_min"],
                 "pi_mean": info["pi_mean"],
                 "source": "pi recorded in the product records (SS13-C)"},
         "init_migrated_missing": mig["migrated_missing"],
+        "anchor_migrated_missing": mig_anchor["migrated_missing"],
         "code_md5": code_md5, "device": args.device}}
     log_path = args.out + ".log.jsonl"
     log = open(log_path, "w")
@@ -1179,8 +1356,8 @@ def main():
         tok, ctx, _ = net.encode(b)
         logits_s = net.decode(b, tok, ctx)
         with torch.no_grad():
-            tok_p, ctx_p, _ = parent.encode(b)
-            logits_p = parent.decode(b, tok_p, ctx_p)
+            tok_p, ctx_p, _ = anchor.encode(b)
+            logits_p = anchor.decode(b, tok_p, ctx_p)
         arms_b = torch.from_numpy(
             arms_t[np.asarray(root_idx)].reshape(-1, arms_t.shape[2])).to(dev)
         joint, kl = joint_logp_kl(logits_s, logits_p, arms_b)
@@ -1236,7 +1413,7 @@ def main():
             "cash_recovery_roots": len(feat_stats["cash_recovery_roots"]),
             "cash_ulp_roots": len(feat_stats["cash_ulp_roots"])}
         prov["frozen_check"] = {"frozen_params": frozen_names, "moved": [],
-                                "bitwise_identical_to_parent": True}
+                                "bitwise_identical_to_student_init": True}
         prov["trainable_moved"] = moved_trainable
         unfreeze = {}
         for pref in ("utility.", "wdl.", "margin."):
@@ -1310,7 +1487,7 @@ def main():
                                args.lambda_u * float(mse_u.detach().mean())
                                + args.lambda_w * float(ce_w.detach().mean())
                                + args.lambda_m * float(mse_m.detach().mean()))},
-                  "kl_monitor": {"definition": "per-root KL(pi_student||pi_parent), "
+                  "kl_monitor": {"definition": "per-root KL(pi_student||pi_kl_reference), "
                                                "mean over candidates of slot-summed KL",
                                  "mean": float(kl_np.mean()),
                                  "p99": float(np.percentile(kl_np, 99))},
