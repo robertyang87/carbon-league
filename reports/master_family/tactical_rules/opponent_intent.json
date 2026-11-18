@@ -1,0 +1,412 @@
+{
+  "format": "enemy-intent/1",
+  "status": "diagnostic_only",
+  "action_order": [
+    "NONE",
+    "UP",
+    "RIGHT",
+    "DOWN",
+    "LEFT"
+  ],
+  "role_order": [
+    "COLLECTOR",
+    "PLANTER"
+  ],
+  "features": [
+    "stay",
+    "repeat_previous_move",
+    "reverse_previous_move",
+    "closer_to_home",
+    "loaded_closer_to_home",
+    "destination_home",
+    "loaded_destination_home",
+    "friend_at_destination",
+    "opposing_worker_at_destination",
+    "light_opposing_collector_can_reach",
+    "opposing_tree_at_destination",
+    "friendly_tree_at_destination",
+    "visible_ground_carbon",
+    "ground_visible",
+    "loaded_stay",
+    "affordable_tree_capture_here"
+  ],
+  "weights": [
+    [
+      1.2498094486864195,
+      0.9802540104851633,
+      -0.5828897120740522,
+      -0.29750762572340955,
+      0.9116352926883609,
+      -0.9002518933010456,
+      2.762007929449691,
+      -1.7857428799875101,
+      0.0033690532806744914,
+      -3.0395489681054735,
+      -0.297234316817785,
+      -0.4443441332591948,
+      1.5259429122384047,
+      -0.23353605693551027,
+      -0.3790511215482517,
+      -0.6506715611051604
+    ],
+    [
+      0.30345311708716344,
+      1.4503107230197696,
+      0.6161846604545798,
+      -0.10396487828045313,
+      0.0,
+      -0.8145892033918074,
+      0.0,
+      -0.9391327733160301,
+      -0.19879924074077565,
+      -1.6345971604254563,
+      0.6220076059122059,
+      -0.2241876765994204,
+      -0.6789620594499669,
+      0.09454085504919958,
+      0.0,
+      1.2239266827447268
+    ]
+  ],
+  "parameters": 32,
+  "role_frequency": [
+    [
+      0.5122787762381671,
+      0.13211688846206612,
+      0.11606530388256277,
+      0.1114007408423652,
+      0.1281382905748388
+    ],
+    [
+      0.26879150066401064,
+      0.2799468791500664,
+      0.14475431606905712,
+      0.13253652058432935,
+      0.17397078353253653
+    ]
+  ],
+  "train": {
+    "policy": "policy_v0_5",
+    "seeds": [
+      620093000,
+      620093001,
+      620093002,
+      620093003,
+      620093004,
+      620093005,
+      620093006,
+      620093007
+    ],
+    "turns": 11044
+  },
+  "steps_per_game_max": 100,
+  "seed_unit": "both seats from the same generated map",
+  "metrics_note": "NLL and Brier lower is better. Meetings are attempted arrivals on the same cell as any existing own worker after both submitted actions. Births excluded. Death is not the target. Pooled rows are correlated; per-map results also reported.",
+  "inputs": "Own live pre-action masked observation and previous own observation. Submitted actions used as labels even when a worker disappears after transition. No future state, top-player replay or our candidate move enters the layer.",
+  "source_sha256": {
+    "opponent_intent.py": "090f835146c0897557ee10978b4c947fbbfb07a2b8c0983abfbfd1a01bc07db8",
+    "fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+    "policy_v0_5.py": "4d435035e8e274c5c4d49dfcc71ca293c6b4989ebadc974796a90837f9f569c1",
+    "policy_raid_v0_1.py": "a569594a78e0ed5632aa7921399a9e906f2ddbe5b237529d9c0ffb6b1ec5bdc5",
+    "eval_v53.py": "ef3301e8e7d1cea39ce015e2a1c0e010c544842a7dfebefb398c458363f60d86"
+  },
+  "held_out": {
+    "policy": "policy_v0_5",
+    "seeds": [
+      620093008,
+      620093009,
+      620093010,
+      620093011
+    ],
+    "all": {
+      "worker_turns": 5119,
+      "games": 4,
+      "actual_meetings": 26,
+      "frequency": {
+        "top1": 0.46024614182457513,
+        "action_nll": 1.4043701357921716,
+        "meeting_brier": 0.0060308468634730035,
+        "mean_meeting_probability": 0.012840361876612161
+      },
+      "existing_rule": {
+        "top1": 0.4272318812268021,
+        "action_nll": 1.5860900648481078,
+        "meeting_brier": 0.010043700193816351,
+        "mean_meeting_probability": 0.017499918368135428
+      },
+      "learned": {
+        "top1": 0.5465911310802891,
+        "action_nll": 1.2039854242256378,
+        "meeting_brier": 0.0043168490415045595,
+        "mean_meeting_probability": 0.008576572083927163
+      }
+    },
+    "within_two_cells": {
+      "worker_turns": 1526,
+      "games": 4,
+      "actual_meetings": 26,
+      "frequency": {
+        "top1": 0.4639580602883355,
+        "action_nll": 1.4126431530718315,
+        "meeting_brier": 0.020230606221571627,
+        "mean_meeting_probability": 0.043073271590024685
+      },
+      "existing_rule": {
+        "top1": 0.36828309305373524,
+        "action_nll": 1.7861214140923851,
+        "meeting_brier": 0.03369180949681906,
+        "mean_meeting_probability": 0.05870385460451197
+      },
+      "learned": {
+        "top1": 0.5393184796854522,
+        "action_nll": 1.183143488079921,
+        "meeting_brier": 0.014480963462294782,
+        "mean_meeting_probability": 0.028770296525310057
+      }
+    },
+    "per_map_within_two_cells": {
+      "620093008": {
+        "worker_turns": 353,
+        "games": 1,
+        "actual_meetings": 10,
+        "frequency": {
+          "top1": 0.5127478753541076,
+          "action_nll": 1.347395342570137,
+          "meeting_brier": 0.023940270135875626,
+          "mean_meeting_probability": 0.03504358666231415
+        },
+        "existing_rule": {
+          "top1": 0.3597733711048159,
+          "action_nll": 1.8660387798619782,
+          "meeting_brier": 0.03201538873461253,
+          "mean_meeting_probability": 0.04536375114798563
+        },
+        "learned": {
+          "top1": 0.5495750708215298,
+          "action_nll": 1.1567711168973822,
+          "meeting_brier": 0.022200670535587826,
+          "mean_meeting_probability": 0.029456747936902145
+        }
+      },
+      "620093009": {
+        "worker_turns": 380,
+        "games": 1,
+        "actual_meetings": 6,
+        "frequency": {
+          "top1": 0.4394736842105263,
+          "action_nll": 1.4008261216483286,
+          "meeting_brier": 0.01987335470569928,
+          "mean_meeting_probability": 0.042973952704009236
+        },
+        "existing_rule": {
+          "top1": 0.36578947368421055,
+          "action_nll": 1.674185966064003,
+          "meeting_brier": 0.03456037843245789,
+          "mean_meeting_probability": 0.05877411480823682
+        },
+        "learned": {
+          "top1": 0.5342105263157895,
+          "action_nll": 1.204087470192802,
+          "meeting_brier": 0.013347550023994289,
+          "mean_meeting_probability": 0.028441655431344366
+        }
+      },
+      "620093010": {
+        "worker_turns": 359,
+        "games": 1,
+        "actual_meetings": 4,
+        "frequency": {
+          "top1": 0.48746518105849584,
+          "action_nll": 1.4070036986347643,
+          "meeting_brier": 0.015928952242834436,
+          "mean_meeting_probability": 0.04167721195321103
+        },
+        "existing_rule": {
+          "top1": 0.3565459610027855,
+          "action_nll": 1.7353589676845733,
+          "meeting_brier": 0.033003477899677204,
+          "mean_meeting_probability": 0.059532112059248764
+        },
+        "learned": {
+          "top1": 0.5097493036211699,
+          "action_nll": 1.2420863700996652,
+          "meeting_brier": 0.013993209109858141,
+          "mean_meeting_probability": 0.02954252919091678
+        }
+      },
+      "620093011": {
+        "worker_turns": 434,
+        "games": 1,
+        "actual_meetings": 6,
+        "frequency": {
+          "top1": 0.42626728110599077,
+          "action_nll": 1.4807249807007181,
+          "meeting_brier": 0.021084380398181838,
+          "mean_meeting_probability": 0.05084609501348962
+        },
+        "existing_rule": {
+          "top1": 0.3870967741935484,
+          "action_nll": 1.8611176315912865,
+          "meeting_brier": 0.03486423202421556,
+          "mean_meeting_probability": 0.06880757169319364
+        },
+        "learned": {
+          "top1": 0.5599078341013825,
+          "action_nll": 1.1374988778943296,
+          "meeting_brier": 0.009597885863692247,
+          "mean_meeting_probability": 0.027860929567849555
+        }
+      }
+    }
+  },
+  "different_policy": {
+    "policy": "policy_raid_v0_1",
+    "seeds": [
+      620093012,
+      620093013,
+      620093014,
+      620093015
+    ],
+    "all": {
+      "worker_turns": 3488,
+      "games": 4,
+      "actual_meetings": 20,
+      "frequency": {
+        "top1": 0.512901376146789,
+        "action_nll": 1.3250901636375578,
+        "meeting_brier": 0.005932234156152884,
+        "mean_meeting_probability": 0.011077786508134459
+      },
+      "existing_rule": {
+        "top1": 0.42775229357798167,
+        "action_nll": 1.456594603147767,
+        "meeting_brier": 0.007764507734957223,
+        "mean_meeting_probability": 0.012961569326555282
+      },
+      "learned": {
+        "top1": 0.5705275229357798,
+        "action_nll": 1.156888198774242,
+        "meeting_brier": 0.004497607312056815,
+        "mean_meeting_probability": 0.00822079802810531
+      }
+    },
+    "within_two_cells": {
+      "worker_turns": 760,
+      "games": 4,
+      "actual_meetings": 20,
+      "frequency": {
+        "top1": 0.46578947368421053,
+        "action_nll": 1.3871597788363683,
+        "meeting_brier": 0.0272258325482385,
+        "mean_meeting_probability": 0.05084120965838552
+      },
+      "existing_rule": {
+        "top1": 0.40657894736842104,
+        "action_nll": 1.5803164318396066,
+        "meeting_brier": 0.03563500392043525,
+        "mean_meeting_probability": 0.059486781330295814
+      },
+      "learned": {
+        "top1": 0.5644736842105263,
+        "action_nll": 1.1508307028075038,
+        "meeting_brier": 0.020641650400597594,
+        "mean_meeting_probability": 0.0377291362131991
+      }
+    },
+    "per_map_within_two_cells": {
+      "620093012": {
+        "worker_turns": 242,
+        "games": 1,
+        "actual_meetings": 12,
+        "frequency": {
+          "top1": 0.39669421487603307,
+          "action_nll": 1.5111557700164375,
+          "meeting_brier": 0.04641732108572801,
+          "mean_meeting_probability": 0.06260544925212512
+        },
+        "existing_rule": {
+          "top1": 0.359504132231405,
+          "action_nll": 1.634711125783223,
+          "meeting_brier": 0.0482513829625613,
+          "mean_meeting_probability": 0.07546155184663472
+        },
+        "learned": {
+          "top1": 0.5,
+          "action_nll": 1.247324109188068,
+          "meeting_brier": 0.038796421084312985,
+          "mean_meeting_probability": 0.03925608805729995
+        }
+      },
+      "620093013": {
+        "worker_turns": 186,
+        "games": 1,
+        "actual_meetings": 2,
+        "frequency": {
+          "top1": 0.521505376344086,
+          "action_nll": 1.3414660343497407,
+          "meeting_brier": 0.014888313027166845,
+          "mean_meeting_probability": 0.04019476861340127
+        },
+        "existing_rule": {
+          "top1": 0.46774193548387094,
+          "action_nll": 1.4004490599235893,
+          "meeting_brier": 0.03684456867300162,
+          "mean_meeting_probability": 0.057299762320941715
+        },
+        "learned": {
+          "top1": 0.5860215053763441,
+          "action_nll": 1.0831743604082968,
+          "meeting_brier": 0.010730805636565583,
+          "mean_meeting_probability": 0.03039141724937299
+        }
+      },
+      "620093014": {
+        "worker_turns": 128,
+        "games": 1,
+        "actual_meetings": 0,
+        "frequency": {
+          "top1": 0.5390625,
+          "action_nll": 1.2783366159477016,
+          "meeting_brier": 0.007649093808003357,
+          "mean_meeting_probability": 0.04349931127914372
+        },
+        "existing_rule": {
+          "top1": 0.4375,
+          "action_nll": 1.441128851190487,
+          "meeting_brier": 0.01549530588096695,
+          "mean_meeting_probability": 0.049133472475252495
+        },
+        "learned": {
+          "top1": 0.609375,
+          "action_nll": 1.0928850048875542,
+          "meeting_brier": 0.005157676328169213,
+          "mean_meeting_probability": 0.026400109976215363
+        }
+      },
+      "620093015": {
+        "worker_turns": 204,
+        "games": 1,
+        "actual_meetings": 6,
+        "frequency": {
+          "top1": 0.45098039215686275,
+          "action_nll": 1.3500096389279628,
+          "meeting_brier": 0.02799181766390989,
+          "mean_meeting_probability": 0.05119932262517491
+        },
+        "existing_rule": {
+          "top1": 0.3872549019607843,
+          "action_nll": 1.7671194983352507,
+          "meeting_brier": 0.03220234988553377,
+          "mean_meeting_probability": 0.04902655880201835
+        },
+        "learned": {
+          "top1": 0.5931372549019608,
+          "action_nll": 1.1344077845521583,
+          "meeting_brier": 0.01785690188060574,
+          "mean_meeting_probability": 0.04971643395502839
+        }
+      }
+    }
+  }
+}

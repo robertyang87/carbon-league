@@ -1,0 +1,788 @@
+{
+  "scope": "Exploratory held-out-by-map, 100 real simultaneous transitions maximum. Four independent maps; two seats per map. Opponent responds on each arm's own trajectory. No top2 training or examiner seeds. Terminal snapshots stop at actual elimination. Cash at stop is not official full-game score. Counters are over each arm's own exposure.",
+  "intervention": "Loaded collectors whose chosen landing can lose in a head-to-head one-step response. Select highest-policy-logit safe unreserved landing outside enemy bases, otherwise retain. Reservation covers earlier own units; later units and bases re-decode with updated prefix. The model itself can still collide with a teammate. No opponent action supplied.",
+  "sources_sha256": {
+    "reports/master_family/tactical_rules/defense.py": "f7955615a79feb8ada4a71b44e51d7ce70c23070c7b5ab392207f1a2917a1d09",
+    "reports/master_family/tactical_rules/defense_probe.py": "1e04dedcd19f823e88f8deedcf078d6b3bdd30957c339032f12e6f12cb8b7761",
+    "data/weights/sapling_1200k/agent_int8.py": "f260f05dd229f84df2ad1d478a9f4861b7e24f6e0c4f6b74e9885212ea430ad3",
+    "code/policy_v0_5.py": "4d435035e8e274c5c4d49dfcc71ca293c6b4989ebadc974796a90837f9f569c1",
+    "code/fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "reports/sapling_bootstrap/smoke_ab.py": "22fe541c27e92d5e89bc3421769e48bf6c4d3da7e0508410bc0ad20b2ab4058e"
+  },
+  "constructed_attacks": {
+    "scope": "Constructed micropositions, not sampled from play; seat-relative home offset, one 50-carbon collector and one empty enemy collector, empty board. Exhaust all distance-one/two attacker cells and all five simultaneous enemy actions. The policy sees position only. Branches are possible responses, not independent games or empirical action probabilities.",
+    "positions": 24,
+    "enemy_response_branches_per_arm": 120,
+    "changed_positions": 0,
+    "positions_with_any_fatal_response": {
+      "original": 0,
+      "defense": 0
+    },
+    "rows": [
+      {
+        "seat": 0,
+        "dx_world": -2,
+        "dy_world_row": 0,
+        "by_arm": {
+          "original": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": -1,
+        "dy_world_row": -1,
+        "by_arm": {
+          "original": {
+            "collector_action": "DOWN",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "DOWN",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": -1,
+        "dy_world_row": 0,
+        "by_arm": {
+          "original": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": -1,
+        "dy_world_row": 1,
+        "by_arm": {
+          "original": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": 0,
+        "dy_world_row": -2,
+        "by_arm": {
+          "original": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": 0,
+        "dy_world_row": -1,
+        "by_arm": {
+          "original": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": 0,
+        "dy_world_row": 1,
+        "by_arm": {
+          "original": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": 0,
+        "dy_world_row": 2,
+        "by_arm": {
+          "original": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": 1,
+        "dy_world_row": -1,
+        "by_arm": {
+          "original": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": 1,
+        "dy_world_row": 0,
+        "by_arm": {
+          "original": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": 1,
+        "dy_world_row": 1,
+        "by_arm": {
+          "original": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 0,
+        "dx_world": 2,
+        "dy_world_row": 0,
+        "by_arm": {
+          "original": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "LEFT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": -2,
+        "dy_world_row": 0,
+        "by_arm": {
+          "original": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": -1,
+        "dy_world_row": -1,
+        "by_arm": {
+          "original": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": -1,
+        "dy_world_row": 0,
+        "by_arm": {
+          "original": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": -1,
+        "dy_world_row": 1,
+        "by_arm": {
+          "original": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": 0,
+        "dy_world_row": -2,
+        "by_arm": {
+          "original": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": 0,
+        "dy_world_row": -1,
+        "by_arm": {
+          "original": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": 0,
+        "dy_world_row": 1,
+        "by_arm": {
+          "original": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": 0,
+        "dy_world_row": 2,
+        "by_arm": {
+          "original": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "RIGHT",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": 1,
+        "dy_world_row": -1,
+        "by_arm": {
+          "original": {
+            "collector_action": "DOWN",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "DOWN",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": 1,
+        "dy_world_row": 0,
+        "by_arm": {
+          "original": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": 1,
+        "dy_world_row": 1,
+        "by_arm": {
+          "original": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          }
+        }
+      },
+      {
+        "seat": 1,
+        "dx_world": 2,
+        "dy_world_row": 0,
+        "by_arm": {
+          "original": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          },
+          "defense": {
+            "collector_action": "UP",
+            "killing_opponent_responses": []
+          }
+        }
+      }
+    ]
+  },
+  "seeds": [
+    620092000,
+    620092001,
+    620092002,
+    620092003
+  ],
+  "horizon": 100,
+  "rows": [
+    {
+      "seed": 620092000,
+      "seat": 0,
+      "original": {
+        "loaded_collector_decisions": 121,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 100,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 15.66,
+        "enemy_cash": 2343.41,
+        "own_delivery": 0,
+        "enemy_delivery": 1848.7962,
+        "own_completed_harvest_delivery": false
+      },
+      "defense": {
+        "loaded_collector_decisions": 121,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 0,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 15.66,
+        "enemy_cash": 2343.41,
+        "own_delivery": 0,
+        "enemy_delivery": 1848.7962,
+        "own_completed_harvest_delivery": false
+      }
+    },
+    {
+      "seed": 620092000,
+      "seat": 1,
+      "original": {
+        "loaded_collector_decisions": 125,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 100,
+        "workers_killed_by_enemy_collector": 1,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0.0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 15.66,
+        "enemy_cash": 2526.9,
+        "own_delivery": 0,
+        "enemy_delivery": 1280.6505,
+        "own_completed_harvest_delivery": false
+      },
+      "defense": {
+        "loaded_collector_decisions": 125,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 0,
+        "workers_killed_by_enemy_collector": 1,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0.0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 15.66,
+        "enemy_cash": 2526.9,
+        "own_delivery": 0,
+        "enemy_delivery": 1280.6505,
+        "own_completed_harvest_delivery": false
+      }
+    },
+    {
+      "seed": 620092001,
+      "seat": 0,
+      "original": {
+        "loaded_collector_decisions": 42,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 100,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 10.89,
+        "enemy_cash": 2767.7,
+        "own_delivery": 34.4046,
+        "enemy_delivery": 1992.4556999999998,
+        "own_completed_harvest_delivery": true
+      },
+      "defense": {
+        "loaded_collector_decisions": 42,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 0,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 10.89,
+        "enemy_cash": 2767.7,
+        "own_delivery": 34.4046,
+        "enemy_delivery": 1992.4556999999998,
+        "own_completed_harvest_delivery": true
+      }
+    },
+    {
+      "seed": 620092001,
+      "seat": 1,
+      "original": {
+        "loaded_collector_decisions": 41,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 100,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 10.56,
+        "enemy_cash": 3137.28,
+        "own_delivery": 34.0647,
+        "enemy_delivery": 2444.2371,
+        "own_completed_harvest_delivery": true
+      },
+      "defense": {
+        "loaded_collector_decisions": 41,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 0,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 10.56,
+        "enemy_cash": 3137.28,
+        "own_delivery": 34.0647,
+        "enemy_delivery": 2444.2371,
+        "own_completed_harvest_delivery": true
+      }
+    },
+    {
+      "seed": 620092002,
+      "seat": 0,
+      "original": {
+        "loaded_collector_decisions": 89,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 100,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 15.62,
+        "enemy_cash": 3157.76,
+        "own_delivery": 0,
+        "enemy_delivery": 2588.6757000000002,
+        "own_completed_harvest_delivery": false
+      },
+      "defense": {
+        "loaded_collector_decisions": 89,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 0,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 15.62,
+        "enemy_cash": 3157.76,
+        "own_delivery": 0,
+        "enemy_delivery": 2588.6757000000002,
+        "own_completed_harvest_delivery": false
+      }
+    },
+    {
+      "seed": 620092002,
+      "seat": 1,
+      "original": {
+        "loaded_collector_decisions": 114,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 100,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 11.3,
+        "enemy_cash": 2391.46,
+        "own_delivery": 0,
+        "enemy_delivery": 1820.2584000000002,
+        "own_completed_harvest_delivery": false
+      },
+      "defense": {
+        "loaded_collector_decisions": 114,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 0,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 11.3,
+        "enemy_cash": 2391.46,
+        "own_delivery": 0,
+        "enemy_delivery": 1820.2584000000002,
+        "own_completed_harvest_delivery": false
+      }
+    },
+    {
+      "seed": 620092003,
+      "seat": 0,
+      "original": {
+        "loaded_collector_decisions": 43,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 100,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 35.85,
+        "enemy_cash": 1984.58,
+        "own_delivery": 31.3635,
+        "enemy_delivery": 1229.2221,
+        "own_completed_harvest_delivery": true
+      },
+      "defense": {
+        "loaded_collector_decisions": 43,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 0,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 35.85,
+        "enemy_cash": 1984.58,
+        "own_delivery": 31.3635,
+        "enemy_delivery": 1229.2221,
+        "own_completed_harvest_delivery": true
+      }
+    },
+    {
+      "seed": 620092003,
+      "seat": 1,
+      "original": {
+        "loaded_collector_decisions": 53,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 100,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 2.43,
+        "enemy_cash": 1769.05,
+        "own_delivery": 0,
+        "enemy_delivery": 1141.542,
+        "own_completed_harvest_delivery": false
+      },
+      "defense": {
+        "loaded_collector_decisions": 53,
+        "possible_loss_on_planned_landing": 0,
+        "has_safer_unreserved_choice": 0,
+        "changed_collector_actions": 0,
+        "pack_action_parity_calls": 0,
+        "workers_killed_by_enemy_collector": 0,
+        "enemy_workers_killed_by_own_collector": 0,
+        "own_collision_cargo_to_enemy": 0,
+        "enemy_collision_cargo_to_own": 0,
+        "own_trees_seized_by_enemy": 0,
+        "enemy_trees_seized_by_own": 0,
+        "terminal": false,
+        "step": 100,
+        "own_cash": 2.43,
+        "enemy_cash": 1769.05,
+        "own_delivery": 0,
+        "enemy_delivery": 1141.542,
+        "own_completed_harvest_delivery": false
+      }
+    }
+  ],
+  "totals": {
+    "original": {
+      "loaded_collector_decisions": 628,
+      "possible_loss_on_planned_landing": 0,
+      "has_safer_unreserved_choice": 0,
+      "changed_collector_actions": 0,
+      "pack_action_parity_calls": 800,
+      "workers_killed_by_enemy_collector": 1,
+      "enemy_workers_killed_by_own_collector": 0,
+      "own_collision_cargo_to_enemy": 0.0,
+      "enemy_collision_cargo_to_own": 0,
+      "own_trees_seized_by_enemy": 0,
+      "enemy_trees_seized_by_own": 0,
+      "terminal": 0,
+      "step": 800,
+      "own_cash": 117.97,
+      "enemy_cash": 20078.14,
+      "own_delivery": 99.8328,
+      "enemy_delivery": 14345.8377,
+      "own_completed_harvest_delivery": 3
+    },
+    "defense": {
+      "loaded_collector_decisions": 628,
+      "possible_loss_on_planned_landing": 0,
+      "has_safer_unreserved_choice": 0,
+      "changed_collector_actions": 0,
+      "pack_action_parity_calls": 0,
+      "workers_killed_by_enemy_collector": 1,
+      "enemy_workers_killed_by_own_collector": 0,
+      "own_collision_cargo_to_enemy": 0.0,
+      "enemy_collision_cargo_to_own": 0,
+      "own_trees_seized_by_enemy": 0,
+      "enemy_trees_seized_by_own": 0,
+      "terminal": 0,
+      "step": 800,
+      "own_cash": 117.97,
+      "enemy_cash": 20078.14,
+      "own_delivery": 99.8328,
+      "enemy_delivery": 14345.8377,
+      "own_completed_harvest_delivery": 3
+    }
+  },
+  "wall_seconds": 32.598
+}
