@@ -60,6 +60,20 @@
 #      the student_init state: the publish gate verifies aux. is
 #      bitwise-identical to what student_init carried at segment
 #      start. --parent is refused with a migration message.
+#   7. MANDATORY CONSUMPTION GATE (k0-distill-u/3, RULING_MERGED_GEN_
+#      PROVENANCE_SAMPLER_20261118 two-layer provenance + RULING_
+#      PREFLIGHT_HOOK_20261118 main case): every start, for merged
+#      and plain generations alike, requires the dataset root's
+#      sealed CONSUMPTION.json (tools/consume_preflight.py) to pass
+#      its own sidecar_sha256 seal in-process and to bind the
+#      generation actually loaded (generation id + manifest sha256);
+#      a missing, unsealed, or mis-bound sidecar refuses the start,
+#      naming the sidecar and the failed binding -- never a warning.
+#      The verified consumption summary (sidecar hash, registration
+#      hash, merged_from in full) is sealed into the effective
+#      record's data block, so a training product traces two hops
+#      back to its source generations. The gate reads no paths from
+#      the registration record (identity only, per the ruling).
 # The pinned docstring below is retained; where it describes the /1
 # format, the four frozen prefixes, or the --parent interface, this
 # header governs.
@@ -209,7 +223,7 @@ FROZEN_PREFIXES = ("aux.",)
 # k0_distill_u: the three value heads train under terminal-label
 # supervision; only aux. stays frozen (DESIGN_K0_DISTILL_U SS2).
 TERMINAL_FIELDS = ("terminal_u", "terminal_wdl", "terminal_margin")
-TRAINER_VERSION = "k0-distill-u/2"
+TRAINER_VERSION = "k0-distill-u/3"
 LAMBDA_U_DEFAULT = 1.0
 LAMBDA_W_DEFAULT = 0.5
 LAMBDA_M_DEFAULT = 0.5
@@ -689,6 +703,78 @@ def load_annotation(data_arg, q_temp=Q_TEMP_DEFAULT):
             "info": info, "gen_dir": gen_dir, "manifest": man,
             "terminal_u": t_u, "terminal_wdl": t_wdl,
             "terminal_margin": t_m}
+
+
+def _resolve_dataset_root(data_arg):
+    """Dataset-root resolution for the consumption gate: mirrors
+    verify_annotation_generation's pointer resolution (a pointer
+    file names its own directory; a dataset root carries
+    current.json). Returns (root, ptr). A sealed generation
+    directory passed directly names no root and is refused here,
+    exactly as the loader refuses it."""
+    if os.path.isfile(data_arg):
+        ptr_path = data_arg
+        root = os.path.dirname(os.path.abspath(data_arg))
+    elif os.path.exists(os.path.join(data_arg, "current.json")):
+        ptr_path = os.path.join(data_arg, "current.json")
+        root = data_arg
+    else:
+        raise SystemExit(
+            f"k0_distill_u data: {data_arg!r} is not an annotation "
+            f"dataset root (no current.json pointer); refusing to "
+            f"start")
+    return root, json.load(open(ptr_path))
+
+
+def _require_consumption_sidecar(data_arg, ds):
+    """Consumption gate (RULING_MERGED_GEN_PROVENANCE_SAMPLER_
+    20261118 two-layer provenance; strength per RULING_PREFLIGHT_
+    HOOK_20261118 main case): refuse to train on a generation
+    whose mandatory consumption preflight record (CONSUMPTION.json,
+    sealed by tools/consume_preflight.py) is missing, fails its
+    own seal, or does not bind the generation actually loaded.
+    The check is in-process (sidecar self-seal + binding to the
+    loaded generation); every refusal names the sidecar and the
+    failed item -- there is no warn-and-pass path. Returns the
+    consumption summary sealed into the effective record."""
+    root, ptr = _resolve_dataset_root(data_arg)
+    sc_path = os.path.join(root, "CONSUMPTION.json")
+    if not os.path.exists(sc_path):
+        raise SystemExit(
+            f"k0_distill_u data: no CONSUMPTION.json sidecar at "
+            f"{sc_path!r} (dataset root {root!r}); the mandatory "
+            f"consumption preflight (tools/consume_preflight.py) "
+            f"has not sealed this generation for consumption; "
+            f"refusing to start")
+    sc = json.load(open(sc_path))
+    core = {k: v for k, v in sc.items()
+            if k not in ("sidecar_sha256", "created", "locations")}
+    if sc.get("sidecar_sha256") != _canonical_sha256(core):
+        raise SystemExit(
+            f"k0_distill_u data: CONSUMPTION.json sidecar at "
+            f"{sc_path!r} fails its sidecar_sha256 seal; refusing "
+            f"to start")
+    man_sha = _sha256_file(os.path.join(ds["gen_dir"],
+                                        "manifest.json"))
+    tgt = sc.get("target") or {}
+    if tgt.get("generation") != ds["info"]["generation"] \
+            or tgt.get("manifest_sha256") != man_sha:
+        raise SystemExit(
+            f"k0_distill_u data: CONSUMPTION.json sidecar at "
+            f"{sc_path!r} binds generation "
+            f"{tgt.get('generation')} / manifest "
+            f"{tgt.get('manifest_sha256')}, but the loaded "
+            f"generation is {ds['info']['generation']} / "
+            f"{man_sha}; refusing to start")
+    merged = sc.get("merged")
+    return {"sidecar": "CONSUMPTION.json",
+            "sidecar_sha256": sc["sidecar_sha256"],
+            "merged_teacher_config_hash":
+                merged["teacher_config_hash"] if merged else None,
+            "registration_sha256":
+                merged["registration"]["file_sha256"]
+                if merged else None,
+            "merged_from": merged["merged_from"] if merged else None}
 
 
 def root_weights(pi, ipw_active):
@@ -1199,6 +1285,7 @@ def main():
 
     # ---- data: sealed generation, SS13-C gates (pure path above) ----
     ds = load_annotation(args.data, q_temp=args.q_temp)
+    consumption = _require_consumption_sidecar(args.data, ds)
     info = ds["info"]
     target = targets_with_flatten(ds, args.flatten_q, q_temp=args.q_temp)
     R, K = info["roots"], info["max_candidates"]
@@ -1261,7 +1348,7 @@ def main():
 
     code_md5 = _md5_file(os.path.abspath(__file__))
     eff = {"k0_distill_u_effective": {
-        "format": "k0-distill-u/2",
+        "format": "k0-distill-u/3",
         "trainer": {"file": "k0_distill_u.py", "version": TRAINER_VERSION,
                     "md5": code_md5},
         "annotation_format": ANNOTATION_FORMAT,
@@ -1293,7 +1380,8 @@ def main():
                  "candidates": info["candidates"],
                  "teacher_config_hash": info["teacher_config_hash"],
                  "teacher_weights_md5": info["teacher_weights_md5"],
-                 "belief": info["belief"]},
+                 "belief": info["belief"],
+                 "consumption": consumption},
         "recipe": {"q_temp": args.q_temp, "kl_beta": args.kl_beta,
                    "lambda_u": args.lambda_u, "lambda_w": args.lambda_w,
                    "lambda_m": args.lambda_m,
