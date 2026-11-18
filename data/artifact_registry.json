@@ -829,6 +829,26 @@
     }
    ],
    "status": "present"
+  },
+  {
+   "name": "spot-74_deployment_release",
+   "kind": "spot seat deployment + release record (fleet spare)",
+   "detail": "spot-74 (i-uf6ctis6xr30bsrnuac0, c8ae / L zone, ¥2.921/h, public 47.103.88.121, Tailscale 100.113.49.57) deployed by DGX line 2026-11-18 19:31:36 with standard deploy package v1 (DEPLOY_OK, rc=0; bootstrap.sh md5 ea33ea85; IMPORT_OK numpy 2.5.4 / scipy 1.18.1; SMOKE_OK roots 2). Mesh-joined and verified the same evening (six-seat matrix all pass, own key carbon-spot-74-mesh). Role: fleet spare seat (Loop-3), never assigned work. RELEASED 2026-11-18 19:40 by owner order (console confirmed by logistics, billing stopped). No unique data on the seat - only the deployment tree. Recorded per war-room registry order 19:38 (register as deployed-never-assigned-released once confirmation arrived).",
+   "identity": {
+    "instance_id": "i-uf6ctis6xr30bsrnuac0",
+    "public_ip": "47.103.88.121",
+    "tailscale_ip": "100.113.49.57",
+    "deploy_package_md5": "4e662646",
+    "deploy_time": "2026-11-18 19:31:36",
+    "release_time": "2026-11-18 19:40"
+   },
+   "locations": [
+    {
+     "machine": "spot-74",
+     "path": "/root/carbon/ (deployment tree only)"
+    }
+   ],
+   "status": "released"
   }
  ],
  "created": "2026-11-17",
@@ -840,6 +860,6 @@
   "R3 release gate: a machine holding unique products is released only after the owning line confirms recovery in writing.",
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
- "version": "4.8",
- "updated": "2026-11-18 (v4.8: Loop-2 disposition per owner ruling 19:18 via war-room registry order - selfplay 750 registered with training-set split 960000-960249 / archived-unused 960250-960749; sparring 250 used descriptively; 53 artifacts)"
+ "version": "4.9",
+ "updated": "2026-11-18 (v4.9: spot-74 deployment+release recorded - deployed 19:31:36, never assigned, released 19:40 by owner order; 54 artifacts)"
 }
