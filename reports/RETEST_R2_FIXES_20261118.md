@@ -79,3 +79,9 @@ bootstrap_offline 对当前 checkout 在 cnet2_search 一件上 fail-close（其
 本报告 §2/§3 曾据本地复测称离线取包链可跑通（G10 通过、bridge 探针 smoke 取包成功）。该结论在本地被掩盖：本机 `/tmp/echo4_int8.py` 缓存（md5 819250bf）在，`fetch_pack` 根本没走到 checkout 候选；且本机 `sys.path` 有 `gh_api` 可走在线通道。2026-11-18 22:15 spot-72 座位验证首跑 （无缓存、无 gh_api）即暴露：`smoke_real_s1.py` 的 `CHECKOUT_PACK_CANDIDATES` 写成 `../../packs/echo4_int8.py`，归一化为不存在的 `<checkout>/packs/`，钉版包实际在 `code/packs/`，差一级——首跑 FAIL（G10 FAIL、`tests_r2_fix.py` import 时 `fetch_pack()` 即崩，11 项 0 跑；冻结 17/17 合、G1–G9 实质项全过）。根因是 R2-06 离线链的潜伏缺陷，非座位问题。
 
 修正：`smoke_real_s1.py` 一行 `../../packs` → `../packs`，提交 97b52b8d（主干读回 md5 0fbc6016）；本地缓存移开后重跑两套 21/21（确证走通修正后的 checkout 路径）；重打验证包上 spot-72 重跑 PASS——2026-11-18 22:27:11–22:27:15 CST，墙钟 4 秒，冻结 17/17、tests_s1_fix_r2 10/10、tests_r2_fix 11/11。§1 冻结表 smoke 一行已同步更新为 0fbc6016。§4「完整 checkout 离线 bootstrap 可跑通」一句指 pack_bridge bootstrap，与 smoke 取包是两条链：前者的原标注（只在钉版文件在场时成立）不变；后者的 checkout fallback 在修正前并不通、修正后在无缓存无 gh_api 的座上跑通。详见 `reports/ADDENDUM_RETEST_R2_FIXES_SEATVAL_20261118.md`（commit beb68b27）。
+
+## 7. 正式 S1 battery2 全量重跑结果（2026-11-18 22:42 CST）
+
+§5 第 2 步后半已执行完毕：spot-72（c8ae 空闲座），2026-11-18 22:41:43–22:42:01 CST，墙钟 18 秒，包 battery2_rerun.tar.gz（md5 ee6eeafa…），口径 --mode formal＋S1B2_RUN_BUDGET_S=15.0（与旧正式证据同口径）。证据 `reports/S1_BATTERY2_RERUN_EVIDENCE_20261118.json`（commit 073397ff），run_id s1b2-formal-20261118T144201Z-b2b9000db0，md5 443b7805e35319904c8ab4173bb01631。
+
+**正式裁定：FAIL（exit 2）**。断言：A1 PASS（完成比较 192、完成根 48）；**A2 FAIL——正典正例 4 例未达：B_capture_step298_seat0/seat1、B_capture_step297_seat0/seat1**（与旧正式工件同一 4 例，G1 复算结论一致）；A3–A9 全 PASS。规模完整：3 局、48 根（≥40）、0 中止，无截断。R2 §5 第 2 步「再跑一次可核验的 S1」至此执行完毕、正式门未过；处置归策略组裁量。
