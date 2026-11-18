@@ -797,6 +797,38 @@
    ],
    "owner_line": "工程组",
    "status": "landed"
+  },
+  {
+   "name": "katago_loop2_selfplay_750",
+   "kind": "selfplay corpus (KataGo Loop-2)",
+   "detail": "KataGo Loop-2 self-play production on L20, completed 2026-11-18 (750/750 after the single missing game selfplay-960749 was closed out; parent = Loop-1 student loop1_student.npz e28a5dd1, bare net, pinned producer). 750 games, seeds 960000-960749. DISPOSITION (owner ruling 2026-11-18 19:18, war-room registry-amendment order): Loop-2 truncated - the training set is seeds 960000-960249 (250 games, annotation in flight across the spot fleet, closing out); seeds 960250-960749 (500 games) replays were produced but are never annotated - archived unused. Owning line: L20.",
+   "identity": {
+    "weights_md5": "e28a5dd10248bf35a9a15fd129a40ede",
+    "producer": "selfplay_gen.py bd62ead949c93d70afaa7dc10b9d5e8e",
+    "seed_domain": "960000-960749"
+   },
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/katago/loop2/"
+    }
+   ],
+   "status": "present"
+  },
+  {
+   "name": "katago_loop2_sparring_250",
+   "kind": "sparring games (KataGo Loop-2)",
+   "detail": "KataGo Loop-2 sparring production, 250 games, seeds 960750-960999, completed 2026-11-18 (three fields in parallel on spot-69 / spot-64, zero errors; opponents incl. snap_70, w_96, fastline student, Master3s2, Echo6). DISPOSITION (owner ruling 2026-11-18 19:18): produced and used - descriptive profile only, not training data. Owning line: L20.",
+   "identity": {
+    "seed_domain": "960750-960999"
+   },
+   "locations": [
+    {
+     "machine": "L20",
+     "path": "/root/carbon/katago/loop2/"
+    }
+   ],
+   "status": "present"
   }
  ],
  "created": "2026-11-17",
@@ -808,6 +840,6 @@
   "R3 release gate: a machine holding unique products is released only after the owning line confirms recovery in writing.",
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
- "version": "4.7",
- "updated": "2026-11-18 (v4.7: pilot selfplay entry + MANIFEST.md5 ed822e5d, 151 entries)"
+ "version": "4.8",
+ "updated": "2026-11-18 (v4.8: Loop-2 disposition per owner ruling 19:18 via war-room registry order - selfplay 750 registered with training-set split 960000-960249 / archived-unused 960250-960749; sparring 250 used descriptively; 53 artifacts)"
 }
