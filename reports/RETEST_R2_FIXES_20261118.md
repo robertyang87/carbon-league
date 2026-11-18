@@ -57,6 +57,13 @@ bootstrap_offline 对当前 checkout 在 cnet2_search 一件上 fail-close（其
 本线不单方改钉；但在裁量前，「完整 checkout 离线 bootstrap 可跑通」这一 R2-06
 结论只在钉版文件在场时成立，特此标注。
 
+**后记（2026-11-18 21:25，策略组纠正件 369e7d56 后修正定性）**：94f7fb64 考试钉版
+集与后继权威集是两个并行权威集，考试钉按后继注册 §4 不受 successor 影响、钉本身
+无误；本节的机械事实收窄为：bootstrap_offline 读活路径 code/cnet2_search.py，该
+路径现驻后继文件，故以考试集为目标的离线 bootstrap 在当前 checkout 上 fail-close。
+另按纠正件 §3 常设验包门：开跑前 --verify-pack 须对该跑自称的注册验（考试跑对
+考试集、后继跑对后继集），不存在「改钉」问题。
+
 ## 5. 未完项
 
 - §5 第 2 步后半「再跑一次可核验的 S1」（正式 battery2 全量复跑：采集＋新判读器
