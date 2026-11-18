@@ -42,9 +42,12 @@ import real_env                               # noqa: E402
 PACK_REPO_PATH = "code/packs/echo4_int8.py"
 PACK_CACHE = "/tmp/echo4_int8.py"
 # checkout fallback（R2-06）：本脚本在仓内 code/search_proto/ 时，
-# 同 checkout 的钉版包在 ../../packs/echo4_int8.py。
+# 同 checkout 的钉版包在 ../packs/echo4_int8.py（即 code/packs/echo4_int8.py）。
+# 2026-11-18 修正：原 ../../packs 差一级（归一化后为 <checkout>/packs/，
+# 仓内无此路径）；钉版包在 code/packs/，自 code/search_proto/ 起为 ../packs。
+# 由 spot-72 座位验证首跑暴露：无 /tmp 缓存、无 gh_api 时离线链 fail-closed。
 CHECKOUT_PACK_CANDIDATES = [
-    os.path.join(_HERE, "..", "..", "packs", "echo4_int8.py"),
+    os.path.join(_HERE, "..", "packs", "echo4_int8.py"),
 ]
 
 # --pack 先于位置参数解析并从 argv 摘除（位置参数口径不变）。
