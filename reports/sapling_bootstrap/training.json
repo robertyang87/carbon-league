@@ -1,0 +1,502 @@
+{
+  "format": "sapling-own-policy-bootstrap-training/1",
+  "generated_utc": "2026-11-18T16:32:48.599039+00:00",
+  "status": "exploratory_diagnostic_no_winner_selected",
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "1.26.4",
+    "torch": "2.5.1+cpu",
+    "device": "cpu",
+    "torch_threads": 2,
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "1",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "automatic_mixed_precision": false
+  },
+  "code": "code/sapling_bootstrap.py",
+  "code_sha256": "de012df884c7b194042d72ffe00d9b0edf03d1c0df046892898cfb71a8a73a28",
+  "regression_test": "code/test_sapling_bootstrap.py",
+  "regression_test_sha256": "ab1ec360c66927a5368f58beacb90c0610a676598d7adee73938550b414a69bf",
+  "regression_result": "5/5 passed; opportunity denominator, absent slots, supported-action macro recall, empty supervision, sqrt transformation",
+  "source_hashes": {
+    "sapling_bootstrap.py": "de012df884c7b194042d72ffe00d9b0edf03d1c0df046892898cfb71a8a73a28",
+    "policy_v0_5.py": "4d435035e8e274c5c4d49dfcc71ca293c6b4989ebadc974796a90837f9f569c1",
+    "fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+    "cnet2_build.py": "edeb3222e3633673693311b7b771d0ebb451557caadc3fda4a9bf94e32651bbf",
+    "cnet2_train.py": "313f0237728e6db6f2be11800c7db2c7d0ed3b332a295bb42a85960916544bd6",
+    "cnet2_model.py": "3dc3b3aaaf083c8b7168299acaa0c573c3957d95a63074776d2f0f4aa52add8f",
+    "init_sapling.py": "be5ef4fd811660af6fedb31a0e3efcb7f951af1c503fae9bf59664fea050c98a",
+    "eval_v53.py": "ef3301e8e7d1cea39ce015e2a1c0e010c544842a7dfebefb398c458363f60d86"
+  },
+  "initialization": {
+    "model_name": "Sapling",
+    "params": 551187,
+    "cfg": {
+      "C": 64,
+      "NB": 4,
+      "D": 96,
+      "NH": 4,
+      "L": 1,
+      "E": 32,
+      "G": 8,
+      "TA": 0
+    },
+    "filename": "sapling_seed551187.npz",
+    "sha256": "fae95a7240198a2e25582096a530dc8f3e4216a3a22724b1b78e9142370bedb3",
+    "tensors_sha256": "ca9f3277eb26230c000056e449184083fc080f3721072e9d91b2c7850063ace7",
+    "strict_full_state_load": true,
+    "all_finite": true,
+    "archived_weights": "data/weights/sapling_bootstrap/initial.npz"
+  },
+  "data": {
+    "source": "New policy_v0_5 self-play in FastCarbon; both seats of every seed stay in the same split",
+    "external_replays": 0,
+    "top2_replays": 0,
+    "master3s2_exam_replays": 0,
+    "train_seeds": [
+      620000000,
+      620000001,
+      620000002,
+      620000003
+    ],
+    "validation_seeds": [
+      620000004,
+      620000005
+    ],
+    "transitions_per_game": 120,
+    "train_games": 4,
+    "validation_games": 2,
+    "train_rows": 960,
+    "validation_rows": 480,
+    "train_tensor_fingerprint": "93e0bafbf2346fa7fbacdd97df15686327fdea9c9e795177623d029f6375887f",
+    "validation_tensor_fingerprint": "43c0656689f8438c2219261fffcf23efc8594db08e25738e755fb56cc1be5db8",
+    "all_three_arms_identical_data": true,
+    "supervised_style": 2,
+    "actual_source_is_not_style_slot_name": true,
+    "training_label_counts_by_role_and_action": [
+      [
+        2381,
+        707,
+        519,
+        465,
+        588
+      ],
+      [
+        472,
+        622,
+        424,
+        290,
+        409
+      ],
+      [
+        1809,
+        57,
+        54,
+        0,
+        0
+      ]
+    ],
+    "value_or_terminal_labels_consumed": false
+  },
+  "method": {
+    "loss": "Existing cnet2_train.losses policy CE only; existing builder replay/action alignment",
+    "budget": "64 AdamW updates per arm; batch 16, lr 0.0003, seed 551187; no checkpoint selection",
+    "inherited_switches": "All pre-existing BC_* and CNET2_* switches refused",
+    "formal_training_or_selection_changed": false,
+    "natural": "Existing unweighted per-unit BC objective (teacher slot constant, so teacher factor cancels)",
+    "role_action": "Equal supported-role/action target mass, cap 8 before valid-unit mean normalization; passed through existing uw",
+    "sqrt_role_action": "One specified post-hoc ablation: sqrt of the same full weights, then mean 1 over valid units; no sweep",
+    "heldout_reuse": "The offline validation split informed the sqrt ablation; all offline numbers are exploratory diagnostics, not an unbiased final selection test.",
+    "existing_bc_support": "Teacher/sample/unit weighting and per-role accuracy already exist. Class/opportunity balancing is opt-in here; base forced-NONE vs recruitment-available diagnostics were absent from the standard evaluate output."
+  },
+  "initial_validation": {
+    "unweighted_policy_ce": 1.3701012745629424,
+    "base_recruit_available": {
+      "n": 254,
+      "teacher_recruits": 55,
+      "predicted_recruits": 173,
+      "correct": 70
+    },
+    "base_forced_none_n": 706,
+    "collector": {
+      "n": 2292,
+      "accuracy": 0.14048865619546247,
+      "macro_recall_supported_actions": 0.2120063720022177,
+      "label_counts": [
+        1142,
+        315,
+        300,
+        234,
+        301
+      ],
+      "prediction_counts": [
+        15,
+        895,
+        1235,
+        123,
+        24
+      ]
+    },
+    "planter": {
+      "n": 1110,
+      "accuracy": 0.27927927927927926,
+      "macro_recall_supported_actions": 0.2409623087078324,
+      "label_counts": [
+        176,
+        365,
+        228,
+        128,
+        213
+      ],
+      "prediction_counts": [
+        43,
+        486,
+        395,
+        173,
+        13
+      ]
+    },
+    "base": {
+      "n": 960,
+      "accuracy": 0.8083333333333333,
+      "macro_recall_supported_actions": 0.43974041453561363,
+      "label_counts": [
+        905,
+        29,
+        26,
+        0,
+        0
+      ],
+      "prediction_counts": [
+        787,
+        62,
+        111,
+        0,
+        0
+      ]
+    }
+  },
+  "initial_validation_arrays": "reports/sapling_bootstrap/validation-initial.npz",
+  "initial_validation_arrays_sha256": "f4289c3dafadecb219d60ec01fbbde5f1976fbcfcb22244014d59046ac3194c1",
+  "arms": {
+    "natural": {
+      "balance": "natural",
+      "updates": 64,
+      "seconds": 20.930066549000912,
+      "training_args": {
+        "train_games": 4,
+        "val_games": 2,
+        "steps": 120,
+        "updates": 64,
+        "bs": 16,
+        "lr": 0.0003,
+        "threads": 2,
+        "seed0": 620000000,
+        "optim_seed": 551187,
+        "style": 2,
+        "balance": "none",
+        "weight_cap": 8.0
+      },
+      "executed_code_sha256": "de012df884c7b194042d72ffe00d9b0edf03d1c0df046892898cfb71a8a73a28",
+      "trained_npz_sha256": "df0d379176c627082e8898a29e0307249a8638bc0383d6e62ad761b548812c43",
+      "trained_tensors_sha256": "6b51c3d1a23768504a1e694e682dd91b7ab49094d72a9b38382be7dd4a51ac0a",
+      "tensor_count": 89,
+      "parameter_count": 551187,
+      "train_unit_weights_sha256": "29831201bdb305626f65dfaae31b553b416c73ae57e9901ca51883adf62d0342",
+      "train_weight_formula": "1 on valid labels; no uw passed to loss",
+      "policy_head_only_loss": true,
+      "unused_output_heads_bitwise_unchanged": true,
+      "validation_arrays": "reports/sapling_bootstrap/validation-natural.npz",
+      "validation_arrays_sha256": "e227506b3e9783b595a8d15b9762b60ab33f9ebd7c1934fa97f5794dc6978d97",
+      "validation": {
+        "unweighted_policy_ce": 1.060962700614247,
+        "base_recruit_available": {
+          "n": 254,
+          "teacher_recruits": 55,
+          "predicted_recruits": 0,
+          "correct": 199
+        },
+        "base_forced_none_n": 706,
+        "collector": {
+          "n": 2292,
+          "accuracy": 0.5191972076788831,
+          "macro_recall_supported_actions": 0.25904443777078484,
+          "label_counts": [
+            1142,
+            315,
+            300,
+            234,
+            301
+          ],
+          "prediction_counts": [
+            2062,
+            78,
+            58,
+            30,
+            64
+          ]
+        },
+        "planter": {
+          "n": 1110,
+          "accuracy": 0.25765765765765763,
+          "macro_recall_supported_actions": 0.2553827407899584,
+          "label_counts": [
+            176,
+            365,
+            228,
+            128,
+            213
+          ],
+          "prediction_counts": [
+            417,
+            199,
+            309,
+            101,
+            84
+          ]
+        },
+        "base": {
+          "n": 960,
+          "accuracy": 0.9427083333333334,
+          "macro_recall_supported_actions": 0.3333333333333333,
+          "label_counts": [
+            905,
+            29,
+            26,
+            0,
+            0
+          ],
+          "prediction_counts": [
+            960,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "first_run_identity": {
+        "trained_npz_sha256": "541c85ba90629c961834f5c958b730976ec4f9952ae21fbcacc7524f32b8915b",
+        "executed_code_sha256": "407ef0e606e8c3dd5fb4e5e40528b00416ea66eae06ba171cb20f5bb0d880cf1",
+        "final_replay_all_89_tensors_bitwise_equal": true,
+        "explanation": "The first run preceded artifact-only improvements and the sqrt option. Frozen final-source replay yields the same 89 tensors. NPZ metadata/container bytes differ; evaluated first-run neural parameters are identical."
+      },
+      "archived_weights": "data/weights/sapling_bootstrap/natural.npz"
+    },
+    "role-action": {
+      "balance": "role-action",
+      "updates": 64,
+      "seconds": 18.114644204999422,
+      "training_args": {
+        "train_games": 4,
+        "val_games": 2,
+        "steps": 120,
+        "updates": 64,
+        "bs": 16,
+        "lr": 0.0003,
+        "threads": 2,
+        "seed0": 620000000,
+        "optim_seed": 551187,
+        "style": 2,
+        "balance": "role-action",
+        "weight_cap": 8.0
+      },
+      "executed_code_sha256": "de012df884c7b194042d72ffe00d9b0edf03d1c0df046892898cfb71a8a73a28",
+      "trained_npz_sha256": "f2ce353286447a9b93850ee9cc5bbfb6614781d6386547f14be74e9a65d2830a",
+      "trained_tensors_sha256": "a42bb9aefa0117583b098862c1463875b10e56c48b57c9e29359761553eaa9c5",
+      "tensor_count": 89,
+      "parameter_count": 551187,
+      "train_unit_weights_sha256": "a72fc1c3d693b8047f0615ac5799564db3f95b46546be5586b5ea9ec3745a2b5",
+      "train_weight_formula": "train-only role/action balancing, capped then mean-normalized",
+      "policy_head_only_loss": true,
+      "unused_output_heads_bitwise_unchanged": true,
+      "validation_arrays": "reports/sapling_bootstrap/validation-role-action.npz",
+      "validation_arrays_sha256": "6d9e52424a7b94351c13dc798ee8e8eef91a18f234a9f98358deaa137e769872",
+      "validation": {
+        "unweighted_policy_ce": 1.2476069202449331,
+        "base_recruit_available": {
+          "n": 254,
+          "teacher_recruits": 55,
+          "predicted_recruits": 240,
+          "correct": 41
+        },
+        "base_forced_none_n": 706,
+        "collector": {
+          "n": 2292,
+          "accuracy": 0.3647469458987784,
+          "macro_recall_supported_actions": 0.3877146789728551,
+          "label_counts": [
+            1142,
+            315,
+            300,
+            234,
+            301
+          ],
+          "prediction_counts": [
+            447,
+            746,
+            496,
+            161,
+            442
+          ]
+        },
+        "planter": {
+          "n": 1110,
+          "accuracy": 0.3261261261261261,
+          "macro_recall_supported_actions": 0.299808314916481,
+          "label_counts": [
+            176,
+            365,
+            228,
+            128,
+            213
+          ],
+          "prediction_counts": [
+            179,
+            327,
+            210,
+            79,
+            315
+          ]
+        },
+        "base": {
+          "n": 960,
+          "accuracy": 0.778125,
+          "macro_recall_supported_actions": 0.6354411829359439,
+          "label_counts": [
+            905,
+            29,
+            26,
+            0,
+            0
+          ],
+          "prediction_counts": [
+            720,
+            87,
+            153,
+            0,
+            0
+          ]
+        }
+      },
+      "first_run_identity": {
+        "trained_npz_sha256": "a42ac4d875c984bdafaae686ff81bccee04a773d63e05a9aadadf5b330766c79",
+        "executed_code_sha256": "407ef0e606e8c3dd5fb4e5e40528b00416ea66eae06ba171cb20f5bb0d880cf1",
+        "final_replay_all_89_tensors_bitwise_equal": true,
+        "explanation": "The first run preceded artifact-only improvements and the sqrt option. Frozen final-source replay yields the same 89 tensors. NPZ metadata/container bytes differ; evaluated first-run neural parameters are identical."
+      },
+      "archived_weights": "data/weights/sapling_bootstrap/full.npz"
+    },
+    "sqrt-role-action": {
+      "balance": "sqrt-role-action",
+      "updates": 64,
+      "seconds": 18.420514429000832,
+      "training_args": {
+        "train_games": 4,
+        "val_games": 2,
+        "steps": 120,
+        "updates": 64,
+        "bs": 16,
+        "lr": 0.0003,
+        "threads": 2,
+        "seed0": 620000000,
+        "optim_seed": 551187,
+        "style": 2,
+        "balance": "sqrt-role-action",
+        "weight_cap": 8.0
+      },
+      "executed_code_sha256": "de012df884c7b194042d72ffe00d9b0edf03d1c0df046892898cfb71a8a73a28",
+      "trained_npz_sha256": "35463ca5248ac4ef5258afa43121cc532849efb3196a870a51b70283b622660e",
+      "trained_tensors_sha256": "84b93eeea01f7f842e4aae18a40a70e8f905831c27ffa5a3d67bdea4b94b6f7d",
+      "tensor_count": 89,
+      "parameter_count": 551187,
+      "train_unit_weights_sha256": "b2ef2b7d24514e1c6e7c6944ab7f159c85f2109b7991738f293670371844be08",
+      "train_weight_formula": "sqrt(role-action weights), re-normalized to mean 1 on valid labels",
+      "policy_head_only_loss": true,
+      "unused_output_heads_bitwise_unchanged": true,
+      "validation_arrays": "reports/sapling_bootstrap/validation-sqrt-role-action.npz",
+      "validation_arrays_sha256": "ea3474562de8d54860e69633482eeaf5533755db04ce24f52bfa2357bc936e46",
+      "validation": {
+        "unweighted_policy_ce": 1.1307995624358584,
+        "base_recruit_available": {
+          "n": 254,
+          "teacher_recruits": 55,
+          "predicted_recruits": 54,
+          "correct": 169
+        },
+        "base_forced_none_n": 706,
+        "collector": {
+          "n": 2292,
+          "accuracy": 0.5239965095986039,
+          "macro_recall_supported_actions": 0.3156104011023573,
+          "label_counts": [
+            1142,
+            315,
+            300,
+            234,
+            301
+          ],
+          "prediction_counts": [
+            1758,
+            170,
+            178,
+            54,
+            132
+          ]
+        },
+        "planter": {
+          "n": 1110,
+          "accuracy": 0.22432432432432434,
+          "macro_recall_supported_actions": 0.23670831306248719,
+          "label_counts": [
+            176,
+            365,
+            228,
+            128,
+            213
+          ],
+          "prediction_counts": [
+            642,
+            128,
+            139,
+            35,
+            166
+          ]
+        },
+        "base": {
+          "n": 960,
+          "accuracy": 0.9114583333333334,
+          "macro_recall_supported_actions": 0.4539526454367376,
+          "label_counts": [
+            905,
+            29,
+            26,
+            0,
+            0
+          ],
+          "prediction_counts": [
+            906,
+            26,
+            28,
+            0,
+            0
+          ]
+        }
+      },
+      "archived_weights": "data/weights/sapling_bootstrap/sqrt.npz"
+    }
+  },
+  "reproduction": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 python code/sapling_bootstrap.py --init <matching-init-sha256.npz> --out <new-directory> --balance {none,role-action,sqrt-role-action} --updates 64",
+  "tensor_fingerprint_algorithm": "sorted keys; for each: UTF8 key + NUL + numpy dtype.str + NUL + compact JSON shape + NUL + C-contiguous tensor bytes; SHA256; NPZ meta excluded for model identity",
+  "artifacts": "Validation arrays are beside this record. The exact starting weight file and the final weight file for each arm are in data/weights/sapling_bootstrap/. The runnable training entry regenerates rule demonstrations and shards from the listed seeds.",
+  "interpretation": [
+    "This proves that the genuine 551187-parameter network can be strictly loaded and trained; the examined starting model was random, not a failed trained policy.",
+    "Natural BC lowers validation CE to 1.061 and raises base accuracy to 94.27%, yet chooses no recruitment in 254 model-legal opportunities; overall accuracy alone is misleading.",
+    "Full balancing predicts 240 recruitments versus 55 teacher recruitments in 254 opportunities; increasing action counts alone is not success.",
+    "Sqrt predicts 54 recruitments, but its planter agreement is lower; matching aggregate action rates is not matching correct decisions.",
+    "Recruitment opportunity is the existing Prefix approximate legal mask (fixed cost 30), not a verified environment event. Independent actual-game ledgers are required.",
+    "Value, utility, WDL, margin, aux output layers remain bitwise unchanged and untrained. Trunk changes can still change their predictions; do not use these checkpoints as certified value teachers.",
+    "No full matches, deployment, A4 selection, strength claim, U improvement claim or optimum architecture claim follows from this diagnostic."
+  ]
+}

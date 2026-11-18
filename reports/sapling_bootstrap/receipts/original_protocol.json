@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "seeds": [
+    620010000,
+    620010001,
+    620010002,
+    620010003
+  ],
+  "candidate_seats": [
+    0,
+    1
+  ],
+  "transitions_per_game": 60,
+  "snapshot_states": [
+    30,
+    60
+  ],
+  "teacher": 2,
+  "guards": false,
+  "quantization": "int8",
+  "opponent": "policy_v0_5.make_agent; frozen same source as training teacher, distinct maps",
+  "source_sha256": {
+    "cnet2_pack.py": "f40ddcd749603bdd0e664d544165c307c17b8f901ac7b7fb0f1c58d1fae1aecc",
+    "cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+    "cnet2_np.py": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+    "cnet2_agent.py": "ac159979644b37d57f59db33bd4cb5713fa54f79d6d92220b6bf5f7c774cbe5c",
+    "fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "policy_v0_5.py": "4d435035e8e274c5c4d49dfcc71ca293c6b4989ebadc974796a90837f9f569c1"
+  },
+  "training_seed_exclusion_declared": [
+    620000000,
+    620000001,
+    620000002,
+    620000003,
+    620000004,
+    620000005
+  ],
+  "seed_registry_check": "No literal 620010000..620010003 in reports/code/automation text at registration; training agent separately confirmed 620000000..005. Not a claim about unrecorded external runs.",
+  "interpretation": "Held-out early behavior smoke only. 4 maps \u00d7 2 candidate seats = 8 games; seats share map, not 8 independent maps. No terminal winrate or strength claim. Trace timing is not resource certification."
+}

@@ -1,0 +1,4883 @@
+{
+  "schema": "sapling-transfer-3s2-research-v1",
+  "status": "complete",
+  "started_at_utc": "2026-11-18T16:36:44.383349+00:00",
+  "runtime": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "python_executable": "/workspace/carbon-review-venv/bin/python",
+    "numpy": "1.26.4",
+    "torch": "2.5.1+cpu"
+  },
+  "initial_preflight_note": "The first launch in the default Python had no Torch; full-search assertion rejected before any transition. This completed run uses an installed Torch environment, with _SEARCH_OK asserted per game.",
+  "repository_head": "d21aedc6bdef42c304fd28a6cea20433f751ce2c",
+  "source_sha256": {
+    "reports/sapling_bootstrap/transfer_3s2.py": "9da4e4c4506a21a7876a6f532d2884da325f6564dec349c3e0a5a4c5fe159604",
+    "reports/sapling_bootstrap/smoke_ab.py": "22fe541c27e92d5e89bc3421769e48bf6c4d3da7e0508410bc0ad20b2ab4058e",
+    "data/master3s2_source.py": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+    "reports/REGISTRATION_MASTER3S2_EXAMINER_20261116.md": "68938eddb3cf6d7ab1ebaa4a2272b8cd6157d78b77a8addfdc82d51585d3686f",
+    "code/cnet2_pack.py": "f40ddcd749603bdd0e664d544165c307c17b8f901ac7b7fb0f1c58d1fae1aecc",
+    "code/cnet2_np.py": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+    "code/cnet2_agent.py": "ac159979644b37d57f59db33bd4cb5713fa54f79d6d92220b6bf5f7c774cbe5c",
+    "code/cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+    "code/fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "code/eval_v53.py": "ef3301e8e7d1cea39ce015e2a1c0e010c544842a7dfebefb398c458363f60d86"
+  },
+  "protocol": {
+    "seeds": [
+      620030000,
+      620030001
+    ],
+    "candidate_seats": [
+      0,
+      1
+    ],
+    "games_per_arm": 4,
+    "max_transitions": 60,
+    "opponent_source": "data/master3s2_source.py",
+    "opponent_source_md5": "57f9a594cce4f2ec9e3573d8d9d26ca1",
+    "registered_wrapper_md5": "b4cde262695d38270e16bde33875a443",
+    "wrapper_used": false,
+    "entrypoint": "direct original source agent; research side",
+    "formal_72_reexamination": false,
+    "registration_review": "Sections 2/5 define registered result/exam use and fixed maps. This separate short behavior study uses neither fixed maps nor formal exam verdicts; no cash handicap.",
+    "quantization": "official cnet2_pack int8",
+    "teacher": 2,
+    "all_candidate_optional_guards": false,
+    "opponent_TEMP": 1.0,
+    "opponent_SEED": null,
+    "paired_gain_inference": false,
+    "interpretation": "Only early behavior transfer on two new maps and both seats. Internal opponent RNG is fresh per game; time-budgeted search also depends on hardware. No terminal strength, winrate, resource certification, or paired-gain inference.",
+    "source_error_mode": "CARBON_DEBUG=1 exposes original search/agent exceptions; any exception stops game without fallback continuation.",
+    "blas_threads": 1,
+    "original_opponent_torch_threads": 2,
+    "process_workers": 2,
+    "no_training_or_parameter_tuning": true,
+    "registration_source_sha256": "68938eddb3cf6d7ab1ebaa4a2272b8cd6157d78b77a8addfdc82d51585d3686f"
+  },
+  "observer_selftests": {
+    "harvest_delivery_trace_parity": true,
+    "friendly_merge_30_carbon_preserved": true,
+    "post_empty_enemy_cargo_not_second_loop": true
+  },
+  "arms": {
+    "initial": {
+      "weights": "data/weights/sapling_bootstrap/initial.npz",
+      "weight_sha256": "fae95a7240198a2e25582096a530dc8f3e4216a3a22724b1b78e9142370bedb3",
+      "weight_md5": "e798c6b06ee3f8c737b6687e3f9331a2",
+      "pack_sha256": "d90c765414b03fd077db1ed0dc7fc230579005abb9117db1327e8353636ede1b",
+      "pack_md5": "8a397c59022624d7cb4c5f06c923fb33",
+      "pack_bytes": 837152
+    },
+    "sqrt-role-action": {
+      "weights": "data/weights/sapling_bootstrap/sqrt.npz",
+      "weight_sha256": "35463ca5248ac4ef5258afa43121cc532849efb3196a870a51b70283b622660e",
+      "weight_md5": "6d55fdce5fea6048abe976a5a471ee43",
+      "pack_sha256": "7c4ff4dcf38166a84e1090091813597da774b3e86d3b4afa2647294f97655e82",
+      "pack_md5": "f92b1823f3de47555f6158eecd0cfb23",
+      "pack_bytes": 845288
+    }
+  },
+  "games": [
+    {
+      "arm": "initial",
+      "seed": 620030000,
+      "candidate_seat": 0,
+      "started_at_utc": "2026-11-18T16:36:44.678619+00:00",
+      "finished_at_utc": "2026-11-18T16:37:08.824469+00:00",
+      "transitions": 60,
+      "early_terminal": false,
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "termination": "60_transition_behavior_cap",
+      "agent_calls_by_seat": [
+        60,
+        60
+      ],
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "errors": [],
+      "snapshots": {
+        "30": {
+          "candidate": {
+            "state_t": 30,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 2,
+            "alive_collectors": 2,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 30,
+            "recruited_total": 7,
+            "new_trees_planted": 1,
+            "alive_workers": 7,
+            "alive_collectors": 3,
+            "alive_trees": 1,
+            "positive_cargo_collectors": 1,
+            "collectors_ever_collected": 2,
+            "cargo": 26.8383,
+            "cash": 27.39,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 16.0,
+            "collected_carbon": 173.1987,
+            "positive_delivery_events": 3.0,
+            "own_positive_delivery_carbon": 146.36039999999997,
+            "closed_loop_events": 3.0,
+            "base_received_carbon": 146.36039999999997,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 20.0
+          }
+        },
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 1,
+            "alive_collectors": 1,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 60,
+            "recruited_total": 10,
+            "new_trees_planted": 16,
+            "alive_workers": 10,
+            "alive_collectors": 5,
+            "alive_trees": 16,
+            "positive_cargo_collectors": 4,
+            "collectors_ever_collected": 5,
+            "cargo": 988.3259999999999,
+            "cash": 1162.19,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 84.0,
+            "collected_carbon": 1430.3496,
+            "positive_delivery_events": 7.0,
+            "own_positive_delivery_carbon": 442.0236,
+            "closed_loop_events": 7.0,
+            "base_received_carbon": 442.0236,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 904.413967874098
+          }
+        }
+      },
+      "final_observed": {
+        "candidate": {
+          "state_t": 60,
+          "recruited_total": 2,
+          "new_trees_planted": 0,
+          "alive_workers": 1,
+          "alive_collectors": 1,
+          "alive_trees": 0,
+          "positive_cargo_collectors": 0,
+          "collectors_ever_collected": 0,
+          "cargo": 0,
+          "cash": 20.0,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": false,
+          "collect_events": 0.0,
+          "collected_carbon": 0.0,
+          "positive_delivery_events": 0.0,
+          "own_positive_delivery_carbon": 0.0,
+          "closed_loop_events": 0.0,
+          "base_received_carbon": 0.0,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 0.0
+        },
+        "opponent": {
+          "state_t": 60,
+          "recruited_total": 10,
+          "new_trees_planted": 16,
+          "alive_workers": 10,
+          "alive_collectors": 5,
+          "alive_trees": 16,
+          "positive_cargo_collectors": 4,
+          "collectors_ever_collected": 5,
+          "cargo": 988.3259999999999,
+          "cash": 1162.19,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 84.0,
+          "collected_carbon": 1430.3496,
+          "positive_delivery_events": 7.0,
+          "own_positive_delivery_carbon": 442.0236,
+          "closed_loop_events": 7.0,
+          "base_received_carbon": 442.0236,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 904.413967874098
+        }
+      },
+      "terminal_score_by_seat": null,
+      "scores_not_defined_at_behavior_cap": true,
+      "wall_seconds": 24.14585217000058,
+      "play_wall_seconds": 19.145384749001096,
+      "module_load_wall_seconds": 5.000463877000584,
+      "cpu_seconds": 44.380542415,
+      "call_timing_by_seat": [
+        {
+          "calls": 60,
+          "total": 0.3573427360115602,
+          "mean": 0.005955712266859337,
+          "max": 0.012361410999801592
+        },
+        {
+          "calls": 60,
+          "total": 18.685267563003435,
+          "mean": 0.3114211260500573,
+          "max": 0.5634952329983207
+        }
+      ],
+      "opponent_search_config": {
+        "_S_ENGINE": true,
+        "_S_START": 0,
+        "_S_K": 32,
+        "_S_GEN": [
+          [
+            2.5,
+            8
+          ],
+          [
+            1.0,
+            3
+          ],
+          [
+            3.5,
+            8
+          ],
+          [
+            0.0,
+            6
+          ],
+          [
+            5.0,
+            8
+          ]
+        ],
+        "_S_DUPS": 8,
+        "_S_M": 1,
+        "_S_MMAX": 1,
+        "_S_STAGES": [
+          [
+            1,
+            0.5
+          ],
+          [
+            4,
+            0.25
+          ]
+        ],
+        "_S_D2": 8,
+        "_S_FILL": 0.85,
+        "_S_ROWS": 32,
+        "_S_EPS": 0.0,
+        "_S_ABORT": 0.58,
+        "_S_SAFE": 1.3,
+        "_S_CFIX": 0.004,
+        "_S_HOMEFIX": true,
+        "_RETIRE": 0,
+        "_BANK": 12,
+        "_HOME": [
+          1,
+          50.0
+        ],
+        "_TEMP": 1.0,
+        "_SEED": null,
+        "_SID": 100
+      },
+      "opponent_search_ok": true,
+      "opponent_embedded_engine": true,
+      "opponent_search_stats": {
+        "searched": 60,
+        "changed": 40,
+        "aborted": 0,
+        "single": 0,
+        "time": [
+          0.14705729600063933,
+          0.16169813000124122,
+          0.20209916299972974,
+          0.1562276259992359,
+          0.22264253700086556,
+          0.24554609400001937,
+          0.2093990319990553,
+          0.12163608999981079,
+          0.13305620100072701,
+          0.13151208099952783,
+          0.15914638399954129,
+          0.1374624979998771,
+          0.12986480700055836,
+          0.14965478499834717,
+          0.24329814900011115,
+          0.2271367650009779,
+          0.1347525780001888,
+          0.13745158200072183,
+          0.1540111070007697,
+          0.14221816200006288,
+          0.15279839799950423,
+          0.1496720600007393,
+          0.14498261399967305,
+          0.14320703500015952,
+          0.18342515599943,
+          0.14503137700012303,
+          0.34717838500000653,
+          0.2600862840008631,
+          0.47064748000047985,
+          0.27062182199915696,
+          0.23357777999990503,
+          0.2149078139991616,
+          0.2070956549996481,
+          0.5024789649996819,
+          0.24794939999992494,
+          0.5326043309996749,
+          0.21221785499983525,
+          0.38374444500004756,
+          0.5600570539991168,
+          0.5500687699986884,
+          0.5630430330002127,
+          0.5616966170000524,
+          0.3579378389986232,
+          0.5480270919997565,
+          0.26055525499941723,
+          0.5231476819990348,
+          0.5531554049994156,
+          0.29470441400007985,
+          0.48601934100042854,
+          0.5383768379997491,
+          0.3522940219991142,
+          0.40355747699868516,
+          0.3820747139998275,
+          0.5440098729995952,
+          0.5478770089994214,
+          0.5373266930000682,
+          0.41410632399856695,
+          0.5228294499993353,
+          0.5423199249999016,
+          0.4695708620001824
+        ],
+        "depth": {
+          "8": 48,
+          "6": 5,
+          "5": 2,
+          "7": 1,
+          "4": 4
+        },
+        "rolls": {
+          "1": 60
+        },
+        "cands": {
+          "2": 2,
+          "5": 3,
+          "4": 12,
+          "8": 3,
+          "9": 6,
+          "7": 3,
+          "3": 4,
+          "6": 1,
+          "12": 2,
+          "17": 1,
+          "16": 3,
+          "19": 1,
+          "20": 6,
+          "22": 3,
+          "11": 1,
+          "25": 1,
+          "18": 2,
+          "13": 1,
+          "15": 2,
+          "24": 3
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          18,
+          8,
+          1,
+          0.4695708620001824,
+          [
+            0.0021344828231447573,
+            0.0010386941864817581,
+            0.0019474533999338747,
+            0.0010959295999782626
+          ]
+        ]
+      },
+      "opponent_torch_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "final_state_sha256": "ec087d4c636ffb5428bbeaee6d2d2c7e80487810169d46d264892fa62f1df66a",
+      "action_trace_sha256": "8a09914919147db88f452dbbf0f2ea44379b430571b72e909862633362544b6d",
+      "measured_events_sha256": "df3cbc83d951b48fd7e28bc89a6322ce153c2baf61582980bde5f4477adace5b",
+      "positive_delivery_and_plant_events": [
+        {
+          "step": 15,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 30.3414
+        },
+        {
+          "step": 15,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 147,
+          "amount": 20.0
+        },
+        {
+          "step": 25,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 57.15209999999999
+        },
+        {
+          "step": 26,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 58.866899999999994
+        },
+        {
+          "step": 31,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 25,
+          "amount": 26.175
+        },
+        {
+          "step": 32,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 26.8383
+        },
+        {
+          "step": 33,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 199,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 35,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 58,
+          "amount": 29.418264375
+        },
+        {
+          "step": 37,
+          "player": 1,
+          "worker": "player-1-worker-6",
+          "event": "deposit",
+          "amount": 44.3493
+        },
+        {
+          "step": 37,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 189,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 37,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 19,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 39,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 46,
+          "amount": 37.74074076747884
+        },
+        {
+          "step": 40,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 205,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 41,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 59.1573
+        },
+        {
+          "step": 42,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 37,
+          "amount": 47.05862133707791
+        },
+        {
+          "step": 43,
+          "player": 1,
+          "worker": "player-1-worker-7",
+          "event": "plant",
+          "position": 166,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 45,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 192,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 45,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 107,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 46,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 178,
+          "amount": 82.94677659577712
+        },
+        {
+          "step": 50,
+          "player": 1,
+          "worker": "player-1-worker-7",
+          "event": "plant",
+          "position": 14,
+          "amount": 97.73926909578475
+        },
+        {
+          "step": 51,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 118,
+          "amount": 116.00799733329417
+        },
+        {
+          "step": 55,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 106,
+          "amount": 138.5698767066183
+        },
+        {
+          "step": 60,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 165.3183
+        }
+      ]
+    },
+    {
+      "arm": "initial",
+      "seed": 620030000,
+      "candidate_seat": 1,
+      "started_at_utc": "2026-11-18T16:36:44.692338+00:00",
+      "finished_at_utc": "2026-11-18T16:37:08.591129+00:00",
+      "transitions": 60,
+      "early_terminal": false,
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "termination": "60_transition_behavior_cap",
+      "agent_calls_by_seat": [
+        60,
+        60
+      ],
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "errors": [],
+      "snapshots": {
+        "30": {
+          "candidate": {
+            "state_t": 30,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 2,
+            "alive_collectors": 2,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 30,
+            "recruited_total": 5,
+            "new_trees_planted": 4,
+            "alive_workers": 5,
+            "alive_collectors": 2,
+            "alive_trees": 4,
+            "positive_cargo_collectors": 1,
+            "collectors_ever_collected": 2,
+            "cargo": 15.7872,
+            "cash": 61.39,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 19.0,
+            "collected_carbon": 179.50500000000002,
+            "positive_delivery_events": 5.0,
+            "own_positive_delivery_carbon": 163.71779999999998,
+            "closed_loop_events": 5.0,
+            "base_received_carbon": 163.71779999999998,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 95.25225
+          }
+        },
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 1,
+            "alive_collectors": 1,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 60,
+            "recruited_total": 11,
+            "new_trees_planted": 14,
+            "alive_workers": 10,
+            "alive_collectors": 5,
+            "alive_trees": 14,
+            "positive_cargo_collectors": 4,
+            "collectors_ever_collected": 5,
+            "cargo": 654.2184,
+            "cash": 1630.12,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 70.0,
+            "collected_carbon": 1163.0748,
+            "positive_delivery_events": 9.0,
+            "own_positive_delivery_carbon": 508.8564,
+            "closed_loop_events": 9.0,
+            "base_received_carbon": 508.8564,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 631.6262196162149
+          }
+        }
+      },
+      "final_observed": {
+        "candidate": {
+          "state_t": 60,
+          "recruited_total": 2,
+          "new_trees_planted": 0,
+          "alive_workers": 1,
+          "alive_collectors": 1,
+          "alive_trees": 0,
+          "positive_cargo_collectors": 0,
+          "collectors_ever_collected": 0,
+          "cargo": 0,
+          "cash": 20.0,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": false,
+          "collect_events": 0.0,
+          "collected_carbon": 0.0,
+          "positive_delivery_events": 0.0,
+          "own_positive_delivery_carbon": 0.0,
+          "closed_loop_events": 0.0,
+          "base_received_carbon": 0.0,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 0.0
+        },
+        "opponent": {
+          "state_t": 60,
+          "recruited_total": 11,
+          "new_trees_planted": 14,
+          "alive_workers": 10,
+          "alive_collectors": 5,
+          "alive_trees": 14,
+          "positive_cargo_collectors": 4,
+          "collectors_ever_collected": 5,
+          "cargo": 654.2184,
+          "cash": 1630.12,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 70.0,
+          "collected_carbon": 1163.0748,
+          "positive_delivery_events": 9.0,
+          "own_positive_delivery_carbon": 508.8564,
+          "closed_loop_events": 9.0,
+          "base_received_carbon": 508.8564,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 631.6262196162149
+        }
+      },
+      "terminal_score_by_seat": null,
+      "scores_not_defined_at_behavior_cap": true,
+      "wall_seconds": 23.898796899000445,
+      "play_wall_seconds": 18.840111352999884,
+      "module_load_wall_seconds": 5.058682612001576,
+      "cpu_seconds": 43.941199715,
+      "call_timing_by_seat": [
+        {
+          "calls": 60,
+          "total": 18.39493498799493,
+          "mean": 0.3065822497999155,
+          "max": 0.5636495069993543
+        },
+        {
+          "calls": 60,
+          "total": 0.34458854499462177,
+          "mean": 0.0057431424165770295,
+          "max": 0.0082981989999098
+        }
+      ],
+      "opponent_search_config": {
+        "_S_ENGINE": true,
+        "_S_START": 0,
+        "_S_K": 32,
+        "_S_GEN": [
+          [
+            2.5,
+            8
+          ],
+          [
+            1.0,
+            3
+          ],
+          [
+            3.5,
+            8
+          ],
+          [
+            0.0,
+            6
+          ],
+          [
+            5.0,
+            8
+          ]
+        ],
+        "_S_DUPS": 8,
+        "_S_M": 1,
+        "_S_MMAX": 1,
+        "_S_STAGES": [
+          [
+            1,
+            0.5
+          ],
+          [
+            4,
+            0.25
+          ]
+        ],
+        "_S_D2": 8,
+        "_S_FILL": 0.85,
+        "_S_ROWS": 32,
+        "_S_EPS": 0.0,
+        "_S_ABORT": 0.58,
+        "_S_SAFE": 1.3,
+        "_S_CFIX": 0.004,
+        "_S_HOMEFIX": true,
+        "_RETIRE": 0,
+        "_BANK": 12,
+        "_HOME": [
+          1,
+          50.0
+        ],
+        "_TEMP": 1.0,
+        "_SEED": null,
+        "_SID": 100
+      },
+      "opponent_search_ok": true,
+      "opponent_embedded_engine": true,
+      "opponent_search_stats": {
+        "searched": 59,
+        "changed": 34,
+        "aborted": 6,
+        "single": 1,
+        "time": [
+          0.13512555200031784,
+          0.15206226599912043,
+          0.21763371799897868,
+          0.22055369000008795,
+          0.14107506700020167,
+          0.22454596599891374,
+          0.2539815969994379,
+          0.15443138100090437,
+          0.1364242279996688,
+          0.14660513500166417,
+          0.15687054400041234,
+          0.15118991199960874,
+          0.15208249100032845,
+          0.2397554039998795,
+          0.15912737699909485,
+          0.19755018499927246,
+          0.18872122799984936,
+          0.15730069699930027,
+          0.18286139399970125,
+          0.25351939699976356,
+          0.19538696599920513,
+          0.16905592600051023,
+          0.16212304000146105,
+          0.14904895600011514,
+          0.2537706250004703,
+          0.18072245199982717,
+          0.16594472999895515,
+          0.18248762499933946,
+          0.20075031200030935,
+          0.3846493910004938,
+          0.2457303219998721,
+          0.3209790349992545,
+          0.37688530999912473,
+          0.23575621100098942,
+          0.5273386380013108,
+          0.31015702600052464,
+          0.2689955349997035,
+          0.5617374009998457,
+          0.2907237230010651,
+          0.5287982899990311,
+          0.47038475499903143,
+          0.5356997630005935,
+          0.5534011259987892,
+          0.49951980100013316,
+          0.41761089799911133,
+          0.5468547239997861,
+          0.4274142770009348,
+          0.5363841309990676,
+          0.5229944080001587,
+          0.5266555050002353,
+          0.3970865680003044,
+          0.5588796699994418,
+          0.5309401799986517,
+          0.5574859669995931,
+          0.4175243780009623,
+          0.2559959739992337,
+          0.5120859480011859,
+          0.37278380200041283,
+          0.3869319940004061
+        ],
+        "depth": {
+          "8": 46,
+          "2": 3,
+          "3": 3,
+          "5": 3,
+          "6": 3,
+          "4": 1
+        },
+        "rolls": {
+          "1": 59
+        },
+        "cands": {
+          "4": 5,
+          "5": 11,
+          "8": 3,
+          "9": 3,
+          "3": 3,
+          "6": 3,
+          "7": 3,
+          "13": 1,
+          "20": 6,
+          "10": 2,
+          "11": 1,
+          "28": 3,
+          "12": 2,
+          "22": 3,
+          "18": 1,
+          "16": 4,
+          "15": 1,
+          "24": 3,
+          "23": 1
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          23,
+          2,
+          1,
+          0.3869319940004061,
+          [
+            0.00458622518701431,
+            0.0014046936366480796,
+            0.005700547333348367,
+            0.0017219960000147694
+          ]
+        ]
+      },
+      "opponent_torch_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "final_state_sha256": "2cc0107a3b66cb74f2c68a7b870cdf98480c50f074b736b2101d5211a1d98fcf",
+      "action_trace_sha256": "bc50d4cba854e26d956d18f05a2a98e219d3d9135a0a7376670d90646dddc15d",
+      "measured_events_sha256": "15b2c2f9d1adafc3c9508fa5a59fae588bb4471d121c426b2aad3aad918624e2",
+      "positive_delivery_and_plant_events": [
+        {
+          "step": 7,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 5.572799999999999
+        },
+        {
+          "step": 14,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 22.470599999999997
+        },
+        {
+          "step": 19,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 29.252699999999997
+        },
+        {
+          "step": 26,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 33.7692
+        },
+        {
+          "step": 26,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 39,
+          "amount": 20.0
+        },
+        {
+          "step": 26,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 178,
+          "amount": 20.0
+        },
+        {
+          "step": 30,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 72.65249999999999
+        },
+        {
+          "step": 30,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 42,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 30,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 166,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 33,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 58,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 33,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 19,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 35,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 55.3995
+        },
+        {
+          "step": 35,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 205,
+          "amount": 37.74074076747884
+        },
+        {
+          "step": 37,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 213,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 37,
+          "player": 0,
+          "worker": "player-0-worker-6",
+          "event": "plant",
+          "position": 46,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 38,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 43.2852
+        },
+        {
+          "step": 38,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 185,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 39,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 25,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 42,
+          "player": 0,
+          "worker": "player-0-worker-6",
+          "event": "plant",
+          "position": 106,
+          "amount": 70.96904987512318
+        },
+        {
+          "step": 46,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 87,
+          "amount": 82.94677659577712
+        },
+        {
+          "step": 46,
+          "player": 0,
+          "worker": "player-0-worker-6",
+          "event": "plant",
+          "position": 118,
+          "amount": 82.94677659577712
+        },
+        {
+          "step": 49,
+          "player": 0,
+          "worker": "player-0-worker-9",
+          "event": "deposit",
+          "amount": 68.3736
+        },
+        {
+          "step": 60,
+          "player": 0,
+          "worker": "player-0-worker-10",
+          "event": "deposit",
+          "amount": 178.0803
+        }
+      ]
+    },
+    {
+      "arm": "initial",
+      "seed": 620030001,
+      "candidate_seat": 0,
+      "started_at_utc": "2026-11-18T16:37:09.180076+00:00",
+      "finished_at_utc": "2026-11-18T16:37:35.841690+00:00",
+      "transitions": 60,
+      "early_terminal": false,
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "termination": "60_transition_behavior_cap",
+      "agent_calls_by_seat": [
+        60,
+        60
+      ],
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "errors": [],
+      "snapshots": {
+        "30": {
+          "candidate": {
+            "state_t": 30,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 2,
+            "alive_collectors": 2,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 30,
+            "recruited_total": 8,
+            "new_trees_planted": 4,
+            "alive_workers": 8,
+            "alive_collectors": 3,
+            "alive_trees": 4,
+            "positive_cargo_collectors": 2,
+            "collectors_ever_collected": 2,
+            "cargo": 63.5961,
+            "cash": 38.81,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 19.0,
+            "collected_carbon": 200.21879999999996,
+            "positive_delivery_events": 6.0,
+            "own_positive_delivery_carbon": 136.6227,
+            "closed_loop_events": 6.0,
+            "base_received_carbon": 136.6227,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 97.04438937500001
+          }
+        },
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 2,
+            "alive_collectors": 2,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 60,
+            "recruited_total": 10,
+            "new_trees_planted": 15,
+            "alive_workers": 10,
+            "alive_collectors": 4,
+            "alive_trees": 15,
+            "positive_cargo_collectors": 4,
+            "collectors_ever_collected": 4,
+            "cargo": 1121.9541,
+            "cash": 739.74,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 78.0,
+            "collected_carbon": 1391.1711000000005,
+            "positive_delivery_events": 8.0,
+            "own_positive_delivery_carbon": 269.217,
+            "closed_loop_events": 8.0,
+            "base_received_carbon": 269.217,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 759.0991762251977
+          }
+        }
+      },
+      "final_observed": {
+        "candidate": {
+          "state_t": 60,
+          "recruited_total": 2,
+          "new_trees_planted": 0,
+          "alive_workers": 2,
+          "alive_collectors": 2,
+          "alive_trees": 0,
+          "positive_cargo_collectors": 0,
+          "collectors_ever_collected": 0,
+          "cargo": 0,
+          "cash": 20.0,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": false,
+          "collect_events": 0.0,
+          "collected_carbon": 0.0,
+          "positive_delivery_events": 0.0,
+          "own_positive_delivery_carbon": 0.0,
+          "closed_loop_events": 0.0,
+          "base_received_carbon": 0.0,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 0.0
+        },
+        "opponent": {
+          "state_t": 60,
+          "recruited_total": 10,
+          "new_trees_planted": 15,
+          "alive_workers": 10,
+          "alive_collectors": 4,
+          "alive_trees": 15,
+          "positive_cargo_collectors": 4,
+          "collectors_ever_collected": 4,
+          "cargo": 1121.9541,
+          "cash": 739.74,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 78.0,
+          "collected_carbon": 1391.1711000000005,
+          "positive_delivery_events": 8.0,
+          "own_positive_delivery_carbon": 269.217,
+          "closed_loop_events": 8.0,
+          "base_received_carbon": 269.217,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 759.0991762251977
+        }
+      },
+      "terminal_score_by_seat": null,
+      "scores_not_defined_at_behavior_cap": true,
+      "wall_seconds": 26.661616350998884,
+      "play_wall_seconds": 21.837216494999666,
+      "module_load_wall_seconds": 4.824395710000317,
+      "cpu_seconds": 49.55979562,
+      "call_timing_by_seat": [
+        {
+          "calls": 60,
+          "total": 0.3643298639981367,
+          "mean": 0.006072164399968946,
+          "max": 0.010792601000503055
+        },
+        {
+          "calls": 60,
+          "total": 21.369115982004587,
+          "mean": 0.3561519330334098,
+          "max": 0.5796383619999688
+        }
+      ],
+      "opponent_search_config": {
+        "_S_ENGINE": true,
+        "_S_START": 0,
+        "_S_K": 32,
+        "_S_GEN": [
+          [
+            2.5,
+            8
+          ],
+          [
+            1.0,
+            3
+          ],
+          [
+            3.5,
+            8
+          ],
+          [
+            0.0,
+            6
+          ],
+          [
+            5.0,
+            8
+          ]
+        ],
+        "_S_DUPS": 8,
+        "_S_M": 1,
+        "_S_MMAX": 1,
+        "_S_STAGES": [
+          [
+            1,
+            0.5
+          ],
+          [
+            4,
+            0.25
+          ]
+        ],
+        "_S_D2": 8,
+        "_S_FILL": 0.85,
+        "_S_ROWS": 32,
+        "_S_EPS": 0.0,
+        "_S_ABORT": 0.58,
+        "_S_SAFE": 1.3,
+        "_S_CFIX": 0.004,
+        "_S_HOMEFIX": true,
+        "_RETIRE": 0,
+        "_BANK": 12,
+        "_HOME": [
+          1,
+          50.0
+        ],
+        "_TEMP": 1.0,
+        "_SEED": null,
+        "_SID": 100
+      },
+      "opponent_search_ok": true,
+      "opponent_embedded_engine": true,
+      "opponent_search_stats": {
+        "searched": 60,
+        "changed": 40,
+        "aborted": 4,
+        "single": 0,
+        "time": [
+          0.1319853940003668,
+          0.15183663999960118,
+          0.14507027400031802,
+          0.13328767600069114,
+          0.15357959599896276,
+          0.16440686300120433,
+          0.19343293400015682,
+          0.18569369400029245,
+          0.22631084600106988,
+          0.14098620599907008,
+          0.1551755990003585,
+          0.15142706900041958,
+          0.2183524789998046,
+          0.4587653720009257,
+          0.24494327300089935,
+          0.2347038589996373,
+          0.22003190100076608,
+          0.29784806099996786,
+          0.19678743000076793,
+          0.31270392300029926,
+          0.17705393800133606,
+          0.18839309900067747,
+          0.2952527559991722,
+          0.1971553249986755,
+          0.18453572600083135,
+          0.495741196000381,
+          0.310830738999357,
+          0.511861613000292,
+          0.44106491599995934,
+          0.4945843019995664,
+          0.43900003300041135,
+          0.47333887000058894,
+          0.5790925010005594,
+          0.4126592630000232,
+          0.3839843710011337,
+          0.3269400419994781,
+          0.5513882119994378,
+          0.5498771780003153,
+          0.4559371049999754,
+          0.48791692899976624,
+          0.49692858799971873,
+          0.5086528779993387,
+          0.25139440200109675,
+          0.3825625960016623,
+          0.3213163529999292,
+          0.5582201420002093,
+          0.52883579400077,
+          0.49345434800125076,
+          0.5324062319996301,
+          0.5344684629999392,
+          0.5265405179998197,
+          0.5472900820004725,
+          0.5150984270003391,
+          0.2834730889990169,
+          0.5231957060004788,
+          0.3978965119986242,
+          0.5036845169997832,
+          0.27692195900090155,
+          0.5392219029999978,
+          0.5506674469997961
+        ],
+        "depth": {
+          "8": 46,
+          "6": 2,
+          "2": 2,
+          "5": 4,
+          "4": 4,
+          "3": 2
+        },
+        "rolls": {
+          "1": 60
+        },
+        "cands": {
+          "2": 1,
+          "4": 6,
+          "3": 3,
+          "5": 4,
+          "7": 2,
+          "6": 3,
+          "18": 4,
+          "8": 4,
+          "12": 3,
+          "11": 1,
+          "16": 7,
+          "10": 3,
+          "17": 2,
+          "23": 1,
+          "22": 6,
+          "15": 1,
+          "20": 6,
+          "24": 1,
+          "28": 1,
+          "14": 1
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          22,
+          5,
+          1,
+          0.5506674469997961,
+          [
+            0.0029677124039588576,
+            0.0009933919798484668,
+            0.002808023583300382,
+            0.0010438120001102409
+          ]
+        ]
+      },
+      "opponent_torch_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "final_state_sha256": "533d38025c8be5f0cfe3f9ce2d2340e2be22fc9df6cb8d8b5eaacf8753ff8264",
+      "action_trace_sha256": "645b23482596826fdd07b97907397a39eb31f8509d692ef48417827642e96244",
+      "measured_events_sha256": "a8fa0410e8ddd96b98bda4d8c7f84d66b0f6dc4db6d5e2bdc0a2e040ae79b798",
+      "positive_delivery_and_plant_events": [
+        {
+          "step": 6,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 19.5165
+        },
+        {
+          "step": 12,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 14.8599
+        },
+        {
+          "step": 12,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 23.3031
+        },
+        {
+          "step": 19,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 22.857
+        },
+        {
+          "step": 19,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 163,
+          "amount": 20.0
+        },
+        {
+          "step": 19,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 97,
+          "amount": 20.0
+        },
+        {
+          "step": 21,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 29.520899999999997
+        },
+        {
+          "step": 23,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 112,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 25,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 26.5653
+        },
+        {
+          "step": 25,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 127,
+          "amount": 29.418264375
+        },
+        {
+          "step": 33,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 15,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 35,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 59,
+          "amount": 34.36497228135938
+        },
+        {
+          "step": 36,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 52.8132
+        },
+        {
+          "step": 36,
+          "player": 1,
+          "worker": "player-1-worker-6",
+          "event": "plant",
+          "position": 194,
+          "amount": 37.74074076747884
+        },
+        {
+          "step": 37,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 79.7811
+        },
+        {
+          "step": 37,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 13,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 37,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 176,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 41,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 189,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 41,
+          "player": 1,
+          "worker": "player-1-worker-6",
+          "event": "plant",
+          "position": 211,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 43,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 63,
+          "amount": 70.96904987512318
+        },
+        {
+          "step": 45,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 223,
+          "amount": 82.94677659577712
+        },
+        {
+          "step": 46,
+          "player": 1,
+          "worker": "player-1-worker-8",
+          "event": "plant",
+          "position": 35,
+          "amount": 97.73926909578475
+        },
+        {
+          "step": 54,
+          "player": 1,
+          "worker": "player-1-worker-8",
+          "event": "plant",
+          "position": 50,
+          "amount": 116.00799733329417
+        }
+      ]
+    },
+    {
+      "arm": "initial",
+      "seed": 620030001,
+      "candidate_seat": 1,
+      "started_at_utc": "2026-11-18T16:37:09.357545+00:00",
+      "finished_at_utc": "2026-11-18T16:37:36.066646+00:00",
+      "transitions": 60,
+      "early_terminal": false,
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "termination": "60_transition_behavior_cap",
+      "agent_calls_by_seat": [
+        60,
+        60
+      ],
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "errors": [],
+      "snapshots": {
+        "30": {
+          "candidate": {
+            "state_t": 30,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 2,
+            "alive_collectors": 2,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 30,
+            "recruited_total": 7,
+            "new_trees_planted": 4,
+            "alive_workers": 7,
+            "alive_collectors": 3,
+            "alive_trees": 4,
+            "positive_cargo_collectors": 2,
+            "collectors_ever_collected": 2,
+            "cargo": 150.2778,
+            "cash": 52.08,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 24.0,
+            "collected_carbon": 263.20349999999996,
+            "positive_delivery_events": 5.0,
+            "own_positive_delivery_carbon": 112.9257,
+            "closed_loop_events": 5.0,
+            "base_received_carbon": 112.9257,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 103.21938937499999
+          }
+        },
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 2,
+            "alive_collectors": 2,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 60,
+            "recruited_total": 10,
+            "new_trees_planted": 15,
+            "alive_workers": 10,
+            "alive_collectors": 6,
+            "alive_trees": 15,
+            "positive_cargo_collectors": 4,
+            "collectors_ever_collected": 6,
+            "cargo": 706.2084,
+            "cash": 1184.65,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 94.0,
+            "collected_carbon": 1540.1724000000004,
+            "positive_delivery_events": 10.0,
+            "own_positive_delivery_carbon": 833.9639999999999,
+            "closed_loop_events": 10.0,
+            "base_received_carbon": 833.9639999999999,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 746.9330102220852
+          }
+        }
+      },
+      "final_observed": {
+        "candidate": {
+          "state_t": 60,
+          "recruited_total": 2,
+          "new_trees_planted": 0,
+          "alive_workers": 2,
+          "alive_collectors": 2,
+          "alive_trees": 0,
+          "positive_cargo_collectors": 0,
+          "collectors_ever_collected": 0,
+          "cargo": 0,
+          "cash": 20.0,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": false,
+          "collect_events": 0.0,
+          "collected_carbon": 0.0,
+          "positive_delivery_events": 0.0,
+          "own_positive_delivery_carbon": 0.0,
+          "closed_loop_events": 0.0,
+          "base_received_carbon": 0.0,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 0.0
+        },
+        "opponent": {
+          "state_t": 60,
+          "recruited_total": 10,
+          "new_trees_planted": 15,
+          "alive_workers": 10,
+          "alive_collectors": 6,
+          "alive_trees": 15,
+          "positive_cargo_collectors": 4,
+          "collectors_ever_collected": 6,
+          "cargo": 706.2084,
+          "cash": 1184.65,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 94.0,
+          "collected_carbon": 1540.1724000000004,
+          "positive_delivery_events": 10.0,
+          "own_positive_delivery_carbon": 833.9639999999999,
+          "closed_loop_events": 10.0,
+          "base_received_carbon": 833.9639999999999,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 746.9330102220852
+        }
+      },
+      "terminal_score_by_seat": null,
+      "scores_not_defined_at_behavior_cap": true,
+      "wall_seconds": 26.709105186999295,
+      "play_wall_seconds": 21.992760911000005,
+      "module_load_wall_seconds": 4.716341072000432,
+      "cpu_seconds": 49.533853195999995,
+      "call_timing_by_seat": [
+        {
+          "calls": 60,
+          "total": 21.49249189700822,
+          "mean": 0.35820819828347034,
+          "max": 0.5890112769993721
+        },
+        {
+          "calls": 60,
+          "total": 0.3805503680014226,
+          "mean": 0.006342506133357044,
+          "max": 0.013840600999174058
+        }
+      ],
+      "opponent_search_config": {
+        "_S_ENGINE": true,
+        "_S_START": 0,
+        "_S_K": 32,
+        "_S_GEN": [
+          [
+            2.5,
+            8
+          ],
+          [
+            1.0,
+            3
+          ],
+          [
+            3.5,
+            8
+          ],
+          [
+            0.0,
+            6
+          ],
+          [
+            5.0,
+            8
+          ]
+        ],
+        "_S_DUPS": 8,
+        "_S_M": 1,
+        "_S_MMAX": 1,
+        "_S_STAGES": [
+          [
+            1,
+            0.5
+          ],
+          [
+            4,
+            0.25
+          ]
+        ],
+        "_S_D2": 8,
+        "_S_FILL": 0.85,
+        "_S_ROWS": 32,
+        "_S_EPS": 0.0,
+        "_S_ABORT": 0.58,
+        "_S_SAFE": 1.3,
+        "_S_CFIX": 0.004,
+        "_S_HOMEFIX": true,
+        "_RETIRE": 0,
+        "_BANK": 12,
+        "_HOME": [
+          1,
+          50.0
+        ],
+        "_TEMP": 1.0,
+        "_SEED": null,
+        "_SID": 100
+      },
+      "opponent_search_ok": true,
+      "opponent_embedded_engine": true,
+      "opponent_search_stats": {
+        "searched": 59,
+        "changed": 39,
+        "aborted": 4,
+        "single": 1,
+        "time": [
+          0.12484933800078579,
+          0.1472785899986775,
+          0.13309371800096415,
+          0.13592927499848884,
+          0.1587235069982853,
+          0.14033073400059948,
+          0.1981913119998353,
+          0.24694072600141226,
+          0.3281459290010389,
+          0.18661147499915387,
+          0.1859797079996497,
+          0.18103026500102715,
+          0.17765731799954665,
+          0.17886020700098015,
+          0.2026287400003639,
+          0.2423318749988539,
+          0.28033484700063127,
+          0.3092294390007737,
+          0.25677670600089186,
+          0.21615258500060008,
+          0.19036204399890266,
+          0.20686279599976842,
+          0.29197917000055895,
+          0.28728203699938604,
+          0.2672148259989626,
+          0.43544267600009334,
+          0.29796161000012944,
+          0.4039802849983971,
+          0.5200851030003832,
+          0.21669171099892992,
+          0.4534109369997168,
+          0.298607250000714,
+          0.5546325790000992,
+          0.5376869369993074,
+          0.539571340999828,
+          0.4455605340008333,
+          0.5776110180013347,
+          0.5367661359996418,
+          0.5268792459992255,
+          0.4270393780006998,
+          0.5547222539989889,
+          0.42491810799947416,
+          0.521522430000914,
+          0.4533685599999444,
+          0.5370064040016587,
+          0.5432651760002045,
+          0.527275020000161,
+          0.3510250420004013,
+          0.5649342050000996,
+          0.5630282999991323,
+          0.5211116410009708,
+          0.5230011870007729,
+          0.28431021199867246,
+          0.5496203610000521,
+          0.5465749720005988,
+          0.5884317069994722,
+          0.3642818879998231,
+          0.5229386099999829,
+          0.4620169119989441
+        ],
+        "depth": {
+          "8": 40,
+          "2": 3,
+          "3": 1,
+          "6": 5,
+          "5": 5,
+          "4": 4,
+          "7": 1
+        },
+        "rolls": {
+          "1": 59
+        },
+        "cands": {
+          "4": 3,
+          "3": 3,
+          "7": 4,
+          "9": 4,
+          "5": 4,
+          "6": 2,
+          "8": 5,
+          "10": 1,
+          "24": 5,
+          "12": 4,
+          "16": 4,
+          "23": 1,
+          "29": 1,
+          "20": 10,
+          "18": 3,
+          "13": 2,
+          "19": 2,
+          "26": 1
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          18,
+          8,
+          1,
+          0.4620169119989441,
+          [
+            0.0022356365570866204,
+            0.001072217248785505,
+            0.002112735199788585,
+            0.0011758082000596914
+          ]
+        ]
+      },
+      "opponent_torch_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "final_state_sha256": "f8516fd7ac30f5799bc463574bac715dc19c0d325b1ef399c7b248939b3bfa6c",
+      "action_trace_sha256": "9deb975c05e13ac7f50665ceb83ae1673cc4b9dc648cf5f7bc9568b6f42433c6",
+      "measured_events_sha256": "29950af3a44eb61196ea64fd681087c63f967c1cd8d357e848f55ff7ebdf7992",
+      "positive_delivery_and_plant_events": [
+        {
+          "step": 6,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 19.5165
+        },
+        {
+          "step": 8,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 20.7048
+        },
+        {
+          "step": 15,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 24.722099999999998
+        },
+        {
+          "step": 16,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 28.594199999999997
+        },
+        {
+          "step": 17,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 45,
+          "amount": 20.0
+        },
+        {
+          "step": 21,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 19.3881
+        },
+        {
+          "step": 21,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 59,
+          "amount": 26.175
+        },
+        {
+          "step": 23,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 209,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 26,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 0,
+          "amount": 29.418264375
+        },
+        {
+          "step": 31,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 28,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 32,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 109.1091
+        },
+        {
+          "step": 33,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 165,
+          "amount": 34.36497228135938
+        },
+        {
+          "step": 33,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 127,
+          "amount": 34.36497228135938
+        },
+        {
+          "step": 34,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 97,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 36,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 67.7949
+        },
+        {
+          "step": 36,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 112,
+          "amount": 47.05862133707791
+        },
+        {
+          "step": 38,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 56,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 41,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 200,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 41,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 71,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 46,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 153,
+          "amount": 82.94677659577712
+        },
+        {
+          "step": 48,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 170,
+          "amount": 97.73926909578475
+        },
+        {
+          "step": 48,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 168,
+          "amount": 97.73926909578475
+        },
+        {
+          "step": 51,
+          "player": 0,
+          "worker": "player-0-worker-8",
+          "event": "deposit",
+          "amount": 96.27509999999998
+        },
+        {
+          "step": 55,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 224.6256
+        },
+        {
+          "step": 58,
+          "player": 0,
+          "worker": "player-0-worker-6",
+          "event": "deposit",
+          "amount": 223.2336
+        }
+      ]
+    },
+    {
+      "arm": "sqrt-role-action",
+      "seed": 620030000,
+      "candidate_seat": 0,
+      "started_at_utc": "2026-11-18T16:37:36.344118+00:00",
+      "finished_at_utc": "2026-11-18T16:37:59.831753+00:00",
+      "transitions": 60,
+      "early_terminal": false,
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "termination": "60_transition_behavior_cap",
+      "agent_calls_by_seat": [
+        60,
+        60
+      ],
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "errors": [],
+      "snapshots": {
+        "30": {
+          "candidate": {
+            "state_t": 30,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 2,
+            "alive_collectors": 1,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 30,
+            "recruited_total": 6,
+            "new_trees_planted": 4,
+            "alive_workers": 6,
+            "alive_collectors": 2,
+            "alive_trees": 4,
+            "positive_cargo_collectors": 1,
+            "collectors_ever_collected": 2,
+            "cargo": 70.54169999999999,
+            "cash": 33.13,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 15.0,
+            "collected_carbon": 142.4886,
+            "positive_delivery_events": 3.0,
+            "own_positive_delivery_carbon": 71.9469,
+            "closed_loop_events": 3.0,
+            "base_received_carbon": 71.9469,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 103.21938937499999
+          }
+        },
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "recruited_total": 2,
+            "new_trees_planted": 1,
+            "alive_workers": 1,
+            "alive_collectors": 1,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 4.41,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 20.0
+          },
+          "opponent": {
+            "state_t": 60,
+            "recruited_total": 10,
+            "new_trees_planted": 14,
+            "alive_workers": 10,
+            "alive_collectors": 6,
+            "alive_trees": 15,
+            "positive_cargo_collectors": 5,
+            "collectors_ever_collected": 6,
+            "cargo": 1063.3725,
+            "cash": 1469.82,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 91.0,
+            "collected_carbon": 1534.5915000000005,
+            "positive_delivery_events": 6.0,
+            "own_positive_delivery_carbon": 471.21900000000005,
+            "closed_loop_events": 6.0,
+            "base_received_carbon": 471.21900000000005,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 680.5368019962078
+          }
+        }
+      },
+      "final_observed": {
+        "candidate": {
+          "state_t": 60,
+          "recruited_total": 2,
+          "new_trees_planted": 1,
+          "alive_workers": 1,
+          "alive_collectors": 1,
+          "alive_trees": 0,
+          "positive_cargo_collectors": 0,
+          "collectors_ever_collected": 0,
+          "cargo": 0,
+          "cash": 4.41,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": false,
+          "collect_events": 0.0,
+          "collected_carbon": 0.0,
+          "positive_delivery_events": 0.0,
+          "own_positive_delivery_carbon": 0.0,
+          "closed_loop_events": 0.0,
+          "base_received_carbon": 0.0,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 20.0
+        },
+        "opponent": {
+          "state_t": 60,
+          "recruited_total": 10,
+          "new_trees_planted": 14,
+          "alive_workers": 10,
+          "alive_collectors": 6,
+          "alive_trees": 15,
+          "positive_cargo_collectors": 5,
+          "collectors_ever_collected": 6,
+          "cargo": 1063.3725,
+          "cash": 1469.82,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 91.0,
+          "collected_carbon": 1534.5915000000005,
+          "positive_delivery_events": 6.0,
+          "own_positive_delivery_carbon": 471.21900000000005,
+          "closed_loop_events": 6.0,
+          "base_received_carbon": 471.21900000000005,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 680.5368019962078
+        }
+      },
+      "terminal_score_by_seat": null,
+      "scores_not_defined_at_behavior_cap": true,
+      "wall_seconds": 23.4876359459995,
+      "play_wall_seconds": 19.0201897750012,
+      "module_load_wall_seconds": 4.467425099999673,
+      "cpu_seconds": 43.228900637,
+      "call_timing_by_seat": [
+        {
+          "calls": 60,
+          "total": 0.3529044970036921,
+          "mean": 0.005881741616728202,
+          "max": 0.010187140998823452
+        },
+        {
+          "calls": 60,
+          "total": 18.568654977001643,
+          "mean": 0.30947758295002736,
+          "max": 0.5671210359996621
+        }
+      ],
+      "opponent_search_config": {
+        "_S_ENGINE": true,
+        "_S_START": 0,
+        "_S_K": 32,
+        "_S_GEN": [
+          [
+            2.5,
+            8
+          ],
+          [
+            1.0,
+            3
+          ],
+          [
+            3.5,
+            8
+          ],
+          [
+            0.0,
+            6
+          ],
+          [
+            5.0,
+            8
+          ]
+        ],
+        "_S_DUPS": 8,
+        "_S_M": 1,
+        "_S_MMAX": 1,
+        "_S_STAGES": [
+          [
+            1,
+            0.5
+          ],
+          [
+            4,
+            0.25
+          ]
+        ],
+        "_S_D2": 8,
+        "_S_FILL": 0.85,
+        "_S_ROWS": 32,
+        "_S_EPS": 0.0,
+        "_S_ABORT": 0.58,
+        "_S_SAFE": 1.3,
+        "_S_CFIX": 0.004,
+        "_S_HOMEFIX": true,
+        "_RETIRE": 0,
+        "_BANK": 12,
+        "_HOME": [
+          1,
+          50.0
+        ],
+        "_TEMP": 1.0,
+        "_SEED": null,
+        "_SID": 100
+      },
+      "opponent_search_ok": true,
+      "opponent_embedded_engine": true,
+      "opponent_search_stats": {
+        "searched": 60,
+        "changed": 39,
+        "aborted": 5,
+        "single": 0,
+        "time": [
+          0.13671718400109967,
+          0.1599834179996833,
+          0.16008596000028774,
+          0.1626573070006998,
+          0.16207628000120167,
+          0.2513910220004618,
+          0.22613101799834112,
+          0.15265120799995202,
+          0.16130841400081408,
+          0.14778269099952013,
+          0.22486511500028428,
+          0.15448855999966327,
+          0.13291857600052026,
+          0.1836170589995163,
+          0.1451654470001813,
+          0.16547006300061184,
+          0.1390998770002625,
+          0.1698147249990143,
+          0.1446775530002924,
+          0.2178892600004474,
+          0.15738730100019893,
+          0.158255744001508,
+          0.19783637600085058,
+          0.17600476400002663,
+          0.1750576180002099,
+          0.20854060400051821,
+          0.15929862899974978,
+          0.16943458099922282,
+          0.3221798430004128,
+          0.18878118600150628,
+          0.1773528889989393,
+          0.33403392100080964,
+          0.4228029229998356,
+          0.2737471389991697,
+          0.425741654000376,
+          0.20700225200016575,
+          0.4194596779998392,
+          0.32305038899903593,
+          0.44652081500134955,
+          0.5554552569992666,
+          0.39550554500056023,
+          0.29982423699948413,
+          0.5509326820010756,
+          0.5415812869996444,
+          0.5410380409994104,
+          0.3605408709991025,
+          0.566511843000626,
+          0.3239734580001823,
+          0.5476299679994554,
+          0.3003542349997588,
+          0.5559812449992023,
+          0.557734296999115,
+          0.498247610999897,
+          0.34646965300089505,
+          0.5593348170004901,
+          0.55553859399879,
+          0.5517477440007497,
+          0.5605948550000903,
+          0.5075411300003907,
+          0.5317739370002528
+        ],
+        "depth": {
+          "8": 45,
+          "2": 3,
+          "6": 5,
+          "4": 2,
+          "7": 2,
+          "3": 2,
+          "5": 1
+        },
+        "rolls": {
+          "1": 60
+        },
+        "cands": {
+          "2": 1,
+          "5": 6,
+          "3": 10,
+          "4": 7,
+          "9": 2,
+          "10": 1,
+          "7": 5,
+          "12": 7,
+          "18": 3,
+          "8": 1,
+          "24": 4,
+          "16": 1,
+          "20": 7,
+          "23": 1,
+          "11": 1,
+          "26": 1,
+          "21": 1,
+          "19": 1
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          19,
+          5,
+          1,
+          0.5317739370002528,
+          [
+            0.002735849512748462,
+            0.0011515132873546113,
+            0.00256567449986469,
+            0.0010038356002041837
+          ]
+        ]
+      },
+      "opponent_torch_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "final_state_sha256": "fa3e213c18efc31623684f16fdc12c4b9218d044071b9a972761352111de129d",
+      "action_trace_sha256": "41bb124fc6711bd67a35c0755f94c3830ccc7f1f88b9109e171bdef7dccb91b1",
+      "measured_events_sha256": "b3c7f417f751a552c5521d95fe5d5093a6c096e8a392b929b3408c2ec2f3be92",
+      "positive_delivery_and_plant_events": [
+        {
+          "step": 9,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 9.9645
+        },
+        {
+          "step": 14,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 118,
+          "amount": 20.0
+        },
+        {
+          "step": 19,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 29.252699999999997
+        },
+        {
+          "step": 19,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 106,
+          "amount": 26.175
+        },
+        {
+          "step": 24,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 46,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 28,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 32.7297
+        },
+        {
+          "step": 28,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 58,
+          "amount": 29.418264375
+        },
+        {
+          "step": 31,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 166,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 32,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 70.54169999999999
+        },
+        {
+          "step": 33,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 25,
+          "amount": 34.36497228135938
+        },
+        {
+          "step": 34,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 199,
+          "amount": 37.74074076747884
+        },
+        {
+          "step": 35,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 178,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 37,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 205,
+          "amount": 47.05862133707791
+        },
+        {
+          "step": 38,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 19,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 41,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 35,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 42,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 187,
+          "amount": 70.96904987512318
+        },
+        {
+          "step": 43,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 147,
+          "amount": 82.94677659577712
+        },
+        {
+          "step": 47,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "plant",
+          "position": 145,
+          "amount": 20.0
+        },
+        {
+          "step": 54,
+          "player": 1,
+          "worker": "player-1-worker-9",
+          "event": "deposit",
+          "amount": 105.99000000000001
+        },
+        {
+          "step": 57,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 175,
+          "amount": 116.00799733329417
+        },
+        {
+          "step": 59,
+          "player": 1,
+          "worker": "player-1-worker-6",
+          "event": "deposit",
+          "amount": 222.74040000000002
+        }
+      ]
+    },
+    {
+      "arm": "sqrt-role-action",
+      "seed": 620030000,
+      "candidate_seat": 1,
+      "started_at_utc": "2026-11-18T16:37:36.609198+00:00",
+      "finished_at_utc": "2026-11-18T16:37:59.381823+00:00",
+      "transitions": 60,
+      "early_terminal": false,
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "termination": "60_transition_behavior_cap",
+      "agent_calls_by_seat": [
+        60,
+        60
+      ],
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "errors": [],
+      "snapshots": {
+        "30": {
+          "candidate": {
+            "state_t": 30,
+            "recruited_total": 2,
+            "new_trees_planted": 0,
+            "alive_workers": 2,
+            "alive_collectors": 1,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 20.0,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 0.0
+          },
+          "opponent": {
+            "state_t": 30,
+            "recruited_total": 5,
+            "new_trees_planted": 3,
+            "alive_workers": 5,
+            "alive_collectors": 2,
+            "alive_trees": 3,
+            "positive_cargo_collectors": 1,
+            "collectors_ever_collected": 2,
+            "cargo": 37.3386,
+            "cash": 49.71,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 23.0,
+            "collected_carbon": 176.2755,
+            "positive_delivery_events": 6.0,
+            "own_positive_delivery_carbon": 138.9369,
+            "closed_loop_events": 6.0,
+            "base_received_carbon": 138.9369,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 73.801125
+          }
+        },
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "recruited_total": 2,
+            "new_trees_planted": 1,
+            "alive_workers": 2,
+            "alive_collectors": 1,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 0,
+            "cargo": 0,
+            "cash": 4.89,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": false,
+            "collect_events": 0.0,
+            "collected_carbon": 0.0,
+            "positive_delivery_events": 0.0,
+            "own_positive_delivery_carbon": 0.0,
+            "closed_loop_events": 0.0,
+            "base_received_carbon": 0.0,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 20.0
+          },
+          "opponent": {
+            "state_t": 60,
+            "recruited_total": 10,
+            "new_trees_planted": 15,
+            "alive_workers": 10,
+            "alive_collectors": 6,
+            "alive_trees": 16,
+            "positive_cargo_collectors": 4,
+            "collectors_ever_collected": 6,
+            "cargo": 930.0135,
+            "cash": 1332.5,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 94.0,
+            "collected_carbon": 1513.0175999999997,
+            "positive_delivery_events": 10.0,
+            "own_positive_delivery_carbon": 583.0041,
+            "closed_loop_events": 10.0,
+            "base_received_carbon": 583.0041,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 763.5649285931044
+          }
+        }
+      },
+      "final_observed": {
+        "candidate": {
+          "state_t": 60,
+          "recruited_total": 2,
+          "new_trees_planted": 1,
+          "alive_workers": 2,
+          "alive_collectors": 1,
+          "alive_trees": 0,
+          "positive_cargo_collectors": 0,
+          "collectors_ever_collected": 0,
+          "cargo": 0,
+          "cash": 4.89,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": false,
+          "collect_events": 0.0,
+          "collected_carbon": 0.0,
+          "positive_delivery_events": 0.0,
+          "own_positive_delivery_carbon": 0.0,
+          "closed_loop_events": 0.0,
+          "base_received_carbon": 0.0,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 20.0
+        },
+        "opponent": {
+          "state_t": 60,
+          "recruited_total": 10,
+          "new_trees_planted": 15,
+          "alive_workers": 10,
+          "alive_collectors": 6,
+          "alive_trees": 16,
+          "positive_cargo_collectors": 4,
+          "collectors_ever_collected": 6,
+          "cargo": 930.0135,
+          "cash": 1332.5,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 94.0,
+          "collected_carbon": 1513.0175999999997,
+          "positive_delivery_events": 10.0,
+          "own_positive_delivery_carbon": 583.0041,
+          "closed_loop_events": 10.0,
+          "base_received_carbon": 583.0041,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 763.5649285931044
+        }
+      },
+      "terminal_score_by_seat": null,
+      "scores_not_defined_at_behavior_cap": true,
+      "wall_seconds": 22.77263194400075,
+      "play_wall_seconds": 18.81805383199935,
+      "module_load_wall_seconds": 3.9545752379999612,
+      "cpu_seconds": 42.093121134,
+      "call_timing_by_seat": [
+        {
+          "calls": 60,
+          "total": 18.334556426994823,
+          "mean": 0.3055759404499137,
+          "max": 0.5636319400000502
+        },
+        {
+          "calls": 60,
+          "total": 0.3825801839975611,
+          "mean": 0.006376336399959352,
+          "max": 0.015901083999779075
+        }
+      ],
+      "opponent_search_config": {
+        "_S_ENGINE": true,
+        "_S_START": 0,
+        "_S_K": 32,
+        "_S_GEN": [
+          [
+            2.5,
+            8
+          ],
+          [
+            1.0,
+            3
+          ],
+          [
+            3.5,
+            8
+          ],
+          [
+            0.0,
+            6
+          ],
+          [
+            5.0,
+            8
+          ]
+        ],
+        "_S_DUPS": 8,
+        "_S_M": 1,
+        "_S_MMAX": 1,
+        "_S_STAGES": [
+          [
+            1,
+            0.5
+          ],
+          [
+            4,
+            0.25
+          ]
+        ],
+        "_S_D2": 8,
+        "_S_FILL": 0.85,
+        "_S_ROWS": 32,
+        "_S_EPS": 0.0,
+        "_S_ABORT": 0.58,
+        "_S_SAFE": 1.3,
+        "_S_CFIX": 0.004,
+        "_S_HOMEFIX": true,
+        "_RETIRE": 0,
+        "_BANK": 12,
+        "_HOME": [
+          1,
+          50.0
+        ],
+        "_TEMP": 1.0,
+        "_SEED": null,
+        "_SID": 100
+      },
+      "opponent_search_ok": true,
+      "opponent_embedded_engine": true,
+      "opponent_search_stats": {
+        "searched": 59,
+        "changed": 38,
+        "aborted": 4,
+        "single": 1,
+        "time": [
+          0.2509283060007874,
+          0.12960155200016743,
+          0.1543578079999861,
+          0.13320082400059619,
+          0.16032239599917375,
+          0.15180528800010507,
+          0.23691334699833533,
+          0.20927364099952683,
+          0.12973424099982367,
+          0.15728593499989074,
+          0.13739383599931898,
+          0.1595056289988861,
+          0.21010971299983794,
+          0.17384271700029785,
+          0.2004931489991577,
+          0.18383571400045184,
+          0.15423785299935844,
+          0.18931253499977174,
+          0.18943070599925704,
+          0.16219895999893197,
+          0.19811471899993194,
+          0.34702234900032636,
+          0.24550155900033133,
+          0.20211431899952004,
+          0.2109446009999374,
+          0.17666965200078266,
+          0.15654050900047878,
+          0.19078653099859366,
+          0.1911282029996073,
+          0.32319505300074525,
+          0.5195217149994278,
+          0.24129134800023166,
+          0.39160363500013773,
+          0.30897426800038374,
+          0.36741155100025935,
+          0.3831706889995985,
+          0.5131500759998744,
+          0.5631243669995456,
+          0.5342165980000573,
+          0.4078059599996777,
+          0.5268753919990559,
+          0.5593227710014617,
+          0.5107483029987634,
+          0.3170752430014545,
+          0.4932043019998673,
+          0.19936840500122344,
+          0.28463590600040334,
+          0.5478597549990809,
+          0.29472386599991296,
+          0.5352937689985993,
+          0.40725947200007795,
+          0.4933342309996078,
+          0.36514498199903755,
+          0.49634853299903625,
+          0.3813126620007097,
+          0.3321532340014528,
+          0.5175128560003941,
+          0.5378161019998515,
+          0.548141729001145
+        ],
+        "depth": {
+          "8": 47,
+          "6": 5,
+          "3": 2,
+          "2": 2,
+          "4": 2,
+          "5": 1
+        },
+        "rolls": {
+          "1": 59
+        },
+        "cands": {
+          "5": 8,
+          "3": 7,
+          "6": 3,
+          "4": 3,
+          "9": 3,
+          "8": 2,
+          "13": 2,
+          "7": 5,
+          "16": 2,
+          "12": 5,
+          "10": 1,
+          "14": 3,
+          "18": 3,
+          "22": 1,
+          "20": 3,
+          "24": 4,
+          "27": 1,
+          "17": 1,
+          "26": 1,
+          "21": 1
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          20,
+          5,
+          1,
+          0.548141729001145,
+          [
+            0.0035451210116041864,
+            0.00194097844452825,
+            0.003892411999995238,
+            0.002863016199989943
+          ]
+        ]
+      },
+      "opponent_torch_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "final_state_sha256": "fce5c58a16fc753b9b1cf901b19902e5eade61ee94412d2bc12cb7dc28d9a1e2",
+      "action_trace_sha256": "f9a523775542c5bf9ce31bcdc3b281ae2fd7cb3cd3c6d547f66c01545674e7a5",
+      "measured_events_sha256": "973e794778bea04541db04ed291118ba7f4f9fff8ee414d9c0add9eb04daf087",
+      "positive_delivery_and_plant_events": [
+        {
+          "step": 10,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 9.1398
+        },
+        {
+          "step": 13,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 18.8817
+        },
+        {
+          "step": 18,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 21.6693
+        },
+        {
+          "step": 19,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 108,
+          "amount": 20.0
+        },
+        {
+          "step": 21,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 27.230400000000003
+        },
+        {
+          "step": 25,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 27.2925
+        },
+        {
+          "step": 27,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 4,
+          "amount": 26.175
+        },
+        {
+          "step": 30,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 34.7232
+        },
+        {
+          "step": 30,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 205,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 32,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 199,
+          "amount": 29.418264375
+        },
+        {
+          "step": 33,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 37.3386
+        },
+        {
+          "step": 34,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 166,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 34,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 25,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 36,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 46,
+          "amount": 37.74074076747884
+        },
+        {
+          "step": 38,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 178,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 39,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 55.7616
+        },
+        {
+          "step": 39,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 42,
+          "amount": 47.05862133707791
+        },
+        {
+          "step": 40,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 74,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 44,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 87,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 46,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 198,
+          "amount": 70.96904987512318
+        },
+        {
+          "step": 46,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 185,
+          "amount": 70.96904987512318
+        },
+        {
+          "step": 48,
+          "player": 0,
+          "worker": "player-0-worker-5",
+          "event": "plant",
+          "position": 118,
+          "amount": 97.73926909578475
+        },
+        {
+          "step": 51,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 39,
+          "amount": 116.00799733329417
+        },
+        {
+          "step": 53,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 152,
+          "amount": 20.0
+        },
+        {
+          "step": 59,
+          "player": 0,
+          "worker": "player-0-worker-8",
+          "event": "deposit",
+          "amount": 196.30769999999998
+        },
+        {
+          "step": 60,
+          "player": 0,
+          "worker": "player-0-worker-9",
+          "event": "deposit",
+          "amount": 154.6593
+        }
+      ]
+    },
+    {
+      "arm": "sqrt-role-action",
+      "seed": 620030001,
+      "candidate_seat": 0,
+      "started_at_utc": "2026-11-18T16:37:59.988340+00:00",
+      "finished_at_utc": "2026-11-18T16:38:24.054760+00:00",
+      "transitions": 60,
+      "early_terminal": false,
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "termination": "60_transition_behavior_cap",
+      "agent_calls_by_seat": [
+        60,
+        60
+      ],
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "errors": [],
+      "snapshots": {
+        "30": {
+          "candidate": {
+            "state_t": 30,
+            "recruited_total": 2,
+            "new_trees_planted": 1,
+            "alive_workers": 2,
+            "alive_collectors": 1,
+            "alive_trees": 1,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 1,
+            "cargo": 0,
+            "cash": 43.25,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 4.0,
+            "collected_carbon": 43.2537,
+            "positive_delivery_events": 1.0,
+            "own_positive_delivery_carbon": 43.2537,
+            "closed_loop_events": 1.0,
+            "base_received_carbon": 43.2537,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 20.0
+          },
+          "opponent": {
+            "state_t": 30,
+            "recruited_total": 6,
+            "new_trees_planted": 7,
+            "alive_workers": 6,
+            "alive_collectors": 2,
+            "alive_trees": 7,
+            "positive_cargo_collectors": 1,
+            "collectors_ever_collected": 2,
+            "cargo": 115.75380000000001,
+            "cash": 80.22,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 23.0,
+            "collected_carbon": 278.38919999999996,
+            "positive_delivery_events": 6.0,
+            "own_positive_delivery_carbon": 162.6354,
+            "closed_loop_events": 6.0,
+            "base_received_carbon": 162.6354,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 205.16451955196322
+          }
+        },
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "recruited_total": 2,
+            "new_trees_planted": 2,
+            "alive_workers": 2,
+            "alive_collectors": 1,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 1,
+            "cargo": 0,
+            "cash": 10.26,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 4.0,
+            "collected_carbon": 43.2537,
+            "positive_delivery_events": 1.0,
+            "own_positive_delivery_carbon": 43.2537,
+            "closed_loop_events": 1.0,
+            "base_received_carbon": 43.2537,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 67.05862133707791
+          },
+          "opponent": {
+            "state_t": 60,
+            "recruited_total": 10,
+            "new_trees_planted": 13,
+            "alive_workers": 10,
+            "alive_collectors": 6,
+            "alive_trees": 15,
+            "positive_cargo_collectors": 5,
+            "collectors_ever_collected": 6,
+            "cargo": 1320.6338999999998,
+            "cash": 861.28,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 116.0,
+            "collected_carbon": 1807.6704,
+            "positive_delivery_events": 8.0,
+            "own_positive_delivery_carbon": 487.03650000000005,
+            "closed_loop_events": 8.0,
+            "base_received_carbon": 487.03650000000005,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 687.5154955320784
+          }
+        }
+      },
+      "final_observed": {
+        "candidate": {
+          "state_t": 60,
+          "recruited_total": 2,
+          "new_trees_planted": 2,
+          "alive_workers": 2,
+          "alive_collectors": 1,
+          "alive_trees": 0,
+          "positive_cargo_collectors": 0,
+          "collectors_ever_collected": 1,
+          "cargo": 0,
+          "cash": 10.26,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 4.0,
+          "collected_carbon": 43.2537,
+          "positive_delivery_events": 1.0,
+          "own_positive_delivery_carbon": 43.2537,
+          "closed_loop_events": 1.0,
+          "base_received_carbon": 43.2537,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 67.05862133707791
+        },
+        "opponent": {
+          "state_t": 60,
+          "recruited_total": 10,
+          "new_trees_planted": 13,
+          "alive_workers": 10,
+          "alive_collectors": 6,
+          "alive_trees": 15,
+          "positive_cargo_collectors": 5,
+          "collectors_ever_collected": 6,
+          "cargo": 1320.6338999999998,
+          "cash": 861.28,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 116.0,
+          "collected_carbon": 1807.6704,
+          "positive_delivery_events": 8.0,
+          "own_positive_delivery_carbon": 487.03650000000005,
+          "closed_loop_events": 8.0,
+          "base_received_carbon": 487.03650000000005,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 687.5154955320784
+        }
+      },
+      "terminal_score_by_seat": null,
+      "scores_not_defined_at_behavior_cap": true,
+      "wall_seconds": 24.06642288600051,
+      "play_wall_seconds": 19.466540704999716,
+      "module_load_wall_seconds": 4.599879086001238,
+      "cpu_seconds": 44.620223428,
+      "call_timing_by_seat": [
+        {
+          "calls": 60,
+          "total": 0.35807135299182846,
+          "mean": 0.005967855883197141,
+          "max": 0.009979123000448453
+        },
+        {
+          "calls": 60,
+          "total": 19.00715852200119,
+          "mean": 0.3167859753666865,
+          "max": 0.5579313729995192
+        }
+      ],
+      "opponent_search_config": {
+        "_S_ENGINE": true,
+        "_S_START": 0,
+        "_S_K": 32,
+        "_S_GEN": [
+          [
+            2.5,
+            8
+          ],
+          [
+            1.0,
+            3
+          ],
+          [
+            3.5,
+            8
+          ],
+          [
+            0.0,
+            6
+          ],
+          [
+            5.0,
+            8
+          ]
+        ],
+        "_S_DUPS": 8,
+        "_S_M": 1,
+        "_S_MMAX": 1,
+        "_S_STAGES": [
+          [
+            1,
+            0.5
+          ],
+          [
+            4,
+            0.25
+          ]
+        ],
+        "_S_D2": 8,
+        "_S_FILL": 0.85,
+        "_S_ROWS": 32,
+        "_S_EPS": 0.0,
+        "_S_ABORT": 0.58,
+        "_S_SAFE": 1.3,
+        "_S_CFIX": 0.004,
+        "_S_HOMEFIX": true,
+        "_RETIRE": 0,
+        "_BANK": 12,
+        "_HOME": [
+          1,
+          50.0
+        ],
+        "_TEMP": 1.0,
+        "_SEED": null,
+        "_SID": 100
+      },
+      "opponent_search_ok": true,
+      "opponent_embedded_engine": true,
+      "opponent_search_stats": {
+        "searched": 60,
+        "changed": 39,
+        "aborted": 9,
+        "single": 0,
+        "time": [
+          0.14997042499999225,
+          0.16876804799903766,
+          0.16369694499917387,
+          0.1519811309990473,
+          0.16767145400081063,
+          0.2831442890001199,
+          0.22235283100053493,
+          0.16770176999852993,
+          0.1677669809996587,
+          0.15365827200002968,
+          0.14182515500033333,
+          0.14835587599918654,
+          0.19715129799988063,
+          0.36014547900049365,
+          0.15920171800098615,
+          0.15689403400028823,
+          0.23298337800042646,
+          0.1678567210001347,
+          0.1702078899998014,
+          0.2348721550006303,
+          0.21335268800066842,
+          0.18044030300006852,
+          0.21379820900074265,
+          0.23561803200027498,
+          0.29230983799971,
+          0.360147727000367,
+          0.36900654999953986,
+          0.19258444899969618,
+          0.18875175199900696,
+          0.29552638799941633,
+          0.408563493998372,
+          0.27615674500157184,
+          0.5043944610006292,
+          0.3156908789987938,
+          0.5374736599987955,
+          0.557351301999006,
+          0.3692515940001613,
+          0.23283691700089548,
+          0.5530842830012261,
+          0.5249013910015492,
+          0.45031363899943244,
+          0.46758698799931153,
+          0.31606662899866933,
+          0.5349944699992193,
+          0.487244224999813,
+          0.5128320240000903,
+          0.28027946499969403,
+          0.5483745960009401,
+          0.37514156100041873,
+          0.4649123250001139,
+          0.48195065399886516,
+          0.289783260999684,
+          0.374014007000369,
+          0.38992428699930315,
+          0.42137328399985563,
+          0.3236010130003706,
+          0.4283975950002059,
+          0.31360428699917975,
+          0.5266578439986915,
+          0.4094223759984743
+        ],
+        "depth": {
+          "8": 46,
+          "2": 6,
+          "3": 3,
+          "4": 2,
+          "5": 3
+        },
+        "rolls": {
+          "1": 60
+        },
+        "cands": {
+          "2": 1,
+          "4": 7,
+          "3": 3,
+          "6": 6,
+          "8": 3,
+          "15": 1,
+          "5": 1,
+          "7": 5,
+          "12": 6,
+          "13": 2,
+          "11": 2,
+          "25": 2,
+          "26": 3,
+          "14": 3,
+          "20": 4,
+          "10": 2,
+          "16": 3,
+          "24": 3,
+          "19": 1,
+          "27": 2
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          14,
+          8,
+          1,
+          0.4094223759984743,
+          [
+            0.003068777158064908,
+            0.0014617268509445876,
+            0.0028205205000849673,
+            0.0015565502499157446
+          ]
+        ]
+      },
+      "opponent_torch_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "final_state_sha256": "658e90fc7b16612e4d041b9b2fa2ceb7844da3001ab6c10ab7ccfff93aeac33a",
+      "action_trace_sha256": "d18bade9ba67b446084011aafbadd4ba64ce851963492a7ae3960ca68001b034",
+      "measured_events_sha256": "bc3bc928b50a56c0721509fe6ae78db420b47dba0bb4e458387add7fe5f953d5",
+      "positive_delivery_and_plant_events": [
+        {
+          "step": 6,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 19.5165
+        },
+        {
+          "step": 12,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 23.3031
+        },
+        {
+          "step": 12,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 112,
+          "amount": 20.0
+        },
+        {
+          "step": 17,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 34.4346
+        },
+        {
+          "step": 19,
+          "player": 1,
+          "worker": "player-1-worker-2",
+          "event": "deposit",
+          "amount": 27.8259
+        },
+        {
+          "step": 19,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 127,
+          "amount": 26.175
+        },
+        {
+          "step": 24,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 32.257799999999996
+        },
+        {
+          "step": 24,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 180,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 24,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 59,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 26,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 45,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 28,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 163,
+          "amount": 34.36497228135938
+        },
+        {
+          "step": 29,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 43.2537
+        },
+        {
+          "step": 30,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 25.2975
+        },
+        {
+          "step": 30,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "plant",
+          "position": 175,
+          "amount": 20.0
+        },
+        {
+          "step": 30,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 0,
+          "amount": 37.74074076747884
+        },
+        {
+          "step": 33,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "plant",
+          "position": 190,
+          "amount": 47.05862133707791
+        },
+        {
+          "step": 36,
+          "player": 1,
+          "worker": "player-1-worker-5",
+          "event": "plant",
+          "position": 218,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 37,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 223,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 39,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 44,
+          "amount": 70.96904987512318
+        },
+        {
+          "step": 41,
+          "player": 1,
+          "worker": "player-1-worker-3",
+          "event": "plant",
+          "position": 35,
+          "amount": 82.94677659577712
+        },
+        {
+          "step": 47,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 151,
+          "amount": 97.73926909578475
+        },
+        {
+          "step": 48,
+          "player": 1,
+          "worker": "player-1-worker-4",
+          "event": "plant",
+          "position": 77,
+          "amount": 116.00799733329417
+        },
+        {
+          "step": 54,
+          "player": 1,
+          "worker": "player-1-worker-8",
+          "event": "deposit",
+          "amount": 142.73310000000004
+        },
+        {
+          "step": 59,
+          "player": 1,
+          "worker": "player-1-worker-7",
+          "event": "deposit",
+          "amount": 181.668
+        }
+      ]
+    },
+    {
+      "arm": "sqrt-role-action",
+      "seed": 620030001,
+      "candidate_seat": 1,
+      "started_at_utc": "2026-11-18T16:38:00.320972+00:00",
+      "finished_at_utc": "2026-11-18T16:38:25.039897+00:00",
+      "transitions": 60,
+      "early_terminal": false,
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "termination": "60_transition_behavior_cap",
+      "agent_calls_by_seat": [
+        60,
+        60
+      ],
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "errors": [],
+      "snapshots": {
+        "30": {
+          "candidate": {
+            "state_t": 30,
+            "recruited_total": 2,
+            "new_trees_planted": 1,
+            "alive_workers": 2,
+            "alive_collectors": 1,
+            "alive_trees": 1,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 1,
+            "cargo": 0,
+            "cash": 43.25,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 4.0,
+            "collected_carbon": 43.2537,
+            "positive_delivery_events": 1.0,
+            "own_positive_delivery_carbon": 43.2537,
+            "closed_loop_events": 1.0,
+            "base_received_carbon": 43.2537,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 20.0
+          },
+          "opponent": {
+            "state_t": 30,
+            "recruited_total": 7,
+            "new_trees_planted": 6,
+            "alive_workers": 7,
+            "alive_collectors": 3,
+            "alive_trees": 6,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 2,
+            "cargo": 0,
+            "cash": 67.03,
+            "agent_calls": 30,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 19.0,
+            "collected_carbon": 147.06,
+            "positive_delivery_events": 7.0,
+            "own_positive_delivery_carbon": 147.06,
+            "closed_loop_events": 7.0,
+            "base_received_carbon": 147.06,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 169.21591815948437
+          }
+        },
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "recruited_total": 2,
+            "new_trees_planted": 4,
+            "alive_workers": 2,
+            "alive_collectors": 1,
+            "alive_trees": 0,
+            "positive_cargo_collectors": 0,
+            "collectors_ever_collected": 1,
+            "cargo": 0,
+            "cash": 30.3,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 4.0,
+            "collected_carbon": 43.2537,
+            "positive_delivery_events": 1.0,
+            "own_positive_delivery_carbon": 43.2537,
+            "closed_loop_events": 1.0,
+            "base_received_carbon": 43.2537,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 80.0
+          },
+          "opponent": {
+            "state_t": 60,
+            "recruited_total": 10,
+            "new_trees_planted": 12,
+            "alive_workers": 10,
+            "alive_collectors": 6,
+            "alive_trees": 16,
+            "positive_cargo_collectors": 5,
+            "collectors_ever_collected": 6,
+            "cargo": 972.6357,
+            "cash": 1183.02,
+            "agent_calls": 60,
+            "agent_errors": 0,
+            "completed_collection_delivery_loop": true,
+            "collect_events": 96.0,
+            "collected_carbon": 1528.7265000000002,
+            "positive_delivery_events": 11.0,
+            "own_positive_delivery_carbon": 554.4711,
+            "closed_loop_events": 11.0,
+            "base_received_carbon": 554.4711,
+            "enemy_base_donation": 0.0,
+            "base_collision_credit": 0.0,
+            "plant_spend": 526.7880638954349
+          }
+        }
+      },
+      "final_observed": {
+        "candidate": {
+          "state_t": 60,
+          "recruited_total": 2,
+          "new_trees_planted": 4,
+          "alive_workers": 2,
+          "alive_collectors": 1,
+          "alive_trees": 0,
+          "positive_cargo_collectors": 0,
+          "collectors_ever_collected": 1,
+          "cargo": 0,
+          "cash": 30.3,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 4.0,
+          "collected_carbon": 43.2537,
+          "positive_delivery_events": 1.0,
+          "own_positive_delivery_carbon": 43.2537,
+          "closed_loop_events": 1.0,
+          "base_received_carbon": 43.2537,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 80.0
+        },
+        "opponent": {
+          "state_t": 60,
+          "recruited_total": 10,
+          "new_trees_planted": 12,
+          "alive_workers": 10,
+          "alive_collectors": 6,
+          "alive_trees": 16,
+          "positive_cargo_collectors": 5,
+          "collectors_ever_collected": 6,
+          "cargo": 972.6357,
+          "cash": 1183.02,
+          "agent_calls": 60,
+          "agent_errors": 0,
+          "completed_collection_delivery_loop": true,
+          "collect_events": 96.0,
+          "collected_carbon": 1528.7265000000002,
+          "positive_delivery_events": 11.0,
+          "own_positive_delivery_carbon": 554.4711,
+          "closed_loop_events": 11.0,
+          "base_received_carbon": 554.4711,
+          "enemy_base_donation": 0.0,
+          "base_collision_credit": 0.0,
+          "plant_spend": 526.7880638954349
+        }
+      },
+      "terminal_score_by_seat": null,
+      "scores_not_defined_at_behavior_cap": true,
+      "wall_seconds": 24.71892621600091,
+      "play_wall_seconds": 20.311369004999506,
+      "module_load_wall_seconds": 4.407553405000726,
+      "cpu_seconds": 45.809616816,
+      "call_timing_by_seat": [
+        {
+          "calls": 60,
+          "total": 19.816114794008172,
+          "mean": 0.3302685799001362,
+          "max": 0.5729387080009474
+        },
+        {
+          "calls": 60,
+          "total": 0.3869321070069418,
+          "mean": 0.006448868450115696,
+          "max": 0.015570374000162701
+        }
+      ],
+      "opponent_search_config": {
+        "_S_ENGINE": true,
+        "_S_START": 0,
+        "_S_K": 32,
+        "_S_GEN": [
+          [
+            2.5,
+            8
+          ],
+          [
+            1.0,
+            3
+          ],
+          [
+            3.5,
+            8
+          ],
+          [
+            0.0,
+            6
+          ],
+          [
+            5.0,
+            8
+          ]
+        ],
+        "_S_DUPS": 8,
+        "_S_M": 1,
+        "_S_MMAX": 1,
+        "_S_STAGES": [
+          [
+            1,
+            0.5
+          ],
+          [
+            4,
+            0.25
+          ]
+        ],
+        "_S_D2": 8,
+        "_S_FILL": 0.85,
+        "_S_ROWS": 32,
+        "_S_EPS": 0.0,
+        "_S_ABORT": 0.58,
+        "_S_SAFE": 1.3,
+        "_S_CFIX": 0.004,
+        "_S_HOMEFIX": true,
+        "_RETIRE": 0,
+        "_BANK": 12,
+        "_HOME": [
+          1,
+          50.0
+        ],
+        "_TEMP": 1.0,
+        "_SEED": null,
+        "_SID": 100
+      },
+      "opponent_search_ok": true,
+      "opponent_embedded_engine": true,
+      "opponent_search_stats": {
+        "searched": 59,
+        "changed": 39,
+        "aborted": 7,
+        "single": 1,
+        "time": [
+          0.18223656499867502,
+          0.14744701599920518,
+          0.1457270159990003,
+          0.1694935159994202,
+          0.2933219429996825,
+          0.17957126600049378,
+          0.1763562500000262,
+          0.14990764200047124,
+          0.5426370229997701,
+          0.30912116300169146,
+          0.16579773600096814,
+          0.1684389950005425,
+          0.16556654200030607,
+          0.3933867339983408,
+          0.19336197600023297,
+          0.20439557300051092,
+          0.16847194399997534,
+          0.16393065500051307,
+          0.17847494699890376,
+          0.1689956810005242,
+          0.19527663699955156,
+          0.2982101080015127,
+          0.250831762999951,
+          0.1568287310001324,
+          0.25654711599963775,
+          0.1936763459998474,
+          0.3026652059998014,
+          0.26089697600036743,
+          0.4704524059998221,
+          0.26547600199955923,
+          0.557266656000138,
+          0.4759652129996539,
+          0.5713077149994206,
+          0.5444236880011886,
+          0.2281391699998494,
+          0.4121539710013167,
+          0.3917361309995613,
+          0.38952187100039737,
+          0.30424514599872055,
+          0.5115979339989281,
+          0.2538577829982387,
+          0.5426995540001371,
+          0.4750149209994561,
+          0.4691866250013845,
+          0.5165123709994077,
+          0.3649905399997806,
+          0.5074808720000874,
+          0.46974355099882814,
+          0.467676152000422,
+          0.25664128599964897,
+          0.5609826349991636,
+          0.5041167390008923,
+          0.32045430399921315,
+          0.553475888000321,
+          0.43504627299989806,
+          0.5320921149996138,
+          0.4495651519991952,
+          0.5506346160000248,
+          0.2385156079999433
+        ],
+        "depth": {
+          "8": 45,
+          "5": 5,
+          "1": 1,
+          "4": 2,
+          "2": 4,
+          "3": 2
+        },
+        "rolls": {
+          "1": 59
+        },
+        "cands": {
+          "5": 7,
+          "4": 2,
+          "3": 5,
+          "23": 2,
+          "12": 4,
+          "6": 4,
+          "11": 2,
+          "2": 1,
+          "7": 2,
+          "9": 1,
+          "10": 5,
+          "18": 7,
+          "22": 2,
+          "20": 4,
+          "8": 1,
+          "26": 2,
+          "14": 2,
+          "24": 3,
+          "28": 1,
+          "16": 2
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          10,
+          8,
+          1,
+          0.2385156079999433,
+          [
+            0.002242693517548134,
+            0.0010529560866842083,
+            0.0021659103334047054,
+            0.0011047163334296783
+          ]
+        ]
+      },
+      "opponent_torch_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "final_state_sha256": "3bfb38ce051dc943fdf080c9d664bd42527d09ddd6aff3735cb4bd6821c7a092",
+      "action_trace_sha256": "c37b3aa380c04d332240f7f91f4241e7d876c81608a2df5c6a2ac56893d4f2cd",
+      "measured_events_sha256": "6a95699019a3407205af2f57cf5348aef8a1c6341e5500ba96feb0d4fac32840",
+      "positive_delivery_and_plant_events": [
+        {
+          "step": 4,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 8.911499999999998
+        },
+        {
+          "step": 8,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 11.251199999999999
+        },
+        {
+          "step": 8,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 20.7048
+        },
+        {
+          "step": 16,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 28.594199999999997
+        },
+        {
+          "step": 17,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 97,
+          "amount": 20.0
+        },
+        {
+          "step": 18,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 30.3363
+        },
+        {
+          "step": 19,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 112,
+          "amount": 26.175
+        },
+        {
+          "step": 21,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 194,
+          "amount": 27.626125000000002
+        },
+        {
+          "step": 22,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 19.969499999999996
+        },
+        {
+          "step": 25,
+          "player": 0,
+          "worker": "player-0-worker-1",
+          "event": "deposit",
+          "amount": 27.2925
+        },
+        {
+          "step": 25,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 210,
+          "amount": 29.418264375
+        },
+        {
+          "step": 27,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 163,
+          "amount": 31.631556503125005
+        },
+        {
+          "step": 29,
+          "player": 1,
+          "worker": "player-1-worker-0",
+          "event": "deposit",
+          "amount": 43.2537
+        },
+        {
+          "step": 29,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 29,
+          "amount": 34.36497228135938
+        },
+        {
+          "step": 30,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 169,
+          "amount": 20.0
+        },
+        {
+          "step": 31,
+          "player": 0,
+          "worker": "player-0-worker-4",
+          "event": "plant",
+          "position": 151,
+          "amount": 41.909814847836365
+        },
+        {
+          "step": 32,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 59,
+          "amount": 47.05862133707791
+        },
+        {
+          "step": 34,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 45,
+          "amount": 53.41739735129123
+        },
+        {
+          "step": 38,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 8,
+          "amount": 61.27048572884466
+        },
+        {
+          "step": 40,
+          "player": 0,
+          "worker": "player-0-worker-3",
+          "event": "plant",
+          "position": 87,
+          "amount": 70.96904987512318
+        },
+        {
+          "step": 42,
+          "player": 0,
+          "worker": "player-0-worker-2",
+          "event": "plant",
+          "position": 216,
+          "amount": 82.94677659577712
+        },
+        {
+          "step": 43,
+          "player": 0,
+          "worker": "player-0-worker-0",
+          "event": "deposit",
+          "amount": 111.16109999999999
+        },
+        {
+          "step": 47,
+          "player": 0,
+          "worker": "player-0-worker-6",
+          "event": "deposit",
+          "amount": 137.7192
+        },
+        {
+          "step": 47,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 199,
+          "amount": 20.0
+        },
+        {
+          "step": 52,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 5,
+          "amount": 20.0
+        },
+        {
+          "step": 54,
+          "player": 0,
+          "worker": "player-0-worker-8",
+          "event": "deposit",
+          "amount": 129.3111
+        },
+        {
+          "step": 56,
+          "player": 1,
+          "worker": "player-1-worker-1",
+          "event": "plant",
+          "position": 19,
+          "amount": 20.0
+        },
+        {
+          "step": 60,
+          "player": 0,
+          "worker": "player-0-worker-8",
+          "event": "deposit",
+          "amount": 29.219699999999996
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "initial": {
+      "games": 4,
+      "transitions": 240,
+      "early_terminal_games": 0,
+      "wall_seconds_sum": 101.4153706069992,
+      "candidate": {
+        "games_with_positive_delivery": 0,
+        "games_with_new_trees": 0,
+        "games_with_completed_collection_delivery_loop": 0,
+        "agent_errors": 0,
+        "totals": {
+          "positive_delivery_events": 0.0,
+          "own_positive_delivery_carbon": 0.0,
+          "closed_loop_events": 0.0,
+          "new_trees_planted": 0,
+          "plant_spend": 0.0,
+          "cash": 80.0,
+          "cargo": 0,
+          "alive_workers": 6,
+          "alive_trees": 0
+        },
+        "means": {
+          "positive_delivery_events": 0.0,
+          "own_positive_delivery_carbon": 0.0,
+          "closed_loop_events": 0.0,
+          "new_trees_planted": 0.0,
+          "plant_spend": 0.0,
+          "cash": 20.0,
+          "cargo": 0.0,
+          "alive_workers": 1.5,
+          "alive_trees": 0.0
+        }
+      },
+      "opponent": {
+        "games_with_positive_delivery": 4,
+        "games_with_new_trees": 4,
+        "games_with_completed_collection_delivery_loop": 4,
+        "agent_errors": 0,
+        "totals": {
+          "positive_delivery_events": 34.0,
+          "own_positive_delivery_carbon": 2054.0609999999997,
+          "closed_loop_events": 34.0,
+          "new_trees_planted": 60,
+          "plant_spend": 3042.072373937596,
+          "cash": 4716.7,
+          "cargo": 3470.7068999999997,
+          "alive_workers": 40,
+          "alive_trees": 60
+        },
+        "means": {
+          "positive_delivery_events": 8.5,
+          "own_positive_delivery_carbon": 513.5152499999999,
+          "closed_loop_events": 8.5,
+          "new_trees_planted": 15.0,
+          "plant_spend": 760.518093484399,
+          "cash": 1179.175,
+          "cargo": 867.6767249999999,
+          "alive_workers": 10.0,
+          "alive_trees": 15.0
+        }
+      }
+    },
+    "sqrt-role-action": {
+      "games": 4,
+      "transitions": 240,
+      "early_terminal_games": 0,
+      "wall_seconds_sum": 95.04561699200167,
+      "candidate": {
+        "games_with_positive_delivery": 2,
+        "games_with_new_trees": 4,
+        "games_with_completed_collection_delivery_loop": 2,
+        "agent_errors": 0,
+        "totals": {
+          "positive_delivery_events": 2.0,
+          "own_positive_delivery_carbon": 86.5074,
+          "closed_loop_events": 2.0,
+          "new_trees_planted": 8,
+          "plant_spend": 187.0586213370779,
+          "cash": 49.86,
+          "cargo": 0,
+          "alive_workers": 7,
+          "alive_trees": 0
+        },
+        "means": {
+          "positive_delivery_events": 0.5,
+          "own_positive_delivery_carbon": 21.62685,
+          "closed_loop_events": 0.5,
+          "new_trees_planted": 2.0,
+          "plant_spend": 46.76465533426948,
+          "cash": 12.465,
+          "cargo": 0.0,
+          "alive_workers": 1.75,
+          "alive_trees": 0.0
+        }
+      },
+      "opponent": {
+        "games_with_positive_delivery": 4,
+        "games_with_new_trees": 4,
+        "games_with_completed_collection_delivery_loop": 4,
+        "agent_errors": 0,
+        "totals": {
+          "positive_delivery_events": 35.0,
+          "own_positive_delivery_carbon": 2095.7307,
+          "closed_loop_events": 35.0,
+          "new_trees_planted": 54,
+          "plant_spend": 2658.4052900168253,
+          "cash": 4846.62,
+          "cargo": 4286.6556,
+          "alive_workers": 40,
+          "alive_trees": 62
+        },
+        "means": {
+          "positive_delivery_events": 8.75,
+          "own_positive_delivery_carbon": 523.932675,
+          "closed_loop_events": 8.75,
+          "new_trees_planted": 13.5,
+          "plant_spend": 664.6013225042063,
+          "cash": 1211.655,
+          "cargo": 1071.6639,
+          "alive_workers": 10.0,
+          "alive_trees": 15.5
+        }
+      }
+    }
+  },
+  "finished_at_utc": "2026-11-18T16:38:25.510605+00:00",
+  "elapsed_wall_seconds": 101.12440231300025,
+  "post_run_verification": {
+    "utc": "2026-11-18T16:38:53.970921+00:00",
+    "all_8_games_60_transitions_no_extinction_no_agent_errors": true,
+    "complete_unique_arm_map_seat_grid": true,
+    "all_source_hashes_unchanged": true,
+    "all_games_search_active_and_searched_plus_single_equals_opponent_calls": true,
+    "all_observed_numpy_BLAS_pools_one_thread": true,
+    "all_opponent_net": "_WinoNet",
+    "all_opponent_rollout_net": "the same",
+    "original_source_has_embedded_ROLL_weights": false,
+    "rollout_note": "The pinned source contains _WEIGHTS and _VALUE but no _ROLL; rnet=the same is the original configuration, not a missing rollout dependency.",
+    "all_plant_event_counts_and_amounts_match_final_counters": true,
+    "config_source_sha256": "8c8545c460506020b2238bc67e9f19c75d917f27595dbb170af68e1adf1e5548",
+    "game_configuration": {
+      "episodeSteps": 300,
+      "startingCarbon": 2500,
+      "size": 15,
+      "carbonCoverage": 45,
+      "numberOfBases": 2,
+      "startPosOffset": 1,
+      "startingCellCarbon": 50,
+      "maxCellCarbon": 100,
+      "recCollectorCost": 30,
+      "recCollectorIncreaseCost": 0,
+      "recPlanterCost": 30,
+      "recPlanterIncreaseCost": 0,
+      "moveCost": 0,
+      "smeltCost": 0,
+      "workerLimit": 10,
+      "planterLimit": 1,
+      "collectorLimit": 2,
+      "plantCost": 20,
+      "plantCostInflationRatio": 5,
+      "plantCostInflationBase": 1.235,
+      "playerTreeProtectiveNumber": 0,
+      "co2FrmWithered": 30,
+      "seizeCost": 20,
+      "initialCollectRate": 0.3,
+      "collectDecreaseRate": 0.0,
+      "regenRate": 0.03,
+      "treeLifespan": 50,
+      "cellAbsorptionRate": 0.0375,
+      "collectorAbsorptionRate": 0.1,
+      "randomSeed": null,
+      "agentTimeout": 60,
+      "actTimeout": 1,
+      "runTimeout": 9600
+    }
+  }
+}
