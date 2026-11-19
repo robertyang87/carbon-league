@@ -75,12 +75,41 @@ def evidence(items):
     return out
 
 
+def training_transfer(gate, files, signed, expect_pass):
+    """Recompute the prerequisite from both existing training cohorts and their individual seat receipts."""
+    outcomes={}
+    for batch in ("03","04"):
+        training=HERE/"batches"/("intake_"+batch)
+        path=DEV/f"transfer{batch}.json"
+        require(files.get(str(path.relative_to(ROOT)))==sha(path),"missing frozen transfer result")
+        receipt=read(path)
+        seeds=read(training/"protocol.json")["train_maps"]
+        need={f"transfer{batch}/{s}_{p}.json.gz" for s in seeds for p in (0,1)}
+        idx=receipt["identity"]
+        require(receipt["batch"]==batch and receipt["protocol_sha256"]==signed["dev_protocol_sha256"]
+                and receipt["candidate_sha256"]==signed["candidate_pack_sha256"] and idx["pack_sha256"]==receipt["candidate_sha256"]
+                and idx["opportunity_sha256"]==sha(training/"opportunities.jsonl.gz")
+                and idx["source_receipt_sha256"]==sha(training/"source_receipt.json")
+                and set(receipt["per_seat_files"])==need and set(map(int,receipt["maps"]))==set(seeds),
+                "transfer identity, sources or seats differ")
+        for name,h in receipt["per_seat_files"].items():
+            require(files.get(str((DEV/name).relative_to(ROOT)))==h,"unbound seat transfer")
+        exact=all(receipt.get(k) is True for k in ("parity_passed","all_actions_matched","all_opportunity_predictions_matched","all_original_v1_scores_matched"))
+        by_map=receipt["maps"]
+        require(all(m["net_saved"]==m["saved"]-m["harmed"] for m in by_map.values()),"inconsistent transfer effect")
+        passed=exact and all(m["net_saved"]>0 and m["harmed"]==0 for m in by_map.values())
+        require(receipt["passed"] is passed and gate["transfer_by_batch"][batch]=={"maps":by_map,"pass":passed},"wrong declared transfer verdict")
+        outcomes[batch]=passed
+    require(all(outcomes.values())==expect_pass,"declared development decision differs from observed prerequisite")
+
+
 def approval():
     r = reservation()
     doc = read(DEV / "slot_request.json")
     gate = read(DEV / "gate.json")
     require(gate.get("decision") == "run_native" and gate.get("started_native_games") == 0, "missing pre-game approval")
     gate_files = evidence(gate.get("evidence_files_sha256"))
+    training_transfer(gate,gate_files,r,True)
     files = evidence(doc.get("evidence_files_sha256"))
     require(all(str((DEV / n).relative_to(ROOT)) in files for n in
                 ("protocol.json", "release_manifest.json", "run.py", "candidate.py", "gate.json", "clearance.json")), "incomplete development request")
@@ -142,6 +171,8 @@ def cancellation(reason):
         require(g.get("owner") == r["owner"], "unknown withdrawing owner")
     files = evidence(g.get("evidence_files_sha256"))
     require(isinstance(reason,str) and len(reason.strip()) >= 4 and not native_started(), "reason missing or development began")
+    if g["decision"]=="do_not_run_native":
+        training_transfer(g,files,r,False)
     return {"mode":"cancelled_before_play","reason":reason.strip(),"gate_sha256":sha(p),"evidence":files,
             "reservation_sha256":sha(SLOT/"reservation.json")}
 
@@ -260,6 +291,21 @@ def wait_before_source(wd, plan):
     if Path(wd).resolve()!=AFTER:return
     require(plan.get("intake_name")==AFTER.name,"unexpected training block")
     while True:
+        # A supervising process can stop between publishing its outcome and releasing the slot.
+        # Give the development owner first use of the receipt, then recover only the already finished work.
+        comparison=DEV/"comparison.json"
+        gate_path=DEV/"gate.json"
+        if not (SLOT/"release.json").exists() and comparison.exists() and time.time()-comparison.stat().st_mtime>30:
+            try:
+                release()
+            except BlockingIOError:
+                pass
+        if not (SLOT/"cancelled.json").exists() and gate_path.exists() and time.time()-gate_path.stat().st_mtime>30:
+            if read(gate_path).get("decision")=="do_not_run_native":
+                try:
+                    cancel(gate_path,"public transfer did not pass the registered four-map survival rule")
+                except BlockingIOError:
+                    pass
         with lock(".state.lock"):
             if (SLOT/"cancelled.json").is_file():
                 validate_cancelled();return

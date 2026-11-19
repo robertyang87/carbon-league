@@ -38,7 +38,7 @@ class SlotTests(unittest.TestCase):
         return self.dev/"gate.json"
 
     def test_cancel_before_play_is_evidence_bound_and_idempotent(self):
-        gate=self.failure();slot.cancel(gate,"translation parity did not pass")
+        gate=self.failure("paired_hybrid_parent");slot.cancel(gate,"translation parity did not pass")
         slot.cancel(gate,"translation parity did not pass")
         slot.wait_before_source(self.after,{"intake_name":"after"})
         self.write(self.dev/"failure.json",{})
@@ -54,6 +54,37 @@ class SlotTests(unittest.TestCase):
         self.write(self.res/"cancelled.json",{})
         with self.assertRaises(ValueError):slot.wait_before_source(self.after,{"intake_name":"after"})
         self.assertFalse((self.res/"release.json").exists())
+
+    def test_fabricated_negative_gate_without_actual_trajectories_is_rejected(self):
+        with self.assertRaises((FileNotFoundError,ValueError)):
+            slot.cancel(self.failure(),"unsubstantiated failure")
+        self.assertFalse((self.res/"cancelled.json").exists())
+
+    def test_both_cohorts_and_all_seat_hashes_required_for_real_threshold(self):
+        std={"dev_protocol_sha256":"protocol","candidate_pack_sha256":"candidate"}
+        files={};g={"transfer_by_batch":{}}
+        for b,seeds in (("03",[11,12]),("04",[13,14])):
+            td=self.here/"batches"/("intake_"+b)
+            for name,val in (("protocol.json",{"train_maps":seeds}),("source_receipt.json",{}),("opportunities.jsonl.gz",{})):
+                self.write(td/name,val)
+            witness={}
+            for seed in seeds:
+                for seat in (0,1):
+                    name=f"transfer{b}/{seed}_{seat}.json.gz"
+                    self.write(self.dev/name,[seed,seat])
+                    witness[name]=slot.sha(self.dev/name)
+                    files[str((self.dev/name).relative_to(self.here))]=witness[name]
+            by_map={str(seed):{"saved":2,"harmed":int(b=="04"),"net_saved":2-int(b=="04")} for seed in seeds}
+            passed=b=="03"
+            g["transfer_by_batch"][b]={"maps":by_map,"pass":passed}
+            report={"batch":b,"protocol_sha256":"protocol","candidate_sha256":"candidate","per_seat_files":witness,"maps":by_map,
+                    "identity":{"pack_sha256":"candidate","opportunity_sha256":slot.sha(td/"opportunities.jsonl.gz"),"source_receipt_sha256":slot.sha(td/"source_receipt.json")},
+                    "passed":passed,"parity_passed":True,"all_actions_matched":True,"all_opportunity_predictions_matched":True,"all_original_v1_scores_matched":True}
+            path=self.dev/f"transfer{b}.json";self.write(path,report);files[str(path.relative_to(self.here))]=slot.sha(path)
+        slot.training_transfer(g,files,std,False)
+        with self.assertRaisesRegex(ValueError,"observed prerequisite"):slot.training_transfer(g,files,std,True)
+        files.pop("native/transfer04/14_1.json.gz")
+        with self.assertRaisesRegex(ValueError,"unbound seat transfer"):slot.training_transfer(g,files,std,False)
 
     def test_grant_requires_boundary_and_no_opened_training(self):
         import continue_intakes

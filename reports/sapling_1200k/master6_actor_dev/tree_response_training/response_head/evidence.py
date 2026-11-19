@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 from statistics import mean
 import sys
+import zipfile
 
 CODE = Path(__file__).resolve().parent.parent
 PARENT = "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"
@@ -47,13 +48,157 @@ def index(rows, keys):
     return indexed
 
 
+SUPPLEMENT = "supplement_01"
+SUPPLEMENT_HASH = "03cae8915e514bab1cdd1120edd95b4156e43dd8e851f8ec3e4c6ae5db69b351"
+SUPPLEMENT_NAMES = ("intake_06", "intake_07", "intake_08")
+
+
+def intake_folder(root, name):
+    if name == "intake_01":
+        return root
+    return (root / SUPPLEMENT if name in SUPPLEMENT_NAMES else root) / "batches" / name
+
+
+def supplement_registration(root):
+    folder = root / SUPPLEMENT
+    registration = folder / "registration.json"
+    equal(sha(registration), SUPPLEMENT_HASH, "unrecognized supplemental registration")
+    reg = read(registration)
+    anchors = {folder / "register.py":"register_program_sha256", root / "protocol.json":"original_protocol_sha256",
+               root / "next_intake.json":"original_queue_sha256", root / "batches/intake_03/aggregate.json":"original_03_aggregate_sha256"}
+    for path, key in anchors.items():
+        equal(sha(path), reg[key], "supplement upstream evidence or allocator differs")
+    equal([reg["schema"], reg["original_05_must_seal"], reg["policy_sha256"], reg["weight_manifest_sha256"],
+           reg["student_npz_sha256"], reg["protected_unopened_development_maps"]],
+          ["sapling-tree-training-supplement-v1", True, PARENT, WEIGHTS, STUDENT, read(root / "protocol.json")["development_maps"]],
+          "supplement actor or protected map identity")
+    return reg
+
+
+def count_shortfall(maps, paid, goals):
+    return maps < goals["independent_training_maps"] or paid < goals["completed_actually_paid_pairs"]
+
+
+def sealed_supplements(root, queue):
+    folder = root / SUPPLEMENT
+    prefix = [root] + [intake_folder(root, entry["name"]) for entry in queue["batches"]]
+    present = {p.name for p in (folder / "batches").glob("intake_*")}
+    require(not (present - set(SUPPLEMENT_NAMES)), "unregistered supplementary intake directory")
+    if not present:
+        return
+    reg = supplement_registration(root)
+    equal([str(p.relative_to(root)) for p in prefix], reg["expected_original_05_prefix"], "wrong original intake prefix")
+    equal([entry["name"] for entry in reg["batches"]], list(SUPPLEMENT_NAMES), "wrong supplementary intake order")
+    for entry in reg["batches"]:
+        name = entry["name"]
+        area = intake_folder(root, name)
+        if name not in present:
+            continue
+        # A scheduler can create an empty directory before publishing its protocol.
+        if not (area / "protocol.json").is_file():
+            require(not any(p.name != ".registration.lock" for p in area.iterdir()), "supplement evidence without declaration")
+            continue
+        predecessors = reg["batches"][:list(SUPPLEMENT_NAMES).index(name)]
+        expected_dirs = [root / v for v in reg["expected_original_05_prefix"]] + [intake_folder(root, b["name"]) for b in predecessors]
+        require(prefix == expected_dirs and all((p / "training_labels.json").is_file() for p in prefix)
+                and all((p / "aggregate.json").is_file() for p in prefix[1:]), "supplement started before all previous double seals")
+        prior = {str(p.relative_to(root)): sha(p / "training_labels.json") for p in prefix}
+        last = read(prefix[-1] / "aggregate.json")
+        equal(last["source_intakes"], [{"dir":k,"labels_sha256":v} for k,v in prior.items()], "unbound previous aggregate")
+        require(count_shortfall(last["distinct_maps"], last["filled_pairs"], reg["goals"]),
+                "supplement started after data counts had been satisfied")
+        verify_supplement_plan(root, area, entry, reg, prior)
+        if (area / "aggregate.json").is_file():
+            require((area / "training_labels.json").is_file(), "supplement aggregate without pair labels")
+            prefix.append(area)
+            yield name, area, entry
+
+
+def verify_supplement_plan(root, area, entry, reg, prior):
+    plan = read(area / "protocol.json")
+    expected = {**read(root / "batches/intake_03/protocol.json"),
+                "schema":"sapling-tree-response-training-supplement-batch-v1", "intake_name":entry["name"],
+                "queue_sha256":SUPPLEMENT_HASH, "train_maps":entry["maps"], "training_job_registry":entry["jobs"],
+                "prior_receipts":prior, "selector_at_registration_sha256":reg["selector_at_registration_sha256"],
+                "shared_decode_at_registration_sha256":reg["shared_decode_at_registration_sha256"]}
+    require(re.fullmatch(r"[0-9a-f]{40}", plan["source_revision"]) and isinstance(plan["registered_utc"], str)
+            and plan["registered_utc"] >= reg["registered_utc"], "invalid supplementary protocol freeze")
+    for key in ("registered_utc", "source_revision"):
+        expected[key] = plan[key]
+    equal(plan, expected, "supplementary protocol diverges from original registered method, job or label chain")
+
+
+def verify_supplement_clearance(root, area, plan, clearance, entry):
+    seeds = plan["train_maps"]
+    equal([clearance["registration_sha256"], clearance["source_revision"], clearance["training_maps"],
+           clearance["protected_identity_only"], set(clearance["full_audits"]) == set(map(str,seeds)),
+           clearance["initial_clearance_sha256"]],
+          [SUPPLEMENT_HASH, plan["source_revision"], seeds, plan["development_maps"], True, sha(root / "clearance.json")],
+          "wrong independent supplementary clearance")
+    expected_boards = {**{str(s):read(root / "clearance.json")["boards"][str(s)] for s in plan["development_maps"]},
+                       **entry["terrain_at_queue_time"]}
+    equal(clearance["boards"], expected_boards, "supplement board differs from the independently reserved opening")
+    repo_prefix = CODE.relative_to(CODE.parents[3])
+    lookup = lambda path: str(repo_prefix / path.relative_to(root))
+    expected = {lookup(p):sha(p) for p in (root / SUPPLEMENT / "registration.json", root / SUPPLEMENT / "register.py",
+                                          area / "protocol.json", area / "response_resources.json")}
+    equal(clearance["reservations_sha256"], expected, "supplement auditor signed different reservation bytes")
+    equal(clearance["prior_aggregate_sha256"], {name:sha(root / name / "aggregate.json") for name in plan["prior_receipts"] if name != "."},
+          "supplement clearance has different cumulative seals")
+    equal(set(clearance["prior_sources"]) == {lookup(root / name) for name in plan["prior_receipts"]}, True,
+          "supplement clearance did not exclude the complete prior source set")
+    for name in plan["prior_receipts"]:
+        source = root / name
+        prior = clearance["prior_sources"][lookup(source)]
+        equal([prior["source_receipt_sha256"], prior["official_sha256"], prior["clearance_sha256"], prior["protocol_sha256"]],
+              [sha(source / f) for f in ("source_receipt.json","source/official_replay.json","clearance.json","protocol.json")],
+              "supplement auditor checked different prior source tapes")
+    for s in seeds:
+        item = clearance["full_audits"][str(s)]
+        archive = area / f"clearance_audit_{s}.zip"
+        equal([item["archive"], item["sha256"]], [archive.name, sha(archive)], "supplement archived map audit changed")
+        with zipfile.ZipFile(archive) as z:
+            equal(z.namelist(), [f"{s}.json"], "supplement audit contains unexpected map")
+            raw = z.read(f"{s}.json")
+        equal(hashlib.sha256(raw).hexdigest(), item["report_sha256"], "supplement map audit payload changed")
+        scan = json.loads(raw)
+        board = expected_boards[str(s)]
+        equal([scan["candidate_seed"], scan["candidate_initial_terrain_u8_sha256"], scan["official_opening_sha256"],
+               scan["frozen_git_revision"], scan["current_declaration"]["sha256"], scan["reserved"],
+               scan["ladder_seed_or_terrain_match"],scan["conflicts"],scan["same_terrain_matches"]],
+              [s,board,board,plan["source_revision"],sha(area / "protocol.json"),False,False,
+               item["generic_nominal_conflicts"],item["generic_terrain_matches"]], "supplement audit reports different map or exposure")
+        declaration = lookup(area / "protocol.json")
+        equal(scan["current_declaration"]["path"], declaration, "wrong archived supplement protocol path")
+        roots = {Path(path).parts[0] for path in scan["current_declaration"]["local_exact_references"]
+                 if Path(path).parts and str(Path(*Path(path).parts[1:])) == declaration}
+        require(len(roots) == 1, "map auditor did not identify a unique repository declaration")
+        def allowed_source(path):
+            relative = Path(path)
+            return (not relative.is_absolute() and ".." not in relative.parts and len(relative.parts) > 1
+                    and relative.parts[0] in roots and str(Path(*relative.parts[1:])) in expected)
+        for path, method, *detail in scan["conflicts"]:
+            if path == "frozen_git":
+                require(method == "unexpected_exact_references" and len(detail) == 1 and set(detail[0]) <= expected.keys(),
+                        "unregistered supplementary frozen reference")
+            else:
+                require(allowed_source(path) and not detail and method in {"exact_number_or_terrain","recorded_seed"},
+                        "supplement map collides with historic file or range")
+        for terrain, seed, method in scan["same_terrain_matches"]:
+            equal([terrain,seed,method], [board,s,"inferred_default_native_generator"], "supplement overlaps previously observed terrain")
+            matches = [r for r in scan["local_native_or_training_maps"] if (r["terrain"],r["seed"],r["method"]) == (terrain,seed,method)]
+            require(len(matches) == 1 and matches[0]["source"] and all(allowed_source(path) and
+                    scan["local_source_sha256"][path] == expected[str(Path(*Path(path).parts[1:]))]
+                    for path in matches[0]["source"]), "supplement terrain has a nonreservation source")
+
+
 def batches(root):
     root = Path(root)
     require(sha(root / "protocol.json") == FIRST_PROTOCOL, "unexpected initial tree-response protocol")
     yield "intake_01", root, None
     queue_file = root / "next_intake.json"
     if not queue_file.exists():
-        require(not (root / "batches").exists() or not any((root / "batches").glob("intake_*")),
+        require(not any((root / "batches").glob("intake_*")) and not any((root / SUPPLEMENT / "batches").glob("intake_*")),
                 "continuation exists without a registered queue")
         return
     queue = read(queue_file)
@@ -65,6 +210,7 @@ def batches(root):
     require(not {p.name for p in (root / "batches").glob("intake_*")} - set(names), "unregistered continuation")
     for entry in queue["batches"]:
         yield entry["name"], root / "batches" / entry["name"], entry
+    yield from sealed_supplements(root, queue)
 
 
 def progress(intake_root):
@@ -226,7 +372,8 @@ def read_batch(area, name, entry, reserved, prior_hashes):
     equal([plan["parent_pack_sha256"], plan["parent_weight_manifest_sha256"], plan["student_npz_sha256"], plan["physical_seats"]],
           [PARENT, WEIGHTS, STUDENT, [0, 1]], "wrong family of training actors/seats")
     require(len(seeds) == len(set(seeds)) == 2 and not (reserved & set(seeds)), "unregistered or development map")
-    if entry is not None:
+    supplemental = name in SUPPLEMENT_NAMES
+    if entry is not None and not supplemental:
         require(plan["schema"] == "sapling-tree-response-training-continuation-v1", "unexpected continuation schema")
         equal([plan["intake_name"], seeds, plan["training_job_registry"], plan["prior_receipts"], plan["queue_sha256"]],
               [name, entry["maps"], entry["jobs"], prior_hashes, sha(area.parents[1] / "next_intake.json")], "continuation chain")
@@ -242,6 +389,15 @@ def read_batch(area, name, entry, reserved, prior_hashes):
             "unsupported batch provenance")
     equal(selection["covered_maps"], seeds, "selected source maps")
     verify_selector(area, name, plan, selection)
+    if supplemental:
+        root = area.parents[2]
+        registration = supplement_registration(root)
+        verify_supplement_plan(root, area, entry, registration, prior_hashes)
+        verify_supplement_clearance(root, area, plan, clearance, entry)
+        repo_prefix = CODE.relative_to(CODE.parents[3])
+        for game in receipt["games"]:
+            tape = repo_prefix / area.relative_to(root) / "source" / f"raw_{game['seed']}_{game['seat']}.json.gz"
+            equal(game["raw_path"], str(tape), "supplement source evidence outside registered intake")
     sources = verify_sources(area, plan, receipt, clearance)
     boards = {sources[s,0][0]["map_sha256"] for s in seeds}
     reserved_boards = {clearance["boards"][str(s)] for s in reserved}
@@ -295,7 +451,7 @@ def check_aggregate(root, area, records, prior, count_boards):
     provenance = [{"dir": k, "labels_sha256": v} for k, v in prior.items()]
     examples = []
     for r in records:
-        folder = root if r["batch"] == "intake_01" else root / "batches" / r["batch"]
+        folder = intake_folder(root, r["batch"])
         features = folder / r["label"]["features"]
         label = features.with_name("training_label.json")
         item = r["label"]
@@ -329,6 +485,10 @@ def collect(intake_root):
             pending.append(name)
             continue
         require(not pending, "later intake claims completion before a registered predecessor")
+        if name in SUPPLEMENT_NAMES:
+            reg = supplement_registration(root)
+            paid = sum(bool(r["label"]["pay_intent_filled"]) for r in records)
+            require(count_shortfall(len(covered_boards), paid, reg["goals"]), "verified pairs no longer require a supplemental block")
         batch, boards = read_batch(area, name, entry, reserved, prior)
         seeds = set(read(area / "protocol.json")["train_maps"])
         require(not covered_seeds & seeds and not covered_boards & boards, "reused training terrain or seed")
