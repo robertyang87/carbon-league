@@ -61,16 +61,25 @@ def main():
     if substitute(parent, old) != parent:
         raise ValueError("baseline student and compound weights differ")
     source = substitute(parent, updated)
+    artifacts = [REFERENCE, PARENT, args.student, args.npz]
     if source != parent:
+        frozen = Path(__file__).resolve().with_name("weight_receipt.json")
+        receipt = json.loads(frozen.read_bytes())
+        if (digest(args.student) != receipt["agent_sha256"] or digest(args.npz) != receipt["npz_sha256"]
+                or receipt["recipe"]["parent_sha256"] != "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be"):
+            raise ValueError("student and FP32 weights must match the same frozen training receipt")
+        artifacts.append(frozen)
         old_name = '"student": "Sapling cash_v3"'
         if source.count(old_name) != 1:
             raise ValueError("unexpected embedded student descriptor")
         source = source.replace(old_name, '"student": "Sapling Master6 actor V1"')
+    elif digest(args.npz) != "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be":
+        raise ValueError("baseline FP32 weights do not match the registered parent")
     output = source.encode()
     if len(output) > 10_000_000:
         raise ValueError("agent size limit")
     args.output.write_bytes(output)
-    paths = [REFERENCE, PARENT, args.student, args.npz, args.output, Path(__file__).resolve()]
+    paths = [*artifacts, args.output, Path(__file__).resolve()]
     def path_key(path):
         absolute = path.resolve()
         return str(absolute.relative_to(ROOT) if absolute.is_relative_to(ROOT) else absolute)
