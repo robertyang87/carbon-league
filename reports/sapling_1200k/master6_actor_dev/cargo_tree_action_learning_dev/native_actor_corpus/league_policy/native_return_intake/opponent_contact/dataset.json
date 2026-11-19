@@ -1,0 +1,531 @@
+{
+  "arrays": {
+    "ep": {
+      "dtype": "uint8",
+      "shape": [
+        53758
+      ]
+    },
+    "g_ep": {
+      "dtype": "uint8",
+      "shape": [
+        85720
+      ]
+    },
+    "g_focal_uid": {
+      "dtype": "int16",
+      "shape": [
+        85720
+      ]
+    },
+    "g_intent": {
+      "dtype": "uint8",
+      "shape": [
+        85720
+      ]
+    },
+    "g_is_train": {
+      "dtype": "bool",
+      "shape": [
+        85720
+      ]
+    },
+    "g_planterpos": {
+      "dtype": "int16",
+      "shape": [
+        85720
+      ]
+    },
+    "g_seat": {
+      "dtype": "uint8",
+      "shape": [
+        85720
+      ]
+    },
+    "g_seed": {
+      "dtype": "int32",
+      "shape": [
+        85720
+      ]
+    },
+    "g_step": {
+      "dtype": "int16",
+      "shape": [
+        85720
+      ]
+    },
+    "g_target": {
+      "dtype": "int16",
+      "shape": [
+        85720
+      ]
+    },
+    "g_truth": {
+      "dtype": "bool",
+      "shape": [
+        85720
+      ]
+    },
+    "is_train": {
+      "dtype": "bool",
+      "shape": [
+        53758
+      ]
+    },
+    "link_action": {
+      "dtype": "uint8",
+      "shape": [
+        24231
+      ]
+    },
+    "link_idx": {
+      "dtype": "int32",
+      "shape": [
+        24231
+      ]
+    },
+    "link_ptr": {
+      "dtype": "int32",
+      "shape": [
+        85721
+      ]
+    },
+    "seat": {
+      "dtype": "uint8",
+      "shape": [
+        53758
+      ]
+    },
+    "seed": {
+      "dtype": "int32",
+      "shape": [
+        53758
+      ]
+    },
+    "step": {
+      "dtype": "int16",
+      "shape": [
+        53758
+      ]
+    },
+    "uid": {
+      "dtype": "int16",
+      "shape": [
+        53758
+      ]
+    },
+    "uid_vocab": {
+      "dtype": "<U18",
+      "shape": [
+        141
+      ]
+    },
+    "x": {
+      "dtype": "float32",
+      "shape": [
+        53758,
+        139
+      ]
+    },
+    "y": {
+      "dtype": "uint8",
+      "shape": [
+        53758
+      ]
+    }
+  },
+  "definitions": {
+    "g_truth": "any reachable enemy collector issued the required move; includes subsequent deaths",
+    "link_idx": "global collector-row ID for one physically adjacent target and move in link_action",
+    "uid": "index into uid_vocab; grouping only, never a model input",
+    "x": "exclusively from the student observer before any current tape line is consumed"
+  },
+  "episodes": [
+    {
+      "archive_sha256": "e5a2382cd8e61f20f73ee20c23afad8f9aa339a97746ffc9e46c035952c2bca2",
+      "arm": "draw_a",
+      "collector_rows": 2178,
+      "index": 0,
+      "links": 836,
+      "planter_intents": 3270,
+      "receipt_sha256": "a2b974967c53588ea73960e6d114549735577a43e9f7daf088a49109c2954302",
+      "registration_sha256": "6a4678b84dcb75f8189b101afde359be09a627bbcb70664e4cab8d30cc00facd",
+      "seat": 0,
+      "seed": 621758460,
+      "tape_sha256": "39a1dc19c973af4b872cfb4a5f649bbf5f9a951f52d938a42e0195d0418de1c7",
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "e5a2382cd8e61f20f73ee20c23afad8f9aa339a97746ffc9e46c035952c2bca2",
+      "arm": "draw_b",
+      "collector_rows": 2257,
+      "index": 1,
+      "links": 1015,
+      "planter_intents": 3490,
+      "receipt_sha256": "b8a04e357750c37b9b553228dc54f3908560b6e397a2da103b93b90ba2d1cd39",
+      "registration_sha256": "d3f1cccac2a751b4e4a551d66434e9cbe90bd6f2d45e49107e9983719a0a31a3",
+      "seat": 0,
+      "seed": 621758460,
+      "tape_sha256": "bf57efbfc96ab8c350f3daf58a4350df37255a0f5848748627d56c9291706cf5",
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "551659775033e0713894af1ed92383f31a316a93cb7b56120da7f45b193f3dc4",
+      "arm": "draw_a",
+      "collector_rows": 2304,
+      "index": 2,
+      "links": 913,
+      "planter_intents": 3030,
+      "receipt_sha256": "2cab93257c445359990187b8fb4f4b892e7c9284570b6b2e10f4f60da3ba08c8",
+      "registration_sha256": "b5dd3d9fe76fea4b03a29de52e85404320c7224154eb29c60fd747682925bb5c",
+      "seat": 1,
+      "seed": 621758460,
+      "tape_sha256": "80caafee4b1cd6f82564efe5adcb482a764a946eb57fd87cb58d5aca25d05867",
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "551659775033e0713894af1ed92383f31a316a93cb7b56120da7f45b193f3dc4",
+      "arm": "draw_b",
+      "collector_rows": 2326,
+      "index": 3,
+      "links": 1170,
+      "planter_intents": 3615,
+      "receipt_sha256": "7b8fb5a8f452f0b7c0e6c097960e408d8dbdad098b23c0aa879cca29541cf8e8",
+      "registration_sha256": "4126a9c327688f1c796fa30f55ecf5e1857c7154e01b652470d2c1cd59301592",
+      "seat": 1,
+      "seed": 621758460,
+      "tape_sha256": "c04eb14939bfce6bca9210e1749da9eff75190fca1754dd87198368149c64fce",
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "c8ed8206997a49a6af4e7f3501f6672826683320e0927cd0f2c039997cb425e1",
+      "arm": "draw_a",
+      "collector_rows": 2274,
+      "index": 4,
+      "links": 1488,
+      "planter_intents": 4495,
+      "receipt_sha256": "a14a8890f9baa9db671e9373549c71d43969e72f1f6ab98541ab86046701d10e",
+      "registration_sha256": "5c297efe7ec5e400b565d5b8b20c11f545ca75774d454317d06763e58885f84a",
+      "seat": 0,
+      "seed": 621758461,
+      "tape_sha256": "fdc45f306542940f24802639df28739309c74b274d7d26e5d53e781be9c0d081",
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "c8ed8206997a49a6af4e7f3501f6672826683320e0927cd0f2c039997cb425e1",
+      "arm": "draw_b",
+      "collector_rows": 2169,
+      "index": 5,
+      "links": 968,
+      "planter_intents": 3785,
+      "receipt_sha256": "c63e4a369a54c93e293e4a5de70cc1134798561526e148c05a47315d37ad78a4",
+      "registration_sha256": "ef487747311f61fd8796d6bfcc7617fbd017dac171d1d766232d824c9e93fc88",
+      "seat": 0,
+      "seed": 621758461,
+      "tape_sha256": "258ebd5da726ab023b4e0aef645bdb568285e4e38055f33f0ecd7753ce6c0175",
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "56e31eb144bb26346034afb738950519e0bd41e46938d3150b7931346c939905",
+      "arm": "draw_a",
+      "collector_rows": 2098,
+      "index": 6,
+      "links": 554,
+      "planter_intents": 2600,
+      "receipt_sha256": "a446236c39f08db37d09ed6a7649946544afcf19259f96ff4f6e484e966ec99b",
+      "registration_sha256": "6cb498468f005819bcfe62f345e83281a51b608f78443f22bffcd51c62af819f",
+      "seat": 1,
+      "seed": 621758461,
+      "tape_sha256": "c7dbeff623f4948ce2cc7b1a1623554606927bbc6012f82f773cc56fd9cd5d3b",
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "56e31eb144bb26346034afb738950519e0bd41e46938d3150b7931346c939905",
+      "arm": "draw_b",
+      "collector_rows": 2079,
+      "index": 7,
+      "links": 603,
+      "planter_intents": 2470,
+      "receipt_sha256": "36f1d549978ff20a8e66748b9324d276a629389ec69e50892471b3ed0864a4f7",
+      "registration_sha256": "b25e347302df5e040168d2d6a93a9c69b6a69ff07346f845189c97d8ba241902",
+      "seat": 1,
+      "seed": 621758461,
+      "tape_sha256": "2d8562cfde1e48e5115ce04431278413978b3f20ed2ab26a8a6d061259648257",
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "c70e693fd52a93c3a8817e340e51d36c5e145e7e90dfab2a2ddfc99315fdda6b",
+      "arm": "draw_a",
+      "collector_rows": 2132,
+      "index": 8,
+      "links": 961,
+      "planter_intents": 3520,
+      "receipt_sha256": "e473350757dbce2f9c00251e43c85e275f5089cd2669d565a8814dd20e196e0f",
+      "registration_sha256": "eb618ae8c43212d65c510ec2fec897d5d7b7de086929dc4a9095bc3e01a9173d",
+      "seat": 0,
+      "seed": 621758462,
+      "tape_sha256": "1daf4533ed61fd0260925624404ec6096718b9defffa4a6f1dae6f88490bd564",
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "c70e693fd52a93c3a8817e340e51d36c5e145e7e90dfab2a2ddfc99315fdda6b",
+      "arm": "draw_b",
+      "collector_rows": 2235,
+      "index": 9,
+      "links": 1339,
+      "planter_intents": 4630,
+      "receipt_sha256": "51a9f8ddc35b63689ee001548b8ae6c7f8eed73943c3db9005c573fc4e442a1e",
+      "registration_sha256": "eb32a85521fdf4c0601715a5874251e9ccdeb100f1ce93d05e3901abd5bb9dd8",
+      "seat": 0,
+      "seed": 621758462,
+      "tape_sha256": "55077d3862b746b25e008a5ef82ecd1c715947ef8e619d01e5bb86531961cd5f",
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "1fde4c86fee79da96499a8fe5f6c2e1adb2bdb775399300e13a4695088cfaaeb",
+      "arm": "draw_a",
+      "collector_rows": 2277,
+      "index": 10,
+      "links": 830,
+      "planter_intents": 3440,
+      "receipt_sha256": "6ae9375606afa9ac9ab64b8533ea59c1936f009fb6bb4a5daf1219405a1214ee",
+      "registration_sha256": "14af4fdb7dfdbad4024a0de416d8b40632ebba8ccc16a7f7e4b8f0faf3579f2d",
+      "seat": 1,
+      "seed": 621758462,
+      "tape_sha256": "03d7d1448ea5061b4b3a47b0851aefc90b0036e0ab0cf4f78e38dea656ecdffd",
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "1fde4c86fee79da96499a8fe5f6c2e1adb2bdb775399300e13a4695088cfaaeb",
+      "arm": "draw_b",
+      "collector_rows": 2333,
+      "index": 11,
+      "links": 1117,
+      "planter_intents": 4195,
+      "receipt_sha256": "a707035df3784fd25665a9157458a15cca87382ddcfc0de9ac8b711909a559e0",
+      "registration_sha256": "d2be0defe295238f440f2ddad451b8ea21f82f9f4e1059c63f9d02194aa6f57c",
+      "seat": 1,
+      "seed": 621758462,
+      "tape_sha256": "8d56b780c9719033d514693fb43706a345fb31e1d35341782db6338526dea720",
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "f1e8055784b0c6923abebc1e90e7b65ae0edd29d643e19482add9908ca55af72",
+      "arm": "draw_a",
+      "collector_rows": 2181,
+      "index": 12,
+      "links": 923,
+      "planter_intents": 3675,
+      "receipt_sha256": "1a7d888cff77864ab38db9b8655662a05fd6997043789d91f7185cbb78f3a4d3",
+      "registration_sha256": "1e1a07a22b70f23b4fe0a7658512ad689a75bbaf1b3ecf0db7197feccc8df8c6",
+      "seat": 0,
+      "seed": 621758463,
+      "tape_sha256": "3ef948ad23fe55d03d9d708574af15a9fabd02f08d622dbf7225a87147acdae5",
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "f1e8055784b0c6923abebc1e90e7b65ae0edd29d643e19482add9908ca55af72",
+      "arm": "draw_b",
+      "collector_rows": 2101,
+      "index": 13,
+      "links": 815,
+      "planter_intents": 3400,
+      "receipt_sha256": "67d71c147c56f06a3805fb46d620118f8a1198ffb532b4896ab0b93a576bde88",
+      "registration_sha256": "3eac5e050f81e4ced49165bc65ca8134e9d2c2e962bc522dd7d8c0e3db4520c3",
+      "seat": 0,
+      "seed": 621758463,
+      "tape_sha256": "baff250fa6ea959f11d52de1dbb6450e18f28f365e376c7090b0e7cdc0296296",
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "e611ce2d13f4945ab0154bd35d8d194e54d24f5f72fdb8b7162e2ed04ad941f5",
+      "arm": "draw_a",
+      "collector_rows": 2371,
+      "index": 14,
+      "links": 1333,
+      "planter_intents": 3970,
+      "receipt_sha256": "7633518fbdb9a9d02943f89c871f25f173c893363d08660de17c5fdc26fcb3db",
+      "registration_sha256": "303195ad0b61a68c269a74eb6ef031665de1a1d63865e7de3afe2ad2f9c347b7",
+      "seat": 1,
+      "seed": 621758463,
+      "tape_sha256": "0ce49e3d29cf9f9101e77e5990cf77ac4dd1264e03133114a505cd145b5e13da",
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "e611ce2d13f4945ab0154bd35d8d194e54d24f5f72fdb8b7162e2ed04ad941f5",
+      "arm": "draw_b",
+      "collector_rows": 2332,
+      "index": 15,
+      "links": 982,
+      "planter_intents": 3485,
+      "receipt_sha256": "1a081e84f848ccf0e355848561ded3073506f11ec653620fc9b01dea6e2b2be0",
+      "registration_sha256": "698f48f6ad9cd297209ccee6e0f4de2dce884df20da439f398d7103c4646e93a",
+      "seat": 1,
+      "seed": 621758463,
+      "tape_sha256": "9b8cacce3909affe2abeebd261a49e0ac2356a6c222b6f4908c8a833a84217bd",
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "b0a8a63c7218fa1f6238e8eb673a748576d1934ac9171c1b3d8178d64cbba026",
+      "arm": "draw_a",
+      "collector_rows": 2254,
+      "index": 16,
+      "links": 1002,
+      "planter_intents": 3560,
+      "receipt_sha256": "3be43a455f0974f290c4b421b9758da56dc073b63e5cf2f6ea0fa38c9976a883",
+      "registration_sha256": "45b18a580526d2eb92fa55dc4b34319bf4ceb1844a182bb24b05f7dc5193e648",
+      "seat": 0,
+      "seed": 621758464,
+      "tape_sha256": "4a2569fc98e60d4029cf4a5adcfb8ff210c502ed43071c32e3b010eec49076bc",
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "b0a8a63c7218fa1f6238e8eb673a748576d1934ac9171c1b3d8178d64cbba026",
+      "arm": "draw_b",
+      "collector_rows": 2212,
+      "index": 17,
+      "links": 1238,
+      "planter_intents": 3865,
+      "receipt_sha256": "95a27f64382ed49ff3bd02d4a9f550e04c2af6020587b50f970f98e6cf6dd1fb",
+      "registration_sha256": "4fe35d8fe1abb24894b13c74afaefad77a95bcded56aa0564f3b27331d2dc0f4",
+      "seat": 0,
+      "seed": 621758464,
+      "tape_sha256": "0e73ac4fc151cf35d0ce3f541f2d0a4d7934baa743aef040f9932e8b7573f4cf",
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "c73ae481c3d7963c96bf2d577c745bbdb108b074a235b4f54f5d35b8eb061f3d",
+      "arm": "draw_a",
+      "collector_rows": 2334,
+      "index": 18,
+      "links": 1342,
+      "planter_intents": 4150,
+      "receipt_sha256": "e3ede98517441f9f631947a9382ccad2acb024661236f0eaa507fd5123d18ead",
+      "registration_sha256": "01a66c0e30ce5b388a9649cc0c6fd07228d4ee770ff381009a2530ceee8fce4a",
+      "seat": 1,
+      "seed": 621758464,
+      "tape_sha256": "b5609952bb0cda1120672107fae22107b95f3fa7835010e0d5ad8e5638f37f76",
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "c73ae481c3d7963c96bf2d577c745bbdb108b074a235b4f54f5d35b8eb061f3d",
+      "arm": "draw_b",
+      "collector_rows": 2307,
+      "index": 19,
+      "links": 1310,
+      "planter_intents": 3900,
+      "receipt_sha256": "6bd76c237fb615ebeb6284e40d1d3bc1d6455486a4aeb4d3a325c71b77e7bbe7",
+      "registration_sha256": "a3852bf5e21ffe3653a1c664909c9547dbb3bae27364120af8dd6db2fb37bce7",
+      "seat": 1,
+      "seed": 621758464,
+      "tape_sha256": "a65797b8fc0d9ce02008da6667551f133c8bc90d3ba1a580f08e30acf7c401ee",
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "1f8aed10a70fa1f9ee80320571247bb29a8cf99ce6f45e4dd2b1c0e0de789390",
+      "arm": "draw_a",
+      "collector_rows": 2200,
+      "index": 20,
+      "links": 763,
+      "planter_intents": 3385,
+      "receipt_sha256": "bae0abf661f27ef05394a6255edfb9dbca3a7d009fddf0247928b6b77482ef5d",
+      "registration_sha256": "0e37fda988c9464522a5ecef360b7349fd10f3f2e8f9289436ffef4889f4bba7",
+      "seat": 0,
+      "seed": 621758465,
+      "tape_sha256": "0d1261acbe3dbec58c52f98578ca3c753ded169eb31d746dfd62f54f141a62a5",
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "1f8aed10a70fa1f9ee80320571247bb29a8cf99ce6f45e4dd2b1c0e0de789390",
+      "arm": "draw_b",
+      "collector_rows": 2256,
+      "index": 21,
+      "links": 966,
+      "planter_intents": 3745,
+      "receipt_sha256": "eea1c7cc28aaa57dbb455ec33ec45af088f03bbbb1f35065187dcdae2d8b566d",
+      "registration_sha256": "01dbf1b699c9a2a9263852afdfbdafae24cf02092da4d6efb846a5bd47d9d5ae",
+      "seat": 0,
+      "seed": 621758465,
+      "tape_sha256": "4683355709270e954e417a2bb47d355b2b4e50bd2ff499e5ab92590d519983a8",
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "da6bead5880bc3cce941f182921057e034de1a6f50d476258a04f344c4fbf1ac",
+      "arm": "draw_a",
+      "collector_rows": 2269,
+      "index": 22,
+      "links": 864,
+      "planter_intents": 2885,
+      "receipt_sha256": "b83e1fcaa7d94e8921c09c56d1952f2b44b345cf9fdf43bf974bed287309f44e",
+      "registration_sha256": "7938b0f2bb01d1fa307d29a412a159be05b249c9b83b766580f91c80cb5fcf8d",
+      "seat": 1,
+      "seed": 621758465,
+      "tape_sha256": "0b7720f5059eaeeb6f3f94a00eac1b9baae6e18d49c0ef318297ff70437a8c00",
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+      "turns": 299
+    },
+    {
+      "archive_sha256": "da6bead5880bc3cce941f182921057e034de1a6f50d476258a04f344c4fbf1ac",
+      "arm": "draw_b",
+      "collector_rows": 2279,
+      "index": 23,
+      "links": 899,
+      "planter_intents": 3160,
+      "receipt_sha256": "ae653636145d4db8ea688074422b7081fa61f27ef8631cf2ceaee95fea8d615d",
+      "registration_sha256": "2282108398ccbe8ba0685ff0c660f9e00b90c5c4079553ca5a533f91d8ffa96d",
+      "seat": 1,
+      "seed": 621758465,
+      "tape_sha256": "7b01bc7c0ad6ba722a2b27dc9f255f402175a909131a2aa988f0cc16e9d163a4",
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+      "turns": 299
+    }
+  ],
+  "files_sha256": {
+    "dataset.npz": "4e480730e369bef9fbde8f3a2c99e46fc32cba95950ad5dfd2468de0c135a2e7",
+    "dataset.py": "5cc9ef53839d9bc9462cdcefa0331e3c128901a6049ee90f29b74ff8cd713ed6",
+    "features.py": "f11102590be7b6d24923a409c6db58491fa0138f3d036cf4a3d6478c365deb47"
+  },
+  "fit_seeds": [
+    621758460,
+    621758461,
+    621758464,
+    621758465
+  ],
+  "heldout_seeds": [
+    621758462,
+    621758463
+  ],
+  "manifest_sha256": "63daa51e127aafea36401ebdce6400de60faa772d3929a1803ce768e121be5b4",
+  "move_order": [
+    "NONE",
+    "UP",
+    "RIGHT",
+    "DOWN",
+    "LEFT"
+  ],
+  "official_steps": 7176,
+  "protocol_sha256": "2c904de2e1c31c49a9d8897123f0569e71728896b46da9f792ccbdb0b9e3c18c",
+  "schema": "sapling-visible-opponent-motion-dataset/1"
+}
