@@ -20,8 +20,9 @@ import native_clock
 
 # These development maps have been preflighted even when their game gate stops.
 RESERVED_DEVELOPMENT_PLANS = (
-    "master6_actor_dev/stratified_action_value_dev/source/pilot_plan.json",
-    "master6_actor_dev/blended_actor_arena/protocol.json",
+    ("master6_actor_dev/stratified_action_value_dev/source/pilot_plan.json", None, "maps"),
+    ("master6_actor_dev/blended_actor_arena/protocol.json", "new_dev", "seeds"),
+    ("master6_actor_dev/blended_policy_return_dev/map_declaration.json", None, "new_proxy_development"),
 )
 
 
@@ -43,13 +44,11 @@ def exam_exposures(local_seeds, observed_maps=()):
     if not isinstance(local_seeds, list):
         raise ValueError("additional local exposures must be a list")
     reserved = []
-    for filename in RESERVED_DEVELOPMENT_PLANS:
+    for filename, section, key in RESERVED_DEVELOPMENT_PLANS:
         plan = json.loads((Path(__file__).parent / filename).read_bytes())
-        if "new_dev" in plan:
-            plan = plan["new_dev"]
-            seeds = plan["seeds"]
-        else:
-            seeds = plan["maps"]
+        if section is not None:
+            plan = plan[section]
+        seeds = plan[key]
         if plan.get("formal") is not False or not isinstance(seeds, list) or not seeds:
             raise ValueError(f"invalid registered development maps in {filename}")
         reserved.extend(seeds)
@@ -97,7 +96,7 @@ def protocol_hashes():
         "reports/sapling_1200k/v5_guard_runtime.py", RULES,
     )
     registry_paths = tuple("reports/sapling_1200k/" + f for f, *_ in map_identity.SOURCES)
-    development_plans = tuple("reports/sapling_1200k/" + name for name in RESERVED_DEVELOPMENT_PLANS)
+    development_plans = tuple("reports/sapling_1200k/" + name for name, _, _ in RESERVED_DEVELOPMENT_PLANS)
     return {p: digest(ROOT / p) for p in paths + registry_paths + development_plans}
 
 
