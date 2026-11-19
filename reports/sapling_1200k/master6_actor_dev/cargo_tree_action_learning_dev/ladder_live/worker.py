@@ -4,17 +4,22 @@ import json
 import os
 from pathlib import Path
 import sys
+import time
 
 
 def emit(value):
     print(json.dumps(value, separators=(',', ':'), allow_nan=False), flush=True)
 
 
-def memory_sample():
+def resource_sample():
     import resource
-    peak = Path('/sys/fs/cgroup/memory.peak')
+    root = Path('/sys/fs/cgroup')
+    peak = root/'memory.peak'
+    cpu_stat = root/'cpu.stat'
+    cpu = dict(line.split() for line in cpu_stat.read_text().splitlines()) if cpu_stat.is_file() else {}
     return {'rss_peak_kib': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
-            'cgroup_peak_bytes': int(peak.read_text()) if peak.is_file() else None}
+            'cgroup_peak_bytes': int(peak.read_text()) if peak.is_file() else None,
+            'cgroup_cpu': {k: int(cpu[k]) for k in ('usage_usec', 'nr_periods', 'nr_throttled', 'throttled_usec') if k in cpu}}
 
 
 def probe():
@@ -52,16 +57,28 @@ def run(role):
     exec(compile(source, mod.__file__, 'exec'), mod.__dict__)
     identity = hashlib.sha256(source).hexdigest()
     del source
-    ready = dict(ready=True, sha256=identity, **memory_sample())
+    ready = dict(ready=True, sha256=identity, **resource_sample())
     if role == 'opponent':
         ready['original'] = {k:getattr(mod,k,None) for k in ('_TEMP','_SEED','_S_ABORT','_SEARCH_OK')}
     emit(ready)
     for line in sys.stdin:
         request = json.loads(line)
+        old_single = mod._S_STATS['single'] if role == 'opponent' else None
+        cpu_start = time.process_time()
+        wall_start = time.perf_counter()
         action = mod.agent(request['observation'], request['configuration'])
-        response = dict(action=action, step=request['observation']['step'], **memory_sample())
+        wall = time.perf_counter() - wall_start
+        cpu = time.process_time() - cpu_start
+        response = dict(action=action, step=request['observation']['step'], public_wall_seconds=wall,
+                        public_cpu_seconds=cpu, **resource_sample())
         if role == 'opponent':
-            response['search_counts'] = {key:mod._S_STATS[key] for key in ('searched','single','aborted')}
+            stats = mod._S_STATS
+            response['search_counts'] = {key: stats[key] for key in ('searched','single','aborted','changed')}
+            if stats['single'] > old_single:
+                response['search_last'] = dict(candidates=1, depth=0, rolls=0, search_seconds=None)
+            elif 'last' in stats:
+                candidates, depth, rolls, elapsed, _ = stats['last']
+                response['search_last'] = dict(candidates=int(candidates), depth=int(depth), rolls=int(rolls), search_seconds=float(elapsed))
         emit(response)
 
 

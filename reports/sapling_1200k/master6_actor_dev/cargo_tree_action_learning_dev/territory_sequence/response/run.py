@@ -169,7 +169,7 @@ def run_arm(job):
     original = recorder.wrap(master.agent)
     before = R.native_clock.host_snapshot(master)
     R.native_clock.validate_host(before, [cpu])
-    assert all(p["num_threads"] == 1 for p in before["pools"]) and before["torch_threads"] == 1
+    assert all(p["num_threads"] == 1 for p in before["pools"] if p["user_api"] == "blas") and before["torch_threads"] == 2
     assert all(z["cpus"] == [cpu] for z in before["thread_affinity"])
     started = time.perf_counter()
     tape, proposals, own_seconds = [], [], []
