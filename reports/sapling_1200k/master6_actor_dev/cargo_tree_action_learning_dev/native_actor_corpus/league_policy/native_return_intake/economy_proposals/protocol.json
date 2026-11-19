@@ -1,0 +1,104 @@
+{
+  "schema": "sapling.economy-proposals.v1",
+  "purpose": "Training-only candidate sampling on already exposed signed trajectories. No new matches, scores or outcome labels.",
+  "behavior": {
+    "package": "natural_original/candidate_sampled.py",
+    "sha256": "851c901aa561ce80bf04d03e7c2a8e7876bfa2f24dc6c57ffe22b501979320ee",
+    "used": "Live native baseline at scheduled roots, same trained network, prefix and safety routing. Normal deployed agent is unchanged."
+  },
+  "evidence": {
+    "intake_protocol_sha256": "f720c89c4d221f43f3cec81a73a3ce765c4d70c14dae44ee76c289a04ad346fc",
+    "manifest_sha256": "63daa51e127aafea36401ebdce6400de60faa772d3929a1803ce768e121be5b4",
+    "seeds": [
+      621758460,
+      621758461
+    ],
+    "seats": [
+      0,
+      1
+    ],
+    "arm": "draw_a",
+    "steps": [
+      12,
+      36,
+      60,
+      84,
+      108,
+      132,
+      156,
+      180,
+      204,
+      228,
+      252,
+      276
+    ],
+    "expected_roots": 48,
+    "archives": [
+      {
+        "seed": 621758460,
+        "seat": 0,
+        "arm": "draw_a",
+        "archive_path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/hosted/14578479168.zip",
+        "archive_sha256": "e5a2382cd8e61f20f73ee20c23afad8f9aa339a97746ffc9e46c035952c2bca2",
+        "registration_sha256": "6a4678b84dcb75f8189b101afde359be09a627bbcb70664e4cab8d30cc00facd",
+        "receipt_sha256": "a2b974967c53588ea73960e6d114549735577a43e9f7daf088a49109c2954302",
+        "tape_sha256": "39a1dc19c973af4b872cfb4a5f649bbf5f9a951f52d938a42e0195d0418de1c7",
+        "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887"
+      },
+      {
+        "seed": 621758460,
+        "seat": 1,
+        "arm": "draw_a",
+        "archive_path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/hosted/14581210488.zip",
+        "archive_sha256": "551659775033e0713894af1ed92383f31a316a93cb7b56120da7f45b193f3dc4",
+        "registration_sha256": "b5dd3d9fe76fea4b03a29de52e85404320c7224154eb29c60fd747682925bb5c",
+        "receipt_sha256": "2cab93257c445359990187b8fb4f4b892e7c9284570b6b2e10f4f60da3ba08c8",
+        "tape_sha256": "80caafee4b1cd6f82564efe5adcb482a764a946eb57fd87cb58d5aca25d05867",
+        "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887"
+      },
+      {
+        "seed": 621758461,
+        "seat": 0,
+        "arm": "draw_a",
+        "archive_path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/hosted/14580496236.zip",
+        "archive_sha256": "c8ed8206997a49a6af4e7f3501f6672826683320e0927cd0f2c039997cb425e1",
+        "registration_sha256": "5c297efe7ec5e400b565d5b8b20c11f545ca75774d454317d06763e58885f84a",
+        "receipt_sha256": "a14a8890f9baa9db671e9373549c71d43969e72f1f6ab98541ab86046701d10e",
+        "tape_sha256": "fdc45f306542940f24802639df28739309c74b274d7d26e5d53e781be9c0d081",
+        "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d"
+      },
+      {
+        "seed": 621758461,
+        "seat": 1,
+        "arm": "draw_a",
+        "archive_path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/hosted/14578673947.zip",
+        "archive_sha256": "56e31eb144bb26346034afb738950519e0bd41e46938d3150b7931346c939905",
+        "registration_sha256": "6cb498468f005819bcfe62f345e83281a51b608f78443f22bffcd51c62af819f",
+        "receipt_sha256": "a446236c39f08db37d09ed6a7649946544afcf19259f96ff4f6e484e966ec99b",
+        "tape_sha256": "c7dbeff623f4948ce2cc7b1a1623554606927bbc6012f82f773cc56fd9cd5d3b",
+        "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d"
+      }
+    ]
+  },
+  "scope": "The proposal builder receives only the acting public observation including causal feature history and own native logits. No opponent simultaneous decision, replay truth or outcome is supplied. Archived commands advance only subsequent states. No proposal off the twelve registered turns.",
+  "base": "A0 is the complete unforced native _sample_branch team order; preserve route, earlier prefix, identical selected-slot law, and reject any introduced own collision/recruit conflict. All rerouted, unforced, illegal, non-finite or physically identical alternatives are excluded; report reason.",
+  "classes": {
+    "recruit": "Any legal alternative for a base comparing recruitment types or doing nothing. Tag collector/planter/none on each side.",
+    "plant_or_capture": "Own planter compares staying against moving on a cell which is neither any base nor own tree. Separate standing on enemy tree (capture opportunity) and other cells (plant opportunity); label direction and public cash, never claim execution.",
+    "freight": "Own collector carries strictly positive cargo; alternative changes whether its predicted destination is on an own base, its minimum toroidal distance to an own base, or the number of visible enemy collectors within toroidal distance one of that destination. Retain directions of differences; proximity is a threat proxy only.",
+    "ordinary": "Any legal alternative to the native action for any active slot, including overlaps with the other categories."
+  },
+  "policy": {
+    "class_mass": 0.25,
+    "legal_rank": "Sort each class by increasing baseline-minus-alternative learned logit gap, then slot then move. Test at most the first 4 witnesses per class in order, keep first two physically distinct validated alternate team orders in that class. Cache duplicate forced slots between classes.",
+    "choice": "Uniform witness within nonempty class. For its witness: choose alternate with p=0.25+0.5*sigmoid(native_alt_logit-native_base_logit), else baseline. Empty class assigns all its mass to A0.",
+    "marginal": "Sum all paths, including fallback and cross-class order duplicates, per physical command. Report path masses and exact observed-order comparisons only after generating. All eligible pairs, attempts, exclusions, support size and class fallbacks are recorded. No extra class renormalization.",
+    "learning": "The two scored actions at each retained witness use live native logits with explicit exploration. Store both logits, slot prefix/route, legal mask and per-order propensities. Freeze the behavior menu/support when fitting a local importance-weighted update; topology/ranking and mass changes must be treated explicitly for future data."
+  },
+  "analysis": "Census of all preregistered roots and seats. Report eligible/validated/fallback by category, subtype direction, marginal baseline and novel physical command support versus signed original menu. Distinguish possible actions from realized economic effects. Prior return is never assigned to hypothetical commands.",
+  "change_to_deployed_weights_or_agent": false,
+  "labels": {
+    "official_terminal_effect": null,
+    "immediate_economic_effect": null
+  }
+}
