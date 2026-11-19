@@ -50,7 +50,13 @@ def protocol_hashes():
     paths = (
         "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/map_identity.py",
         "reports/sapling_1200k/tree_v4_exam.py",
-        "reports/sapling_1200k/compound_formal.py", "reports/sapling_1200k/build_it50_v3.py",
+        "reports/sapling_1200k/compound_formal.py", "reports/sapling_1200k/terminal_compound_formal.py",
+        "reports/sapling_1200k/master6_actor_dev/hybrid_build.py",
+        "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/build.py",
+        "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/trial.py",
+        "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/runtime.py",
+        "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/learned_checkpoint.json",
+        "reports/sapling_1200k/build_it50_v3.py",
         "reports/sapling_1200k/it50_v3_runtime.py", "reports/sapling_1200k/build_it50_endhome.py",
         "reports/sapling_1200k/d1_sapling_build.py", "reports/sapling_1200k/d1_sapling_runtime.py",
         "reports/sapling_1200k/d1_sapling_arena.py", "reports/sapling_1200k/income_target.py", "reports/sapling_1200k/turning_point_ledger.py",
@@ -263,11 +269,11 @@ def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False
     if any(sum(e[1] == k for e in events) != row["search_return_types"].get(k,0) for k in kinds):
         raise ValueError("search trace differs from per-game ledger")
     if formal:
-        from compound_formal import COMPOUNDS, STUDENT, verify_actions
+        from compound_formal import COMPOUNDS, student_identity, verify_actions
         if pack_sha in COMPOUNDS:
-            if weights_sha != STUDENT:
+            if weights_sha != student_identity(pack_sha):
                 raise ValueError("formal compound requires its real Sapling NPZ")
-            account = verify_actions(directory, row, raw, pack_sha)
+            account = verify_actions(directory, row, raw, pack_sha, record=record_compound)
             if record_compound and "compound_policy_audit" not in row:
                 row["compound_policy_audit"] = account
             elif row.get("compound_policy_audit") != account:
@@ -338,6 +344,15 @@ def verdict(plan, games):
                     or proof.get("verified_roots") != row["actual_transitions"]
                     or not 0 <= proof["student_changes"] <= proof["verified_unforced_slots"]):
                 raise ValueError("missing or incomplete actual compound policy evidence")
+        from compound_formal import TERMINAL
+        if plan["pack_sha256"] == TERMINAL:
+            for row, proof in zip(games, proofs):
+                n = row["actual_transitions"]
+                if (proof.get("evidence_file") != f"terminal_policy_{row['seed']}_{row['candidate_seat']}.json.gz"
+                        or not isinstance(proof.get("evidence_sha256"), str) or len(proof["evidence_sha256"]) != 64
+                        or not 0 <= proof["student_changes"] <= proof.get("drop_sapling_changed_roots", -1) <= n
+                        or not proof["drop_sapling_changed_roots"] <= proof.get("drop_sapling_changed_slots", -1) <= proof["verified_unforced_slots"]):
+                    raise ValueError("incomplete terminal residual and matched Sapling ablation proof")
         if not any(p["student_changes"] for p in proofs):
             raise ValueError("no observed unforced Sapling contribution in the full exam")
     seat_wins = [sum(g["candidate_seat"] == seat and g["result"] == "win" for g in games)

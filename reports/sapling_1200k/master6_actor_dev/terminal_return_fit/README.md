@@ -34,3 +34,5 @@ python "$dir/trial.py" evaluate
 [四场训练回报、开发图换席成绩与实发采集指令](RESULTS.md) · [两图追加复核的冻结条件](replication/protocol.json)
 
 [两张预留图的全部八局与分项](replication/README.md) · [考官与历史场的搜索和耗时](examiner_runtime.md)
+
+[冻结包重建、禁用 Sapling 的逐步消融及正式验收器回归](formal_gate_evidence/README.md)在已公开开发轨迹核对了两席全部 598 步。保留相同回报系数，只去掉 Sapling 的打分，两席有 112 和 117 条最终命令改变。该核验没有使用独立正式考卷。

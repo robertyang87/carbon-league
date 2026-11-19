@@ -1,4 +1,4 @@
-"""Identity and actual-prefix verification for the two frozen Sapling/it50 packages."""
+"""Identity and actual-prefix verification for the frozen Sapling/it50 packages."""
 from functools import lru_cache
 import gzip
 import hashlib
@@ -16,7 +16,8 @@ REPORT = Path("reports/sapling_1200k")
 ACTORS = Path("data/weights/sapling_1200k")
 PARENT = "b54cc51f4109f19f4a7b508eafc9cf04a28b7e295a9f442c5208f0d33f10a9ca"
 D1 = "429ec9a2bb84f77485b4f8830e71b252267705ffd8ce854a1cc35a03c446a367"
-COMPOUNDS = frozenset((PARENT, D1))
+TERMINAL = "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"
+COMPOUNDS = frozenset((PARENT, D1, TERMINAL))
 STUDENT = "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be"
 STUDENT_PACK = "4cd4c1fcf40f05217ecba2a59095ba40286c5f96017d2b15285c942a3b0f5348"
 
@@ -25,7 +26,19 @@ def _hash(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def student_identity(identity):
+    if identity == TERMINAL:
+        from terminal_compound_formal import TRAINED
+        return TRAINED
+    if identity in (PARENT, D1):
+        return STUDENT
+    raise ValueError("unknown compound candidate")
+
+
 def prove(weights, candidate, identity):
+    if identity == TERMINAL:
+        from terminal_compound_formal import prove as prove_terminal
+        return prove_terminal(weights, candidate)
     from tree_win_gate import prove_single_pack
     if (identity not in COMPOUNDS or Path(weights).suffix.lower() != ".npz" or _hash(weights) != STUDENT):
         raise ValueError("this compound requires its exact trained cash V3 Sapling NPZ")
@@ -85,10 +98,13 @@ def _live_d1(folder, row, raw):
     return trace["calls"]
 
 
-def verify_actions(folder, row, raw, pack):
+def verify_actions(folder, row, raw, pack, record=False):
     """Independently rerun both original policies on every executed non-forced slot."""
     from tree_audited_game import exam
     from turning_point_ledger import sha, compact
+    if pack == TERMINAL:
+        from terminal_compound_formal import verify
+        return verify(folder, row, raw, record)
     if pack not in COMPOUNDS:
         raise ValueError("unknown compound")
     model = reference()
