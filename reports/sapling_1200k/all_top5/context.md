@@ -1,5 +1,7 @@
 # 天梯前五逐决策背景查询
 
+快照 `628e28d0` 新增六场的 1,794 次联合推进及 3,588 份逐席行动前观察。每场均含双方可见碳格和已知历史、当拍真实命令、随后到账与规则配置。六场定点查询入口见附录，另可查前一快照新增的一场。[六场上下文索引](appendix_628e28d0/context_index.tsv.gz) · [六场核验回执](appendix_628e28d0/context_receipt.json) · [前一场核验回执](context_appendix_56e1e613_receipt.json)
+
 截至 `b243ff82`，本次新增 2 张图、1,196 个行动前席位视角。两场均追溯到实际交仓工人的行动，来源、可见历史和事后结算按原字段约定保存。[逐局上下文索引](context_appendix_b243ff82_index.tsv.gz) · [核验收据](context_appendix_b243ff82_receipt.json)
 
 截至 `bec6a010`，补齐两局的 1,196 个行动前席位视角，资料覆盖 1,627 场有完整终分的比赛和 1 场历史执行故障。[新增比赛与复算](appendix_bec6a010/README.md) · [公开态索引](context_appendix_bec6a010_index.tsv.gz)

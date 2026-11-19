@@ -24,7 +24,7 @@ Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜�
 
 首胜包的 Sapling 骨干直接从原版实际发出的整队指令学习。13 张训练图、双方席位共 2,496 个不重复局面、23,880 个可选单位命令，候选 `6c548995` 更新了 1,158,585 个参数。六张诊断图的工人动作命中率从 79.34% 升到 79.68%，三张验证图下降 0.45 个百分点。两个旧图窗口内让新网络连续出令 32 步，再用共同父代续弈至终局。新策略比父代分别多改 14、13 条工人命令，最终官方分差改善 **19.81、77.77** 分；四支均负。对这两次改善的经济复算显示，地面树租均提高，正常入库净差均降低。该包在独立天梯限额下有 598 次完整回放请求，最慢 88.36 毫秒，无慢步、超时和错误。[网络、训练控制和留图原始动作](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/README.md) · [两图实际原版响应与结算](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/original_response/README.md) · [天梯计时](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/ladder_timing/hosted/README.md)
 
-截至数据快照 `56e1e613`，前五任一方出场且有官方终分的回放有 1,630 局，其中互打 121 局、对外 1,509 局。另有一场官方故障。新收录的 Fable v7 对 it920-evo31 终场负 794.68 分，已复核决策前历史、双方指令及地形排除。[当前逐局索引](all_top5/README.md)
+截至 `628e28d0`，前五出场且有官方终分的回放共 1,636 局（互打 121、对外 1,515），另有一场历史故障。本次新增六场。Master6 在席 0 两次对 it920-evo31，一场胜 80.26、一场负 1,961.24。新增六张图均已排除出独立考试。[逐局转折、收入、双席动作与地图排除](all_top5/appendix_628e28d0/README.md) · [当前逐局索引](all_top5/README.md)
 
 ## 早期开发记录
 
