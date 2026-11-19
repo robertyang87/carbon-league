@@ -1,0 +1,31 @@
+{
+  "manifest_sha256": "b1eb2b6d38fb7ab401c1ddd12b33256780bbcea858256731e221f822250123b6",
+  "groups": {
+    "train": {
+      "teacher_max_probability_below_0_9": 8729,
+      "games": 18,
+      "roots": 1778,
+      "free_slots": 15201,
+      "subsequent_free_slots_after_non_greedy_execution": 4766,
+      "executed_differs": 3004,
+      "mean_entropy_nats_per_free_slot": 0.49234523332610053,
+      "mean_teacher_max_probability": 0.8014024597438932
+    },
+    "val": {
+      "teacher_max_probability_below_0_9": 3110,
+      "games": 6,
+      "roots": 598,
+      "free_slots": 5547,
+      "subsequent_free_slots_after_non_greedy_execution": 1872,
+      "executed_differs": 1083,
+      "mean_entropy_nats_per_free_slot": 0.48984065578484737,
+      "mean_teacher_max_probability": 0.8019638401561112
+    }
+  },
+  "torch_checked_roots": 80,
+  "torch_checked_slots": 630,
+  "checked_subsequent_free_slots_after_non_greedy": 180,
+  "max_abs_probability_error": 2.4437904357910156e-06,
+  "maximum_normalization_error": 1.1920928955078125e-07,
+  "meaning": "Full mask and timing checks. PyTorch rescores the original dequantized it50 weights conditioned on the stored real action prefix on each selected root."
+}
