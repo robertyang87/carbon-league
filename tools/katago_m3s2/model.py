@@ -23,7 +23,7 @@ meta = total block count, which _Policy/_TorchNet read generically.
 RollNet is the small rollout net for the chassis' _ROLL slot: same block
 structure (the chassis builds rollouts with the same _TorchNet class, so
 the key layout -- including the g gate -- is identical), 2-3 blocks,
-32-48 channels, policy heads only, no critic.  Note: the default fix2
+32-48 channels, policy heads only, no critic.  Note: the default fix3
 chassis has no _ROLL wiring (see pack_submission.py); RollNet matters for
 the master3s2 chassis and for fast rollout evaluation inside training.
 """

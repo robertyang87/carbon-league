@@ -1,10 +1,16 @@
 """Plan stage 3: pack a trained checkpoint into a single-file submission.
 
-Chassis: the owner's V1 search file (src/apexcarbon_v4tta_search.py,
-md5 70e7a9ac...) by default -- owner ruling 2026-11-19 18:29: the
-40-game paired verdict showed the fix2 shell significantly weaker than
-v1's at identical weights, so v1 is the default chassis and
-src/apexcarbon_v1_fix2.py remains an accepted alternate (--chassis).
+Chassis: the owner's fix3 search file (src/apexcarbon_v1_fix3.py,
+md5 4b3423a0...) by default -- owner order 2026-11-19 19:28.  fix3 is
+v1 (src/apexcarbon_v4tta_search.py, md5 70e7a9ac...) plus surgical
+bugfixes only: it preserves every v1 strength constant verbatim
+(_S_K=28, stages (2,0.45)/(5,0.22), _S_D2=9, _S_ROLL_TEMP=0.80,
+_S_FILL=0.85, _S_ABORT=0.62, _S_SAFE=1.35) and carries the identical
+_POLICY/_VALUE payloads (array-for-array equal to master3s2's, like
+v1 and fix2).  v1 (the previous default, owner ruling 2026-11-19
+18:29) and src/apexcarbon_v1_fix2.py remain accepted alternates
+(--chassis); the 40-game paired verdict showed the fix2 shell
+significantly weaker than v1's at identical weights.
 The chassis code is kept untouched except for the mechanical, auditable
 operations below:
 
@@ -13,8 +19,8 @@ operations below:
    + base64 -- the source's own storage format; the in-file _quant() is a
    *feature* quantizer, the source never int8-quantizes weights).
    A _ROLL payload is embedded only when the chassis actually wires one:
-   master3s2's _net() reads globals().get('_ROLL'); neither the v1 nor
-   the fix2 chassis has a _ROLL slot (their rollouts use the main net),
+   master3s2's _net() reads globals().get('_ROLL'); none of the v1,
+   fix2 or fix3 chassis has a _ROLL slot (their rollouts use the main net),
    so with those chassis a --roll argument is reported and skipped,
    main-only packed.  agent() and the search layer are never edited by
    the swap.
@@ -31,26 +37,30 @@ operations below:
    pack FAILS LOUDLY (an unpatched chassis is never shipped silently).
    Post-condition asserted on the output: no 'perf_counter' remains
    anywhere in the file.  The patch set is selected by a signature line
-   (v1 and fix2 texts differ slightly); an unrecognized chassis fails
-   loudly.  Sites neutralized (both chassis unless noted):
+   (the three chassis texts differ slightly; fix3 contains v1's TTA
+   line verbatim, so it is detected first, by its unique upd_cost
+   body); an unrecognized chassis fails loudly.  Sites neutralized
+   (all chassis unless noted):
      * agent(): t0 = perf_counter()                    -> t0 = 0.0
      * _net(): _S_COST seeded from a timed warmup pass -> nominal constants
      * _act root: n_tta chosen from _S_COST vs _S_ABORT -> _FIXED_TTA
-       (v1: unconditional TTA line, _S_ABORT=0.62; fix2: the
+       (v1/fix3: unconditional TTA line, _S_ABORT=0.62; fix2: the
        _S_USE_V4_ROOT-guarded line, _S_ABORT=0.58)
      * _act: candidate cap `most` fitted to the time left via _plan()
        and _S_FILL/_S_ABORT                            -> most = _FIXED_K
      * upd_cost(): per-pass cost tracker feeding late()-> no-op
-       (v1 body blends 0.5/0.5, fix2 caps then blends 0.7/0.3)
+       (v1 body blends 0.5/0.5, fix2 caps then blends 0.7/0.3,
+       fix3 caps then blends 0.5/0.5)
      * look()/other()/play(): perf_counter() call sites -> upd_cost(*, 0.0)
      * late(): abort predicate (elapsed + _S_SAFE*need > _S_ABORT)
                                                            -> always False
        (the fixed plan always runs in full, including the top-2
        multi-response verification the chassis runs 'when time allows')
-     * _act tail: dt = perf_counter() - t0 (stats)      -> dt = 0.0 (fix2 only;
-       v1 has no such line)
+     * _act tail: dt = perf_counter() - t0 (stats)      -> dt = 0.0 (fix2 and
+       fix3; v1 has no such line)
    _S_COST remains as dead telemetry state: after the patch nothing reads
-   it for a decision (fix2's depth==0 decay in the stats tail is inert).
+   it for a decision (the depth==0 decay in the fix2/fix3 stats tail is
+   inert).
 
 3. VALUE-SCALE BRIDGE (only with --value-scale u; Strategy ruling
    reports/RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119.md).  A checkpoint
@@ -71,14 +81,15 @@ operations below:
    is injected at all.  The chosen scale is recorded in the pack report
    (the notes printed by every pack run).  The bridge patch set is
    separate from the clock-removal set: the clock fixture (12 patches
-   for the v1 chassis, no perf_counter in the output) is unaffected.
+   for the v1 chassis, 13 for fix3, no perf_counter in the output) is
+   unaffected.
 
 --verify (numpy only, no torch) checks the packed file end to end:
    * it imports standalone and its _Policy loads;
    * its (numpy) net forward on fixed encode() inputs matches a
      reference net built directly from the checkpoint payload (float16
-     quantization tolerance, number reported) -- note the v1/fix2 chassis'
-     _Policy is a pure weight container with no forward method; the
+     quantization tolerance, number reported) -- note the v1/fix2/fix3
+     chassis' _Policy is a pure weight container with no forward method; the
      forward lives in its _WinoNetNP/_TorchNet, so the check runs
      through _WinoNetNP, the same class the packed agent uses;
    * determinism + timing over full self-games (both seats = the packed
@@ -104,16 +115,30 @@ STEP_TIME_LIMIT = 0.75      # seconds, the ladder red line
 
 
 # ---------------------------------------------------------------------------
-# Clock-removal patch: (name, old, new, expected_count).  Patterns are the
-# fix2 chassis' exact text; any mismatch aborts the pack.
+# Clock-removal patch: (name, old, new, expected_count).  Patterns are
+# each chassis' exact text; any mismatch aborts the pack.
 # ---------------------------------------------------------------------------
 V1_TTA_LINE = ("    n_tta = 4 if (_S_COST[0] <= 0.0 or 8 * _S_COST[0] < 0.25 * _S_ABORT) else 2")
 FIX2_TTA_LINE = ("    n_tta = (4 if (_S_COST[0] <= 0.0 or 8 * _S_COST[0] < 0.25 * _S_ABORT) else 2) "
                  "if _S_USE_V4_ROOT else 1")
+# fix3 signature: its upd_cost body (spike clamp, then v1's 0.5/0.5 blend)
+# is unique across the three chassis -- fix3's root-TTA line is v1's
+# verbatim, so the TTA lines alone cannot distinguish fix3 from v1.
+FIX3_UPD_COST = ("        def upd_cost(i, x):\n"
+                 "            cap = 0.05 if i == 0 else 0.02\n"
+                 "            x = min(x, cap)\n"
+                 "            _S_COST[i] = x if _S_COST[i] == 0.0 else 0.5 * _S_COST[i] + 0.5 * x\n"
+                 "            _S_COST[i + 2] = x\n")
+UPD_COST_NOOP = ("        def upd_cost(i, x):\n"
+                 "            return  # CLOCK-REMOVAL PATCH: cost telemetry disabled; _S_COST feeds no decision\n")
+STATS_DT_OLD = "        dt = _time.perf_counter() - t0"
+STATS_DT_NEW = ("        dt = 0.0  # CLOCK-REMOVAL PATCH: stats only; "
+                "no wall clock in the decision path")
 
 
 def clock_patches(fixed_k, fixed_tta, variant):
-    """Exact-replacement patch list for one chassis variant ('v1'/'fix2')."""
+    """Exact-replacement patch list for one chassis variant
+    ('v1'/'fix2'/'fix3')."""
     common = [
         ('fixed-constants',
          "_S_COST = [0.0, 0.0, 0.0, 0.0]\n",
@@ -176,8 +201,17 @@ def clock_patches(fixed_k, fixed_tta, variant):
              "        def upd_cost(i, x):\n"
              "            _S_COST[i] = x if _S_COST[i] == 0.0 else 0.5 * _S_COST[i] + 0.5 * x\n"
              "            _S_COST[i + 2] = x\n",
-             "        def upd_cost(i, x):\n"
-             "            return  # CLOCK-REMOVAL PATCH: cost telemetry disabled; _S_COST feeds no decision\n", 1),
+             UPD_COST_NOOP, 1),
+        ]
+    elif variant == 'fix3':
+        # fix3 = v1's patch set, except upd_cost carries fix2's spike
+        # clamp over v1's blend (its own exact text), and the stats tail
+        # has fix2's dt line (v1 has none).  13 patches in total.
+        specific = [
+            ('root-tta-count', V1_TTA_LINE,
+             "    n_tta = _FIXED_TTA  # CLOCK-REMOVAL PATCH: fixed root TTA count", 1),
+            ('upd-cost-noop', FIX3_UPD_COST, UPD_COST_NOOP, 1),
+            ('stats-dt', STATS_DT_OLD, STATS_DT_NEW, 1),
         ]
     else:  # fix2
         specific = [
@@ -189,23 +223,25 @@ def clock_patches(fixed_k, fixed_tta, variant):
              "            x = min(x, cap)\n"
              "            _S_COST[i] = x if _S_COST[i] == 0.0 else 0.7 * _S_COST[i] + 0.3 * x\n"
              "            _S_COST[i + 2] = x\n",
-             "        def upd_cost(i, x):\n"
-             "            return  # CLOCK-REMOVAL PATCH: cost telemetry disabled; _S_COST feeds no decision\n", 1),
-            ('stats-dt',
-             "        dt = _time.perf_counter() - t0",
-             "        dt = 0.0  # CLOCK-REMOVAL PATCH: stats only; no wall clock in the decision path", 1),
+             UPD_COST_NOOP, 1),
+            ('stats-dt', STATS_DT_OLD, STATS_DT_NEW, 1),
         ]
     return common + specific
 
 
 def detect_variant(text):
+    # fix3 first: it contains v1's root-TTA line verbatim, so the TTA
+    # lines alone would misclassify it as v1 (and its upd_cost patch
+    # would then fail loudly on the v1 pattern -- never silently).
+    if FIX3_UPD_COST in text:
+        return 'fix3'
     if V1_TTA_LINE in text:
         return 'v1'
     if FIX2_TTA_LINE in text:
         return 'fix2'
-    raise SystemExit('CLOCK PATCH FAILED: unrecognized chassis (neither the '
-                     'v1 nor the fix2 root-TTA line found). Refusing to ship '
-                     'an unpatched chassis.')
+    raise SystemExit('CLOCK PATCH FAILED: unrecognized chassis (none of '
+                     'the v1, fix2 or fix3 signatures found). Refusing '
+                     'to ship an unpatched chassis.')
 
 
 def apply_clock_patch(text, fixed_k, fixed_tta):
@@ -230,9 +266,9 @@ def apply_clock_patch(text, fixed_k, fixed_tta):
 # 20261119): a self-contained twin of bridge.py's exact inversion, plus
 # the two call sites inside _act's look() -- the only places the net's
 # value output enters search leaf evaluation.  The injected text is
-# identical for the v1 and fix2 chassis (their _terminal def and look()
-# value lines are byte-identical); counts are asserted like the clock
-# patch's, and any mismatch aborts the pack.
+# identical for the v1, fix2 and fix3 chassis (their _terminal def and
+# look() value lines are byte-identical); counts are asserted like the
+# clock patch's, and any mismatch aborts the pack.
 # ---------------------------------------------------------------------------
 BRIDGE_DEF = '''
 def _u_of_margin(d):
@@ -312,9 +348,10 @@ def pack(chassis_path, ckpt, roll, out_path, clock_patch=True, fixed_k=12,
          fixed_tta=None, value_scale='terminal'):
     text = open(chassis_path).read()
     if fixed_tta is None:
-        # v1's quality branch is TTA=4 (used whenever the machine is fast);
-        # fix2 ships with root TTA off and 2 is its conservative on-value.
-        fixed_tta = 4 if (V1_TTA_LINE in text) else 2
+        # v1's and fix3's quality branch is TTA=4 (used whenever the
+        # machine is fast); fix2 ships with root TTA off and 2 is its
+        # conservative on-value.
+        fixed_tta = 2 if (FIX2_TTA_LINE in text) else 4
     pol, val = layout.split_checkpoint(ckpt)
     if not val:
         raise SystemExit('checkpoint has no value keys (v1./v2./v3.); the chassis needs _VALUE')
@@ -439,9 +476,10 @@ def verify_games(packed_path, games=1):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('--chassis', default=layout.APEX_V4TTA,
-                    help='chassis source file (default: the v1 file, owner '
-                         'ruling 18:29; the fix2 file is an accepted alternate)')
+    ap.add_argument('--chassis', default=layout.FIX3,
+                    help='chassis source file (default: the fix3 file, owner '
+                         'order 2026-11-19 19:28; the v1 and fix2 files are '
+                         'accepted alternates)')
     ap.add_argument('--ckpt', required=True, help='trained checkpoint npz (source layout)')
     ap.add_argument('--roll', default=None, help='optional _ROLL npz (policy keys only)')
     ap.add_argument('--out', required=True)
@@ -451,8 +489,9 @@ def main():
     ap.add_argument('--fixed-k', type=int, default=12,
                     help='deterministic candidate budget baked into the patch')
     ap.add_argument('--fixed-tta', type=int, default=None,
-                    help='fixed root TTA count (default: 4 for the v1 chassis, '
-                         '2 for fix2 -- each chassis\' own quality branch)')
+                    help='fixed root TTA count (default: 4 for the v1 and '
+                         'fix3 chassis, 2 for fix2 -- each chassis\' own '
+                         'quality branch)')
     ap.add_argument('--value-scale', choices=['terminal', 'u'], default='terminal',
                     help='scale of the checkpoint\'s value head: terminal = the '
                          'chassis\' native _terminal scale (gen-0 / untrained; '

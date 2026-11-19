@@ -6,11 +6,12 @@ a numpy mirror (gen0_m3s2.npz, source key layout) and -- when PyTorch is
 available -- a torch state_dict (gen0_m3s2.pt) for model.py's MainNet, i.e.
 the generation-0 warm-start weights.
 
-Canonical source: src/master3s2.py.  The owner's fix2 chassis
-(src/apexcarbon_v1_fix2.py) carries _WEIGHTS/_VALUE payloads that are
-array-identical to master3s2's (war-room verified with numpy: same keys,
-nb=6, same snames, every array equal), so generation 0 is exactly the net
-already inside fix2; master3s2.py stays canonical here because fix2 has no
+Canonical source: src/master3s2.py.  The owner's fix2 and fix3 chassis
+(src/apexcarbon_v1_fix2.py, src/apexcarbon_v1_fix3.py) carry
+_WEIGHTS/_VALUE payloads that are array-identical to master3s2's
+(war-room verified with numpy: same keys, nb=6, same snames, every
+array equal), so generation 0 is exactly the net already inside fix3;
+master3s2.py stays canonical here because neither chassis has a
 _TorchNet class -- the PyTorch forward reference lives only in master3s2.py.
 
 --verify compares, on both random tensors and real encode() outputs:

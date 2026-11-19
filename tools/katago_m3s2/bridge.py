@@ -8,8 +8,8 @@ Two scales of the same final cash margin d are in play:
     the plan's Score Utility (train.py's score_utility).  The trained
     value head outputs this scale.
   * _terminal(m) = clip(m/3000, -2.5, 2.5) + 0.5*sign(m), range [-3, 3] --
-    the chassis' native critic scale (master3s2.py / v1 / fix2, identical
-    text in all three).  The chassis' search arithmetic (backup, fusion,
+    the chassis' native critic scale (master3s2.py / v1 / fix2 / fix3,
+    identical text in all four).  The chassis' search arithmetic (backup, fusion,
     veto thresholds) was tuned on this scale, and terminal boards are
     scored with it directly.
 

@@ -39,6 +39,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC_DIR = os.path.normpath(os.path.join(HERE, '..', '..', 'src'))
 MASTER3S2 = os.path.join(SRC_DIR, 'master3s2.py')
 FIX2 = os.path.join(SRC_DIR, 'apexcarbon_v1_fix2.py')
+FIX3 = os.path.join(SRC_DIR, 'apexcarbon_v1_fix3.py')
 APEX_V4TTA = os.path.join(SRC_DIR, 'apexcarbon_v4tta_search.py')
 
 VALUE_KEYS = ('v1.weight', 'v1.bias', 'v2.weight', 'v2.bias', 'v3.weight', 'v3.bias')

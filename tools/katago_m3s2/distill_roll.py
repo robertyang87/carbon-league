@@ -15,7 +15,7 @@ Export: a _ROLL npz in the source policy key layout (snames/meta/stem/
 emb/blocks/hw/hb), policy keys ONLY -- no value keys, matching what the
 chassis' _build(_Policy(_ROLL), None) consumes.  Whether a chassis can
 embed it is pack_submission.py's concern (the master3s2 chassis wires
-_ROLL; the default fix2 chassis does not).
+_ROLL; the default fix3 chassis does not).
 """
 
 import argparse
