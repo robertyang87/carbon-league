@@ -1,4 +1,4 @@
-"""Apply the core decision, economy and defense extractors to the eight later arrivals."""
+"""Apply the core decision, economy and defense extractors to a later frozen batch."""
 import argparse
 import gzip
 import hashlib
@@ -18,8 +18,9 @@ from plant_timing_extract import extract as planting
 from raid_timing import game_rows, sample_stats
 
 
-def main(cache):
-    manifest=json.loads((HERE/"manifest.json").read_bytes())
+def main(cache, manifest_path):
+    output_dir=manifest_path.parent
+    manifest=json.loads(manifest_path.read_bytes())
     if manifest["state"]!="complete":raise ValueError("incomplete manifest")
     data=[];risks=[]
     for i,card in enumerate(manifest["games"]):
@@ -42,15 +43,17 @@ def main(cache):
         md=case_page(card,cash,{"replay_sha256":card["sha256"]})
         md+=["","## 截击与种树时机","",
              f"行动前达到重货截击几何条件的工人对／回合共 {len(events):,} 个。两席种树工的行动前机会、选择与所有权账分别写入本批证据的 planting 字段。此局收据保留零事件和实际支付。",
-             "","[八局逐局背景及分支时机数据](cases.json.gz) · [截击机会定义与字段顺序](../raid_timing.py)"]
-        (HERE/(card["id"]+".md")).write_text("\n".join(md)+"\n")
-    np.savez_compressed(HERE/"raid_rows.npz",rows=np.concatenate(risks))
+             "","[本批逐局背景及分支时机数据](cases.json.gz) · [截击机会定义与字段顺序](../raid_timing.py)"]
+        (output_dir/(card["id"]+".md")).write_text("\n".join(md)+"\n")
+    np.savez_compressed(output_dir/"raid_rows.npz",rows=np.concatenate(risks))
     output={"rows":data,"revision":manifest["revision"],"steps":sum(r["defense"]["transitions"] for r in data)}
-    (HERE/"cases.json.gz").write_bytes(gzip.compress(json.dumps(output,ensure_ascii=False,separators=(",",":"),allow_nan=False).encode(),mtime=0))
+    (output_dir/"cases.json.gz").write_bytes(gzip.compress(json.dumps(output,ensure_ascii=False,separators=(",",":"),allow_nan=False).encode(),mtime=0))
     print(len(data),output["steps"],flush=True)
 
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--cache",type=Path,required=True)
-    main(p.parse_args().cache)
+    p.add_argument("--manifest",type=Path,default=HERE/"manifest.json")
+    args=p.parse_args()
+    main(args.cache,args.manifest)

@@ -1,4 +1,5 @@
 """Compare the same external ladder opponent in the same physical seat against Master6 and other leaders."""
+import argparse
 from collections import Counter, defaultdict
 import gzip
 import hashlib
@@ -20,7 +21,7 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def load():
+def load(extra=None):
     seals = {}
     def read(path):
         raw = path.read_bytes()
@@ -33,7 +34,8 @@ def load():
     ranks = {v["name"]:v["board_rank"] for v in by_id.values()
              if name_counts[v["name"]]==1 and v.get("board")=="heavy" and isinstance(v.get("board_rank"),int)}
     cards = {}
-    for where in (HERE, APPENDIX):
+    appendices = [APPENDIX] + ([extra] if extra else [])
+    for where in [HERE, *appendices]:
         man = json.loads(read(where / "manifest.json"))
         for g in man["games"]:
             if g["id"] in cards:
@@ -56,10 +58,11 @@ def load():
         r=json.loads(line);gid=r["id"]
         if gid in defense or cards[gid]["sha256"]!=r["sha256"]:raise ValueError("defense identity")
         defense[gid]=r
-    for r in json.loads(read(APPENDIX/"cases.json.gz"))["rows"]:
-        gid=r["id"]
-        if gid in econ or r["source_sha256"]!=cards[gid]["sha256"]:raise ValueError("appendix identity")
-        econ[gid],layouts[gid],defense[gid]=r["economy"],r["layout"],r["defense"]
+    for where in appendices:
+        for r in json.loads(read(where/"cases.json.gz"))["rows"]:
+            gid=r["id"]
+            if gid in econ or r["source_sha256"]!=cards[gid]["sha256"]:raise ValueError("appendix identity")
+            econ[gid],layouts[gid],defense[gid]=r["economy"],r["layout"],r["defense"]
     if set(cards)!=set(econ) or set(cards)!=set(layouts) or set(cards)!=set(defense):
         raise ValueError("incomplete evidence")
     exclusion=Counter(); result=[]
@@ -166,8 +169,8 @@ def summarize(rows, low, high, physical=None, control=None, complete=False, boot
     return result
 
 
-def main():
-    rows,excluded,seals,when,high=load()
+def main(extra=None):
+    rows,excluded,seals,when,high=load(extra)
     groups={}
     for name,lo,hi in (("21_50",21,50),("6_20",6,20),("51_plus",51,high)):
         groups[name]=summarize(rows,lo,hi,bootstrap=True,examples=name=="21_50")
@@ -180,8 +183,12 @@ def main():
                 finite_horizon="Flow after official termination equals zero. For t100/t200 beyond termination, hold final cash, workers and owned trees. Also report the common-support subset lasting >=200.",
                 interval="10,000 opponent-cluster resamples; retained games and seats per sampled identity remain fixed.",
                 excluded=dict(excluded),groups=groups)
-    (HERE/"master6_opponent_controls.json").write_text(json.dumps(output,ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+    output_dir = extra or HERE
+    (output_dir/"master6_opponent_controls.json").write_text(json.dumps(output,ensure_ascii=False,indent=2,allow_nan=False)+"\n")
 
 
 if __name__=="__main__":
-    main()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--additional-appendix",type=Path,help="append a sealed cases.json.gz and write the sensitivity result there")
+    options=parser.parse_args()
+    main(options.additional_appendix.resolve() if options.additional_appendix else None)

@@ -10,6 +10,10 @@
 | 4 | RyanX-AIPowercore-M9XJ-630 | 311 | 219 / 0 / 92 | [1](index/rank4-p01.md) · [2](index/rank4-p02.md) · [3](index/rank4-p03.md) · [4](index/rank4-p04.md) · [5](index/rank4-p05.md) · [6](index/rank4-p06.md) |
 | 5 | ClaudeFable5.2-v7 | 364 | 296 / 0 / 68 | [1](index/rank5-p01.md) · [2](index/rank5-p02.md) · [3](index/rank5-p03.md) · [4](index/rank5-p04.md) · [5](index/rank5-p05.md) · [6](index/rank5-p06.md) · [7](index/rank5-p07.md) |
 
+## 后续补编
+
+[新增八局](appendix_499886f1/README.md)和[最后十五局](appendix_4bfdabf5/README.md)逐局附相同的原始回放、资金流和出手背景，三批合计 1,347 局。
+
 ## 数据与口径
 
 [逐局双席 TSV 压缩表](index_games.tsv.gz) · [来源与哈希](index_sources.json) · [逐帧清单](manifest.json)

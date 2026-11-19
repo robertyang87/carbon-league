@@ -67,13 +67,14 @@ class TerrainTests(unittest.TestCase):
 
     def test_frozen_evidence(self):
         _, seeds, boards = identity.ladder_boards()
-        self.assertEqual(len(seeds),1332)
-        self.assertEqual(len(boards),1332)
-        appendix = Path(__file__).with_name("all_top5")/"appendix_499886f1/validation_maps.jsonl.gz"
-        for line in gzip.decompress(appendix.read_bytes()).splitlines():
-            witness=json.loads(line)
-            self.assertIn(witness["seed"],seeds)
-            self.assertIn(witness["initial_terrain_u8_sha256"],boards)
+        self.assertEqual(len(seeds),1347)
+        self.assertEqual(len(boards),1347)
+        for name in ("appendix_499886f1","appendix_4bfdabf5"):
+            appendix = Path(__file__).with_name("all_top5") / name / "validation_maps.jsonl.gz"
+            for line in gzip.decompress(appendix.read_bytes()).splitlines():
+                witness=json.loads(line)
+                self.assertIn(witness["seed"],seeds)
+                self.assertIn(witness["initial_terrain_u8_sha256"],boards)
 
 
 if __name__ == "__main__":

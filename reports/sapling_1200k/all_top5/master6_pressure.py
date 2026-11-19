@@ -5,11 +5,9 @@ import gzip
 import json
 from pathlib import Path
 from statistics import median
-import sys
 
 from defense_summary import ranking_lookup
 from economy_extract import KEYS, reconstruct
-from layout import layout
 
 HERE=Path(__file__).resolve().parent
 MASTER6="ecde65e596acbeb9ba5feca22e05f100"
@@ -88,13 +86,29 @@ def summarize(rows):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--cache",type=Path,required=True);args=p.parse_args()
+    p.add_argument("--cache",type=Path,required=True)
+    p.add_argument("--manifest",action="append",type=Path,help="complete nonoverlapping manifest; repeat to combine batches")
+    p.add_argument("--prior",type=Path,help="reuse rows whose source hash matches a requested fixture")
+    p.add_argument("--out",type=Path,default=HERE/"master6_pressure.json.gz")
+    args=p.parse_args()
     cases=[]
-    for f in (HERE/"manifest.json",HERE/"appendix_499886f1/manifest.json"):
+    for f in args.manifest or (HERE/"manifest.json",HERE/"appendix_499886f1/manifest.json"):
         cases.extend(g for g in json.loads(f.read_bytes())["games"] if MASTER6 in g["seat_strategy_ids"])
     lookup,asof=ranking_lookup()
-    rows=[audit(g,args.cache/g["path"],lookup) for g in cases]
-    if len(rows)!=len({r["id"] for r in rows}) or len(rows)!=271:raise ValueError("unexpected Master6 corpus")
+    prior = {}
+    if args.prior:
+        sealed=json.loads(gzip.decompress(args.prior.read_bytes()))
+        if sealed["rank_as_of"]!=asof or sealed["master_id"]!=MASTER6:
+            raise ValueError("prior inputs differ")
+        prior={r["id"]:r for r in sealed["rows"]}
+    rows=[]
+    for g in cases:
+        row=prior.get(g["id"])
+        if not row or row["source_sha256"]!=g["sha256"]:
+            row=audit(g,args.cache/g["path"],lookup)
+        rows.append(row)
+    if not rows or len(rows)!=len({r["id"] for r in rows}):
+        raise ValueError("empty or overlapping Master6 corpus")
     groups=defaultdict(list)
     for r in rows:
         for key in ("all","tier/"+r["tier"],"result/"+r["result"],"seat/"+str(r["seat"])):
@@ -102,7 +116,7 @@ def main():
     content={"master_id":MASTER6,"rank_as_of":asof,
              "definition":"Frozen heavy ranks 21–50 are the primary middle tier; missing/ambiguous strategy names remain unknown. Midgame windows only include games reaching both endpoints.",
              "groups":{k:summarize(v) for k,v in groups.items()},"rows":rows}
-    (HERE/"master6_pressure.json.gz").write_bytes(gzip.compress(json.dumps(content,ensure_ascii=False,allow_nan=False,separators=(",",":")).encode(),mtime=0))
+    args.out.write_bytes(gzip.compress(json.dumps(content,ensure_ascii=False,allow_nan=False,separators=(",",":")).encode(),mtime=0))
     print({k:(v["games"],v["outcome"]) for k,v in content["groups"].items()})
 
 if __name__=="__main__":main()

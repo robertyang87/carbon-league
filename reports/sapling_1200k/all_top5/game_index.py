@@ -217,7 +217,8 @@ def build(source,output,partial=False):
     emit(output/"index_sources.json",json.dumps(info,ensure_ascii=False,indent=2)+"\n")
     overview=["# 天梯前五逐局索引","",f"共 {len(rows):,} 个独立对局 ID，其中前五互打 {info['cohorts'].get('mutual',0)} 局，对外 {info['cohorts'].get('external',0)} 局。"
               f"五个选手视图合计 {info['top_player_view_rows']:,} 条，因为互打局在两位选手名下都可查到。下载表每个 ID 只有一行，保留两物理席。","",
-              "| 排名 | 选手 | 对局数 | 胜 / 平 / 负 | 页码 |","| ---: | --- | ---: | --- | --- |",*nav,"","## 数据与口径","",
+              "| 排名 | 选手 | 对局数 | 胜 / 平 / 负 | 页码 |","| ---: | --- | ---: | --- | --- |",*nav,"","## 后续补编","",
+              "[新增八局](appendix_499886f1/README.md)和[最后十五局](appendix_4bfdabf5/README.md)逐局附相同的原始回放、资金流和出手背景，三批合计 1,347 局。","","## 数据与口径","",
               "[逐局双席 TSV 压缩表](index_games.tsv.gz) · [来源与哈希](index_sources.json) · [逐帧清单](manifest.json)","",
               "打开选手分页，点对局 ID 看天梯回放，点“经济与回溯”看该局收入明细及转折前的布局。“防0/防1”跳到物理席防守统计。缺少证据的局保留在索引中，空值不得当作零。","",
               f"逐局证据覆盖为 "+
