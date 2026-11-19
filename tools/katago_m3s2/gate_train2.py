@@ -58,6 +58,48 @@ plus the review's manual line-by-line comparison (REVIEW_TRAIN2
 section 5.8), not on executing train.py. Do not cite (b) as a
 train.py execution check.
 
+Basis and tripwire (strategy ruling 628e28d0, scheme C -- read before
+citing (b)): the replication above was made against ONE pinned
+train.py, md5 34898e7c0132b1834404bff01f0cde21 (report field
+basis_train_py_md5). Claim scope: (b) evidence is valid ONLY for the
+definition surface of that exact md5 (report field claim_scope);
+it certifies nothing about any other train.py revision.
+
+Tripwire -- automatic-void scope (the assembly definition surface,
+组装定义面): (i) the batch-assembly segment, L283-296 in the
+34898e7c numbering; (ii) augment; (iii) score_utility; (iv)
+load_dataset / ReplayData row construction. ANY change inside that
+surface voids the (b) evidence automatically, and the replication
+must be re-reviewed before (b) may be cited again. A change that
+does not touch the definition surface is cleared by showing the
+definition-surface diff is empty (fingerprint unchanged, below).
+
+Definition-surface fingerprint (report field
+basis_definition_fingerprint_sha256):
+  ffb89c7b7f7689032a3e7685d285883f70f75575f5cba9766f94cb73bdd993ca
+Extraction rule (content anchors ONLY -- no absolute line numbers,
+so a line shift outside the surface, e.g. a comment inserted above
+the assembly segment, cannot move it): take, in this fixed order,
+(1) augment: from the line 'def augment(row, g):' through the first
+following line whose stripped form is 'return out';
+(2) score_utility: from the line 'def score_utility(d):' through
+the first following line containing 'return 0.6 * np.tanh';
+(3) ReplayData: from the line 'class ReplayData:' through the first
+following line containing
+'return {k: a[i] for k, a in self.arrays.items()}';
+(4) load_dataset: from the line 'def load_dataset(dirs):' through
+the first following line whose stripped form is
+'return ReplayData(arrays)';
+(5) assembly: from the first line containing
+"x = torch.from_numpy(np.stack([b['x']" through the first following
+line containing 'x, sc = x.to(args.device), sc.to(args.device)'.
+Concatenate, in the order augment / score_utility / ReplayData /
+load_dataset / assembly, each section as a header line
+'=== <name> ===' followed by its verbatim lines, and take sha256 of
+the UTF-8 bytes. Recompute this fingerprint on any candidate
+train.py: equal value = definition surface untouched (change
+cleared); different value = (b) evidence void, re-review required.
+
 Verdict discipline: any failed check prints a final line
   VERDICT: FAIL -> ABANDON (不过 → 弃置)
 plus a failure record (step, metric, measured, line). Any exception on
@@ -94,6 +136,27 @@ ABS_TOL = 2e-2    # 待策略组钉 (placeholder, see docstring)
 REL_TOL = 0.02    # 待策略组钉 (placeholder, see docstring)
 BASELINE_STEPS_S = 11.78  # L20 Gen-2 measured, war-room supplied
 DEFAULT_REPORT = 'gate_train2_report.json'
+
+# Basis pinning + tripwire (strategy ruling 628e28d0, scheme C; see the
+# module docstring's coverage note for the full text and the
+# fingerprint extraction rule).
+BASIS_TRAIN_PY_MD5 = '34898e7c0132b1834404bff01f0cde21'
+BASIS_DEFINITION_FINGERPRINT_SHA256 = (
+    'ffb89c7b7f7689032a3e7685d285883f70f75575f5cba9766f94cb73bdd993ca')
+CLAIM_SCOPE = (
+    '(b) evidence is valid ONLY for the definition surface of '
+    'train.py md5 34898e7c0132b1834404bff01f0cde21 '
+    '(basis_train_py_md5); any change to that definition surface '
+    '(batch-assembly segment L283-296 in the 34898e7c numbering, '
+    'augment, score_utility, load_dataset/ReplayData row '
+    'construction) voids the (b) evidence automatically and the '
+    'replication must be re-reviewed; a change outside the '
+    'definition surface is cleared by an empty definition-surface '
+    'diff (fingerprint unchanged).')
+COVERAGE_NOTE = (
+    CLAIM_SCOPE + ' Definition-surface fingerprint (sha256, '
+    'content-anchor extraction per the docstring rule): '
+    + BASIS_DEFINITION_FINGERPRINT_SHA256)
 
 np = None   # numpy, bound lazily in main (bootstrap stays stdlib-only)
 t2 = None   # train2_fixed module, bound lazily in main
@@ -158,6 +221,11 @@ class _Reporter:
     def write(self, verdict, exit_code):
         report = {
             'gate_md5': _self_md5(),
+            'basis_train_py_md5': BASIS_TRAIN_PY_MD5,
+            'basis_definition_fingerprint_sha256':
+                BASIS_DEFINITION_FINGERPRINT_SHA256,
+            'claim_scope': CLAIM_SCOPE,
+            'coverage_note': COVERAGE_NOTE,
             'gate_file': os.path.basename(os.path.abspath(__file__)),
             'subject_file': 'train2_fixed.py',
             'subject_md5': _subject_md5(),
@@ -425,6 +493,17 @@ def _main_inner(rep):
     rep.check('arguments', 'PASS', {'mode': args.mode, 'batch': args.batch,
                                     'epochs': args.epochs,
                                     'n_rows': args.n_rows, 'seed': args.seed})
+
+    # ---- basis pinning (ruling 628e28d0): visible on every report ----
+    rep.say('[basis] basis_train_py_md5=%s '
+            'basis_definition_fingerprint_sha256=%s'
+            % (BASIS_TRAIN_PY_MD5, BASIS_DEFINITION_FINGERPRINT_SHA256))
+    rep.say('[basis] claim_scope: ' + CLAIM_SCOPE)
+    rep.check('basis', 'PASS',
+              {'basis_train_py_md5': BASIS_TRAIN_PY_MD5,
+               'basis_definition_fingerprint_sha256':
+                   BASIS_DEFINITION_FINGERPRINT_SHA256,
+               'claim_scope': CLAIM_SCOPE})
 
     # ---- lazy heavy imports (review 4.3): failure -> verdict, not a bare
     # traceback. numpy first, then the subject module (which itself
