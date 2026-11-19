@@ -52,10 +52,22 @@ def run():
         lines+=[f"真正进入下一包的是 Sapling 工人读出矩阵及偏置，发生数值变化 {f['parameter_count']} 项。FP32 更新 L2 范数 {f['step_l2']:.5f}，训练时任一实际二选一 logit 差最大改变 {f['max_abs_paired_logit_shift']:.5f}。留出的 343/344 两图按冻结时刻复演，席 0/1 各有 {ch['0']}／{ch['1']} 个联合命令相对首胜版改变。实际公开部署包 SHA-256 为 `{f['selected']}`，长 {f['file_bytes']:,} 字节，只含原贪心推理入口及新张量。按预登记判据，"+('可进入旧图的原版真实响应复验。' if stable else '停止在离线门。'),'',
                 '[训练器](fit.py) · [梯度与训练结果](fit.json) · [学生权重](candidate.npz) · [普通部署包](candidate.py) · [公开命令对照](held_commands.json.gz)']
     else:lines+=['有效探索量未达到预登记最小值，本次没有导出新包。[训练门](fit.json)']
+    if (HERE/'deployed_tensor_audit.json').exists():
+        audit=read(HERE/'deployed_tensor_audit.json')
+        episodes=f['episodes']; ad=[r['advantage'] for r in episodes]
+        worst=min(episodes,key=lambda v:v['advantage'])
+        lines+=['',f"八个实际训练回报中 {sum(v>0 for v in ad)} 个超过历史同图同席父策略，{sum(v<0 for v in ad)} 个低于它。最大一次差异出现在 {worst['seed']} 席 {worst['seat']}，终局 U 差为 {worst['advantage']:+.4f}。新权重在旧实录两选项和固定前缀下产生的平均 KL 为 {audit['mean_conditional_kl']:.5f}；这是训练内读数。历史共同地图的采样结果没有提供胜率或平均分差提升证据。原版考官的训练局/历史参照累计搜到八层步数分别为 {a['d8']}／{b['d8']}，零深回退 {a['cutoffs']}／{b['cutoffs']}，所有计时差异和失败局保留。[部署参数及逐次概率核验](deployed_tensor_audit.json) · [实际公开入口梯度差分](score_gradient.json)"]
     if (HERE/'response/result.json').exists():
         rr=read(HERE/'response/result.json');lines+=['','## 未用于更新的两张开发图','',
-             '每张固定图仅干预第一处符合登记的真实不同命令，随后双方均使用首胜版作为本方的续弈策略。']
+             '每张固定图仅干预第一处符合登记的真实不同命令，随后双方均使用首胜版作为本方的续弈策略。','']
         for r in rr['rows']:lines.append(f"- {r['id']} 第 {r['t']} 步，改令后官方终差 {r['student']:+.2f}，父令 {r['parent']:+.2f}，增量 {r['delta']:+.2f}。")
         lines+=['',('两图均严格改善，可考虑在独立开发地图整场复测。' if rr['both_strictly_positive'] else '两图同时严格改善的条件未满足，停止本候选。')+'[终局与逐臂记录](response/result.json)']
+    if (HERE/'response/economy.json.gz').exists():
+        e=read(HERE/'response/economy.json.gz')
+        lines+=['','两个改令都发生在带货采集工身上，之后冻结同一续弈策略。以下金额是两条实际分支的现金账分解。','']
+        for row in e['rows']:
+            uid,unit=next(iter(row['changed_orders'].items()));info=row['cash_credits_student_minus_parent'];w=row['largest_absolute_ten_step_cash_gap_change']
+            lines.append(f"- {row['id']}，{uid} 携货 {unit['worker'][1]:.2f}，{unit['before']} 改为 {unit['after']}。后续双方回库差比父令少 {-info['own_delivery']['relative']:.2f}，树吸收差少 {-info['tree_absorption']['relative']:.2f}。两条分支的现金分差在截至 t{w['ending_t']} 的 10 步内又拉开 {abs(w['difference_last_n']['10']):.2f}。")
+        lines+=['','每张图只有一个共同初始化的随机流；单个工人改令会改变后续整队和对手路线。把结果推广到其他载货量、敌人位置和回库距离，还需要相应局面的实际对照。[回溯 3、5、10 步的双方状态、付费与行动](response/economy.json.gz)']
     (HERE/'README.md').write_text('\n'.join(lines)+'\n')
 if __name__=='__main__':run()
