@@ -1,0 +1,2731 @@
+{
+  "identity": {
+    "fit_sha256": "becea176edda604ebdd5d67379e572a519dc8391e56856190a7bd33d50fa2b72",
+    "manifest_sha256": "f941af840faa93343db0a3f2fb95ef93387834a601b5abce8acc47d57e569c69",
+    "parent_sha256": "f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713",
+    "training_protocol_sha256": "309f33b41af3706440b821b19f4db77b68150949bf693c4804e8531bebcde969",
+    "order_sha256": "003db155a118ff5bea50da26760b769606908a9bb4abfbda754343ac7cc55b50"
+  },
+  "weights": {
+    "control": {
+      "file": "control.npz",
+      "sha256": "b33ccf86cb22aba0db93e58ecb7c68c5539390843d2c2e8eb84994a055aba91a",
+      "losses": [
+        0.7243946194648743,
+        1.016028881072998,
+        0.8379685282707214,
+        0.9388437271118164,
+        1.0096960067749023,
+        0.9297491908073425,
+        0.8459287881851196,
+        0.8323939442634583,
+        0.9013163447380066,
+        0.8726571798324585,
+        1.0374010801315308,
+        0.8731827139854431,
+        0.9899564981460571,
+        0.9867693185806274,
+        0.8054346442222595,
+        0.9204141497612,
+        0.8615253567695618,
+        0.9732757210731506,
+        0.99196457862854,
+        0.7969449162483215,
+        0.9041714072227478,
+        0.94099360704422,
+        0.893909752368927,
+        0.8614640235900879,
+        0.971508264541626,
+        0.8111807703971863,
+        0.7484825253486633,
+        0.916536271572113,
+        0.9930347204208374,
+        0.875800371170044,
+        0.9439863562583923,
+        0.8491588830947876
+      ],
+      "changed_per_module": {
+        "stem": 27714,
+        "stem_n": 186,
+        "blocks": 902201,
+        "aux": 0,
+        "tok1": 8305,
+        "tok2": 9312,
+        "fuse": 18240,
+        "attn": 75684,
+        "sc1": 1208,
+        "sc2": 3776,
+        "teach": 16,
+        "ctx": 13481,
+        "value": 0,
+        "utility": 0,
+        "wdl": 0,
+        "margin": 0,
+        "h0": 4896,
+        "din": 21792,
+        "aemb": 864,
+        "gru": 55872,
+        "whead": 485,
+        "bhead": 291,
+        "U": 3104,
+        "V": 512
+      },
+      "trained_parameters": 1205800,
+      "network_parameters": 1206476,
+      "pack_sha256": "f35363571088da5fd26f409a6670a1af0f30cf70ec937ff81b276ec96cbb31c1",
+      "pack_bytes": 1666263,
+      "int8_dequantized_sha256": "51c4d7417e43300714e270b98314e14b47753a3e99a09ccd1003cd88bbe3eaa9"
+    },
+    "student": {
+      "file": "student.npz",
+      "sha256": "604503ce4d7347a8218d2ada158b6a26b8e7c4a0932c65223243a559a3452ca5",
+      "losses": [
+        0.7142127156257629,
+        0.9980905652046204,
+        0.8349801301956177,
+        0.9180310964584351,
+        0.9941527843475342,
+        0.9417784214019775,
+        0.838773787021637,
+        0.8335217237472534,
+        0.9091481566429138,
+        0.8764002323150635,
+        1.0016740560531616,
+        0.866943895816803,
+        0.9738050699234009,
+        1.0088354349136353,
+        0.7983856201171875,
+        0.9185746908187866,
+        0.8491969108581543,
+        0.9965250492095947,
+        0.9976027011871338,
+        0.8045791387557983,
+        0.892596960067749,
+        0.9270238280296326,
+        0.9022400975227356,
+        0.8831045031547546,
+        1.0042917728424072,
+        0.8146200180053711,
+        0.7513044476509094,
+        0.9038301110267639,
+        1.0052783489227295,
+        0.8756703734397888,
+        0.987989604473114,
+        0.8638628125190735
+      ],
+      "changed_per_module": {
+        "stem": 27714,
+        "stem_n": 186,
+        "blocks": 902189,
+        "aux": 0,
+        "tok1": 8305,
+        "tok2": 9312,
+        "fuse": 18240,
+        "attn": 75684,
+        "sc1": 1208,
+        "sc2": 3776,
+        "teach": 16,
+        "ctx": 13479,
+        "value": 0,
+        "utility": 0,
+        "wdl": 0,
+        "margin": 0,
+        "h0": 4896,
+        "din": 21792,
+        "aemb": 863,
+        "gru": 55872,
+        "whead": 485,
+        "bhead": 291,
+        "U": 3104,
+        "V": 512
+      },
+      "trained_parameters": 1205800,
+      "network_parameters": 1206476,
+      "pack_sha256": "704eaf011ea8eef70dc6833bf1e2c96cf0efc005360809600b010eb2e81aecfb",
+      "pack_bytes": 1666295,
+      "int8_dequantized_sha256": "ec02f3eecc9965b1d690a1dd27b06f54b5864c31d53c87258455ce0b108a9ffd"
+    }
+  },
+  "protocol": {
+    "source": "Freeze before labels, fitting, or any held decision read. Starting parameters for both arms are Sapling master6_actor_v1.npz f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713; exact int8 deployment compare.",
+    "objective": "Student cross-entropy to temperature-1 projected Master3s2 raw pre-search spatial policy. Control cross-entropy to argmax of the very same projected legal vector. On both arms keep the same shard order, batch order, optimizer, initialization, actual forward decoder prefix, legality mask and active (at least two legal actions) loss denominator. Source-executed action agreement is reported only, never used as training target; source orders in the historical-prefix mode have already formed that prefix.",
+    "updates": 32,
+    "roots_per_update": 8,
+    "learning_rate": 8e-05,
+    "weight_decay": 0.0001,
+    "clip_norm": 1.0,
+    "seed": 861920,
+    "exposure": "Each draw round shuffles terrains then draws from each terrain's shuffled rows without replacement until exhausted; both modes and domains retained. Each optimizer spends 256 root presentations. 512 combined.",
+    "parameters": "Train all shared spatial, token, attention, context, GRU and policy scoring parameters; omit only aux carbon and scalar/utility/WDL/margin heads from optimization. Unused style rows may still change by AdamW decay.",
+    "eligibility": "Benchmark on int8 public-prefix legal policy distributions. Require terrain-equal mean student KL to target lower than both control and parent on all held observed slots and strictly lower on at least half of held terrains against matched control. Require held native original executed legal-slot agreement within two percentage points of parent on recorded-prefix roots. Require actual normal-entry qualification separately. This only screens for a future diagnostic, never authorizes a native match automatically."
+  },
+  "held_metric": {
+    "parent": {
+      "all": {
+        "slots": 3165,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 420,
+            "soft_kl": 0.9899662944129348,
+            "target_modal_agreement": 0.5952380952380952,
+            "source_slots": 420,
+            "source_exact": 0.6285714285714286
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 434,
+            "soft_kl": 0.8492781631857053,
+            "target_modal_agreement": 0.6267281105990783,
+            "source_slots": 434,
+            "source_exact": 0.6658986175115207
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 206,
+            "soft_kl": 0.7921186680080433,
+            "target_modal_agreement": 0.616504854368932,
+            "source_slots": 206,
+            "source_exact": 0.6699029126213593
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 413,
+            "soft_kl": 0.818915732761779,
+            "target_modal_agreement": 0.6755447941888619,
+            "source_slots": 413,
+            "source_exact": 0.6803874092009685
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 416,
+            "soft_kl": 0.7956587455093722,
+            "target_modal_agreement": 0.6081730769230769,
+            "source_slots": 416,
+            "source_exact": 0.6490384615384616
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 218,
+            "soft_kl": 0.8697221804601686,
+            "target_modal_agreement": 0.6055045871559633,
+            "source_slots": 218,
+            "source_exact": 0.5504587155963303
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 432,
+            "soft_kl": 0.8233727948890451,
+            "target_modal_agreement": 0.6226851851851852,
+            "source_slots": 432,
+            "source_exact": 0.6689814814814815
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 208,
+            "soft_kl": 0.8594540025045087,
+            "target_modal_agreement": 0.6442307692307693,
+            "source_slots": 208,
+            "source_exact": 0.7259615384615384
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 205,
+            "soft_kl": 0.9782236893326853,
+            "target_modal_agreement": 0.5170731707317073,
+            "source_slots": 205,
+            "source_exact": 0.4975609756097561
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 213,
+            "soft_kl": 0.9536256626161238,
+            "target_modal_agreement": 0.5774647887323944,
+            "source_slots": 213,
+            "source_exact": 0.460093896713615
+          }
+        },
+        "map_equal_kl": 0.8730335933680367,
+        "map_equal_target_modal": 0.6089147432354064,
+        "map_equal_source_agreement": 0.619685543730646
+      },
+      "original_historical_prefix": {
+        "slots": 530,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 108,
+            "soft_kl": 0.9041915884272712,
+            "target_modal_agreement": 0.5833333333333334,
+            "source_slots": 108,
+            "source_exact": 0.5833333333333334
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 108,
+            "soft_kl": 0.9150513961153602,
+            "target_modal_agreement": 0.6018518518518519,
+            "source_slots": 108,
+            "source_exact": 0.6111111111111112
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 103,
+            "soft_kl": 0.7509611102881645,
+            "target_modal_agreement": 0.6990291262135923,
+            "source_slots": 103,
+            "source_exact": 0.6796116504854369
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 103,
+            "soft_kl": 0.8074120308600606,
+            "target_modal_agreement": 0.5825242718446602,
+            "source_slots": 103,
+            "source_exact": 0.5728155339805825
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 108,
+            "soft_kl": 0.7185496403896758,
+            "target_modal_agreement": 0.6481481481481481,
+            "source_slots": 108,
+            "source_exact": 0.6018518518518519
+          }
+        },
+        "map_equal_kl": 0.8192331532161065,
+        "map_equal_target_modal": 0.6229773462783171,
+        "map_equal_source_agreement": 0.6097446961524632
+      },
+      "history_prefix": {
+        "slots": 1584,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 210,
+            "soft_kl": 0.9911968432558512,
+            "target_modal_agreement": 0.5952380952380952,
+            "source_slots": 210,
+            "source_exact": 0.6285714285714286
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 217,
+            "soft_kl": 0.852899537626196,
+            "target_modal_agreement": 0.6267281105990783,
+            "source_slots": 217,
+            "source_exact": 0.6682027649769585
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 103,
+            "soft_kl": 0.8013997590684137,
+            "target_modal_agreement": 0.6116504854368932,
+            "source_slots": 103,
+            "source_exact": 0.6601941747572816
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 207,
+            "soft_kl": 0.8201183237864955,
+            "target_modal_agreement": 0.6714975845410628,
+            "source_slots": 207,
+            "source_exact": 0.6763285024154589
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 208,
+            "soft_kl": 0.7857649570762804,
+            "target_modal_agreement": 0.6105769230769231,
+            "source_slots": 208,
+            "source_exact": 0.6490384615384616
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 109,
+            "soft_kl": 0.8917095403449432,
+            "target_modal_agreement": 0.6146788990825688,
+            "source_slots": 109,
+            "source_exact": 0.5596330275229358
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.815811402572913,
+            "target_modal_agreement": 0.6203703703703703,
+            "source_slots": 216,
+            "source_exact": 0.6666666666666666
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 104,
+            "soft_kl": 0.8612617087460254,
+            "target_modal_agreement": 0.6442307692307693,
+            "source_slots": 104,
+            "source_exact": 0.7211538461538461
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 103,
+            "soft_kl": 0.9918217455544261,
+            "target_modal_agreement": 0.5145631067961165,
+            "source_slots": 103,
+            "source_exact": 0.5048543689320388
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 107,
+            "soft_kl": 0.9304806071157274,
+            "target_modal_agreement": 0.5794392523364486,
+            "source_slots": 107,
+            "source_exact": 0.4766355140186916
+          }
+        },
+        "map_equal_kl": 0.874246442514727,
+        "map_equal_target_modal": 0.6088973596708327,
+        "map_equal_source_agreement": 0.6211278755553769
+      },
+      "teacher_greedy_prefix": {
+        "slots": 1581,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 210,
+            "soft_kl": 0.9887357455700184,
+            "target_modal_agreement": 0.5952380952380952,
+            "source_slots": 210,
+            "source_exact": 0.6285714285714286
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 217,
+            "soft_kl": 0.8456567887452142,
+            "target_modal_agreement": 0.6267281105990783,
+            "source_slots": 217,
+            "source_exact": 0.663594470046083
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 103,
+            "soft_kl": 0.7828375769476729,
+            "target_modal_agreement": 0.6213592233009708,
+            "source_slots": 103,
+            "source_exact": 0.6796116504854369
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 206,
+            "soft_kl": 0.817707303916554,
+            "target_modal_agreement": 0.6796116504854369,
+            "source_slots": 206,
+            "source_exact": 0.6844660194174758
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 208,
+            "soft_kl": 0.8055525339424643,
+            "target_modal_agreement": 0.6057692307692307,
+            "source_slots": 208,
+            "source_exact": 0.6490384615384616
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 109,
+            "soft_kl": 0.847734820575394,
+            "target_modal_agreement": 0.5963302752293578,
+            "source_slots": 109,
+            "source_exact": 0.5412844036697247
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.830934187205177,
+            "target_modal_agreement": 0.625,
+            "source_slots": 216,
+            "source_exact": 0.6712962962962963
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 104,
+            "soft_kl": 0.8576462962629919,
+            "target_modal_agreement": 0.6442307692307693,
+            "source_slots": 104,
+            "source_exact": 0.7307692307692307
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 102,
+            "soft_kl": 0.9644923188342603,
+            "target_modal_agreement": 0.5196078431372549,
+            "source_slots": 102,
+            "source_exact": 0.49019607843137253
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 106,
+            "soft_kl": 0.9769890676967128,
+            "target_modal_agreement": 0.5754716981132075,
+            "source_slots": 106,
+            "source_exact": 0.44339622641509435
+          }
+        },
+        "map_equal_kl": 0.8718286639696459,
+        "map_equal_target_modal": 0.6089346896103401,
+        "map_equal_source_agreement": 0.6182224265640606
+      },
+      "collector": {
+        "slots": 2290,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 310,
+            "soft_kl": 0.978647321835943,
+            "target_modal_agreement": 0.6,
+            "source_slots": 310,
+            "source_exact": 0.6451612903225806
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 304,
+            "soft_kl": 0.7971206524991372,
+            "target_modal_agreement": 0.6447368421052632,
+            "source_slots": 304,
+            "source_exact": 0.680921052631579
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 162,
+            "soft_kl": 0.7473277631154304,
+            "target_modal_agreement": 0.654320987654321,
+            "source_slots": 162,
+            "source_exact": 0.6790123456790124
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 288,
+            "soft_kl": 0.7717321458467947,
+            "target_modal_agreement": 0.71875,
+            "source_slots": 288,
+            "source_exact": 0.6840277777777778
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 302,
+            "soft_kl": 0.7263300007203178,
+            "target_modal_agreement": 0.6390728476821192,
+            "source_slots": 302,
+            "source_exact": 0.695364238410596
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 154,
+            "soft_kl": 0.8291703466528191,
+            "target_modal_agreement": 0.6428571428571429,
+            "source_slots": 154,
+            "source_exact": 0.5974025974025974
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 306,
+            "soft_kl": 0.6883176471673333,
+            "target_modal_agreement": 0.7254901960784313,
+            "source_slots": 306,
+            "source_exact": 0.738562091503268
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 168,
+            "soft_kl": 0.8582547494662248,
+            "target_modal_agreement": 0.6309523809523809,
+            "source_slots": 168,
+            "source_exact": 0.7023809523809523
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 138,
+            "soft_kl": 0.9118997746909192,
+            "target_modal_agreement": 0.5579710144927537,
+            "source_slots": 138,
+            "source_exact": 0.5289855072463768
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 158,
+            "soft_kl": 0.9157895276910623,
+            "target_modal_agreement": 0.620253164556962,
+            "source_slots": 158,
+            "source_exact": 0.45569620253164556
+          }
+        },
+        "map_equal_kl": 0.8224589929685981,
+        "map_equal_target_modal": 0.6434404576379374,
+        "map_equal_source_agreement": 0.6407514055886386
+      },
+      "planter": {
+        "slots": 648,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 88,
+            "soft_kl": 1.150098006478575,
+            "target_modal_agreement": 0.5454545454545454,
+            "source_slots": 88,
+            "source_exact": 0.5227272727272727
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 98,
+            "soft_kl": 1.1321657157834917,
+            "target_modal_agreement": 0.5714285714285714,
+            "source_slots": 98,
+            "source_exact": 0.5714285714285714
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 28,
+            "soft_kl": 1.1555504325430899,
+            "target_modal_agreement": 0.39285714285714285,
+            "source_slots": 28,
+            "source_exact": 0.5714285714285714
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 94,
+            "soft_kl": 1.0274430598745732,
+            "target_modal_agreement": 0.574468085106383,
+            "source_slots": 94,
+            "source_exact": 0.6170212765957447
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 90,
+            "soft_kl": 1.1573923551233676,
+            "target_modal_agreement": 0.4666666666666667,
+            "source_slots": 90,
+            "source_exact": 0.4
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 44,
+            "soft_kl": 1.0971167505752275,
+            "target_modal_agreement": 0.5227272727272727,
+            "source_slots": 44,
+            "source_exact": 0.36363636363636365
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 88,
+            "soft_kl": 1.3914162362960605,
+            "target_modal_agreement": 0.26136363636363635,
+            "source_slots": 88,
+            "source_exact": 0.3977272727272727
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 32,
+            "soft_kl": 1.0138884792944958,
+            "target_modal_agreement": 0.6875,
+            "source_slots": 32,
+            "source_exact": 0.78125
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 48,
+            "soft_kl": 1.2083262668591648,
+            "target_modal_agreement": 0.4791666666666667,
+            "source_slots": 48,
+            "source_exact": 0.3958333333333333
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 38,
+            "soft_kl": 1.250820423436048,
+            "target_modal_agreement": 0.39473684210526316,
+            "source_slots": 38,
+            "source_exact": 0.42105263157894735
+          }
+        },
+        "map_equal_kl": 1.1584217726264094,
+        "map_equal_target_modal": 0.4896369429376148,
+        "map_equal_source_agreement": 0.5042105293456076
+      },
+      "base": {
+        "slots": 227,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 22,
+            "soft_kl": 0.5089340597352562,
+            "target_modal_agreement": 0.7272727272727273,
+            "source_slots": 22,
+            "source_exact": 0.8181818181818182
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 32,
+            "soft_kl": 0.4784313848773811,
+            "target_modal_agreement": 0.625,
+            "source_slots": 32,
+            "source_exact": 0.8125
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 16,
+            "soft_kl": 0.6096209921094186,
+            "target_modal_agreement": 0.625,
+            "source_slots": 16,
+            "source_exact": 0.75
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 31,
+            "soft_kl": 0.6249578064041273,
+            "target_modal_agreement": 0.5806451612903226,
+            "source_slots": 31,
+            "source_exact": 0.8387096774193549
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 24,
+            "soft_kl": 0.3115444147191573,
+            "target_modal_agreement": 0.75,
+            "source_slots": 24,
+            "source_exact": 1.0
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 20,
+            "soft_kl": 0.681703246523629,
+            "target_modal_agreement": 0.5,
+            "source_slots": 20,
+            "source_exact": 0.6
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 38,
+            "soft_kl": 0.595453120126583,
+            "target_modal_agreement": 0.631578947368421,
+            "source_slots": 38,
+            "source_exact": 0.7368421052631579
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 8,
+            "soft_kl": 0.26690040914852176,
+            "target_modal_agreement": 0.75,
+            "source_slots": 8,
+            "source_exact": 1.0
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 19,
+            "soft_kl": 0.8786329787691434,
+            "target_modal_agreement": 0.3157894736842105,
+            "source_slots": 19,
+            "source_exact": 0.5263157894736842
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 17,
+            "soft_kl": 0.6409614512633368,
+            "target_modal_agreement": 0.5882352941176471,
+            "source_slots": 17,
+            "source_exact": 0.5882352941176471
+          }
+        },
+        "map_equal_kl": 0.5597139863676555,
+        "map_equal_target_modal": 0.6093521603733328,
+        "map_equal_source_agreement": 0.7670784684455663
+      },
+      "elite": {
+        "slots": 1050,
+        "map_count": 5,
+        "by_terrain": {
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 206,
+            "soft_kl": 0.7921186680080433,
+            "target_modal_agreement": 0.616504854368932,
+            "source_slots": 206,
+            "source_exact": 0.6699029126213593
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 218,
+            "soft_kl": 0.8697221804601686,
+            "target_modal_agreement": 0.6055045871559633,
+            "source_slots": 218,
+            "source_exact": 0.5504587155963303
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 208,
+            "soft_kl": 0.8594540025045087,
+            "target_modal_agreement": 0.6442307692307693,
+            "source_slots": 208,
+            "source_exact": 0.7259615384615384
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 205,
+            "soft_kl": 0.9782236893326853,
+            "target_modal_agreement": 0.5170731707317073,
+            "source_slots": 205,
+            "source_exact": 0.4975609756097561
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 213,
+            "soft_kl": 0.9536256626161238,
+            "target_modal_agreement": 0.5774647887323944,
+            "source_slots": 213,
+            "source_exact": 0.460093896713615
+          }
+        },
+        "map_equal_kl": 0.8906288405843059,
+        "map_equal_target_modal": 0.5921556340439532,
+        "map_equal_source_agreement": 0.5807956078005198
+      },
+      "original": {
+        "slots": 1060,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 216,
+            "soft_kl": 0.9043700282581548,
+            "target_modal_agreement": 0.5833333333333334,
+            "source_slots": 216,
+            "source_exact": 0.5833333333333334
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 216,
+            "soft_kl": 0.9090888868868517,
+            "target_modal_agreement": 0.6064814814814815,
+            "source_slots": 216,
+            "source_exact": 0.6111111111111112
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 206,
+            "soft_kl": 0.7475004459861283,
+            "target_modal_agreement": 0.7038834951456311,
+            "source_slots": 206,
+            "source_exact": 0.6844660194174758
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 206,
+            "soft_kl": 0.8284051672197977,
+            "target_modal_agreement": 0.5825242718446602,
+            "source_slots": 206,
+            "source_exact": 0.5728155339805825
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.7270973114634903,
+            "target_modal_agreement": 0.6527777777777778,
+            "source_slots": 216,
+            "source_exact": 0.6064814814814815
+          }
+        },
+        "map_equal_kl": 0.8232923679628847,
+        "map_equal_target_modal": 0.6258000719165768,
+        "map_equal_source_agreement": 0.6116414958647968
+      },
+      "sapling_visited": {
+        "slots": 1055,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 204,
+            "soft_kl": 1.0805976350474076,
+            "target_modal_agreement": 0.6078431372549019,
+            "source_slots": 204,
+            "source_exact": 0.6764705882352942
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 218,
+            "soft_kl": 0.790016161720349,
+            "target_modal_agreement": 0.6467889908256881,
+            "source_slots": 218,
+            "source_exact": 0.7201834862385321
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 207,
+            "soft_kl": 0.8899860181520399,
+            "target_modal_agreement": 0.6473429951690821,
+            "source_slots": 207,
+            "source_exact": 0.6763285024154589
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 210,
+            "soft_kl": 0.7635360651648595,
+            "target_modal_agreement": 0.6333333333333333,
+            "source_slots": 210,
+            "source_exact": 0.7238095238095238
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.9196482783145998,
+            "target_modal_agreement": 0.5925925925925926,
+            "source_slots": 216,
+            "source_exact": 0.7314814814814815
+          }
+        },
+        "map_equal_kl": 0.8887568316798511,
+        "map_equal_target_modal": 0.6255802098351196,
+        "map_equal_source_agreement": 0.7056547164360581
+      }
+    },
+    "control": {
+      "all": {
+        "slots": 3165,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 420,
+            "soft_kl": 0.9397027773566697,
+            "target_modal_agreement": 0.6190476190476191,
+            "source_slots": 420,
+            "source_exact": 0.6404761904761904
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 434,
+            "soft_kl": 0.811547410894354,
+            "target_modal_agreement": 0.6336405529953917,
+            "source_slots": 434,
+            "source_exact": 0.6290322580645161
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 206,
+            "soft_kl": 0.7451290021701775,
+            "target_modal_agreement": 0.6553398058252428,
+            "source_slots": 206,
+            "source_exact": 0.6650485436893204
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 413,
+            "soft_kl": 0.807756605223313,
+            "target_modal_agreement": 0.6803874092009685,
+            "source_slots": 413,
+            "source_exact": 0.6658595641646489
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 416,
+            "soft_kl": 0.7565207134691647,
+            "target_modal_agreement": 0.6370192307692307,
+            "source_slots": 416,
+            "source_exact": 0.6514423076923077
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 218,
+            "soft_kl": 0.825098194221645,
+            "target_modal_agreement": 0.5871559633027523,
+            "source_slots": 218,
+            "source_exact": 0.6100917431192661
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 432,
+            "soft_kl": 0.7525171852987674,
+            "target_modal_agreement": 0.6875,
+            "source_slots": 432,
+            "source_exact": 0.6944444444444444
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 208,
+            "soft_kl": 0.7674736763306951,
+            "target_modal_agreement": 0.6826923076923077,
+            "source_slots": 208,
+            "source_exact": 0.7403846153846154
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 205,
+            "soft_kl": 0.9122888617245211,
+            "target_modal_agreement": 0.5365853658536586,
+            "source_slots": 205,
+            "source_exact": 0.5219512195121951
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 213,
+            "soft_kl": 0.897562859010093,
+            "target_modal_agreement": 0.6056338028169014,
+            "source_slots": 213,
+            "source_exact": 0.460093896713615
+          }
+        },
+        "map_equal_kl": 0.8215597285699401,
+        "map_equal_target_modal": 0.6325002057504073,
+        "map_equal_source_agreement": 0.6278824783261119
+      },
+      "original_historical_prefix": {
+        "slots": 530,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 108,
+            "soft_kl": 0.846597578896389,
+            "target_modal_agreement": 0.6296296296296297,
+            "source_slots": 108,
+            "source_exact": 0.6111111111111112
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 108,
+            "soft_kl": 0.896292480371225,
+            "target_modal_agreement": 0.5925925925925926,
+            "source_slots": 108,
+            "source_exact": 0.5648148148148148
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 103,
+            "soft_kl": 0.7374384144148024,
+            "target_modal_agreement": 0.6893203883495146,
+            "source_slots": 103,
+            "source_exact": 0.6601941747572816
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 103,
+            "soft_kl": 0.7686822051645471,
+            "target_modal_agreement": 0.6310679611650486,
+            "source_slots": 103,
+            "source_exact": 0.6116504854368932
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 108,
+            "soft_kl": 0.6366907863930525,
+            "target_modal_agreement": 0.7314814814814815,
+            "source_slots": 108,
+            "source_exact": 0.6666666666666666
+          }
+        },
+        "map_equal_kl": 0.7771402930480033,
+        "map_equal_target_modal": 0.6548184106436534,
+        "map_equal_source_agreement": 0.6228874505573535
+      },
+      "history_prefix": {
+        "slots": 1584,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 210,
+            "soft_kl": 0.9400702380712785,
+            "target_modal_agreement": 0.6190476190476191,
+            "source_slots": 210,
+            "source_exact": 0.6428571428571429
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 217,
+            "soft_kl": 0.815425558449658,
+            "target_modal_agreement": 0.6359447004608295,
+            "source_slots": 217,
+            "source_exact": 0.631336405529954
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 103,
+            "soft_kl": 0.7537400776588804,
+            "target_modal_agreement": 0.6407766990291263,
+            "source_slots": 103,
+            "source_exact": 0.6504854368932039
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 207,
+            "soft_kl": 0.8103283454617896,
+            "target_modal_agreement": 0.6763285024154589,
+            "source_slots": 207,
+            "source_exact": 0.6618357487922706
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 208,
+            "soft_kl": 0.7467700390396156,
+            "target_modal_agreement": 0.6346153846153846,
+            "source_slots": 208,
+            "source_exact": 0.6538461538461539
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 109,
+            "soft_kl": 0.8441458022355405,
+            "target_modal_agreement": 0.5779816513761468,
+            "source_slots": 109,
+            "source_exact": 0.6055045871559633
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.7492427694395986,
+            "target_modal_agreement": 0.6944444444444444,
+            "source_slots": 216,
+            "source_exact": 0.6990740740740741
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 104,
+            "soft_kl": 0.7702734969789591,
+            "target_modal_agreement": 0.6826923076923077,
+            "source_slots": 104,
+            "source_exact": 0.7307692307692307
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 103,
+            "soft_kl": 0.9234741717295453,
+            "target_modal_agreement": 0.5242718446601942,
+            "source_slots": 103,
+            "source_exact": 0.5339805825242718
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 107,
+            "soft_kl": 0.8787621194046105,
+            "target_modal_agreement": 0.616822429906542,
+            "source_slots": 107,
+            "source_exact": 0.4672897196261682
+          }
+        },
+        "map_equal_kl": 0.8232232618469476,
+        "map_equal_target_modal": 0.6302925583648054,
+        "map_equal_source_agreement": 0.6276979082068433
+      },
+      "teacher_greedy_prefix": {
+        "slots": 1581,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 210,
+            "soft_kl": 0.939335316642061,
+            "target_modal_agreement": 0.6190476190476191,
+            "source_slots": 210,
+            "source_exact": 0.638095238095238
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 217,
+            "soft_kl": 0.8076692633390498,
+            "target_modal_agreement": 0.631336405529954,
+            "source_slots": 217,
+            "source_exact": 0.6267281105990783
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 103,
+            "soft_kl": 0.7365179266814745,
+            "target_modal_agreement": 0.6699029126213593,
+            "source_slots": 103,
+            "source_exact": 0.6796116504854369
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 206,
+            "soft_kl": 0.8051723808089214,
+            "target_modal_agreement": 0.6844660194174758,
+            "source_slots": 206,
+            "source_exact": 0.6699029126213593
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 208,
+            "soft_kl": 0.7662713878987139,
+            "target_modal_agreement": 0.6394230769230769,
+            "source_slots": 208,
+            "source_exact": 0.6490384615384616
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 109,
+            "soft_kl": 0.8060505862077493,
+            "target_modal_agreement": 0.5963302752293578,
+            "source_slots": 109,
+            "source_exact": 0.6146788990825688
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.7557916011579363,
+            "target_modal_agreement": 0.6805555555555556,
+            "source_slots": 216,
+            "source_exact": 0.6898148148148148
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 104,
+            "soft_kl": 0.7646738556824306,
+            "target_modal_agreement": 0.6826923076923077,
+            "source_slots": 104,
+            "source_exact": 0.75
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 102,
+            "soft_kl": 0.9009938918174869,
+            "target_modal_agreement": 0.5490196078431373,
+            "source_slots": 102,
+            "source_exact": 0.5098039215686274
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 106,
+            "soft_kl": 0.9165409640835516,
+            "target_modal_agreement": 0.5943396226415094,
+            "source_slots": 106,
+            "source_exact": 0.4528301886792453
+          }
+        },
+        "map_equal_kl": 0.8199017174319376,
+        "map_equal_target_modal": 0.6347113402501352,
+        "map_equal_source_agreement": 0.6280504197484831
+      },
+      "collector": {
+        "slots": 2290,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 310,
+            "soft_kl": 0.9314673464136077,
+            "target_modal_agreement": 0.6129032258064516,
+            "source_slots": 310,
+            "source_exact": 0.6548387096774193
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 304,
+            "soft_kl": 0.7673195981670798,
+            "target_modal_agreement": 0.6644736842105263,
+            "source_slots": 304,
+            "source_exact": 0.6743421052631579
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 162,
+            "soft_kl": 0.7081256686630513,
+            "target_modal_agreement": 0.6666666666666666,
+            "source_slots": 162,
+            "source_exact": 0.691358024691358
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 288,
+            "soft_kl": 0.7623234067066236,
+            "target_modal_agreement": 0.7083333333333334,
+            "source_slots": 288,
+            "source_exact": 0.6736111111111112
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 302,
+            "soft_kl": 0.6775341278830175,
+            "target_modal_agreement": 0.6887417218543046,
+            "source_slots": 302,
+            "source_exact": 0.7119205298013245
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 154,
+            "soft_kl": 0.7808491953499018,
+            "target_modal_agreement": 0.6168831168831169,
+            "source_slots": 154,
+            "source_exact": 0.6558441558441559
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 306,
+            "soft_kl": 0.6387058332258648,
+            "target_modal_agreement": 0.7777777777777778,
+            "source_slots": 306,
+            "source_exact": 0.7581699346405228
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 168,
+            "soft_kl": 0.7748299433438399,
+            "target_modal_agreement": 0.6607142857142857,
+            "source_slots": 168,
+            "source_exact": 0.7321428571428571
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 138,
+            "soft_kl": 0.8337331275258806,
+            "target_modal_agreement": 0.5869565217391305,
+            "source_slots": 138,
+            "source_exact": 0.5797101449275363
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 158,
+            "soft_kl": 0.8394403786879051,
+            "target_modal_agreement": 0.6455696202531646,
+            "source_slots": 158,
+            "source_exact": 0.46835443037974683
+          }
+        },
+        "map_equal_kl": 0.7714328625966771,
+        "map_equal_target_modal": 0.6629019954238758,
+        "map_equal_source_agreement": 0.660029200347919
+      },
+      "planter": {
+        "slots": 648,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 88,
+            "soft_kl": 1.1201262244377548,
+            "target_modal_agreement": 0.5909090909090909,
+            "source_slots": 88,
+            "source_exact": 0.5681818181818182
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 98,
+            "soft_kl": 1.1012202119857633,
+            "target_modal_agreement": 0.4897959183673469,
+            "source_slots": 98,
+            "source_exact": 0.45918367346938777
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 28,
+            "soft_kl": 1.1088769261510305,
+            "target_modal_agreement": 0.5357142857142857,
+            "source_slots": 28,
+            "source_exact": 0.5357142857142857
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 94,
+            "soft_kl": 1.0491681912918545,
+            "target_modal_agreement": 0.5851063829787234,
+            "source_slots": 94,
+            "source_exact": 0.6276595744680851
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 90,
+            "soft_kl": 1.1844621220429914,
+            "target_modal_agreement": 0.3888888888888889,
+            "source_slots": 90,
+            "source_exact": 0.4
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 44,
+            "soft_kl": 1.0819328997277926,
+            "target_modal_agreement": 0.4772727272727273,
+            "source_slots": 44,
+            "source_exact": 0.4090909090909091
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 88,
+            "soft_kl": 1.262539766574732,
+            "target_modal_agreement": 0.3181818181818182,
+            "source_slots": 88,
+            "source_exact": 0.42045454545454547
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 32,
+            "soft_kl": 0.907707349768391,
+            "target_modal_agreement": 0.71875,
+            "source_slots": 32,
+            "source_exact": 0.78125
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 48,
+            "soft_kl": 1.181738692595025,
+            "target_modal_agreement": 0.4375,
+            "source_slots": 48,
+            "source_exact": 0.3958333333333333
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 38,
+            "soft_kl": 1.300605584800154,
+            "target_modal_agreement": 0.42105263157894735,
+            "source_slots": 38,
+            "source_exact": 0.39473684210526316
+          }
+        },
+        "map_equal_kl": 1.1298377969375488,
+        "map_equal_target_modal": 0.4963171743891829,
+        "map_equal_source_agreement": 0.4992104981817628
+      },
+      "base": {
+        "slots": 227,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 22,
+            "soft_kl": 0.3340536977754773,
+            "target_modal_agreement": 0.8181818181818182,
+            "source_slots": 22,
+            "source_exact": 0.7272727272727273
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 32,
+            "soft_kl": 0.3445886784610178,
+            "target_modal_agreement": 0.78125,
+            "source_slots": 32,
+            "source_exact": 0.71875
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 16,
+            "soft_kl": 0.4832288869633381,
+            "target_modal_agreement": 0.75,
+            "source_slots": 16,
+            "source_exact": 0.625
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 31,
+            "soft_kl": 0.4978234465898828,
+            "target_modal_agreement": 0.7096774193548387,
+            "source_slots": 31,
+            "source_exact": 0.7096774193548387
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 24,
+            "soft_kl": 0.14565496660966742,
+            "target_modal_agreement": 0.9166666666666666,
+            "source_slots": 24,
+            "source_exact": 0.8333333333333334
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 20,
+            "soft_kl": 0.6007791334205408,
+            "target_modal_agreement": 0.6,
+            "source_slots": 20,
+            "source_exact": 0.7
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 38,
+            "soft_kl": 0.48789314798359146,
+            "target_modal_agreement": 0.8157894736842105,
+            "source_slots": 38,
+            "source_exact": 0.8157894736842105
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 8,
+            "soft_kl": 0.052057375303866324,
+            "target_modal_agreement": 1.0,
+            "source_slots": 8,
+            "source_exact": 0.75
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 19,
+            "soft_kl": 0.8021362005470579,
+            "target_modal_agreement": 0.42105263157894735,
+            "source_slots": 19,
+            "source_exact": 0.42105263157894735
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 17,
+            "soft_kl": 0.5368409949444093,
+            "target_modal_agreement": 0.6470588235294118,
+            "source_slots": 17,
+            "source_exact": 0.5294117647058824
+          }
+        },
+        "map_equal_kl": 0.4285056528598849,
+        "map_equal_target_modal": 0.7459676832995894,
+        "map_equal_source_agreement": 0.683028734992994
+      },
+      "elite": {
+        "slots": 1050,
+        "map_count": 5,
+        "by_terrain": {
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 206,
+            "soft_kl": 0.7451290021701775,
+            "target_modal_agreement": 0.6553398058252428,
+            "source_slots": 206,
+            "source_exact": 0.6650485436893204
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 218,
+            "soft_kl": 0.825098194221645,
+            "target_modal_agreement": 0.5871559633027523,
+            "source_slots": 218,
+            "source_exact": 0.6100917431192661
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 208,
+            "soft_kl": 0.7674736763306951,
+            "target_modal_agreement": 0.6826923076923077,
+            "source_slots": 208,
+            "source_exact": 0.7403846153846154
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 205,
+            "soft_kl": 0.9122888617245211,
+            "target_modal_agreement": 0.5365853658536586,
+            "source_slots": 205,
+            "source_exact": 0.5219512195121951
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 213,
+            "soft_kl": 0.897562859010093,
+            "target_modal_agreement": 0.6056338028169014,
+            "source_slots": 213,
+            "source_exact": 0.460093896713615
+          }
+        },
+        "map_equal_kl": 0.8295105186914263,
+        "map_equal_target_modal": 0.6134814490981726,
+        "map_equal_source_agreement": 0.5995140036838025
+      },
+      "original": {
+        "slots": 1060,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 216,
+            "soft_kl": 0.8466527900545167,
+            "target_modal_agreement": 0.6296296296296297,
+            "source_slots": 216,
+            "source_exact": 0.6111111111111112
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 216,
+            "soft_kl": 0.8897581315269586,
+            "target_modal_agreement": 0.5925925925925926,
+            "source_slots": 216,
+            "source_exact": 0.5601851851851852
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 206,
+            "soft_kl": 0.7332912602077949,
+            "target_modal_agreement": 0.6941747572815534,
+            "source_slots": 206,
+            "source_exact": 0.6650485436893204
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 206,
+            "soft_kl": 0.7870966086139761,
+            "target_modal_agreement": 0.6310679611650486,
+            "source_slots": 206,
+            "source_exact": 0.6116504854368932
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.6401674626004963,
+            "target_modal_agreement": 0.7268518518518519,
+            "source_slots": 216,
+            "source_exact": 0.6620370370370371
+          }
+        },
+        "map_equal_kl": 0.7793932506007485,
+        "map_equal_target_modal": 0.6548633585041352,
+        "map_equal_source_agreement": 0.6220064724919094
+      },
+      "sapling_visited": {
+        "slots": 1055,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 204,
+            "soft_kl": 1.0382262933236552,
+            "target_modal_agreement": 0.6078431372549019,
+            "source_slots": 204,
+            "source_exact": 0.6715686274509803
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 218,
+            "soft_kl": 0.7340542198088376,
+            "target_modal_agreement": 0.6743119266055045,
+            "source_slots": 218,
+            "source_exact": 0.6972477064220184
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 207,
+            "soft_kl": 0.8818622142725723,
+            "target_modal_agreement": 0.6666666666666666,
+            "source_slots": 207,
+            "source_exact": 0.6666666666666666
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 210,
+            "soft_kl": 0.7265272163271115,
+            "target_modal_agreement": 0.6428571428571429,
+            "source_slots": 210,
+            "source_exact": 0.6904761904761905
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.8648669079970384,
+            "target_modal_agreement": 0.6481481481481481,
+            "source_slots": 216,
+            "source_exact": 0.7268518518518519
+          }
+        },
+        "map_equal_kl": 0.8491073703458432,
+        "map_equal_target_modal": 0.6479654043064729,
+        "map_equal_source_agreement": 0.6905622085735417
+      }
+    },
+    "student": {
+      "all": {
+        "slots": 3165,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 420,
+            "soft_kl": 0.9384670153071519,
+            "target_modal_agreement": 0.6261904761904762,
+            "source_slots": 420,
+            "source_exact": 0.6452380952380953
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 434,
+            "soft_kl": 0.8095522503286712,
+            "target_modal_agreement": 0.6428571428571429,
+            "source_slots": 434,
+            "source_exact": 0.6359447004608295
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 206,
+            "soft_kl": 0.7456607531666681,
+            "target_modal_agreement": 0.6407766990291263,
+            "source_slots": 206,
+            "source_exact": 0.6504854368932039
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 413,
+            "soft_kl": 0.8085968466012727,
+            "target_modal_agreement": 0.6803874092009685,
+            "source_slots": 413,
+            "source_exact": 0.6658595641646489
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 416,
+            "soft_kl": 0.7554820240032112,
+            "target_modal_agreement": 0.6370192307692307,
+            "source_slots": 416,
+            "source_exact": 0.65625
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 218,
+            "soft_kl": 0.823220024795312,
+            "target_modal_agreement": 0.5871559633027523,
+            "source_slots": 218,
+            "source_exact": 0.6100917431192661
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 432,
+            "soft_kl": 0.7492917881157972,
+            "target_modal_agreement": 0.6828703703703703,
+            "source_slots": 432,
+            "source_exact": 0.6944444444444444
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 208,
+            "soft_kl": 0.7648113070105756,
+            "target_modal_agreement": 0.6538461538461539,
+            "source_slots": 208,
+            "source_exact": 0.7211538461538461
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 205,
+            "soft_kl": 0.9099684169835295,
+            "target_modal_agreement": 0.5365853658536586,
+            "source_slots": 205,
+            "source_exact": 0.5121951219512195
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 213,
+            "soft_kl": 0.8971750823434439,
+            "target_modal_agreement": 0.6103286384976526,
+            "source_slots": 213,
+            "source_exact": 0.4507042253521127
+          }
+        },
+        "map_equal_kl": 0.8202225508655634,
+        "map_equal_target_modal": 0.6298017449917533,
+        "map_equal_source_agreement": 0.6242367177777667
+      },
+      "original_historical_prefix": {
+        "slots": 530,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 108,
+            "soft_kl": 0.844301053732204,
+            "target_modal_agreement": 0.6296296296296297,
+            "source_slots": 108,
+            "source_exact": 0.6111111111111112
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 108,
+            "soft_kl": 0.8945745566898798,
+            "target_modal_agreement": 0.6018518518518519,
+            "source_slots": 108,
+            "source_exact": 0.5740740740740741
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 103,
+            "soft_kl": 0.7379020378108465,
+            "target_modal_agreement": 0.6893203883495146,
+            "source_slots": 103,
+            "source_exact": 0.6601941747572816
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 103,
+            "soft_kl": 0.7683291277792318,
+            "target_modal_agreement": 0.6213592233009708,
+            "source_slots": 103,
+            "source_exact": 0.6213592233009708
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 108,
+            "soft_kl": 0.6359577056555908,
+            "target_modal_agreement": 0.7222222222222222,
+            "source_slots": 108,
+            "source_exact": 0.6574074074074074
+          }
+        },
+        "map_equal_kl": 0.7762128963335505,
+        "map_equal_target_modal": 0.6528766630708379,
+        "map_equal_source_agreement": 0.624829198130169
+      },
+      "history_prefix": {
+        "slots": 1584,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 210,
+            "soft_kl": 0.9386228333330325,
+            "target_modal_agreement": 0.6285714285714286,
+            "source_slots": 210,
+            "source_exact": 0.6476190476190476
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 217,
+            "soft_kl": 0.8133809248049688,
+            "target_modal_agreement": 0.6451612903225806,
+            "source_slots": 217,
+            "source_exact": 0.6405529953917051
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 103,
+            "soft_kl": 0.7541909264351069,
+            "target_modal_agreement": 0.6310679611650486,
+            "source_slots": 103,
+            "source_exact": 0.6407766990291263
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 207,
+            "soft_kl": 0.8115835866069108,
+            "target_modal_agreement": 0.6763285024154589,
+            "source_slots": 207,
+            "source_exact": 0.6618357487922706
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 208,
+            "soft_kl": 0.745962039384217,
+            "target_modal_agreement": 0.6346153846153846,
+            "source_slots": 208,
+            "source_exact": 0.6586538461538461
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 109,
+            "soft_kl": 0.8419021768554444,
+            "target_modal_agreement": 0.5779816513761468,
+            "source_slots": 109,
+            "source_exact": 0.6055045871559633
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.745985020441779,
+            "target_modal_agreement": 0.6805555555555556,
+            "source_slots": 216,
+            "source_exact": 0.6944444444444444
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 104,
+            "soft_kl": 0.767638213498582,
+            "target_modal_agreement": 0.6538461538461539,
+            "source_slots": 104,
+            "source_exact": 0.7211538461538461
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 103,
+            "soft_kl": 0.9214545391791131,
+            "target_modal_agreement": 0.5242718446601942,
+            "source_slots": 103,
+            "source_exact": 0.5339805825242718
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 107,
+            "soft_kl": 0.878660548190622,
+            "target_modal_agreement": 0.616822429906542,
+            "source_slots": 107,
+            "source_exact": 0.45794392523364486
+          }
+        },
+        "map_equal_kl": 0.8219380808729776,
+        "map_equal_target_modal": 0.6269222202434493,
+        "map_equal_source_agreement": 0.6262465722498166
+      },
+      "teacher_greedy_prefix": {
+        "slots": 1581,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 210,
+            "soft_kl": 0.938311197281271,
+            "target_modal_agreement": 0.6238095238095238,
+            "source_slots": 210,
+            "source_exact": 0.6428571428571429
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 217,
+            "soft_kl": 0.8057235758523735,
+            "target_modal_agreement": 0.6405529953917051,
+            "source_slots": 217,
+            "source_exact": 0.631336405529954
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 103,
+            "soft_kl": 0.7371305798982292,
+            "target_modal_agreement": 0.6504854368932039,
+            "source_slots": 103,
+            "source_exact": 0.6601941747572816
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 206,
+            "soft_kl": 0.8055956078577433,
+            "target_modal_agreement": 0.6844660194174758,
+            "source_slots": 206,
+            "source_exact": 0.6699029126213593
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 208,
+            "soft_kl": 0.7650020086222054,
+            "target_modal_agreement": 0.6394230769230769,
+            "source_slots": 208,
+            "source_exact": 0.6538461538461539
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 109,
+            "soft_kl": 0.8045378727351793,
+            "target_modal_agreement": 0.5963302752293578,
+            "source_slots": 109,
+            "source_exact": 0.6146788990825688
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.7525985557898158,
+            "target_modal_agreement": 0.6851851851851852,
+            "source_slots": 216,
+            "source_exact": 0.6944444444444444
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 104,
+            "soft_kl": 0.7619844005225693,
+            "target_modal_agreement": 0.6538461538461539,
+            "source_slots": 104,
+            "source_exact": 0.7211538461538461
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 102,
+            "soft_kl": 0.8983696857468126,
+            "target_modal_agreement": 0.5490196078431373,
+            "source_slots": 102,
+            "source_exact": 0.49019607843137253
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 106,
+            "soft_kl": 0.915864281912802,
+            "target_modal_agreement": 0.6037735849056604,
+            "source_slots": 106,
+            "source_exact": 0.44339622641509435
+          }
+        },
+        "map_equal_kl": 0.8185117766219001,
+        "map_equal_target_modal": 0.632689185944448,
+        "map_equal_source_agreement": 0.6222006284139218
+      },
+      "collector": {
+        "slots": 2290,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 310,
+            "soft_kl": 0.9324794295644178,
+            "target_modal_agreement": 0.6161290322580645,
+            "source_slots": 310,
+            "source_exact": 0.6548387096774193
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 304,
+            "soft_kl": 0.7662349170559625,
+            "target_modal_agreement": 0.6743421052631579,
+            "source_slots": 304,
+            "source_exact": 0.6842105263157895
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 162,
+            "soft_kl": 0.7094079892158455,
+            "target_modal_agreement": 0.654320987654321,
+            "source_slots": 162,
+            "source_exact": 0.6790123456790124
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 288,
+            "soft_kl": 0.7649325876734235,
+            "target_modal_agreement": 0.7118055555555556,
+            "source_slots": 288,
+            "source_exact": 0.6770833333333334
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 302,
+            "soft_kl": 0.6756604095218736,
+            "target_modal_agreement": 0.695364238410596,
+            "source_slots": 302,
+            "source_exact": 0.7119205298013245
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 154,
+            "soft_kl": 0.7788154646066842,
+            "target_modal_agreement": 0.6168831168831169,
+            "source_slots": 154,
+            "source_exact": 0.6558441558441559
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 306,
+            "soft_kl": 0.6344546818343997,
+            "target_modal_agreement": 0.7712418300653595,
+            "source_slots": 306,
+            "source_exact": 0.7516339869281046
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 168,
+            "soft_kl": 0.7699694118703465,
+            "target_modal_agreement": 0.6309523809523809,
+            "source_slots": 168,
+            "source_exact": 0.7142857142857143
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 138,
+            "soft_kl": 0.8342236473184952,
+            "target_modal_agreement": 0.5942028985507246,
+            "source_slots": 138,
+            "source_exact": 0.572463768115942
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 158,
+            "soft_kl": 0.8398636160837107,
+            "target_modal_agreement": 0.6455696202531646,
+            "source_slots": 158,
+            "source_exact": 0.46835443037974683
+          }
+        },
+        "map_equal_kl": 0.770604215474516,
+        "map_equal_target_modal": 0.661081176584644,
+        "map_equal_source_agreement": 0.6569647500360543
+      },
+      "planter": {
+        "slots": 648,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 88,
+            "soft_kl": 1.111589283365837,
+            "target_modal_agreement": 0.5909090909090909,
+            "source_slots": 88,
+            "source_exact": 0.5681818181818182
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 98,
+            "soft_kl": 1.0956696036741334,
+            "target_modal_agreement": 0.5,
+            "source_slots": 98,
+            "source_exact": 0.45918367346938777
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 28,
+            "soft_kl": 1.1059580798950368,
+            "target_modal_agreement": 0.5,
+            "source_slots": 28,
+            "source_exact": 0.5
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 94,
+            "soft_kl": 1.0448984069898901,
+            "target_modal_agreement": 0.574468085106383,
+            "source_slots": 94,
+            "source_exact": 0.6170212765957447
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 90,
+            "soft_kl": 1.1856663809420456,
+            "target_modal_agreement": 0.36666666666666664,
+            "source_slots": 90,
+            "source_exact": 0.4222222222222222
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 44,
+            "soft_kl": 1.0796021304743448,
+            "target_modal_agreement": 0.4772727272727273,
+            "source_slots": 44,
+            "source_exact": 0.4090909090909091
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 88,
+            "soft_kl": 1.2616717588749669,
+            "target_modal_agreement": 0.3068181818181818,
+            "source_slots": 88,
+            "source_exact": 0.4318181818181818
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 32,
+            "soft_kl": 0.9160078571836447,
+            "target_modal_agreement": 0.6875,
+            "source_slots": 32,
+            "source_exact": 0.75
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 48,
+            "soft_kl": 1.1717801723604013,
+            "target_modal_agreement": 0.4166666666666667,
+            "source_slots": 48,
+            "source_exact": 0.375
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 38,
+            "soft_kl": 1.3000230346912198,
+            "target_modal_agreement": 0.42105263157894735,
+            "source_slots": 38,
+            "source_exact": 0.3684210526315789
+          }
+        },
+        "map_equal_kl": 1.127286670845152,
+        "map_equal_target_modal": 0.48413540500186636,
+        "map_equal_source_agreement": 0.49009391340098424
+      },
+      "base": {
+        "slots": 227,
+        "map_count": 10,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 22,
+            "soft_kl": 0.33034846944729995,
+            "target_modal_agreement": 0.9090909090909091,
+            "source_slots": 22,
+            "source_exact": 0.8181818181818182
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 32,
+            "soft_kl": 0.344832521798926,
+            "target_modal_agreement": 0.78125,
+            "source_slots": 32,
+            "source_exact": 0.71875
+          },
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 16,
+            "soft_kl": 0.4821996663941024,
+            "target_modal_agreement": 0.75,
+            "source_slots": 16,
+            "source_exact": 0.625
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 31,
+            "soft_kl": 0.4977245851396768,
+            "target_modal_agreement": 0.7096774193548387,
+            "source_slots": 31,
+            "source_exact": 0.7096774193548387
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 24,
+            "soft_kl": 0.14671266770608002,
+            "target_modal_agreement": 0.9166666666666666,
+            "source_slots": 24,
+            "source_exact": 0.8333333333333334
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 20,
+            "soft_kl": 0.6010945057538735,
+            "target_modal_agreement": 0.6,
+            "source_slots": 20,
+            "source_exact": 0.7
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 38,
+            "soft_kl": 0.4874685537816069,
+            "target_modal_agreement": 0.8421052631578947,
+            "source_slots": 38,
+            "source_exact": 0.8421052631578947
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 8,
+            "soft_kl": 0.05170490426311308,
+            "target_modal_agreement": 1.0,
+            "source_slots": 8,
+            "source_exact": 0.75
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 19,
+            "soft_kl": 0.7986954672827346,
+            "target_modal_agreement": 0.42105263157894735,
+            "source_slots": 19,
+            "source_exact": 0.42105263157894735
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 17,
+            "soft_kl": 0.5293509340977004,
+            "target_modal_agreement": 0.7058823529411765,
+            "source_slots": 17,
+            "source_exact": 0.47058823529411764
+          }
+        },
+        "map_equal_kl": 0.4270132275665114,
+        "map_equal_target_modal": 0.7635725242790433,
+        "map_equal_source_agreement": 0.688868870090095
+      },
+      "elite": {
+        "slots": 1050,
+        "map_count": 5,
+        "by_terrain": {
+          "4f95b3f588245b120704a33a64211de527fbf871144ac9ea7b4f53bac0bdd983": {
+            "slots": 206,
+            "soft_kl": 0.7456607531666681,
+            "target_modal_agreement": 0.6407766990291263,
+            "source_slots": 206,
+            "source_exact": 0.6504854368932039
+          },
+          "bd43b240a87127b359af5196324f99aaa10724effd3c6efada730095f7c2dabc": {
+            "slots": 218,
+            "soft_kl": 0.823220024795312,
+            "target_modal_agreement": 0.5871559633027523,
+            "source_slots": 218,
+            "source_exact": 0.6100917431192661
+          },
+          "d1ddfe125a189fe3a06978d4854cd64aa27dcbbb6f95588a95fd7102fbff5146": {
+            "slots": 208,
+            "soft_kl": 0.7648113070105756,
+            "target_modal_agreement": 0.6538461538461539,
+            "source_slots": 208,
+            "source_exact": 0.7211538461538461
+          },
+          "d80688f6e8632e16c0d5d389a32488a509e50c941603495566be6eb61aa28b44": {
+            "slots": 205,
+            "soft_kl": 0.9099684169835295,
+            "target_modal_agreement": 0.5365853658536586,
+            "source_slots": 205,
+            "source_exact": 0.5121951219512195
+          },
+          "fdfa549f79fe6311731c8d1b6c0f47b731e6125d950b40ecea00b352d31ce212": {
+            "slots": 213,
+            "soft_kl": 0.8971750823434439,
+            "target_modal_agreement": 0.6103286384976526,
+            "source_slots": 213,
+            "source_exact": 0.4507042253521127
+          }
+        },
+        "map_equal_kl": 0.8281671168599057,
+        "map_equal_target_modal": 0.6057385641058687,
+        "map_equal_source_agreement": 0.5889260746939297
+      },
+      "original": {
+        "slots": 1060,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 216,
+            "soft_kl": 0.8443484135584737,
+            "target_modal_agreement": 0.6296296296296297,
+            "source_slots": 216,
+            "source_exact": 0.6111111111111112
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 216,
+            "soft_kl": 0.8880097534369215,
+            "target_modal_agreement": 0.6018518518518519,
+            "source_slots": 216,
+            "source_exact": 0.5694444444444444
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 206,
+            "soft_kl": 0.7334634728951837,
+            "target_modal_agreement": 0.6893203883495146,
+            "source_slots": 206,
+            "source_exact": 0.6601941747572816
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 206,
+            "soft_kl": 0.7866353927089211,
+            "target_modal_agreement": 0.6213592233009708,
+            "source_slots": 206,
+            "source_exact": 0.6213592233009708
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.6392318619773215,
+            "target_modal_agreement": 0.7268518518518519,
+            "source_slots": 216,
+            "source_exact": 0.6620370370370371
+          }
+        },
+        "map_equal_kl": 0.7783377789153643,
+        "map_equal_target_modal": 0.6538025889967638,
+        "map_equal_source_agreement": 0.624829198130169
+      },
+      "sapling_visited": {
+        "slots": 1055,
+        "map_count": 5,
+        "by_terrain": {
+          "082c1af077a13fddeb60e1f30e109084158407b5b76b446986f6960f5336bfac": {
+            "slots": 204,
+            "soft_kl": 1.0381220053939877,
+            "target_modal_agreement": 0.6225490196078431,
+            "source_slots": 204,
+            "source_exact": 0.6813725490196079
+          },
+          "145f342451ad38b153c9ee1e580a8c19860c5b8c60356b158aefe152c8d83d00": {
+            "slots": 218,
+            "soft_kl": 0.7318145408269184,
+            "target_modal_agreement": 0.6834862385321101,
+            "source_slots": 218,
+            "source_exact": 0.7018348623853211
+          },
+          "690d7d82424ae7e3c12f9b7000e044998b577cf6adb81928dff81043ebcc6fc7": {
+            "slots": 207,
+            "soft_kl": 0.8833672571493613,
+            "target_modal_agreement": 0.6714975845410628,
+            "source_slots": 207,
+            "source_exact": 0.6714975845410628
+          },
+          "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41": {
+            "slots": 210,
+            "soft_kl": 0.7249220527966577,
+            "target_modal_agreement": 0.6523809523809524,
+            "source_slots": 210,
+            "source_exact": 0.6904761904761905
+          },
+          "cf8b0786932c77d76ab6bfda5c0e321e0a9c9aca35a7354a58519c363c84af59": {
+            "slots": 216,
+            "soft_kl": 0.8593517142542729,
+            "target_modal_agreement": 0.6388888888888888,
+            "source_slots": 216,
+            "source_exact": 0.7268518518518519
+          }
+        },
+        "map_equal_kl": 0.8475155140842396,
+        "map_equal_target_modal": 0.6537605367901714,
+        "map_equal_source_agreement": 0.6944066076548069
+      }
+    }
+  },
+  "held_scorer": "int8 channel quantizer, dequantized frozen tensors",
+  "held_map_kl_gains_vs_control": 8,
+  "common_prefix_gate": {
+    "held_soft_kl_vs_parent": true,
+    "held_soft_kl_vs_control": true,
+    "held_pos_maps_at_least_half": true,
+    "historical_prefix_original_agreement_within_2pp": true
+  },
+  "common_prefix_pass": true,
+  "numpy_prefix_parity": {
+    "control": {
+      "roots": 20,
+      "slots": 138,
+      "legal_logits": 574,
+      "max_abs": 1.9073486328125e-06,
+      "argmax_differences": 0
+    },
+    "student": {
+      "roots": 20,
+      "slots": 138,
+      "legal_logits": 574,
+      "max_abs": 2.2649765014648438e-06,
+      "argmax_differences": 0
+    }
+  },
+  "rows_by_split": {
+    "held": 360,
+    "fit": 696
+  },
+  "all_games": 44,
+  "order_gids": [
+    28,
+    33,
+    29,
+    42,
+    30,
+    27,
+    15,
+    36,
+    7,
+    5,
+    8,
+    12,
+    41,
+    39,
+    23,
+    24,
+    31,
+    16,
+    33,
+    41,
+    42,
+    12,
+    36,
+    29,
+    24,
+    27,
+    6,
+    17,
+    40,
+    30,
+    23,
+    31,
+    4,
+    8,
+    15,
+    28,
+    42,
+    14,
+    30,
+    5,
+    39,
+    29,
+    33,
+    26,
+    25,
+    28,
+    12,
+    17,
+    7,
+    41,
+    36,
+    31,
+    23,
+    9,
+    6,
+    13,
+    8,
+    42,
+    23,
+    35,
+    25,
+    30,
+    29,
+    26,
+    39,
+    4,
+    41,
+    31,
+    28,
+    16,
+    14,
+    33,
+    39,
+    25,
+    15,
+    42,
+    12,
+    35,
+    29,
+    7,
+    5,
+    26,
+    33,
+    31,
+    41,
+    30,
+    28,
+    8,
+    16,
+    23,
+    6,
+    14,
+    41,
+    39,
+    26,
+    23,
+    28,
+    42,
+    17,
+    33,
+    29,
+    30,
+    25,
+    13,
+    5,
+    35,
+    9,
+    31,
+    23,
+    30,
+    29,
+    31,
+    40,
+    16,
+    42,
+    25,
+    12,
+    26,
+    5,
+    7,
+    33,
+    36,
+    41,
+    9,
+    28,
+    15,
+    23,
+    8,
+    14,
+    12,
+    26,
+    42,
+    6,
+    40,
+    28,
+    33,
+    30,
+    41,
+    25,
+    31,
+    35,
+    4,
+    29,
+    17,
+    25,
+    28,
+    40,
+    22,
+    31,
+    35,
+    33,
+    9,
+    12,
+    16,
+    42,
+    4,
+    27,
+    29,
+    30,
+    14,
+    41,
+    7,
+    40,
+    30,
+    13,
+    35,
+    16,
+    33,
+    27,
+    28,
+    24,
+    22,
+    41,
+    6,
+    5,
+    9,
+    31,
+    29,
+    14,
+    42,
+    30,
+    26,
+    4,
+    36,
+    24,
+    15,
+    42,
+    9,
+    23,
+    12,
+    6,
+    31,
+    17,
+    29,
+    33,
+    28,
+    41,
+    40,
+    6,
+    23,
+    25,
+    26,
+    13,
+    31,
+    39,
+    16,
+    28,
+    42,
+    41,
+    36,
+    29,
+    4,
+    8,
+    14,
+    30,
+    33,
+    5,
+    7,
+    33,
+    13,
+    25,
+    28,
+    29,
+    14,
+    42,
+    23,
+    30,
+    31,
+    39,
+    8,
+    36,
+    41,
+    27,
+    17,
+    6,
+    31,
+    13,
+    42,
+    28,
+    26,
+    25,
+    33,
+    39,
+    36,
+    41,
+    4,
+    14,
+    16,
+    8,
+    22,
+    30,
+    29,
+    40,
+    31,
+    12,
+    41
+  ],
+  "order_rows": [
+    [
+      689,
+      809,
+      709,
+      1013,
+      726,
+      666,
+      368,
+      864
+    ],
+    [
+      188,
+      143,
+      201,
+      302,
+      1001,
+      939,
+      559,
+      582
+    ],
+    [
+      752,
+      390,
+      798,
+      1000,
+      1014,
+      306,
+      869,
+      705
+    ],
+    [
+      593,
+      652,
+      167,
+      428,
+      960,
+      733,
+      572,
+      758
+    ],
+    [
+      115,
+      205,
+      382,
+      681,
+      1017,
+      339,
+      742,
+      134
+    ],
+    [
+      959,
+      702,
+      800,
+      626,
+      610,
+      680,
+      291,
+      427
+    ],
+    [
+      181,
+      987,
+      883,
+      753,
+      570,
+      218,
+      155,
+      329
+    ],
+    [
+      212,
+      1021,
+      574,
+      853,
+      608,
+      727,
+      701,
+      644
+    ],
+    [
+      949,
+      107,
+      984,
+      744,
+      694,
+      392,
+      352,
+      792
+    ],
+    [
+      956,
+      621,
+      367,
+      1020,
+      294,
+      848,
+      699,
+      187
+    ],
+    [
+      142,
+      633,
+      812,
+      745,
+      1002,
+      721,
+      690,
+      202
+    ],
+    [
+      385,
+      564,
+      163,
+      351,
+      1007,
+      938,
+      639,
+      567
+    ],
+    [
+      695,
+      1009,
+      429,
+      793,
+      697,
+      737,
+      606,
+      321
+    ],
+    [
+      140,
+      849,
+      227,
+      755,
+      553,
+      732,
+      718,
+      749
+    ],
+    [
+      975,
+      402,
+      1024,
+      611,
+      300,
+      634,
+      130,
+      180
+    ],
+    [
+      797,
+      882,
+      992,
+      229,
+      687,
+      372,
+      573,
+      209
+    ],
+    [
+      346,
+      307,
+      635,
+      1030,
+      159,
+      966,
+      675,
+      811
+    ],
+    [
+      722,
+      988,
+      603,
+      748,
+      861,
+      110,
+      704,
+      420
+    ],
+    [
+      601,
+      674,
+      969,
+      536,
+      756,
+      847,
+      813,
+      234
+    ],
+    [
+      293,
+      406,
+      1031,
+      108,
+      671,
+      710,
+      739,
+      336
+    ],
+    [
+      996,
+      184,
+      972,
+      725,
+      316,
+      854,
+      398,
+      807
+    ],
+    [
+      660,
+      679,
+      576,
+      538,
+      991,
+      166,
+      126,
+      237
+    ],
+    [
+      767,
+      696,
+      349,
+      1011,
+      735,
+      625,
+      97,
+      877
+    ],
+    [
+      583,
+      365,
+      1010,
+      228,
+      554,
+      289,
+      146,
+      766
+    ],
+    [
+      418,
+      708,
+      801,
+      686,
+      986,
+      981,
+      161,
+      557
+    ],
+    [
+      612,
+      646,
+      323,
+      746,
+      943,
+      400,
+      672,
+      1023
+    ],
+    [
+      1006,
+      885,
+      703,
+      103,
+      200,
+      338,
+      731,
+      808
+    ],
+    [
+      128,
+      186,
+      803,
+      317,
+      607,
+      676,
+      719,
+      344
+    ],
+    [
+      1019,
+      560,
+      730,
+      760,
+      953,
+      211,
+      876,
+      989
+    ],
+    [
+      668,
+      425,
+      164,
+      747,
+      332,
+      1029,
+      693,
+      631
+    ],
+    [
+      602,
+      796,
+      937,
+      867,
+      994,
+      105,
+      357,
+      387
+    ],
+    [
+      214,
+      549,
+      724,
+      713,
+      962,
+      761,
+      299,
+      1005
+    ]
+  ],
+  "new_native_games": 0
+}

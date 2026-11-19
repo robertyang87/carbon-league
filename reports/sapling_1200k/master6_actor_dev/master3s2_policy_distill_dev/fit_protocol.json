@@ -1,0 +1,13 @@
+{
+  "source": "Freeze before labels, fitting, or any held decision read. Starting parameters for both arms are Sapling master6_actor_v1.npz f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713; exact int8 deployment compare.",
+  "objective": "Student cross-entropy to temperature-1 projected Master3s2 raw pre-search spatial policy. Control cross-entropy to argmax of the very same projected legal vector. On both arms keep the same shard order, batch order, optimizer, initialization, actual forward decoder prefix, legality mask and active (at least two legal actions) loss denominator. Source-executed action agreement is reported only, never used as training target; source orders in the historical-prefix mode have already formed that prefix.",
+  "updates": 32,
+  "roots_per_update": 8,
+  "learning_rate": 0.00008,
+  "weight_decay": 0.0001,
+  "clip_norm": 1.0,
+  "seed": 861920,
+  "exposure": "Each draw round shuffles terrains then draws from each terrain's shuffled rows without replacement until exhausted; both modes and domains retained. Each optimizer spends 256 root presentations. 512 combined.",
+  "parameters": "Train all shared spatial, token, attention, context, GRU and policy scoring parameters; omit only aux carbon and scalar/utility/WDL/margin heads from optimization. Unused style rows may still change by AdamW decay.",
+  "eligibility": "Benchmark on int8 public-prefix legal policy distributions. Require terrain-equal mean student KL to target lower than both control and parent on all held observed slots and strictly lower on at least half of held terrains against matched control. Require held native original executed legal-slot agreement within two percentage points of parent on recorded-prefix roots. Require actual normal-entry qualification separately. This only screens for a future diagnostic, never authorizes a native match automatically."
+}
