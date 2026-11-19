@@ -1,0 +1,4468 @@
+{
+  "revision": "5d7190d3680081317d446532b0b7ebe8d3d38ee2",
+  "input_sha256": {
+    "layout.json.gz": "c419328fe840d4edb0e83534400a9c7606775039fed3ecd0f4260c952cc807ce",
+    "manifest.json": "1de8744e555278088a13d5ad689bb871608342c9028d04cadbd0177e3453ae4a"
+  },
+  "criterion": "t60, absolute cash gap <=300.",
+  "estimand": "Within each exact pre-frozen-rank focal player/opponent pairing, average focal WDL (draw=0.5) when focal leads minus when focal trails. Both signs required. Weight each contrast by eligible matchup maps / all matched maps. Balanced favored-player WDL = (1 + difference)/2. Baseline = unadjusted WDL of whichever player has more. One independent row per map.",
+  "reverse_case_selection": "For each cohort/factor choose matchup with most maps observing both lead-loss and trail-win. Ties by names; show smallest alphabetical game ID of each type. Other strata and all member IDs are retained.",
+  "flow": {
+    "external": {
+      "complete_replays": 1214,
+      "cash_close_maps": 906,
+      "cash_gap_above_300": 306,
+      "ended_before_t60": 2
+    },
+    "mutual": {
+      "complete_replays": 110,
+      "cash_gap_above_300": 19,
+      "cash_close_maps": 91
+    }
+  },
+  "metrics": {
+    "mutual": {
+      "workers": {
+        "cash_close_maps": 91,
+        "factor_tied_maps": 46,
+        "unmatched_favored_score": 0.7333333333333333,
+        "informative_maps": 45,
+        "all_matchup_count": 10,
+        "bidirectional_matchups": 7,
+        "maps_from_one_sided_matchups": 8,
+        "matched_maps": 37,
+        "matched_favored_score_before_balancing": 0.7027027027027027,
+        "matched_reference_leads": {
+          "maps": 22,
+          "wins": 19,
+          "draws": 0,
+          "losses": 3,
+          "average_outcome": 0.8636363636363636
+        },
+        "matched_reference_trails": {
+          "maps": 15,
+          "wins": 8,
+          "draws": 0,
+          "losses": 7,
+          "average_outcome": 0.5333333333333333
+        },
+        "within_matchup_difference": 0.3076576576576577,
+        "balanced_favored_score": 0.6538288288288289,
+        "equal_matchup_weight_difference": 0.3404761904761905,
+        "overlap_weight_difference": 0.3340020060180542,
+        "leave_one_matchup_out_difference_range": [
+          0.21236559139784947,
+          0.4065476190476191
+        ],
+        "matchups_with_one_map_on_the_scarcer_side": 7,
+        "within_matchup_positive_zero_negative": [
+          5,
+          1,
+          1
+        ],
+        "paired_reverse_case_count": 1,
+        "illustration": {
+          "lead_loss": {
+            "id": "ea0da721a26d892c456fe7b0054bb018-1",
+            "map_seed": 703079157,
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "RyanX-AIPowercore-it720-preview",
+            "seat": 0,
+            "focal_cash": 30.41,
+            "opponent_cash": 31.89,
+            "focal_quantity": 10,
+            "opponent_quantity": 8,
+            "factor_difference": 2,
+            "outcome": 0,
+            "focal_final": 4770.5,
+            "opponent_final": 5681.67
+          },
+          "trail_win": {
+            "id": "b58c6f50466bff30fc183256041de011-1",
+            "map_seed": 758000401,
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "RyanX-AIPowercore-it720-preview",
+            "seat": 1,
+            "focal_cash": 10.55,
+            "opponent_cash": 127.86,
+            "focal_quantity": 9,
+            "opponent_quantity": 10,
+            "factor_difference": -1,
+            "outcome": 1,
+            "focal_final": 6205.82,
+            "opponent_final": 5868.51
+          }
+        },
+        "strata": [
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-v7",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 1,
+              "draws": 0,
+              "losses": 3,
+              "average_outcome": 0.25
+            },
+            "maps": 5,
+            "difference": 0.75,
+            "ids": [
+              "248c9570faa519c6921969e83fe814af-1",
+              "8fc205473028aeb6518e81dddb501a5a-1",
+              "970bf01cc0e2a312ba4391d5f3686f05-1",
+              "c0261123738bcb06d57d1ef4770f269d-1",
+              "f7118e8abde06045fce7ef098e985610-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "ClaudeFable5.2-v7",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "maps": 5,
+            "difference": 0.25,
+            "ids": [
+              "077d383b994d3891094d90cc1b6a5d4b-1",
+              "2e09893b936dcfdb1c5fd10748e169ae-1",
+              "4034efbe6f6c9d1c19f8fa1e379510a3-1",
+              "79b47fefed45e4029be82c2ae84f758c-1",
+              "ffac01bf78c476901cbfe79395c10592-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "ClaudeFable5.2-v7",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 2,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.6666666666666666
+            },
+            "maps": 4,
+            "difference": 0.33333333333333337,
+            "ids": [
+              "01b56d406361dbb513d6d7417dc0184f-1",
+              "04e2bd65b4b6e81980135e06cfadd7b0-1",
+              "2bb0546c0fa8b5de7b4576b31a5b6383-1",
+              "f306679c3694d94f4bdb3e868fb15955-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "RyanX-AIPowercore-it720-preview",
+            "lead": {
+              "maps": 2,
+              "wins": 1,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.5
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 3,
+            "difference": 0.5,
+            "ids": [
+              "20ab1325ba01b9b75373635ee3d7b1ef-1",
+              "6b77b77327fb186f176c76b876c1aea9-1",
+              "929c2717b472cda849d4f413bb7744a4-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "ClaudeFable5.2-v7",
+            "lead": {
+              "maps": 8,
+              "wins": 8,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 9,
+            "difference": 0.0,
+            "ids": [
+              "0e4aac28e06ddc63f8b082966d71f12f-1",
+              "16c18b65adabdee40d6a79fc9def85b1-1",
+              "3686922ec2b2128fbd1ff6bfd7d04d81-1",
+              "704a532aab1f77dd3ba0210f9cf8b55b-1",
+              "7d2f125ddec4e3fb476907dadec6883e-1",
+              "a547b189361afe25e5f0682c73e572e8-1",
+              "b455a0c842ab04a2f37917d0f155b1a5-1",
+              "d0f5e89c975909cd491a987567d751bb-1",
+              "f3d51b78d834bc998582f6657012bd20-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "RyanX-AIPowercore-M9XJ-630",
+            "lead": {
+              "maps": 5,
+              "wins": 4,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.8
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 6,
+            "difference": 0.8,
+            "ids": [
+              "09a12e7f6169d13d2b6a924468e0f205-1",
+              "1359247345c9f23c19af46240c47ffa5-1",
+              "5a5f72bc66bdafbc4d8d90edc9870f8e-1",
+              "8e983cb27ec89013fc28873674712c21-1",
+              "a349f113d8cd4665b6da581cd7833500-1",
+              "f64fa44f1c884f04b4b3941c040c3b39-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "RyanX-AIPowercore-it720-preview",
+            "lead": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": -0.25,
+            "ids": [
+              "5b4f5ceaa627db4ff6228b2b18e3aecb-1",
+              "5bd3791f228a5dda51411c62a10b6bdf-1",
+              "af7c078e9a0001364d3ce4025b23e1ed-1",
+              "b58c6f50466bff30fc183256041de011-1",
+              "ea0da721a26d892c456fe7b0054bb018-1"
+            ]
+          }
+        ]
+      },
+      "tree_turns": {
+        "cash_close_maps": 91,
+        "factor_tied_maps": 0,
+        "unmatched_favored_score": 0.6153846153846154,
+        "informative_maps": 91,
+        "all_matchup_count": 10,
+        "bidirectional_matchups": 8,
+        "maps_from_one_sided_matchups": 3,
+        "matched_maps": 88,
+        "matched_favored_score_before_balancing": 0.6136363636363636,
+        "matched_reference_leads": {
+          "maps": 52,
+          "wins": 39,
+          "draws": 0,
+          "losses": 13,
+          "average_outcome": 0.75
+        },
+        "matched_reference_trails": {
+          "maps": 36,
+          "wins": 21,
+          "draws": 0,
+          "losses": 15,
+          "average_outcome": 0.5833333333333334
+        },
+        "within_matchup_difference": 0.14792568542568543,
+        "balanced_favored_score": 0.5739628427128427,
+        "equal_matchup_weight_difference": 0.14677579365079366,
+        "overlap_weight_difference": 0.1376473117438974,
+        "leave_one_matchup_out_difference_range": [
+          0.10423280423280423,
+          0.19253154253154253
+        ],
+        "matchups_with_one_map_on_the_scarcer_side": 0,
+        "within_matchup_positive_zero_negative": [
+          6,
+          0,
+          2
+        ],
+        "paired_reverse_case_count": 5,
+        "illustration": {
+          "lead_loss": {
+            "id": "3d375fad2dd0c7d6e168c5316563e621-1",
+            "map_seed": 1910509060,
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "RyanX-AIPowercore-M9XJ-630",
+            "seat": 1,
+            "focal_cash": 217.9,
+            "opponent_cash": 124.15,
+            "focal_quantity": 186,
+            "opponent_quantity": 144,
+            "factor_difference": 42,
+            "outcome": 0,
+            "focal_final": 8186.29,
+            "opponent_final": 8254.92
+          },
+          "trail_win": {
+            "id": "1359247345c9f23c19af46240c47ffa5-1",
+            "map_seed": 218213950,
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "RyanX-AIPowercore-M9XJ-630",
+            "seat": 0,
+            "focal_cash": 24.17,
+            "opponent_cash": 54.84,
+            "focal_quantity": 101,
+            "opponent_quantity": 118,
+            "factor_difference": -17,
+            "outcome": 1,
+            "focal_final": 5578.72,
+            "opponent_final": 4945.79
+          }
+        },
+        "strata": [
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-v7",
+            "lead": {
+              "maps": 5,
+              "wins": 1,
+              "draws": 0,
+              "losses": 4,
+              "average_outcome": 0.2
+            },
+            "trail": {
+              "maps": 5,
+              "wins": 2,
+              "draws": 0,
+              "losses": 3,
+              "average_outcome": 0.4
+            },
+            "maps": 10,
+            "difference": -0.2,
+            "ids": [
+              "248c9570faa519c6921969e83fe814af-1",
+              "33de9499ab63698020525f27eb0552ee-1",
+              "6ea7a65ad77d9bf46a14cd2de7cc3463-1",
+              "8fc205473028aeb6518e81dddb501a5a-1",
+              "970bf01cc0e2a312ba4391d5f3686f05-1",
+              "a7e7a131ac7d151fc2cccf6e4daf6d38-1",
+              "bc097a59409cb2c229e1dd74bf8837eb-1",
+              "c0261123738bcb06d57d1ef4770f269d-1",
+              "d69821e07e7f40527309464adf245894-1",
+              "f7118e8abde06045fce7ef098e985610-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "ClaudeFable5.2-v7",
+            "lead": {
+              "maps": 3,
+              "wins": 2,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.6666666666666666
+            },
+            "trail": {
+              "maps": 6,
+              "wins": 3,
+              "draws": 0,
+              "losses": 3,
+              "average_outcome": 0.5
+            },
+            "maps": 9,
+            "difference": 0.16666666666666663,
+            "ids": [
+              "077d383b994d3891094d90cc1b6a5d4b-1",
+              "0bc5422fdbb7c4fd49d2a99eaaaf6a14-1",
+              "109570e2df6f6c8fe60811543a35ceda-1",
+              "2e09893b936dcfdb1c5fd10748e169ae-1",
+              "3377ed87b195c3c6e84df1c588d97d31-1",
+              "4034efbe6f6c9d1c19f8fa1e379510a3-1",
+              "79b47fefed45e4029be82c2ae84f758c-1",
+              "928e825a8b987d4324684254c8b10f18-1",
+              "ffac01bf78c476901cbfe79395c10592-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "ClaudeFable5.2-v7",
+            "lead": {
+              "maps": 7,
+              "wins": 7,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "maps": 11,
+            "difference": 0.25,
+            "ids": [
+              "01b56d406361dbb513d6d7417dc0184f-1",
+              "04e2bd65b4b6e81980135e06cfadd7b0-1",
+              "0a815a4c86941b6d187c57727e3e6090-1",
+              "1f170a1fa6ae1bc79cf771cfe27f000f-1",
+              "2bb0546c0fa8b5de7b4576b31a5b6383-1",
+              "36e68802e4465ab013073813a646602e-1",
+              "73a884b4a7adc8d2feb37d845e50648a-1",
+              "a9b1fcf0a020a42efcf51b3d7c359b47-1",
+              "bc551c365258a92404b9d73888061070-1",
+              "ef8c2fbd6a5f7c9b58bb2b091a96d0c1-1",
+              "f306679c3694d94f4bdb3e868fb15955-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "RyanX-AIPowercore-M9XJ-630",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "maps": 9,
+            "difference": 0.25,
+            "ids": [
+              "30330fcb8982d57b36f4c168fb663ced-1",
+              "3a3d08498acbb03c5d8ea98479e9bb3b-1",
+              "85aa69e9678f9bd97020e27a8ef943e2-1",
+              "a4cbf1fa9a498523f02de6c84dbdf14e-1",
+              "ad630693c26ae17b724092518d883ae1-1",
+              "dfade934a41b69385a7143b586c75759-1",
+              "eca9e0ff749ffd031fbc451255d158f1-1",
+              "eef68438eba8b4db68f1bb4b8fb918a3-1",
+              "ff09b13031cfcd11d59631affed007d6-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "RyanX-AIPowercore-it720-preview",
+            "lead": {
+              "maps": 9,
+              "wins": 7,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.7777777777777778
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 1,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.5
+            },
+            "maps": 11,
+            "difference": 0.2777777777777778,
+            "ids": [
+              "06591c01cd12b7f46c7215d5b464fb9b-1",
+              "0a4b378d35c63912fd4bebe264ffdb43-1",
+              "14919682e511adc8098c338d7a01be90-1",
+              "20ab1325ba01b9b75373635ee3d7b1ef-1",
+              "54b1d3e11b3a9a83b488a738de241517-1",
+              "67dd2b66f44a1897249a0081517826bd-1",
+              "6b77b77327fb186f176c76b876c1aea9-1",
+              "929c2717b472cda849d4f413bb7744a4-1",
+              "9723c173fb2c3d7d8fee64dcd64b0ce6-1",
+              "abb23c7796d827b211c26e46b99785b3-1",
+              "edb585cf77ed804bcf68276515b1f78e-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "ClaudeFable5.2-v7",
+            "lead": {
+              "maps": 8,
+              "wins": 8,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 5,
+              "wins": 3,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.6
+            },
+            "maps": 13,
+            "difference": 0.4,
+            "ids": [
+              "0e4aac28e06ddc63f8b082966d71f12f-1",
+              "16c18b65adabdee40d6a79fc9def85b1-1",
+              "3686922ec2b2128fbd1ff6bfd7d04d81-1",
+              "704a532aab1f77dd3ba0210f9cf8b55b-1",
+              "7d2f125ddec4e3fb476907dadec6883e-1",
+              "82f195473526f6b251d88d1c8c894988-1",
+              "a547b189361afe25e5f0682c73e572e8-1",
+              "b455a0c842ab04a2f37917d0f155b1a5-1",
+              "c78a918ebd92a08149b394ef8959d161-1",
+              "d0f5e89c975909cd491a987567d751bb-1",
+              "d1ecca5e86110600b6dd0add400fe723-1",
+              "dcc847457524cef15b6cc068f29ea616-1",
+              "f3d51b78d834bc998582f6657012bd20-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "RyanX-AIPowercore-M9XJ-630",
+            "lead": {
+              "maps": 7,
+              "wins": 4,
+              "draws": 0,
+              "losses": 3,
+              "average_outcome": 0.5714285714285714
+            },
+            "trail": {
+              "maps": 6,
+              "wins": 4,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.6666666666666666
+            },
+            "maps": 13,
+            "difference": -0.09523809523809523,
+            "ids": [
+              "09a12e7f6169d13d2b6a924468e0f205-1",
+              "1359247345c9f23c19af46240c47ffa5-1",
+              "309b0c9ed86a17969d22294d41a59029-1",
+              "3d375fad2dd0c7d6e168c5316563e621-1",
+              "5a5f72bc66bdafbc4d8d90edc9870f8e-1",
+              "785db4b4353aea1f2e61c8493ba425b3-1",
+              "8e983cb27ec89013fc28873674712c21-1",
+              "a349f113d8cd4665b6da581cd7833500-1",
+              "b25e54576d8e4ca28ccd266a3e531a21-1",
+              "b4b03f5ecc6781a9c45a8d55ae96c764-1",
+              "f64fa44f1c884f04b4b3941c040c3b39-1",
+              "f8028deec3901b3fd25bf870a1a20d56-1",
+              "f975d32b62d02b7cb49a185f918254b5-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "RyanX-AIPowercore-it720-preview",
+            "lead": {
+              "maps": 8,
+              "wins": 5,
+              "draws": 0,
+              "losses": 3,
+              "average_outcome": 0.625
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 2,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.5
+            },
+            "maps": 12,
+            "difference": 0.125,
+            "ids": [
+              "44f161c5e1a41bf9fb7e1aa255f5080f-1",
+              "51f34379b8018af261ce057ca75692a0-1",
+              "5b4f5ceaa627db4ff6228b2b18e3aecb-1",
+              "5bd3791f228a5dda51411c62a10b6bdf-1",
+              "5fb0f13dacd5a31934a64dcb7917720b-1",
+              "af7c078e9a0001364d3ce4025b23e1ed-1",
+              "b58c6f50466bff30fc183256041de011-1",
+              "c682745d307bf8bec8fbbd2cdf419d18-1",
+              "ca9868fdb788e855bbf53f8fc2e38f9e-1",
+              "d2c7d061739bef723dc4abfffb22de2a-1",
+              "ddd8bf4ef175473cec7ff9d7480be558-1",
+              "ea0da721a26d892c456fe7b0054bb018-1"
+            ]
+          }
+        ]
+      }
+    },
+    "external": {
+      "workers": {
+        "cash_close_maps": 906,
+        "factor_tied_maps": 634,
+        "unmatched_favored_score": 0.8125,
+        "informative_maps": 272,
+        "all_matchup_count": 137,
+        "bidirectional_matchups": 12,
+        "maps_from_one_sided_matchups": 236,
+        "matched_maps": 36,
+        "matched_favored_score_before_balancing": 0.5833333333333334,
+        "matched_reference_leads": {
+          "maps": 19,
+          "wins": 15,
+          "draws": 0,
+          "losses": 4,
+          "average_outcome": 0.7894736842105263
+        },
+        "matched_reference_trails": {
+          "maps": 17,
+          "wins": 11,
+          "draws": 0,
+          "losses": 6,
+          "average_outcome": 0.6470588235294118
+        },
+        "within_matchup_difference": -0.023148148148148147,
+        "balanced_favored_score": 0.48842592592592593,
+        "equal_matchup_weight_difference": -0.027777777777777776,
+        "overlap_weight_difference": -0.03205128205128206,
+        "leave_one_matchup_out_difference_range": [
+          -0.11616161616161615,
+          0.036458333333333336
+        ],
+        "matchups_with_one_map_on_the_scarcer_side": 11,
+        "within_matchup_positive_zero_negative": [
+          2,
+          7,
+          3
+        ],
+        "paired_reverse_case_count": 3,
+        "illustration": {
+          "lead_loss": {
+            "id": "946e17ef5c24910bb0f2994edf3c8e57-1",
+            "map_seed": 1811764478,
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-BC-v2",
+            "seat": 1,
+            "focal_cash": 289.85,
+            "opponent_cash": 259.08,
+            "focal_quantity": 9,
+            "opponent_quantity": 8,
+            "factor_difference": 1,
+            "outcome": 0,
+            "focal_final": 6918.12,
+            "opponent_final": 7207.28
+          },
+          "trail_win": {
+            "id": "1c57510547c0017921d65e6fb9aef7b8-1",
+            "map_seed": 1868221510,
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-BC-v2",
+            "seat": 0,
+            "focal_cash": 499.15,
+            "opponent_cash": 619.92,
+            "focal_quantity": 9,
+            "opponent_quantity": 10,
+            "factor_difference": -1,
+            "outcome": 1,
+            "focal_final": 7358.22,
+            "opponent_final": 6694.59
+          }
+        },
+        "strata": [
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Echo4",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "41da6401ddcddd499293a1e08d2b9cad-1",
+              "5da522519f81b002b97ed90090bb8f96-1",
+              "b5546726df73a99e84d6fba9d86437bf-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "stephen-K4TacSearch-v6",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "b46151326adb9aeaa65f0d9e2a029c35-1",
+              "c608523dc5cce91e739abd4cde952388-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "小肥鱼v5-late1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 1,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.5
+            },
+            "maps": 3,
+            "difference": 0.5,
+            "ids": [
+              "19d54846f2afb89af4d0327480bfd125-1",
+              "1f3373dc83f462318f7d9240567b854c-1",
+              "bb79d509ab8b155b21cd7fbeafbf9619-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-BC-v2",
+            "lead": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 1,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.3333333333333333
+            },
+            "maps": 4,
+            "difference": -0.3333333333333333,
+            "ids": [
+              "1c57510547c0017921d65e6fb9aef7b8-1",
+              "40cdcc820a091d9655bb5514a6ba10b4-1",
+              "50fef4261456110385d1218f28191ee1-1",
+              "946e17ef5c24910bb0f2994edf3c8e57-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-Search-v7",
+            "lead": {
+              "maps": 2,
+              "wins": 0,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 1,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.5
+            },
+            "maps": 4,
+            "difference": -0.5,
+            "ids": [
+              "863188f91f7a20a4af48ffdfea2d5853-1",
+              "9e12e2e1cf688e4cc1da912e6afa4bb1-1",
+              "c665cfa53f5efed00908ee15c04549bc-1",
+              "eaad2f6769a1a9ee75b26f939a3f9204-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-Sym8-v4",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "1f6c0fee6250b8363a6477016a9313fd-1",
+              "d86cd37e5bc6d043fdb70b88a5cca75b-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "Grok4.7-Search-v5",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 0,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.0
+            },
+            "maps": 3,
+            "difference": 1.0,
+            "ids": [
+              "6f13f55d2deed99c2bbe39b06e9050c4-1",
+              "8ca8e689419c1459ed749ce79a88a68e-1",
+              "b40389d37f42bc925df5868296c890d6-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "stephen-K4TacSearch-v6",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "b113140a80083e5e8f475161d44c886b-1",
+              "de0bea926cfe0689aef9df6f4aaf96d2-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "小肥鱼v5-late1",
+            "lead": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": -1.0,
+            "ids": [
+              "83b0cfed6f7c694a4f332c6f5780ffdd-1",
+              "d7f52a633490faf1b7b28f3a1ddcecd3-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "ClaudeFable5.2-v8",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "765362cf212416fdefacce84c71e9a4e-1",
+              "961b6cf4fbc3b6d8c00e42d874fb361e-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "ClaudeFable5.2-BC-v3",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "ab65ffdc07226a0ab6d7bee5997c719a-1",
+              "c2fd0dcd97929f12fe6bb3be60a89415-1",
+              "c4d761ec5af1ee73ab7cce2b9c6a2b08-1",
+              "d48fd1719afcfee8b77a6b8cb7ae2997-1",
+              "f7831333de4a7380c0527cf2af42701f-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "ClaudeFable5.2-Search-v7",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "1d8a5e60edfdb28ee1801eccbf220f6b-1",
+              "841d11240fa7482c6d21a4185099f049-1",
+              "94c0826751e649dcc2cfd54a8553cdd0-1",
+              "ac364a420640522907349a4f31ea09ef-1"
+            ]
+          }
+        ]
+      },
+      "tree_turns": {
+        "cash_close_maps": 906,
+        "factor_tied_maps": 3,
+        "unmatched_favored_score": 0.689922480620155,
+        "informative_maps": 903,
+        "all_matchup_count": 261,
+        "bidirectional_matchups": 125,
+        "maps_from_one_sided_matchups": 265,
+        "matched_maps": 638,
+        "matched_favored_score_before_balancing": 0.6081504702194357,
+        "matched_reference_leads": {
+          "maps": 376,
+          "wins": 344,
+          "draws": 0,
+          "losses": 32,
+          "average_outcome": 0.9148936170212766
+        },
+        "matched_reference_trails": {
+          "maps": 262,
+          "wins": 218,
+          "draws": 0,
+          "losses": 44,
+          "average_outcome": 0.8320610687022901
+        },
+        "within_matchup_difference": 0.09479026720406032,
+        "balanced_favored_score": 0.5473951336020302,
+        "equal_matchup_weight_difference": 0.07902857142857142,
+        "overlap_weight_difference": 0.09567492009380345,
+        "leave_one_matchup_out_difference_range": [
+          0.08475734791524266,
+          0.09962207105064248
+        ],
+        "matchups_with_one_map_on_the_scarcer_side": 75,
+        "within_matchup_positive_zero_negative": [
+          23,
+          96,
+          6
+        ],
+        "paired_reverse_case_count": 10,
+        "illustration": {
+          "lead_loss": {
+            "id": "dd08059105e8a1beb41f749c3c7b9959-1",
+            "map_seed": 1873564054,
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "小肥鱼v5-late1",
+            "seat": 0,
+            "focal_cash": 375.45,
+            "opponent_cash": 196.08,
+            "focal_quantity": 189,
+            "opponent_quantity": 95,
+            "factor_difference": 94,
+            "outcome": 0,
+            "focal_final": 8350.5,
+            "opponent_final": 8836.86
+          },
+          "trail_win": {
+            "id": "1f3373dc83f462318f7d9240567b854c-1",
+            "map_seed": 799093206,
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "小肥鱼v5-late1",
+            "seat": 1,
+            "focal_cash": 109.59,
+            "opponent_cash": 280.05,
+            "focal_quantity": 115,
+            "opponent_quantity": 168,
+            "factor_difference": -53,
+            "outcome": 1,
+            "focal_final": 7172.61,
+            "opponent_final": 6721.17
+          }
+        },
+        "strata": [
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "ClaudeFable5.2-Search-v7",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 2,
+            "difference": 1.0,
+            "ids": [
+              "47e20f79ab64a5395fb36a2f56713a1d-1",
+              "7be27eff3b3fc67bcd5d79348af49b24-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "ClaudeFable5.2-v8",
+            "lead": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "3594e048dbd4dd4a9e52f569fb129490-1",
+              "8354cd906b13540107410bcc75bbe150-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Echo4",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "305147e7a75ae05c3a3ea6c2f19e5a01-1",
+              "41da6401ddcddd499293a1e08d2b9cad-1",
+              "5da522519f81b002b97ed90090bb8f96-1",
+              "b5546726df73a99e84d6fba9d86437bf-1",
+              "c73703cae164f4833e983ea85371f58c-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Echo5",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "0f674bbed06ab4eb57137a0211089132-1",
+              "2025fb6b31bd2bb9827fc39dfd3b797f-1",
+              "4f95decac54124a8bb7e76a4d9ec5e0e-1",
+              "5940370c9d582c945f79bef05a3b82b2-1",
+              "cc06b2748f046c4391784575d230d8bb-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Fable5.2-Max-V6",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "a9703b9d1dde47c2028bda7190805e49-1",
+              "be06e573572baf15f65b169c65d8de3b-1",
+              "cb8e711230082f907bd6ba31f6d9491f-1",
+              "cb99842641e4453b1c79dd68cf1be16a-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Fable5.2-Max-V7",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "05361bcc662b094548c13c2ac4f86a03-1",
+              "09ce6028502ed840185a15db50ff44e3-1",
+              "0bf3546c7cd2b88c13fcefa2fce3f46a-1",
+              "2b991643edbdef64e81cf23f225ae4b3-1",
+              "47946f6a1de201870d97241e4adc0359-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Fable5.2-Max-V8",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "218ce2377b86b8f52ec74fd29da963fc-1",
+              "58b0a547068d08c2fc0c20256694ef08-1",
+              "6c525047257d28b5d45248aa1698b736-1",
+              "ac7e5aec2ba847fe135de6ab874c4113-1",
+              "d121e68e35883891e16a06695f8c23b5-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "First111",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "2cbbdb9a0e63ac9d708d8902bcc98085-1",
+              "56a397f88235246e192fd6f9387e8b3d-1",
+              "69c0d0729fc7298db60fc8b3793c7e45-1",
+              "cf181840d7120c65ca144730739ecb36-1",
+              "eae4c22ae81f7ea50d8d131c63a18585-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "First111-1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "e4e13defe0e0fab13195fa31236354bf-1",
+              "f2d55457d2b38b43a3c9d44bb35d126c-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Krypton-CS-Plant-v1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "b7c461d298a56787c8229dbca9baeffe-1",
+              "d8f83815aef12a65164da1edf3f06f27-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Krypton-M144Search-v1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "0e4efeb6a956b6a9bb0f8f1698400bd2-1",
+              "6e9aa1e87c61685897a9a92b5b2703ac-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "Krypton-M3s2-EarlyHome",
+            "lead": {
+              "maps": 6,
+              "wins": 5,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.8333333333333334
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 1,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.5
+            },
+            "maps": 8,
+            "difference": 0.33333333333333337,
+            "ids": [
+              "3febe50a0c89aea40d94350740623d16-1",
+              "5f1c99d3bc615ce89656b319e59fffd9-1",
+              "6ce7bfaf1f1a9189cb0ac0d51c611f6d-1",
+              "aca294df41d3b59336937dbc4776d688-1",
+              "c1b393ece0c8746c1f8ef056fccb85bd-1",
+              "d9d4bb4385210a6ab5fa8fbe714f6fc3-1",
+              "dbb13ee5d85f826448d433d6108a1ffe-1",
+              "fea9e8e6523e187e0af6bb6e5420cc44-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "RyanX-AIPowercore-Lite-V8",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "03a89f9ef844971a8dffed663c05c027-1",
+              "4142ae28dd21b01afb85004d52654196-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "claude-AlphaCarbon-Master2s",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "22c9368a672ade8bdc7b1682487f27d6-1",
+              "30f719ea3be681acb5005502e56c5b25-1",
+              "41223891cc3edcb55c8a5aedd41b22de-1",
+              "e5a1c1bc2eedc584e7cfa83597f6e8ed-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "claude-AlphaCarbon-Master3s",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "1611fc7faf77882bed76cfe927db15ae-1",
+              "75ce46930fb05107b394ad0bb7d410f4-1",
+              "7b4063703c11766b93301217bbcd62e8-1",
+              "ba0d59bd57fb534ccdaedfa7824c86ac-1",
+              "ece5b9bcace268a787ac4fadc0d8cfd9-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "claude-AlphaCarbon-Master3s2",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 7,
+            "difference": 0.0,
+            "ids": [
+              "5b4e22d1911cf712d6170687ed76651a-1",
+              "5bb1a2ceec17b436982dee80662cce9d-1",
+              "7b6acacd92e29b45333a5b9768c290b2-1",
+              "845939ad99f3cde8167ad210124237f6-1",
+              "89d2c9398291b7a502866766678ee990-1",
+              "b6c3f95e0664711bc323b07d2566fb42-1",
+              "d2154373b778e00ce1b441bd271136d1-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "claude-opus55-cloud-Echo6",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "620eb58b01d5a4754b4fd0cca81b98b6-1",
+              "d8ec95e6ad628fe433a20a263afc4683-1",
+              "f5fc4fd1488ba77b6a9b48718d0294fd-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "master3",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "750c6b118ce94bf95c86d5cf03564da4-1",
+              "c896cc24202394e0a67e5dc715ebc5eb-1",
+              "df150b540e540c555583ee5560fc7f88-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "stephen-K4TacSearch-v6",
+            "lead": {
+              "maps": 6,
+              "wins": 6,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 9,
+            "difference": 0.0,
+            "ids": [
+              "2756f3711a63380c07ee91a0b35e3a07-1",
+              "501b128fcaf8947c1ea14233fab34a82-1",
+              "84eaf222e41434c9e40e675062b5855c-1",
+              "b46151326adb9aeaa65f0d9e2a029c35-1",
+              "c31f217be62c7b48987caa78689b5553-1",
+              "c3dd2c953fa5423c7e0aa15049bb45a0-1",
+              "c608523dc5cce91e739abd4cde952388-1",
+              "ce55542a69e0033f34ec7c880b0c5fcd-1",
+              "dae76acd8cd335eaff7c5f2a61b74784-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "哈基米 v3",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 7,
+            "difference": 0.0,
+            "ids": [
+              "01ec00f9bd7f9672285aeabfb775a39f-1",
+              "378a95da4846d11dfe1d29364eb82ca7-1",
+              "7e608da37692ccd8aaadd570c71e3f3b-1",
+              "92f221539315ba933e90146afb33d82e-1",
+              "a02b0cafe009ebf2846ddc4138312b72-1",
+              "b3e7865ade92658653844579ad71698c-1",
+              "b6bae6f1cf6178a6e582016d3595019d-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "哈基米 v3pro",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 7,
+              "wins": 7,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 8,
+            "difference": 0.0,
+            "ids": [
+              "08c4a2884efe9dbb5c220078e7c86d27-1",
+              "152e28d8f7b53ab58c9f1044244025b4-1",
+              "27d7a24e0da5d593ca7364769b65cfe5-1",
+              "7b39651e4f711c70f7c385c4157768ec-1",
+              "7de86eb575b6cefd34f4fb1616681708-1",
+              "87fb19680c0f0c8aac32b776bfd1b167-1",
+              "d1b886d362840bf9fbdb77d6be379366-1",
+              "dc4c7accbefdbbaf0ddd4eee8246c3a3-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "哈基米基准",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 7,
+              "wins": 5,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.7142857142857143
+            },
+            "maps": 9,
+            "difference": 0.2857142857142857,
+            "ids": [
+              "1ffbe35d8e8506e1da1f9808bcb66912-1",
+              "6c1c3101d515559ff0d62e8ba3945995-1",
+              "a30ca4113c70dfefff927a3fbb61914b-1",
+              "a384a0fcf432cd2822a2531901d5e55b-1",
+              "a5ed6809d5d16c9c13a427a33928e631-1",
+              "bb17fc007ee914426412dd54007d885d-1",
+              "ecdefba5ae9174a3ec95552f9b6041a2-1",
+              "f93d7fb4c3020f13c10f2d0314683d4d-1",
+              "f99a32aaffa2b7f98ee0009de66164fa-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "安生N27",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 6,
+            "difference": 0.0,
+            "ids": [
+              "07b68f6d88cfb6897f5afda5e9f9d5d9-1",
+              "0ff6e1f8b9a93c9705247a02d20e1768-1",
+              "576362745a1ea4cde326ff03a473c0ee-1",
+              "8cf341dc05e37fb4f34c4d3c1937eadd-1",
+              "b5b36b7a121625ee7dac3e860e050374-1",
+              "eb28aa04921b0d9594035460b76bf41e-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "安生N29",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "46ac28cafbad3d854b81b3877ffba565-1",
+              "5042efd4d8d363176be06eacb4e5dad1-1",
+              "aa089e4168432aa6d3c9dd1754e73016-1",
+              "c0268250b9b4fc5c9a7de1b3af6b0d9a-1",
+              "f3fef1318460bd037c449eaf1f2536c0-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "安生N30",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+              "005827404b63ed26c4dcd7d1082d77e5-1",
+              "5aed54adc8c12325d32260186815a829-1",
+              "6471a5a9ce3cc79da61e43dd3d90c664-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "小肥鱼v5",
+            "lead": {
+              "maps": 3,
+              "wins": 2,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.6666666666666666
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 7,
+            "difference": -0.33333333333333337,
+            "ids": [
+              "13b240c6405446fca884431db1d1a998-1",
+              "8268f58fc636e69d5419275335ffef1d-1",
+              "95dbdf8b8eb89855a8636bb878be3a57-1",
+              "a33f813736717aa76b70854b7ba169aa-1",
+              "c864c6985a0a57bd24ff8c791202fae5-1",
+              "e4dbf1eabc7332e92fc98e1e10c426fb-1",
+              "f06375b2fe343e5cd3d7699237f27374-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "小肥鱼v5-d5",
+            "lead": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 1,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.3333333333333333
+            },
+            "maps": 7,
+            "difference": 0.4166666666666667,
+            "ids": [
+              "3e0bf6875b88361de0da2fdd1559de16-1",
+              "652c5f3bb977bba66e919092b7c19ab1-1",
+              "6a79e693899c89338d20a067a9eb3545-1",
+              "7ef08be7068b7b2e99636a9225ff8214-1",
+              "a36839a7d1901ace27f520009a39ac14-1",
+              "be89d1a82c5ded601db5680c4323a1d8-1",
+              "fd9094b27217d128065bac8f25dce833-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "小肥鱼v5-late1",
+            "lead": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "trail": {
+              "maps": 6,
+              "wins": 2,
+              "draws": 0,
+              "losses": 4,
+              "average_outcome": 0.3333333333333333
+            },
+            "maps": 10,
+            "difference": 0.4166666666666667,
+            "ids": [
+              "19d54846f2afb89af4d0327480bfd125-1",
+              "1f3373dc83f462318f7d9240567b854c-1",
+              "303a99941ea0a5b98da66a5b01596304-1",
+              "60b4670b0e5f48c2cf35e9ec7647a406-1",
+              "7eaea9e5b1f692cd9a6427dcc69e2e9d-1",
+              "89bb4574a80f54b23976aaed2c06d525-1",
+              "bb79d509ab8b155b21cd7fbeafbf9619-1",
+              "bca8f5de1fd2e3880ae0c9586110c8e1-1",
+              "dd08059105e8a1beb41f749c3c7b9959-1",
+              "df00ceb239e5cc100d8aa5807562706c-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "小肥鱼v5-late2d",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "191303053fd0377d43508c45448b2d5c-1",
+              "33a381791db9407088cb1fd34ae119dd-1",
+              "f5ea0fe189a028d62b3fa89259ae7630-1"
+            ]
+          },
+          {
+            "player": "ClaudeFable5.2-v7",
+            "opponent": "测001",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "0daf57d4607dbfdd85780f059d6f0263-1",
+              "1842fb8a932e4f367e5453e5a834247c-1",
+              "9b714497f779eda12fe6f3e4502ec1e8-1",
+              "c4e3313c7c6ac1c6c994c234200c43d8-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "AgyCarbon-P2C-Godslayer-CVI",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "787677d879c4f051fd7409e9720c8680-1",
+              "824db87d438a9984abcf333add35b479-1",
+              "99db2556ff04e3927fe94fb5473f1c5a-1",
+              "eb67023ab51f46daa5876dbae8b8aa97-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-BC-v2",
+            "lead": {
+              "maps": 5,
+              "wins": 2,
+              "draws": 0,
+              "losses": 3,
+              "average_outcome": 0.4
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 0,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.0
+            },
+            "maps": 7,
+            "difference": 0.4,
+            "ids": [
+              "010f22a50ffb9be93e7dc3dbab51d9a6-1",
+              "1c57510547c0017921d65e6fb9aef7b8-1",
+              "1e588d9db7de4841e2b5f29b52cec7a0-1",
+              "2f24881c665a585a86bc8801951a2e1d-1",
+              "40cdcc820a091d9655bb5514a6ba10b4-1",
+              "50fef4261456110385d1218f28191ee1-1",
+              "946e17ef5c24910bb0f2994edf3c8e57-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-BC-v3",
+            "lead": {
+              "maps": 7,
+              "wins": 5,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.7142857142857143
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 8,
+            "difference": 0.7142857142857143,
+            "ids": [
+              "1879e222d65933205f2f77bee4f69be7-1",
+              "32f130ce8abe84ad3d0a03a7da99edd0-1",
+              "35cc4551971eafcb184652e1e1265cae-1",
+              "5cab8ea560cc86c218f1e3834b3ba0a0-1",
+              "7a0ee8262373cbbfedb4d6ccd43d3f8e-1",
+              "7c748d458b4c2d46ff3f70fa9129637f-1",
+              "83e9adc323134e5934d2397baa7c34c3-1",
+              "c4c2d4770d4752d577912512017b0fe1-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-Search-v7",
+            "lead": {
+              "maps": 5,
+              "wins": 3,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.6
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 0,
+              "draws": 0,
+              "losses": 3,
+              "average_outcome": 0.0
+            },
+            "maps": 8,
+            "difference": 0.6,
+            "ids": [
+              "36c89c07a3ff770a64d1466dedb22c85-1",
+              "71cc89413700c2845120281fd37a3b6b-1",
+              "863188f91f7a20a4af48ffdfea2d5853-1",
+              "9e12e2e1cf688e4cc1da912e6afa4bb1-1",
+              "b01ae1cd4390759bc097c9edfd16f9bf-1",
+              "c665cfa53f5efed00908ee15c04549bc-1",
+              "dd016b8827e7dfc658bdeb8e739dbc84-1",
+              "eaad2f6769a1a9ee75b26f939a3f9204-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-Sym8-v4",
+            "lead": {
+              "maps": 6,
+              "wins": 4,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.6666666666666666
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 7,
+            "difference": -0.33333333333333337,
+            "ids": [
+              "1f6c0fee6250b8363a6477016a9313fd-1",
+              "3c67ff5fcf5bd41170b5bbb6362bf286-1",
+              "79184f50f73a1d69c329066747db1eef-1",
+              "90489f3da313e5a949af5b04f3fdd586-1",
+              "d86cd37e5bc6d043fdb70b88a5cca75b-1",
+              "df7bba8ea3b74884de3f57153b824f9a-1",
+              "fc55f3dc3e6142cae9d85e430d69cc41-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "ClaudeFable5.2-v8",
+            "lead": {
+              "maps": 7,
+              "wins": 2,
+              "draws": 0,
+              "losses": 5,
+              "average_outcome": 0.2857142857142857
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 8,
+            "difference": 0.2857142857142857,
+            "ids": [
+              "198ded9f420ce95066faf51c3b94332a-1",
+              "62413ee210b7952323e8eb9e25d60ae0-1",
+              "699215a83ce4184a3888b198680382d0-1",
+              "7bb3e67400971b6cb649422afc869839-1",
+              "7e40ad52090dcffa1138fb958c512574-1",
+              "99b0044afc038de6f7613e4bf151de6d-1",
+              "d4ed7ba4a5e456aeebc9e2a5af8e398c-1",
+              "d7e841190da0c6f9d1c125a36596d240-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "Echo3",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "840f7b4d0661c1b0a7c92319b0b4e00d-1",
+              "a6811f8d92482049094943d0f675ad0e-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "Fable5.2-Max-V6",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "bd90eaf40ba90e240978bea11dd438f2-1",
+              "c6dc1e95935972cdd15349a0788ecd72-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "Fable5.2-Max-V8",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "7a24c5dae96b333fce5e66604b35f495-1",
+              "aab542841ba5a20b5201cd145ce1dbc1-1",
+              "d7a885db789684f2cf438192357c31ef-1",
+              "f882b8c68477abc4b49d9175312abfac-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "Grok4.7-Search-v5",
+            "lead": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "trail": {
+              "maps": 5,
+              "wins": 1,
+              "draws": 0,
+              "losses": 4,
+              "average_outcome": 0.2
+            },
+            "maps": 9,
+            "difference": 0.55,
+            "ids": [
+              "23e38461bc8aecb04340191dbcade1ab-1",
+              "2c09951e59f835f67eca0b9ecb5f9966-1",
+              "34ddd43a34bba294673633eed53c414e-1",
+              "4bdfac068d49b11cb3245e725c50bdc5-1",
+              "6f13f55d2deed99c2bbe39b06e9050c4-1",
+              "8ca8e689419c1459ed749ce79a88a68e-1",
+              "b40389d37f42bc925df5868296c890d6-1",
+              "c0fc9aa4596d4e152419a98d32e4beb9-1",
+              "e53faf6160956a07bc575a4d0f9d50c2-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "Krypton-CS-Plant-v1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "d229dc8efbe183368bee4e2cc2f4cc6b-1",
+              "f9d91fb16ceb2701acae533a0c8a719b-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "Krypton-M3s2-EarlyHome",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "5297785330296743a838dad3a03a2a2e-1",
+              "6776b4b3671a799ee06402bb28aa8842-1",
+              "873db302dec132b8827abdb6f71dac11-1",
+              "8882f5678ed9d791c86a5e18507e53e4-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "claude-AlphaCarbon-Master3s",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "0242aba84f33ddc633e48171985382b3-1",
+              "13642b3b894be022b1402dc03e7c9e78-1",
+              "3a11109f38e56a5e97867b902a2233af-1",
+              "94bc5951110da7865a57d2b64a22c3b5-1",
+              "f0f8cab17bc9481aa0db49b8f09955bb-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "claude-AlphaCarbon-Master3s2",
+            "lead": {
+              "maps": 2,
+              "wins": 1,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.5
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": -0.5,
+            "ids": [
+              "12637bb65cb1f3638dd4b61deb71ed80-1",
+              "44673175ac6ef5213c2db97f4863a3f7-1",
+              "7080dd608162c47e5856f7594360841e-1",
+              "72bcac4dcfd19fce173fc22e0395ad7f-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "claude-AlphaCarbon-Master4s",
+            "lead": {
+              "maps": 5,
+              "wins": 3,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.6
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 0,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.0
+            },
+            "maps": 7,
+            "difference": 0.6,
+            "ids": [
+              "36ae2bca3f0666a2bd2f4691ae2a4924-1",
+              "43d342b74b7a7656217a50e6d5715a9a-1",
+              "4fab98c37816e983685cec959e4559f2-1",
+              "536d3fdd4c0db739b4e1fb345eb71db2-1",
+              "6acdb8daa9bb535f5d1610aca88c25fc-1",
+              "b89fcfd8f2870b2929e4aaf1ccda68cb-1",
+              "ec30867656f9440d6259404eea26253e-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "claude-AlphaCarbon-Master5.9",
+            "lead": {
+              "maps": 2,
+              "wins": 0,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "8f1eb95abacb819a0c50bdc570a5e5f1-1",
+              "9fac7c753cb832a57e5c88ef75106d78-1",
+              "ecd923ee04407eee4f7397b26236bb6b-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "stephen-K4TacSearch-v4",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "7205d2bba8517704f74331f0413ee482-1",
+              "845ac667debb2ebcd22a13fcf6e6a1dd-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "哈基米 v3pro",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "3349967f89a1a16a24771102499d358d-1",
+              "369fe4fc276ae06b1af2d57c024f8d3d-1",
+              "37f29f1c9b192d92302c33b4410d6694-1",
+              "d8756d32849d78931207c6cf40428bde-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "哈基米基准",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "86a1ed06c2563654e51008405534ca22-1",
+              "afd365f9a33dd66c1ee81113a1173241-1",
+              "ce379023331f6c12653b72191c7c613f-1",
+              "df89e587084ba24505bc44539aed383b-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "安生N23",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "2fa227b2120b451dcb56e42ca636c23e-1",
+              "45d8630dce8b102bde6070a830fd9e05-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "安生N25",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "32ea6bf5607f06b6e79ae3c78699bf74-1",
+              "6d62f356a2f10b36e0fea0bf48ecf51d-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "安生N27",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "15bce4310212b556964586541c81c2c4-1",
+              "3c3b4631389c19cf08dbbaf5f8c64a8a-1",
+              "fc0998469046e317e82d28febd49a080-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "安生N30",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "038037a1c4844e22cba0fd94bc1ac850-1",
+              "7dd6b6224728282c5f147f9ef459f22e-1",
+              "d1027e099480ab309c731d672d3a85de-1",
+              "f0c37edc6b713f2e8b9468224cf66d1c-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "安生N31",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "0c5ef73f86ff61e725f136d45688a989-1",
+              "e3ad82c6945b389d0151a63af85015bd-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "小肥鱼v5",
+            "lead": {
+              "maps": 7,
+              "wins": 5,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.7142857142857143
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 8,
+            "difference": -0.2857142857142857,
+            "ids": [
+              "37de73b56f7002e51e3b71a6d11c8788-1",
+              "5b81249ba2e57ae0f308b7a75a631705-1",
+              "829b73223e908cb59029ea27e336ee9f-1",
+              "aa35e48f59924a677991a76f43eb7d79-1",
+              "b7a4fd4c3843ccdcac8c3d076eade39a-1",
+              "d9ae79b746f277021c8dde10d4352b27-1",
+              "e6ff9db04dbd711d2ce41d359d310eeb-1",
+              "fd2ca2aa328e4e994016cd5744964992-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "小肥鱼v5-d5",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 6,
+            "difference": 1.0,
+            "ids": [
+              "37db10c00d203c9c886282aca1f8bdbe-1",
+              "4599da74fcd67e731c35faa15e59124f-1",
+              "76bf84b1dbd085b90e872fadd153fc10-1",
+              "7aab1c29fdac80cfc2ae3672f4467127-1",
+              "e53a7b52c53e32dc6c23ac222e9c04b4-1",
+              "fb01244273fdf046ee4b61512217bc06-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "小肥鱼v5-late1",
+            "lead": {
+              "maps": 6,
+              "wins": 4,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.6666666666666666
+            },
+            "trail": {
+              "maps": 5,
+              "wins": 0,
+              "draws": 0,
+              "losses": 5,
+              "average_outcome": 0.0
+            },
+            "maps": 11,
+            "difference": 0.6666666666666666,
+            "ids": [
+              "18507eadf5e15f1033709b7e0edddee4-1",
+              "1ecbcaa7d800e2df6054bd1a38dd0cbc-1",
+              "2032e2b9b668d449b5d389917111350c-1",
+              "5f889b493cd83c32ccd13a8a1eb2da3b-1",
+              "7bccbf3155f4d6e0660eb54163952557-1",
+              "83b0cfed6f7c694a4f332c6f5780ffdd-1",
+              "856f3849d2c0d2a053e50f70b7c1e65a-1",
+              "99b70911a16e374692f19cfdbc7d7e6f-1",
+              "cc15cf6d163bc0c91cbf0150956f87bb-1",
+              "d5cfe4b356bd20ad93117d31cc00164e-1",
+              "d7f52a633490faf1b7b28f3a1ddcecd3-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-M9XJ-630",
+            "opponent": "小肥鱼v5-late2d",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 1,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.3333333333333333
+            },
+            "maps": 4,
+            "difference": 0.6666666666666667,
+            "ids": [
+              "1bf0cbefc23b33927e222bf2fd83bbff-1",
+              "6e93f17dd911898feb0c7178e460647e-1",
+              "d910417eb70b69c21cf1c840f457200f-1",
+              "e5dbdca2429618d17fa34776cd580fff-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "AgyCarbon-P2C-Godslayer-CVI",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "1e6ec11d3dbd2e8912e5ffb5726ca268-1",
+              "9b5b3b67b3ef0ae1baf0c731890c5d5d-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "ClaudeFable5.2-Search-v7",
+            "lead": {
+              "maps": 6,
+              "wins": 6,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 10,
+            "difference": 0.0,
+            "ids": [
+              "01ddd5357eeffd9dbb1c8450bd66c060-1",
+              "1b4a36ebaa6fd1f3e8916df5ef9f06f3-1",
+              "39d8e7b9e55d498e804b1ea26202b6b4-1",
+              "40e03b3843b859f93cca421b55f34bce-1",
+              "523e06f744f6c773ca396d3e95d3597c-1",
+              "608cb1400eaaec509132a25955ccaa1c-1",
+              "675f66a720710be43a2954add2e4ab1d-1",
+              "b2da0b46976874be16fe5fcd0e9c9e69-1",
+              "b9391088b8078fda2a5a5e386bfa9e6a-1",
+              "ce38317785d0cbe4c6604e09de4d7ec6-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "ClaudeFable5.2-v8",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "maps": 8,
+            "difference": 0.25,
+            "ids": [
+              "10230bcabe59fe9b8ebfc783b70fb528-1",
+              "19f239ecb48fc4fb71d75b881b43ecef-1",
+              "3d8622bddf8ef1f55e58f173bd93f83b-1",
+              "5d8eb74cde4af92452d2b7d2b79437f6-1",
+              "758cdde9ad1b8253aefd3334793c3471-1",
+              "765362cf212416fdefacce84c71e9a4e-1",
+              "961b6cf4fbc3b6d8c00e42d874fb361e-1",
+              "fd8d4adab566629c5645a57ab64af5c6-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "Echo4",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "7b0ac720a775668bb4c573b84ae8600c-1",
+              "b3faa1310d22d0a5b8cf0d5723904592-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "Echo5",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "6225418b4a27f24df36a7358fdc2961f-1",
+              "74eab5e1fb24f6a3af0e00d24062c527-1",
+              "a7d0b08b5bbcd3c68cef5bd8a63531ec-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "Fable5.2-Max-V6",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "5457b112c43ae5448f814e17b1dddee3-1",
+              "61f3f2cc6086dccee7f29289120efce6-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "Fable5.2-Max-V7",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "046379fd9ecbd0c973e4fb3e003e9c10-1",
+              "24656556b92885482d60d3bd644dae16-1",
+              "4fe2161bf25cdf8d895ebffb2a0eaa4d-1",
+              "5841f5178648a30d7dcc52c1c115b2d9-1",
+              "640422dd5b8e11e21253dce4845537bf-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "Fable5.2-Max-V8",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "0bacf1c26efb9c7c4340b01104a8582c-1",
+              "30c9f1b6454bd32017cd65d8732c4851-1",
+              "b8090c134fc8f13f7ec115e6ff8bcde3-1",
+              "d2148866d3c47a4eb023566dcccbce2b-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "Fable5.2-Max-V9",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "07e8c3a4765b318539a62ed27bb1a712-1",
+              "37db8290b9fabca801b7153fa0cc5038-1",
+              "59b0b66e677b5d1af15607fd98938a6d-1",
+              "8e4280f3b2b19f50b0ea083c81a9b855-1",
+              "d191b209c56c05f3374e5887b6621939-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "First111-1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "2ee7bed6fad97767b546a9ad5aea0616-1",
+              "30ef16170f5f159a35ac534ea3a42380-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "Krypton-CS-Plant-v1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "d0ac62b829c9a0938c7b235674bbffca-1",
+              "da3d325e08b9f0f856db526273799855-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "Krypton-M3s2-EarlyHome",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 6,
+            "difference": 0.0,
+            "ids": [
+              "87d57e145613dae8886d99fda964b37a-1",
+              "92393e35834810d74fd2dedb4d088bd5-1",
+              "962b767eb444dac98d6141026556a4a1-1",
+              "a1cc4d81983ddba446aa70ecb2199ac2-1",
+              "b4562f41a7a4134ef34d4900d2a62e29-1",
+              "c75e95bdff9633fcc0e0ef78e6810ee2-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "claude-AlphaCarbon-Master3s",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "046f28490a1eff230beabd23b6ccf27c-1",
+              "20253359836f589275da866d335a620b-1",
+              "207e8960bbe04bf23ed6f6bdf94ed7a6-1",
+              "625f3221f4849b353bdad8ec50cfc22d-1",
+              "b67c04eb8932d7fe9e4cfe531877024f-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "claude-AlphaCarbon-Master3s2",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "28393f10a717a02c213790730a008a67-1",
+              "3689a5d13f56fb0e6098da7fdfa81bdd-1",
+              "38afaa68909d71b38df5309115bc3ebb-1",
+              "f68f08d0cb28f8215a3f26d1002f3eb4-1",
+              "f79352e66e4925297b8b2dfff0303d93-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "claude-AlphaCarbon-Master5.9",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 2,
+            "difference": 1.0,
+            "ids": [
+              "5a436ad4ca6114fa2fe7a948f0990d87-1",
+              "a7868b250b69d6ccbfa4674505f48f8e-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "stephen-K4TacSearch-v6",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "118b0123eb1534ace5b7183e342880f5-1",
+              "555901ec78ccaed1a2845e0dad241c6d-1",
+              "7a0aa1b6c366da07824049c1bdd40719-1",
+              "d536092329db21bf89a2e0fd74dcce3c-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "哈基米 v3",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "19e2fddf2ec9b58bddfa54341082cb80-1",
+              "2fafa206172873afa9899d34edf3f147-1",
+              "51cca854fa130f0852fd2cf07246a57f-1",
+              "65cfe30559e12ea0295b91dfabb1a1ad-1",
+              "91a443bea07e7a9129bb75eeec78061b-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "哈基米 v3pro",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "0cea87e64ecc107c9bce51baab2f3a1f-1",
+              "205c50dac0422f6ca0fcd15e5b6329ee-1",
+              "88538e3443eea2741079d7d20ac1f0d1-1",
+              "9e946d662dc1e67f4386db91e586bd92-1",
+              "fb45b91314eb9ee4b52c49554f988d7f-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "哈基米基准",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 6,
+            "difference": 0.0,
+            "ids": [
+              "07f75372fbdbbeba13f0b309d5509df1-1",
+              "12864cd8d92d799e519e98ae25b93294-1",
+              "2fc64af62e6ca54b246c8c0fe2df4849-1",
+              "7063b155c805afae3855a9428c39e922-1",
+              "e93683750d4a2c57d3872a93d50ef4c8-1",
+              "eddb8d5b510fae8e86925b913b9020c7-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "安生N27",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "4bfc93454b8a97405be0974447766eb6-1",
+              "50d329e415917e50a5b01dcd05510f2c-1",
+              "7fc47df40581cb1e00bac36610db6884-1",
+              "cd204b84ba9dcc89c6d5ca4644770f4a-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "安生N31",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 1,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.5
+            },
+            "maps": 3,
+            "difference": 0.5,
+            "ids": [
+              "686b133454bc60cf7c96823298e67add-1",
+              "8ed2d473a37cfc1a1665414e75b8192f-1",
+              "a4ff6c4f5bf820ababc3f927525db833-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "小肥鱼v5",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 7,
+              "wins": 6,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.8571428571428571
+            },
+            "maps": 9,
+            "difference": 0.1428571428571429,
+            "ids": [
+              "1ad7349326f426eb8f5120bf5b3fc0e1-1",
+              "42d3e7dcf8afd6b1184f02b43268ab3f-1",
+              "4d40819585d0fafb9ffbbf2eb4642140-1",
+              "8ca9c03feae757f251d692c9fc1b0d69-1",
+              "90137c2dc65535512d055c41d70ed23d-1",
+              "b968cced15a3d1395ea26c3359613d86-1",
+              "c7a6bfd37cd827404e5399bce3c3ec6b-1",
+              "cbecae9b457f46c0238ccf7aa4f35982-1",
+              "e654ace72cd3bba051e7d2438960bb6c-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "小肥鱼v5-d5",
+            "lead": {
+              "maps": 5,
+              "wins": 4,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.8
+            },
+            "trail": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 10,
+            "difference": -0.19999999999999996,
+            "ids": [
+              "00cf90e4ffcb535b73ad9e3928446479-1",
+              "2fc87c2c27e3c05652e05ed579a4ca92-1",
+              "66c97f12298043dc8a228252d398f18c-1",
+              "6cd342b219c6663f37bc4ad8f55e78f4-1",
+              "740ec91daedd41d11c8e507ad66f72db-1",
+              "7444bcbc58da5f8905b750e0ec474b0c-1",
+              "7655beca35ef6ca733a517e4c4f2de1f-1",
+              "7c5ffb00cbbacaafd3713c1fa8a7fc3e-1",
+              "92ce93301e545352d840e1bcb83a06e9-1",
+              "b28a04e12f5ce61c4844dda83bee9ddf-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "小肥鱼v5-late1",
+            "lead": {
+              "maps": 6,
+              "wins": 6,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 9,
+            "difference": 0.0,
+            "ids": [
+              "0673c633c186541c7b97fb9e08430e76-1",
+              "326cb1584c798daeec12fc4ded2f137d-1",
+              "63537cdfce04b57b4eb9e53bfd320627-1",
+              "6c6290127e7d7876a97ba4b6a238522a-1",
+              "71ccf87fb7cf1be34a7affe66c3f6af2-1",
+              "7c524e0c3bad4584bf87df8593b0bebf-1",
+              "9f4b8a9dfc9f53b72c2360c94ec9c0ad-1",
+              "affddf22a40471b53ae1a193d6be9724-1",
+              "ee1cb29d1afec9043b750ae7ee4e94a5-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "小肥鱼v5-late2d",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 2,
+            "difference": 1.0,
+            "ids": [
+              "7aae70e8c212a96636c0470d98c6d6b0-1",
+              "e936708c304b554b1d61f592d11a04ad-1"
+            ]
+          },
+          {
+            "player": "RyanX-AIPowercore-it720-preview",
+            "opponent": "测001",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "9dfa5af7e050bc98a8cd616a960bf34c-1",
+              "bdc8601f3d70ff1f26312a8576a23bf1-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "AgyCarbon-P2C-Godslayer-CVI",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "dbfe0909e055a4becb14f29d06d818ef-1",
+              "f39aed0b73cb0af85ac40496bc999a11-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "ClaudeFable5.2-BC-v3",
+            "lead": {
+              "maps": 7,
+              "wins": 7,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 8,
+            "difference": 0.0,
+            "ids": [
+              "6ce0e3516c513493910bd7d4cdc86361-1",
+              "7981780bf487dcc1c83d7c94d5faea25-1",
+              "a1de950526b7bfa32c15301e55ae8420-1",
+              "ab65ffdc07226a0ab6d7bee5997c719a-1",
+              "c2fd0dcd97929f12fe6bb3be60a89415-1",
+              "c4d761ec5af1ee73ab7cce2b9c6a2b08-1",
+              "d48fd1719afcfee8b77a6b8cb7ae2997-1",
+              "f7831333de4a7380c0527cf2af42701f-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "ClaudeFable5.2-Search-v7",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 8,
+            "difference": 0.0,
+            "ids": [
+              "1d8a5e60edfdb28ee1801eccbf220f6b-1",
+              "23353c8f6d169b431d678b6653804992-1",
+              "4cab29b766a5a8f60b9a4347adb05863-1",
+              "6208b896bf5cfb902605cf049560d0e4-1",
+              "8028b5874ca6fdbf50c83b7f3eecd461-1",
+              "841d11240fa7482c6d21a4185099f049-1",
+              "94c0826751e649dcc2cfd54a8553cdd0-1",
+              "ac364a420640522907349a4f31ea09ef-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "ClaudeFable5.2-Sym8-v4",
+            "lead": {
+              "maps": 7,
+              "wins": 7,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 9,
+            "difference": 0.0,
+            "ids": [
+              "17cf6cd3cc8ea8a27269047e2b56be8c-1",
+              "20ed2afd8245781230e23f73b9bddbfa-1",
+              "2ebe44bee72d74b66c5b69f09ce99575-1",
+              "39637cfc931f6c15cf156f2f4c26ac51-1",
+              "737be0fd4cb3b9698190d1631af2d042-1",
+              "9581b889b5ffc67ed420ccc0b96d00b0-1",
+              "b0de87e741fd0279b0430033a1e7abaf-1",
+              "bdc8435261e23a96b1931a53c4c325f8-1",
+              "caa5901be2e08abd0d666697dc542a84-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "ClaudeFable5.2-v8",
+            "lead": {
+              "maps": 7,
+              "wins": 7,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 9,
+            "difference": 0.0,
+            "ids": [
+              "16246b994fa62016c8f673db3f47426a-1",
+              "3199ea6fa6700a1cd596c1ffd96b34ec-1",
+              "4f522ee8ab66b4ffc68bcf3822389e89-1",
+              "5a186082f07f6f0eca9094cfe678508c-1",
+              "8caa0fdab6a29ebb41ddbe377dfe28ea-1",
+              "8f459a86f11b9b539c9b192448fe6bda-1",
+              "bbe51a3424ac2226ed8d2252fe2201b9-1",
+              "edf3b8910090e3e652b24612b6d43af3-1",
+              "f27bf25a57669091127e4eeaabea7b1b-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "Krypton-M3s2-EarlyHome",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "45f77f0d7876a94ddb910c4a04982b0c-1",
+              "59aeaaca0ecde773785f8ce09a0aeecd-1",
+              "7adfb38706a6855c057758e37a1914c8-1",
+              "b068fe500c6bb66b8f091676479d64a7-1",
+              "c83854a8bb70a683b57de37af0f0b66e-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "哈基米 v3",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "00f7e221872bf7bc75a3847676e17b56-1",
+              "0b8c45ecd6b9bec5e30c62a3f9b69daa-1",
+              "7edaeef85acdd6175b5151acfa9e4e16-1",
+              "8dd781b85a33e6a28d8476c0dcac9e11-1",
+              "ca4a03a707b01a872af62ecb29573f05-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "哈基米 v3pro",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "1fd5e494424c26bd81a9e5f7ba2e6613-1",
+              "5ab68c0476536c6194846de0d987a1e1-1",
+              "774d051ac0beeca433b63362f249ad0f-1",
+              "b67eedf5ab9ec4ffbd941e3cbab635a5-1",
+              "db0193406ee795dba5018c02e6ebf506-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "哈基米基准",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "1717d1fced6509c6c4d224172b8c5beb-1",
+              "1fedcf34baee77b3e866de8065948aca-1",
+              "392116cf7bf821f974683908f2924353-1",
+              "81602de8cc2ab08aebf643830c60b33e-1",
+              "8fe94754c17c07ab3a959ef7e3314d70-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "安生N31",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "349b40bb3837f7264c063841b7812e2c-1",
+              "5256711b9f8cbe46189d1f683cc928b3-1",
+              "c62160da26f6a96119319c9fbae4f6bb-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "小肥鱼v5",
+            "lead": {
+              "maps": 6,
+              "wins": 6,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 11,
+            "difference": 0.0,
+            "ids": [
+              "23e6019f321ed539386263c3e85b8e42-1",
+              "34822028068c905ca1bf90f45a005aef-1",
+              "37768a0cb18b1a14d5b8103e0041de6b-1",
+              "3e5b1e2e17d8b956b21c6e378d1cf861-1",
+              "3fa7ad1b32db4e8f57bb74b00ddb8fe4-1",
+              "95a2b781a6246b7050f0c3a756906e1a-1",
+              "9e94753554981699b6547e96ec02898b-1",
+              "a229117417d0cefbcc646b589530e8b3-1",
+              "b01e870a1892cd87e9bd4bbcb45b9b90-1",
+              "ca8a8a9cb60115f0514d249d92d048c9-1",
+              "e46fc0a3b033ea2662683665fc37c92d-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "小肥鱼v5-d5",
+            "lead": {
+              "maps": 6,
+              "wins": 5,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.8333333333333334
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 8,
+            "difference": -0.16666666666666663,
+            "ids": [
+              "12e2ff04a56cd951318d912e819b91ab-1",
+              "3025ca573d299f0d387c22fddc1fa2fd-1",
+              "3505ed9b6d524d71d58de58f2eabc315-1",
+              "3b40cb24f17cc3852f7b5f234ffef623-1",
+              "4c086ee0a76d9dd2c26d5e2a13654119-1",
+              "9d2ed003f12fa024fd5e05c8be1137d7-1",
+              "cf409979a5c2cef1f2d0894fbfb1512f-1",
+              "e0c126311823190a38dc2bb5fabff800-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master5s",
+            "opponent": "小肥鱼v5-late1",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 6,
+              "wins": 4,
+              "draws": 0,
+              "losses": 2,
+              "average_outcome": 0.6666666666666666
+            },
+            "maps": 10,
+            "difference": 0.33333333333333337,
+            "ids": [
+              "1b3177fc72dcd87cf955642782c41a80-1",
+              "333fd46d4296ba6efbaf68d77450790d-1",
+              "54ae0807115990474ee47ad8c8641b54-1",
+              "8297406e1276d00ed0357d1b978b1e1b-1",
+              "9123289768bfb40633b0c00668825ab2-1",
+              "a203c2ece52f5d44e229e6f6e3a4a93a-1",
+              "ad6b0225a805a79d58a8c3cb47d20ea0-1",
+              "cc55d20939336bf84566156754665648-1",
+              "ec8dc75f8e9b9b1b5f38cbac03f39d9d-1",
+              "f5a8339ea7846cd64b1a27a526341ba0-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "Carago-V2微调",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "4776deb382cafbda838ceaeb5441473f-1",
+              "8fefb27600ec429ba04a3850e38cb98e-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "ClaudeFable5.2-v8",
+            "lead": {
+              "maps": 8,
+              "wins": 8,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 3,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.75
+            },
+            "maps": 12,
+            "difference": 0.25,
+            "ids": [
+              "02a73d9effe7d04131e46c61a036b0cb-1",
+              "2b36d9c3899abac5f4601a09508fe2da-1",
+              "669523683958722b320356f498e02709-1",
+              "8576857b881006a65658502aa0fce156-1",
+              "997232d2523741adbd0403e3750efd03-1",
+              "9e0f21cfd1b7cb04e90174cd255b7d86-1",
+              "c7a43acf0b27bec94831acf5f63e2c1d-1",
+              "d2a3b420acce68d396b69e350814139e-1",
+              "d77adda4082645819a97e5f71e2c541e-1",
+              "e0319a225f8e35a2143a64dae4960d4a-1",
+              "e80e7d3886d13fea2bb412fa5122831a-1",
+              "ee48fd77f50b11aace52810f6eb32540-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "Fable5.2-Max-V6",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "0892c1671ab180361a184b6c0ddb0abe-1",
+              "7951977b9832d6c694e59caf0df53f83-1",
+              "c20010c4b5eca56cd4a307f87dc35689-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "Fable5.2-Max-V7",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "640cf4d5ac8e464b66bf93455c6deba2-1",
+              "9f27c951e34659a048dc3f0afb864fa2-1",
+              "daa91aaf72aa60408f5c36888977dbb8-1",
+              "f8a6bc149397325799ff80e2de38804d-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "Fable5.2-Max-V8",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "1b81abd365f2ed46c3d1da6b24a4903f-1",
+              "2f09025d3cfbd4028af4efaff1813dbe-1",
+              "481a728f3c0bfdca4497ed20cf869254-1",
+              "5f69ba737b6b4dfcfffcd08c6c6fbf5d-1",
+              "abf36a0bafae44ff51c367aca6967547-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "Fable5.2-Max-V9",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "337d835612fef5b624dcf4d232334a48-1",
+              "3cefb5267a6300ebe841eed28fbd9766-1",
+              "be764e5947a438d9b9a6d0c338559e29-1",
+              "dc0190bece37880c391663a537397013-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "First111",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "1841c9fb5bf77087b4129693495faac3-1",
+              "81518c976fa3bfe77d4bd6b3e1498a2b-1",
+              "9756aa749f6487a6593e2133b3ae4fd5-1",
+              "afac7d66b6ca8a4d13967df93d77cad9-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "First111-1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "1c4129dd97facd73433a6f1127f07b66-1",
+              "a81d56feb1e755ed457d3b365697a1ec-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "Krypton-CS-Plant-v1",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "529b2d23cdd33e27a10b54cf557c6810-1",
+              "bda9da62333b0cf018b1cddd9f6b0e86-1",
+              "de65c460c775f6adbedb6a2217c50c67-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "Krypton-M128Search-v1",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "21548060ac200dbec3df57d35ee513c3-1",
+              "421b817dceb3fe811cac6c7ead8e1730-1",
+              "7a92e5a3c1f0bd550d075d45ee3ff26b-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "Krypton-M3s2-EarlyHome",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 7,
+            "difference": 0.0,
+            "ids": [
+              "050f7cf068e8e27adf244ca4aade334e-1",
+              "590146b91a6be88c74092d74b54d1e6c-1",
+              "6a978d3f2ded0608d1b52c9b17ab0986-1",
+              "6c7d3c49cad8818146c636dbab05b9e5-1",
+              "9df8e96aa0d450a42960627f0c273eb7-1",
+              "b4b95a9c8bf827a2684ef801ebd8b920-1",
+              "be73806ef6f30deb3e08f926c7ff4c30-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "claude-AlphaCarbon-Master3s2",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "1cdd726ef54f66516e0d315693c85bf1-1",
+              "dd08a437669794077c5324288a61eac9-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "claude-AlphaCarbon-Master6s",
+            "lead": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 0,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "27b612db5474263ecb2909a57df24505-1",
+              "e96d4dcf4e69f5e9d9af66a9000256e6-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "stephen-K4TacSearch-v1",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "081e11502d87f9fe69ced1e56620e891-1",
+              "4531d3c026f93ba19397b85a1535d505-1",
+              "a9d8deba12fd8896f3bc3e2c357f70fb-1",
+              "be51be0daa809b964da213cb1bc99842-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "stephen-K4TacSearch-v2",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "50cac5af3793a0b9fb69fa44f19de0b1-1",
+              "6c3d9ad534354040af3e2db6e43a436e-1",
+              "a7c3f2f09f52651844bc5effa60fc674-1",
+              "f59c4a6ea2d96ae70a90440c893c949b-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "stephen-K4TacSearch-v4",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 3,
+            "difference": 0.0,
+            "ids": [
+              "cce3d705b482142c1dccfe6bafa13784-1",
+              "e90b9e02d0187e39388af883e6ba37d6-1",
+              "f1e4f4bd9c59bc73c14dc61aef686eb5-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "stephen-K4TacSearch-v6",
+            "lead": {
+              "maps": 5,
+              "wins": 5,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 9,
+            "difference": 0.0,
+            "ids": [
+              "217b7ffa09cd5838cedbe2cd7b6d45dd-1",
+              "3d0d21d6bbb3b30c49075c0156690b59-1",
+              "55e8d9d827dd30e1d72e06a932b43083-1",
+              "5f5daa03787e1af574075785c5c3c276-1",
+              "77d8c3ae9b4c52234ace5d61f137c5d7-1",
+              "95d18ab1be530b142cc29fe159ad1823-1",
+              "989823698f16fb6dbeb8673cc3cc47e6-1",
+              "b9f76da9aaa1349b95eb8d767a059f53-1",
+              "e7e42ca5896934a3a0115f3e1baa136c-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "哈基米 v2 pro",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 4,
+            "difference": 0.0,
+            "ids": [
+              "0ec137b74f50cb88ee57a9e5077a9e75-1",
+              "2ba36ce809c070807f1df8ce9d9896a5-1",
+              "5c56922e61e50f31d194e30658df29ea-1",
+              "778f48d3919f85fce6a83346c9c33159-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "哈基米 v3",
+            "lead": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 3,
+              "wins": 3,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 6,
+            "difference": 0.0,
+            "ids": [
+              "20f31dbccbfe279e2893fcfda0ae8298-1",
+              "393025d96d4d767c1e0eeb0e0761bd0e-1",
+              "6bfc439e37be544e61bfbe5cf8f70efa-1",
+              "72754f2abee913f2c18d7f67a02026b4-1",
+              "c6e8900903560d742b48733a54a20ef5-1",
+              "f75e3739888938ca1df2d6a29228c046-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "哈基米 v3pro",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 6,
+            "difference": 0.0,
+            "ids": [
+              "4a88beaf0cb2452e134481e5f926fa85-1",
+              "62393017e805fa7147e10fc3670da0b0-1",
+              "7f0ef2011cc22070ae0ab8800e5a8a94-1",
+              "bef6d5664071eef80955b1a5855f05f7-1",
+              "ed50a8ff6c3cbc1f0e7d3566c9e4e1a2-1",
+              "fe6fff0b1df597dcbf8bafa23c8c8572-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "哈基米基准",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 6,
+              "wins": 6,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 8,
+            "difference": 0.0,
+            "ids": [
+              "176aab183f1b1f586ed4a0a6f6fece30-1",
+              "35906b33fd22a900c46b1bcf28af3f8f-1",
+              "4faed60a26df9192cc9643cbcd47a7c8-1",
+              "a3cd09d94c8d5719ab564f53c68db493-1",
+              "b7bf53df0b46e2aaab9ae34f244b49a0-1",
+              "b8757536bd56dedfbab0c694b0b735ef-1",
+              "c96ce8e7c46f59aeabe0e490884fb228-1",
+              "e3b9aaabd94bcc73f07b24d1beda59dc-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "安生N25",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "572c2e316de751384ae0b127e417005a-1",
+              "65941a14eb3c07234032ecb53188e2fd-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "安生N30",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 6,
+            "difference": 0.0,
+            "ids": [
+              "37aef17893efcf4c27ebafe6859177c4-1",
+              "88b749bbc6652916deca09c1a44cfad9-1",
+              "918874a5a3fe275ed997dd773123ce62-1",
+              "a5339b36de9977c9a825bf6de5691cac-1",
+              "a76284dd75a05d851d42e1d97582fb17-1",
+              "f5eb1e3e34442a53542a5263bf0589d2-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "安生N31",
+            "lead": {
+              "maps": 4,
+              "wins": 4,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 5,
+            "difference": 0.0,
+            "ids": [
+              "6807d1ae9127e910607e45ea4039ace7-1",
+              "8215da6e9d67928dc6c918742566c953-1",
+              "a3c8f8179e3e0ba6c9e60f3d490de6b0-1",
+              "b89da539fda8c75bad5c0c54d28827b0-1",
+              "f75aeef3d363100c2b170ba8cdeda20b-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "小肥鱼v5",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 7,
+              "wins": 6,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.8571428571428571
+            },
+            "maps": 9,
+            "difference": 0.1428571428571429,
+            "ids": [
+              "00b490c13c7f3afd6419725df29a09a4-1",
+              "00b853aabfec65bd9ecee24c0b8bb7dc-1",
+              "16fe44ae57a6707c88cb25fac96cb7a9-1",
+              "20cf86d80e4621391c705158ad187584-1",
+              "538d11b6048b88feda3310b3e73f8f30-1",
+              "79a6f726539d4747b696666900578ef6-1",
+              "84c38a4e06bec75014d64fc52155866c-1",
+              "bd11332a58f618d3f3750b1193eace81-1",
+              "df1002840c44b1b3055ceaad5a5c061e-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "小肥鱼v5-d5",
+            "lead": {
+              "maps": 6,
+              "wins": 6,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 6,
+              "wins": 6,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 12,
+            "difference": 0.0,
+            "ids": [
+              "0f976fbab719fdc1377137109920f960-1",
+              "2c62cc5c7d86a9bd7554001a972f15b2-1",
+              "4ed9d90532588246c93c2705e92ca86f-1",
+              "59456541a62bd2d1acf1c42fcfa72107-1",
+              "6dcbd507378ab984b19ff9c9b7015b6e-1",
+              "73e61d8ed73ece998391151ac3b82148-1",
+              "79960a8111a1698d069e3c58ff986487-1",
+              "b30ab36f856969cac5d2dae5565d9197-1",
+              "bf1723a977f4ae066fed92292ec7e6a7-1",
+              "c4fa4b449c4d3c5f62a29e5a4475cf62-1",
+              "cc5df60d50f8dd9f4e527acb7373a187-1",
+              "dfade732264f7716034817877dfaa308-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "小肥鱼v5-late1",
+            "lead": {
+              "maps": 2,
+              "wins": 2,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 7,
+              "wins": 6,
+              "draws": 0,
+              "losses": 1,
+              "average_outcome": 0.8571428571428571
+            },
+            "maps": 9,
+            "difference": 0.1428571428571429,
+            "ids": [
+              "1fce7056bf01172a1bdf026799141f24-1",
+              "37565c5666fe4150a19427cb75b978a3-1",
+              "791ae149851d64f1b7252c0e44fa5b99-1",
+              "7d651b81bb589a01eca3ff86a2b5f3c7-1",
+              "87e98d34df2495fffdf11f908efab870-1",
+              "a0b06c2df17f21dc9821fc6175c7d7a8-1",
+              "b807deb80d8cc55df578a02236428db1-1",
+              "d1982baa7f56397eca02d7fc882e9a33-1",
+              "f6bfa602792e97292aa7d84788606363-1"
+            ]
+          },
+          {
+            "player": "claude-AlphaCarbon-Master6",
+            "opponent": "测001",
+            "lead": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "trail": {
+              "maps": 1,
+              "wins": 1,
+              "draws": 0,
+              "losses": 0,
+              "average_outcome": 1.0
+            },
+            "maps": 2,
+            "difference": 0.0,
+            "ids": [
+              "3b8f19a9546db6992cfe656001f64f32-1",
+              "dccadac084ca2d5df35fe4fa0543ecff-1"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

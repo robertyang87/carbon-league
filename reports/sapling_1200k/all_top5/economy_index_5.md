@@ -1,0 +1,82 @@
+# 逐局经济索引 5
+
+| 对局 | 席0 / 席1 | 官方分数 | 最大现金差窗口 |
+| --- | --- | ---: | --- |
+| [501b128f](economy_games/501b128fcaf8947c1ea14233fab34a82-1.md) | ClaudeFable5.2-v7 / stephen-K4TacSearch-v6 | 7,058.35 / 5,974.72 | t198–208，785.88 |
+| [502cbf1c](economy_games/502cbf1c92561b42c2fa5b7135aa3daf-1.md) | stephen-K4TacSearch-v2 / claude-AlphaCarbon-Master5s | 7,327.15 / 9,479.14 | t282–292，741.75 |
+| [5042efd4](economy_games/5042efd4d8d363176be06eacb4e5dad1-1.md) | 安生N29 / ClaudeFable5.2-v7 | 8,313.24 / 9,359.52 | t135–145，874.57 |
+| [50554c5e](economy_games/50554c5e234b22c83815794ad0bac9a5-1.md) | claude-AlphaCarbon-Master6 / AgyCarbon-P2C-Godslayer-CVI | 8,638.4 / 6,939.83 | t156–166，1,123.44 |
+| [50cac5af](economy_games/50cac5af3793a0b9fb69fa44f19de0b1-1.md) | stephen-K4TacSearch-v2 / claude-AlphaCarbon-Master6 | 7,482.77 / 9,063.18 | t246–256，983.48 |
+| [50d329e4](economy_games/50d329e415917e50a5b01dcd05510f2c-1.md) | 安生N27 / RyanX-AIPowercore-it720-preview | 5,151.53 / 6,488.75 | t219–229，1,148.63 |
+| [50d4b8cc](economy_games/50d4b8cc634466307faae70afd999385-1.md) | 小肥鱼v5-d5 / claude-AlphaCarbon-Master5s | 5,710.18 / 7,876.35 | t87–97，1,109.18 |
+| [50fef426](economy_games/50fef4261456110385d1218f28191ee1-1.md) | ClaudeFable5.2-BC-v2 / RyanX-AIPowercore-M9XJ-630 | 8,268.68 / 7,653.76 | t76–86，939.21 |
+| [5129f31e](economy_games/5129f31e2b3026222d5917d370159cdb-1.md) | ClaudeFable5.2-v8 / RyanX-AIPowercore-it720-preview | 6,152.55 / 7,753.98 | t69–79，699.63 |
+| [51cca854](economy_games/51cca854fa130f0852fd2cf07246a57f-1.md) | RyanX-AIPowercore-it720-preview / 哈基米 v3 | 8,252.91 / 6,719.84 | t182–192，816.19 |
+| [51f34379](economy_games/51f34379b8018af261ce057ca75692a0-1.md) | RyanX-AIPowercore-it720-preview / claude-AlphaCarbon-Master6 | 6,203.03 / 7,177.28 | t159–169，757.37 |
+| [523e06f7](economy_games/523e06f744f6c773ca396d3e95d3597c-1.md) | ClaudeFable5.2-Search-v7 / RyanX-AIPowercore-it720-preview | 7,304.72 / 7,504.68 | t182–192，954.97 |
+| [5256711b](economy_games/5256711b9f8cbe46189d1f683cc928b3-1.md) | claude-AlphaCarbon-Master5s / 安生N31 | 11,784.72 / 2,836.4 | t93–103，922.21 |
+| [525a8a85](economy_games/525a8a85c50d3e4bb59f7e51eee277bf-1.md) | claude-opus55-cloud-Echo2 / ClaudeFable5.2-v7 | 8,317.79 / 10,434.83 | t289–299，910.62 |
+| [5272264d](economy_games/5272264d8801e98be7f2b265d5c008eb-1.md) | RyanX-AIPowercore-M9XJ-630 / Krypton-M144Search-v1 | 10,603.75 / 8,699.78 | t162–172，897.34 |
+| [52977853](economy_games/5297785330296743a838dad3a03a2a2e-1.md) | RyanX-AIPowercore-M9XJ-630 / Krypton-M3s2-EarlyHome | 7,386.14 / 7,197.02 | t104–114，930.83 |
+| [529b2d23](economy_games/529b2d23cdd33e27a10b54cf557c6810-1.md) | claude-AlphaCarbon-Master6 / Krypton-CS-Plant-v1 | 12,875.6 / 1,351.08 | t96–106，1,578.83 |
+| [53413837](economy_games/5341383755fc49a9ac70caf18b5e65f0-1.md) | Krypton-M144-p150 / RyanX-AIPowercore-it720-preview | 6,361.97 / 8,999.46 | t180–190，776.03 |
+| [536d3fdd](economy_games/536d3fdd4c0db739b4e1fb345eb71db2-1.md) | claude-AlphaCarbon-Master4s / RyanX-AIPowercore-M9XJ-630 | 7,234.06 / 6,797.42 | t231–241，901.5 |
+| [538d11b6](economy_games/538d11b6048b88feda3310b3e73f8f30-1.md) | 小肥鱼v5 / claude-AlphaCarbon-Master6 | 7,076.1 / 6,601.27 | t200–210，838.28 |
+| [53b5c28f](economy_games/53b5c28f01a243ce4d013a0910e38e2f-1.md) | Krypton-CloudSearch-v1 / ClaudeFable5.2-v7 | 8,578.4 / 11,329.98 | t72–82，775.62 |
+| [543067b4](economy_games/543067b4a31ac2a05fc0f64c2728b616-1.md) | 安生N30 / ClaudeFable5.2-v7 | 5,684.37 / 7,339.19 | t278–288，779.24 |
+| [5444e7e5](economy_games/5444e7e5540b75cddfd73ce02c479a30-1.md) | stephen-K4TacSearch-v3 / claude-AlphaCarbon-Master6 | 489.73 / 12,609.99 | t287–297，1,312.59 |
+| [5457b112](economy_games/5457b112c43ae5448f814e17b1dddee3-1.md) | Fable5.2-Max-V6 / RyanX-AIPowercore-it720-preview | 8,515.33 / 10,606.11 | t243–253，847.75 |
+| [549c7e3a](economy_games/549c7e3a6049523817a3338c496ad621-1.md) | stephen-K4TacSearch-v2 / ClaudeFable5.2-v7 | 7,239.2 / 9,406.66 | t139–149，856.82 |
+| [54a165dd](economy_games/54a165ddb36f6b614c78b353e652d141-1.md) | stephen-K4TacSearch-v2 / ClaudeFable5.2-v7 | 7,891.9 / 9,574.28 | t189–199，815.24 |
+| [54ae0807](economy_games/54ae0807115990474ee47ad8c8641b54-1.md) | claude-AlphaCarbon-Master5s / 小肥鱼v5-late1 | 6,262.65 / 5,300.68 | t171–181，863.32 |
+| [54b1d3e1](economy_games/54b1d3e11b3a9a83b488a738de241517-1.md) | claude-AlphaCarbon-Master5s / RyanX-AIPowercore-it720-preview | 5,282.87 / 5,278.43 | t67–77，577.43 |
+| [555901ec](economy_games/555901ec78ccaed1a2845e0dad241c6d-1.md) | stephen-K4TacSearch-v6 / RyanX-AIPowercore-it720-preview | 5,976.28 / 7,672.4 | t86–96，727.74 |
+| [55e8d9d8](economy_games/55e8d9d827dd30e1d72e06a932b43083-1.md) | stephen-K4TacSearch-v6 / claude-AlphaCarbon-Master6 | 6,415.96 / 7,823.12 | t270–280，783.87 |
+| [56169fed](economy_games/56169fed54993f0819a29eaaaef38dd7-1.md) | RyanX-AIPowercore-M9XJ-630 / ClaudeFable5.2-v7 | 6,735.96 / 6,836.7 | t229–239，631.86 |
+| [562b56b0](economy_games/562b56b0f2734d8385249b6daac5e63f-1.md) | RyanX-AIPowercore-M9XJ-630 / 小肥鱼v5-late1 | 7,060.55 / 6,316.56 | t277–287，1,062.4 |
+| [56a397f8](economy_games/56a397f88235246e192fd6f9387e8b3d-1.md) | ClaudeFable5.2-v7 / First111 | 8,662.31 / 7,066.16 | t121–131，676.1 |
+| [56eba1d3](economy_games/56eba1d3291f5e825fbbace1ab8bff3e-1.md) | claude-AlphaCarbon-Master5s / ClaudeFable5.2-BC-v2 | 9,198.33 / 3,783.75 | t92–102，1,002.59 |
+| [57214a54](economy_games/57214a541f3d88fc05c768d31b5e6612-1.md) | Fable5.2-Max-V9 / ClaudeFable5.2-v7 | 6,806.62 / 8,097.98 | t160–170，889.61 |
+| [572c2e31](economy_games/572c2e316de751384ae0b127e417005a-1.md) | claude-AlphaCarbon-Master6 / 安生N25 | 9,674.22 / 385.75 | t289–299，1,035.62 |
+| [57636274](economy_games/576362745a1ea4cde326ff03a473c0ee-1.md) | 安生N27 / ClaudeFable5.2-v7 | 5,267.84 / 7,595.65 | t79–89，978.76 |
+| [5808a378](economy_games/5808a3786fab4c3e1a0dae6e0555d4c1-1.md) | RyanX-AIPowercore-M9XJ-630 / ClaudeFable5.2-Sym8-v4 | 6,591.15 / 6,669.76 | t128–138，1,035.97 |
+| [5841f517](economy_games/5841f5178648a30d7dcc52c1c115b2d9-1.md) | RyanX-AIPowercore-it720-preview / Fable5.2-Max-V7 | 9,856.52 / 8,078.45 | t190–200，878.51 |
+| [58b0a547](economy_games/58b0a547068d08c2fc0c20256694ef08-1.md) | ClaudeFable5.2-v7 / Fable5.2-Max-V8 | 8,137.83 / 6,401.04 | t247–257，933.79 |
+| [590146b9](economy_games/590146b91a6be88c74092d74b54d1e6c-1.md) | claude-AlphaCarbon-Master6 / Krypton-M3s2-EarlyHome | 7,512.42 / 6,361.46 | t275–285，933.72 |
+| [5940370c](economy_games/5940370c9d582c945f79bef05a3b82b2-1.md) | ClaudeFable5.2-v7 / Echo5 | 10,679.74 / 7,131.26 | t170–180，1,044.9 |
+| [59456541](economy_games/59456541a62bd2d1acf1c42fcfa72107-1.md) | 小肥鱼v5-d5 / claude-AlphaCarbon-Master6 | 17.59 / 13,191.56 | t288–298，1,799.29 |
+| [599cefed](economy_games/599cefedb4dd1fbf7c6996859adf1827-1.md) | RyanX-AIPowercore-M9XJ-630 / stephen-K4TacSearch-v4 | 9,761.99 / 7,221.01 | t282–292，924.18 |
+| [59aeaaca](economy_games/59aeaaca0ecde773785f8ce09a0aeecd-1.md) | Krypton-M3s2-EarlyHome / claude-AlphaCarbon-Master5s | 5,136.03 / 7,614.67 | t289–299，693.61 |
+| [59b0b66e](economy_games/59b0b66e677b5d1af15607fd98938a6d-1.md) | RyanX-AIPowercore-it720-preview / Fable5.2-Max-V9 | 7,735.83 / 6,193.77 | t288–298，795.33 |
+| [5a186082](economy_games/5a186082f07f6f0eca9094cfe678508c-1.md) | claude-AlphaCarbon-Master5s / ClaudeFable5.2-v8 | 7,752.19 / 5,914.44 | t285–295，1,003.83 |
+| [5a29ce1c](economy_games/5a29ce1cf123531152fa0b074aa1af1b-1.md) | claude-AlphaCarbon-Master5s / stephen-K4TacSearch-v4 | 8,416.18 / 6,900.22 | t93–103，1,032.3 |
+| [5a436ad4](economy_games/5a436ad4ca6114fa2fe7a948f0990d87-1.md) | claude-AlphaCarbon-Master5.9 / RyanX-AIPowercore-it720-preview | 10,170.4 / 2,153.45 | t245–255，1,335.58 |
+| [5a5f72bc](economy_games/5a5f72bc66bdafbc4d8d90edc9870f8e-1.md) | RyanX-AIPowercore-M9XJ-630 / claude-AlphaCarbon-Master6 | 3.54 / 8,665.3 | t289–299，1,385.74 |
+| [5ab68c04](economy_games/5ab68c0476536c6194846de0d987a1e1-1.md) | claude-AlphaCarbon-Master5s / 哈基米 v3pro | 7,866.56 / 4,628.93 | t73–83，896.74 |
+| [5ac9af6f](economy_games/5ac9af6f84bb01b06e8db1e858c62630-1.md) | RyanX-AIPowercore-it720-preview / Fable5.2-Max-V6 | 10,313.11 / 7,034.24 | t222–232，843.1 |
+| [5aed54ad](economy_games/5aed54adc8c12325d32260186815a829-1.md) | 安生N30 / ClaudeFable5.2-v7 | 7,961.21 / 9,126.66 | t257–267，731.92 |
+| [5af76ed2](economy_games/5af76ed28d079ef5286691487c452a96-1.md) | ClaudeFable5.2-v7 / Krypton-M3s2-EarlyHome | 6,360.59 / 5,351.19 | t188–198，647.5 |
+| [5b44d65a](economy_games/5b44d65a3bdb58f9495f949c309e9bf2-1.md) | RyanX-AIPowercore-M9XJ-630 / Echo4 | 10,680.43 / 7,949.27 | t66–76，762.41 |
+| [5b4e22d1](economy_games/5b4e22d1911cf712d6170687ed76651a-1.md) | ClaudeFable5.2-v7 / claude-AlphaCarbon-Master3s2 | 4,718.78 / 3,497.25 | t210–220，717.06 |
+| [5b4f5cea](economy_games/5b4f5ceaa627db4ff6228b2b18e3aecb-1.md) | RyanX-AIPowercore-it720-preview / claude-AlphaCarbon-Master6 | 1,719.86 / 10,298.6 | t244–254，1,257.53 |
+| [5b5e53f5](economy_games/5b5e53f50e478dc437fd64aff92fe1d6-1.md) | claude-AlphaCarbon-Master6 / Echo4 | 13,681.95 / 1,299.15 | t272–282，1,448.57 |
+| [5b81249b](economy_games/5b81249ba2e57ae0f308b7a75a631705-1.md) | 小肥鱼v5 / RyanX-AIPowercore-M9XJ-630 | 7,912.71 / 8,288.55 | t168–178，640.17 |
+| [5bb1a2ce](economy_games/5bb1a2ceec17b436982dee80662cce9d-1.md) | ClaudeFable5.2-v7 / claude-AlphaCarbon-Master3s2 | 7,454.46 / 7,093.88 | t112–122，663.22 |
+| [5bd3791f](economy_games/5bd3791f228a5dda51411c62a10b6bdf-1.md) | RyanX-AIPowercore-it720-preview / claude-AlphaCarbon-Master6 | 2,328.49 / 10,032.11 | t198–208，1,413.83 |
+| [5c56922e](economy_games/5c56922e61e50f31d194e30658df29ea-1.md) | claude-AlphaCarbon-Master6 / 哈基米 v2 pro | 12,156.11 / 14.29 | t289–299，1,627.64 |
+| [5c690dc2](economy_games/5c690dc22fa34dd49b6211e290a40236-1.md) | ClaudeFable5.2-Search-v7 / RyanX-AIPowercore-it720-preview | 5,501.38 / 6,253.63 | t167–177，667.5 |
+| [5c77e80b](economy_games/5c77e80b452007274aab910bbe3ee917-1.md) | stephen-K4TacSearch-v2 / ClaudeFable5.2-v7 | 3,287.24 / 5,126.63 | t84–94，835.99 |
+| [5cab8ea5](economy_games/5cab8ea560cc86c218f1e3834b3ba0a0-1.md) | RyanX-AIPowercore-M9XJ-630 / ClaudeFable5.2-BC-v3 | 8,415.07 / 8,119.98 | t225–235，735.63 |
+| [5ce27313](economy_games/5ce27313ac00441d226501ca100c6580-1.md) | claude-AlphaCarbon-Master5s / 测001 | 6,841.96 / 4,172.77 | t131–141，736.84 |
+| [5d8eb74c](economy_games/5d8eb74cde4af92452d2b7d2b79437f6-1.md) | ClaudeFable5.2-v8 / RyanX-AIPowercore-it720-preview | 7,410.32 / 8,032.37 | t68–78，687.29 |
+| [5da52251](economy_games/5da522519f81b002b97ed90090bb8f96-1.md) | ClaudeFable5.2-v7 / Echo4 | 7,885.29 / 5,888.81 | t246–256，897.08 |
+| [5dc29754](economy_games/5dc29754c2bff9d5317287f8f3fddb9d-1.md) | AgyCarbon-P2C-Godslayer-CV / RyanX-AIPowercore-it720-preview | 7,196.04 / 9,531.1 | t229–239，801.4 |
+| [5ddcefaf](economy_games/5ddcefaf07f1af139387a8ec0a3eb96f-1.md) | claude-opus55-cloud-Echo6 / claude-AlphaCarbon-Master6 | 5,555.82 / 6,340.05 | t87–97，681.97 |
+| [5e990475](economy_games/5e990475adc9a87cda80b44a7aced113-1.md) | ClaudeFable5.2-v7 / stephen-K4TacSearch-v6 | 7,883.08 / 6,614.54 | t71–81，781.61 |
+| [5f1c99d3](economy_games/5f1c99d3bc615ce89656b319e59fffd9-1.md) | Krypton-M3s2-EarlyHome / ClaudeFable5.2-v7 | 7,575.65 / 8,250.08 | t99–109，1,152.98 |
+| [5f208321](economy_games/5f2083216180fc1cf815f8d90abfc62c-1.md) | claude-AlphaCarbon-Master5s / stephen-K4TacSearch-v6 | 6,849.42 / 4,689.16 | t137–147，617.05 |
+| [5f5daa03](economy_games/5f5daa03787e1af574075785c5c3c276-1.md) | stephen-K4TacSearch-v6 / claude-AlphaCarbon-Master6 | 731.93 / 11,168.33 | t216–226，1,459.81 |
+| [5f69ba73](economy_games/5f69ba737b6b4dfcfffcd08c6c6fbf5d-1.md) | Fable5.2-Max-V8 / claude-AlphaCarbon-Master6 | 250.89 / 11,192.42 | t289–299，1,572.89 |
+| [5f889b49](economy_games/5f889b493cd83c32ccd13a8a1eb2da3b-1.md) | RyanX-AIPowercore-M9XJ-630 / 小肥鱼v5-late1 | 8,005.53 / 8,250.67 | t99–109，710.98 |
+| [5f94f88f](economy_games/5f94f88fa521940d85ba2b6a5ae66b82-1.md) | claude-AlphaCarbon-Master3s / RyanX-AIPowercore-M9XJ-630 | 7,485.27 / 10,021.5 | t235–245，882.88 |
+| [5fb0f13d](economy_games/5fb0f13dacd5a31934a64dcb7917720b-1.md) | claude-AlphaCarbon-Master6 / RyanX-AIPowercore-it720-preview | 8,040.09 / 9,290.49 | t125–135，922.38 |

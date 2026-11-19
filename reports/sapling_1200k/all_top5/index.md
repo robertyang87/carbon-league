@@ -1,0 +1,23 @@
+# 天梯前五逐局索引
+
+共 1,324 个独立对局 ID，其中前五互打 110 局，对外 1214 局。五个选手视图合计 1,434 条，因为互打局在两位选手名下都可查到。下载表每个 ID 只有一行，保留两物理席。
+
+| 排名 | 选手 | 对局数 | 胜 / 平 / 负 | 页码 |
+| ---: | --- | ---: | --- | --- |
+| 1 | claude-AlphaCarbon-Master5s | 220 | 206 / 0 / 14 | [1](index/rank1-p01.md) · [2](index/rank1-p02.md) · [3](index/rank1-p03.md) · [4](index/rank1-p04.md) |
+| 2 | claude-AlphaCarbon-Master6 | 269 | 247 / 1 / 21 | [1](index/rank2-p01.md) · [2](index/rank2-p02.md) · [3](index/rank2-p03.md) · [4](index/rank2-p04.md) · [5](index/rank2-p05.md) |
+| 3 | RyanX-AIPowercore-it720-preview | 270 | 239 / 0 / 31 | [1](index/rank3-p01.md) · [2](index/rank3-p02.md) · [3](index/rank3-p03.md) · [4](index/rank3-p04.md) · [5](index/rank3-p05.md) |
+| 4 | RyanX-AIPowercore-M9XJ-630 | 311 | 219 / 0 / 92 | [1](index/rank4-p01.md) · [2](index/rank4-p02.md) · [3](index/rank4-p03.md) · [4](index/rank4-p04.md) · [5](index/rank4-p05.md) · [6](index/rank4-p06.md) |
+| 5 | ClaudeFable5.2-v7 | 364 | 296 / 0 / 68 | [1](index/rank5-p01.md) · [2](index/rank5-p02.md) · [3](index/rank5-p03.md) · [4](index/rank5-p04.md) · [5](index/rank5-p05.md) · [6](index/rank5-p06.md) · [7](index/rank5-p07.md) |
+
+## 数据与口径
+
+[逐局双席 TSV 压缩表](index_games.tsv.gz) · [来源与哈希](index_sources.json) · [逐帧清单](manifest.json)
+
+打开选手分页，点对局 ID 看天梯回放，点“经济与回溯”看该局收入明细及转折前的布局。“防0/防1”跳到物理席防守统计。缺少证据的局保留在索引中，空值不得当作零。
+
+逐局证据覆盖为 齐全 1324 局。独立验证状态为 consistent 1324 局。
+
+转折是整局绝对值最大的连续十步席0现金领先变化；短于十步的对局取全段。到达转折起点前 3、5、10 步的资产位置均保存在 TSV。若回溯早于开局则取第0步，保留实际步号。终局分差按官方奖励计算；灭绝时它与最终盘面现金差可能不同。
+
+以 seat0_ 和 seat1_ 开头的列始终对应物理席。收入金额按现金账分类，抢到的货物在实际入账前仍属在途；最后三十步与三段区间存为 JSON。布局资产快照的数组顺序为 cash、collectors、planters、trees、remaining_tree_turns_30、cargo_total、cargo_near_bank、cargo_approach_threatened、blocked_bases。布局快照只记录对局实际到达的步数。
