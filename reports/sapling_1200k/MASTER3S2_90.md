@@ -2,6 +2,8 @@
 
 ## 当前胜绩与验收
 
+Sapling 新包 `da9919ad` 已从 24 场仓内原版的真实终局回报完成一次策略网络更新。产生数据的父代 `851c901a` 为 0 胜 24 负，场均 −1462.95；六图中五图的梯度和其余五图相反。旧图同局面复演发现，新网在未计入抽样损失的 1,148 个普通时点中改变了 147 处整队命令。两张新开发图 470/471 的父子对照另行计分。[训练权重、真实行动变化及攻防归因](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/README.md)
+
 两张首次使用的新图上，全网回报训练包 `851c901a` 对仓内原版 **0 胜 0 平 4 负、场均 −824.96**，同采样父代 0/4、−1503.72。每图双席平均改善 +287.40、+1070.12。八局均正常完赛。新网已曝光图的 1/4 与本批分开。独立正式考卷继续封存。[新图全部比分、两席和逐拍收入](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/fresh_repeat/README.md)
 
 精确到同一单文件，Sapling 首胜包 `8da4b465` 在 10 张首次登记的开发图对原版 Master3s2 共 **2 胜 0 平 18 负（10%）**，场均官方分差 **−1164.13**。席 0 为 0/10，席 1 为 2/10。以整张图为单位重抽，观察胜率的描述性 95% 区间为 0%–25%，平均分差区间为 −1590.22 至 −792.81。前 8 场保留本机考官逐拍时钟，后 12 场使用每席独立限额执行器。另列的一场同图同席复测为负。正式考试已保留号段、固定为 100 张新图换席。尚未抽取正式地图，也未开考。验收要求同一批 200 局至少赢 180 局且平均官方分差至少 +500。[逐场身份、两席与墙钟](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/incumbent_history/README.md) · [两次胜局与十八次败局的回款对照](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/incumbent_history/cash_paths/README.md)
