@@ -27,8 +27,8 @@ def play(job):
 
 
 if __name__ == "__main__":
-    from gate import run
-    if not run(): raise SystemExit("Tree defense did not pass its registered development checks")
+    screening = native.module(HERE / "gate.py", "registered_screen_gate")
+    if not screening.run(): raise SystemExit("Tree defense did not pass its registered development checks")
     with native.SHARED.open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         assert native.sha(CAND) == plan["candidate"] and native.sha(PARENT) == plan["parent"]
