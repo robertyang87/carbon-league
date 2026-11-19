@@ -90,6 +90,37 @@ class TrainingTests(unittest.TestCase):
             for pay in (True,False):
                 self.assertEqual(policy.choose(model,[v,.1,.7,.15,.05],pay),"pay" if pay else "defer")
 
+    def test_historical_and_continuation_selectors(self):
+        import gzip
+        import hashlib
+        import json
+        import evidence
+
+        area = train.HERE.parent / "batches" / "intake_02"
+        plan = json.loads((area / "protocol.json").read_bytes())
+        selected = json.loads((area / "selection.json").read_bytes())
+        evidence.verify_selector(area, "intake_02", plan, selected)
+        with self.assertRaisesRegex(ValueError, "differs from frozen registration"):
+            evidence.verify_selector(area, "intake_02", plan, dict(selected, selector_sha256="0"*64))
+        with tempfile.TemporaryDirectory() as tmp:
+            code = Path(tmp)
+            (code / "select_roots.py").write_bytes(b"a shared legal decoder")
+            (code / "selector_versions").mkdir()
+            frozen = b"the actual selector byte sequence"
+            h = hashlib.sha256(frozen).hexdigest()
+            decoder = evidence.sha(code / "select_roots.py")
+            archive = code / "selector_versions" / (h + ".py.gz")
+            archive.write_bytes(gzip.compress(frozen))
+            reg = dict(selector_at_registration_sha256=h, shared_decode_at_registration_sha256=decoder)
+            decision = dict(selector_sha256=h, shared_decode_sha256=decoder)
+            evidence.verify_selector(code, "intake_03", reg, decision, code)
+            # Redirection and replacement remain independent rejection paths.
+            with self.assertRaisesRegex(ValueError, "differs from frozen registration"):
+                evidence.verify_selector(code, "intake_03", reg, dict(decision, selector_sha256="f"*64), code)
+            archive.write_bytes(gzip.compress(frozen+b" replacement"))
+            with self.assertRaisesRegex(ValueError, "archived selector bytes disagree"):
+                evidence.verify_selector(code, "intake_03", reg, decision, code)
+
     def test_stale_receipt_cannot_release(self):
         status={"stage":"insufficient_realized_support","eligible_for_development":False}
         with patch.object(train,"calculate",return_value=(status,[],None,None)):

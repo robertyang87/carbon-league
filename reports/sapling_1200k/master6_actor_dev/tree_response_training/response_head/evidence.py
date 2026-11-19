@@ -194,6 +194,31 @@ def verify_case(area, reg, source, selected_candidate, label, authority, protoco
                 cfg=raw["game_configuration"])
 
 
+# intake_02 was selected under this committed program before selectors were
+# recorded in each protocol. Both its registration and chosen roots are immutable.
+SECOND_PROTOCOL = "5d53001a0fed22e83d2941b470181682fb0bac548014499c66e97efca5b6b9fd"
+SECOND_SELECTION = "fb5af0b3946d13ddd1f151c0375376c0f490a33be1c12a866e974d881de1a16c"
+SECOND_SELECTOR = "b061725081ee4252ef479cb2eecb8a5e5c57feceb6e322212869e5b3f906d77b"
+
+def verify_selector(area, name, plan, selection, code=CODE):
+    decoder = sha(code / "select_roots.py")
+    if name == "intake_01":
+        equal(selection["selector_sha256"], decoder, "unknown initial root selector")
+        return
+    if name == "intake_02":
+        equal([sha(area / "protocol.json"), sha(area / "selection.json")],
+              [SECOND_PROTOCOL, SECOND_SELECTION], "changed historic intake_02 registration or roots")
+        expected = SECOND_SELECTOR
+    else:
+        expected = plan["selector_at_registration_sha256"]
+        equal(plan["shared_decode_at_registration_sha256"], decoder, "different legal decoder at registration")
+    require(isinstance(expected, str) and re.fullmatch(r"[0-9a-f]{64}", expected), "invalid selector hash")
+    equal(selection["selector_sha256"], expected, "selector differs from frozen registration")
+    payload = gzip.decompress((code / "selector_versions" / (expected + ".py.gz")).read_bytes())
+    equal(hashlib.sha256(payload).hexdigest(), expected, "archived selector bytes disagree")
+    equal(selection["shared_decode_sha256"], decoder, "unknown shared legal decoder")
+
+
 def read_batch(area, name, entry, reserved, prior_hashes):
     plan = read(area / "protocol.json")
     protocol_hash = sha(area / "protocol.json")
@@ -216,10 +241,7 @@ def read_batch(area, name, entry, reserved, prior_hashes):
             and agg["reserved_development_games"] == 0 and selection["opponent_future_or_terminal_used_in_selection"] is False,
             "unsupported batch provenance")
     equal(selection["covered_maps"], seeds, "selected source maps")
-    selector = CODE / ("batch_cli.py" if entry else "select_roots.py")
-    equal(selection["selector_sha256"], sha(selector), "unknown selector implementation")
-    if entry:
-        equal(selection["shared_decode_sha256"], sha(CODE / "select_roots.py"), "unknown shared legal decoder")
+    verify_selector(area, name, plan, selection)
     sources = verify_sources(area, plan, receipt, clearance)
     boards = {sources[s,0][0]["map_sha256"] for s in seeds}
     reserved_boards = {clearance["boards"][str(s)] for s in reserved}
