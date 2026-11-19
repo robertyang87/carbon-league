@@ -1,0 +1,121 @@
+{
+  "dedup": "Exclude any identical (seed,seat,t) in the complete 152-row older original registry, all terminal_direction realized roots, all three paired_response_prefix registries and the two recent original_response intervention windows. Also exclude same-terrain and seat prior short public hash or physical prefix hash, plus duplicate within-batch histories. Accept t before consuming archived actions[t]; no future state, income, result or teacher label in enrollment. Bind both exact actions and complete prefix.",
+  "eligibility": "First four distinct seeds ascending in the thirteen original model-training maps. Source historical candidate seat equals map-index mod 2. Two disjoint inclusive 28-turn windows. Select first qualifying public tick in each window. Require a living own collector with cargo >=20, different legal moves and different destination distances from the nearest own base. First 14 ticks per window accept only a choice where exactly one proposed destination is an own base. Last 14 ticks also accept route discrepancies if the collector currently lies 1\u20135 toroidal steps from a friendly base. If multiple focal workers qualify on the same tick prioritize immediate-base discrepancy, then largest cargo, then smallest uid lexicographically. Keep entire naturally emitted team action and record every cochange. No replacement maps or windows.",
+  "inputs": {
+    "learned_carbon_observation/active_roots/verify.py": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/active_roots/verify.py",
+      "sha256": "d6d78a66fa6ba353ec3eb8333ba07adbdcca4ca14747cecff82362b51c18157b"
+    },
+    "learned_carbon_observation/native_response/run.py": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/native_response/run.py",
+      "sha256": "91449427ac7a2361f2a6399396ff6ef8a30d405fba45325aebb1a6ea2feb9b66"
+    },
+    "native_actor_corpus/original_response/release.json": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/original_response/release.json",
+      "sha256": "6742a7d20a76254ac2237f23d50b19db0dd9add629f10f803bd9b993a32a7232"
+    },
+    "native_actor_corpus/protocol.json": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/protocol.json",
+      "sha256": "1b23910b1d97755483fbdc1fb05550ae816abc5323b4402e2f2c480e0a727703"
+    },
+    "native_actor_corpus/return_action_labels/fit.py": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/return_action_labels/fit.py",
+      "sha256": "eeff6133b45621ad1804c5ffaf9787da90fd2a220080c6cd1715ab3f5053b3db"
+    },
+    "native_actor_corpus/sources.json": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/sources.json",
+      "sha256": "8caa1e03ac2b66eebb218461ae073edbcdeb329d322886b84ae98d190708e995"
+    },
+    "native_actor_corpus/terminal_direction/commands.json.gz": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/terminal_direction/commands.json.gz",
+      "sha256": "5ffd11e7b9aea4094b0d0fb575281483abce315591bd76fb05844f4d383c673a"
+    },
+    "native_actor_corpus/terminal_direction/protocol.json": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/terminal_direction/protocol.json",
+      "sha256": "47580b841767389e9d5810c1d7c93ffb7d2e6f6a1efa19488db04f73668b2e58"
+    },
+    "native_actor_corpus/terminal_direction/result.json": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/terminal_direction/result.json",
+      "sha256": "120154b60cca75e23e5b5623f4fefb7a9407f70c45eb73d32b19e8da702a2110"
+    },
+    "paired_response_prefix/earlier.json.gz": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/paired_response_prefix/earlier.json.gz",
+      "sha256": "a988aa7c839802d1615a2b697c3e0492711ca1849cd5ca797f5f17d2c65831e4"
+    },
+    "paired_response_prefix/signed.json.gz": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/paired_response_prefix/signed.json.gz",
+      "sha256": "ac0fb71cd9134b361bb3b18808c6bd556cb470b508302ee5453b083cf3db71b4"
+    },
+    "paired_response_prefix/windows.json.gz": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/paired_response_prefix/windows.json.gz",
+      "sha256": "f7ffbf8c41918b1fc110aa84f1806fce889db7993abd2697a4c84dcbbc59a6a2"
+    },
+    "signed_return_policy/inventory.json.gz": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/signed_return_policy/inventory.json.gz",
+      "sha256": "32a533cab6c2d0eecec31900badca4154f8c79a4f46eb002e529f8db44f6cd72"
+    }
+  },
+  "learning": "Two public signed features x0=min(cargo/100,1)*(parent_dest_distance-student_dest_distance)/2 and x1=min(cargo/100,1)*(I(student lands on friendly base)-I(parent lands on friendly base)). One regularized logistic neuron with bias and a parallel intercept-only model. Start at zero; exactly 24 Newton iterations; loss terrain-equal mean BCE plus 0.5*L2 norm squared including intercept. Target sign of student-minus-parent official terminal margin; exclude exact ties from training but evaluate all played pairs. No directional assumption. Leave one whole map out; require both classes in each training fold. Choose student only for p>0.5. Report both constant arms, intercept-only and trained model, official margin, W/D/L, both physical teams deposits and tree cash at 8/24/terminal. Advancement to collecting independent labels requires all folds estimable, strictly positive held map-level margin vs both parent-only and intercept-only on >=3 of the same maps, positive overall terrain-equal margin gain vs parent and no win-count decrease. Positive outcome permits replication only. No surrogate labels for other commands.",
+  "limitations": "Up to 8 cases from four exposed training terrains. Any held map refers only to this fit, not prior model training. Whole-team differences may include other workers. No proven causal attribution to a single carrier. A single native draw per action; unchanged/no-support windows remain reported and cannot be replaced.",
+  "maps": [
+    {
+      "receipt": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/dev_learned/official_replay.json",
+      "receipt_sha256": "9c2a3f17e0859e7abeacf5412435f78ff28b590d2a182b2e6ad6f7f2ce5a6788",
+      "seat": 0,
+      "seed": 621461220,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/dev_learned/raw_621461220_0.json.gz",
+      "source_sha256": "28ff3d1d1737bf85f8ff11c542ff4638b3af81a8f3496fcebd3727a7e8ebf85d",
+      "terrain": "d3e7259051367fd0db834ffa53fbf1db0f98e93707ee8d20e15b211219187a59"
+    },
+    {
+      "receipt": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_02/source/official_replay.json",
+      "receipt_sha256": "7c6b64455e4a5e2301c8bd299129157020e4f145325dd1b1314d76a76a1a95ae",
+      "seat": 1,
+      "seed": 621472120,
+      "source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_02/source/raw_621472120_1.json.gz",
+      "source_sha256": "5d171bf27e5aab25bcbff9edb47f66b5578f5f0c06f88371a303dd67629f4bc1",
+      "terrain": "6a71e8754f4fec39920f245c63877211c3b0d81f5e07985a5f4c6c2283448171"
+    },
+    {
+      "receipt": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_02/source/official_replay.json",
+      "receipt_sha256": "7c6b64455e4a5e2301c8bd299129157020e4f145325dd1b1314d76a76a1a95ae",
+      "seat": 0,
+      "seed": 621472121,
+      "source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_02/source/raw_621472121_0.json.gz",
+      "source_sha256": "1d6521c4b31240571c9b367d336de2f37471b17b14e296fd90f0382e8cbb3377",
+      "terrain": "cc1a0cc67a2ba0e9ac59e777a675dae928ceef2977e68bfcb470bcd17a5d2628"
+    },
+    {
+      "receipt": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_03/source/official_replay.json",
+      "receipt_sha256": "bd7b89865a891b01ef80fdd7d460f1d0b5128151ce212c1c92c15d4d6253a86a",
+      "seat": 1,
+      "seed": 621473121,
+      "source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_03/source/raw_621473121_1.json.gz",
+      "source_sha256": "3af85273544385b32b61049d16f8d9f9cdf728f7e29a8f785340429a5cd27a9a",
+      "terrain": "f53102a2dcf2166fea3cffe0249b66d0c2b1e9d0e0b8bf840db2d49db107bedc"
+    }
+  ],
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "packages": {
+    "parent": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.py",
+      "sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac"
+    },
+    "student": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/full.py",
+      "sha256": "6c54899562382552b95bc1299d83119088ef1d1206b93135e33769815ed69c9f"
+    }
+  },
+  "sampling": "One original natural warmup per source, real .58 s wall clock at T1 with default unseeded sampling. Retarget tracker to actual archived historical command every tick through each root. Save original fresh root response and the complete post-decision tracker, adaptive costs, counters and Python/NumPy/Torch RNG snapshot before retargeting that root to carry on to the next sampled historical position. Restore a separate identical copy for each arm. After the common enemy root action original responds naturally independently within each branch. Mark a single native draw per action and retain every terminal. At t only learner action differs; from t+1 use 8da4 for both arms without exception. Source index mod 2 selects dedicated core 0 or 1, scheduling maps 0 then 2 on core 0; 1 then 3 on core 1. Arms serial, parent first iff (map index+window index) is even. Preserve full opponent orders, per-step true clocks, depth and fallback, never discard poorly timed outcomes. No additional trials.",
+  "schema": 1,
+  "windows": [
+    [
+      210,
+      237
+    ],
+    [
+      238,
+      265
+    ]
+  ]
+}
