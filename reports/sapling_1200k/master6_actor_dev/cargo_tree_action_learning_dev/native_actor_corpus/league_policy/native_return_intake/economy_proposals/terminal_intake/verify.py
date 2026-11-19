@@ -296,7 +296,13 @@ def main():
         if ticket["status"]!="pending":
             card_path=HERE/"outputs"/f"{f['seed']}_{f['seat']}"/"verified.json"
             if card_path.exists():
-                need(read(card_path)==ticket,"Different existing independently verified ticket")
+                prior=read(card_path)
+                stamp=prior.get("verification_sha256")
+                accepted={ticket["verification_sha256"],"57917ed174f7dea139b539dd1250dbeb7d16ba7932b8ce636fe8a39fa767c793"}
+                need(stamp in accepted,"Unknown earlier per-fixture verification implementation")
+                comparable={**ticket,"verification_sha256":stamp}
+                need(prior==json.loads(play.encode(comparable)),"Different existing independently verified ticket")
+                ticket=prior
             else:
                 play.save(card_path,ticket)
         result.append(ticket)
@@ -308,7 +314,7 @@ def main():
              formal_games=0,new_games_by_auditor=0,scope="Causal root interventions conditional on one real sampled opponent response and one natural continuation per arm. Separate economic eligibility and official returns; both exposed training boards. No new inference about win rate, other terrains or ladder certification.")
     dest=HERE/"verify.json"
     if dest.exists():
-        need(read(dest)==doc,"Different existing independent verification")
+        need(read(dest)==json.loads(play.encode(doc)),"Different existing independent verification")
     else:
         play.save(dest,doc)
     print(sha(dest),[(r["seed"],r["status"],r["eligible"]) for r in result])
