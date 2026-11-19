@@ -1,0 +1,26 @@
+"""Describe the deployment interval only from the signed artifact and measured commands."""
+from pathlib import Path
+import json
+P=Path(__file__).resolve().parent
+q=json.loads((P/'qualification.json').read_text());p=json.loads((P/'pack.json').read_text());g=q['cgroup']
+rows=[]
+for r in q['rows']:
+    rows.append(f"| {r['seed']} | {r['seat']} | {len(r['changed_vs_parent_in'])}/32 | {r['init_s']:.2f} | {r['step0_ms']:.1f} | {r['step128_ms']:.1f} | {r['step160_ms']:.1f} | {r['p95_ms']:.1f} | {r['p99_ms']:.1f} | {r['max_ms']:.1f} | {r['slow']} | {r['excess_s']:.3f} | {r['peak_rss_mib']:.1f} | {r['wall_s']:.1f} |")
+(P/'README.md').write_text(f"""# H24 学习权重的部署时段对照
+
+单文件 SHA-256 为 `{p['candidate']}`，大小 {p['bytes']:,} 字节。第 128 到 159 步（两端均含）使用已训练 H24 的 Sapling 单位查询 U 与候选动作嵌入 V；其余各步采用首胜包对应权重。窗口完全取自此前存档的真实响应实验合同。组合包沿用同一个公开特征历史、骨干、it50、联合解码与守卫。此对照衡量同一份训练成果的作用时段。
+
+构建从 `8da4b465` 单文件出发，核对原始 FP32 检查点、部署字节与 `adc4d78e` 全时段包，确认只有 U、V 及各自偏置有差异。四张小张量在原包中均按 f32 保存，原始有效载荷 {p['included_tensor_bytes']:,} 字节；程序和封装共新增 {p['extra_file_bytes']:,} 字节。窗口边界同时更换推理使用的连续转置矩阵及偏置。双方换席、新局从第 0 步开始时均依据当前步决定开关。
+
+## 完整公开请求的逐步校验
+
+历史图 621758345 和 621758346 每图双席，四次独立冷启并持续到历史终局。给窗口包发出的 {q['total_calls']:,} 条公开观测，均可与同历史同观测下两参考包的真实联合命令逐项比对。窗内 {q['inside']} 次与 H24 全部相同，其中 {q['effective_inside']} 次确实改变父包命令；窗外 {q['outside']:,} 次与父包全部相同，撤回了全时段 H24 在窗外的 {q['effective_outside_removed']} 次改令。两席均出现窗内有效改变。回放端继续推进有签名的历史命令，上述动作等价证据本身不能预测新对手响应或终局胜率。
+
+| 图 | 席位 | 窗内改令 | 冷启 s | 第0步 ms | 第128步 ms | 第160步 ms | P95 ms | P99 ms | 最慢 ms | 慢步 | 累计超额 s | RSS MiB | 复演 s |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+"""+'\n'.join(rows)+f"""
+
+所有输入从序列化前计到解析动作，共 {q['slow']} 次超 1 秒，额外用时 {q['excess_s']:.3f} 秒，P95/P99 为 {q['p95_ms']:.1f}/{q['p99_ms']:.1f} ms，最慢 {q['max_ms']:.1f} ms。Docker 内 cpuset 实读 `{g['cpuset.cpus.effective']}`，cpu.max 实读 `{g['cpu.max']}`，memory.max 实读 `{g['memory.max']}`。单策略进程绑 CPU 2 并设 512 MiB 地址空间限制。正式 1.5 核、512 MiB 配额及完整互动对局仍需独立执行器验证。
+
+protocol.json 与原响应合同绑定；pack.json 保存源权重及最终包身份；四个 timing/*.json.gz 包含逐步公开动作、外部 IPC 墙钟及内存记录，qualification.json 留有指标、命令差异步号和文件 SHA。build.py 重建单文件，verify.py 对已签名旧图实跑或校验本地收据。
+""")
