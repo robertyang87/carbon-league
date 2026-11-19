@@ -1,0 +1,18 @@
+{
+  "version": "master6-single-sapling-actor-v1",
+  "parent_sha256": "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be",
+  "soft_manifest_sha256": "b1eb2b6d38fb7ab401c1ddd12b33256780bbcea858256731e221f822250123b6",
+  "published_parent_training_scope": "full_top5_decoder had 79 mutual training maps; this run starts from cash V3 and adds previously unseen Master6 matches against external opponents, including losses",
+  "data_scope": "Master6 seat, actual publicly visible observations from step zero, executed legal joint prefixes, one role per occupied slot and at least two legal actions. All public subsets bound by data selection receipt before training. No winner-only filter.",
+  "seed": 910631,
+  "schedule": "one shuffled pass through every eligible training root, minibatch 32 plus four auxiliary it50 roots per update; final update always exported. Validation and holdout evaluated after freezing final FP32 weights",
+  "skill_target": "In public roots, 0.80 times expert action CE plus 0.12 times KL from frozen V3 on the identical prefix. Per-source public loss weights collector 0.52, planter 0.27, base 0.21, normalized by actionable role frequencies in the full training set. This controls the dominance of collector slots. A sparse final minibatch uses its actual root count.",
+  "auxiliary_target": "0.08 times mean forward KL to previously sealed it50 probabilities on their actual behavior-induced prefixes, 18 old auxiliary train maps only. Chosen as a small regularizer because the previous 85% soft it50 arm underperformed V3 in combat. All six auxiliary validation maps stay unused for fitting.",
+  "source_ceiling": "Elite demonstrated choices can be suboptimal in weak or strong games. A loss remains in the sample, without inverting or penalizing its individual moves. Cash/V3 and it50 on-policy shifts and strength against Master3s2 are measured separately.",
+  "learn": ["blocks.5.", "attn.0.", "ctx.", "h0.", "aemb.", "din.", "gru.", "U.", "V.", "bhead.", "whead."],
+  "lr_encoder": 0.00003,
+  "lr_decoder": 0.00013,
+  "optimizer": "AdamW, decay 0.0001, global grad norm cap 2; no symmetry augmentation",
+  "metrics": "Public splits: mean CE, modal agreement, parent-to-final change count and corrected/damaged decisions; split by role, contact cohort, result, seat and map. Report FP32 parent/final and separately both exported int8s on holdout when available. Same expert prefix, not autoregressive strength. A heldout comparison is reserved for this fixed candidate; all rung choices fixed before access.",
+  "deployment": "single Sapling style 2, standard int8 cnet2_pack, all optional guards false. No external teacher at inference. New training does not cover the value and utility heads."
+}
