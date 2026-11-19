@@ -36,4 +36,4 @@ RyanX-AIPowercore-M9XJ-630 席 0 为 1 胜、0 平、0 负，席 1 为 0 胜、0
 
 官方 Board 和 FastCarbon 各复算 7,338 次联合推进，25 场全部吻合。每席行动前上下文复查包括 14,676 个决策，来源仅限本批原始回放；历史局复用已冻结的完整收据。本批在独立考试排除集中逐图绑定真实 225 格开局。归档文件 5,785,600 字节，SHA-256 `317833060aa2efedc4f67f199bf5aad14b86f18ecbfcb2b8724abe96fc66e0b4`。[双引擎逐局收据](validation_games.jsonl.gz) · [真实棋盘](validation_maps.jsonl.gz) · [对局上下文](../context_appendix_cbd6d545_receipt.json) · [完整无损回放](../../../../data/sapling_all_top5_20261119/appendix_cbd6d545.tar)
 
-同名 Krypton-Pro 在两张地图分别得 6,087.49 和 5.50，Master6 另以 238.71 分负于 it720。三局并列核对首工、实收、招工和关键时段的双方命令。[逐局现金与动作对照](contrasts.md)
+同名 Krypton-Pro 在两张地图分别得 6,087.49 和 5.50，Master6 另以 238.71 分负于 it720。三局并列核对首工、实收、招工和关键时段的双方命令。[逐局现金与动作对照](contrasts.md) · [未来 10/30 步实收标签核验](future_economy_check.json)

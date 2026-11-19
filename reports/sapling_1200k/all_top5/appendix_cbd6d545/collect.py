@@ -118,9 +118,11 @@ def main():
     run(TOP/"context_audit.py","--index",idx,"--validation",HERE/"validation_games.jsonl.gz","--out",TOP/f"context_{HERE.name}_receipt.json","--jobs","1")
     render(d,batch)
     run(HERE / "contrasts.py")
+    run(TOP / "future_economy_check.py", "--replay-cache", fetch.CACHE / "replays",
+        "--expect-games", d["union_games"], "--out", HERE / "future_economy_check.json")
     page = HERE / "README.md"
     with page.open("a") as stream:
-        stream.write("\n同名 Krypton-Pro 在两张地图分别得 6,087.49 和 5.50，Master6 另以 238.71 分负于 it720。三局并列核对首工、实收、招工和关键时段的双方命令。[逐局现金与动作对照](contrasts.md)\n")
+        stream.write("\n同名 Krypton-Pro 在两张地图分别得 6,087.49 和 5.50，Master6 另以 238.71 分负于 it720。三局并列核对首工、实收、招工和关键时段的双方命令。[逐局现金与动作对照](contrasts.md) · [未来 10/30 步实收标签核验](future_economy_check.json)\n")
 
 
 if __name__=="__main__":main()
