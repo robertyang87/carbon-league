@@ -1,0 +1,125 @@
+{
+  "name": "Master3s2 same-root native wall-clock experiment",
+  "only_development_sources": true,
+  "cpu": 3,
+  "cgroup_ceiling_cores": 4,
+  "host_eligibility": "Only run if quiet target CPU and total task load below 3.35 cores in sampled window; two native arena workers on CPU0/1 remain isolated. If not ready, wait. Each treatment pins original and one equally nice synthetic busy worker to CPU3, sharing one hardware core.",
+  "roots": [
+    {
+      "seed": 621461321,
+      "actor_seat": 1,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/replication/learned/raw_621461321_0.json.gz",
+      "sha256": "1c377672ef23f620b703be5a91fdf40110a5a187c76ee5250026a91e2b11e1d4",
+      "t": 24,
+      "paired_rng_seed": 41990630,
+      "order": [
+        "idle_1",
+        "idle_2",
+        "contended"
+      ]
+    },
+    {
+      "seed": 621461322,
+      "actor_seat": 0,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/replication/learned/raw_621461322_1.json.gz",
+      "sha256": "6969c026957cdba8ee84fc4746b5b8f30ee5d67780bb233334e8be5ed15ac1e6",
+      "t": 40,
+      "paired_rng_seed": 41990631,
+      "order": [
+        "idle_2",
+        "contended",
+        "idle_1"
+      ]
+    },
+    {
+      "seed": 621461322,
+      "actor_seat": 1,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/replication/learned/raw_621461322_0.json.gz",
+      "sha256": "4da640849900b9e0c9cc4f857026e663c55fdb07d45fd8ebba981c490ab88866",
+      "t": 73,
+      "paired_rng_seed": 41990632,
+      "order": [
+        "contended",
+        "idle_1",
+        "idle_2"
+      ]
+    },
+    {
+      "seed": 621461321,
+      "actor_seat": 0,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/replication/learned/raw_621461321_1.json.gz",
+      "sha256": "a3a4417c4be8f3a943794a02794b818467ee67bba96c263ed0825682fd3572bd",
+      "t": 108,
+      "paired_rng_seed": 41990633,
+      "order": [
+        "idle_1",
+        "idle_2",
+        "contended"
+      ]
+    },
+    {
+      "seed": 621461322,
+      "actor_seat": 0,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/replication/learned/raw_621461322_1.json.gz",
+      "sha256": "6969c026957cdba8ee84fc4746b5b8f30ee5d67780bb233334e8be5ed15ac1e6",
+      "t": 144,
+      "paired_rng_seed": 41990634,
+      "order": [
+        "idle_2",
+        "contended",
+        "idle_1"
+      ]
+    },
+    {
+      "seed": 621461321,
+      "actor_seat": 1,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/replication/learned/raw_621461321_0.json.gz",
+      "sha256": "1c377672ef23f620b703be5a91fdf40110a5a187c76ee5250026a91e2b11e1d4",
+      "t": 181,
+      "paired_rng_seed": 41990635,
+      "order": [
+        "contended",
+        "idle_1",
+        "idle_2"
+      ]
+    },
+    {
+      "seed": 621461321,
+      "actor_seat": 0,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/replication/learned/raw_621461321_1.json.gz",
+      "sha256": "a3a4417c4be8f3a943794a02794b818467ee67bba96c263ed0825682fd3572bd",
+      "t": 237,
+      "paired_rng_seed": 41990636,
+      "order": [
+        "idle_1",
+        "idle_2",
+        "contended"
+      ]
+    },
+    {
+      "seed": 621461322,
+      "actor_seat": 1,
+      "source": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/replication/learned/raw_621461322_0.json.gz",
+      "sha256": "4da640849900b9e0c9cc4f857026e663c55fdb07d45fd8ebba981c490ab88866",
+      "t": 285,
+      "paired_rng_seed": 41990637,
+      "order": [
+        "idle_2",
+        "contended",
+        "idle_1"
+      ]
+    }
+  ],
+  "scope": "Previously exposed terminal-return v1 replication boards, sorted fixed phase schedule independent of root search outcome. One diagnostic shared MT19937 state per root, full natural original outputs, temperature 1, no seed in game policy configuration. Two quiet replicates vs one co-scheduled process; treatment and repetitions rotate in time.",
+  "warm_cost_source": "reports/sapling_1200k/master6_actor_dev/early_lane_dev/native_response/case_621474120_0/live_shared_init.json",
+  "warm_cost_sha256": "fb8933d5e519c2f1871bbb321bad159844bd3d820623ce40ad36135c0c102263",
+  "cost": "Initialize from archived measured shared warm costs; execute one comparison-free preceding recorded public turn to update measured costs. Replay archived actual previous command for beliefs rather than substituting the measured warm-up command. Identical copies of complete resulting cost, tracker, previous players and RNG are used in all 3 paired calls. Historical per-turn wall cost from original games was not archived.",
+  "fixed_search": {
+    "_S_ABORT": 0.58,
+    "_S_FILL": 0.85,
+    "_S_SAFE": 1.3,
+    "_TEMP": 1,
+    "_SEED": null
+  },
+  "work": "8 antecedent cost warmup calls + 24 measured calls, all through unchanged original public agent API. Outcomes are individual displayed actions, lengths and full depths of original returned candidate records, abort count, wall and thread time, returned-base or single/no-completed reason. No new games or score inference."
+}
