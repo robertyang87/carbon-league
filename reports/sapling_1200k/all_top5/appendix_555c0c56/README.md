@@ -1,0 +1,25 @@
+# 天梯前五新增回放 · 555c0c56
+
+在 1,347 局已归档回放上按比赛 ID 和场次去重，本批新增 **10 局**。2 局前五互打、8 局对外，共 2,791 次联合推进、5,582 个物理席决策。累计 1,357 局，其中 114 局前五互打，总计 404,176 次联合推进、808,352 个出手前的物理席局面。[本批清单与压缩回放指纹](manifest.json)
+
+| 逐局分析 | 物理席0 | 物理席1 | 官方终分 0／1 | 联合步数 | 现金差波动最大的十步，席0视角 |
+| --- | --- | --- | ---: | ---: | ---: |
+| [054739fa](054739faf0ef1cccdd33c44fe10ee828-1.md) | claude-AlphaCarbon-Master5s | 哈基米 v3pro | 8,733.23／4,947.42 | 299 | t124–134，+763.46 |
+| [14d01936](14d019369dad7b51e71f8e17e99eec67-1.md) | ClaudeFable5.2-v8 | claude-AlphaCarbon-Master6 | 6,437.37／6,695.81 | 299 | t100–110，+950.14 |
+| [17a454fe](17a454fe4ff692b4fdc9819e87bba1c4-1.md) | 哈基米 v2 pro | claude-AlphaCarbon-Master5s | 4,509.82／7,366.93 | 299 | t132–142，+848.50 |
+| [4b741db0](4b741db02ea41b52c10f9bcce7156fd0-1.md) | claude-AlphaCarbon-Master5s | RyanX-AIPowercore-M9XJ-630 | 7,425.64／6,139.61 | 299 | t151–161，-1,060.68 |
+| [5620f376](5620f3766caf8d798ba6710ebc31d9dd-1.md) | claude-AlphaCarbon-Master5s | 安生N27 | 2,192.93／-201.00 | 100 | t90–100，+1,276.89 |
+| [83ee2ee8](83ee2ee8ab53546a05927c0d6bd19fb9-1.md) | ClaudeFable5.2-v7 | claude-AlphaCarbon-Master6 | 1,869.43／12,430.33 | 299 | t91–101，-1,270.98 |
+| [cdf37f1d](cdf37f1de273daacc63aa74100367ddb-1.md) | Echo3 | claude-AlphaCarbon-Master5s | 5,669.85／10,459.00 | 299 | t85–95，-1,623.36 |
+| [d7f92945](d7f92945dd3437fedb2578a36c412461-1.md) | claude-AlphaCarbon-Master5s | 小肥鱼v5-d5 | 10,147.51／10,623.04 | 299 | t189–199，+1,049.84 |
+| [d818dcbc](d818dcbc2977abaf466cf6b43a3303c8-1.md) | 安生N25 | claude-AlphaCarbon-Master5s | 5,568.57／7,863.66 | 299 | t272–282，+729.20 |
+| [f6d4ccf1](f6d4ccf1d37c9f894eaed2d3d52aead0-1.md) | 小肥鱼v5-late2d | RyanX-AIPowercore-M9XJ-630 | 7,108.69／7,453.50 | 299 | t170–180，+736.76 |
+
+逐局记录含资金分解、最大转折前3／5／10步的双方布局、带货截获去向、守卫和种树机会。行动前满足重货几何条件的单位对／根合计 5,805 个，每一次实际归属都和本局终分、完整资产演化一起核验。[逐局经济与攻守](cases.json.gz) · [候选截击局面](raid_rows.npz) · [逐帧核验](validation.json)
+
+## 本批 Master6
+
+- 物理席1对 ClaudeFable5.2-v8，官方分差 +258.44，从 t291 起连续保持现金领先至结算，t100 双方累计正常交付 1,715.08／1,336.42。[逐局](14d019369dad7b51e71f8e17e99eec67-1.md)
+- 物理席1对 ClaudeFable5.2-v7，官方分差 +10,560.90，从 t54 起连续保持现金领先至结算，t100 双方累计正常交付 1,922.25／655.34。[逐局](83ee2ee8ab53546a05927c0d6bd19fb9-1.md)
+
+刷新后累计 287 场 Master6：[逐局资金与优势形成时间](master6_pressure.json.gz)。
