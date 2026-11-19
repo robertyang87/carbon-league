@@ -86,9 +86,10 @@ def parse():
     a("--gamma", type=float, default=0.995)
     a("--lam", type=float, default=0.95)
     a("--rscale", type=float, default=1 / 5000.0)
-    a("--reward", default="dense", choices=["dense", "terminal", "worth", "u"],
+    a("--reward", default="dense", choices=["dense", "terminal", "worth", "u", "win"],
       help="dense: per-step change of the cash margin; worth: per-step change of the worth margin (cash + cargo on board + "
-           "remaining tree value; sums to the same final margin, credit arrives at pick-up / planting time)")
+           "remaining tree value; sums to the same final margin, credit arrives at pick-up / planting time). "
+           "win: terminal +1 for an official win and -1 for a draw or loss (twice win probability minus one).")
     a("--value-head", default="tanh", choices=["tanh", "utility"],
       help="critic readout. tanh: the legacy value head (default, unchanged). utility: the Stage 0 utility head "
            "(E[U]) mapped to 2*(U-0.5) -- the Terminal-U critic; requires --reward u and the cnet2 adapter, and the "
@@ -132,6 +133,7 @@ def parse():
     a("--eval-opps", default="exp/opp_1cz_v5.py,exp/cand_c1z_v1.py")
     a("--eval-seed0", type=int, default=980000)
     a("--seed0", type=int, default=3000000, help="training game seeds start here")
+    a("--sampler-seed", type=int, help="also seed opponent draws, rollout actions and learner minibatch selection")
     a("--amp", type=int, default=0,
       help="1: fp16 autocast for the learner's forward/backward on cuda (log-probs and losses stay fp32); watch dlogp")
     a("--pre-mb", type=int, default=4096, help="batch of the no-grad passes before the PPO epochs (values, reference)")
@@ -307,6 +309,8 @@ def u_mode_gate(args):
     list when the launch may proceed (empty, or non-empty under the
     explicit --allow-u-mode-problems override); raises SystemExit naming
     every problem otherwise. Called before anything is loaded or written."""
+    if args.reward == "win" and (args.gamma != 1 or args.rscale != 1 or args.c_dep or args.c_lost):
+        raise SystemExit("--reward win needs --gamma 1 --rscale 1 and zero delivery/loss shaping")
     probs = u_mode_check(args)
     if probs and not getattr(args, "allow_u_mode_problems", False):
         raise SystemExit("Terminal-U launch contract violated; refusing to start:\n  - "
@@ -317,6 +321,15 @@ def u_mode_gate(args):
 
 def game_rewards(g, args, it):
     dm = g["dmargin"].astype(np.float64)
+    if args.reward == "win":
+        # Both sides receive -1 in a drawn self-play game. Each trajectory
+        # has its own seat-relative official margin, including extinction.
+        margin = float(g["margin"])
+        if not math.isfinite(margin):
+            raise ValueError("nonfinite official margin for win reward")
+        r = np.zeros(len(dm), np.float32)
+        r[-1] = 1.0 if margin > 0 else -1.0
+        return r
     if args.reward == "u":
         # Terminal-U: non-terminal steps pay 0; terminal pays 2*(U-0.5) in
         # [-1, 1]. No shaping terms and no win bonus in this mode (U already
@@ -528,6 +541,8 @@ def _select_remote_files(names, cur_it, max_stale):
 
 def main():
     args = parse()
+    if args.sampler_seed is not None and args.sampler_seed < 0:
+        raise SystemExit("--sampler-seed must be nonnegative")
     _u_probs = u_mode_gate(args)          # F6: refuse before any load / write
     args.out = os.path.abspath(args.out)
     # R03: resolve built-in defaults for the None-sentinel hyper-parameters (see parse()).
@@ -775,15 +790,16 @@ def main():
         if args.remote:
             return _Remote(), time.time()
         specs = []
-        _keys, _probs = league.round_subset(rng, args.round_opps) if args.round_opps > 0 else (None, None)
+        draw = rng if args.sampler_seed is None else np.random.default_rng([args.sampler_seed, seed, 0])
+        _keys, _probs = league.round_subset(draw, args.round_opps) if args.round_opps > 0 else (None, None)
         for gi in range(args.games):
-            specs.append((league.sample(rng, _keys, _probs), seed + gi // 2, gi % 2))   # same seed both sides
+            specs.append((league.sample(draw, _keys, _probs), seed + gi // 2, gi % 2))   # same seed both sides
         seed += args.games
         tasks = []
         for i in range(0, len(specs), args.lockstep):
             tasks.append({"adapter": args.adapter, "wkey": wk, "games": specs[i:i + args.lockstep],
                           "temp": args.temp, "greedy": False, "record": True,
-                          "rng_seed": int(rng.integers(1 << 30))})
+                          "rng_seed": int(draw.integers(1 << 30))})
         return pool.map_async(__import__("rl2_ppo_rollout").play_batch, tasks), time.time()
 
     import rl2_ppo_rollout as RO
@@ -826,7 +842,9 @@ def main():
         REFLP = None
         # --dec-frac < 1: values for every decision (GAE needs them), but the reference pass and the PPO epochs only
         # touch a random subset -> more games per GPU-second (decisions within a game are strongly correlated)
-        SUB = (np.sort(np.random.choice(buf.n, max(1, int(buf.n * args.dec_frac)), replace=False))
+        batch_rng = np.random if args.sampler_seed is None else np.random.default_rng(
+            [args.sampler_seed, it, warm_done if resume_warm else 0, int(resume_warm), 1])
+        SUB = (np.sort(batch_rng.choice(buf.n, max(1, int(buf.n * args.dec_frac)), replace=False))
                if args.dec_frac < 1 else np.arange(buf.n))
         with torch.no_grad():
             for b0 in range(0, buf.n, pmb):
@@ -860,7 +878,7 @@ def main():
         stats = []
         tq = lambda a: torch.from_numpy(a).to(dev)
         for ep in range(args.epochs):
-            perm = np.random.permutation(SUB)
+            perm = batch_rng.permutation(SUB)
             for b0 in range(0, len(perm), args.mb):
                 idx = np.sort(perm[b0:b0 + args.mb])
                 bt = buf.batch(idx, dev)
@@ -951,6 +969,11 @@ def main():
                                round(float(np.mean([g.get("planted_op", 0) for g in games if g["opp"] == k])), 1)]
                            for k in by},
                "buf_mb": round(buf.nbytes() / 1e6, 1), "rss_mb": round(rss_mb()), "workers_rss_mb": round(children_rss_mb())}
+        if args.reward == "win":
+            rec["outcomes"] = [
+                {key: g[key] for key in ("seed", "side", "opp", "steps", "margin", "term", "mirror") if key in g}
+                for g in games
+            ]
         if resume_warm:
             warm_done += 1
             rec["warmup_batch"] = warm_done

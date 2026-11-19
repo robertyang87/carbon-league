@@ -18,6 +18,8 @@ import sys
 import tempfile
 from types import SimpleNamespace
 
+import numpy as np
+
 for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "LEARNER_THREADS"):
     os.environ[name] = "1"
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -53,6 +55,12 @@ def refused(a, needle):
 
 
 def main():
+    win = args(reward="win", value_head="tanh")
+    check("terminal win launch passes", PT.u_mode_gate(win) == [])
+    for margin, expected in ((3, 1.), (0, -1.), (-5, -1.)):
+        game = {"margin": margin, "dmargin": np.array([30., 15., -7.])}
+        check(f"win return uses official margin {margin}, with no shaping",
+              np.array_equal(PT.game_rewards(game, win, 1), [0., 0., expected]))
     check("canonical Terminal-U launch passes", PT.u_mode_gate(args()) == [])
     check("legacy dense launch passes untouched",
           PT.u_mode_gate(args(reward="dense", value_head="tanh", gamma=0.995, rscale=2e-4, c_dep=0.1)) == [])

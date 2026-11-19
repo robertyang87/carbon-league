@@ -1,0 +1,5576 @@
+{
+  "header": {
+    "version": 1,
+    "mode": "development",
+    "seeds": [
+      620106811,
+      620106812
+    ],
+    "cpus": [
+      0,
+      1
+    ],
+    "weight_sha256": "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be",
+    "pack_sha256": "4cd4c1fcf40f05217ecba2a59095ba40286c5f96017d2b15285c942a3b0f5348",
+    "examiner_md5": "57f9a594cce4f2ec9e3573d8d9d26ca1",
+    "configuration": {
+      "episodeSteps": 300,
+      "startingCarbon": 2500,
+      "size": 15,
+      "carbonCoverage": 45,
+      "numberOfBases": 2,
+      "startPosOffset": 1,
+      "startingCellCarbon": 50,
+      "maxCellCarbon": 100,
+      "recCollectorCost": 30,
+      "recCollectorIncreaseCost": 0,
+      "recPlanterCost": 30,
+      "recPlanterIncreaseCost": 0,
+      "moveCost": 0,
+      "smeltCost": 0,
+      "workerLimit": 10,
+      "planterLimit": 1,
+      "collectorLimit": 2,
+      "plantCost": 20,
+      "plantCostInflationRatio": 5,
+      "plantCostInflationBase": 1.235,
+      "playerTreeProtectiveNumber": 0,
+      "co2FrmWithered": 30,
+      "seizeCost": 20,
+      "initialCollectRate": 0.3,
+      "collectDecreaseRate": 0.0,
+      "regenRate": 0.03,
+      "treeLifespan": 50,
+      "cellAbsorptionRate": 0.0375,
+      "collectorAbsorptionRate": 0.1,
+      "randomSeed": null,
+      "agentTimeout": 60,
+      "actTimeout": 1,
+      "runTimeout": 9600
+    },
+    "numpy": "1.26.4",
+    "torch": "2.5.1+cpu",
+    "cpu_quota": "400000 100000",
+    "sources_sha256": {
+      "reports/sapling_1200k/tree_v4_exam.py": "000cc7e26cac375c9d22abbf6e4343735380858f848c75068d3bb0858ba92b93",
+      "reports/sapling_1200k/cash_v3_exam.py": "7ccd3baef738969aa5e5eecbf7b536e5d6ca1c00547337830ce81452a213eff0",
+      "reports/sapling_1200k/external_3s2.py": "a499d503a12d4cc88f7a8821ecfc3fbd7f67a8ae9ae86f722d420dd8180de72c",
+      "reports/sapling_bootstrap/transfer_3s2.py": "9da4e4c4506a21a7876a6f532d2884da325f6564dec349c3e0a5a4c5fe159604",
+      "reports/sapling_bootstrap/smoke_ab.py": "22fe541c27e92d5e89bc3421769e48bf6c4d3da7e0508410bc0ad20b2ab4058e",
+      "data/master3s2_source.py": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+      "code/eval_v53.py": "ef3301e8e7d1cea39ce015e2a1c0e010c544842a7dfebefb398c458363f60d86",
+      "code/fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+      "code/cnet2_pack.py": "f40ddcd749603bdd0e664d544165c307c17b8f901ac7b7fb0f1c58d1fae1aecc",
+      "code/cnet2_agent.py": "ac159979644b37d57f59db33bd4cb5713fa54f79d6d92220b6bf5f7c774cbe5c",
+      "code/cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+      "code/cnet2_np.py": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496"
+    },
+    "plan_sha256": null,
+    "scope": "Two persistent single-core seat workers, fresh examiner per game, no seed override. The examiner uses the wall clock; underlying opponent trajectories can differ. No platform resource certification."
+  },
+  "status": "complete",
+  "started": "2026-11-19T01:30:45.380404+00:00",
+  "games": [
+    {
+      "seed": 620106811,
+      "candidate_seat": 0,
+      "cpu_affinity": [
+        0
+      ],
+      "actual_transitions": 299,
+      "termination": "official_episode_limit",
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "result": "loss",
+      "official_score_by_seat": [
+        4625.55,
+        8419.0
+      ],
+      "margin": -3793.45,
+      "snapshots": {
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "cash": 330.18,
+            "cargo": 116.1498,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 0,
+            "positive_delivery_events": 14.0,
+            "own_positive_delivery_carbon": 550.1804630999999,
+            "closed_loop_events": 14.0,
+            "collected_carbon": 689.1876,
+            "cumulative_tree_absorption_income": 0.0,
+            "recruited_total": 10,
+            "distinct_delivery_turns": 13
+          },
+          "opponent": {
+            "state_t": 60,
+            "cash": 1043.04,
+            "cargo": 596.9636999999999,
+            "alive_workers": 10,
+            "alive_trees": 12,
+            "new_trees_planted": 13,
+            "positive_delivery_events": 8.0,
+            "own_positive_delivery_carbon": 656.2437,
+            "closed_loop_events": 8.0,
+            "collected_carbon": 1253.2074,
+            "cumulative_tree_absorption_income": 1171.2810743999994,
+            "recruited_total": 10,
+            "distinct_delivery_turns": 7
+          }
+        },
+        "100": {
+          "candidate": {
+            "state_t": 100,
+            "cash": 1027.42,
+            "cargo": 258.3231552,
+            "alive_workers": 9,
+            "alive_trees": 0,
+            "new_trees_planted": 0,
+            "positive_delivery_events": 25.0,
+            "own_positive_delivery_carbon": 1247.42332644,
+            "closed_loop_events": 25.0,
+            "collected_carbon": 1588.8042000000005,
+            "cumulative_tree_absorption_income": 0.0,
+            "recruited_total": 10,
+            "distinct_delivery_turns": 24
+          },
+          "opponent": {
+            "state_t": 100,
+            "cash": 2730.81,
+            "cargo": 116.92439999999999,
+            "alive_workers": 10,
+            "alive_trees": 9,
+            "new_trees_planted": 22,
+            "positive_delivery_events": 17.0,
+            "own_positive_delivery_carbon": 2055.8151,
+            "closed_loop_events": 17.0,
+            "collected_carbon": 2172.7394999999997,
+            "cumulative_tree_absorption_income": 2029.0485183600006,
+            "recruited_total": 11,
+            "distinct_delivery_turns": 16
+          }
+        },
+        "200": {
+          "candidate": {
+            "state_t": 200,
+            "cash": 2630.12,
+            "cargo": 264.648327,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 0,
+            "positive_delivery_events": 57.0,
+            "own_positive_delivery_carbon": 3120.12083568605,
+            "closed_loop_events": 57.0,
+            "collected_carbon": 3560.4579000000017,
+            "cumulative_tree_absorption_income": 0.0,
+            "recruited_total": 19,
+            "distinct_delivery_turns": 54
+          },
+          "opponent": {
+            "state_t": 200,
+            "cash": 5351.77,
+            "cargo": 351.14099999999996,
+            "alive_workers": 10,
+            "alive_trees": 13,
+            "new_trees_planted": 45,
+            "positive_delivery_events": 36.0,
+            "own_positive_delivery_carbon": 3940.1667,
+            "closed_loop_events": 36.0,
+            "collected_carbon": 4281.4731,
+            "cumulative_tree_absorption_income": 4282.759087313957,
+            "recruited_total": 15,
+            "distinct_delivery_turns": 34
+          }
+        },
+        "299": {
+          "candidate": {
+            "state_t": 299,
+            "cash": 4625.55,
+            "cargo": 231.14370899999997,
+            "alive_workers": 9,
+            "alive_trees": 0,
+            "new_trees_planted": 0,
+            "positive_delivery_events": 88.0,
+            "own_positive_delivery_carbon": 5242.601695686051,
+            "closed_loop_events": 88.0,
+            "collected_carbon": 5700.185099999996,
+            "cumulative_tree_absorption_income": 12.9594,
+            "recruited_total": 23,
+            "distinct_delivery_turns": 84
+          },
+          "opponent": {
+            "state_t": 299,
+            "cash": 8419.0,
+            "cargo": 96.0255,
+            "alive_workers": 10,
+            "alive_trees": 7,
+            "new_trees_planted": 62,
+            "positive_delivery_events": 66.0,
+            "own_positive_delivery_carbon": 6303.956699999999,
+            "closed_loop_events": 66.0,
+            "collected_carbon": 6390.147599999993,
+            "cumulative_tree_absorption_income": 6260.013032813966,
+            "recruited_total": 19,
+            "distinct_delivery_turns": 60
+          }
+        }
+      },
+      "final": {
+        "candidate": {
+          "state_t": 299,
+          "cash": 4625.55,
+          "cargo": 231.14370899999997,
+          "alive_workers": 9,
+          "alive_trees": 0,
+          "new_trees_planted": 0,
+          "positive_delivery_events": 88.0,
+          "own_positive_delivery_carbon": 5242.601695686051,
+          "closed_loop_events": 88.0,
+          "collected_carbon": 5700.185099999996,
+          "cumulative_tree_absorption_income": 12.9594,
+          "recruited_total": 23,
+          "distinct_delivery_turns": 84
+        },
+        "opponent": {
+          "state_t": 299,
+          "cash": 8419.0,
+          "cargo": 96.0255,
+          "alive_workers": 10,
+          "alive_trees": 7,
+          "new_trees_planted": 62,
+          "positive_delivery_events": 66.0,
+          "own_positive_delivery_carbon": 6303.956699999999,
+          "closed_loop_events": 66.0,
+          "collected_carbon": 6390.147599999993,
+          "cumulative_tree_absorption_income": 6260.013032813966,
+          "recruited_total": 19,
+          "distinct_delivery_turns": 60
+        }
+      },
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "agent_calls_by_seat": [
+        299,
+        299
+      ],
+      "search": {
+        "searched": 299,
+        "changed": 171,
+        "aborted": 3,
+        "single": 0,
+        "time": [
+          0.18160037999996348,
+          0.23825720500008174,
+          0.33235597899965796,
+          0.26927280900008554,
+          0.29593812699977207,
+          0.20383045500011576,
+          0.19834578899963162,
+          0.19091673599996284,
+          0.19497090699996988,
+          0.23968293300004007,
+          0.24103378900008465,
+          0.36078911799995694,
+          0.23003654600006485,
+          0.2732446830000299,
+          0.2329637630000434,
+          0.24631266899996263,
+          0.2762790040001164,
+          0.30436531799978184,
+          0.27613483000004635,
+          0.2785981939996418,
+          0.31597097399981067,
+          0.23796778499990978,
+          0.33164344100032395,
+          0.329801265000242,
+          0.3172845550002421,
+          0.4011612580002293,
+          0.4164874839998447,
+          0.3232351579999886,
+          0.4631484299998192,
+          0.5402601749997302,
+          0.3588303579999774,
+          0.5075508039999477,
+          0.44577884299997095,
+          0.5383426159996816,
+          0.527973245999874,
+          0.34748707100015963,
+          0.5811893820000478,
+          0.4307832760000565,
+          0.4157966579996355,
+          0.5245496810002805,
+          0.4366922919998615,
+          0.46333043999993606,
+          0.4642581429998245,
+          0.4988968420002493,
+          0.39948977399990326,
+          0.44953694400010136,
+          0.45905223599993406,
+          0.47060695799973473,
+          0.5543554689998018,
+          0.5495005980001224,
+          0.5023248040001818,
+          0.5467251009999927,
+          0.430629473999943,
+          0.49906275600005756,
+          0.5148210710003696,
+          0.4848021829998288,
+          0.44298738899988166,
+          0.33941938199996,
+          0.5489807439998913,
+          0.46629411800040543,
+          0.4465035810003428,
+          0.438987028000156,
+          0.42471406999993633,
+          0.5540509150000617,
+          0.48294252000005145,
+          0.5362779179999961,
+          0.39277826799980176,
+          0.5503419369997573,
+          0.5101464050003415,
+          0.5363606589999108,
+          0.561302507000164,
+          0.5251198249998197,
+          0.3687796949998301,
+          0.5026070799999616,
+          0.5186410179999257,
+          0.42196508100005303,
+          0.5591590740000356,
+          0.5505747639999754,
+          0.5507308209998882,
+          0.31827788100008547,
+          0.43273656299970753,
+          0.5651156110002375,
+          0.5375803010001619,
+          0.5578601309998703,
+          0.3793126000000484,
+          0.5126911249999466,
+          0.5508751110000958,
+          0.3265868449998379,
+          0.560043663000215,
+          0.5513254489997053,
+          0.3782408550000582,
+          0.5249741570000879,
+          0.49027469299971926,
+          0.5135770609999781,
+          0.5205129610003496,
+          0.404901812999924,
+          0.32957261499996093,
+          0.5243741809999847,
+          0.4053836489997593,
+          0.5596403829999872,
+          0.46908738100000846,
+          0.5494754829996964,
+          0.27580438499990123,
+          0.4472980200002894,
+          0.550139118000061,
+          0.5665546129998802,
+          0.5230250429999614,
+          0.5185291459997643,
+          0.48358702099994844,
+          0.5668105589998049,
+          0.31974931100012327,
+          0.5449740720000591,
+          0.5569588260000273,
+          0.46017250000022614,
+          0.35237943800029825,
+          0.5033833860002233,
+          0.4140306360000068,
+          0.4431294920000255,
+          0.32465197700003046,
+          0.5185553789997357,
+          0.5148338329995568,
+          0.46766004299979613,
+          0.42478143000016644,
+          0.5611770200002866,
+          0.4982097130000511,
+          0.5488575950002996,
+          0.3317898579998655,
+          0.5329153070001666,
+          0.41909954799984916,
+          0.47825591800028633,
+          0.40139070400027776,
+          0.5516199369999413,
+          0.5042021370004477,
+          0.3869107290001921,
+          0.5557223799996791,
+          0.48000459899958514,
+          0.28829636199998276,
+          0.39268607800022437,
+          0.5058727860000545,
+          0.49477547999958915,
+          0.3751208690000567,
+          0.5592412350001723,
+          0.39711095100028615,
+          0.4510856869997042,
+          0.3298344280001402,
+          0.5922493560001385,
+          0.3977834040001653,
+          0.31140255399986927,
+          0.5292103309998311,
+          0.4227611960000104,
+          0.5454857580002681,
+          0.3581519740000658,
+          0.312012223000238,
+          0.4512455500002943,
+          0.5320964980001008,
+          0.399354011000014,
+          0.48991558199986684,
+          0.570880809999835,
+          0.40161245099989173,
+          0.4687754700003097,
+          0.40191032800021276,
+          0.4900234969995836,
+          0.4798721399997703,
+          0.5542164349999439,
+          0.5385845490000065,
+          0.5345643929999824,
+          0.41545235599960506,
+          0.4906458880000173,
+          0.4027820569999676,
+          0.511206563000087,
+          0.5163450499999271,
+          0.5520339139998214,
+          0.564286180000181,
+          0.4237215959997229,
+          0.4972516210000322,
+          0.43865928200011695,
+          0.5034835769997699,
+          0.5004864110001108,
+          0.4365478360000452,
+          0.3627531160000217,
+          0.5213236629997482,
+          0.4994255010001325,
+          0.5121811700000762,
+          0.4081304970000019,
+          0.4950335409998843,
+          0.49716711500013844,
+          0.5506691159998809,
+          0.378197492000254,
+          0.3902554749997762,
+          0.391691142000127,
+          0.3953469370003404,
+          0.5892109729998083,
+          0.478191698000046,
+          0.5794447539997236,
+          0.42053577800015773,
+          0.5107903739999529,
+          0.3405549859999155,
+          0.5051855980000255,
+          0.48621206300003905,
+          0.4051933949999693,
+          0.5556130609998036,
+          0.3934454159998495,
+          0.5728497300001436,
+          0.31559873900005186,
+          0.5576313899996421,
+          0.5009286579997934,
+          0.4680769310002688,
+          0.4425255390001439,
+          0.35643615399976625,
+          0.5235764680001012,
+          0.4676269080000566,
+          0.39832706499964843,
+          0.47897240800011787,
+          0.3684348299998419,
+          0.3246684929999901,
+          0.5657517270001335,
+          0.4828210009995928,
+          0.5517977060003432,
+          0.4151059539999551,
+          0.4915804309998748,
+          0.5566800719998355,
+          0.5691472819999035,
+          0.4189866099995925,
+          0.4548661630001334,
+          0.43030021799995666,
+          0.5498505919999843,
+          0.35992166100004397,
+          0.4585888460001115,
+          0.3411452149998695,
+          0.5278450050000174,
+          0.4025549950001732,
+          0.49330603299995346,
+          0.5116111600000295,
+          0.5216536379998615,
+          0.4066561580002599,
+          0.44265508399985265,
+          0.4047438239999792,
+          0.4726520150002216,
+          0.5381958060002034,
+          0.5168745550004132,
+          0.48279554300006566,
+          0.45788451099997474,
+          0.325484071000119,
+          0.5355224219997581,
+          0.2905603979997977,
+          0.316629660000217,
+          0.505270716999803,
+          0.4708905720003713,
+          0.5669970179997108,
+          0.4718426660001569,
+          0.2901463930002137,
+          0.5714402329999757,
+          0.3005353080002351,
+          0.5088895569997476,
+          0.5064762850001898,
+          0.5152650310001263,
+          0.49636578900026507,
+          0.47502810800006046,
+          0.5207338889999846,
+          0.5561985620001906,
+          0.39458687300020756,
+          0.5607246729996405,
+          0.5122267599999759,
+          0.4303143199999795,
+          0.4073339599999599,
+          0.46942668900010176,
+          0.5674706469999364,
+          0.3930194009999468,
+          0.32828317399980733,
+          0.5547857350002232,
+          0.5725393480001912,
+          0.3693196919998627,
+          0.3370819480001046,
+          0.43856318300004205,
+          0.3420206370001324,
+          0.531079107000096,
+          0.40189658500003134,
+          0.5580166069998995,
+          0.40087917700020625,
+          0.5516638559997773,
+          0.3799668829997245,
+          0.40816287400002693,
+          0.4821610259996305,
+          0.46388521800008675,
+          0.3303304639998714,
+          0.49235438599998815,
+          0.5455061960001331,
+          0.36545623799975147,
+          0.3880215870003667,
+          0.3315050319997681,
+          0.5453765930001282,
+          0.43164469600014854,
+          0.5153723620001074,
+          0.3032939350000561,
+          0.25922087199978705,
+          0.1362060419996851,
+          0.17802067499997065,
+          0.16005787500034785,
+          0.02355771700013065
+        ],
+        "depth": {
+          "8": 227,
+          "5": 17,
+          "6": 28,
+          "7": 12,
+          "4": 9,
+          "2": 2,
+          "3": 2,
+          "1": 2
+        },
+        "rolls": {
+          "1": 299
+        },
+        "cands": {
+          "2": 9,
+          "5": 14,
+          "7": 5,
+          "3": 7,
+          "9": 4,
+          "6": 46,
+          "4": 36,
+          "8": 77,
+          "10": 32,
+          "12": 41,
+          "16": 10,
+          "14": 13,
+          "15": 2,
+          "11": 3
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          8,
+          1,
+          1,
+          0.02355771700013065,
+          [
+            0.00743145834047957,
+            0.001185012256760395,
+            0.008820381999957317,
+            0.0011267013999713526
+          ]
+        ]
+      },
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "opponent_torch_threads": 2,
+      "wall_seconds": 143.78730782699995,
+      "call_seconds_by_seat": [
+        {
+          "n": 299,
+          "sum": 4.45052835399747,
+          "mean": 0.01488471021403836,
+          "min": 0.009498087000338273,
+          "max": 0.04809922699996605
+        },
+        {
+          "n": 299,
+          "sum": 132.65165810200187,
+          "mean": 0.44365103044147786,
+          "min": 0.02368390499987072,
+          "max": 0.5925622009999643
+        }
+      ],
+      "actions_sha256": "6ab37835feb0bf8e68bc5e45ecb9e9f44872e2632fde8baccee75d9d3799817b",
+      "final_state_sha256": "aacd06b85b5825516df71cc0f3f9f3677bdeda29f1491817b4aedf9c31caa82f",
+      "positive_deposits": [
+        {
+          "t": 10,
+          "seat": 0,
+          "amount": 11.8308
+        },
+        {
+          "t": 11,
+          "seat": 1,
+          "amount": 32.7606
+        },
+        {
+          "t": 18,
+          "seat": 0,
+          "amount": 37.46939999999999
+        },
+        {
+          "t": 20,
+          "seat": 1,
+          "amount": 41.7384
+        },
+        {
+          "t": 24,
+          "seat": 0,
+          "amount": 19.3422
+        },
+        {
+          "t": 27,
+          "seat": 0,
+          "amount": 33.39978
+        },
+        {
+          "t": 29,
+          "seat": 1,
+          "amount": 53.16359999999999
+        },
+        {
+          "t": 29,
+          "seat": 1,
+          "amount": 53.16359999999999
+        },
+        {
+          "t": 30,
+          "seat": 1,
+          "amount": 23.0958
+        },
+        {
+          "t": 32,
+          "seat": 0,
+          "amount": 33.9903
+        },
+        {
+          "t": 39,
+          "seat": 0,
+          "amount": 37.2201
+        },
+        {
+          "t": 40,
+          "seat": 0,
+          "amount": 88.0608
+        },
+        {
+          "t": 42,
+          "seat": 1,
+          "amount": 87.34949999999999
+        },
+        {
+          "t": 43,
+          "seat": 0,
+          "amount": 23.0499
+        },
+        {
+          "t": 45,
+          "seat": 0,
+          "amount": 51.012863100000004
+        },
+        {
+          "t": 46,
+          "seat": 1,
+          "amount": 101.92320000000002
+        },
+        {
+          "t": 51,
+          "seat": 0,
+          "amount": 43.4283
+        },
+        {
+          "t": 51,
+          "seat": 0,
+          "amount": 38.51711999999999
+        },
+        {
+          "t": 52,
+          "seat": 0,
+          "amount": 64.1712
+        },
+        {
+          "t": 57,
+          "seat": 0,
+          "amount": 50.2383
+        },
+        {
+          "t": 58,
+          "seat": 0,
+          "amount": 18.449399999999997
+        },
+        {
+          "t": 59,
+          "seat": 1,
+          "amount": 263.04900000000004
+        },
+        {
+          "t": 63,
+          "seat": 0,
+          "amount": 30.6744
+        },
+        {
+          "t": 64,
+          "seat": 0,
+          "amount": 11.625
+        },
+        {
+          "t": 64,
+          "seat": 1,
+          "amount": 118.38539999999999
+        },
+        {
+          "t": 72,
+          "seat": 1,
+          "amount": 219.4533
+        },
+        {
+          "t": 73,
+          "seat": 1,
+          "amount": 345.99329999999986
+        },
+        {
+          "t": 76,
+          "seat": 0,
+          "amount": 26.965316339999994
+        },
+        {
+          "t": 76,
+          "seat": 1,
+          "amount": 221.93549999999996
+        },
+        {
+          "t": 81,
+          "seat": 0,
+          "amount": 71.634
+        },
+        {
+          "t": 82,
+          "seat": 0,
+          "amount": 100.18379999999999
+        },
+        {
+          "t": 83,
+          "seat": 0,
+          "amount": 118.57799999999999
+        },
+        {
+          "t": 89,
+          "seat": 0,
+          "amount": 18.235439999999997
+        },
+        {
+          "t": 90,
+          "seat": 1,
+          "amount": 59.1003
+        },
+        {
+          "t": 94,
+          "seat": 1,
+          "amount": 72.3774
+        },
+        {
+          "t": 95,
+          "seat": 0,
+          "amount": 53.8296
+        },
+        {
+          "t": 96,
+          "seat": 1,
+          "amount": 133.3107
+        },
+        {
+          "t": 97,
+          "seat": 0,
+          "amount": 111.93488699999999
+        },
+        {
+          "t": 97,
+          "seat": 1,
+          "amount": 159.76559999999995
+        },
+        {
+          "t": 98,
+          "seat": 0,
+          "amount": 51.3537
+        },
+        {
+          "t": 99,
+          "seat": 1,
+          "amount": 69.2499
+        },
+        {
+          "t": 100,
+          "seat": 0,
+          "amount": 102.22872
+        },
+        {
+          "t": 105,
+          "seat": 1,
+          "amount": 134.6463
+        },
+        {
+          "t": 107,
+          "seat": 0,
+          "amount": 124.8312
+        },
+        {
+          "t": 107,
+          "seat": 0,
+          "amount": 67.84295519999999
+        },
+        {
+          "t": 109,
+          "seat": 1,
+          "amount": 63.666
+        },
+        {
+          "t": 110,
+          "seat": 0,
+          "amount": 74.7249
+        },
+        {
+          "t": 113,
+          "seat": 0,
+          "amount": 63.506699999999995
+        },
+        {
+          "t": 120,
+          "seat": 0,
+          "amount": 20.038994999999996
+        },
+        {
+          "t": 123,
+          "seat": 1,
+          "amount": 35.271
+        },
+        {
+          "t": 127,
+          "seat": 1,
+          "amount": 82.5297
+        },
+        {
+          "t": 128,
+          "seat": 0,
+          "amount": 67.99289999999999
+        },
+        {
+          "t": 128,
+          "seat": 0,
+          "amount": 75.03569999999999
+        },
+        {
+          "t": 128,
+          "seat": 1,
+          "amount": 86.5356
+        },
+        {
+          "t": 129,
+          "seat": 0,
+          "amount": 62.214780000000005
+        },
+        {
+          "t": 131,
+          "seat": 0,
+          "amount": 70.42859999999999
+        },
+        {
+          "t": 131,
+          "seat": 1,
+          "amount": 110.739
+        },
+        {
+          "t": 132,
+          "seat": 0,
+          "amount": 70.51283099999999
+        },
+        {
+          "t": 135,
+          "seat": 1,
+          "amount": 75.6162
+        },
+        {
+          "t": 139,
+          "seat": 0,
+          "amount": 157.9224315
+        },
+        {
+          "t": 140,
+          "seat": 0,
+          "amount": 48.203399999999995
+        },
+        {
+          "t": 143,
+          "seat": 1,
+          "amount": 130.584
+        },
+        {
+          "t": 149,
+          "seat": 0,
+          "amount": 74.5467
+        },
+        {
+          "t": 149,
+          "seat": 1,
+          "amount": 172.1154
+        },
+        {
+          "t": 150,
+          "seat": 0,
+          "amount": 53.770799999999994
+        },
+        {
+          "t": 150,
+          "seat": 1,
+          "amount": 127.47659999999998
+        },
+        {
+          "t": 153,
+          "seat": 0,
+          "amount": 57.8064
+        },
+        {
+          "t": 155,
+          "seat": 0,
+          "amount": 55.4019
+        },
+        {
+          "t": 156,
+          "seat": 0,
+          "amount": 35.514227766051
+        },
+        {
+          "t": 158,
+          "seat": 0,
+          "amount": 20.4323796
+        },
+        {
+          "t": 160,
+          "seat": 0,
+          "amount": 20.695337999999996
+        },
+        {
+          "t": 161,
+          "seat": 0,
+          "amount": 102.4638
+        },
+        {
+          "t": 161,
+          "seat": 1,
+          "amount": 127.72380000000001
+        },
+        {
+          "t": 163,
+          "seat": 0,
+          "amount": 50.68117218
+        },
+        {
+          "t": 165,
+          "seat": 1,
+          "amount": 134.9637
+        },
+        {
+          "t": 166,
+          "seat": 1,
+          "amount": 138.4764
+        },
+        {
+          "t": 167,
+          "seat": 0,
+          "amount": 20.208689999999997
+        },
+        {
+          "t": 169,
+          "seat": 0,
+          "amount": 62.386500000000005
+        },
+        {
+          "t": 170,
+          "seat": 1,
+          "amount": 208.42829999999998
+        },
+        {
+          "t": 171,
+          "seat": 0,
+          "amount": 22.395599999999998
+        },
+        {
+          "t": 171,
+          "seat": 1,
+          "amount": 102.7536
+        },
+        {
+          "t": 172,
+          "seat": 0,
+          "amount": 121.7373
+        },
+        {
+          "t": 173,
+          "seat": 0,
+          "amount": 69.8109
+        },
+        {
+          "t": 176,
+          "seat": 0,
+          "amount": 18.715508999999997
+        },
+        {
+          "t": 177,
+          "seat": 1,
+          "amount": 19.156499999999998
+        },
+        {
+          "t": 177,
+          "seat": 1,
+          "amount": 41.261399999999995
+        },
+        {
+          "t": 181,
+          "seat": 0,
+          "amount": 23.836799999999997
+        },
+        {
+          "t": 183,
+          "seat": 0,
+          "amount": 30.287399999999998
+        },
+        {
+          "t": 187,
+          "seat": 0,
+          "amount": 37.4499
+        },
+        {
+          "t": 192,
+          "seat": 1,
+          "amount": 26.9346
+        },
+        {
+          "t": 196,
+          "seat": 0,
+          "amount": 37.0122
+        },
+        {
+          "t": 197,
+          "seat": 1,
+          "amount": 65.4735
+        },
+        {
+          "t": 198,
+          "seat": 0,
+          "amount": 54.288599999999995
+        },
+        {
+          "t": 201,
+          "seat": 0,
+          "amount": 14.6961
+        },
+        {
+          "t": 202,
+          "seat": 1,
+          "amount": 94.71509999999999
+        },
+        {
+          "t": 203,
+          "seat": 0,
+          "amount": 39.1605
+        },
+        {
+          "t": 203,
+          "seat": 1,
+          "amount": 120.64679999999998
+        },
+        {
+          "t": 205,
+          "seat": 0,
+          "amount": 70.19256
+        },
+        {
+          "t": 206,
+          "seat": 1,
+          "amount": 155.6316
+        },
+        {
+          "t": 209,
+          "seat": 1,
+          "amount": 59.1309
+        },
+        {
+          "t": 210,
+          "seat": 0,
+          "amount": 42.440562
+        },
+        {
+          "t": 211,
+          "seat": 0,
+          "amount": 118.44059999999998
+        },
+        {
+          "t": 213,
+          "seat": 0,
+          "amount": 46.350978
+        },
+        {
+          "t": 218,
+          "seat": 1,
+          "amount": 68.6964
+        },
+        {
+          "t": 218,
+          "seat": 1,
+          "amount": 93.1152
+        },
+        {
+          "t": 219,
+          "seat": 0,
+          "amount": 52.9737
+        },
+        {
+          "t": 220,
+          "seat": 1,
+          "amount": 53.130599999999994
+        },
+        {
+          "t": 223,
+          "seat": 0,
+          "amount": 84.12788699999999
+        },
+        {
+          "t": 223,
+          "seat": 0,
+          "amount": 60.306
+        },
+        {
+          "t": 234,
+          "seat": 1,
+          "amount": 84.642
+        },
+        {
+          "t": 234,
+          "seat": 1,
+          "amount": 257.6892
+        },
+        {
+          "t": 235,
+          "seat": 1,
+          "amount": 53.340599999999995
+        },
+        {
+          "t": 237,
+          "seat": 0,
+          "amount": 82.0101
+        },
+        {
+          "t": 237,
+          "seat": 1,
+          "amount": 102.49919999999999
+        },
+        {
+          "t": 239,
+          "seat": 0,
+          "amount": 84.673764
+        },
+        {
+          "t": 244,
+          "seat": 0,
+          "amount": 94.92030000000001
+        },
+        {
+          "t": 244,
+          "seat": 1,
+          "amount": 65.7
+        },
+        {
+          "t": 247,
+          "seat": 1,
+          "amount": 62.5857
+        },
+        {
+          "t": 250,
+          "seat": 1,
+          "amount": 76.3407
+        },
+        {
+          "t": 254,
+          "seat": 0,
+          "amount": 57.9054
+        },
+        {
+          "t": 254,
+          "seat": 1,
+          "amount": 79.1514
+        },
+        {
+          "t": 255,
+          "seat": 0,
+          "amount": 160.33169999999996
+        },
+        {
+          "t": 257,
+          "seat": 0,
+          "amount": 80.8536
+        },
+        {
+          "t": 257,
+          "seat": 1,
+          "amount": 47.90129999999999
+        },
+        {
+          "t": 258,
+          "seat": 0,
+          "amount": 93.6672
+        },
+        {
+          "t": 259,
+          "seat": 0,
+          "amount": 113.4756
+        },
+        {
+          "t": 262,
+          "seat": 1,
+          "amount": 60.428999999999995
+        },
+        {
+          "t": 263,
+          "seat": 0,
+          "amount": 54.29470499999999
+        },
+        {
+          "t": 263,
+          "seat": 1,
+          "amount": 38.3043
+        },
+        {
+          "t": 264,
+          "seat": 0,
+          "amount": 78.829533
+        },
+        {
+          "t": 264,
+          "seat": 1,
+          "amount": 58.941599999999994
+        },
+        {
+          "t": 266,
+          "seat": 0,
+          "amount": 115.87349999999998
+        },
+        {
+          "t": 268,
+          "seat": 1,
+          "amount": 38.8914
+        },
+        {
+          "t": 273,
+          "seat": 0,
+          "amount": 50.0529
+        },
+        {
+          "t": 276,
+          "seat": 1,
+          "amount": 66.1662
+        },
+        {
+          "t": 277,
+          "seat": 0,
+          "amount": 89.63609999999998
+        },
+        {
+          "t": 279,
+          "seat": 1,
+          "amount": 68.3115
+        },
+        {
+          "t": 280,
+          "seat": 0,
+          "amount": 22.4289
+        },
+        {
+          "t": 283,
+          "seat": 0,
+          "amount": 77.3454
+        },
+        {
+          "t": 284,
+          "seat": 0,
+          "amount": 74.148
+        },
+        {
+          "t": 285,
+          "seat": 0,
+          "amount": 56.30099999999999
+        },
+        {
+          "t": 286,
+          "seat": 0,
+          "amount": 13.4952
+        },
+        {
+          "t": 287,
+          "seat": 0,
+          "amount": 53.1915
+        },
+        {
+          "t": 287,
+          "seat": 1,
+          "amount": 28.4178
+        },
+        {
+          "t": 289,
+          "seat": 1,
+          "amount": 43.0251
+        },
+        {
+          "t": 290,
+          "seat": 1,
+          "amount": 29.609999999999996
+        },
+        {
+          "t": 290,
+          "seat": 1,
+          "amount": 79.38719999999999
+        },
+        {
+          "t": 292,
+          "seat": 0,
+          "amount": 48.616679999999995
+        },
+        {
+          "t": 294,
+          "seat": 0,
+          "amount": 41.879691
+        },
+        {
+          "t": 297,
+          "seat": 1,
+          "amount": 184.3416
+        },
+        {
+          "t": 297,
+          "seat": 1,
+          "amount": 140.72310000000002
+        },
+        {
+          "t": 298,
+          "seat": 0,
+          "amount": 49.861200000000004
+        },
+        {
+          "t": 298,
+          "seat": 1,
+          "amount": 18.383399999999998
+        },
+        {
+          "t": 299,
+          "seat": 1,
+          "amount": 33.9411
+        }
+      ]
+    },
+    {
+      "seed": 620106811,
+      "candidate_seat": 1,
+      "cpu_affinity": [
+        1
+      ],
+      "actual_transitions": 299,
+      "termination": "official_episode_limit",
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "result": "loss",
+      "official_score_by_seat": [
+        8535.38,
+        4735.06
+      ],
+      "margin": -3800.319999999999,
+      "snapshots": {
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "cash": 175.58,
+            "cargo": 223.131,
+            "alive_workers": 5,
+            "alive_trees": 0,
+            "new_trees_planted": 0,
+            "positive_delivery_events": 9.0,
+            "own_positive_delivery_carbon": 245.58120000000002,
+            "closed_loop_events": 9.0,
+            "collected_carbon": 487.4949000000001,
+            "cumulative_tree_absorption_income": 0.0,
+            "recruited_total": 5,
+            "distinct_delivery_turns": 9
+          },
+          "opponent": {
+            "state_t": 60,
+            "cash": 1208.93,
+            "cargo": 280.0602,
+            "alive_workers": 10,
+            "alive_trees": 14,
+            "new_trees_planted": 14,
+            "positive_delivery_events": 9.0,
+            "own_positive_delivery_carbon": 758.8239,
+            "closed_loop_events": 9.0,
+            "collected_carbon": 1038.8841000000002,
+            "cumulative_tree_absorption_income": 1306.9640249999995,
+            "recruited_total": 10,
+            "distinct_delivery_turns": 9
+          }
+        },
+        "100": {
+          "candidate": {
+            "state_t": 100,
+            "cash": 485.68,
+            "cargo": 387.56657279999996,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 0,
+            "positive_delivery_events": 15.0,
+            "own_positive_delivery_carbon": 705.6837609000002,
+            "closed_loop_events": 15.0,
+            "collected_carbon": 1160.4576,
+            "cumulative_tree_absorption_income": 0.0,
+            "recruited_total": 10,
+            "distinct_delivery_turns": 14
+          },
+          "opponent": {
+            "state_t": 100,
+            "cash": 2544.54,
+            "cargo": 319.1658,
+            "alive_workers": 10,
+            "alive_trees": 11,
+            "new_trees_planted": 24,
+            "positive_delivery_events": 18.0,
+            "own_positive_delivery_carbon": 1689.2667,
+            "closed_loop_events": 18.0,
+            "collected_carbon": 2008.4325,
+            "cumulative_tree_absorption_income": 2517.220303799999,
+            "recruited_total": 10,
+            "distinct_delivery_turns": 17
+          }
+        },
+        "200": {
+          "candidate": {
+            "state_t": 200,
+            "cash": 2003.37,
+            "cargo": 605.08810851,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 0,
+            "positive_delivery_events": 38.0,
+            "own_positive_delivery_carbon": 2403.36643124454,
+            "closed_loop_events": 38.0,
+            "collected_carbon": 3147.2523000000006,
+            "cumulative_tree_absorption_income": 0.0,
+            "recruited_total": 16,
+            "distinct_delivery_turns": 34
+          },
+          "opponent": {
+            "state_t": 200,
+            "cash": 5302.88,
+            "cargo": 221.3139,
+            "alive_workers": 10,
+            "alive_trees": 9,
+            "new_trees_planted": 45,
+            "positive_delivery_events": 36.0,
+            "own_positive_delivery_carbon": 3449.3795999999998,
+            "closed_loop_events": 36.0,
+            "collected_carbon": 3670.693500000002,
+            "cumulative_tree_absorption_income": 5075.450422745454,
+            "recruited_total": 16,
+            "distinct_delivery_turns": 33
+          }
+        },
+        "299": {
+          "candidate": {
+            "state_t": 299,
+            "cash": 4735.06,
+            "cargo": 60.2097,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 0,
+            "positive_delivery_events": 64.0,
+            "own_positive_delivery_carbon": 5195.053688278469,
+            "closed_loop_events": 64.0,
+            "collected_carbon": 5535.4131,
+            "cumulative_tree_absorption_income": 0.0,
+            "recruited_total": 18,
+            "distinct_delivery_turns": 58
+          },
+          "opponent": {
+            "state_t": 299,
+            "cash": 8535.38,
+            "cargo": 102.9225,
+            "alive_workers": 10,
+            "alive_trees": 6,
+            "new_trees_planted": 62,
+            "positive_delivery_events": 60.0,
+            "own_positive_delivery_carbon": 5701.6284000000005,
+            "closed_loop_events": 60.0,
+            "collected_carbon": 5804.550900000007,
+            "cumulative_tree_absorption_income": 7044.0512242215245,
+            "recruited_total": 18,
+            "distinct_delivery_turns": 57
+          }
+        }
+      },
+      "final": {
+        "candidate": {
+          "state_t": 299,
+          "cash": 4735.06,
+          "cargo": 60.2097,
+          "alive_workers": 10,
+          "alive_trees": 0,
+          "new_trees_planted": 0,
+          "positive_delivery_events": 64.0,
+          "own_positive_delivery_carbon": 5195.053688278469,
+          "closed_loop_events": 64.0,
+          "collected_carbon": 5535.4131,
+          "cumulative_tree_absorption_income": 0.0,
+          "recruited_total": 18,
+          "distinct_delivery_turns": 58
+        },
+        "opponent": {
+          "state_t": 299,
+          "cash": 8535.38,
+          "cargo": 102.9225,
+          "alive_workers": 10,
+          "alive_trees": 6,
+          "new_trees_planted": 62,
+          "positive_delivery_events": 60.0,
+          "own_positive_delivery_carbon": 5701.6284000000005,
+          "closed_loop_events": 60.0,
+          "collected_carbon": 5804.550900000007,
+          "cumulative_tree_absorption_income": 7044.0512242215245,
+          "recruited_total": 18,
+          "distinct_delivery_turns": 57
+        }
+      },
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "agent_calls_by_seat": [
+        299,
+        299
+      ],
+      "search": {
+        "searched": 298,
+        "changed": 184,
+        "aborted": 2,
+        "single": 1,
+        "time": [
+          0.21542266200003723,
+          0.18455492800012507,
+          0.34061982200000784,
+          0.2674401970002691,
+          0.19554867600027137,
+          0.19531266900003175,
+          0.20145713100009743,
+          0.19607124200001635,
+          0.24709940799994,
+          0.2308478209997702,
+          0.2552023119997102,
+          0.20843382200018823,
+          0.23115223300010257,
+          0.2153768640000635,
+          0.2737593070000912,
+          0.303682858999764,
+          0.30436646999987715,
+          0.3887624980002329,
+          0.2896825460002219,
+          0.48070520399960515,
+          0.44117775899985645,
+          0.37055784099993616,
+          0.3810165289996803,
+          0.3264866519998577,
+          0.5212781780001023,
+          0.4590741090000847,
+          0.46713910700009365,
+          0.5385400190002656,
+          0.4788345209999534,
+          0.34493025400024635,
+          0.5354161949999252,
+          0.46928018600010546,
+          0.5293891690002965,
+          0.47457163499984745,
+          0.36568004099990503,
+          0.46291303999987576,
+          0.5424140529999022,
+          0.5150759550001567,
+          0.41407558299988523,
+          0.5048601280000184,
+          0.34927415600031964,
+          0.537889764999818,
+          0.5104586439997547,
+          0.5063882179997563,
+          0.5310461600001872,
+          0.3721166110003651,
+          0.46809060399982627,
+          0.4238716969998677,
+          0.5200906539998869,
+          0.33235944399984874,
+          0.5654976280002302,
+          0.27984988999969573,
+          0.5862946060001377,
+          0.4093244229998163,
+          0.43482581799980835,
+          0.31904342899997573,
+          0.5364110409996101,
+          0.5345329059996402,
+          0.35967073800020444,
+          0.40200478299993847,
+          0.5668582910002442,
+          0.40927012200018,
+          0.4626461709999603,
+          0.40274551300035455,
+          0.537055056999634,
+          0.360683452000103,
+          0.5605709090000346,
+          0.5364774169997872,
+          0.5257804399998349,
+          0.5253682840002512,
+          0.5591307360000428,
+          0.35464746199977526,
+          0.5361740970001847,
+          0.5094268380003086,
+          0.308216617999733,
+          0.5412656690000404,
+          0.5344660109999495,
+          0.5467145110001184,
+          0.3358299689998603,
+          0.49840850800001135,
+          0.5579409949996261,
+          0.5422182080001221,
+          0.5522221009996429,
+          0.4130995439995786,
+          0.5443546510000488,
+          0.5599047710002196,
+          0.3633230799996454,
+          0.46054031099993153,
+          0.43899537700008295,
+          0.5288609500003076,
+          0.5333153719998336,
+          0.5682183530002476,
+          0.501776474000053,
+          0.5681320280000364,
+          0.402580695999859,
+          0.5352280720003364,
+          0.5282967470002404,
+          0.5433364089999486,
+          0.4027357810000467,
+          0.4908329270001559,
+          0.5523633570001039,
+          0.4414242610000656,
+          0.5411875720001262,
+          0.5210043880001649,
+          0.5426334510002562,
+          0.47944052299999385,
+          0.5492712889999893,
+          0.54504886299992,
+          0.5568365549997907,
+          0.416939321999962,
+          0.5545619610002177,
+          0.4023921060002067,
+          0.40500062599994635,
+          0.5539485959998274,
+          0.5139313250001578,
+          0.5453827379997165,
+          0.3787738470000477,
+          0.5122279980000712,
+          0.5474661470002502,
+          0.3223543150002115,
+          0.5564503499999773,
+          0.3225245769999674,
+          0.5339168540003811,
+          0.49403086699976484,
+          0.5452262410003641,
+          0.3587646659998427,
+          0.30518475999997463,
+          0.5723168709996571,
+          0.43608804499990583,
+          0.4224461200001315,
+          0.5769136379999509,
+          0.337058375000197,
+          0.5111605239999335,
+          0.5632316870000977,
+          0.3516692759999387,
+          0.5068819000002804,
+          0.4809290999996847,
+          0.3021079939999254,
+          0.5111319490001733,
+          0.4457554320001691,
+          0.46704068999997617,
+          0.4863987779999661,
+          0.3720620429999144,
+          0.34673377199987954,
+          0.5020597880002242,
+          0.3289917210004205,
+          0.44508410000025833,
+          0.40964755899995,
+          0.4779964999997901,
+          0.5582372519997989,
+          0.3959596199997577,
+          0.49011195800039786,
+          0.521788633000142,
+          0.4310810820002189,
+          0.5431578610000543,
+          0.4086787100000038,
+          0.4264407699997719,
+          0.5442465319997609,
+          0.3526999679997971,
+          0.4987401870002941,
+          0.4729774960001123,
+          0.436110070000268,
+          0.3647894260002431,
+          0.5389110529999925,
+          0.5339290050001182,
+          0.3071848559998216,
+          0.4926830469999004,
+          0.5423957640000481,
+          0.4139852409998639,
+          0.47689176399990174,
+          0.5159735830002319,
+          0.46951040099975216,
+          0.45409498600020015,
+          0.5132712599997831,
+          0.3831389839997428,
+          0.3996372260003227,
+          0.4894329510002535,
+          0.5520683760000793,
+          0.4235266609998689,
+          0.4007079520001753,
+          0.5462580910002544,
+          0.47778534200006106,
+          0.5445377810001446,
+          0.435656155000288,
+          0.40430930799993803,
+          0.3340227890003007,
+          0.47523987300019144,
+          0.5157787569996799,
+          0.5135695010003474,
+          0.44490859100005764,
+          0.6004884840003797,
+          0.46832377300006556,
+          0.49733093300028486,
+          0.4751753679997819,
+          0.5344465509997463,
+          0.5020011420001538,
+          0.33388254700003017,
+          0.4463710820000415,
+          0.5052137150000817,
+          0.43859401200006687,
+          0.4646652660003383,
+          0.4140568180000628,
+          0.3786950050002815,
+          0.5578105479999067,
+          0.4730520049997722,
+          0.34538735000023735,
+          0.48773418599967044,
+          0.3232534819999273,
+          0.46028140999987954,
+          0.4312336520001736,
+          0.5572203809997518,
+          0.5648850450002101,
+          0.34034003799979473,
+          0.5599587209999299,
+          0.5344972870002493,
+          0.49446968200027186,
+          0.4801928339998085,
+          0.5251037799998812,
+          0.42158394999978555,
+          0.4753215369996724,
+          0.373787744999845,
+          0.37572965399976965,
+          0.3465106650000962,
+          0.4661043639998752,
+          0.5063821829999142,
+          0.4935566750000362,
+          0.4841174610000962,
+          0.5198393900000156,
+          0.5612924600000042,
+          0.4736105410001983,
+          0.5650725909999892,
+          0.48268920300006357,
+          0.38644284399970275,
+          0.43740630299998884,
+          0.5806270539997058,
+          0.24727493099999265,
+          0.5296085009999842,
+          0.5133798290003142,
+          0.5022263780001595,
+          0.34477335800011133,
+          0.4989405619999161,
+          0.3064993749999303,
+          0.5271271239998896,
+          0.5524598280003374,
+          0.2428278610000234,
+          0.5676496080000106,
+          0.311768395999934,
+          0.5710700790000374,
+          0.3696221400000468,
+          0.4991336639996007,
+          0.4024075970000922,
+          0.5589672330002031,
+          0.5034376020003037,
+          0.5817837939998753,
+          0.3471014419997118,
+          0.5300784620003469,
+          0.5713417570000274,
+          0.5009298220002165,
+          0.50614818799977,
+          0.515712762000021,
+          0.5171118000002934,
+          0.46843347899994114,
+          0.5555098269996961,
+          0.46852601099999447,
+          0.34502622599984534,
+          0.4457267109996792,
+          0.5703703310000492,
+          0.582673968999643,
+          0.39564605099985783,
+          0.5403033299999151,
+          0.41389285600007497,
+          0.5683216130000801,
+          0.3428510659996391,
+          0.5511059630002819,
+          0.49433543699979055,
+          0.5050591789999999,
+          0.32093261099998927,
+          0.5435222050000448,
+          0.36711928199974864,
+          0.38616396700035693,
+          0.34129006100010884,
+          0.47388239000019894,
+          0.4365236010003173,
+          0.3088669159997153,
+          0.5094207369998003,
+          0.46737046999987797,
+          0.412043819000246,
+          0.5415565500002231,
+          0.4448676729998624,
+          0.33741261300019687,
+          0.5468174289999297,
+          0.42368569499967634,
+          0.2945555129999775,
+          0.4165561859999798,
+          0.26984840699969936,
+          0.19859957799963013,
+          0.16100105199984682,
+          0.03311624399975699
+        ],
+        "depth": {
+          "8": 226,
+          "5": 17,
+          "4": 16,
+          "6": 22,
+          "7": 12,
+          "2": 3,
+          "3": 1,
+          "1": 1
+        },
+        "rolls": {
+          "1": 298
+        },
+        "cands": {
+          "6": 27,
+          "4": 28,
+          "7": 15,
+          "5": 9,
+          "3": 7,
+          "2": 16,
+          "10": 31,
+          "9": 5,
+          "12": 38,
+          "11": 4,
+          "16": 11,
+          "8": 89,
+          "15": 1,
+          "14": 16,
+          "13": 1
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          8,
+          1,
+          1,
+          0.03311624399975699,
+          [
+            0.005958255408427824,
+            0.003689461873918748,
+            0.005478627999927267,
+            0.00620252779999646
+          ]
+        ]
+      },
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "opponent_torch_threads": 2,
+      "wall_seconds": 145.38660025199988,
+      "call_seconds_by_seat": [
+        {
+          "n": 299,
+          "sum": 133.7539145519977,
+          "mean": 0.44733750686286855,
+          "min": 0.010726270999839471,
+          "max": 0.600784332999865
+        },
+        {
+          "n": 299,
+          "sum": 4.856672771997182,
+          "mean": 0.016243052749154455,
+          "min": 0.009412338999936765,
+          "max": 0.05474785099977453
+        }
+      ],
+      "actions_sha256": "666c1a39e01097aedd072e8247a98f634983c2073c7ef1bde0ceec6f9a87d66d",
+      "final_state_sha256": "a7664fe8fd4fcde75c6e2301cc87e4bba65b929bf42805ce0dcbad56f13b30fd",
+      "positive_deposits": [
+        {
+          "t": 10,
+          "seat": 0,
+          "amount": 31.057500000000005
+        },
+        {
+          "t": 12,
+          "seat": 1,
+          "amount": 32.1639
+        },
+        {
+          "t": 15,
+          "seat": 0,
+          "amount": 40.4313
+        },
+        {
+          "t": 20,
+          "seat": 0,
+          "amount": 49.9713
+        },
+        {
+          "t": 21,
+          "seat": 1,
+          "amount": 18.7434
+        },
+        {
+          "t": 25,
+          "seat": 0,
+          "amount": 57.647099999999995
+        },
+        {
+          "t": 25,
+          "seat": 1,
+          "amount": 19.9227
+        },
+        {
+          "t": 27,
+          "seat": 1,
+          "amount": 21.1359
+        },
+        {
+          "t": 29,
+          "seat": 0,
+          "amount": 51.8655
+        },
+        {
+          "t": 31,
+          "seat": 1,
+          "amount": 43.757099999999994
+        },
+        {
+          "t": 36,
+          "seat": 1,
+          "amount": 11.6496
+        },
+        {
+          "t": 39,
+          "seat": 0,
+          "amount": 75.99000000000001
+        },
+        {
+          "t": 39,
+          "seat": 1,
+          "amount": 37.3869
+        },
+        {
+          "t": 43,
+          "seat": 0,
+          "amount": 74.31660000000001
+        },
+        {
+          "t": 49,
+          "seat": 0,
+          "amount": 125.50349999999999
+        },
+        {
+          "t": 50,
+          "seat": 1,
+          "amount": 17.621699999999997
+        },
+        {
+          "t": 51,
+          "seat": 1,
+          "amount": 43.2
+        },
+        {
+          "t": 59,
+          "seat": 0,
+          "amount": 252.0411
+        },
+        {
+          "t": 61,
+          "seat": 0,
+          "amount": 158.4099
+        },
+        {
+          "t": 63,
+          "seat": 1,
+          "amount": 43.9617
+        },
+        {
+          "t": 64,
+          "seat": 0,
+          "amount": 85.5051
+        },
+        {
+          "t": 68,
+          "seat": 0,
+          "amount": 124.8777
+        },
+        {
+          "t": 74,
+          "seat": 1,
+          "amount": 60.75869999999999
+        },
+        {
+          "t": 74,
+          "seat": 1,
+          "amount": 61.47600390000001
+        },
+        {
+          "t": 75,
+          "seat": 1,
+          "amount": 135.363
+        },
+        {
+          "t": 77,
+          "seat": 0,
+          "amount": 145.17389999999997
+        },
+        {
+          "t": 85,
+          "seat": 0,
+          "amount": 30.0
+        },
+        {
+          "t": 86,
+          "seat": 0,
+          "amount": 116.7
+        },
+        {
+          "t": 86,
+          "seat": 0,
+          "amount": 65.7
+        },
+        {
+          "t": 88,
+          "seat": 0,
+          "amount": 120.8832
+        },
+        {
+          "t": 93,
+          "seat": 1,
+          "amount": 19.115486999999998
+        },
+        {
+          "t": 94,
+          "seat": 1,
+          "amount": 139.42766999999998
+        },
+        {
+          "t": 97,
+          "seat": 0,
+          "amount": 83.19300000000001
+        },
+        {
+          "t": 102,
+          "seat": 0,
+          "amount": 100.2747
+        },
+        {
+          "t": 106,
+          "seat": 0,
+          "amount": 240.74429999999998
+        },
+        {
+          "t": 106,
+          "seat": 0,
+          "amount": 51.00659999999999
+        },
+        {
+          "t": 106,
+          "seat": 1,
+          "amount": 37.690200000000004
+        },
+        {
+          "t": 108,
+          "seat": 1,
+          "amount": 114.2328498
+        },
+        {
+          "t": 108,
+          "seat": 1,
+          "amount": 57.39179999999999
+        },
+        {
+          "t": 116,
+          "seat": 0,
+          "amount": 82.0011
+        },
+        {
+          "t": 117,
+          "seat": 1,
+          "amount": 70.833573
+        },
+        {
+          "t": 121,
+          "seat": 0,
+          "amount": 122.1798
+        },
+        {
+          "t": 121,
+          "seat": 1,
+          "amount": 64.46805
+        },
+        {
+          "t": 126,
+          "seat": 1,
+          "amount": 139.9674
+        },
+        {
+          "t": 126,
+          "seat": 1,
+          "amount": 75.2817
+        },
+        {
+          "t": 128,
+          "seat": 1,
+          "amount": 34.367999999999995
+        },
+        {
+          "t": 132,
+          "seat": 1,
+          "amount": 53.7144
+        },
+        {
+          "t": 133,
+          "seat": 1,
+          "amount": 141.62916
+        },
+        {
+          "t": 133,
+          "seat": 1,
+          "amount": 40.837608
+        },
+        {
+          "t": 134,
+          "seat": 1,
+          "amount": 28.266196800000003
+        },
+        {
+          "t": 137,
+          "seat": 0,
+          "amount": 75.7263
+        },
+        {
+          "t": 138,
+          "seat": 0,
+          "amount": 25.2792
+        },
+        {
+          "t": 146,
+          "seat": 1,
+          "amount": 67.506
+        },
+        {
+          "t": 147,
+          "seat": 1,
+          "amount": 36.6261
+        },
+        {
+          "t": 153,
+          "seat": 0,
+          "amount": 98.20349999999999
+        },
+        {
+          "t": 153,
+          "seat": 0,
+          "amount": 89.0118
+        },
+        {
+          "t": 154,
+          "seat": 1,
+          "amount": 66.9102
+        },
+        {
+          "t": 155,
+          "seat": 1,
+          "amount": 154.80749999999998
+        },
+        {
+          "t": 156,
+          "seat": 0,
+          "amount": 258.62010000000004
+        },
+        {
+          "t": 157,
+          "seat": 1,
+          "amount": 35.1363
+        },
+        {
+          "t": 162,
+          "seat": 0,
+          "amount": 129.2748
+        },
+        {
+          "t": 165,
+          "seat": 1,
+          "amount": 37.7619
+        },
+        {
+          "t": 170,
+          "seat": 1,
+          "amount": 82.93553560950001
+        },
+        {
+          "t": 173,
+          "seat": 0,
+          "amount": 71.2407
+        },
+        {
+          "t": 173,
+          "seat": 1,
+          "amount": 83.0346
+        },
+        {
+          "t": 174,
+          "seat": 0,
+          "amount": 43.589999999999996
+        },
+        {
+          "t": 179,
+          "seat": 0,
+          "amount": 35.37479999999999
+        },
+        {
+          "t": 183,
+          "seat": 1,
+          "amount": 102.06213813504
+        },
+        {
+          "t": 185,
+          "seat": 0,
+          "amount": 75.4491
+        },
+        {
+          "t": 192,
+          "seat": 0,
+          "amount": 83.5686
+        },
+        {
+          "t": 195,
+          "seat": 1,
+          "amount": 92.88210000000001
+        },
+        {
+          "t": 198,
+          "seat": 0,
+          "amount": 67.6911
+        },
+        {
+          "t": 200,
+          "seat": 0,
+          "amount": 110.87639999999999
+        },
+        {
+          "t": 200,
+          "seat": 1,
+          "amount": 79.339359
+        },
+        {
+          "t": 202,
+          "seat": 1,
+          "amount": 258.60490851
+        },
+        {
+          "t": 211,
+          "seat": 0,
+          "amount": 200.6778
+        },
+        {
+          "t": 215,
+          "seat": 0,
+          "amount": 125.04480000000001
+        },
+        {
+          "t": 215,
+          "seat": 1,
+          "amount": 93.21000000000001
+        },
+        {
+          "t": 220,
+          "seat": 1,
+          "amount": 25.5768
+        },
+        {
+          "t": 220,
+          "seat": 1,
+          "amount": 156.01559999999998
+        },
+        {
+          "t": 221,
+          "seat": 1,
+          "amount": 127.85040000000001
+        },
+        {
+          "t": 222,
+          "seat": 0,
+          "amount": 179.904
+        },
+        {
+          "t": 223,
+          "seat": 0,
+          "amount": 38.368199999999995
+        },
+        {
+          "t": 227,
+          "seat": 0,
+          "amount": 41.178599999999996
+        },
+        {
+          "t": 228,
+          "seat": 1,
+          "amount": 139.4202
+        },
+        {
+          "t": 229,
+          "seat": 1,
+          "amount": 17.476182
+        },
+        {
+          "t": 232,
+          "seat": 0,
+          "amount": 50.189099999999996
+        },
+        {
+          "t": 233,
+          "seat": 1,
+          "amount": 99.87229500000001
+        },
+        {
+          "t": 237,
+          "seat": 0,
+          "amount": 79.50359999999999
+        },
+        {
+          "t": 238,
+          "seat": 1,
+          "amount": 203.30249999999998
+        },
+        {
+          "t": 240,
+          "seat": 0,
+          "amount": 217.74329999999998
+        },
+        {
+          "t": 243,
+          "seat": 0,
+          "amount": 44.5782
+        },
+        {
+          "t": 243,
+          "seat": 1,
+          "amount": 137.89146672300004
+        },
+        {
+          "t": 244,
+          "seat": 0,
+          "amount": 118.1505
+        },
+        {
+          "t": 246,
+          "seat": 0,
+          "amount": 43.74209999999999
+        },
+        {
+          "t": 248,
+          "seat": 1,
+          "amount": 66.1737
+        },
+        {
+          "t": 249,
+          "seat": 1,
+          "amount": 51.5766
+        },
+        {
+          "t": 254,
+          "seat": 0,
+          "amount": 104.02379999999998
+        },
+        {
+          "t": 260,
+          "seat": 1,
+          "amount": 124.35544606211997
+        },
+        {
+          "t": 262,
+          "seat": 0,
+          "amount": 78.5445
+        },
+        {
+          "t": 263,
+          "seat": 0,
+          "amount": 32.9514
+        },
+        {
+          "t": 265,
+          "seat": 0,
+          "amount": 129.6255
+        },
+        {
+          "t": 266,
+          "seat": 1,
+          "amount": 100.78477429881
+        },
+        {
+          "t": 273,
+          "seat": 1,
+          "amount": 71.335029
+        },
+        {
+          "t": 277,
+          "seat": 0,
+          "amount": 48.3945
+        },
+        {
+          "t": 279,
+          "seat": 0,
+          "amount": 70.8087
+        },
+        {
+          "t": 280,
+          "seat": 1,
+          "amount": 124.99859999999998
+        },
+        {
+          "t": 286,
+          "seat": 0,
+          "amount": 62.076600000000006
+        },
+        {
+          "t": 286,
+          "seat": 1,
+          "amount": 126.91080000000001
+        },
+        {
+          "t": 288,
+          "seat": 1,
+          "amount": 55.40369999999999
+        },
+        {
+          "t": 290,
+          "seat": 1,
+          "amount": 70.29541343999999
+        },
+        {
+          "t": 291,
+          "seat": 0,
+          "amount": 30.0
+        },
+        {
+          "t": 292,
+          "seat": 0,
+          "amount": 78.8364
+        },
+        {
+          "t": 292,
+          "seat": 1,
+          "amount": 79.4574
+        },
+        {
+          "t": 292,
+          "seat": 1,
+          "amount": 62.138400000000004
+        },
+        {
+          "t": 293,
+          "seat": 0,
+          "amount": 64.8444
+        },
+        {
+          "t": 293,
+          "seat": 1,
+          "amount": 73.393449
+        },
+        {
+          "t": 294,
+          "seat": 1,
+          "amount": 162.64674
+        },
+        {
+          "t": 295,
+          "seat": 1,
+          "amount": 247.18350000000004
+        },
+        {
+          "t": 296,
+          "seat": 0,
+          "amount": 110.87069999999997
+        },
+        {
+          "t": 297,
+          "seat": 0,
+          "amount": 136.7643
+        },
+        {
+          "t": 297,
+          "seat": 1,
+          "amount": 56.975553
+        },
+        {
+          "t": 298,
+          "seat": 0,
+          "amount": 165.4278
+        },
+        {
+          "t": 298,
+          "seat": 1,
+          "amount": 58.8378
+        }
+      ]
+    },
+    {
+      "seed": 620106812,
+      "candidate_seat": 0,
+      "cpu_affinity": [
+        0
+      ],
+      "actual_transitions": 299,
+      "termination": "official_episode_limit",
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "result": "loss",
+      "official_score_by_seat": [
+        4207.36,
+        9375.62
+      ],
+      "margin": -5168.260000000001,
+      "snapshots": {
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "cash": 384.3,
+            "cargo": 124.7958,
+            "alive_workers": 10,
+            "alive_trees": 1,
+            "new_trees_planted": 3,
+            "positive_delivery_events": 21.0,
+            "own_positive_delivery_carbon": 661.1247,
+            "closed_loop_events": 21.0,
+            "collected_carbon": 785.9205,
+            "cumulative_tree_absorption_income": 156.7322625,
+            "recruited_total": 14,
+            "distinct_delivery_turns": 18
+          },
+          "opponent": {
+            "state_t": 60,
+            "cash": 1216.51,
+            "cargo": 242.97119999999998,
+            "alive_workers": 10,
+            "alive_trees": 11,
+            "new_trees_planted": 10,
+            "positive_delivery_events": 16.0,
+            "own_positive_delivery_carbon": 1070.8641,
+            "closed_loop_events": 16.0,
+            "collected_carbon": 1313.8353,
+            "cumulative_tree_absorption_income": 971.8514999999993,
+            "recruited_total": 14,
+            "distinct_delivery_turns": 16
+          }
+        },
+        "100": {
+          "candidate": {
+            "state_t": 100,
+            "cash": 812.08,
+            "cargo": 435.74568939899996,
+            "alive_workers": 9,
+            "alive_trees": 0,
+            "new_trees_planted": 3,
+            "positive_delivery_events": 35.0,
+            "own_positive_delivery_carbon": 1171.5053838000001,
+            "closed_loop_events": 35.0,
+            "collected_carbon": 1636.8431999999996,
+            "cumulative_tree_absorption_income": 164.14507499999996,
+            "recruited_total": 17,
+            "distinct_delivery_turns": 31
+          },
+          "opponent": {
+            "state_t": 100,
+            "cash": 2429.0,
+            "cargo": 368.7369,
+            "alive_workers": 9,
+            "alive_trees": 9,
+            "new_trees_planted": 17,
+            "positive_delivery_events": 29.0,
+            "own_positive_delivery_carbon": 2063.241,
+            "closed_loop_events": 29.0,
+            "collected_carbon": 2431.9779000000003,
+            "cumulative_tree_absorption_income": 1645.489964301,
+            "recruited_total": 17,
+            "distinct_delivery_turns": 28
+          }
+        },
+        "200": {
+          "candidate": {
+            "state_t": 200,
+            "cash": 2618.28,
+            "cargo": 587.5410789,
+            "alive_workers": 10,
+            "alive_trees": 2,
+            "new_trees_planted": 6,
+            "positive_delivery_events": 59.0,
+            "own_positive_delivery_carbon": 3270.5226426989993,
+            "closed_loop_events": 59.0,
+            "collected_carbon": 3961.0638000000013,
+            "cumulative_tree_absorption_income": 289.6171875,
+            "recruited_total": 24,
+            "distinct_delivery_turns": 55
+          },
+          "opponent": {
+            "state_t": 200,
+            "cash": 6257.86,
+            "cargo": 102.6627,
+            "alive_workers": 10,
+            "alive_trees": 6,
+            "new_trees_planted": 31,
+            "positive_delivery_events": 63.0,
+            "own_positive_delivery_carbon": 5526.918300000001,
+            "closed_loop_events": 63.0,
+            "collected_carbon": 5629.581000000001,
+            "cumulative_tree_absorption_income": 2919.9930659009965,
+            "recruited_total": 24,
+            "distinct_delivery_turns": 59
+          }
+        },
+        "299": {
+          "candidate": {
+            "state_t": 299,
+            "cash": 4207.36,
+            "cargo": 635.2131899999999,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 6,
+            "positive_delivery_events": 80.0,
+            "own_positive_delivery_carbon": 5131.902843264,
+            "closed_loop_events": 80.0,
+            "collected_carbon": 5923.458899999999,
+            "cumulative_tree_absorption_income": 347.33632500000004,
+            "recruited_total": 35,
+            "distinct_delivery_turns": 75
+          },
+          "opponent": {
+            "state_t": 299,
+            "cash": 9375.62,
+            "cargo": 4.6122,
+            "alive_workers": 8,
+            "alive_trees": 8,
+            "new_trees_planted": 51,
+            "positive_delivery_events": 101.0,
+            "own_positive_delivery_carbon": 8501.2701,
+            "closed_loop_events": 101.0,
+            "collected_carbon": 8505.882299999997,
+            "cumulative_tree_absorption_income": 4462.606241736011,
+            "recruited_total": 32,
+            "distinct_delivery_turns": 92
+          }
+        }
+      },
+      "final": {
+        "candidate": {
+          "state_t": 299,
+          "cash": 4207.36,
+          "cargo": 635.2131899999999,
+          "alive_workers": 10,
+          "alive_trees": 0,
+          "new_trees_planted": 6,
+          "positive_delivery_events": 80.0,
+          "own_positive_delivery_carbon": 5131.902843264,
+          "closed_loop_events": 80.0,
+          "collected_carbon": 5923.458899999999,
+          "cumulative_tree_absorption_income": 347.33632500000004,
+          "recruited_total": 35,
+          "distinct_delivery_turns": 75
+        },
+        "opponent": {
+          "state_t": 299,
+          "cash": 9375.62,
+          "cargo": 4.6122,
+          "alive_workers": 8,
+          "alive_trees": 8,
+          "new_trees_planted": 51,
+          "positive_delivery_events": 101.0,
+          "own_positive_delivery_carbon": 8501.2701,
+          "closed_loop_events": 101.0,
+          "collected_carbon": 8505.882299999997,
+          "cumulative_tree_absorption_income": 4462.606241736011,
+          "recruited_total": 32,
+          "distinct_delivery_turns": 92
+        }
+      },
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "agent_calls_by_seat": [
+        299,
+        299
+      ],
+      "search": {
+        "searched": 299,
+        "changed": 173,
+        "aborted": 8,
+        "single": 0,
+        "time": [
+          0.5242360649999682,
+          0.5208942089998345,
+          0.5269219859997065,
+          0.504728600999897,
+          0.5669435879999583,
+          0.49537617599980877,
+          0.4958735089999209,
+          0.539997337999921,
+          0.4886491689999275,
+          0.5065121489997182,
+          0.5907252440001685,
+          0.48628299299980426,
+          0.4746938670000418,
+          0.5258098330000394,
+          0.5115890870001749,
+          0.47221876500043436,
+          0.5090279040000496,
+          0.5136344409997946,
+          0.5202570410001499,
+          0.5076840900001116,
+          0.5161024779999934,
+          0.4982219509997776,
+          0.47876478199987105,
+          0.5781942580001669,
+          0.5265782530000251,
+          0.4896625649998896,
+          0.5437522470001568,
+          0.5047632599998906,
+          0.5122047919999204,
+          0.5199650620002103,
+          0.49306186200010416,
+          0.4937083119998533,
+          0.4903242800000953,
+          0.5447708600004262,
+          0.5506383549995917,
+          0.5485275320002074,
+          0.5005903490000492,
+          0.5049595689997659,
+          0.4918730670001423,
+          0.5161365679996379,
+          0.36695821800003614,
+          0.5389758110000002,
+          0.539178888999686,
+          0.5312299930001245,
+          0.40395942700024534,
+          0.526923547000024,
+          0.3365956279999409,
+          0.43380042099988714,
+          0.5085212209996826,
+          0.3148174140001174,
+          0.5683421469998393,
+          0.504612219000137,
+          0.4547497129997282,
+          0.5126373349999085,
+          0.4624270239996804,
+          0.4533355240000674,
+          0.3945237749999251,
+          0.503565080000044,
+          0.5453929750001407,
+          0.34972167800015086,
+          0.5248574429997461,
+          0.3264117680000709,
+          0.5086270090000653,
+          0.36603965799986327,
+          0.5132763870001327,
+          0.47256965499991566,
+          0.5573674669999491,
+          0.5251197870002215,
+          0.5978447440002128,
+          0.30680703200005155,
+          0.5604791460000342,
+          0.43966620499986675,
+          0.44708307400014746,
+          0.5450526620002165,
+          0.45288520199983395,
+          0.5373315199999524,
+          0.5068150319998495,
+          0.4528789820001293,
+          0.44928986300010365,
+          0.5598788470001637,
+          0.3544058329998734,
+          0.5237702860003992,
+          0.4097664379996786,
+          0.561655750000682,
+          0.5448493270005201,
+          0.5463158550001026,
+          0.5406016980005006,
+          0.48864342700017005,
+          0.5101732149996678,
+          0.5574480269997366,
+          0.4892611340001167,
+          0.5563425650007048,
+          0.5119364530000894,
+          0.376603191999493,
+          0.27508279199992103,
+          0.5390195939999103,
+          0.48012681900036114,
+          0.5222184290005316,
+          0.5589040559998466,
+          0.4923153159998037,
+          0.535407041000326,
+          0.4178511610007263,
+          0.5482355829999506,
+          0.5335040650006704,
+          0.3907277489997796,
+          0.48785037600009673,
+          0.2819108120002056,
+          0.2868612780002877,
+          0.4368906210002024,
+          0.49928544300018984,
+          0.4869617099993775,
+          0.37602873600008024,
+          0.30803402200035634,
+          0.39149536799959606,
+          0.3114394750000429,
+          0.5195693719997507,
+          0.4387387540000418,
+          0.4207618519994867,
+          0.36868145700009336,
+          0.4860864219999712,
+          0.353107375000036,
+          0.40961692100063374,
+          0.5711098330002642,
+          0.3840854819991364,
+          0.4673931890001768,
+          0.40002623700002005,
+          0.44046579800033214,
+          0.537710626000262,
+          0.435832431999188,
+          0.41041042799952265,
+          0.5198917179995988,
+          0.43074291900029493,
+          0.560650720999547,
+          0.4325726980005129,
+          0.5435490589998153,
+          0.5387940450000315,
+          0.5231643090000944,
+          0.3916248960003941,
+          0.3001681890000327,
+          0.4873234409997167,
+          0.5676945080003861,
+          0.41536529600034555,
+          0.5043082430001959,
+          0.5568731450002815,
+          0.3861323050005012,
+          0.47589215399966633,
+          0.5312901400002374,
+          0.523978031000297,
+          0.5159261549997609,
+          0.5337012350000805,
+          0.5059422489994176,
+          0.47190357699946617,
+          0.5086646139998265,
+          0.5666772540007514,
+          0.4780650180000521,
+          0.562911566999901,
+          0.4042455519993382,
+          0.4993080029998964,
+          0.5017732590004016,
+          0.3341460920000827,
+          0.531574431000081,
+          0.44674722500076314,
+          0.5233751530004156,
+          0.43695882799966057,
+          0.46163549599987164,
+          0.31554704400059563,
+          0.3371997040003407,
+          0.5233579750001809,
+          0.4717088059996968,
+          0.44076737100022,
+          0.48818502399990393,
+          0.39719377200071904,
+          0.5740713429995594,
+          0.3370753589997548,
+          0.5100181970001358,
+          0.38486500999988493,
+          0.43737953400068363,
+          0.4186451579998902,
+          0.35261837000052765,
+          0.3358457330004967,
+          0.540488274999916,
+          0.5061950140006957,
+          0.4942944100002933,
+          0.47011669900075503,
+          0.4094330820007599,
+          0.5560416379994422,
+          0.5028376790005495,
+          0.4679677869999068,
+          0.45481115900020086,
+          0.5553436259997397,
+          0.47958550700059277,
+          0.46612138000000414,
+          0.512174063999737,
+          0.3560015580005711,
+          0.5139029029996891,
+          0.4658868530004838,
+          0.41431500900034735,
+          0.49994056899959105,
+          0.5580760279999595,
+          0.5629022459997941,
+          0.42802135400052066,
+          0.32986678699944605,
+          0.39669201300057466,
+          0.4019304060002469,
+          0.4811495180001657,
+          0.5795636580005521,
+          0.35264981199998147,
+          0.38383985699965706,
+          0.4272368940000888,
+          0.3648412570000801,
+          0.4935194580002644,
+          0.5046158259992808,
+          0.5081343310002921,
+          0.4503115520001302,
+          0.5259269220005081,
+          0.45905775199935306,
+          0.43711108499974216,
+          0.4012161370001195,
+          0.37916068699996686,
+          0.32314632999987225,
+          0.4126274010004636,
+          0.46536634499989304,
+          0.5234800029993494,
+          0.35634760199991433,
+          0.4729636809997828,
+          0.42897751900000003,
+          0.4945868490003704,
+          0.532619823999994,
+          0.49720546800017473,
+          0.5112798509999266,
+          0.3964862439997887,
+          0.56863740100016,
+          0.40156019699952594,
+          0.5489520559995071,
+          0.5197610659997736,
+          0.4423652539999239,
+          0.23681992800084117,
+          0.5402261720000752,
+          0.46250870199946803,
+          0.45842908800022997,
+          0.38981169700036844,
+          0.40355969299980643,
+          0.5115353359997243,
+          0.4585752829998455,
+          0.5522030219999579,
+          0.5801669510001375,
+          0.46590258499963966,
+          0.42391341099937563,
+          0.4449661059998107,
+          0.5133152119997249,
+          0.4880799610000395,
+          0.5597819510003319,
+          0.40404923999994935,
+          0.4506629609995798,
+          0.437760425000306,
+          0.34503882199987856,
+          0.5240552109999044,
+          0.558134199000051,
+          0.3843715319999319,
+          0.3532290759994794,
+          0.5343033130002368,
+          0.46367133900002955,
+          0.3753425610002523,
+          0.45839798399993015,
+          0.4627916859999459,
+          0.5044601170002352,
+          0.478694741000254,
+          0.4279731870001342,
+          0.5419148410001071,
+          0.4205849030004174,
+          0.5514601070008212,
+          0.48068630499983556,
+          0.4085063689999515,
+          0.4583865770000557,
+          0.4129345800001829,
+          0.5465896579999026,
+          0.5530927270001484,
+          0.5112411270001758,
+          0.4974236660000315,
+          0.48170813800061296,
+          0.3487942049996491,
+          0.5662419880000016,
+          0.2328870139999708,
+          0.4187308699993082,
+          0.4023853689996031,
+          0.4227504600003158,
+          0.41957986099987465,
+          0.5427387119998457,
+          0.5110998869995456,
+          0.47124452800017025,
+          0.5447703840000031,
+          0.5087782709997555,
+          0.2674239170000874,
+          0.5346452410003621,
+          0.4590520469992043,
+          0.24711469500016392,
+          0.15654782199999318,
+          0.1421176359999663,
+          0.045129302000532334
+        ],
+        "depth": {
+          "5": 29,
+          "6": 37,
+          "8": 193,
+          "7": 15,
+          "4": 14,
+          "2": 6,
+          "1": 2,
+          "3": 3
+        },
+        "rolls": {
+          "1": 299
+        },
+        "cands": {
+          "2": 58,
+          "4": 35,
+          "10": 24,
+          "9": 5,
+          "8": 60,
+          "6": 39,
+          "14": 10,
+          "16": 13,
+          "12": 35,
+          "15": 1,
+          "13": 2,
+          "11": 7,
+          "3": 1,
+          "5": 6,
+          "7": 3
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          11,
+          1,
+          1,
+          0.045129302000532334,
+          [
+            0.005468670389553118,
+            0.0015055255235853196,
+            0.005202806833327486,
+            0.0016742239999985031
+          ]
+        ]
+      },
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "opponent_torch_threads": 2,
+      "wall_seconds": 166.93611276200045,
+      "call_seconds_by_seat": [
+        {
+          "n": 299,
+          "sum": 5.969042429996989,
+          "mean": 0.01996335260868558,
+          "min": 0.010160720999920159,
+          "max": 0.08498636900003476
+        },
+        {
+          "n": 299,
+          "sum": 139.4177193060077,
+          "mean": 0.46627999767895556,
+          "min": 0.045351693000156956,
+          "max": 0.5982495149996794
+        }
+      ],
+      "actions_sha256": "6513fb781276801f739f85a06c30a1713db9e253fe813f9e804ed202d9763ae5",
+      "final_state_sha256": "ec83e66e80362378a0da7fa42a890cb85bd16c73d8a77499aafb03a85f229e8b",
+      "positive_deposits": [
+        {
+          "t": 7,
+          "seat": 1,
+          "amount": 33.0537
+        },
+        {
+          "t": 8,
+          "seat": 0,
+          "amount": 15.7944
+        },
+        {
+          "t": 8,
+          "seat": 0,
+          "amount": 25.1268
+        },
+        {
+          "t": 11,
+          "seat": 0,
+          "amount": 10.9599
+        },
+        {
+          "t": 12,
+          "seat": 1,
+          "amount": 23.3031
+        },
+        {
+          "t": 13,
+          "seat": 1,
+          "amount": 35.1468
+        },
+        {
+          "t": 14,
+          "seat": 0,
+          "amount": 28.9446
+        },
+        {
+          "t": 17,
+          "seat": 0,
+          "amount": 13.087200000000001
+        },
+        {
+          "t": 18,
+          "seat": 0,
+          "amount": 19.7382
+        },
+        {
+          "t": 18,
+          "seat": 1,
+          "amount": 27.8259
+        },
+        {
+          "t": 20,
+          "seat": 0,
+          "amount": 9.6717
+        },
+        {
+          "t": 21,
+          "seat": 0,
+          "amount": 14.658299999999999
+        },
+        {
+          "t": 23,
+          "seat": 1,
+          "amount": 67.4787
+        },
+        {
+          "t": 25,
+          "seat": 1,
+          "amount": 41.5299
+        },
+        {
+          "t": 26,
+          "seat": 0,
+          "amount": 11.604299999999999
+        },
+        {
+          "t": 29,
+          "seat": 0,
+          "amount": 12.6198
+        },
+        {
+          "t": 35,
+          "seat": 0,
+          "amount": 90.1698
+        },
+        {
+          "t": 41,
+          "seat": 1,
+          "amount": 74.8239
+        },
+        {
+          "t": 42,
+          "seat": 1,
+          "amount": 88.0803
+        },
+        {
+          "t": 43,
+          "seat": 0,
+          "amount": 54.4461
+        },
+        {
+          "t": 43,
+          "seat": 1,
+          "amount": 15.260099999999998
+        },
+        {
+          "t": 44,
+          "seat": 0,
+          "amount": 37.836
+        },
+        {
+          "t": 44,
+          "seat": 1,
+          "amount": 119.451
+        },
+        {
+          "t": 48,
+          "seat": 0,
+          "amount": 22.236299999999996
+        },
+        {
+          "t": 48,
+          "seat": 0,
+          "amount": 24.8208
+        },
+        {
+          "t": 49,
+          "seat": 0,
+          "amount": 92.3142
+        },
+        {
+          "t": 50,
+          "seat": 0,
+          "amount": 75.99000000000001
+        },
+        {
+          "t": 51,
+          "seat": 1,
+          "amount": 104.8608
+        },
+        {
+          "t": 53,
+          "seat": 0,
+          "amount": 17.519099999999998
+        },
+        {
+          "t": 53,
+          "seat": 1,
+          "amount": 207.3525
+        },
+        {
+          "t": 54,
+          "seat": 0,
+          "amount": 18.0444
+        },
+        {
+          "t": 54,
+          "seat": 1,
+          "amount": 81.0
+        },
+        {
+          "t": 55,
+          "seat": 1,
+          "amount": 51.0
+        },
+        {
+          "t": 57,
+          "seat": 0,
+          "amount": 32.3841
+        },
+        {
+          "t": 57,
+          "seat": 0,
+          "amount": 33.158699999999996
+        },
+        {
+          "t": 59,
+          "seat": 1,
+          "amount": 67.8867
+        },
+        {
+          "t": 60,
+          "seat": 1,
+          "amount": 32.8107
+        },
+        {
+          "t": 64,
+          "seat": 1,
+          "amount": 182.72639999999998
+        },
+        {
+          "t": 66,
+          "seat": 0,
+          "amount": 39.2277
+        },
+        {
+          "t": 67,
+          "seat": 0,
+          "amount": 29.7228
+        },
+        {
+          "t": 67,
+          "seat": 0,
+          "amount": 29.191500000000005
+        },
+        {
+          "t": 68,
+          "seat": 0,
+          "amount": 33.2121
+        },
+        {
+          "t": 68,
+          "seat": 1,
+          "amount": 41.2254
+        },
+        {
+          "t": 69,
+          "seat": 0,
+          "amount": 52.7313
+        },
+        {
+          "t": 69,
+          "seat": 1,
+          "amount": 46.172399999999996
+        },
+        {
+          "t": 72,
+          "seat": 0,
+          "amount": 36.4203081
+        },
+        {
+          "t": 73,
+          "seat": 1,
+          "amount": 94.3074
+        },
+        {
+          "t": 74,
+          "seat": 1,
+          "amount": 19.9533
+        },
+        {
+          "t": 75,
+          "seat": 0,
+          "amount": 17.0828757
+        },
+        {
+          "t": 76,
+          "seat": 1,
+          "amount": 22.014899999999997
+        },
+        {
+          "t": 77,
+          "seat": 0,
+          "amount": 16.4481
+        },
+        {
+          "t": 78,
+          "seat": 0,
+          "amount": 50.4537
+        },
+        {
+          "t": 78,
+          "seat": 1,
+          "amount": 51.2067
+        },
+        {
+          "t": 79,
+          "seat": 0,
+          "amount": 28.659599999999998
+        },
+        {
+          "t": 79,
+          "seat": 1,
+          "amount": 195.2655
+        },
+        {
+          "t": 81,
+          "seat": 0,
+          "amount": 35.560199999999995
+        },
+        {
+          "t": 84,
+          "seat": 0,
+          "amount": 34.7541
+        },
+        {
+          "t": 84,
+          "seat": 1,
+          "amount": 96.6519
+        },
+        {
+          "t": 85,
+          "seat": 1,
+          "amount": 65.0949
+        },
+        {
+          "t": 85,
+          "seat": 1,
+          "amount": 91.6392
+        },
+        {
+          "t": 86,
+          "seat": 0,
+          "amount": 55.9971
+        },
+        {
+          "t": 88,
+          "seat": 1,
+          "amount": 25.5372
+        },
+        {
+          "t": 91,
+          "seat": 0,
+          "amount": 50.91929999999999
+        },
+        {
+          "t": 91,
+          "seat": 1,
+          "amount": 60.58169999999999
+        },
+        {
+          "t": 101,
+          "seat": 0,
+          "amount": 125.55869999999999
+        },
+        {
+          "t": 102,
+          "seat": 0,
+          "amount": 45.2619
+        },
+        {
+          "t": 102,
+          "seat": 1,
+          "amount": 85.78979999999999
+        },
+        {
+          "t": 103,
+          "seat": 1,
+          "amount": 87.1851
+        },
+        {
+          "t": 104,
+          "seat": 0,
+          "amount": 49.78021539900001
+        },
+        {
+          "t": 110,
+          "seat": 1,
+          "amount": 132.68849999999998
+        },
+        {
+          "t": 111,
+          "seat": 1,
+          "amount": 123.83789999999999
+        },
+        {
+          "t": 111,
+          "seat": 1,
+          "amount": 35.87819999999999
+        },
+        {
+          "t": 113,
+          "seat": 1,
+          "amount": 68.72909999999999
+        },
+        {
+          "t": 115,
+          "seat": 1,
+          "amount": 37.8909
+        },
+        {
+          "t": 116,
+          "seat": 1,
+          "amount": 51.0828
+        },
+        {
+          "t": 118,
+          "seat": 1,
+          "amount": 11.7876
+        },
+        {
+          "t": 120,
+          "seat": 0,
+          "amount": 43.2726
+        },
+        {
+          "t": 121,
+          "seat": 1,
+          "amount": 57.293099999999995
+        },
+        {
+          "t": 122,
+          "seat": 1,
+          "amount": 108.3519
+        },
+        {
+          "t": 124,
+          "seat": 0,
+          "amount": 92.63174093999999
+        },
+        {
+          "t": 125,
+          "seat": 0,
+          "amount": 101.41469999999998
+        },
+        {
+          "t": 129,
+          "seat": 0,
+          "amount": 79.1106
+        },
+        {
+          "t": 129,
+          "seat": 1,
+          "amount": 38.886
+        },
+        {
+          "t": 130,
+          "seat": 0,
+          "amount": 117.48389999999999
+        },
+        {
+          "t": 131,
+          "seat": 1,
+          "amount": 55.7076
+        },
+        {
+          "t": 133,
+          "seat": 1,
+          "amount": 115.64789999999999
+        },
+        {
+          "t": 134,
+          "seat": 1,
+          "amount": 102.21749999999999
+        },
+        {
+          "t": 134,
+          "seat": 1,
+          "amount": 67.05659999999999
+        },
+        {
+          "t": 135,
+          "seat": 0,
+          "amount": 25.522289999999998
+        },
+        {
+          "t": 135,
+          "seat": 1,
+          "amount": 192.32190000000003
+        },
+        {
+          "t": 143,
+          "seat": 0,
+          "amount": 141.0228
+        },
+        {
+          "t": 151,
+          "seat": 0,
+          "amount": 88.9071
+        },
+        {
+          "t": 152,
+          "seat": 0,
+          "amount": 65.50104599999999
+        },
+        {
+          "t": 153,
+          "seat": 0,
+          "amount": 60.0315
+        },
+        {
+          "t": 153,
+          "seat": 1,
+          "amount": 106.63499999999999
+        },
+        {
+          "t": 154,
+          "seat": 1,
+          "amount": 112.7718
+        },
+        {
+          "t": 156,
+          "seat": 0,
+          "amount": 83.50516655999999
+        },
+        {
+          "t": 156,
+          "seat": 1,
+          "amount": 16.7403
+        },
+        {
+          "t": 159,
+          "seat": 1,
+          "amount": 65.6505
+        },
+        {
+          "t": 160,
+          "seat": 1,
+          "amount": 180.65009999999995
+        },
+        {
+          "t": 161,
+          "seat": 0,
+          "amount": 71.136
+        },
+        {
+          "t": 163,
+          "seat": 0,
+          "amount": 133.8276
+        },
+        {
+          "t": 164,
+          "seat": 1,
+          "amount": 67.0059
+        },
+        {
+          "t": 167,
+          "seat": 1,
+          "amount": 85.7712
+        },
+        {
+          "t": 171,
+          "seat": 0,
+          "amount": 52.1571
+        },
+        {
+          "t": 173,
+          "seat": 1,
+          "amount": 178.1787
+        },
+        {
+          "t": 181,
+          "seat": 0,
+          "amount": 94.42649999999999
+        },
+        {
+          "t": 182,
+          "seat": 0,
+          "amount": 117.4311
+        },
+        {
+          "t": 183,
+          "seat": 0,
+          "amount": 154.0125
+        },
+        {
+          "t": 183,
+          "seat": 1,
+          "amount": 188.69729999999998
+        },
+        {
+          "t": 184,
+          "seat": 0,
+          "amount": 115.20540000000003
+        },
+        {
+          "t": 184,
+          "seat": 1,
+          "amount": 159.34949999999998
+        },
+        {
+          "t": 185,
+          "seat": 1,
+          "amount": 24.8079
+        },
+        {
+          "t": 187,
+          "seat": 1,
+          "amount": 126.3807
+        },
+        {
+          "t": 188,
+          "seat": 0,
+          "amount": 31.371
+        },
+        {
+          "t": 190,
+          "seat": 0,
+          "amount": 187.58250000000004
+        },
+        {
+          "t": 190,
+          "seat": 1,
+          "amount": 195.42960000000002
+        },
+        {
+          "t": 192,
+          "seat": 1,
+          "amount": 107.0262
+        },
+        {
+          "t": 195,
+          "seat": 0,
+          "amount": 22.8633
+        },
+        {
+          "t": 197,
+          "seat": 1,
+          "amount": 65.0625
+        },
+        {
+          "t": 197,
+          "seat": 1,
+          "amount": 210.42
+        },
+        {
+          "t": 200,
+          "seat": 1,
+          "amount": 200.7477
+        },
+        {
+          "t": 203,
+          "seat": 1,
+          "amount": 78.92760000000001
+        },
+        {
+          "t": 205,
+          "seat": 0,
+          "amount": 146.112
+        },
+        {
+          "t": 205,
+          "seat": 1,
+          "amount": 64.93679999999999
+        },
+        {
+          "t": 207,
+          "seat": 0,
+          "amount": 54.89830100999999
+        },
+        {
+          "t": 207,
+          "seat": 0,
+          "amount": 134.5473
+        },
+        {
+          "t": 208,
+          "seat": 0,
+          "amount": 144.18539999999996
+        },
+        {
+          "t": 209,
+          "seat": 0,
+          "amount": 39.0714
+        },
+        {
+          "t": 209,
+          "seat": 1,
+          "amount": 34.5243
+        },
+        {
+          "t": 210,
+          "seat": 0,
+          "amount": 11.918099999999999
+        },
+        {
+          "t": 210,
+          "seat": 1,
+          "amount": 57.7629
+        },
+        {
+          "t": 212,
+          "seat": 0,
+          "amount": 21.8313
+        },
+        {
+          "t": 215,
+          "seat": 0,
+          "amount": 26.787989999999997
+        },
+        {
+          "t": 216,
+          "seat": 0,
+          "amount": 58.5228
+        },
+        {
+          "t": 216,
+          "seat": 1,
+          "amount": 41.104200000000006
+        },
+        {
+          "t": 217,
+          "seat": 1,
+          "amount": 78.3384
+        },
+        {
+          "t": 219,
+          "seat": 1,
+          "amount": 31.8393
+        },
+        {
+          "t": 220,
+          "seat": 1,
+          "amount": 123.6474
+        },
+        {
+          "t": 222,
+          "seat": 0,
+          "amount": 40.065
+        },
+        {
+          "t": 223,
+          "seat": 0,
+          "amount": 23.999999999999996
+        },
+        {
+          "t": 225,
+          "seat": 0,
+          "amount": 239.56740000000002
+        },
+        {
+          "t": 229,
+          "seat": 0,
+          "amount": 44.1165
+        },
+        {
+          "t": 230,
+          "seat": 1,
+          "amount": 63.9423
+        },
+        {
+          "t": 231,
+          "seat": 0,
+          "amount": 41.18568
+        },
+        {
+          "t": 231,
+          "seat": 1,
+          "amount": 93.873
+        },
+        {
+          "t": 233,
+          "seat": 0,
+          "amount": 122.467792884
+        },
+        {
+          "t": 233,
+          "seat": 1,
+          "amount": 93.0153
+        },
+        {
+          "t": 233,
+          "seat": 1,
+          "amount": 76.7886
+        },
+        {
+          "t": 237,
+          "seat": 1,
+          "amount": 36.4824
+        },
+        {
+          "t": 239,
+          "seat": 0,
+          "amount": 29.3157
+        },
+        {
+          "t": 239,
+          "seat": 1,
+          "amount": 50.96159999999999
+        },
+        {
+          "t": 244,
+          "seat": 1,
+          "amount": 42.0012
+        },
+        {
+          "t": 247,
+          "seat": 1,
+          "amount": 84.45209999999999
+        },
+        {
+          "t": 249,
+          "seat": 1,
+          "amount": 92.83709999999999
+        },
+        {
+          "t": 250,
+          "seat": 1,
+          "amount": 58.62089999999999
+        },
+        {
+          "t": 252,
+          "seat": 1,
+          "amount": 68.62769999999999
+        },
+        {
+          "t": 253,
+          "seat": 1,
+          "amount": 16.3833
+        },
+        {
+          "t": 261,
+          "seat": 1,
+          "amount": 284.31930000000006
+        },
+        {
+          "t": 263,
+          "seat": 1,
+          "amount": 65.7
+        },
+        {
+          "t": 269,
+          "seat": 1,
+          "amount": 132.82709999999997
+        },
+        {
+          "t": 271,
+          "seat": 1,
+          "amount": 93.8046
+        },
+        {
+          "t": 277,
+          "seat": 1,
+          "amount": 128.8431
+        },
+        {
+          "t": 278,
+          "seat": 1,
+          "amount": 99.3516
+        },
+        {
+          "t": 285,
+          "seat": 1,
+          "amount": 134.7447
+        },
+        {
+          "t": 287,
+          "seat": 1,
+          "amount": 55.1265
+        },
+        {
+          "t": 288,
+          "seat": 0,
+          "amount": 116.09639999999999
+        },
+        {
+          "t": 289,
+          "seat": 0,
+          "amount": 87.86388000000001
+        },
+        {
+          "t": 291,
+          "seat": 0,
+          "amount": 174.9831
+        },
+        {
+          "t": 292,
+          "seat": 1,
+          "amount": 66.6585
+        },
+        {
+          "t": 292,
+          "seat": 1,
+          "amount": 98.05890000000001
+        },
+        {
+          "t": 293,
+          "seat": 0,
+          "amount": 184.75349999999997
+        },
+        {
+          "t": 293,
+          "seat": 1,
+          "amount": 95.8551
+        },
+        {
+          "t": 293,
+          "seat": 1,
+          "amount": 129.04500000000002
+        },
+        {
+          "t": 294,
+          "seat": 1,
+          "amount": 65.38770000000001
+        },
+        {
+          "t": 297,
+          "seat": 0,
+          "amount": 119.090656671
+        },
+        {
+          "t": 297,
+          "seat": 1,
+          "amount": 121.1643
+        },
+        {
+          "t": 298,
+          "seat": 1,
+          "amount": 17.3217
+        },
+        {
+          "t": 298,
+          "seat": 1,
+          "amount": 17.253299999999996
+        },
+        {
+          "t": 299,
+          "seat": 1,
+          "amount": 19.845599999999997
+        },
+        {
+          "t": 299,
+          "seat": 1,
+          "amount": 59.97839999999999
+        }
+      ]
+    },
+    {
+      "seed": 620106812,
+      "candidate_seat": 1,
+      "cpu_affinity": [
+        1
+      ],
+      "actual_transitions": 299,
+      "termination": "official_episode_limit",
+      "extinct_by_seat": [
+        false,
+        false
+      ],
+      "result": "loss",
+      "official_score_by_seat": [
+        9752.42,
+        4921.98
+      ],
+      "margin": -4830.4400000000005,
+      "snapshots": {
+        "60": {
+          "candidate": {
+            "state_t": 60,
+            "cash": 447.77,
+            "cargo": 175.00533,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 3,
+            "positive_delivery_events": 23.0,
+            "own_positive_delivery_carbon": 753.28612447539,
+            "closed_loop_events": 23.0,
+            "collected_carbon": 991.4235,
+            "cumulative_tree_absorption_income": 70.73984849999998,
+            "recruited_total": 12,
+            "distinct_delivery_turns": 21
+          },
+          "opponent": {
+            "state_t": 60,
+            "cash": 1195.96,
+            "cargo": 470.7312,
+            "alive_workers": 10,
+            "alive_trees": 14,
+            "new_trees_planted": 11,
+            "positive_delivery_events": 13.0,
+            "own_positive_delivery_carbon": 851.053389,
+            "closed_loop_events": 13.0,
+            "collected_carbon": 1324.3281,
+            "cumulative_tree_absorption_income": 1232.3545205246091,
+            "recruited_total": 12,
+            "distinct_delivery_turns": 12
+          }
+        },
+        "100": {
+          "candidate": {
+            "state_t": 100,
+            "cash": 977.14,
+            "cargo": 309.066588228,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 3,
+            "positive_delivery_events": 38.0,
+            "own_positive_delivery_carbon": 1342.65255847539,
+            "closed_loop_events": 38.0,
+            "collected_carbon": 1732.0430999999999,
+            "cumulative_tree_absorption_income": 70.73984849999998,
+            "recruited_total": 14,
+            "distinct_delivery_turns": 35
+          },
+          "opponent": {
+            "state_t": 100,
+            "cash": 2434.85,
+            "cargo": 247.71869999999998,
+            "alive_workers": 10,
+            "alive_trees": 9,
+            "new_trees_planted": 19,
+            "positive_delivery_events": 24.0,
+            "own_positive_delivery_carbon": 1950.1645889999998,
+            "closed_loop_events": 24.0,
+            "collected_carbon": 2227.1789999999996,
+            "cumulative_tree_absorption_income": 1936.6733282966095,
+            "recruited_total": 16,
+            "distinct_delivery_turns": 23
+          }
+        },
+        "200": {
+          "candidate": {
+            "state_t": 200,
+            "cash": 2433.06,
+            "cargo": 587.9859,
+            "alive_workers": 10,
+            "alive_trees": 0,
+            "new_trees_planted": 4,
+            "positive_delivery_events": 55.0,
+            "own_positive_delivery_carbon": 2946.88295070339,
+            "closed_loop_events": 55.0,
+            "collected_carbon": 3622.574099999999,
+            "cumulative_tree_absorption_income": 122.40547349999999,
+            "recruited_total": 20,
+            "distinct_delivery_turns": 52
+          },
+          "opponent": {
+            "state_t": 200,
+            "cash": 5137.19,
+            "cargo": 412.2018,
+            "alive_workers": 10,
+            "alive_trees": 10,
+            "new_trees_planted": 36,
+            "positive_delivery_events": 52.0,
+            "own_positive_delivery_carbon": 4196.821088999999,
+            "closed_loop_events": 52.0,
+            "collected_carbon": 4684.351200000002,
+            "cumulative_tree_absorption_income": 3220.4672117966143,
+            "recruited_total": 18,
+            "distinct_delivery_turns": 48
+          }
+        },
+        "299": {
+          "candidate": {
+            "state_t": 299,
+            "cash": 4921.98,
+            "cargo": 122.0772,
+            "alive_workers": 7,
+            "alive_trees": 2,
+            "new_trees_planted": 7,
+            "positive_delivery_events": 79.0,
+            "own_positive_delivery_carbon": 5683.440485703392,
+            "closed_loop_events": 79.0,
+            "collected_carbon": 5915.009700000006,
+            "cumulative_tree_absorption_income": 154.18031099999996,
+            "recruited_total": 27,
+            "distinct_delivery_turns": 73
+          },
+          "opponent": {
+            "state_t": 299,
+            "cash": 9752.42,
+            "cargo": 0,
+            "alive_workers": 6,
+            "alive_trees": 1,
+            "new_trees_planted": 43,
+            "positive_delivery_events": 97.0,
+            "own_positive_delivery_carbon": 8183.6341889999985,
+            "closed_loop_events": 97.0,
+            "collected_carbon": 8258.962500000005,
+            "cumulative_tree_absorption_income": 4393.709851796611,
+            "recruited_total": 24,
+            "distinct_delivery_turns": 87
+          }
+        }
+      },
+      "final": {
+        "candidate": {
+          "state_t": 299,
+          "cash": 4921.98,
+          "cargo": 122.0772,
+          "alive_workers": 7,
+          "alive_trees": 2,
+          "new_trees_planted": 7,
+          "positive_delivery_events": 79.0,
+          "own_positive_delivery_carbon": 5683.440485703392,
+          "closed_loop_events": 79.0,
+          "collected_carbon": 5915.009700000006,
+          "cumulative_tree_absorption_income": 154.18031099999996,
+          "recruited_total": 27,
+          "distinct_delivery_turns": 73
+        },
+        "opponent": {
+          "state_t": 299,
+          "cash": 9752.42,
+          "cargo": 0,
+          "alive_workers": 6,
+          "alive_trees": 1,
+          "new_trees_planted": 43,
+          "positive_delivery_events": 97.0,
+          "own_positive_delivery_carbon": 8183.6341889999985,
+          "closed_loop_events": 97.0,
+          "collected_carbon": 8258.962500000005,
+          "cumulative_tree_absorption_income": 4393.709851796611,
+          "recruited_total": 24,
+          "distinct_delivery_turns": 87
+        }
+      },
+      "agent_errors_by_seat": [
+        0,
+        0
+      ],
+      "agent_calls_by_seat": [
+        299,
+        299
+      ],
+      "search": {
+        "searched": 298,
+        "changed": 177,
+        "aborted": 8,
+        "single": 1,
+        "time": [
+          0.41860105300020223,
+          0.30387234699992405,
+          0.4689533539999502,
+          0.45247117799999614,
+          0.4256654860000708,
+          0.4557660710001983,
+          0.49390788700020494,
+          0.522863206999773,
+          0.5310808989997895,
+          0.5258306939999784,
+          0.5406573660002323,
+          0.4086556180000116,
+          0.4139292499999101,
+          0.5052339670000947,
+          0.35650441699999647,
+          0.5201191260002815,
+          0.5822066830000949,
+          0.3708623519996763,
+          0.35413736399959816,
+          0.4188899460000357,
+          0.5036731830000463,
+          0.44313957599979403,
+          0.5664127939999162,
+          0.37515248199997586,
+          0.3867143299999043,
+          0.43053603399994245,
+          0.5154968189999636,
+          0.32025294300001406,
+          0.5370695350002279,
+          0.4781983230000151,
+          0.4133823009997286,
+          0.48722132300008525,
+          0.42068677100041896,
+          0.52936636000004,
+          0.4651486699999623,
+          0.48909781299971655,
+          0.5244954349996078,
+          0.5299201220000214,
+          0.5681484330002604,
+          0.39362007099998664,
+          0.4789034829996126,
+          0.42042212700016535,
+          0.561426893999851,
+          0.5257504070000323,
+          0.4137122239999371,
+          0.584886839000319,
+          0.5269004100000529,
+          0.3839373319997321,
+          0.4979317759998594,
+          0.3421592419999797,
+          0.5229148080002233,
+          0.3512840929997765,
+          0.42452048500035744,
+          0.42303993999985323,
+          0.48986301000013555,
+          0.4552819410000666,
+          0.5327642319998631,
+          0.5492471759998807,
+          0.531195363000279,
+          0.39104550699994434,
+          0.4028634139999667,
+          0.5228991860003589,
+          0.4584185979997528,
+          0.3244474490002176,
+          0.4753125870001895,
+          0.4974928110000292,
+          0.46815049599990743,
+          0.3457203570001184,
+          0.31872865099967385,
+          0.5445162209998671,
+          0.4885897690001002,
+          0.31816066000010323,
+          0.29774834299996655,
+          0.5043851579998773,
+          0.3668567320000875,
+          0.5034174620000158,
+          0.5600332150002032,
+          0.4784467620002033,
+          0.5205307670003094,
+          0.4346890780002468,
+          0.5563906940001289,
+          0.43333394600040265,
+          0.4473300899999231,
+          0.3132460399997399,
+          0.5364438679998784,
+          0.41969587399989905,
+          0.5160690809998414,
+          0.5384065109997209,
+          0.5450684659999752,
+          0.368409106999934,
+          0.507398792999993,
+          0.2815917879997869,
+          0.5208297979997951,
+          0.49362535000000207,
+          0.4627236629999061,
+          0.48846918600020217,
+          0.39386313200020595,
+          0.5251427809998859,
+          0.5192060370000036,
+          0.542628829000023,
+          0.4542878549996203,
+          0.529677822999929,
+          0.5555370930001118,
+          0.49721499899987975,
+          0.3861020819999794,
+          0.5625594869998167,
+          0.3689313069999116,
+          0.5473795610000707,
+          0.43129184400004306,
+          0.5473493350000354,
+          0.5090744879998965,
+          0.3469699090001086,
+          0.531852525999966,
+          0.5258238430005804,
+          0.359104980999291,
+          0.49091266699997504,
+          0.544925871000487,
+          0.5348426259997723,
+          0.5665723069996602,
+          0.5768777620005494,
+          0.2777141529995788,
+          0.5048272099993483,
+          0.40918376299941883,
+          0.5351165629999741,
+          0.34196555400012585,
+          0.3215095489995292,
+          0.5017985099993894,
+          0.4634409260006578,
+          0.5319304240001657,
+          0.5426127870005075,
+          0.42638632000034704,
+          0.2926467209999828,
+          0.4315677019994837,
+          0.4272195889998329,
+          0.5683365990007587,
+          0.5042136010006288,
+          0.5371430489994964,
+          0.5724532029998954,
+          0.2831764820002718,
+          0.4800249239997356,
+          0.4233924999998635,
+          0.5206223089999185,
+          0.44765052999991894,
+          0.4389533120001943,
+          0.5132106649998605,
+          0.5341666679996706,
+          0.48958782499994413,
+          0.391073521999715,
+          0.4159938359998705,
+          0.5338311279992922,
+          0.4940076479997515,
+          0.45528941200063855,
+          0.4018638899997313,
+          0.4732009379995361,
+          0.4321846490001917,
+          0.5395595979998689,
+          0.46937558199988416,
+          0.37549133999982587,
+          0.5211692719994971,
+          0.4544710419995681,
+          0.5659272100001544,
+          0.47301868199974706,
+          0.5191047449998223,
+          0.3735154969999712,
+          0.42267680400073004,
+          0.3901720399999249,
+          0.463911134999762,
+          0.5504124310000407,
+          0.41706980300023133,
+          0.5430309180001132,
+          0.3318525199993019,
+          0.5474180780001916,
+          0.42720604599981016,
+          0.5357388219999848,
+          0.2962751549994209,
+          0.5198548799999116,
+          0.3148681399998168,
+          0.5139053530001547,
+          0.5509645689999161,
+          0.4759568119998221,
+          0.4997931679999965,
+          0.4655609080000431,
+          0.4348391300000003,
+          0.5398081140001523,
+          0.5502829810002368,
+          0.46887222600071254,
+          0.4781004309998025,
+          0.33027497599960043,
+          0.5414376479993734,
+          0.5136532440001247,
+          0.30409827399944334,
+          0.5625175330005732,
+          0.3650385669998286,
+          0.5094752510003673,
+          0.5426795180001136,
+          0.34794149799927254,
+          0.5096163649996015,
+          0.37946129299962195,
+          0.47350635699967825,
+          0.38690634700014925,
+          0.32430143100009445,
+          0.5631990499996391,
+          0.5156188299997666,
+          0.527238323000347,
+          0.47777696600041963,
+          0.4126060739999957,
+          0.5560608940004386,
+          0.3156312370001615,
+          0.5624969399996189,
+          0.5177866799995172,
+          0.4763871269997253,
+          0.4999184869993769,
+          0.33291895299953467,
+          0.4104839030005678,
+          0.42986634700082504,
+          0.4920794270001352,
+          0.5287246789994242,
+          0.3971057139997356,
+          0.5305289429998084,
+          0.4537133880003239,
+          0.5301331000000573,
+          0.5122782930002359,
+          0.5076647810001305,
+          0.3159347219998381,
+          0.5499871950005399,
+          0.38925968799958355,
+          0.29203729599976214,
+          0.5223115509998024,
+          0.5553926319998936,
+          0.5752831210002114,
+          0.433735028999763,
+          0.5424311249998937,
+          0.47210724300020956,
+          0.4583864980004364,
+          0.29425302500021644,
+          0.3376916240003993,
+          0.5346086099998502,
+          0.5582691220006382,
+          0.5139703769991684,
+          0.435252228000536,
+          0.319850218999818,
+          0.39745201699952304,
+          0.5398027169994748,
+          0.47638148599980923,
+          0.3968899429992234,
+          0.4070892769996135,
+          0.49607265000031475,
+          0.5584690589994352,
+          0.5707794809995903,
+          0.38075684900013584,
+          0.33323964300052467,
+          0.5054376849993787,
+          0.33970947800025897,
+          0.5121214900000268,
+          0.4505390770000304,
+          0.5555681450005068,
+          0.5739585089995671,
+          0.4212691779994202,
+          0.4744191139998293,
+          0.4673720679993494,
+          0.3157918910001172,
+          0.5562357809994865,
+          0.3993147789997238,
+          0.431957587999932,
+          0.4963642719994823,
+          0.3949571029997969,
+          0.5736447459994451,
+          0.42201424399991083,
+          0.4614125560001412,
+          0.5129363610003566,
+          0.48533758699977625,
+          0.3245970990001297,
+          0.5612008790003529,
+          0.4748455959997955,
+          0.4260751210003946,
+          0.5205857509999987,
+          0.5591868920000707,
+          0.4781714090004243,
+          0.4313377070002389,
+          0.4744392020002124,
+          0.5632856299998821,
+          0.5554205620001085,
+          0.4440695700004653,
+          0.5422616589994504,
+          0.4812769810005193,
+          0.3205869579996943,
+          0.48935042199991585,
+          0.4200188570002865,
+          0.47028964499986614,
+          0.34161568399940734,
+          0.45629015899976366,
+          0.4211357880003561,
+          0.39793837999968673,
+          0.46278860500024166,
+          0.2791838289995212,
+          0.2099649669999053,
+          0.1526197980001598,
+          0.02066737099994498
+        ],
+        "depth": {
+          "8": 216,
+          "7": 15,
+          "3": 4,
+          "6": 25,
+          "5": 17,
+          "4": 14,
+          "2": 6,
+          "1": 1
+        },
+        "rolls": {
+          "1": 298
+        },
+        "cands": {
+          "2": 17,
+          "4": 47,
+          "3": 7,
+          "5": 10,
+          "6": 35,
+          "8": 78,
+          "12": 39,
+          "11": 4,
+          "7": 6,
+          "10": 29,
+          "16": 11,
+          "9": 7,
+          "14": 7,
+          "15": 1
+        },
+        "net": "_WinoNet",
+        "rnet": "the same",
+        "last": [
+          8,
+          1,
+          1,
+          0.02066737099994498,
+          [
+            0.008183060824769923,
+            0.0010454528034155842,
+            0.010194547250170216,
+            0.0009940587501660048
+          ]
+        ]
+      },
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+          "version": "0.3.23.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Cooperlake"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/workspace/carbon-review-venv/lib/python3.12/site-packages/torch/lib/libgomp-a34b3233.so.1",
+          "version": null
+        }
+      ],
+      "opponent_torch_threads": 2,
+      "wall_seconds": 153.9535125769994,
+      "call_seconds_by_seat": [
+        {
+          "n": 299,
+          "sum": 136.96121944400966,
+          "mean": 0.45806427907695535,
+          "min": 0.01623158800020974,
+          "max": 0.5851832890002697
+        },
+        {
+          "n": 299,
+          "sum": 4.806266836003033,
+          "mean": 0.016074471023421515,
+          "min": 0.010181921000366856,
+          "max": 0.05909769600020809
+        }
+      ],
+      "actions_sha256": "18cbca65b26bdbbc9964ea922280e8a4ff97813d4558b5411f982fc199077d0f",
+      "final_state_sha256": "80a6a1590ce8cc8ae4b10be5570533d4e6047822ec8d3293cf91504d95923f43",
+      "positive_deposits": [
+        {
+          "t": 4,
+          "seat": 1,
+          "amount": 13.0491
+        },
+        {
+          "t": 5,
+          "seat": 0,
+          "amount": 15.1497
+        },
+        {
+          "t": 7,
+          "seat": 1,
+          "amount": 9.6906
+        },
+        {
+          "t": 8,
+          "seat": 1,
+          "amount": 12.6282
+        },
+        {
+          "t": 9,
+          "seat": 0,
+          "amount": 24.9675
+        },
+        {
+          "t": 10,
+          "seat": 0,
+          "amount": 32.1639
+        },
+        {
+          "t": 11,
+          "seat": 1,
+          "amount": 18.089100000000002
+        },
+        {
+          "t": 12,
+          "seat": 1,
+          "amount": 27.282899999999998
+        },
+        {
+          "t": 14,
+          "seat": 0,
+          "amount": 9.085799999999999
+        },
+        {
+          "t": 14,
+          "seat": 0,
+          "amount": 24.722099999999998
+        },
+        {
+          "t": 15,
+          "seat": 1,
+          "amount": 12.3357
+        },
+        {
+          "t": 18,
+          "seat": 1,
+          "amount": 13.3569
+        },
+        {
+          "t": 19,
+          "seat": 1,
+          "amount": 15.497399999999999
+        },
+        {
+          "t": 20,
+          "seat": 0,
+          "amount": 28.643099999999997
+        },
+        {
+          "t": 21,
+          "seat": 1,
+          "amount": 30.1926
+        },
+        {
+          "t": 22,
+          "seat": 0,
+          "amount": 33.7185
+        },
+        {
+          "t": 22,
+          "seat": 1,
+          "amount": 10.3104
+        },
+        {
+          "t": 22,
+          "seat": 1,
+          "amount": 16.9341
+        },
+        {
+          "t": 27,
+          "seat": 1,
+          "amount": 30.214199999999998
+        },
+        {
+          "t": 39,
+          "seat": 0,
+          "amount": 97.7877
+        },
+        {
+          "t": 41,
+          "seat": 0,
+          "amount": 98.682789
+        },
+        {
+          "t": 41,
+          "seat": 1,
+          "amount": 75.99000000000001
+        },
+        {
+          "t": 43,
+          "seat": 0,
+          "amount": 99.13980000000001
+        },
+        {
+          "t": 43,
+          "seat": 1,
+          "amount": 22.3767
+        },
+        {
+          "t": 47,
+          "seat": 1,
+          "amount": 16.3767
+        },
+        {
+          "t": 48,
+          "seat": 1,
+          "amount": 126.2961
+        },
+        {
+          "t": 49,
+          "seat": 1,
+          "amount": 83.37172807539
+        },
+        {
+          "t": 49,
+          "seat": 1,
+          "amount": 18.818999999999996
+        },
+        {
+          "t": 51,
+          "seat": 0,
+          "amount": 108.93780000000002
+        },
+        {
+          "t": 53,
+          "seat": 1,
+          "amount": 28.914899999999996
+        },
+        {
+          "t": 54,
+          "seat": 1,
+          "amount": 93.5148
+        },
+        {
+          "t": 56,
+          "seat": 0,
+          "amount": 171.1233
+        },
+        {
+          "t": 58,
+          "seat": 1,
+          "amount": 15.9309
+        },
+        {
+          "t": 59,
+          "seat": 0,
+          "amount": 106.93140000000001
+        },
+        {
+          "t": 59,
+          "seat": 1,
+          "amount": 22.9670964
+        },
+        {
+          "t": 60,
+          "seat": 1,
+          "amount": 39.147
+        },
+        {
+          "t": 61,
+          "seat": 1,
+          "amount": 38.530592999999996
+        },
+        {
+          "t": 64,
+          "seat": 0,
+          "amount": 192.79799999999997
+        },
+        {
+          "t": 67,
+          "seat": 0,
+          "amount": 136.9998
+        },
+        {
+          "t": 67,
+          "seat": 1,
+          "amount": 33.375564
+        },
+        {
+          "t": 69,
+          "seat": 0,
+          "amount": 108.8388
+        },
+        {
+          "t": 69,
+          "seat": 1,
+          "amount": 56.267127
+        },
+        {
+          "t": 70,
+          "seat": 1,
+          "amount": 35.8671
+        },
+        {
+          "t": 71,
+          "seat": 1,
+          "amount": 36.771
+        },
+        {
+          "t": 74,
+          "seat": 0,
+          "amount": 14.3382
+        },
+        {
+          "t": 74,
+          "seat": 1,
+          "amount": 13.54671
+        },
+        {
+          "t": 74,
+          "seat": 1,
+          "amount": 36.573389999999996
+        },
+        {
+          "t": 76,
+          "seat": 0,
+          "amount": 86.9886
+        },
+        {
+          "t": 77,
+          "seat": 1,
+          "amount": 11.123999999999999
+        },
+        {
+          "t": 78,
+          "seat": 1,
+          "amount": 84.08810999999999
+        },
+        {
+          "t": 79,
+          "seat": 0,
+          "amount": 118.93769999999999
+        },
+        {
+          "t": 79,
+          "seat": 1,
+          "amount": 50.00609999999999
+        },
+        {
+          "t": 83,
+          "seat": 0,
+          "amount": 46.6194
+        },
+        {
+          "t": 87,
+          "seat": 1,
+          "amount": 19.4514
+        },
+        {
+          "t": 89,
+          "seat": 0,
+          "amount": 51.0
+        },
+        {
+          "t": 90,
+          "seat": 1,
+          "amount": 35.52174
+        },
+        {
+          "t": 91,
+          "seat": 0,
+          "amount": 193.09140000000002
+        },
+        {
+          "t": 91,
+          "seat": 1,
+          "amount": 63.00099000000001
+        },
+        {
+          "t": 95,
+          "seat": 1,
+          "amount": 37.323
+        },
+        {
+          "t": 97,
+          "seat": 1,
+          "amount": 37.91961
+        },
+        {
+          "t": 99,
+          "seat": 0,
+          "amount": 56.212199999999996
+        },
+        {
+          "t": 100,
+          "seat": 0,
+          "amount": 93.2871
+        },
+        {
+          "t": 104,
+          "seat": 1,
+          "amount": 22.2018
+        },
+        {
+          "t": 106,
+          "seat": 0,
+          "amount": 130.6326
+        },
+        {
+          "t": 108,
+          "seat": 0,
+          "amount": 75.90209999999999
+        },
+        {
+          "t": 110,
+          "seat": 0,
+          "amount": 41.0907
+        },
+        {
+          "t": 112,
+          "seat": 1,
+          "amount": 63.207600000000006
+        },
+        {
+          "t": 113,
+          "seat": 1,
+          "amount": 47.1528
+        },
+        {
+          "t": 114,
+          "seat": 0,
+          "amount": 67.8351
+        },
+        {
+          "t": 114,
+          "seat": 0,
+          "amount": 31.47
+        },
+        {
+          "t": 117,
+          "seat": 0,
+          "amount": 24.7815
+        },
+        {
+          "t": 121,
+          "seat": 1,
+          "amount": 42.5175
+        },
+        {
+          "t": 122,
+          "seat": 0,
+          "amount": 82.2165
+        },
+        {
+          "t": 122,
+          "seat": 0,
+          "amount": 40.4949
+        },
+        {
+          "t": 125,
+          "seat": 1,
+          "amount": 150.77609999999999
+        },
+        {
+          "t": 133,
+          "seat": 0,
+          "amount": 102.0531
+        },
+        {
+          "t": 137,
+          "seat": 1,
+          "amount": 115.38912652800002
+        },
+        {
+          "t": 139,
+          "seat": 0,
+          "amount": 152.50349999999997
+        },
+        {
+          "t": 139,
+          "seat": 0,
+          "amount": 197.8881
+        },
+        {
+          "t": 142,
+          "seat": 0,
+          "amount": 49.4358
+        },
+        {
+          "t": 143,
+          "seat": 1,
+          "amount": 116.33926170000001
+        },
+        {
+          "t": 145,
+          "seat": 0,
+          "amount": 88.2612
+        },
+        {
+          "t": 145,
+          "seat": 1,
+          "amount": 44.67095999999999
+        },
+        {
+          "t": 147,
+          "seat": 1,
+          "amount": 121.37850000000002
+        },
+        {
+          "t": 149,
+          "seat": 0,
+          "amount": 91.81739999999999
+        },
+        {
+          "t": 151,
+          "seat": 1,
+          "amount": 124.5813
+        },
+        {
+          "t": 152,
+          "seat": 1,
+          "amount": 77.8404
+        },
+        {
+          "t": 154,
+          "seat": 0,
+          "amount": 20.988300000000002
+        },
+        {
+          "t": 157,
+          "seat": 0,
+          "amount": 41.6817
+        },
+        {
+          "t": 159,
+          "seat": 0,
+          "amount": 116.9256
+        },
+        {
+          "t": 161,
+          "seat": 1,
+          "amount": 95.5398
+        },
+        {
+          "t": 162,
+          "seat": 0,
+          "amount": 13.5858
+        },
+        {
+          "t": 166,
+          "seat": 1,
+          "amount": 23.966603999999997
+        },
+        {
+          "t": 167,
+          "seat": 0,
+          "amount": 129.86219999999997
+        },
+        {
+          "t": 169,
+          "seat": 0,
+          "amount": 122.26559999999998
+        },
+        {
+          "t": 172,
+          "seat": 0,
+          "amount": 61.807799999999986
+        },
+        {
+          "t": 173,
+          "seat": 0,
+          "amount": 36.313199999999995
+        },
+        {
+          "t": 178,
+          "seat": 1,
+          "amount": 97.2126
+        },
+        {
+          "t": 180,
+          "seat": 1,
+          "amount": 22.331429999999997
+        },
+        {
+          "t": 182,
+          "seat": 0,
+          "amount": 38.82299999999999
+        },
+        {
+          "t": 187,
+          "seat": 0,
+          "amount": 160.7451
+        },
+        {
+          "t": 190,
+          "seat": 0,
+          "amount": 120.09389999999999
+        },
+        {
+          "t": 192,
+          "seat": 0,
+          "amount": 52.3779
+        },
+        {
+          "t": 193,
+          "seat": 0,
+          "amount": 109.72800000000001
+        },
+        {
+          "t": 194,
+          "seat": 1,
+          "amount": 64.3476
+        },
+        {
+          "t": 197,
+          "seat": 1,
+          "amount": 374.7770100000001
+        },
+        {
+          "t": 198,
+          "seat": 0,
+          "amount": 45.075900000000004
+        },
+        {
+          "t": 201,
+          "seat": 0,
+          "amount": 51.0
+        },
+        {
+          "t": 205,
+          "seat": 1,
+          "amount": 153.3897
+        },
+        {
+          "t": 207,
+          "seat": 0,
+          "amount": 166.77960000000002
+        },
+        {
+          "t": 211,
+          "seat": 1,
+          "amount": 114.9591
+        },
+        {
+          "t": 213,
+          "seat": 0,
+          "amount": 132.07170000000002
+        },
+        {
+          "t": 213,
+          "seat": 1,
+          "amount": 143.6538
+        },
+        {
+          "t": 214,
+          "seat": 0,
+          "amount": 148.79819999999998
+        },
+        {
+          "t": 214,
+          "seat": 1,
+          "amount": 51.27274499999999
+        },
+        {
+          "t": 216,
+          "seat": 0,
+          "amount": 67.4682
+        },
+        {
+          "t": 217,
+          "seat": 0,
+          "amount": 35.6031
+        },
+        {
+          "t": 221,
+          "seat": 0,
+          "amount": 69.89009999999999
+        },
+        {
+          "t": 222,
+          "seat": 0,
+          "amount": 250.4283
+        },
+        {
+          "t": 223,
+          "seat": 1,
+          "amount": 27.523199999999996
+        },
+        {
+          "t": 224,
+          "seat": 0,
+          "amount": 160.4052
+        },
+        {
+          "t": 228,
+          "seat": 0,
+          "amount": 41.3865
+        },
+        {
+          "t": 228,
+          "seat": 1,
+          "amount": 29.3007
+        },
+        {
+          "t": 230,
+          "seat": 1,
+          "amount": 133.91070000000002
+        },
+        {
+          "t": 233,
+          "seat": 0,
+          "amount": 59.8164
+        },
+        {
+          "t": 234,
+          "seat": 0,
+          "amount": 134.0412
+        },
+        {
+          "t": 235,
+          "seat": 1,
+          "amount": 204.00839999999997
+        },
+        {
+          "t": 236,
+          "seat": 0,
+          "amount": 107.1858
+        },
+        {
+          "t": 237,
+          "seat": 0,
+          "amount": 24.463499999999996
+        },
+        {
+          "t": 242,
+          "seat": 0,
+          "amount": 60.384899999999995
+        },
+        {
+          "t": 244,
+          "seat": 0,
+          "amount": 143.5605
+        },
+        {
+          "t": 244,
+          "seat": 1,
+          "amount": 138.9258
+        },
+        {
+          "t": 247,
+          "seat": 1,
+          "amount": 184.39829999999998
+        },
+        {
+          "t": 251,
+          "seat": 0,
+          "amount": 85.31339999999999
+        },
+        {
+          "t": 252,
+          "seat": 0,
+          "amount": 138.89909999999998
+        },
+        {
+          "t": 252,
+          "seat": 0,
+          "amount": 95.0808
+        },
+        {
+          "t": 253,
+          "seat": 0,
+          "amount": 117.2343
+        },
+        {
+          "t": 255,
+          "seat": 1,
+          "amount": 62.244299999999996
+        },
+        {
+          "t": 257,
+          "seat": 0,
+          "amount": 167.23649999999998
+        },
+        {
+          "t": 260,
+          "seat": 0,
+          "amount": 55.772999999999996
+        },
+        {
+          "t": 261,
+          "seat": 0,
+          "amount": 78.15480000000001
+        },
+        {
+          "t": 264,
+          "seat": 0,
+          "amount": 60.316199999999995
+        },
+        {
+          "t": 264,
+          "seat": 0,
+          "amount": 89.9982
+        },
+        {
+          "t": 264,
+          "seat": 1,
+          "amount": 24.06
+        },
+        {
+          "t": 271,
+          "seat": 0,
+          "amount": 132.1386
+        },
+        {
+          "t": 273,
+          "seat": 0,
+          "amount": 73.9662
+        },
+        {
+          "t": 273,
+          "seat": 1,
+          "amount": 214.23209999999997
+        },
+        {
+          "t": 274,
+          "seat": 1,
+          "amount": 217.87859999999992
+        },
+        {
+          "t": 278,
+          "seat": 0,
+          "amount": 156.70409999999998
+        },
+        {
+          "t": 279,
+          "seat": 0,
+          "amount": 86.9202
+        },
+        {
+          "t": 282,
+          "seat": 0,
+          "amount": 34.3899
+        },
+        {
+          "t": 282,
+          "seat": 1,
+          "amount": 71.1636
+        },
+        {
+          "t": 283,
+          "seat": 1,
+          "amount": 151.81560000000002
+        },
+        {
+          "t": 286,
+          "seat": 0,
+          "amount": 104.46929999999999
+        },
+        {
+          "t": 286,
+          "seat": 0,
+          "amount": 89.1366
+        },
+        {
+          "t": 286,
+          "seat": 1,
+          "amount": 174.92399999999998
+        },
+        {
+          "t": 286,
+          "seat": 1,
+          "amount": 386.331
+        },
+        {
+          "t": 287,
+          "seat": 0,
+          "amount": 151.113
+        },
+        {
+          "t": 289,
+          "seat": 0,
+          "amount": 70.6926
+        },
+        {
+          "t": 289,
+          "seat": 1,
+          "amount": 17.3706
+        },
+        {
+          "t": 289,
+          "seat": 1,
+          "amount": 76.79348999999999
+        },
+        {
+          "t": 290,
+          "seat": 0,
+          "amount": 12.1911
+        },
+        {
+          "t": 291,
+          "seat": 0,
+          "amount": 16.9743
+        },
+        {
+          "t": 291,
+          "seat": 0,
+          "amount": 32.83409999999999
+        },
+        {
+          "t": 291,
+          "seat": 1,
+          "amount": 27.3468
+        },
+        {
+          "t": 293,
+          "seat": 0,
+          "amount": 21.4296
+        },
+        {
+          "t": 294,
+          "seat": 0,
+          "amount": 89.70479999999998
+        },
+        {
+          "t": 294,
+          "seat": 1,
+          "amount": 67.86149999999999
+        },
+        {
+          "t": 295,
+          "seat": 0,
+          "amount": 83.5932
+        },
+        {
+          "t": 296,
+          "seat": 0,
+          "amount": 132.58319999999998
+        },
+        {
+          "t": 297,
+          "seat": 1,
+          "amount": 35.560199999999995
+        },
+        {
+          "t": 297,
+          "seat": 1,
+          "amount": 27.6333
+        },
+        {
+          "t": 298,
+          "seat": 0,
+          "amount": 89.6406
+        },
+        {
+          "t": 298,
+          "seat": 0,
+          "amount": 22.7727
+        },
+        {
+          "t": 299,
+          "seat": 0,
+          "amount": 25.0581
+        },
+        {
+          "t": 299,
+          "seat": 0,
+          "amount": 19.211399999999998
+        }
+      ]
+    }
+  ],
+  "finished": "2026-11-19T01:36:00.647610+00:00",
+  "mean_margin": -4398.1175
+}

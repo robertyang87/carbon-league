@@ -1,0 +1,138 @@
+{
+  "roots": 280,
+  "plays": [
+    "36e68802e4465ab013073813a646602e-1",
+    "67dd2b66f44a1897249a0081517826bd-1",
+    "82f195473526f6b251d88d1c8c894988-1",
+    "a7e7a131ac7d151fc2cccf6e4daf6d38-1",
+    "bc551c365258a92404b9d73888061070-1",
+    "f8028deec3901b3fd25bf870a1a20d56-1",
+    "f975d32b62d02b7cb49a185f918254b5-1"
+  ],
+  "ticks": [
+    0,
+    15,
+    31,
+    47,
+    62,
+    78,
+    94,
+    109,
+    125,
+    141,
+    156,
+    172,
+    188,
+    203,
+    219,
+    235,
+    250,
+    266,
+    282,
+    298
+  ],
+  "models": {
+    "v3": {
+      "weight_sha256": "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be",
+      "counts": {
+        "open_affordable_enemy_planter_within_two": {
+          "n": 102,
+          "games": 7,
+          "correct": 54,
+          "accuracy": 0.5294117647058824,
+          "ce": 1.261723007349407,
+          "response": {
+            "eligible": 102,
+            "expert_yes": 4,
+            "policy_yes": 10,
+            "both_yes": 3,
+            "policy_only": 7,
+            "expert_only": 1
+          }
+        },
+        "open_affordable_other": {
+          "n": 257,
+          "games": 7,
+          "correct": 151,
+          "accuracy": 0.5875486381322957,
+          "ce": 0.9972762479102565,
+          "response": {
+            "eligible": 257,
+            "expert_yes": 19,
+            "policy_yes": 26,
+            "both_yes": 19,
+            "policy_only": 7,
+            "expert_only": 0
+          }
+        },
+        "occupying_enemy_tree": {
+          "n": 48,
+          "games": 7,
+          "correct": 29,
+          "accuracy": 0.6041666666666666,
+          "ce": 1.1101442445069551,
+          "response": {
+            "eligible": 48,
+            "expert_yes": 16,
+            "policy_yes": 19,
+            "both_yes": 15,
+            "policy_only": 4,
+            "expert_only": 1
+          }
+        }
+      }
+    },
+    "v4": {
+      "weight_sha256": "2ce3c214683bc4d132ca7502e4864c5fcd7961840e13354671bf7c1173b13a00",
+      "counts": {
+        "open_affordable_enemy_planter_within_two": {
+          "n": 102,
+          "games": 7,
+          "correct": 51,
+          "accuracy": 0.5,
+          "ce": 1.4041168417270278,
+          "response": {
+            "eligible": 102,
+            "expert_yes": 4,
+            "policy_yes": 16,
+            "both_yes": 4,
+            "policy_only": 12,
+            "expert_only": 0
+          }
+        },
+        "open_affordable_other": {
+          "n": 257,
+          "games": 7,
+          "correct": 136,
+          "accuracy": 0.5291828793774319,
+          "ce": 1.1619640138971434,
+          "response": {
+            "eligible": 257,
+            "expert_yes": 19,
+            "policy_yes": 63,
+            "both_yes": 19,
+            "policy_only": 44,
+            "expert_only": 0
+          }
+        },
+        "occupying_enemy_tree": {
+          "n": 48,
+          "games": 7,
+          "correct": 27,
+          "accuracy": 0.5625,
+          "ce": 1.3841640192064613,
+          "response": {
+            "eligible": 48,
+            "expert_yes": 16,
+            "policy_yes": 26,
+            "both_yes": 16,
+            "policy_only": 10,
+            "expert_only": 0
+          }
+        }
+      }
+    }
+  },
+  "evaluator_sha256": "087ae041d0c242e9f0a0f30b69137180f461957358e4b43c5a570c351cffc77e",
+  "scope": "Frozen logged-prefix FP32 choices; public features only, expert_yes and policy_yes count STAY. Open cell excludes either base and any tree. Affordability uses the public root cash and current tree price. Enemy-tree occupancy is shown without an affordability condition. Realized plant or capture requires a simulator transition."
+}
