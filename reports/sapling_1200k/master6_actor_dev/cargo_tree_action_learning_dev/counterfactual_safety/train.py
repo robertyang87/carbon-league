@@ -20,7 +20,7 @@ class Predictor(nn.Module):
         self.layers=nn.Sequential(nn.Linear(d,64),nn.SiLU(),nn.Linear(64,32),nn.SiLU(),nn.Linear(32,3))
     def forward(self,x):return self.layers(x)
 
-def train_teacher(x,ys,legal,factual,train,targets,all_arms):
+def train_teacher(x,ys,legal,factual,train,targets,all_arms,archive=None):
     torch.manual_seed(7782);m=Predictor(x.shape[-1]);opt=torch.optim.AdamW(m.parameters(),lr=.002,weight_decay=.004)
     center=x[train].reshape(-1,x.shape[-1]).mean(0);scale=x[train].reshape(-1,x.shape[-1]).std(0).clamp_min(.05)
     xx=((x-center)/scale).clamp(-6,6)
@@ -30,6 +30,9 @@ def train_teacher(x,ys,legal,factual,train,targets,all_arms):
             val=F.binary_cross_entropy_with_logits(p[:,:,0],y[:,:,0],reduction='none')+2*(p[:,:,1:].sigmoid()*1.5-y[:,:,1:]).square().sum(2)
             loss=((val*observed).sum(1)/observed.sum(1)).mean()
             opt.zero_grad(set_to_none=True);loss.backward();opt.step()
+    if archive is not None:
+        tensors={k:v.detach().numpy() for k,v in m.state_dict().items()}
+        np.savez_compressed(archive,**tensors,input_mean=center.numpy(),input_scale=scale.numpy())
     with torch.no_grad():
         val=m(xx[targets]).sigmoid();val[:,:,1:]*=1.5
     return val
@@ -44,7 +47,7 @@ def run():
     loc={k:set(rows[i]['terrain'] for i in v) for k,v in idx.items()};assert not (loc['train']&loc['val'] or loc['test']&(loc['train']|loc['val']))
     assert [len(loc[k]) for k in ['train','val','test']]==[19,4,6]
     tags=np.array([r['tag'] for r in rows]); tree=tags=='tree';cargo=torch.tensor([r['cargo'] for r in rows],dtype=torch.float32)
-    fact=torch.tensor([r['parent'] for r in rows]);true=y.clone()
+    fact=torch.tensor([r['parent'] for r in rows])
     # Signals are settlement components of the same acting worker. Supervision is limited to one native simultaneous transition.
     # High cargo cannot be augmented artificially by stealing from a teammate while scoring defensive survival.
     prior=cargo[:,None]
@@ -60,7 +63,18 @@ def run():
     tt=idx['train'];train_actors=tt[~tree[tt]];split_fold={v:i%3 for i,v in enumerate(sorted(loc['train']))}
     trainmap=np.array([split_fold.get(r['terrain'],-1) for r in rows])
     outputs={};predictions={};methods={'control':False,'candidate':True}
-    pref_net=logp(logits[:,1],mask);pref_mix=logp(z,mask);eye=torch.arange(n)
+    pref_net=logp(logits[:,1],mask);pref_mix=logp(z,mask)
+    if '--export-teachers' in sys.argv:
+        held=np.concatenate([idx['val'],idx['test']]);check={}
+        with np.load(HERE/'crossfitted.npz') as expected:
+            for arm,all_actions in methods.items():
+                archive=HERE/(arm+'_predictor.npz')
+                preds=train_teacher(x,Y,mask,fact,train_actors,held,all_actions,archive).numpy()
+                err=float(np.max(np.abs(preds-expected[arm][held])))
+                assert err<1e-6
+                check[arm]=dict(sha256=sha(archive),held_prediction_max_abs_err=err,roots=len(held))
+        write(HERE/'predictors.json',check)
+        return
     for arm,observed_all in methods.items():
         pred=torch.zeros((n,5,3));assigned=np.zeros(n,bool)
         for f in range(3):
