@@ -1,0 +1,1435 @@
+{
+  "model_sha256": "0ac53d232edce74a180031497f57268301d46cd2cb806ee8fdd60621a2e50a72",
+  "native_rows_sha256": "65f122e0bcc5f7b0e26d9144d690a4fbd63f4497cb957e00710280d37d496bc5",
+  "code_sha256": "916e02ce09d23088c592a21bcb0954b63d82d0efc079460adf4ac9ca983e03f9",
+  "economic_sha256": "b0e6f6572292b0a53ffee1c96f526afb1a55fe353189d10a9b298513e6b013f9",
+  "original_examiner_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "parent_sha256": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0",
+  "prior_native_sha256": "92adda724456268c454acc527b9cec306618e2695d79a01882e86c8b0e78e8cd",
+  "new_responding_games": 0,
+  "fresh_native_holdout": false,
+  "scope": "Each landscape weights its four preselected historical opportunities equally; repeated source roots across arms are paired. Outside rows form a separate sensitivity check, with one opportunity per map. C is a single root action followed by the archived continuation. A is always stay at the same focal root only. These are already published, outcome-seen native response opportunities.",
+  "money": "Stay buys only when this worker pays at its root landing on transition t. Move buys only when this worker pays at its new landing on transition t+1. Income is first tenure until owner changes, tree expires or game ends, minus the actual price. The optional broader two-transition field does not enter aggregates. Each fork uses its separately recorded subsequent native responses.",
+  "by_historical_use": {
+    "train": {
+      "fixed_n": 48,
+      "maps": 12,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.4583333333333333,
+          "predicted_death_mean": 0.3758833497735264,
+          "death_brier": 0.15219172838997339,
+          "predicted_first_tenure_net_mean": -4.558103455294664,
+          "observed_first_tenure_net_mean": 3.107744050918509,
+          "first_tenure_net_mae": 20.31391924615586,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0.0625,
+          "predicted_death_mean": 0.03900055957130685,
+          "death_brier": 0.04031955566107494,
+          "predicted_first_tenure_net_mean": 1.5211371127848432,
+          "observed_first_tenure_net_mean": -0.1570802020782569,
+          "first_tenure_net_mae": 6.28561849835474,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 15,
+      "C_moves": 33,
+      "movement_arm_next_purchases": 4,
+      "policy": {
+        "C": {
+          "root_survivals": 45,
+          "root_or_next_purchases": 17,
+          "mean_first_tenure_net": 8.130323882324577,
+          "wins": 1,
+          "mean_official_margin": -1423.8822916666666
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 26,
+          "root_or_next_purchases": 26,
+          "mean_first_tenure_net": 3.107744050918509,
+          "wins": 2,
+          "mean_official_margin": -1321.7308333333333
+        },
+        "actual_parent": {
+          "root_survivals": 39,
+          "root_or_next_purchases": 17,
+          "mean_first_tenure_net": 7.492592053262265,
+          "wins": 2,
+          "mean_official_margin": -1362.9222916666668
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -102.15145833333342,
+        "positive": 13,
+        "negative": 20,
+        "zero": 15
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -60.95999999999992,
+        "positive": 5,
+        "negative": 6,
+        "zero": 37
+      }
+    },
+    "hold": {
+      "fixed_n": 16,
+      "maps": 4,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5625,
+          "predicted_death_mean": 0.3413294034075027,
+          "death_brier": 0.22596470497244997,
+          "predicted_first_tenure_net_mean": 3.0370960910926006,
+          "observed_first_tenure_net_mean": 5.591404045519313,
+          "first_tenure_net_mae": 15.919782613293636,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.03164067927641092,
+          "death_brier": 0.005439445466650097,
+          "predicted_first_tenure_net_mean": 0.6052150034799789,
+          "observed_first_tenure_net_mean": 2.719676857240742,
+          "first_tenure_net_mae": 10.21721078107747,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 4,
+      "C_moves": 12,
+      "movement_arm_next_purchases": 3,
+      "policy": {
+        "C": {
+          "root_survivals": 16,
+          "root_or_next_purchases": 7,
+          "mean_first_tenure_net": 7.692752766798976,
+          "wins": 0,
+          "mean_official_margin": -1296.085
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 7,
+          "root_or_next_purchases": 7,
+          "mean_first_tenure_net": 5.591404045519313,
+          "wins": 0,
+          "mean_official_margin": -1186.36125
+        },
+        "actual_parent": {
+          "root_survivals": 14,
+          "root_or_next_purchases": 6,
+          "mean_first_tenure_net": 1.594048466072068,
+          "wins": 0,
+          "mean_official_margin": -1292.5993749999998
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -109.72375000000005,
+        "positive": 6,
+        "negative": 6,
+        "zero": 4
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -3.4856250000000273,
+        "positive": 2,
+        "negative": 1,
+        "zero": 13
+      }
+    },
+    "outside": {
+      "fixed_n": 2,
+      "maps": 2,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0007072186534221539,
+          "death_brier": 5.001582237482446e-07,
+          "predicted_first_tenure_net_mean": 10.466388090446925,
+          "observed_first_tenure_net_mean": 15.131663459931985,
+          "first_tenure_net_mae": 4.665275369485061,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0008115561157581545,
+          "death_brier": 6.587114305813053e-07,
+          "predicted_first_tenure_net_mean": 11.698966946759459,
+          "observed_first_tenure_net_mean": 18.10298750000004,
+          "first_tenure_net_mae": 13.743310142529385,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 1,
+      "movement_arm_next_purchases": 1,
+      "policy": {
+        "C": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 31.19975132435428,
+          "wins": 0,
+          "mean_official_margin": -2542.459999999999
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 15.131663459931985,
+          "wins": 0,
+          "mean_official_margin": -2531.144999999999
+        },
+        "actual_parent": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 18.10298750000004,
+          "wins": 0,
+          "mean_official_margin": -2222.0999999999995
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -11.315000000000055,
+        "positive": 0,
+        "negative": 1,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -320.3599999999997,
+        "positive": 0,
+        "negative": 1,
+        "zero": 1
+      }
+    }
+  },
+  "original_64_only": {
+    "fixed_n": 64,
+    "maps": 16,
+    "factual_prediction_check": {
+      "stay": {
+        "observed_death_fraction": 0.484375,
+        "predicted_death_mean": 0.36724486318202043,
+        "death_brier": 0.17063497253559254,
+        "predicted_first_tenure_net_mean": -2.659303568697848,
+        "observed_first_tenure_net_mean": 3.7286590495687095,
+        "first_tenure_net_mae": 19.2153850879403,
+        "late_or_early_purchases_excluded_by_frozen_timing": 0
+      },
+      "move": {
+        "observed_death_fraction": 0.046875,
+        "predicted_death_mean": 0.03716058949758287,
+        "death_brier": 0.03159952811246873,
+        "predicted_first_tenure_net_mean": 1.2921565854586272,
+        "observed_first_tenure_net_mean": 0.5621090627514929,
+        "first_tenure_net_mae": 7.268516569035423,
+        "late_or_early_purchases_excluded_by_frozen_timing": 0
+      }
+    },
+    "C_stays": 19,
+    "C_moves": 45,
+    "movement_arm_next_purchases": 7,
+    "policy": {
+      "C": {
+        "root_survivals": 61,
+        "root_or_next_purchases": 24,
+        "mean_first_tenure_net": 8.020931103443177,
+        "wins": 1,
+        "mean_official_margin": -1391.9329687499999
+      },
+      "always_stay_A_at_these_roots": {
+        "root_survivals": 33,
+        "root_or_next_purchases": 33,
+        "mean_first_tenure_net": 3.7286590495687095,
+        "wins": 2,
+        "mean_official_margin": -1287.8884374999998
+      },
+      "actual_parent": {
+        "root_survivals": 53,
+        "root_or_next_purchases": 23,
+        "mean_first_tenure_net": 6.017956156464716,
+        "wins": 2,
+        "mean_official_margin": -1345.3415625
+      }
+    },
+    "C_minus_A": {
+      "delta_mean_margin": -104.04453125000008,
+      "positive": 19,
+      "negative": 26,
+      "zero": 19
+    },
+    "C_minus_parent": {
+      "delta_mean_margin": -46.59140624999995,
+      "positive": 7,
+      "negative": 7,
+      "zero": 50
+    }
+  },
+  "per_map": [
+    {
+      "historical_use": "hold",
+      "seed": 621477120,
+      "map": "58c702ec72a5be19f97d6f509c0f1f3e80957c4ca8ea7dfc73f25b7fa6c32db3",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.75,
+          "predicted_death_mean": 0.3776242435714923,
+          "death_brier": 0.25817197365316596,
+          "predicted_first_tenure_net_mean": -0.13532610482093688,
+          "observed_first_tenure_net_mean": -11.94084414894428,
+          "first_tenure_net_mae": 28.272787640758246,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.06691671227843345,
+          "death_brier": 0.012691661222366556,
+          "predicted_first_tenure_net_mean": -0.830280282336453,
+          "observed_first_tenure_net_mean": -0.6342334592698649,
+          "first_tenure_net_mae": 1.0730546277415929,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 1,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": -12.575077608214144,
+          "wins": 0,
+          "mean_official_margin": -1447.3325
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": -11.94084414894428,
+          "wins": 0,
+          "mean_official_margin": -1547.815
+        },
+        "actual_parent": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": -11.94084414894428,
+          "wins": 0,
+          "mean_official_margin": -1498.1550000000002
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": 100.48250000000007,
+        "positive": 3,
+        "negative": 0,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 50.82250000000022,
+        "positive": 1,
+        "negative": 0,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "hold",
+      "seed": 621477121,
+      "map": "d0ffd6029e4f87d3a7fc3a4b1471de88a814cd9361af296a00ed281ad656d1a0",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.2803690639213238,
+          "death_brier": 0.1518279027181102,
+          "predicted_first_tenure_net_mean": 12.648430577182152,
+          "observed_first_tenure_net_mean": 16.526025912176866,
+          "first_tenure_net_mae": 5.122418511143704,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.01197366527824449,
+          "death_brier": 0.0005139849632046093,
+          "predicted_first_tenure_net_mean": 3.2852116499565587,
+          "observed_first_tenure_net_mean": 22.968638162177058,
+          "first_tenure_net_mae": 24.493702807461023,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 1,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 41.55507657435436,
+          "wins": 0,
+          "mean_official_margin": -991.8374999999994
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 16.526025912176866,
+          "wins": 0,
+          "mean_official_margin": -1083.7249999999997
+        },
+        "actual_parent": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 16.526025912176866,
+          "wins": 0,
+          "mean_official_margin": -872.8724999999995
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": 91.88750000000027,
+        "positive": 2,
+        "negative": 1,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -118.96499999999992,
+        "positive": 0,
+        "negative": 1,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "hold",
+      "seed": 621478120,
+      "map": "2ba2f1184db8d6efd02dd455a1b2c8d76515a74a025155a4e34fa8db12a3e011",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.4333493475317357,
+          "death_brier": 0.01184459073910982,
+          "predicted_first_tenure_net_mean": -4.1227727972687696,
+          "observed_first_tenure_net_mean": 6.782087101055822,
+          "first_tenure_net_mae": 16.480813286460993,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0468513971902509,
+          "death_brier": 0.008551461734672892,
+          "predicted_first_tenure_net_mean": 1.7514335305254067,
+          "observed_first_tenure_net_mean": -11.455697273944224,
+          "first_tenure_net_mae": 13.516580804881672,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 1,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": -3.4906347739442936,
+          "wins": 0,
+          "mean_official_margin": -1571.5500000000004
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 6.782087101055822,
+          "wins": 0,
+          "mean_official_margin": -1309.4325
+        },
+        "actual_parent": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": -3.4906347739442936,
+          "wins": 0,
+          "mean_official_margin": -1625.75
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -262.1175000000005,
+        "positive": 1,
+        "negative": 2,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 54.19999999999959,
+        "positive": 1,
+        "negative": 0,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "hold",
+      "seed": 621478121,
+      "map": "805181884c5a3f010634736bb74b154cb2980077a46dd29e8f2c65c0316fbe98",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.2739749586054588,
+          "death_brier": 0.48201435277941396,
+          "predicted_first_tenure_net_mean": 3.758052689277957,
+          "observed_first_tenure_net_mean": 10.998347317788841,
+          "first_tenure_net_mae": 13.803111014811602,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0008209423587148515,
+          "death_brier": 6.73946356332304e-07,
+          "predicted_first_tenure_net_mean": -1.7855048842255965,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 1.7855048842255965,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 5.2816468749999785,
+          "wins": 0,
+          "mean_official_margin": -1173.62
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 10.998347317788841,
+          "wins": 0,
+          "mean_official_margin": -804.4724999999999
+        },
+        "actual_parent": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 5.2816468749999785,
+          "wins": 0,
+          "mean_official_margin": -1173.62
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -369.14750000000004,
+        "positive": 0,
+        "negative": 3,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 0.0,
+        "positive": 0,
+        "negative": 0,
+        "zero": 4
+      }
+    },
+    {
+      "historical_use": "outside",
+      "seed": 621461321,
+      "map": "0e68112eb5df11b217f3e2407f9d1caa7ca2aee27798c6a4ad26eebd767369fb",
+      "fixed_n": 1,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0007072186534221539,
+          "death_brier": 5.001582237482446e-07,
+          "predicted_first_tenure_net_mean": 2.295153258172622,
+          "observed_first_tenure_net_mean": 4.069799271155489,
+          "first_tenure_net_mae": 1.774646012982867,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0008021698728014576,
+          "death_brier": 6.434765048303065e-07,
+          "predicted_first_tenure_net_mean": 16.058644304230114,
+          "observed_first_tenure_net_mean": 36.20597500000008,
+          "first_tenure_net_mae": 20.147330695769966,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 0,
+      "C_moves": 1,
+      "movement_arm_next_purchases": 1,
+      "policy": {
+        "C": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 36.20597500000008,
+          "wins": 0,
+          "mean_official_margin": -2344.949999999999
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 4.069799271155489,
+          "wins": 0,
+          "mean_official_margin": -2322.319999999999
+        },
+        "actual_parent": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 36.20597500000008,
+          "wins": 0,
+          "mean_official_margin": -2344.949999999999
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -22.63000000000011,
+        "positive": 0,
+        "negative": 1,
+        "zero": 0
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 0.0,
+        "positive": 0,
+        "negative": 0,
+        "zero": 1
+      }
+    },
+    {
+      "historical_use": "outside",
+      "seed": 621461322,
+      "map": "4d545488b89d7c2c19f42c1ebf30467cf8adf5095e368ccffbea85929b19c778",
+      "fixed_n": 1,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0007072186534221539,
+          "death_brier": 5.001582237482446e-07,
+          "predicted_first_tenure_net_mean": 18.637622922721228,
+          "observed_first_tenure_net_mean": 26.193527648708482,
+          "first_tenure_net_mae": 7.555904725987254,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0008209423587148515,
+          "death_brier": 6.73946356332304e-07,
+          "predicted_first_tenure_net_mean": 7.339289589288802,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 7.339289589288802,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 0,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 26.193527648708482,
+          "wins": 0,
+          "mean_official_margin": -2739.9699999999993
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 26.193527648708482,
+          "wins": 0,
+          "mean_official_margin": -2739.9699999999993
+        },
+        "actual_parent": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 0,
+          "mean_first_tenure_net": 0.0,
+          "wins": 0,
+          "mean_official_margin": -2099.25
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": 0.0,
+        "positive": 0,
+        "negative": 0,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -640.7199999999993,
+        "positive": 0,
+        "negative": 1,
+        "zero": 0
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621471120,
+      "map": "2920f439bb16a4297298984934b1a9c1ff0932873d318d35b798c89bd6de3845",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.25,
+          "predicted_death_mean": 0.23566874659232845,
+          "death_brier": 0.000881008526526617,
+          "predicted_first_tenure_net_mean": -1.8369127905645293,
+          "observed_first_tenure_net_mean": -8.084006206155806,
+          "first_tenure_net_mae": 17.18772755901134,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0.25,
+          "predicted_death_mean": 0.05014202817783983,
+          "death_brier": 0.16075928869131234,
+          "predicted_first_tenure_net_mean": 2.0055921144663067,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 2.0055921144663067,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 8.971853124999939,
+          "wins": 1,
+          "mean_official_margin": -1485.0199999999995
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 3,
+          "mean_first_tenure_net": -8.084006206155806,
+          "wins": 1,
+          "mean_official_margin": -1313.6474999999998
+        },
+        "actual_parent": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 8.971853124999939,
+          "wins": 1,
+          "mean_official_margin": -1405.7624999999998
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -171.37249999999972,
+        "positive": 1,
+        "negative": 2,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -79.25749999999971,
+        "positive": 0,
+        "negative": 1,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621471121,
+      "map": "5b108d4fa2f95cc194b89944e788dada1698006b819c4cdbcca2deb3d646dc34",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.5370152593740296,
+          "death_brier": 0.02488384074355159,
+          "predicted_first_tenure_net_mean": -9.139201821049042,
+          "observed_first_tenure_net_mean": -7.884810617727368,
+          "first_tenure_net_mae": 20.435381109107354,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0008116865602572136,
+          "death_brier": 6.590920815174525e-07,
+          "predicted_first_tenure_net_mean": 1.1587545246681987,
+          "observed_first_tenure_net_mean": 2.3239093750000563,
+          "first_tenure_net_mae": 1.4484221565443862,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 0,
+      "C_moves": 4,
+      "movement_arm_next_purchases": 1,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 2.3239093750000563,
+          "wins": 0,
+          "mean_official_margin": -1368.9775000000004
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": -7.884810617727368,
+          "wins": 1,
+          "mean_official_margin": -922.2875000000004
+        },
+        "actual_parent": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 14.258462906218938,
+          "wins": 1,
+          "mean_official_margin": -1036.1575000000007
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -446.69000000000005,
+        "positive": 2,
+        "negative": 2,
+        "zero": 0
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -332.8199999999997,
+        "positive": 1,
+        "negative": 1,
+        "zero": 2
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621472120,
+      "map": "6a71e8754f4fec39920f245c63877211c3b0d81f5e07985a5f4c6c2283448171",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.28514321169761325,
+          "death_brier": 0.1620879070818949,
+          "predicted_first_tenure_net_mean": 19.14959432726878,
+          "observed_first_tenure_net_mean": 17.451061513231252,
+          "first_tenure_net_mae": 15.077942207020666,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0.25,
+          "predicted_death_mean": 0.04565968541039061,
+          "death_brier": 0.22441309280178784,
+          "predicted_first_tenure_net_mean": 2.483832795529133,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 3.118365913907735,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 3,
+      "C_moves": 1,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 17.451061513231252,
+          "wins": 0,
+          "mean_official_margin": -1353.2149999999995
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 17.451061513231252,
+          "wins": 0,
+          "mean_official_margin": -1378.9824999999996
+        },
+        "actual_parent": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 4.705467101053898,
+          "wins": 0,
+          "mean_official_margin": -1162.3849999999998
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": 25.767500000000155,
+        "positive": 1,
+        "negative": 0,
+        "zero": 3
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -190.8299999999997,
+        "positive": 1,
+        "negative": 2,
+        "zero": 1
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621472121,
+      "map": "cc1a0cc67a2ba0e9ac59e777a675dae928ceef2977e68bfcb470bcd17a5d2628",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.35584118791607755,
+          "death_brier": 0.38802184778768,
+          "predicted_first_tenure_net_mean": -12.756072962387318,
+          "observed_first_tenure_net_mean": 1.0461256591841561,
+          "first_tenure_net_mae": 13.802198621571474,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.11973724700173634,
+          "death_brier": 0.02990387419846283,
+          "predicted_first_tenure_net_mean": 1.4371773555507412,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 2.982071776427395,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 10.16211793313056,
+          "wins": 0,
+          "mean_official_margin": -1365.5525
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 1.0461256591841561,
+          "wins": 0,
+          "mean_official_margin": -1680.3125
+        },
+        "actual_parent": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 10.16211793313056,
+          "wins": 0,
+          "mean_official_margin": -1365.5525
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": 314.76,
+        "positive": 3,
+        "negative": 0,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 0.0,
+        "positive": 0,
+        "negative": 0,
+        "zero": 4
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621473120,
+      "map": "c96afb3d08cffb98f195c700407f613bc3306a847f78c78ae86f2e0ad485b0d5",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.25,
+          "predicted_death_mean": 0.43680229977969065,
+          "death_brier": 0.19229847007990059,
+          "predicted_first_tenure_net_mean": -29.756642113553216,
+          "observed_first_tenure_net_mean": -8.537900797887794,
+          "first_tenure_net_mae": 21.218741315665422,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0008209423587148515,
+          "death_brier": 6.73946356332304e-07,
+          "predicted_first_tenure_net_mean": -0.5679062172266331,
+          "observed_first_tenure_net_mean": -25.92340036772756,
+          "first_tenure_net_mae": 26.03933889611228,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 2,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 3,
+          "mean_first_tenure_net": -23.650378492727064,
+          "wins": 0,
+          "mean_official_margin": -1927.2875
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 3,
+          "mean_first_tenure_net": -8.537900797887794,
+          "wins": 0,
+          "mean_official_margin": -1953.6949999999997
+        },
+        "actual_parent": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 3,
+          "mean_first_tenure_net": -23.650378492727064,
+          "wins": 0,
+          "mean_official_margin": -1927.2875
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": 26.4074999999998,
+        "positive": 1,
+        "negative": 2,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 0.0,
+        "positive": 0,
+        "negative": 0,
+        "zero": 4
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621473121,
+      "map": "f53102a2dcf2166fea3cffe0249b66d0c2b1e9d0e0b8bf840db2d49db107bedc",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.25,
+          "predicted_death_mean": 0.2931472683116739,
+          "death_brier": 0.017463771707699048,
+          "predicted_first_tenure_net_mean": 8.813406453257503,
+          "observed_first_tenure_net_mean": 37.31829507836629,
+          "first_tenure_net_mae": 28.504888625108784,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.011945198402118697,
+          "death_brier": 0.0005139349824236,
+          "predicted_first_tenure_net_mean": 2.115220210599993,
+          "observed_first_tenure_net_mean": 21.71452856778842,
+          "first_tenure_net_mae": 22.129366709071583,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 3,
+      "C_moves": 1,
+      "movement_arm_next_purchases": 1,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 3,
+          "mean_first_tenure_net": 37.31829507836629,
+          "wins": 0,
+          "mean_official_margin": -1108.7475000000002
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 3,
+          "mean_first_tenure_net": 37.31829507836629,
+          "wins": 0,
+          "mean_official_margin": -985.6925000000001
+        },
+        "actual_parent": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 31.023644635577494,
+          "wins": 0,
+          "mean_official_margin": -928.375
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -123.05500000000006,
+        "positive": 0,
+        "negative": 1,
+        "zero": 3
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -180.37250000000017,
+        "positive": 0,
+        "negative": 1,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621474120,
+      "map": "24f821ffe47c3667e08e0d451865886595858a23f912a3be3b291927d9daa2e1",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.29192548002859703,
+          "death_brier": 0.1418038867739331,
+          "predicted_first_tenure_net_mean": 5.159514320373665,
+          "observed_first_tenure_net_mean": -6.93779955721169,
+          "first_tenure_net_mae": 20.812847625195587,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0008209423587148515,
+          "death_brier": 6.73946356332304e-07,
+          "predicted_first_tenure_net_mean": 2.1943446185353936,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 3.546990304942003,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": -6.390708932211226,
+          "wins": 0,
+          "mean_official_margin": -1229.5600000000002
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": -6.93779955721169,
+          "wins": 0,
+          "mean_official_margin": -1278.8225000000004
+        },
+        "actual_parent": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": -6.93779955721169,
+          "wins": 0,
+          "mean_official_margin": -1316.2000000000003
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": 49.26250000000027,
+        "positive": 1,
+        "negative": 2,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 86.6400000000001,
+        "positive": 1,
+        "negative": 0,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621474121,
+      "map": "8af39452822f6eb3269cc99cc70a142c8874514ab54ffd0322c881b1fd268a95",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.75,
+          "predicted_death_mean": 0.47630338150812346,
+          "death_brier": 0.11331040936034324,
+          "predicted_first_tenure_net_mean": 13.927867735918927,
+          "observed_first_tenure_net_mean": 16.928802726055892,
+          "first_tenure_net_mae": 20.255517952720034,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.011940505280640348,
+          "death_brier": 0.0005139273649607245,
+          "predicted_first_tenure_net_mean": 0.6313466814816536,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 1.5213518757633602,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 16.928802726055892,
+          "wins": 0,
+          "mean_official_margin": -1300.6000000000004
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 16.928802726055892,
+          "wins": 0,
+          "mean_official_margin": -1533.7349999999997
+        },
+        "actual_parent": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 16.928802726055892,
+          "wins": 0,
+          "mean_official_margin": -1475.6350000000002
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": 233.1349999999993,
+        "positive": 2,
+        "negative": 1,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 175.03499999999985,
+        "positive": 1,
+        "negative": 0,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621475120,
+      "map": "417782cd05a0da099881d18641e60b2e4efbf82eef56606c5dd7135985807092",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.5955819226218858,
+          "death_brier": 0.2345727441145279,
+          "predicted_first_tenure_net_mean": 19.369732207439206,
+          "observed_first_tenure_net_mean": 26.7096696390945,
+          "first_tenure_net_mae": 22.046447697498856,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.012981190758274076,
+          "death_brier": 0.0006121262369196482,
+          "predicted_first_tenure_net_mean": 1.3482950649994163,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 3.4235670011987085,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 27.103377538040945,
+          "wins": 0,
+          "mean_official_margin": -809.8674999999994
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": 26.7096696390945,
+          "wins": 0,
+          "mean_official_margin": -699.7274999999995
+        },
+        "actual_parent": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 27.103377538040945,
+          "wins": 0,
+          "mean_official_margin": -835.3824999999997
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -110.13999999999987,
+        "positive": 1,
+        "negative": 2,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 25.515000000000327,
+        "positive": 1,
+        "negative": 0,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621475121,
+      "map": "a066000cc4ec8b578e9c870311b17eaf821ae842ea7d6811dc3cafddad9e67c9",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.75,
+          "predicted_death_mean": 0.3641177842911563,
+          "death_brier": 0.22776294789205967,
+          "predicted_first_tenure_net_mean": -12.644419197551882,
+          "observed_first_tenure_net_mean": 1.923553156219441,
+          "first_tenure_net_mae": 24.850508415574723,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.04131114354744522,
+          "death_brier": 0.006626500137775216,
+          "predicted_first_tenure_net_mean": 3.1696089709145765,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 4.0517752425987394,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 1.923553156219441,
+          "wins": 0,
+          "mean_official_margin": -2225.26
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 1,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 1.923553156219441,
+          "wins": 0,
+          "mean_official_margin": -1808.05
+        },
+        "actual_parent": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 1.923553156219441,
+          "wins": 0,
+          "mean_official_margin": -1989.83
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -417.21000000000004,
+        "positive": 0,
+        "negative": 3,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": -235.43000000000006,
+        "positive": 0,
+        "negative": 1,
+        "zero": 3
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621476120,
+      "map": "2a7d4f94ed871802c7e99e168aae9decd0f03058fff4e91c0ad68b7450dc14de",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.5,
+          "predicted_death_mean": 0.21799308277547355,
+          "death_brier": 0.15945518398769612,
+          "predicted_first_tenure_net_mean": -27.428858367677734,
+          "observed_first_tenure_net_mean": -2.9746147394220976,
+          "first_tenure_net_mae": 24.50839472834465,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0.25,
+          "predicted_death_mean": 0.17101520264083533,
+          "death_brier": 0.06048924258810655,
+          "predicted_first_tenure_net_mean": 1.8073778779210707,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 2.8509184265559195,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 4.452678567788805,
+          "wins": 0,
+          "mean_official_margin": -1279.3100000000006
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 2,
+          "root_or_next_purchases": 2,
+          "mean_first_tenure_net": -2.9746147394220976,
+          "wins": 0,
+          "mean_official_margin": -825.6250000000002
+        },
+        "actual_parent": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 4.452678567788805,
+          "wins": 0,
+          "mean_official_margin": -1279.3100000000006
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -453.6850000000004,
+        "positive": 0,
+        "negative": 3,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 0.0,
+        "positive": 0,
+        "negative": 0,
+        "zero": 4
+      }
+    },
+    {
+      "historical_use": "train",
+      "seed": 621476121,
+      "map": "3c86bc36dd38d4d48f81b34c72b2b909724b3b98bbe8be364e814739763ffb76",
+      "fixed_n": 4,
+      "maps": 1,
+      "factual_prediction_check": {
+        "stay": {
+          "observed_death_fraction": 0.25,
+          "predicted_death_mean": 0.421060572385667,
+          "death_brier": 0.1637587226238678,
+          "predicted_first_tenure_net_mean": -27.55524925501033,
+          "observed_first_tenure_net_mean": -29.665447242724667,
+          "first_tenure_net_mae": 15.066435097051412,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        },
+        "move": {
+          "observed_death_fraction": 0,
+          "predicted_death_mean": 0.0008209423587148515,
+          "death_brier": 6.73946356332304e-07,
+          "predicted_first_tenure_net_mean": 0.470001355978268,
+          "observed_first_tenure_net_mean": 0.0,
+          "first_tenure_net_mae": 2.309661562668465,
+          "late_or_early_purchases_excluded_by_frozen_timing": 0
+        }
+      },
+      "C_stays": 1,
+      "C_moves": 3,
+      "movement_arm_next_purchases": 0,
+      "policy": {
+        "C": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 0.9693250000000262,
+          "wins": 0,
+          "mean_official_margin": -1633.1899999999998
+        },
+        "always_stay_A_at_these_roots": {
+          "root_survivals": 3,
+          "root_or_next_purchases": 3,
+          "mean_first_tenure_net": -29.665447242724667,
+          "wins": 0,
+          "mean_official_margin": -1480.1924999999994
+        },
+        "actual_parent": {
+          "root_survivals": 4,
+          "root_or_next_purchases": 1,
+          "mean_first_tenure_net": 0.9693250000000262,
+          "wins": 0,
+          "mean_official_margin": -1633.1899999999998
+        }
+      },
+      "C_minus_A": {
+        "delta_mean_margin": -152.9975000000004,
+        "positive": 1,
+        "negative": 2,
+        "zero": 1
+      },
+      "C_minus_parent": {
+        "delta_mean_margin": 0.0,
+        "positive": 0,
+        "negative": 0,
+        "zero": 4
+      }
+    }
+  ]
+}
