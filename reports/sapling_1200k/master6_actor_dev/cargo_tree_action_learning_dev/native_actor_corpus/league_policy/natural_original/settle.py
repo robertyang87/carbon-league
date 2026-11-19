@@ -2,7 +2,6 @@
 import argparse
 import ast
 from collections import Counter
-import hashlib
 import json
 import math
 from pathlib import Path
@@ -192,6 +191,28 @@ def summarize(games):
     return summary
 
 
+def contrasts(games,seeds):
+    completed={(g['seed'],g['seat'],g['arm']):g for g in games if g['status']=='complete'}
+    pairs={}
+    for trial,control in [('sampled_child','sampled_parent'),('sampled_parent','greedy_parent'),('sampled_child','greedy_parent')]:
+        paired=[]
+        for seed in seeds:
+            for side in (0,1):
+                a=completed.get((seed,side,trial))
+                b=completed.get((seed,side,control))
+                if not a or not b:
+                    continue
+                def margin(g):
+                    scores=g['official_scores_by_seat']
+                    return scores[side]-scores[1-side]
+                paired.append(dict(seed=seed,seat=side,official_margin_delta=margin(a)-margin(b)))
+        by_map={s:statistics.mean(p['official_margin_delta'] for p in paired if p['seed']==s)
+                for s in seeds if sum(p['seed']==s for p in paired)==2}
+        pairs[trial+' minus '+control]=dict(paired_numeric_games=len(paired),pairs=paired,complete_map_means=by_map,
+            mean_over_fixed_maps=statistics.mean(by_map.values()) if len(by_map)==len(seeds) else None)
+    return pairs
+
+
 def merge(args):
     run_id,commit=args.run,args.commit
     run=gh(f'runs/{run_id}')
@@ -211,13 +232,14 @@ def merge(args):
     report=dict(run_id=run_id,commit=commit,url=run['html_url'],run_conclusion=run['conclusion'],
                 map_scope='Two previously exposed physical development maps. These matches do not enter the independent exam.',
                 plan_sha256=live.sha(plan_path),archives=[],games=[],verification_errors=[])
+    sys.path.insert(0,str(HERE))
     from audit_menu import verify_menu
     for path in args.archives:
         sha=live.sha(path)
         item=remote.pop('sha256:'+sha,None)
         require(item is not None and item['size_in_bytes']==path.stat().st_size
-                and item['workflow_run']['head_sha']==commit and not item['expired'],'Archive is not an authentic artifact of this run')
-        attachment=dict(id=item['id'],name=item['name'],sha256=sha,bytes=path.stat().st_size)
+                and item['workflow_run']['head_sha']==commit and item['workflow_run']['id']==run_id,'Archive is not an authentic artifact of this run')
+        attachment=dict(id=item['id'],name=item['name'],sha256=sha,bytes=path.stat().st_size,expired=item['expired'])
         report['archives'].append(attachment)
         # Keep even malformed or interrupted raw artifacts as evidence.
         dest=target/(str(item['id'])+'.zip')
@@ -233,8 +255,9 @@ def merge(args):
                 key=(pair['seed'],pair['seat'])
                 require(key in expected and key not in seen and str(pair['run_id'])==str(run_id)
                         and pair['commit']==commit and pair['protocol_sha256']==live.sha(plan_path),'Wrong hosted ticket')
+                require(item['name']==f'natural-original-{key[0]}-{key[1]}-{run_id}','Archive label differs from the contained ticket')
                 seen.add(key)
-                attachment.update(seed=key[0],seat=key[1])
+                attachment.update(seed=key[0],seat=key[1],job_outcome=pair.get('pair_step_outcome'))
                 local=Path(tmp)
                 for arm in ARMS:
                     (local/arm).mkdir()
@@ -251,10 +274,10 @@ def merge(args):
                 for arm,g in checked['games'].items():
                     require(str(g['workflow_run'])==str(run_id),'Arm from a different workflow run')
                     report['games'].append(g)
-                    if g['status']=='complete' and arm in ARMDIR:
+                    if g['status'] in ('complete','forfeit','bilateral_failure','whole_task_timeout','infrastructure_error'):
                         try:
-                            proof=verify_menu(local/arm,ARMDIR[arm],persist=False)
-                            require(proof['matched_all_steps'] and proof['deployment_sha256']==DIGESTS[arm],
+                            proof=verify_menu(local/arm,ARMDIR.get(arm,arm),persist=False)
+                            require((g['status']!='complete' or proof['matched_all_steps']) and proof['deployment_sha256']==DIGESTS[arm],
                                     'Unsampled or illegal issued action')
                             g['action_support']=proof
                         except (OSError,ValueError,TypeError,KeyError,IndexError,AssertionError) as e:
@@ -264,6 +287,7 @@ def merge(args):
     report['remote_artifacts_missing_locally']=[r['id'] for r in remote.values()]
     report['missing_triples']=sorted(expected-seen)
     report['summary']=summarize(report['games'])
+    report['descriptive_contrasts']=contrasts(report['games'],matrix['seeds'])
     report['records_reconciled']=(len(report['games'])==12 and not report['verification_errors']
                                   and not report['missing_triples'] and not remote)
     output=target/'settlement.json'
