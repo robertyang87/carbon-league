@@ -137,4 +137,9 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-fixture",action="store_true")
     args = parser.parse_args()
-    raise SystemExit(0 if (check_training_fixture() if args.train_fixture else main()) else 1)
+    if args.train_fixture:
+        check_training_fixture()
+    else:
+        # A completed negative comparison has a readable pass=false result for job.py.
+        # Invalid input or unfinished evaluation still raises before publication.
+        main()

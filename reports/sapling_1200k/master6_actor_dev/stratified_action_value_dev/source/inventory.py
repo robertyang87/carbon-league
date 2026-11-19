@@ -115,6 +115,14 @@ def census():
 
 
 if __name__ == "__main__":
-    out = census()
-    (HERE / "inventory.json").write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n")
+    p = HERE / "inventory.json"
+    if p.exists():
+        out = r(p)
+        for game in out["v1_inventory"]:
+            checked(digest((ROOT/game["raw"]).read_bytes()) == game["raw_sha256"]
+                    and digest((ROOT/game["official"]).read_bytes()) == game["official_sha256"],
+                    "a frozen raw or official certificate changed")
+    else:
+        out = census()
+        p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n")
     print(out["exact_v1_raw_count"], out["exact_v1_map_count"], len(out["games"]))
