@@ -1,0 +1,57 @@
+{
+  "fields": [
+    "intercept",
+    "distance",
+    "slack",
+    "cargo",
+    "downhill",
+    "downhill_with_zero_slack",
+    "reachable_by_light_enemy",
+    "enemy_gap",
+    "moving"
+  ],
+  "weights": [
+    -0.30050824746403165,
+    -1.067476765236398,
+    1.1453064465771874,
+    0.12757007485446248,
+    1.0665810536907423,
+    -0.12605826902411083,
+    -0.6228261158178239,
+    0.6249574983267541,
+    -0.4500107297814264
+  ],
+  "baseline": [
+    0.6149014735060052,
+    -1.2190668042559478,
+    0.9114079179145428,
+    0.28184910779113453
+  ],
+  "stats": {
+    "train": {
+      "maps": 910,
+      "workers": 3546,
+      "arrivals": 2507,
+      "brier": 0.18673970365577655,
+      "base_brier": 0.1942045656588005,
+      "calibration_error": -2.928060724286127e-18
+    },
+    "held_maps": {
+      "maps": 230,
+      "workers": 952,
+      "arrivals": 642,
+      "brier": 0.19728276636743608,
+      "base_brier": 0.20394207770451153,
+      "calibration_error": 0.027256262753048772
+    },
+    "master6": {
+      "maps": 421,
+      "workers": 1961,
+      "arrivals": 1322,
+      "brier": 0.21943823084564318,
+      "base_brier": 0.21842745823177379,
+      "calibration_error": 0.04500461136941135
+    }
+  },
+  "label": "same worker observed alive at own base with zero cargo by terminal; no causal claim"
+}
