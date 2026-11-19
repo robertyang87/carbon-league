@@ -2,6 +2,8 @@
 
 ## 当前胜绩与验收
 
+用原版真实回报训练的 `da9919ad`，在预登记新图 470、471 对原版 **0 胜 0 平 4 负、场均 −1511.21**；同采样父代 **0 胜 0 平 4 负、−1230.12**。两个地图簇的配对变化为 −560.72、−1.46。双方全程符合限额。新网不晋级，100 张正式地图继续封存。另一个保持完整行动支持的神经评分头在离线六图留一中仅两图改善，未送考。[八场全部官方分及原始证据](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/hosted/settlement.json) · [训练、攻防研究与支出分解](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/README.md)
+
 Sapling 新包 `da9919ad` 已从 24 场仓内原版的真实终局回报完成一次策略网络更新。产生数据的父代 `851c901a` 为 0 胜 24 负，场均 −1462.95；六图中五图的梯度和其余五图相反。旧图同局面复演发现，新网在未计入抽样损失的 1,148 个普通时点中改变了 147 处整队命令。两张新开发图 470/471 的父子对照另行计分。[训练权重、真实行动变化及攻防归因](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/README.md)
 
 两张首次使用的新图上，全网回报训练包 `851c901a` 对仓内原版 **0 胜 0 平 4 负、场均 −824.96**，同采样父代 0/4、−1503.72。每图双席平均改善 +287.40、+1070.12。八局均正常完赛。新网已曝光图的 1/4 与本批分开。独立正式考卷继续封存。[新图全部比分、两席和逐拍收入](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/fresh_repeat/README.md)
