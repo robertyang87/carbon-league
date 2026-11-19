@@ -280,6 +280,7 @@ def main():
         for s0 in range(0, len(order), args.batch):
             idx = order[s0:s0 + args.batch]
             batch = [augment(rows[i], int(rng.randint(4))) for i in idx]
+            # 绊线（裁决 628e28d0）：下方组装段为 gate_train2 (b) 复刻所据，改动即自动作废其 (b) 证据。
             x = torch.from_numpy(np.stack([b['x'] for b in batch]).astype(np.float32) / 100.0)
             sc = torch.from_numpy(np.stack([b['sc'] for b in batch]).astype(np.float32))
             tw = torch.from_numpy(np.stack([b['tw'] for b in batch]).astype(np.float32))
