@@ -1,0 +1,30 @@
+{
+ "panel_sha256": "0ea7306a4f72907f66d8df636c4f31c58db97dbb9d10fbd7eb8026439dd3e35e",
+ "parent_npz_sha256": "f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713",
+ "parent_deployed_sha256": "c5ad3f43959a4812e84e89574ee0c6e69765ebb06a8b3ec93f839b0dde128dd3",
+ "freeze_sha256": "f514886048935fe95029a5ec4db2ad5f6499a61f61cb8122c0bc2a3a9ff2e197",
+ "builder_sha256": "967a496bb4114eb33874d57d0af552d98c55b105f753982cf931b5c1284d52d6",
+ "seed": 7924059,
+ "batch": 16,
+ "train_epochs": 1,
+ "lr": 9e-05,
+ "grad_clip": 1.0,
+ "optimizer": "AdamW, weight_decay .001",
+ "sample": "Each game contributes up to 8 roots in each of 4 consecutive 75-step bands, without replacement. One full predeclared pass, narrow residuals not used.",
+ "loss": "Map-phase balanced action CE (0.75 normalized target-role groups plus 0.25 all actionable slots) on student plus 0.5 deployed CE on the frozen .75 expert + .25 student blend; .16 KL(frozen parent student || student). Action inputs only, illegal/forced slots omitted. Value and aux heads frozen.",
+ "eval_steps": [
+  0,
+  20,
+  50,
+  80,
+  110,
+  140,
+  170,
+  200,
+  230,
+  260,
+  285,
+  297
+ ],
+ "gate": "One final checkpoint. Report per-role/early/mid metrics and actual deployed command agreement versus original on every held map; true strength requires independent responding-opponent games."
+}
