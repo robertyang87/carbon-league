@@ -29,8 +29,6 @@ def play(job):
 if __name__ == "__main__":
     gate = native.module(HERE / "eligible.py", "toll_route_eligibility")
     if not gate.run(): raise SystemExit("Development gate not met")
-    reservation=(ACTOR/"tree_response_training/.continuation.lock").open("a")
-    fcntl.flock(reservation,fcntl.LOCK_EX)
     with native.SHARED.open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         assert native.sha(CAND) == plan["candidate"] and native.sha(PARENT) == plan["parent"]
