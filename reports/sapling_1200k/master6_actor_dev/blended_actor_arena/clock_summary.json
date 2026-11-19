@@ -1,0 +1,378 @@
+{
+  "by_arm": {
+    "candidate": {
+      "both_agent_and_arena_worker_cpu_seconds": 591.392496322,
+      "depth_counts": {
+        "0": 2,
+        "1": 9,
+        "2": 7,
+        "3": 7,
+        "4": 25,
+        "5": 58,
+        "6": 107,
+        "7": 46,
+        "8": 935
+      },
+      "mean_max_depth": 7.423076923076923,
+      "mean_original_public_call_ms": 442.2930416614301,
+      "original_cpu_seconds": 526.9079386849999,
+      "original_public_wall_seconds": 528.9824778270704,
+      "search_return_counts": {
+        "searched": 1194,
+        "single": 2
+      },
+      "turns": 1196
+    },
+    "parent": {
+      "both_agent_and_arena_worker_cpu_seconds": 587.530368988,
+      "depth_counts": {
+        "0": 2,
+        "1": 7,
+        "2": 6,
+        "3": 6,
+        "4": 21,
+        "5": 48,
+        "6": 76,
+        "7": 35,
+        "8": 995
+      },
+      "mean_max_depth": 7.543478260869565,
+      "mean_original_public_call_ms": 437.87783368059286,
+      "original_cpu_seconds": 522.4867639449997,
+      "original_public_wall_seconds": 523.7018890819891,
+      "search_return_counts": {
+        "searched": 1194,
+        "single": 2
+      },
+      "turns": 1196
+    }
+  },
+  "caveats": [
+    "worker CPU includes both agents, simulation, checkpoints and any prefix replay; search CPU counts only measured original public calls",
+    "one observation per decision, complete depths as natively reported; single branch and depth-zero are distinguished",
+    "wave intervals span the earliest to the latest recorded game segment; external start-up, final proof and other jobs between waves are excluded",
+    "whole-cgroup counters are shared and cannot be summed across concurrent workers; host occupancy can also include processes outside this cgroup"
+  ],
+  "clock_source_sha256": "8952c3ea1c51566d8eb7aed327ef501acf851e30de55779c708f8ed1c595830a",
+  "elapsed_range_of_recorded_original_process_segments_by_pair_seconds": {
+    "621675585/0": 146.47350018200086,
+    "621675585/1": 150.66085700700205,
+    "621675586/0": 149.42799220500456,
+    "621675586/1": 148.898404501997
+  },
+  "games": [
+    {
+      "arm": "parent",
+      "completed_depth_counts": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 6,
+        "5": 19,
+        "6": 21,
+        "7": 8,
+        "8": 239
+      },
+      "cpu": 0,
+      "mean_max_depth": 7.448160535117057,
+      "mean_original_public_call_ms": 434.0674245419926,
+      "native_aborted": 3,
+      "original_public_above_058": 4,
+      "resource_segments": [
+        {
+          "core_busy_excluding_idle_iowait_steal_seconds": 138.43,
+          "cpu": 0,
+          "elapsed_seconds": 146.0006357969978,
+          "host_steal_seconds": 7.52,
+          "whole_cgroup_throttled_seconds": 0.321558,
+          "whole_cgroup_throttles": 9,
+          "worker_cpu_seconds": 145.416986631
+        }
+      ],
+      "root_cpu_seconds": 129.3005084059999,
+      "root_wall_seconds": 129.7861599380558,
+      "search_return_counts": {
+        "searched": 299
+      },
+      "seat": 0,
+      "seed": 621675585,
+      "turns": 299,
+      "wall_sha256": "68bb6737ebc5ac6ded95ef69c6c6509c759d5e65ea589215c6b1f26583709785"
+    },
+    {
+      "arm": "candidate",
+      "completed_depth_counts": {
+        "1": 4,
+        "2": 2,
+        "3": 3,
+        "4": 10,
+        "5": 18,
+        "6": 29,
+        "7": 7,
+        "8": 226
+      },
+      "cpu": 1,
+      "mean_max_depth": 7.2842809364548495,
+      "mean_original_public_call_ms": 433.9914423510717,
+      "native_aborted": 6,
+      "original_public_above_058": 1,
+      "resource_segments": [
+        {
+          "core_busy_excluding_idle_iowait_steal_seconds": 138.39,
+          "cpu": 1,
+          "elapsed_seconds": 145.51029205800296,
+          "host_steal_seconds": 7.0,
+          "whole_cgroup_throttled_seconds": 0.321558,
+          "whole_cgroup_throttles": 9,
+          "worker_cpu_seconds": 144.533612557
+        }
+      ],
+      "root_cpu_seconds": 128.8846101760001,
+      "root_wall_seconds": 129.76344126297045,
+      "search_return_counts": {
+        "searched": 299
+      },
+      "seat": 0,
+      "seed": 621675585,
+      "turns": 299,
+      "wall_sha256": "0dcb62700657936baf5e7d810de3a13b1c10f01888cdbe35286632732e522f4e"
+    },
+    {
+      "arm": "parent",
+      "completed_depth_counts": {
+        "0": 1,
+        "1": 2,
+        "2": 1,
+        "3": 1,
+        "4": 3,
+        "5": 7,
+        "6": 19,
+        "7": 7,
+        "8": 258
+      },
+      "cpu": 1,
+      "mean_max_depth": 7.62876254180602,
+      "mean_original_public_call_ms": 445.44461022066804,
+      "native_aborted": 1,
+      "original_public_above_058": 0,
+      "resource_segments": [
+        {
+          "core_busy_excluding_idle_iowait_steal_seconds": 142.92,
+          "cpu": 1,
+          "elapsed_seconds": 150.66085700700205,
+          "host_steal_seconds": 7.71,
+          "whole_cgroup_throttled_seconds": 0.012322,
+          "whole_cgroup_throttles": 1,
+          "worker_cpu_seconds": 150.47858846900002
+        }
+      ],
+      "root_cpu_seconds": 133.0343285339998,
+      "root_wall_seconds": 133.18793845597975,
+      "search_return_counts": {
+        "searched": 298,
+        "single": 1
+      },
+      "seat": 1,
+      "seed": 621675585,
+      "turns": 299,
+      "wall_sha256": "a6f749d5cdba202a9d60fcff9d7f0314415b53da9ace8e6196e11d33856849df"
+    },
+    {
+      "arm": "candidate",
+      "completed_depth_counts": {
+        "0": 1,
+        "1": 2,
+        "2": 2,
+        "3": 1,
+        "4": 5,
+        "5": 10,
+        "6": 20,
+        "7": 14,
+        "8": 244
+      },
+      "cpu": 0,
+      "mean_max_depth": 7.521739130434782,
+      "mean_original_public_call_ms": 444.43885809058605,
+      "native_aborted": 2,
+      "original_public_above_058": 3,
+      "resource_segments": [
+        {
+          "core_busy_excluding_idle_iowait_steal_seconds": 142.95,
+          "cpu": 0,
+          "elapsed_seconds": 150.255234723998,
+          "host_steal_seconds": 7.23,
+          "whole_cgroup_throttled_seconds": 0.012322,
+          "whole_cgroup_throttles": 1,
+          "worker_cpu_seconds": 149.69876616800002
+        }
+      ],
+      "root_cpu_seconds": 132.4306101399999,
+      "root_wall_seconds": 132.88721856908523,
+      "search_return_counts": {
+        "searched": 298,
+        "single": 1
+      },
+      "seat": 1,
+      "seed": 621675585,
+      "turns": 299,
+      "wall_sha256": "177d6f5596e2894866ce54566e18b92e259167ba01d6fd9bff5243298a5ad8b5"
+    },
+    {
+      "arm": "parent",
+      "completed_depth_counts": {
+        "1": 3,
+        "2": 1,
+        "3": 1,
+        "4": 6,
+        "5": 11,
+        "6": 21,
+        "7": 11,
+        "8": 245
+      },
+      "cpu": 1,
+      "mean_max_depth": 7.525083612040134,
+      "mean_original_public_call_ms": 440.8274843342368,
+      "native_aborted": 2,
+      "original_public_above_058": 1,
+      "resource_segments": [
+        {
+          "core_busy_excluding_idle_iowait_steal_seconds": 141.03,
+          "cpu": 1,
+          "elapsed_seconds": 148.18108634900273,
+          "host_steal_seconds": 7.1,
+          "whole_cgroup_throttled_seconds": 0.0,
+          "whole_cgroup_throttles": 0,
+          "worker_cpu_seconds": 147.63538634
+        }
+      ],
+      "root_cpu_seconds": 131.369751513,
+      "root_wall_seconds": 131.8074178159368,
+      "search_return_counts": {
+        "searched": 299
+      },
+      "seat": 0,
+      "seed": 621675586,
+      "turns": 299,
+      "wall_sha256": "3591d78ada90f3644e85c6b2b863cf414a572aad4d7040cc4f5ff707aa2c5b59"
+    },
+    {
+      "arm": "candidate",
+      "completed_depth_counts": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 2,
+        "5": 15,
+        "6": 27,
+        "7": 13,
+        "8": 237
+      },
+      "cpu": 0,
+      "mean_max_depth": 7.501672240802676,
+      "mean_original_public_call_ms": 444.89961651483446,
+      "native_aborted": 2,
+      "original_public_above_058": 1,
+      "resource_segments": [
+        {
+          "core_busy_excluding_idle_iowait_steal_seconds": 142.17,
+          "cpu": 0,
+          "elapsed_seconds": 149.24921617300424,
+          "host_steal_seconds": 7.05,
+          "whole_cgroup_throttled_seconds": 0.0,
+          "whole_cgroup_throttles": 0,
+          "worker_cpu_seconds": 148.90387695
+        }
+      ],
+      "root_cpu_seconds": 132.7465767160001,
+      "root_wall_seconds": 133.0249853379355,
+      "search_return_counts": {
+        "searched": 299
+      },
+      "seat": 0,
+      "seed": 621675586,
+      "turns": 299,
+      "wall_sha256": "fa740e9d97cbddfa85d1d854e6e4dcfaeba15e34bc0d31da351c18fef5515f64"
+    },
+    {
+      "arm": "parent",
+      "completed_depth_counts": {
+        "0": 1,
+        "1": 1,
+        "2": 2,
+        "3": 1,
+        "4": 6,
+        "5": 11,
+        "6": 15,
+        "7": 9,
+        "8": 253
+      },
+      "cpu": 0,
+      "mean_max_depth": 7.5719063545150505,
+      "mean_original_public_call_ms": 431.17181562547404,
+      "native_aborted": 1,
+      "original_public_above_058": 0,
+      "resource_segments": [
+        {
+          "core_busy_excluding_idle_iowait_steal_seconds": 136.39,
+          "cpu": 0,
+          "elapsed_seconds": 144.17444102500303,
+          "host_steal_seconds": 7.8,
+          "whole_cgroup_throttled_seconds": 0.003961,
+          "whole_cgroup_throttles": 1,
+          "worker_cpu_seconds": 143.999407548
+        }
+      ],
+      "root_cpu_seconds": 128.7821754919999,
+      "root_wall_seconds": 128.92037287201674,
+      "search_return_counts": {
+        "searched": 298,
+        "single": 1
+      },
+      "seat": 1,
+      "seed": 621675586,
+      "turns": 299,
+      "wall_sha256": "6a5ee1c9ca032d941a618f030703b23933004f8311c04c83698dc0406efe20ee"
+    },
+    {
+      "arm": "candidate",
+      "completed_depth_counts": {
+        "0": 1,
+        "1": 2,
+        "2": 1,
+        "3": 1,
+        "4": 8,
+        "5": 15,
+        "6": 31,
+        "7": 12,
+        "8": 228
+      },
+      "cpu": 1,
+      "mean_max_depth": 7.384615384615385,
+      "mean_original_public_call_ms": 445.84224968922814,
+      "native_aborted": 1,
+      "original_public_above_058": 0,
+      "resource_segments": [
+        {
+          "core_busy_excluding_idle_iowait_steal_seconds": 141.43,
+          "cpu": 1,
+          "elapsed_seconds": 148.8208104869991,
+          "host_steal_seconds": 7.38,
+          "whole_cgroup_throttled_seconds": 0.003961,
+          "whole_cgroup_throttles": 1,
+          "worker_cpu_seconds": 148.256240647
+        }
+      ],
+      "root_cpu_seconds": 132.84614165299976,
+      "root_wall_seconds": 133.3068326570792,
+      "search_return_counts": {
+        "searched": 298,
+        "single": 1
+      },
+      "seat": 1,
+      "seed": 621675586,
+      "turns": 299,
+      "wall_sha256": "d8810c98f928aad7b6aca1ed5ce7d7c1e152541137544da6af4f73e84996a22e"
+    }
+  ],
+  "sum_of_four_wave_windows_seconds": 595.4607538960045
+}
