@@ -29,7 +29,8 @@ def play(job):
     configuration = {key: getattr(opp,key) for key in exam.SEARCH_KEYS}
     if not (opp._SEARCH_OK and opp._RX and opp._TEMP == 1 and opp._SEED is None):
         raise ValueError("opponent must use original enabled search and unseeded temperature one")
-    from tree_win_gate import GUARDED_V5
+    from tree_win_gate import GUARDED_V5, validate_examiner_configuration
+    validate_examiner_configuration(configuration)
     guarded_candidate = pack_sha == GUARDED_V5
     unchanged_action_steps = []
     prior_guard_changes = 0

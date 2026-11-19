@@ -27,10 +27,28 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def validate_examiner_configuration(configuration):
+    # Canonical JSON of every recorded SEARCH_KEYS default in the original 57f9a594 source.
+    # JSON encoding also distinguishes booleans from integer substitutions and normalizes tuple/list.
+    fingerprint = hashlib.sha256(json.dumps(configuration, sort_keys=True, separators=(",", ":"),
+                                            allow_nan=False).encode()).hexdigest()
+    if fingerprint != "9d37b28c3bfc3cb28411c437d24d49c3dc8af7b813d9d7a16b0b0896aa9a37a6":
+        raise ValueError("examiner settings disagree with the full original Master3s2 defaults")
+
+
+def require_compound_joint_schema(plan):
+    from compound_formal import COMPOUNDS
+    if plan.get("pack_sha256") in COMPOUNDS and plan.get("schema") != "sapling-90-and-income/3":
+        raise ValueError("compound candidates require the joint win-rate and official-margin plan")
+
+
 def protocol_hashes():
     paths = (
         "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/tree_v4_exam.py",
-        "reports/sapling_1200k/income_target.py", "reports/sapling_1200k/turning_point_ledger.py",
+        "reports/sapling_1200k/compound_formal.py", "reports/sapling_1200k/build_it50_v3.py",
+        "reports/sapling_1200k/it50_v3_runtime.py", "reports/sapling_1200k/build_it50_endhome.py",
+        "reports/sapling_1200k/d1_sapling_build.py", "reports/sapling_1200k/d1_sapling_runtime.py",
+        "reports/sapling_1200k/d1_sapling_arena.py", "reports/sapling_1200k/income_target.py", "reports/sapling_1200k/turning_point_ledger.py",
         "reports/sapling_1200k/cash_v3_exam.py", "reports/sapling_1200k/external_3s2.py",
         "reports/sapling_1200k/tree_audited_game.py", "reports/sapling_1200k/tree_pack_arena.py",
         "reports/sapling_1200k/it50_v3_audited_seat.py", "reports/sapling_1200k/it50_v3_exam.py",
@@ -86,7 +104,7 @@ def rebuild_guarded_v5(source, directory):
 def prove_single_pack(weights, pack):
     """Rebuild the exact one-actor candidate from the given Sapling NPZ."""
     if Path(weights).suffix.lower() != ".npz":
-        raise ValueError("compound packs need a verified build and attribution adapter before formal use")
+        raise ValueError("formal candidates require actual Sapling NPZ weights")
     with tempfile.TemporaryDirectory(prefix="sapling-freeze-") as tmp:
         source = Path(tmp) / "frozen.npz"
         output = Path(tmp) / "rebuilt.py"
@@ -110,12 +128,21 @@ def prove_single_pack(weights, pack):
         return digest(source), digest(output)
 
 
+def prove_candidate(weights, pack):
+    from compound_formal import COMPOUNDS, prove
+    pack_hash = digest(pack)
+    if pack_hash in COMPOUNDS:
+        return prove(weights, pack, pack_hash)
+    return prove_single_pack(weights, pack)
+
+
 def seed_list(nonce):
     generator = random.Random(int(nonce, 16))
     return sorted(generator.sample(range(*RESERVED_RANGE), N))
 
 
 def validate(plan, weight_hash, pack_hash, examiner_hash, run):
+    require_compound_joint_schema(plan)
     if (plan["schema"] not in ("sapling-one-shot-90/2", "sapling-90-and-income/3")
             or plan["weight_sha256"] != weight_hash
             or plan["pack_sha256"] != pack_hash or plan["examiner_md5"] != examiner_hash
@@ -174,7 +201,7 @@ def verify_terminal_replay(row, raw):
         raise ValueError("recorded end state differs from replayed actions")
 
 
-def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False):
+def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False, record_compound=False):
     path = Path(directory) / f"raw_{row['seed']}_{row['candidate_seat']}.json.gz"
     if row["raw_file"] != path.name or digest(path) != row["raw_sha256"]:
         raise ValueError("raw transcript missing or changed")
@@ -182,6 +209,10 @@ def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False
     if (raw["seed"], raw["candidate_seat"], raw["pack_sha256"], raw["examiner_md5"]) != (
             row["seed"], row["candidate_seat"], pack_sha, EXAMINER) or raw["weight_identity"] != weights_sha:
         raise ValueError("raw transcript identity mismatch")
+    if formal:
+        validate_examiner_configuration(raw.get("configuration"))
+        if raw.get("audit_messages") != []:
+            raise ValueError("formal raw tape is missing its clean observer record")
     if formal and pack_sha == GUARDED_V5:
         stats = raw.get("candidate_guard_stats")
         if (not isinstance(stats, dict) or stats != row.get("candidate_guard_stats")
@@ -213,6 +244,16 @@ def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False
         raise ValueError("missing or invalid original search call")
     if any(sum(e[1] == k for e in events) != row["search_return_types"].get(k,0) for k in kinds):
         raise ValueError("search trace differs from per-game ledger")
+    if formal:
+        from compound_formal import COMPOUNDS, STUDENT, verify_actions
+        if pack_sha in COMPOUNDS:
+            if weights_sha != STUDENT:
+                raise ValueError("formal compound requires its real Sapling NPZ")
+            account = verify_actions(directory, row, raw, pack_sha)
+            if record_compound and "compound_policy_audit" not in row:
+                row["compound_policy_audit"] = account
+            elif row.get("compound_policy_audit") != account:
+                raise ValueError("compound attribution differs from independent prefix verification")
     if income:
         from income_target import reconstruct
         account = reconstruct(row, raw)
@@ -243,9 +284,17 @@ def validate_game(row):
             or min(searched, single, no_depth) < 0 or no_depth > search["aborted"]
             or searched + single + no_depth != steps):
         raise ValueError("original examiner search coverage not confirmed")
+    # The original agent records one positive depth and one elapsed time for each "searched" return.
+    depths, times = search["depth"], search["time"]
+    if (not isinstance(depths, dict) or any(str(d) not in tuple("12345678") or type(n) is not int or n <= 0
+                                            for d, n in depths.items())
+            or sum(depths.values()) != searched or len(times) != searched
+            or any(type(t) not in (float, int) or not math.isfinite(t) or t < 0 for t in times)):
+        raise ValueError("original examiner depth/time observations do not cover every completed search")
 
 
 def verdict(plan, games):
+    require_compound_joint_schema(plan)
     expected = {(r["seed"], seat) for r in plan["maps"] for seat in (0, 1)}
     if len(expected) != 2*N or len(games) != len(expected):
         raise ValueError("incomplete frozen map set")
@@ -257,6 +306,16 @@ def verdict(plan, games):
     if plan.get("pack_sha256") == GUARDED_V5:
         if not any(row["unchanged_network_action_steps"] for row in games):
             raise ValueError("guarded candidate executed no unmodified network decisions")
+    from compound_formal import COMPOUNDS
+    if plan.get("pack_sha256") in COMPOUNDS:
+        proofs = [r.get("compound_policy_audit", {}) for r in games]
+        for row, proof in zip(games, proofs):
+            if (proof.get("pack_sha256") != plan["pack_sha256"] or proof.get("transcript_sha256") != row["raw_sha256"]
+                    or proof.get("verified_roots") != row["actual_transitions"]
+                    or not 0 <= proof["student_changes"] <= proof["verified_unforced_slots"]):
+                raise ValueError("missing or incomplete actual compound policy evidence")
+        if not any(p["student_changes"] for p in proofs):
+            raise ValueError("no observed unforced Sapling contribution in the full exam")
     seat_wins = [sum(g["candidate_seat"] == seat and g["result"] == "win" for g in games)
                  for seat in (0, 1)]
     counts = [sum(rows[(r["seed"], s)]["result"] == "win" for s in (0, 1))
@@ -347,7 +406,7 @@ def main():
         parser.error("exclusion ledger is missing known V4 development maps")
     if args.out.exists() or args.run.exists():
         parser.error("allocate a fresh plan path and run directory")
-    weights, pack = prove_single_pack(args.weights, args.pack)
+    weights, pack = prove_candidate(args.weights, args.pack)
     while True:
         nonce = secrets.token_hex(32)
         seeds = seed_list(nonce)

@@ -31,16 +31,21 @@ def main():
         p.error("candidate or examiner identity mismatch")
     if len(set(args.cpus)) != 2 or not set(args.cpus) <= os.sched_getaffinity(0):
         p.error("two distinct available CPU cores are required")
-    from tree_win_gate import RESERVED_RANGE, prove_single_pack, protocol_hashes, validate, validate_game, verdict, verify_raw
+    from tree_win_gate import RESERVED_RANGE, prove_candidate, protocol_hashes, validate, validate_game, verdict, verify_raw
     plan = None
     if args.final_plan:
         plan = json.loads(args.final_plan.read_text())
-        rebuilt_weights, rebuilt_pack = prove_single_pack(args.weights, args.pack)
+        rebuilt_weights, rebuilt_pack = prove_candidate(args.weights, args.pack)
         seeds = validate(plan, rebuilt_weights, rebuilt_pack, PRIOR.EXPECTED_MD5, args.run)
     else:
         seeds = args.maps
         if any(RESERVED_RANGE[0] <= s < RESERVED_RANGE[1] for s in seeds):
             p.error("these seeds are reserved for independent formal exams")
+    play_match = arena.play
+    if plan is not None:
+        from compound_formal import D1
+        if args.pack_sha256 == D1:
+            from d1_sapling_arena import play as play_match
     if len(set(seeds)) != len(seeds):
         p.error("duplicate map")
     args.run.mkdir(parents=True, exist_ok=True)
@@ -79,7 +84,7 @@ def main():
                 PRIOR.shared.atomic_json(scorefile, report)
                 raise ValueError("preserved an already played raw outcome; recover that record before resuming")
             with ProcessPoolExecutor(max_workers=2, mp_context=multiprocessing.get_context("spawn")) as pool:
-                jobs = [pool.submit(arena.play, (str(pack), weight_sha, seed, s, args.cpus[s], str(args.run), args.pack_sha256)) for s in missing]
+                jobs = [pool.submit(play_match, (str(pack), weight_sha, seed, s, args.cpus[s], str(args.run), args.pack_sha256)) for s in missing]
                 for future in as_completed(jobs):
                     row = future.result()
                     report["games"].append(row)
@@ -93,7 +98,7 @@ def main():
             try:
                 require_income = plan is not None and plan["schema"] == "sapling-90-and-income/3"
                 account = verify_raw(args.run, row, args.pack_sha256, weight_sha, formal=plan is not None,
-                                     income=require_income)
+                                     income=require_income, record_compound=plan is not None)
                 if require_income:
                     row["income_account"] = account
                 validate_game(row)
