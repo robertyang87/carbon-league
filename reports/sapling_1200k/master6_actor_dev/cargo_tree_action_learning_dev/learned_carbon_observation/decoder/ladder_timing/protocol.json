@@ -1,0 +1,132 @@
+{
+  "scope": "Fixed two-seat diagnostic for the decoder on the archived seed 621471120. Identical cgroup/image and verified public timing engine as the encoder; fixed joint tape only, no opponent or new result.",
+  "seed": 621471120,
+  "physical_map_sha256": "2920f439bb16a4297298984934b1a9c1ff0932873d318d35b798c89bd6de3845",
+  "candidate_seat": 0,
+  "opponent_seat": 1,
+  "platform": {
+    "per_candidate_cpu": 1.5,
+    "per_candidate_memory_bytes": 536870912,
+    "swap_headroom_bytes": 0,
+    "network": "none",
+    "containers": 2,
+    "python": "3.12",
+    "numpy": "1.26.4",
+    "opponent_required_torch": "2.5.1+cpu",
+    "source_limit_bytes": 10000000,
+    "init_seconds": 20,
+    "step_soft_seconds": 1,
+    "step_hard_seconds": 3,
+    "slow_steps_per_player": 3,
+    "overage_seconds_per_player": 5,
+    "task_seconds": 1500
+  },
+  "files": {
+    "official_helpers": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/helpers.py",
+      "bytes": 51161,
+      "sha256": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae"
+    },
+    "environment": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/carbon.py",
+      "bytes": 11755,
+      "sha256": "72f1f3b561a8715927b809d0e45d621651f9c2c50aaf0109c18a18123a03cc60"
+    },
+    "rules": {
+      "path": "reports/agent-guide.md",
+      "bytes": 9120,
+      "sha256": "ea9276c2c12b61a0425690f121e91306b2ab2780b91f1781f8f99b7d58d9e3c1"
+    },
+    "candidate": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/candidate.py",
+      "sha256": "61dae17267eb6f581efba533750134ccc62c6d5316526fce9a0e5db1996d6ead",
+      "bytes": 6087100
+    },
+    "live": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/live.py",
+      "sha256": "928646196266fdfb40e60be052f82b733d0d95c495a974dab4c1fe492dfa5a80",
+      "bytes": 16011
+    },
+    "worker": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/worker.py",
+      "sha256": "146e4afd9fd2e695fe6bd887e70e11b229e7616e648c0a230b1b90b1943a32b9",
+      "bytes": 4185
+    },
+    "dockerfile": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/Dockerfile",
+      "sha256": "f2e862c3e26bd080969f280018f6bae85d93440fae66de96dcbb65d804bf947e",
+      "bytes": 1072
+    },
+    "observed_actions": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/ladder_timing/reference.json.gz",
+      "sha256": "96aabb2a6a76fd2f59dbdf0fce5c3400cf00400f23a5cbc5b00d940c572395bd",
+      "bytes": 6707
+    },
+    "replay": {
+      "path": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source/raw_621471120_0.json.gz",
+      "sha256": "892bfc66bb02729bb21a7fae89d5ddf547c7fcdd9d4fac2ecbc5054c611ba3b8",
+      "bytes": 10338
+    },
+    "official_config": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz",
+      "sha256": "7a5967383c78324d248f4b228541d7eb30f3ac3d39bf18e74f81a011a78c4631",
+      "bytes": 10094
+    },
+    "live_registration": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/protocol.json",
+      "sha256": "8bc6122533b139c626323955c0aa0b4dbd8ef771ab04d086df275e5d1641751a",
+      "bytes": 3234
+    },
+    "standard_runner": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/ladder_timing/time_replay.py",
+      "sha256": "113ecbb468da9cdd83d600d1b9cbac064af909b6501814ab502be2fe63cc24dc",
+      "bytes": 7689
+    },
+    "variant_adapter": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/ladder_timing/variant.py",
+      "sha256": "760fb9de9c45c66086814b127db1ab63d6afab1c7acb55e9b5c5a8107dab0d66",
+      "bytes": 1323
+    },
+    "build_identity": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/packages.json",
+      "sha256": "5b01d4fb3edd30eb386e9499c9973f7ea52a4524411115fbab8945d04e45bb3a",
+      "bytes": 555
+    }
+  },
+  "policy_seats": [
+    0,
+    1
+  ],
+  "expected_transitions": 299,
+  "current_rules_url": "https://117.72.210.134/static/agent-guide.md",
+  "base_image": "python@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b",
+  "own_command_reference": {
+    "corpus": [
+      {
+        "seat": 0,
+        "underlying_timing_basename": "decoder_student_timing_621471120_0.json.gz",
+        "local_timing_tape_sha256": "d79fc444ab9e7ced8980fcca24cd650fb98b5a00e47778b6d9ccc40d5be28426",
+        "official_public_command_count": 299,
+        "differences_to_encoder_joint_orders": 1
+      },
+      {
+        "seat": 1,
+        "underlying_timing_basename": "decoder_student_timing_621471120_1.json.gz",
+        "local_timing_tape_sha256": "f684a259c5e2f333c1746245b8635a48b82d35d2ea5bd0d63f7fd57a69266b0a",
+        "official_public_command_count": 299,
+        "differences_to_encoder_joint_orders": 2
+      }
+    ],
+    "source_trajectory": "892bfc66bb02729bb21a7fae89d5ddf547c7fcdd9d4fac2ecbc5054c611ba3b8",
+    "collection_code": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/held_eval.py",
+      "sha256": "ec6128db9f95dae9faee9466b77b717fea20b92624af29ffae8228a6b766fe4a",
+      "bytes": 14251
+    },
+    "collection_protocol": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/protocol.json",
+      "sha256": "af39fdbd8e200906cf90dbf868aa9f717601b626c16e0ae4a3d5bb493cd734b1",
+      "bytes": 4572
+    }
+  }
+}
