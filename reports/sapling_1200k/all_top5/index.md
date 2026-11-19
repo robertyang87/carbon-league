@@ -39,3 +39,5 @@
 [截至 41e4177e 的 16 场新对外局及行动追溯](appendix_41e4177e/README.md) · [累计 1,402 张唯一地图、两种引擎核分及正式考试隔离](appendix_41e4177e/validation.md)
 
 [Master5s 新四场，对手含 Echo6 和 Echo5](appendix_f7109df6/README.md) · [Master6 对 Fable v8 新局](appendix_1fdacb1b/README.md)
+
+[截至 32b555ee 新增 14 场 Master6 对外比赛，查每场转折和此前行动](appendix_32b555ee/README.md)
