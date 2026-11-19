@@ -63,6 +63,30 @@ def render():
         "",
         "[预注册](protocol.json) · [03 四席](transfer03.json) · [04 四席](transfer04.json) · [开场裁决](gate.json)",
     ]
+    if (HERE / "actual_edits.json").exists():
+        actual = load("actual_edits.json")
+        totals = actual["totals"]
+        lines.extend(
+            [
+                "",
+                "## 候选实际改令的当拍结果",
+                "",
+                f"在候选自己的真实轨迹上，逐一恢复原来的停留命令，其余工人和对手保留当拍已经提交的动作。在 {totals['changed']} 次实际撤离中，"
+                f"{totals['saved']} 次从当拍阵亡转为存活，{totals['harmed']} 次从存活转为阵亡；其余命令不影响当拍生死。"
+                f"放弃原可成交 {totals['foregone_purchases']} 笔树，原付款合计 {totals['foregone_debit']:.2f}。这些是决策已经改变后又遇到的真实局面，不能将救回的次数解释为同一批独立工人，或将它们相加作为胜率增益。",
+                "",
+                "| 地图 / 席 | 实际改令 | 救回 | 反伤 | 放弃已成交树 |",
+                "|---|---:|---:|---:|---:|",
+            ]
+        )
+        for g in actual["games"]:
+            lines.append(
+                f"| {g['seed']} / {g['seat']} | {g['changed']} | {g['saved']} | {g['harmed']} | {g['foregone_purchases']} |"
+            )
+        lines += [
+            "",
+            "[逐步工号、物理命令、死亡与真实付款](actual_edits.json) · [当拍反事实复算](actual_edits.py)",
+        ]
     return "\n".join(lines) + "\n"
 
 

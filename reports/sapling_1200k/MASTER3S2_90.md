@@ -1,6 +1,10 @@
 # Sapling 对 Master3s2 的九成胜率实验
 
-最新两张预先登记的开发图上，终局回报候选席 0 与席 1 均为 0/2，合计 **0/4，平均官方分差 −1,346.81**。同图同席父代 0/4、平均 −1,729.12。两图平均改善 +354.38、+410.23，四个同席对照只有两个改善，未复现首图两席同向的结果。未开启独立正式考卷。[两图八局原版复算、逐席收支与搜索深度](master6_actor_dev/terminal_return_fit/replication/README.md)
+最新开发对照在两张新图上由父代和冻结的撤离模型各执两席，对手均为仓内原版 Master3s2。**候选席 0、席 1 各 0/2，总计 0 胜 4 负，平均官方分差 −1,377.49。父代也是 0/4，平均 −1,592.41。** 候选回放中的 53 次实际改令，经同一回合同一敌令的双引擎重放，50 次使原本阵亡的种植工存活，0 次造成额外阵亡，另 3 次放弃付款 92.11。两张图的席 0 分差改善，席 1 恶化。预注册要求至少三个同图同席的 U 改善，本次为两个，所以保留父代，独立正式考卷未开。[八局原版比分和逐席对照](master6_actor_dev/tree_response_training/planter_survival/native_dev/RESULTS.md) · [单文件候选与风险模型身份](master6_actor_dev/tree_response_training/planter_survival/native_dev/release_manifest.json) · [逐笔撤离复算](master6_actor_dev/tree_response_training/planter_survival/native_dev/actual_edits.json)
+
+这四局候选各自最大的现金回撤均发生在对手交货时，我方同一回合均无交付。候选对照局中我方正常回库比父代局平均多 62.86，考官平均多 434.16，树息的双方相对变化为 +495.08。四个配对的考官都在候选第一次撤离前走出了不同轨迹，每个整局得分是按原版搜索、温度采样实测的结果。当前树投资训练已收 8 张图、32 组从中盘到终局的双边对照，18 组实际付款。[逐回合双方现金、具体工人与转折](master6_actor_dev/tree_response_training/planter_survival/native_dev/economy/README.md) · [跨图资金与终局数据](master6_actor_dev/tree_response_training/batches/intake_04/aggregate.json)
+
+此前两张预先登记的开发图上，终局回报候选席 0 与席 1 均为 0/2，合计 **0/4，平均官方分差 −1,346.81**。同图同席父代 0/4、平均 −1,729.12。两图平均改善 +354.38、+410.23，四个同席对照只有两个改善，未复现首图两席同向的结果。未开启独立正式考卷。[两图八局原版复算、逐席收支与搜索深度](master6_actor_dev/terminal_return_fit/replication/README.md)
 
 避险模型已在两张训练图的 2,789 个停留／移动局面上训练，并在另外两张图的 2,867 个局面验证。相对 v1 在该局面的真实动作，48 处本会死亡的种植工得以活过下一步，3 处出现反向伤害，两图净改善分别为 22、23。这个选择器还会引发 595 笔额外当步付款，现金支出和长期回报须另外衡量；未据此替换参赛包。[轻量权重、逐根误报与实付](master6_actor_dev/tree_response_training/planter_survival/README.md)
 
