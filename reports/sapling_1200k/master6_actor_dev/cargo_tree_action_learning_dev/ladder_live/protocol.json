@@ -1,0 +1,64 @@
+{
+  "schema": "exposed-map-live-clock-v1",
+  "purpose": "Local interactive development check on the exposed first-win seat only. No new map, no scoreboard submission, no addition to the frozen game cohorts.",
+  "seed": 621758346,
+  "candidate_seat": 1,
+  "opponent_seat": 0,
+  "physical_map_sha256": "094481cca13cd662a74cd5d20c584b941e3f966f34202d4032c91056eeb04e78",
+  "files": {
+    "candidate": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.py",
+      "bytes": 6075585,
+      "sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac"
+    },
+    "candidate_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.npz",
+      "bytes": 4861598,
+      "sha256": "7a677b76f30769eb097162a42d355b13b21acf3bab9ae7e22bfe2e4148ff9923"
+    },
+    "opponent": {
+      "path": "data/master3s2_source.py",
+      "bytes": 2897684,
+      "sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5"
+    },
+    "rules": {
+      "path": "reports/agent-guide.md",
+      "bytes": 9120,
+      "sha256": "ea9276c2c12b61a0425690f121e91306b2ab2780b91f1781f8f99b7d58d9e3c1"
+    },
+    "environment": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/carbon.py",
+      "bytes": 11755,
+      "sha256": "72f1f3b561a8715927b809d0e45d621651f9c2c50aaf0109c18a18123a03cc60"
+    },
+    "official_helpers": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/helpers.py",
+      "bytes": 51161,
+      "sha256": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae"
+    }
+  },
+  "platform": {
+    "per_candidate_cpu": 1.5,
+    "per_candidate_memory_bytes": 536870912,
+    "swap_headroom_bytes": 0,
+    "network": "none",
+    "containers": 2,
+    "python": "3.12",
+    "numpy": "1.26.4",
+    "opponent_required_torch": "2.5.1+cpu",
+    "source_limit_bytes": 10000000,
+    "init_seconds": 20,
+    "step_soft_seconds": 1,
+    "step_hard_seconds": 3,
+    "slow_steps_per_player": 3,
+    "overage_seconds_per_player": 5,
+    "task_seconds": 1500
+  },
+  "gates": [
+    "independently inspect actual cgroup v2 quota, memory, swap restriction and private isolation before loading any strategy; with unmet constraints publish BLOCKED and do not play",
+    "use frozen source bytes, public agent entrypoint and platform helper module. Opponent requires actual PyTorch 2.5.1+cpu, original search enabled, natural T=1 and original 0.58sec wall, without mutations; if the needed original setup is absent stop",
+    "one persistent process per seat for the entire match; no parent-visible full_carbon in public JSON; before sending both actions neither receives any other action for that step; the external authoritative interpreter consumes actions only after both return",
+    "measure cold initialization and full JSON exchange with monotonic host clock; over-budget or invalid reply immediately forfeits. Both players failing the same joint step is a bilateral failure. No game scores if infra fails.",
+    "only this one exposed-map one-seat game. No alternate sample, replay substitution or retries after first strategy call; no training, no ranking conclusions"
+  ]
+}
