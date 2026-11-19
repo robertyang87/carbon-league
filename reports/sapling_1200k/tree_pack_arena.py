@@ -11,6 +11,7 @@ import tempfile
 
 import tree_audited_game as arena
 import map_identity
+import native_clock
 
 PRIOR = arena.prior
 
@@ -43,8 +44,11 @@ def main():
         if any(RESERVED_RANGE[0] <= s < RESERVED_RANGE[1] for s in seeds):
             p.error("these seeds are reserved for independent formal exams")
     terrains = {r["seed"]:r["initial_terrain_u8_sha256"] for r in plan["maps"]} if plan else {}
+    cpus = native_clock.assignments(plan, args.cpus)
     play_match = arena.play
-    if plan is not None:
+    if native_clock.required(plan):
+        play_match = native_clock.clocked_play
+    elif plan is not None:
         from compound_formal import D1
         if args.pack_sha256 == D1:
             from d1_sapling_arena import play as play_match
@@ -86,7 +90,7 @@ def main():
                 PRIOR.shared.atomic_json(scorefile, report)
                 raise ValueError("preserved an already played raw outcome; recover that record before resuming")
             with ProcessPoolExecutor(max_workers=2, mp_context=multiprocessing.get_context("spawn")) as pool:
-                jobs = [pool.submit(play_match, (str(pack), weight_sha, seed, s, args.cpus[s], str(args.run), args.pack_sha256)) for s in missing]
+                jobs = [pool.submit(play_match, (str(pack), weight_sha, seed, s, cpus.get((seed, s), args.cpus[s]), str(args.run), args.pack_sha256)) for s in missing]
                 for future in as_completed(jobs):
                     row = future.result()
                     report["games"].append(row)
@@ -101,7 +105,8 @@ def main():
                 require_income = plan is not None and plan["schema"] == map_identity.SCHEMA
                 account = verify_raw(args.run, row, args.pack_sha256, weight_sha, formal=plan is not None,
                                      income=require_income, record_compound=plan is not None,
-                                     expected_terrain=terrains.get(row["seed"]))
+                                     expected_terrain=terrains.get(row["seed"]),
+                                     clock_cpu=cpus.get((row["seed"], row["candidate_seat"])))
                 if require_income:
                     row["income_account"] = account
                 validate_game(row)

@@ -16,6 +16,7 @@ import random
 import secrets
 
 import map_identity
+import native_clock
 
 # These development maps have been preflighted even when their game gate stops.
 RESERVED_DEVELOPMENT_PLANS = ("master6_actor_dev/stratified_action_value_dev/source/pilot_plan.json",)
@@ -64,7 +65,7 @@ def require_compound_joint_schema(plan):
 
 def protocol_hashes():
     paths = (
-        "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/map_identity.py",
+        "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/map_identity.py", native_clock.SOURCE_KEY,
         "reports/sapling_1200k/" + map_identity.LOCAL_EXPOSURE,
         "reports/sapling_1200k/tree_v4_exam.py",
         "reports/sapling_1200k/compound_formal.py", "reports/sapling_1200k/terminal_compound_formal.py",
@@ -179,6 +180,8 @@ def validate(plan, weight_hash, pack_hash, examiner_hash, run):
             or plan["protocol_sha256"] != protocol_hashes()
             or plan["run_directory"] != Path(run).name):
         raise ValueError("final plan does not match this run and exact frozen candidate")
+    if "native_examiner_clock" in plan and plan["native_examiner_clock"] != native_clock.SCHEMA:
+        raise ValueError("unknown formal examiner clock schema")
     if plan["schema"] in INCOME_SCHEMAS:
         from income_target import FORMAL_METRIC, TARGET
         if plan.get("income_metric") != FORMAL_METRIC or plan.get("income_minimum") != TARGET:
@@ -248,7 +251,7 @@ def verify_terminal_replay(row, raw, expected_terrain=None):
         raise ValueError("recorded end state differs from replayed actions")
 
 
-def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False, record_compound=False, expected_terrain=None):
+def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False, record_compound=False, expected_terrain=None, clock_cpu=None):
     path = Path(directory) / f"raw_{row['seed']}_{row['candidate_seat']}.json.gz"
     if row["raw_file"] != path.name or digest(path) != row["raw_sha256"]:
         raise ValueError("raw transcript missing or changed")
@@ -291,6 +294,10 @@ def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False
         raise ValueError("missing or invalid original search call")
     if any(sum(e[1] == k for e in events) != row["search_return_types"].get(k,0) for k in kinds):
         raise ValueError("search trace differs from per-game ledger")
+    if clock_cpu is not None:
+        if row.get("cpu_affinity") != [clock_cpu]:
+            raise ValueError("worker CPU differs from the registered map/seat rotation")
+        native_clock.verify(directory, row, raw)
     if formal:
         from compound_formal import COMPOUNDS, student_identity, verify_actions
         if pack_sha in COMPOUNDS:
@@ -440,9 +447,13 @@ def execute():
             raise SystemExit("formal run invalid: keep execution.log; do not reroll a failed game")
         report = json.loads((args.run / "results.json").read_text())
         frozen_terrains = {m["seed"]:m["initial_terrain_u8_sha256"] for m in plan["maps"]}
+        if report["header"]["cpus"] != args.cpus:
+            raise ValueError("worker layout differs from the recorded run")
+        cpus = native_clock.assignments(plan, args.cpus)
         for row in report["games"]:
             verify_raw(args.run, row, plan["pack_sha256"], plan["weight_sha256"], formal=True,
-                       income=plan["schema"] in INCOME_SCHEMAS, expected_terrain=frozen_terrains[row["seed"]])
+                       income=plan["schema"] in INCOME_SCHEMAS, expected_terrain=frozen_terrains[row["seed"]],
+                       clock_cpu=cpus.get((row["seed"], row["candidate_seat"])))
         if (report["status"] != "complete" or report["header"]["plan_sha256"] != digest(args.plan)
                 or report["verdict"] != verdict(plan, report["games"])):
             raise ValueError("reported final verdict does not match the full game ledger")
@@ -480,7 +491,7 @@ def main():
             retired_draws.append(nonce)
             continue
         break
-    plan = {"schema":map_identity.SCHEMA, "ladder_ledger_sha256":fingerprint,
+    plan = {"schema":map_identity.SCHEMA, "native_examiner_clock":native_clock.SCHEMA, "ladder_ledger_sha256":fingerprint,
             "additional_local_seeds":additional_local_seeds, "additional_observed_maps":additional_observed_maps,
             "retired_draws":retired_draws, "income_metric":FORMAL_METRIC,
             "income_minimum":TARGET, "weight_sha256":weights, "pack_sha256":pack,
