@@ -15,6 +15,10 @@ from pathlib import Path
 import random
 import secrets
 
+import map_identity
+
+INCOME_SCHEMAS = {"sapling-90-and-income/3", map_identity.SCHEMA}
+
 ROOT = Path(__file__).resolve().parents[2]
 GUARDED_V5 = "89df51540512d187ad64e82e21890e9f301083fc07ba06357eddaf43fc6692a2"
 RULES = "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/carbon.json"
@@ -38,13 +42,14 @@ def validate_examiner_configuration(configuration):
 
 def require_compound_joint_schema(plan):
     from compound_formal import COMPOUNDS
-    if plan.get("pack_sha256") in COMPOUNDS and plan.get("schema") != "sapling-90-and-income/3":
+    if plan.get("pack_sha256") in COMPOUNDS and plan.get("schema") not in INCOME_SCHEMAS:
         raise ValueError("compound candidates require the joint win-rate and official-margin plan")
 
 
 def protocol_hashes():
     paths = (
-        "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/tree_v4_exam.py",
+        "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/map_identity.py",
+        "reports/sapling_1200k/tree_v4_exam.py",
         "reports/sapling_1200k/compound_formal.py", "reports/sapling_1200k/build_it50_v3.py",
         "reports/sapling_1200k/it50_v3_runtime.py", "reports/sapling_1200k/build_it50_endhome.py",
         "reports/sapling_1200k/d1_sapling_build.py", "reports/sapling_1200k/d1_sapling_runtime.py",
@@ -59,7 +64,8 @@ def protocol_hashes():
         "code/cnet2_comparator.py", "reports/sapling_1200k/build_v5_guard.py",
         "reports/sapling_1200k/v5_guard_runtime.py", RULES,
     )
-    return {p: digest(ROOT / p) for p in paths}
+    registry_paths = tuple("reports/sapling_1200k/" + f for f, *_ in map_identity.SOURCES)
+    return {p: digest(ROOT / p) for p in paths + registry_paths}
 
 
 def sapling_shapes(meta):
@@ -143,13 +149,13 @@ def seed_list(nonce):
 
 def validate(plan, weight_hash, pack_hash, examiner_hash, run):
     require_compound_joint_schema(plan)
-    if (plan["schema"] not in ("sapling-one-shot-90/2", "sapling-90-and-income/3")
+    if (plan["schema"] not in ({"sapling-one-shot-90/2"} | INCOME_SCHEMAS)
             or plan["weight_sha256"] != weight_hash
             or plan["pack_sha256"] != pack_hash or plan["examiner_md5"] != examiner_hash
             or plan["protocol_sha256"] != protocol_hashes()
             or plan["run_directory"] != Path(run).name):
         raise ValueError("final plan does not match this run and exact frozen candidate")
-    if plan["schema"] == "sapling-90-and-income/3":
+    if plan["schema"] in INCOME_SCHEMAS:
         from income_target import FORMAL_METRIC, TARGET
         if plan.get("income_metric") != FORMAL_METRIC or plan.get("income_minimum") != TARGET:
             raise ValueError("invalid frozen income target")
@@ -158,6 +164,14 @@ def validate(plan, weight_hash, pack_hash, examiner_hash, run):
         raise ValueError("map allocation differs from the original draw")
     if set(seeds).intersection(plan["excluded_reserved_seeds"]):
         raise ValueError("exam overlaps previously exposed reserved maps")
+    if plan["schema"] != map_identity.SCHEMA:
+        raise ValueError("new exam execution requires the initial-terrain exposure lock; replay old freezes at their recorded source revision")
+    fingerprint, ladder_seeds, ladder_terrains = map_identity.ladder_boards()
+    if plan.get("ladder_ledger_sha256") != fingerprint:
+        raise ValueError("ladder exposure ledger differs from the frozen plan")
+    actual = map_identity.checked_maps(seeds, ladder_seeds | set(plan["excluded_reserved_seeds"]), ladder_terrains)
+    if actual != plan["maps"]:
+        raise ValueError("allocated terrain differs from the frozen draw")
     return seeds
 
 
@@ -180,12 +194,16 @@ def cp_interval(n, k, error=0.025):
     return lower(k), 1 - lower(n-k)
 
 
-def verify_terminal_replay(row, raw):
+def verify_terminal_replay(row, raw, expected_terrain=None):
     # Replay recorded actions only. This never reruns the wall-clock opponent.
     from tree_audited_game import exam, prior
     if raw["game_configuration"] != exam.CFG or prior.hashed(raw["actions"]) != row["actions_sha256"]:
         raise ValueError("game configuration or action digest differs")
     sim = exam.FastCarbon(exam.CFG).reset(seed=row["seed"])
+    if expected_terrain is not None:
+        map_identity.verify_observed_map(expected_terrain,row,raw)
+        if map_identity.terrain_sha256(sim.carbon) != expected_terrain:
+            raise ValueError("independently reconstructed initial terrain differs from the frozen plan")
     for index, actions in enumerate(raw["actions"], 1):
         pre_cash = list(sim.cash)
         sim.step(*actions)
@@ -201,7 +219,7 @@ def verify_terminal_replay(row, raw):
         raise ValueError("recorded end state differs from replayed actions")
 
 
-def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False, record_compound=False):
+def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False, record_compound=False, expected_terrain=None):
     path = Path(directory) / f"raw_{row['seed']}_{row['candidate_seat']}.json.gz"
     if row["raw_file"] != path.name or digest(path) != row["raw_sha256"]:
         raise ValueError("raw transcript missing or changed")
@@ -230,7 +248,7 @@ def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False
         raise ValueError("incomplete action history")
     if steps <= 0:
         raise ValueError("empty action history")
-    verify_terminal_replay(row, raw)
+    verify_terminal_replay(row, raw, expected_terrain)
     ext = raw["extinct_by_seat"]
     cash = raw["last_pre_cash"] if any(ext) else raw["last_post_cash"]
     scores = [steps - 301 if ext[seat] else float(cash[seat]) for seat in (0,1)]
@@ -302,6 +320,11 @@ def verdict(plan, games):
     rows = {(g["seed"], g["candidate_seat"]):g for g in games}
     if set(rows) != expected:
         raise ValueError("duplicate, unknown or missing map and seat")
+    if plan.get("schema") == map_identity.SCHEMA:
+        maps = {r["seed"]:r["initial_terrain_u8_sha256"] for r in plan["maps"]}
+        if (len(set(maps.values())) != N
+                or any(r.get("initial_terrain_u8_sha256") != maps[r["seed"]] for r in games)):
+            raise ValueError("one or more adjudicated seats lacks its frozen terrain identity")
     for row in games:
         validate_game(row)
     if plan.get("pack_sha256") == GUARDED_V5:
@@ -335,7 +358,7 @@ def verdict(plan, games):
             "seat_win_rates_simultaneous_95pct_intervals": seat_intervals,
             "maps_with_at_least_one_win": any_win, "maps_with_two_wins": both_win,
             "win_rate_95pct_map_interval": ci, "population_lower_bound_at_least_90_percent": ci[0] >= .90}
-    if plan.get("schema") == "sapling-90-and-income/3":
+    if plan.get("schema") in INCOME_SCHEMAS:
         from income_target import FORMAL_METRIC, TARGET, summarize
         if plan.get("income_metric") != FORMAL_METRIC or plan.get("income_minimum") != TARGET:
             raise ValueError("invalid frozen official margin target")
@@ -378,9 +401,10 @@ def execute():
                 json.dump(dict(utc=stamp(), plan_sha256=digest(args.plan), returncode=status), file)
             raise SystemExit("formal run invalid: keep execution.log; do not reroll a failed game")
         report = json.loads((args.run / "results.json").read_text())
+        frozen_terrains = {m["seed"]:m["initial_terrain_u8_sha256"] for m in plan["maps"]}
         for row in report["games"]:
             verify_raw(args.run, row, plan["pack_sha256"], plan["weight_sha256"], formal=True,
-                       income=plan["schema"] == "sapling-90-and-income/3")
+                       income=plan["schema"] in INCOME_SCHEMAS, expected_terrain=frozen_terrains[row["seed"]])
         if (report["status"] != "complete" or report["header"]["plan_sha256"] != digest(args.plan)
                 or report["verdict"] != verdict(plan, report["games"])):
             raise ValueError("reported final verdict does not match the full game ledger")
@@ -408,17 +432,26 @@ def main():
     if args.out.exists() or args.run.exists():
         parser.error("allocate a fresh plan path and run directory")
     weights, pack = prove_candidate(args.weights, args.pack)
+    fingerprint, ladder_seeds, ladder_terrains = map_identity.ladder_boards()
+    used.update(ladder_seeds)
+    retired_draws = []
     while True:
         nonce = secrets.token_hex(32)
         seeds = seed_list(nonce)
-        if not used.intersection(seeds):
-            break
-    plan = {"schema":"sapling-90-and-income/3", "income_metric":FORMAL_METRIC,
+        try:
+            maps = map_identity.checked_maps(seeds, used, ladder_terrains)
+        except map_identity.OverlappingDraw:
+            used.update(seeds)
+            retired_draws.append(nonce)
+            continue
+        break
+    plan = {"schema":map_identity.SCHEMA, "ladder_ledger_sha256":fingerprint,
+            "retired_draws":retired_draws, "income_metric":FORMAL_METRIC,
             "income_minimum":TARGET, "weight_sha256":weights, "pack_sha256":pack,
             "examiner_md5":EXAMINER, "protocol_sha256":protocol_hashes(), "exclusion_count":len(used),
             "exclusions_sha256":digest(args.exclusions), "nonce":nonce,
             "excluded_reserved_seeds":sorted(s for s in used if RESERVED_RANGE[0] <= s < RESERVED_RANGE[1]),
-            "run_directory":args.run.name, "maps":[{"seed": s} for s in seeds]}
+            "run_directory":args.run.name, "maps":maps}
     validate(plan, weights, pack, EXAMINER, args.run)
     with args.out.open("x") as out:
         json.dump(plan, out, indent=2)

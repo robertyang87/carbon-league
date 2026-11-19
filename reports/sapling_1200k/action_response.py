@@ -153,6 +153,12 @@ def resultfile(card,task):
     return OUT/(card["id"]+"_"+task["family"]+".json.gz")
 
 
+def pin_worker():
+    changes=OUT/"execution.json"
+    default=json.loads(changes.read_bytes())["active_cpu"] if changes.exists() else 4
+    os.sched_setaffinity(0,{int(os.environ.get("SAPLING_RESPONSE_CPU",default))})
+
+
 def work(card,task,paths,plan_hash):
     target=resultfile(card,task)
     if target.exists():
@@ -181,7 +187,7 @@ def work(card,task,paths,plan_hash):
 def main():
     cli=argparse.ArgumentParser(description=__doc__);cli.add_argument("--replays",type=Path,required=True)
     cli.add_argument("--stage",choices=("trainval","test"),required=True);args=cli.parse_args()
-    os.sched_setaffinity(0,{4})
+    pin_worker()
     if b.arena.prior.digest(b.PACK)!=b.SHA:raise ValueError("unexpected parent")
     OUT.mkdir(exist_ok=True);expected=json.loads(json.dumps(plan()));fp=OUT/"plan.json"
     if fp.exists() and json.loads(fp.read_bytes())!=expected:raise ValueError("plan changed")
@@ -191,6 +197,9 @@ def main():
         freeze=json.loads((OUT/"freeze.json").read_bytes())
         if b.arena.prior.digest(OUT/"model.json")!=freeze["model_sha256"] or freeze["plan_sha256"]!=plan_hash:
             raise ValueError("model must be frozen before opening test maps")
+        for name,expected_hash in freeze["code_sha256"].items():
+            if b.arena.prior.digest(HERE/name)!=expected_hash:
+                raise ValueError(f"frozen comparison code differs: {name}")
     paths={f.name.removesuffix(".json.gz"):f for f in args.replays.rglob("*.json.gz")}
     for card in expected["maps"]:
         if (args.stage=="test")!=(card["split"]=="test"):continue

@@ -8,6 +8,7 @@ import random
 import time
 
 import cash_v3_exam as cash
+from map_identity import terrain_sha256
 from it50_v3_audited_seat import audit_after_call, freeze_stats
 
 exam = cash.exam
@@ -23,6 +24,8 @@ def play(job):
     random.seed(7919 * seed + 104729 * side + 31)
     started = time.monotonic()
     sim = exam.FastCarbon(exam.CFG).reset(seed=seed)
+    initial_full_carbon = list(sim.carbon)
+    initial_terrain = terrain_sha256(initial_full_carbon)
     observer = prior.Observer()
     candidate = prior.shared.module(agent_file, "candidate_screen")
     opp = prior.shared.module(prior.SOURCE, "master_original")
@@ -108,6 +111,7 @@ def play(job):
     result = None if margin is None else ("win" if margin > 0 else "loss" if margin < 0 else "draw")
     by_type = Counter(kind for _,kind in search_events)
     raw = {"started":started_utc, "finished":prior.utc(), "seed":seed, "candidate_seat":side,
+           "initial_full_carbon":initial_full_carbon, "initial_terrain_u8_sha256":initial_terrain,
            "pack_sha256":pack_sha, "weight_identity":weight_id, "examiner_md5":prior.EXPECTED_MD5,
            "configuration":configuration, "game_configuration":exam.CFG, "actions":actions_log,
            "search_calls":search_events, "official_score_by_seat":scores, "margin":margin, "result":result,
@@ -128,7 +132,7 @@ def play(job):
         warnings.append("incomplete source search invocations")
     if not complete:
         warnings.append("game did not complete")
-    return dict(**attribution,seed=seed,candidate_seat=side,result=result,margin=margin,official_score_by_seat=scores,
+    return dict(**attribution,initial_terrain_u8_sha256=initial_terrain,seed=seed,candidate_seat=side,result=result,margin=margin,official_score_by_seat=scores,
                 actual_transitions=steps,termination="agent_error" if errors else ("extinction" if any(extinct) else "official_episode_limit"),
                 extinct_by_seat=extinct,agent_calls_by_seat=calls,agent_errors_by_seat=failures,errors=errors,
                 scope="direct original search function wrapped for per-call accounting; raw score saved first",

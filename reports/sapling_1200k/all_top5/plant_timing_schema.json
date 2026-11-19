@@ -1,0 +1,63 @@
+{
+ "choices": [
+  "root",
+  "seat",
+  "worker",
+  "cell",
+  "kind",
+  "price",
+  "neighbor_carbon",
+  "cash_after_price",
+  "remaining_turns",
+  "old_tree_age",
+  "opp_planter_dist",
+  "own_collector_dist",
+  "opp_collector_dist",
+  "alt_adjacent_enemy_tree",
+  "command",
+  "paid",
+  "next_same_worker_paid_in_5",
+  "other_cash_financed",
+  "own_trees",
+  "alive_global_trees",
+  "own_home_dist",
+  "opp_home_dist"
+ ],
+ "purchases": [
+  "root",
+  "seat",
+  "worker",
+  "tree_id",
+  "cell",
+  "kind",
+  "price",
+  "paid_turn",
+  "last_credited_turn",
+  "end_reason",
+  "held_transitions",
+  "absorption",
+  "enemy_worker_absorption",
+  "collision_cash",
+  "payback_transitions",
+  "first_income_transitions"
+ ],
+ "move": [
+  "NONE",
+  "UP",
+  "RIGHT",
+  "DOWN",
+  "LEFT"
+ ],
+ "notes": {
+  "root": "pre-move step, t to t+1",
+  "paid": "0-based index into purchases, null if absent",
+  "next_same_worker_paid_in_5": "observed purchase within next 5 steps by this worker, repeated references may point to same buy",
+  "other_cash_financed": "pre-current-cash below price but paid after intra-turn settlements",
+  "last_credited_turn": "close-account transition (includes first turn after loss); may not equal last positive payment",
+  "payback_transitions": "first transition with cumulative real first-tenure receipts >= full purchase cost, 1 is immediate",
+  "enemy_worker_absorption": "already included in absorption, do not add twice",
+  "first_income_transitions": "first transition with strictly positive economic cash credited to the owner",
+  "neighbor_carbon": "sum of pre-action own-public four cardinal neighbor carbon excluding occupied tree cells",
+  "holding": "count from purchase through the last absorption phase held, not counting a subsequent expiry or seizure; same-transition collision can credit prior owner"
+ }
+}

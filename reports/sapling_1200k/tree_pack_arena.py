@@ -10,6 +10,7 @@ import shutil
 import tempfile
 
 import tree_audited_game as arena
+import map_identity
 
 PRIOR = arena.prior
 
@@ -41,6 +42,7 @@ def main():
         seeds = args.maps
         if any(RESERVED_RANGE[0] <= s < RESERVED_RANGE[1] for s in seeds):
             p.error("these seeds are reserved for independent formal exams")
+    terrains = {r["seed"]:r["initial_terrain_u8_sha256"] for r in plan["maps"]} if plan else {}
     play_match = arena.play
     if plan is not None:
         from compound_formal import D1
@@ -96,9 +98,10 @@ def main():
         invalid = []
         for row in report["games"]:
             try:
-                require_income = plan is not None and plan["schema"] == "sapling-90-and-income/3"
+                require_income = plan is not None and plan["schema"] == map_identity.SCHEMA
                 account = verify_raw(args.run, row, args.pack_sha256, weight_sha, formal=plan is not None,
-                                     income=require_income, record_compound=plan is not None)
+                                     income=require_income, record_compound=plan is not None,
+                                     expected_terrain=terrains.get(row["seed"]))
                 if require_income:
                     row["income_account"] = account
                 validate_game(row)

@@ -34,6 +34,18 @@ class ValidationControls(unittest.TestCase):
     def test_unchanged(self):
         self.assertEqual(self.replay(self.env)["verdict"], "consistent")
 
+    def test_restored_archive_without_transient_receipt(self):
+        with tempfile.TemporaryDirectory() as folder:
+            cache=Path(folder)
+            game=cache/self.row["path"]
+            game.parent.mkdir(parents=True)
+            game.write_bytes((self.cache/self.row["path"]).read_bytes())
+            work=cache/"validation_work"
+            work.mkdir()
+            self.assertEqual(audit.process({"games":[self.row]},cache,work,"test"),1)
+            out=json.loads((work/(self.row["id"]+".json")).read_bytes())
+            self.assertEqual(out["verdict"],"consistent",out["issues"])
+
     def test_changed_visibility_step_and_card(self):
         e=copy.deepcopy(self.env)
         obs=e["steps"][5][1]["observation"]

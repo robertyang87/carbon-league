@@ -1,0 +1,175 @@
+{
+  "games": 1324,
+  "joint_transitions": 394508,
+  "counts": {
+    "games_with_archived_platform_time_control": 1324,
+    "games_with_separate_declared_init_seconds": 0,
+    "opening_post_action_nonempty_info": 0,
+    "opening_post_action_time_named_fields": 0,
+    "decisions": 789016,
+    "visible_cells": 11347030,
+    "visible_zero_cells": 4416210,
+    "unknown_cells": 166181570,
+    "mixed_observed_zero_and_unknown": 770700,
+    "nonempty_recorded_commands": 780788,
+    "subsequent_post_action_nonempty_info": 0,
+    "subsequent_post_action_time_named_fields": 0,
+    "terminal_root_rejections": 1324
+  },
+  "validated_game_certificates_reused": 1324,
+  "index_sha256": "f75c94a45e57f29822f24e90bf4615240361c5251b69a96b956059ba5bf76184",
+  "validation_ledger_sha256": "c05b02e737b4a78f236c839cb8ccde5eed7dfb23009d8e1a2d492c08d2b2a85d",
+  "source_sha256": {
+    "context.py": "0793850fb19851af9441f06f7ea9523e4f5ce7a4029d4f1998889c7e06a0885e",
+    "context_audit.py": "017094535bf171d16d4de75d26a18889805de1d0d03c91a5189dd2d87faa6072",
+    "context_catalog.py": "5ccc1ee1dd08b3222c62d034fe3ae439e5e02ef98483a4389690c79163d760ad",
+    "carbon.json": "8c8545c460506020b2238bc67e9f19c75d917f27595dbb170af68e1adf1e5548",
+    "carbon.py": "72f1f3b561a8715927b809d0e45d621651f9c2c50aaf0109c18a18123a03cc60",
+    "helpers.py": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae",
+    "core.py": "a51d650fe360dd4626c351b744ba6fdcc4e7f14029cd12d024f086e50951b859"
+  },
+  "leakage_checks": {
+    "future_commands_and_cash": true,
+    "outcome_and_seed": true,
+    "opponent_private_grid_time_past_commands": true,
+    "hidden_grid": true,
+    "metadata_isolation": true,
+    "both_seats_open_last_action": true,
+    "explicit_label_positive_control": true
+  },
+  "examples": {
+    "interception": {
+      "id": "011008e4dee32c2fdbfa37044c3c2608-1",
+      "turn": 165,
+      "seat": 1,
+      "unit": "player-1-worker-42",
+      "pre_action_workers": [
+        [
+          4,
+          137.90549999999996,
+          "COLLECTOR"
+        ],
+        [
+          215,
+          142.85729999999998,
+          "COLLECTOR"
+        ]
+      ],
+      "outcome_label": {
+        "victim": "player-0-worker-24",
+        "captured_cargo": 142.85729999999998,
+        "eventual_banked": 142.85729999999998
+      },
+      "source": "defense_traces.jsonl.gz",
+      "ordinal": 6909,
+      "recorded_command_after_query": "RIGHT",
+      "last_observed_entity_states": [
+        {
+          "role": "COLLECTOR",
+          "position": 4,
+          "cargo": 111.42119999999997,
+          "turn": 163,
+          "owner": 1,
+          "own_recorded_command_from_here": null
+        },
+        {
+          "role": "COLLECTOR",
+          "position": 4,
+          "cargo": 127.00019999999996,
+          "turn": 164,
+          "owner": 1,
+          "own_recorded_command_from_here": null
+        },
+        {
+          "role": "COLLECTOR",
+          "position": 4,
+          "cargo": 137.90549999999996,
+          "turn": 165,
+          "owner": 1
+        }
+      ]
+    },
+    "delivery": {
+      "id": "01b56d406361dbb513d6d7417dc0184f-1",
+      "turn": 142,
+      "seat": 0,
+      "unit": "player-0-worker-36",
+      "pre_action_worker": [
+        63,
+        454.82532899999995,
+        "COLLECTOR"
+      ],
+      "outcome_label": {
+        "banked": 454.83
+      },
+      "source": "economy_games/01b56d406361dbb513d6d7417dc0184f-1.md",
+      "ordinal": 8058,
+      "recorded_command_after_query": "RIGHT",
+      "last_observed_entity_states": [
+        {
+          "role": "COLLECTOR",
+          "position": 62,
+          "cargo": 448.56582899999995,
+          "turn": 140,
+          "owner": 0,
+          "own_recorded_command_from_here": "RIGHT"
+        },
+        {
+          "role": "COLLECTOR",
+          "position": 63,
+          "cargo": 448.56582899999995,
+          "turn": 141,
+          "owner": 0,
+          "own_recorded_command_from_here": null
+        },
+        {
+          "role": "COLLECTOR",
+          "position": 63,
+          "cargo": 454.82532899999995,
+          "turn": 142,
+          "owner": 0
+        }
+      ]
+    },
+    "plant": {
+      "id": "003aed5cd8b63c5c4d82dc67e7dd78f2-1",
+      "turn": 19,
+      "seat": 1,
+      "unit": "player-1-worker-3",
+      "pre_action_cash": 32.17,
+      "outcome_label": {
+        "new_tree": "player-1-tree-0",
+        "pos": 215,
+        "age": 1
+      },
+      "source": "economy_games/003aed5cd8b63c5c4d82dc67e7dd78f2-1.md",
+      "ordinal": 39,
+      "recorded_command_after_query": null,
+      "last_observed_entity_states": [
+        {
+          "role": "PLANTER",
+          "position": 199,
+          "cargo": 0,
+          "turn": 17,
+          "owner": 1,
+          "own_recorded_command_from_here": "RIGHT"
+        },
+        {
+          "role": "PLANTER",
+          "position": 200,
+          "cargo": 0,
+          "turn": 18,
+          "owner": 1,
+          "own_recorded_command_from_here": "DOWN"
+        },
+        {
+          "role": "PLANTER",
+          "position": 215,
+          "cargo": 0,
+          "turn": 19,
+          "owner": 1
+        }
+      ]
+    }
+  }
+}

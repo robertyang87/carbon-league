@@ -42,7 +42,7 @@
 - [逐局核验索引](validation_games.jsonl.gz) 含 1,324 条 JSON Lines。按 `id` 关联[总清单](manifest.json)中的原始回放位置。每条保存两席名称、官方分、回放规范与压缩哈希、初盘指纹、帧数、完整匹配推进数、灭绝/故障座序与差异位置。
 - [全量棋盘台账](validation_maps.jsonl.gz) 提供比赛 ID、所载种子及确实见过的初盘字节指纹。[机器摘要](validation.json) 给出总数、冻结清单及代码 SHA-256 和独立原版四局的 ID 与步数。
 - [核验程序](validation.py) 可从仓库归档在新路径执行。已存在缓存时运行第二条即可。归档恢复模式直接校验清单中的源哈希，无需下载时临时产生的收据。
-- [四项回放对照](validation_tests.py) 覆盖未改动原件、植入可见碳/步号/计分差异、改写早期命令和合成平台超时。[终考地图门测试](../test_map_identity.py) 覆盖数值等价、同盘异种、同批重复、有效新盘、双方录制和旧录像的读取边界。
+- [五项回放对照](validation_tests.py) 覆盖未改动原件、无临时收据的归档复验、植入可见碳/步号/计分差异、改写早期命令和合成平台超时。[终考地图门测试](../test_map_identity.py) 覆盖数值等价、同盘异种、同批重复、有效新盘、双方录制和旧录像的读取边界。
 
 ```sh
 python reports/sapling_1200k/all_top5/fetch.py --restore /tmp/carbon-top5 --assets-ref 59eaaecd

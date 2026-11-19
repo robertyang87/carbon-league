@@ -96,8 +96,10 @@ def evaluate():
     frozen=json.loads((OUT/"freeze.json").read_bytes())
     if digest(OUT/"model.json")!=frozen["model_sha256"]:raise ValueError("model bytes differ")
     res={}
+    plan=json.loads((OUT/"plan.json").read_bytes())
     for split in ("train","val","test"):
         r=rows(split);pred=scores(model,r);n=len(r)
+        planned=[c for c in plan["maps"] if c["split"]==split]
         true=np.array([q["du"] for q in r],float)
         map_roots=Counter(q["id"] for q in r)
         weights=np.array([1./map_roots[q["id"]] for q in r],float)
@@ -114,7 +116,16 @@ def evaluate():
         for fam in ar.FAMILIES:
             ids=[i for i,q in enumerate(r) if q["family"]==fam]
             by_family[fam]={name:metric([r[i] for i in ids],v[ids]) for name,v in methods.items()}
-        res[split]={"overall":{name:metric(r,v) for name,v in methods.items()},"by_family":by_family,
+        overall={name:metric(r,v) for name,v in methods.items()}
+        for name,v in methods.items():
+            by_id=defaultdict(float)
+            for obs,p in zip(r,v):
+                by_id[obs["id"]]+=float(p)*obs["du"]
+            overall[name]["all_scheduled_mean_map_u_with_no_action_zero"]=float(np.mean(
+                [by_id[c["id"]]/len(c["tasks"]) for c in planned]))
+        res[split]={"overall":overall,"by_family":by_family,
+                    "coverage":{"scheduled_maps":len(planned),"scheduled_tasks":sum(len(c["tasks"]) for c in planned),
+                                "eligible_maps":len(map_roots),"eligible_roots":n},
                     "training_head_prediction":diagnostics,
                     "rows":[{k:v for k,v in q.items() if k!="x"}|{"public_action_difference":q["x"],"pred_delta_u":float(z)}
                             for q,z in zip(r,pred)]}
@@ -123,6 +134,7 @@ def evaluate():
 
 
 if __name__=="__main__":
+    ar.pin_worker()
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument("stage",choices=("fit","evaluate"))
     if ap.parse_args().stage=="fit":fit()
     else:evaluate()
