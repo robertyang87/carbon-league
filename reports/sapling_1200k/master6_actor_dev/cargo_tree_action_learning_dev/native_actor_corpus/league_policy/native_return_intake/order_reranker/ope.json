@@ -1,0 +1,783 @@
+{
+  "adverse_pairs": [
+    {
+      "delta_u": -0.000827588879234461,
+      "seat": 1,
+      "seed": 621758460,
+      "u_a": 0.1808469124649726,
+      "u_b": 0.17566934831393688,
+      "w_a": 0.7297409543247315,
+      "w_b": 1.0494236680846034
+    },
+    {
+      "delta_u": -0.0027209695063505606,
+      "seat": 0,
+      "seed": 621758461,
+      "u_a": 0.11821794470571129,
+      "u_b": 0.11041638304219445,
+      "w_a": 0.8917299881335531,
+      "w_b": 1.5892748192088189
+    },
+    {
+      "delta_u": -0.002193521562103669,
+      "seat": 1,
+      "seed": 621758461,
+      "u_a": 0.03132802634317422,
+      "u_b": 0.05068519093134399,
+      "w_a": 0.9222646826280959,
+      "w_b": 0.6956280228928937
+    },
+    {
+      "delta_u": -0.02619201612796082,
+      "seat": 1,
+      "seed": 621758463,
+      "u_a": 0.11345254483315234,
+      "u_b": 0.18878560988352566,
+      "w_a": 1.4886860302107294,
+      "w_b": 0.7933202937855122
+    },
+    {
+      "delta_u": -0.0077173365999899666,
+      "seat": 0,
+      "seed": 621758464,
+      "u_a": 0.061746511708529045,
+      "u_b": 0.11436025793764662,
+      "w_a": 1.2510263216989592,
+      "w_b": 0.9576681347953615
+    },
+    {
+      "delta_u": -0.012509395975554916,
+      "seat": 0,
+      "seed": 621758465,
+      "u_a": 0.02055568916235523,
+      "u_b": 0.10349215613029311,
+      "w_a": 1.3887361691421174,
+      "w_b": 1.087074031052949
+    },
+    {
+      "delta_u": -0.016731367362360843,
+      "seat": 1,
+      "seed": 621758465,
+      "u_a": 0.1646657647855817,
+      "u_b": 0.10709513139709292,
+      "w_a": 0.35397512181247276,
+      "w_b": 0.935221718474245
+    }
+  ],
+  "by_physical_seat": [
+    {
+      "max_delta_u": 0.011573012722922387,
+      "mean_delta_u": -0.0004536191362265305,
+      "min_delta_u": -0.012509395975554916,
+      "positive_map_seats": 3,
+      "seat": 0
+    },
+    {
+      "max_delta_u": 0.0009072286046888418,
+      "mean_delta_u": -0.0074914242405878795,
+      "min_delta_u": -0.02619201612796082,
+      "positive_map_seats": 2,
+      "seat": 1
+    }
+  ],
+  "estimator": "Mean over 6 physical maps and 2 seats of (W_a-W_b)(U_a-U_b)/2. W is the product of target/behavior probabilities for actually issued orders with no clipping, self-normalization or ignored losses.",
+  "estimator_sha256": "79981db75e4ab365211ddfad225094bb42ce58cba83e6d982a9914bf1d3e0086",
+  "expected_trajectories": 24,
+  "gate": false,
+  "limitations": "Six cross-fitted policies share training maps. Deletion range and map SE describe instability; they do not establish independent validation of the eventual all-map fit, population win rate, or a gain in future games. Valid only with both target orders entirely on the behavior support, other dispatch steps unchanged and a predictor trained before seeing the held-out map.",
+  "map_sensitivity": {
+    "delete_one_map_mean_delta_u": {
+      "621758460": -0.005841568410457439,
+      "621758461": -0.004275576919243223,
+      "621758462": -0.005238605318855207,
+      "621758463": -0.0026322654351562742,
+      "621758464": -0.004004164354434017,
+      "621758465": -0.00184294969229707
+    },
+    "descriptive_map_sd": 0.007589634658776469,
+    "descriptive_map_se": 0.003098455374690778,
+    "range": [
+      -0.005841568410457439,
+      -0.00184294969229707
+    ]
+  },
+  "mean_delta_u": -0.003972521688407205,
+  "nonpositive_maps": [
+    621758461,
+    621758463,
+    621758464,
+    621758465
+  ],
+  "out_of_fold_packages": {
+    "621758460": "a8ea1559433fcb12e3efeec886b899cac954ae0e8cd8ef607011603010c99cef",
+    "621758461": "f1aa5fa581468b4bee5b5905e42cd7e2d35219d793e4b8e718ab3b219f7b5f27",
+    "621758462": "984577e64b6b4de80e48a6184159a5e683202f0b3890f8d9507a0a90ebf7dc30",
+    "621758463": "a99ba57fa98d1b9cb4c1f5ded75751c35daef81bc1bcbdbed4747a12efd0b0eb",
+    "621758464": "76da071e9a65b5d853d5c8484fee1b33db2a605af51be016ee486f2d9083c1c6",
+    "621758465": "d0c8fb786ae9786364645d71dd04bdd8e8d782532ab4cf9bbff4a44be929d458"
+  },
+  "paired_map_seats": 12,
+  "pairs": [
+    {
+      "delta_u": 0.011573012722922387,
+      "seat": 0,
+      "seed": 621758460,
+      "u_a": 0.15693157874113745,
+      "u_b": 0.0492759125677098,
+      "w_a": 1.1528984360747128,
+      "w_b": 0.9378979045786953
+    },
+    {
+      "delta_u": -0.000827588879234461,
+      "seat": 1,
+      "seed": 621758460,
+      "u_a": 0.1808469124649726,
+      "u_b": 0.17566934831393688,
+      "w_a": 0.7297409543247315,
+      "w_b": 1.0494236680846034
+    },
+    {
+      "delta_u": -0.0027209695063505606,
+      "seat": 0,
+      "seed": 621758461,
+      "u_a": 0.11821794470571129,
+      "u_b": 0.11041638304219445,
+      "w_a": 0.8917299881335531,
+      "w_b": 1.5892748192088189
+    },
+    {
+      "delta_u": -0.002193521562103669,
+      "seat": 1,
+      "seed": 621758461,
+      "u_a": 0.03132802634317422,
+      "u_b": 0.05068519093134399,
+      "w_a": 0.9222646826280959,
+      "w_b": 0.6956280228928937
+    },
+    {
+      "delta_u": 0.003808564322976769,
+      "seat": 0,
+      "seed": 621758462,
+      "u_a": 0.05801163317056818,
+      "u_b": 0.03878538416115104,
+      "w_a": 1.1817156489671392,
+      "w_b": 0.7855318357739042
+    },
+    {
+      "delta_u": 0.0009072286046888418,
+      "seat": 1,
+      "seed": 621758462,
+      "u_a": 0.059052965683549674,
+      "u_b": 0.12831390717990698,
+      "w_a": 1.296142776754321,
+      "w_b": 1.3223401857149415
+    },
+    {
+      "delta_u": 0.004844410218637104,
+      "seat": 0,
+      "seed": 621758463,
+      "u_a": 0.12614933713749127,
+      "u_b": 0.10303576724957378,
+      "w_a": 1.0720822670384722,
+      "w_b": 0.6528990562987503
+    },
+    {
+      "delta_u": -0.02619201612796082,
+      "seat": 1,
+      "seed": 621758463,
+      "u_a": 0.11345254483315234,
+      "u_b": 0.18878560988352566,
+      "w_a": 1.4886860302107294,
+      "w_b": 0.7933202937855122
+    },
+    {
+      "delta_u": -0.0077173365999899666,
+      "seat": 0,
+      "seed": 621758464,
+      "u_a": 0.061746511708529045,
+      "u_b": 0.11436025793764662,
+      "w_a": 1.2510263216989592,
+      "w_b": 0.9576681347953615
+    },
+    {
+      "delta_u": 8.87198834436783e-05,
+      "seat": 1,
+      "seed": 621758464,
+      "u_a": 0.14904811092161663,
+      "u_b": 0.10402828076692058,
+      "w_a": 0.9720714792903172,
+      "w_b": 0.9681301102030141
+    },
+    {
+      "delta_u": -0.012509395975554916,
+      "seat": 0,
+      "seed": 621758465,
+      "u_a": 0.02055568916235523,
+      "u_b": 0.10349215613029311,
+      "w_a": 1.3887361691421174,
+      "w_b": 1.087074031052949
+    },
+    {
+      "delta_u": -0.016731367362360843,
+      "seat": 1,
+      "seed": 621758465,
+      "u_a": 0.1646657647855817,
+      "u_b": 0.10709513139709292,
+      "w_a": 0.35397512181247276,
+      "w_b": 0.935221718474245
+    }
+  ],
+  "per_heldout_map": [
+    {
+      "delta_u": 0.005372711921843963,
+      "ess": 3.897477009545211,
+      "held_out_seed": 621758460,
+      "mean_w": 0.9674902407656858,
+      "seat_delta_u": [
+        0.011573012722922387,
+        -0.000827588879234461
+      ],
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887"
+    },
+    {
+      "delta_u": -0.002457245534227115,
+      "ess": 3.6088821736381083,
+      "held_out_seed": 621758461,
+      "mean_w": 1.0247243782158404,
+      "seat_delta_u": [
+        -0.0027209695063505606,
+        -0.002193521562103669
+      ],
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d"
+    },
+    {
+      "delta_u": 0.0023578964638328054,
+      "ess": 3.864132236493886,
+      "held_out_seed": 621758462,
+      "mean_w": 1.1464326118025765,
+      "seat_delta_u": [
+        0.003808564322976769,
+        0.0009072286046888418
+      ],
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab"
+    },
+    {
+      "delta_u": -0.01067380295466186,
+      "ess": 3.631597736770595,
+      "held_out_seed": 621758463,
+      "mean_w": 1.001746911833366,
+      "seat_delta_u": [
+        0.004844410218637104,
+        -0.02619201612796082
+      ],
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30"
+    },
+    {
+      "delta_u": -0.003814308358273144,
+      "ess": 3.9440386131750342,
+      "held_out_seed": 621758464,
+      "mean_w": 1.037224011496913,
+      "seat_delta_u": [
+        -0.0077173365999899666,
+        8.87198834436783e-05
+      ],
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257"
+    },
+    {
+      "delta_u": -0.01462038166895788,
+      "ess": 3.448757817327267,
+      "held_out_seed": 621758465,
+      "mean_w": 0.941251760120446,
+      "seat_delta_u": [
+        -0.012509395975554916,
+        -0.016731367362360843
+      ],
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3"
+    }
+  ],
+  "physical_maps": 6,
+  "positive_maps": 2,
+  "same_policy_delta": 0.0,
+  "schema": "sapling-paired-native-sixfold-is/1",
+  "source_sha256": {
+    "full_package": "d0985f023769c9c06e75ce74a0d33166c3e26c3b846f72e3eaf6f92632159232",
+    "manifest": "63daa51e127aafea36401ebdce6400de60faa772d3929a1803ce768e121be5b4",
+    "plan": "9bb0f2ce651061037bdf0ecae35bb6a0351bfbbf25809d6280eec5a308c8e291",
+    "predictions": "9b59da185c193a28875c441db37f0500c484f8ed3a4624278fc68a6d2754566c",
+    "weights": "7b7763b3ee5cb7bcce91500ff9d0f639682c92ba927fbab896faa3d8150ae3fa"
+  },
+  "source_supported_events": 275,
+  "source_win_draw_loss": [
+    0,
+    0,
+    24
+  ],
+  "source_workflow_run": 44627147347,
+  "target_replay_required": true,
+  "trajectories": [
+    {
+      "arm": "draw_a",
+      "log_w": 0.14227915074159359,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.1637662413094567,
+        108
+      ],
+      "min_realized_ratio_and_step": [
+        0.8894520102068767,
+        228
+      ],
+      "seat": 0,
+      "seed": 621758460,
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+      "u": 0.15693157874113745,
+      "w": 1.1528984360747128,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": -0.06411417963255556,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.1490129238866458,
+        12
+      ],
+      "min_realized_ratio_and_step": [
+        0.9019963490370551,
+        84
+      ],
+      "seat": 0,
+      "seed": 621758460,
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+      "u": 0.0492759125677098,
+      "w": 0.9378979045786953,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": -0.315065664905785,
+      "logged_decisions": 10,
+      "max_realized_ratio_and_step": [
+        1.1370817440643988,
+        84
+      ],
+      "min_realized_ratio_and_step": [
+        0.8901805908535847,
+        276
+      ],
+      "seat": 1,
+      "seed": 621758460,
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+      "u": 0.1808469124649726,
+      "w": 0.7297409543247315,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": 0.048241125937048934,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.1431729039614698,
+        228
+      ],
+      "min_realized_ratio_and_step": [
+        0.9055364632552577,
+        204
+      ],
+      "seat": 1,
+      "seed": 621758460,
+      "terrain": "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+      "u": 0.17566934831393688,
+      "w": 1.0494236680846034,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": -0.11459189611234794,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1778684126774377,
+        12
+      ],
+      "min_realized_ratio_and_step": [
+        0.8683040632675694,
+        156
+      ],
+      "seat": 0,
+      "seed": 621758461,
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+      "u": 0.11821794470571129,
+      "w": 0.8917299881335531,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": 0.46327782364421016,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.180013654703258,
+        180
+      ],
+      "min_realized_ratio_and_step": [
+        0.9198640648324671,
+        60
+      ],
+      "seat": 0,
+      "seed": 621758461,
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+      "u": 0.11041638304219445,
+      "w": 1.5892748192088189,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": -0.08092302218958058,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.1461769022934516,
+        108
+      ],
+      "min_realized_ratio_and_step": [
+        0.8735192700574549,
+        228
+      ],
+      "seat": 1,
+      "seed": 621758461,
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+      "u": 0.03132802634317422,
+      "w": 0.9222646826280959,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": -0.36294021138348587,
+      "logged_decisions": 10,
+      "max_realized_ratio_and_step": [
+        1.1237483921819011,
+        84
+      ],
+      "min_realized_ratio_and_step": [
+        0.8722373921489769,
+        180
+      ],
+      "seat": 1,
+      "seed": 621758461,
+      "terrain": "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+      "u": 0.05068519093134399,
+      "w": 0.6956280228928937,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": 0.16696732233315725,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1856173249731659,
+        252
+      ],
+      "min_realized_ratio_and_step": [
+        0.876073498986179,
+        204
+      ],
+      "seat": 0,
+      "seed": 621758462,
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+      "u": 0.05801163317056818,
+      "w": 1.1817156489671392,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": -0.24139429279660685,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.122592308879697,
+        276
+      ],
+      "min_realized_ratio_and_step": [
+        0.8939019805491376,
+        156
+      ],
+      "seat": 0,
+      "seed": 621758462,
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+      "u": 0.03878538416115104,
+      "w": 0.7855318357739042,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": 0.25939275911082177,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1313943630486152,
+        180
+      ],
+      "min_realized_ratio_and_step": [
+        0.9135067837664818,
+        252
+      ],
+      "seat": 1,
+      "seed": 621758462,
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+      "u": 0.059052965683549674,
+      "w": 1.296142776754321,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": 0.27940303488867646,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.128839899848003,
+        156
+      ],
+      "min_realized_ratio_and_step": [
+        0.9069067243278685,
+        252
+      ],
+      "seat": 1,
+      "seed": 621758462,
+      "terrain": "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+      "u": 0.12831390717990698,
+      "w": 1.3223401857149415,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": 0.06960280134448704,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.12959622911634,
+        204
+      ],
+      "min_realized_ratio_and_step": [
+        0.8978656864370467,
+        108
+      ],
+      "seat": 0,
+      "seed": 621758463,
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+      "u": 0.12614933713749127,
+      "w": 1.0720822670384722,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": -0.4263327461899654,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.0637875315031031,
+        132
+      ],
+      "min_realized_ratio_and_step": [
+        0.8541697786362478,
+        12
+      ],
+      "seat": 0,
+      "seed": 621758463,
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+      "u": 0.10303576724957378,
+      "w": 0.6528990562987503,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": 0.39789387197206655,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.144785304336589,
+        276
+      ],
+      "min_realized_ratio_and_step": [
+        0.9536490537274983,
+        84
+      ],
+      "seat": 1,
+      "seed": 621758463,
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+      "u": 0.11345254483315234,
+      "w": 1.4886860302107294,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": -0.23152823752462215,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.0774029517817418,
+        228
+      ],
+      "min_realized_ratio_and_step": [
+        0.8685711867328534,
+        36
+      ],
+      "seat": 1,
+      "seed": 621758463,
+      "terrain": "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+      "u": 0.18878560988352566,
+      "w": 0.7933202937855122,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": 0.2239642717901713,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1865632817882947,
+        12
+      ],
+      "min_realized_ratio_and_step": [
+        0.8917886098497264,
+        36
+      ],
+      "seat": 0,
+      "seed": 621758464,
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+      "u": 0.061746511708529045,
+      "w": 1.2510263216989592,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": -0.043253975645301646,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1674969222793092,
+        108
+      ],
+      "min_realized_ratio_and_step": [
+        0.8958665320354612,
+        276
+      ],
+      "seat": 0,
+      "seed": 621758464,
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+      "u": 0.11436025793764662,
+      "w": 0.9576681347953615,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": -0.028325938860987,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1352529720372413,
+        228
+      ],
+      "min_realized_ratio_and_step": [
+        0.9031334852626002,
+        180
+      ],
+      "seat": 1,
+      "seed": 621758464,
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+      "u": 0.14904811092161663,
+      "w": 0.9720714792903172,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": -0.032388789371208315,
+      "logged_decisions": 11,
+      "max_realized_ratio_and_step": [
+        1.168895600234909,
+        12
+      ],
+      "min_realized_ratio_and_step": [
+        0.882221582551278,
+        276
+      ],
+      "seat": 1,
+      "seed": 621758464,
+      "terrain": "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+      "u": 0.10402828076692058,
+      "w": 0.9681301102030141,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": 0.32839410270851255,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1908084083161719,
+        108
+      ],
+      "min_realized_ratio_and_step": [
+        0.8943651693643965,
+        276
+      ],
+      "seat": 0,
+      "seed": 621758465,
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+      "u": 0.02055568916235523,
+      "w": 1.3887361691421174,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": 0.0834897116644539,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1734861772519831,
+        108
+      ],
+      "min_realized_ratio_and_step": [
+        0.8982597668768776,
+        228
+      ],
+      "seat": 0,
+      "seed": 621758465,
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+      "u": 0.10349215613029311,
+      "w": 1.087074031052949,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_a",
+      "log_w": -1.0385286456838285,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.0750570889790283,
+        12
+      ],
+      "min_realized_ratio_and_step": [
+        0.872077041515944,
+        84
+      ],
+      "seat": 1,
+      "seed": 621758465,
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+      "u": 0.1646657647855817,
+      "w": 0.35397512181247276,
+      "zero_trajectory_weight": false
+    },
+    {
+      "arm": "draw_b",
+      "log_w": -0.0669716457467966,
+      "logged_decisions": 12,
+      "max_realized_ratio_and_step": [
+        1.1514277494586995,
+        156
+      ],
+      "min_realized_ratio_and_step": [
+        0.8974033037062606,
+        84
+      ],
+      "seat": 1,
+      "seed": 621758465,
+      "terrain": "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+      "u": 0.10709513139709292,
+      "w": 0.935221718474245,
+      "zero_trajectory_weight": false
+    }
+  ],
+  "weights": {
+    "ess": 22.322593634573952,
+    "expected_count": 24,
+    "max": 1.5892748192088189,
+    "mean": 1.0198116523724712,
+    "min": 0.35397512181247276,
+    "sum": 24.47547965693931
+  }
+}
