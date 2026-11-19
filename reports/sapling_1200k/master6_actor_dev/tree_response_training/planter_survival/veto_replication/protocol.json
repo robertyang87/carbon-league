@@ -1,0 +1,25 @@
+{
+  "schema": "planter-one-transition-veto-replication/1",
+  "intent": "Replication on two intake_03 training-source terrains outside the estimator's fit and earlier evaluation. Registered before this investigator inspected their worker-order consequences. These are prospective analyses of existing trajectories, not new policy games.",
+  "maps": [621473120, 621473121],
+  "seats": [0, 1],
+  "frozen": {
+    "weights.json": "1efe7d4fbcbda256362e6204c5e42fe68216c166c9e5fd4560f5a96050323e3f",
+    "extract.py": "506fc801cdb7c5d46baccd16739d89ebc771dcddaa60e76f00bb176cfdb873a6",
+    "model.py": "385f9fda13dc80a0011742418109efcd40bb2ab36f7027242e5e6d89c3615f46",
+    "protocol.json": "0aa6b73056779509b7f6d785ebeaccbff6262df245323b2ffc3d32515ba9151e",
+    "probability_baseline.json": "d7c33a7ff83014155628272df2d9ee5041cf53a08d06695facd05b6f2e0a4367"
+  },
+  "source": {
+    "protocol_sha256": "2485663b16ded98c60441ddbf5e14ae7090d5ef9c3ce6909204a7d3b7c16a5eb",
+    "receipt_sha256": "57fda758fe5998b507b0c0e13c65b179e6ba074d6a14dd249a9938d91ceec66a",
+    "opportunities_sha256": "3409d4c8c194e8795b681e2dfaaef03b17e5e42e51debc7b7e9618e8baed548d",
+    "official_replay_sha256": "bd7b89865a891b01ef80fdd7d460f1d0b5128151ce212c1c92c15d4d6253a86a"
+  },
+  "risk": { "minimum_stay_probability": 0.2, "minimum_reduction": 0.05 },
+  "eligible": "Inspect all recorded planter roots with real v1's NONE, a strictly positive pre-action price, and can_pay_now after friendly costs/reservations, plus an entry-legal conflict-free movement from extract.pair. Do not condition on later payment or survival. Other source commands are held as submitted. At most one prospective order per physical seat/turn per rule, choose first triggered worker in lexicographic public UID order; also report all isolated triggers. Changing one worker now has no implied later-policy trajectory.",
+  "choice": "Given a v1 hold, extract.pair chooses the legal neighbor minimizing sha256(seed|seat|turn|uid|cmd) in pre-action opportunity data. It takes no opponent simultaneous command or next state. Probabilities use only acting-seat observation, own approved orders, and three preceding public observations. Fire on p_stay >= .20 and p_stay >= p_move + .05. Otherwise retain all original commands.",
+  "comparators": "Same-eligibility, same physical moves and tie-breaking for each rule. Binary public reach veto uses 1 for threatened, 0 for unthreatened, and the same .20/.05 cutoffs. An additional probability baseline uses the frozen training-only contact_constant within that envelope, 0 outside; identical thresholds. Always-v1 uses no veto.",
+  "evaluation": "For each seat, map and all four source trajectories record all roots, retained opportunities, actual vetoes, direction of deaths and missed preventable deaths among feasible roots. Itemize lost original same-turn focal acquisitions and observed debits. Geometric and estimated-rate flags are scored on the exact same opportunities. A root where both arms die is separately counted; missed preventable means v1 dies and the preselected alternative survives but no veto was issued. Give counts and equal-map descriptive results. No refitting, terminal-return or win-rate claims and no final exam.",
+  "compute": "Reuse source, frozen opportunity generator, sample extractor and official Board versus FastCarbon step on original and alternative with actual simultaneous non-focal orders, with per-map/seat progress. One low-priority CPU, after ongoing validation extraction."
+}
