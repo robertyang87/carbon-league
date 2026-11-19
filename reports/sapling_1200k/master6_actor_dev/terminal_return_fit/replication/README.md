@@ -48,3 +48,5 @@
 ## 身份与证据
 
 父代提交包 SHA-256 为 `416cc31b8da7d38cc97f66903fbe2797d7eadda0ee175f105227057afe5d3874`。终局回报候选为 `9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0`。两者沿用 it50 / Sapling 的 75/25 混合。候选只应用在训练图冻结的四参数。复查前先将完整比赛包和权重清单逐字核对，逐场验证考官默认设置、每步搜索记录与官方计分。[已冻检查点](../learned_checkpoint.json) · [复算入口](run.py) · [父代官方回放](parent/official_replay.json) · [候选官方回放](learned/official_replay.json)
+
+[逐树持有期、各阶段合法落点、建树与失树复盘](tree_gap/README.md)复算了两臂八条完整轨迹。候选少收的树息约有 81% 可分解到持树回合少。扣除双方实际种树与夺树支出，候选场均树经济净差为 −967.67。
