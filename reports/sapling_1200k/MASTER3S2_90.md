@@ -2,7 +2,7 @@
 
 ## 当前胜绩与验收
 
-精确到同一单文件，Sapling 首胜包 `8da4b465` 在 10 张首次登记的开发图对原版 Master3s2 共 **2 胜 0 平 18 负（10%）**，场均官方分差 **−1164.13**。席 0 为 0/10，席 1 为 2/10。以整张图为单位重抽，观察胜率的描述性 95% 区间为 0%–25%，平均分差区间为 −1590.22 至 −792.81。前 8 场保留本机考官逐拍时钟，后 12 场使用每席独立限额执行器。另列的一场同图同席复测为负。100 张正式新图仍封存，验收要求同一批 200 局至少赢 180 局且平均官方分差至少 +500。[逐场身份、两席与墙钟](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/incumbent_history/README.md) · [两次胜局与十八次败局的回款对照](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/incumbent_history/cash_paths/README.md)
+精确到同一单文件，Sapling 首胜包 `8da4b465` 在 10 张首次登记的开发图对原版 Master3s2 共 **2 胜 0 平 18 负（10%）**，场均官方分差 **−1164.13**。席 0 为 0/10，席 1 为 2/10。以整张图为单位重抽，观察胜率的描述性 95% 区间为 0%–25%，平均分差区间为 −1590.22 至 −792.81。前 8 场保留本机考官逐拍时钟，后 12 场使用每席独立限额执行器。另列的一场同图同席复测为负。正式考试已保留号段、固定为 100 张新图换席。尚未抽取正式地图，也未开考。验收要求同一批 200 局至少赢 180 局且平均官方分差至少 +500。[逐场身份、两席与墙钟](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/incumbent_history/README.md) · [两次胜局与十八次败局的回款对照](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/incumbent_history/cash_paths/README.md)
 
 最新的独立开发对照中，首胜包 `8da4b465` 在第二张不同的新图赢了原版 Master3s2。图 621758400，席 1，**7496.01 比 7013.31（+482.70）**。本批两张新图换席，原包 **1 胜 3 负**，平均官方分差 **−782.27**。重训全骨干 `6c548995` 对同一考官 **0 胜 4 负**（两席各 0/2），平均 **−2076.33**，四个配对分差均下降。两图各自的平均下降为 1595.46 和 992.67 分。新版每局自身平均少交仓 624.68、额外招工支出 300、额外种树支出 227.51。本轮保留原包。八场正常打满 299 步，双方均无慢步、超时或内部错误。原版共 2388 次正深搜索、4 次单候选；100 张独立正式考卷仍保留。[全部八局、逐步时钟及现金转折](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/hosted/README.md)
 
