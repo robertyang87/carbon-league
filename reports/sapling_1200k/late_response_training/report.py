@@ -71,7 +71,7 @@ def main():
         label="训练" if r["split"]=="train" else "留出"
         lines.append(f"| {seed}／{who['seat']}（{label}） | {f} t{who['turn']}，{r['from_action']}→{r['to_action']} | {'／'.join(direction)} | {r['targets']['mean_delta_u']:+.5f} | {use} |")
     out=["# 终局前 5–12 步，返库与堵截的真实响应标签","",
-         f"三张已曝光开发图各取两个不同的合法动作根，每根给原版 Master3s2 两次独立采样。共 {len(rows)} 根、{len(results)} 对、{total['search_arms']} 臂。与亲本原动作相比，{total['pos']} 对终局分差提高、{total['neg']} 对降低、{total['equal']} 对持平。每种替代动作只在它自己的真实地图、席位和同一对随机流里与亲本比较。分母按地图或根报告时，两次采样必须合并。[选图与选根协议](protocol.json) · [所有事前合格机会的分母与选择](roots.json)","",
+         f"三张已曝光开发图各取两个不同的合法动作根，每根给原版 Master3s2 两次独立采样。共 {len(rows)} 根、{len(results)} 对、{total['search_arms']} 臂。与亲本原动作相比，{total['pos']} 对终局分差提高、{total['neg']} 对降低、{total['equal']} 对持平。这些分支的 Sapling 终局计 {total['W']} 胜、{total['D']} 平、{total['L']} 负；它们共享历史前缀，不能当作从开局抽取的独立正式考试。每种替代动作只在它自己的真实地图、席位和同一对随机流里与亲本比较。分母按地图或根报告时，两次采样必须合并。[选图与选根协议](protocol.json) · [所有事前合格机会的分母与选择](roots.json)","",
          "| 地图／Sapling 席 | 动作 | 两次配对 Δ 分差 | 平均 ΔU | 目标工实际存入：原→改，两次 |","| --- | --- | ---: | ---: | --- |",*lines,"",
          "返库行最后一列追踪本方所改工人，堵截行追踪入选的敌方工人；这直接区分所改动作有没有影响目标现金。整体终局分差还包括两边其他工人的交付、树收入、碰撞、招工和种树成本。独立账本逐拍对齐原版解释器，并检查各项双方现金差变化之和等于正式分差变化。[逐对分项、终局和动作路径](arms/)",""]
     # Describe the strongest directional contradiction without discarding any rows.
