@@ -1,0 +1,212 @@
+{
+  "schema": "sapling-conditional-extinction/1",
+  "scope": "Training-only probe. Fixed four distinct maps with alternating seats. All roots after decision step 10 with 1-2 workers, no trees, and cash below recruitment price counted. Every one-worker root enumerated; both the opponent and our bases retain their logged commands. The label measures only next-step candidate extinction conditional on those simultaneous commands. It is not the opponent action distribution, a winning move, or a terminal return.",
+  "sources": {
+    "data/weights/sapling_1200k/agent_int8.py": "f260f05dd229f84df2ad1d478a9f4861b7e24f6e0c4f6b74e9885212ea430ad3",
+    "code/policy_raid_v0_1.py": "a569594a78e0ed5632aa7921399a9e906f2ddbe5b237529d9c0ffb6b1ec5bdc5",
+    "code/eval_v53.py": "ef3301e8e7d1cea39ce015e2a1c0e010c544842a7dfebefb398c458363f60d86",
+    "code/fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "reports/sapling_1200k/survival_branch_probe.py": "cd2a2e1a4b9926ff054f44dcce59a669ecf7c34be3c078e4c80ea29ae9cce133"
+  },
+  "embedded_feature_sha256": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+  "maps": [
+    {
+      "seed": 620089740,
+      "seat": 0,
+      "decisions": 299,
+      "own_terminal_extinction": false,
+      "opponent_terminal_extinction": false,
+      "normal_limit": true,
+      "last_worker_root_categories": {},
+      "scarce_root_counts": {},
+      "examples": {}
+    },
+    {
+      "seed": 620089741,
+      "seat": 1,
+      "decisions": 299,
+      "own_terminal_extinction": false,
+      "opponent_terminal_extinction": false,
+      "normal_limit": true,
+      "last_worker_root_categories": {
+        "all_actions_survive": 143
+      },
+      "scarce_root_counts": {
+        "own_workers_2": 95,
+        "own_workers_1": 143
+      },
+      "examples": {
+        "all_actions_survive": {
+          "seed": 620089741,
+          "seat": 1,
+          "step": 156,
+          "worker": "player-1-worker-0",
+          "worker_public": [
+            70,
+            0,
+            "COLLECTOR"
+          ],
+          "preceding_states": [
+            {
+              "step": 153,
+              "workers": 2,
+              "trees": 0,
+              "cash": 14.52
+            },
+            {
+              "step": 154,
+              "workers": 2,
+              "trees": 0,
+              "cash": 14.52
+            },
+            {
+              "step": 155,
+              "workers": 2,
+              "trees": 0,
+              "cash": 14.52
+            },
+            {
+              "step": 156,
+              "workers": 1,
+              "trees": 0,
+              "cash": 14.52
+            }
+          ],
+          "logged_canonical_action": "NONE",
+          "extinct_by_canonical_action": {
+            "NONE": false,
+            "UP": false,
+            "RIGHT": false,
+            "DOWN": false,
+            "LEFT": false
+          }
+        }
+      }
+    },
+    {
+      "seed": 620089742,
+      "seat": 0,
+      "decisions": 299,
+      "own_terminal_extinction": false,
+      "opponent_terminal_extinction": false,
+      "normal_limit": true,
+      "last_worker_root_categories": {},
+      "scarce_root_counts": {
+        "own_workers_2": 175
+      },
+      "examples": {}
+    },
+    {
+      "seed": 620089743,
+      "seat": 1,
+      "decisions": 299,
+      "own_terminal_extinction": false,
+      "opponent_terminal_extinction": false,
+      "normal_limit": true,
+      "last_worker_root_categories": {},
+      "scarce_root_counts": {
+        "own_workers_2": 187
+      },
+      "examples": {}
+    }
+  ],
+  "feature_contract": "The paired targets are stored in canonical move order NONE, UP, RIGHT, DOWN, LEFT. target_slot=0 is the only worker. Inputs use Feat.observe(sim.obs(seat)) at every step, including before the training window; uf/mf/legal use the actor's logged prefix. Only slot 0 has a target and its prefix is empty. Do not feed logged_prefix_actions, map identifiers or label arrays into the risk predictor. No opponent commands or full carbon map are actor inputs. All rows are from the training maps; validation requires disjoint new maps. If comparing two actions use only roots with differing outcomes.",
+  "idle_empty_collector_base_runs": [
+    {
+      "seed": 620089741,
+      "seat": 1,
+      "first_step": 156,
+      "last_step": 269,
+      "decisions": 114
+    }
+  ],
+  "labeled_roots": 143,
+  "evaluated_actions": 715,
+  "extinct_actions": 0,
+  "roots_with_both_outcomes": 0,
+  "train_ready_npz": {
+    "sha256": "c9f0b8a443d8f8d47d726803959793f50f97e5ce67c9b4a1c0f469dcb256f574",
+    "bytes": 90699,
+    "arrays": {
+      "maps": [
+        143,
+        33,
+        225
+      ],
+      "scal": [
+        143,
+        20
+      ],
+      "tok_pos": [
+        143,
+        24
+      ],
+      "tok_kind": [
+        143,
+        24
+      ],
+      "tok_mask": [
+        143,
+        24
+      ],
+      "tok_cargo": [
+        143,
+        24
+      ],
+      "hist_cell": [
+        143,
+        24,
+        8
+      ],
+      "hist_cargo": [
+        143,
+        24,
+        8
+      ],
+      "hist_move": [
+        143,
+        24,
+        8
+      ],
+      "uf": [
+        143,
+        12,
+        9
+      ],
+      "mf": [
+        143,
+        12,
+        5,
+        15
+      ],
+      "legal": [
+        143,
+        12,
+        5
+      ],
+      "logged_prefix_actions": [
+        143,
+        12
+      ],
+      "seed": [
+        143
+      ],
+      "seat": [
+        143
+      ],
+      "step": [
+        143
+      ],
+      "teacher": [
+        143
+      ],
+      "target_slot": [
+        143
+      ],
+      "extinct_after_one_joint_step": [
+        143,
+        5
+      ]
+    }
+  }
+}
