@@ -100,6 +100,25 @@ class ContinuationTests(unittest.TestCase):
             exercise();self.assertEqual(games,[(seed,1)])
             exercise();self.assertEqual(games,[(seed,1)])
 
+    def test_registration_executes_frozen_selector_after_working_file_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);fake=root/'state.py';case=root/'case';case.mkdir()
+            template=(
+                "import hashlib,json\nfrom pathlib import Path\n"
+                "def select(wd,plan):\n"
+                "    signature=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()\n"
+                "    (wd/'selection.json').write_text(json.dumps({'selector_sha256':signature,'implementation':3}))\n"
+            )
+            fake.write_text(template)
+            with patch.object(batch,'CODE',root):
+                key=batch.snapshot_selector(fake);fake.write_text(template.replace('implementation\':3','implementation\':9'))
+                plan={'selector_at_registration_sha256':key,'shared_decode_at_registration_sha256':batch.sha(Path(batch.selector.__file__))}
+                batch.select_registered(case,plan)
+                self.assertEqual(json.loads((case/'selection.json').read_text()),{'selector_sha256':key,'implementation':3})
+                archive=root/'selector_versions'/(key+'.py.gz')
+                archive.write_bytes(gzip.compress(b'changed'))
+                with self.assertRaisesRegex(ValueError,'corrupt archived'):batch.select_registered(case,plan)
+
     def test_content_addressed_selectors_and_tamper_rejection(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);p=root/'input.py';p.write_text('print(1)\n')

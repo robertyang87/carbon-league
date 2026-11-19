@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import time
 
 import source_games as sg
@@ -18,6 +19,7 @@ import select_roots as selector
 import pair_games as responder
 import label as evaluator
 import opportunities
+from batch_summary import report as write_report
 from source_games import ROOT,ENV,trial
 from select_roots import load,retain,sha
 
@@ -82,6 +84,8 @@ def _register(wd,entry):
               'responder_rng':'Use exact per-case training_job_registry.rng_seed from the cross-intake registry.',
               'source_math':'A state also carries a map-index-independent risk bit in this intake, so enemy-freight exposure is no longer tied to source-map identity.',
               'resources':'Source games use core 0/1; responses may use two balanced pairs in parallel as registered in response_resources.json. Do not open other new source map blocks concurrently.'}
+        plan['selector_at_registration_sha256']=snapshot_selector(Path(__file__))
+        plan['shared_decode_at_registration_sha256']=sha(Path(selector.__file__))
         retain(expected,plan)
     res={**load(CODE/'response_resources.json'),'parent_protocol_sha256':sha(expected),'data_parent':sha(CODE/'response_resources.json'),
          'source_maps':entry['maps']}
@@ -144,6 +148,28 @@ def select(wd,plan):
                                 'all_opportunities_sha256':sha(ledger),'covered_maps':plan['train_maps'],'windows':summary,'cases':choices,
                                 'empty_windows':missing,'opponent_future_or_terminal_used_in_selection':False,
                                 'selector_sha256':snapshot_selector(Path(__file__)),'shared_decode_sha256':sha(Path(selector.__file__))})
+
+def select_registered(wd,plan):
+    # Reconstruct the exact program captured before the source matches, even if main moved.
+    key=plan.get('selector_at_registration_sha256')
+    if key is None:
+        if (wd/'selection.json').is_file():
+            return
+        raise ValueError('missing pre-source selector registration; inspect original source before selecting')
+    if plan['shared_decode_at_registration_sha256']!=sha(Path(selector.__file__)):
+        raise ValueError('shared legal-prefix/decoder source has changed')
+    archived=CODE/'selector_versions'/(key+'.py.gz')
+    payload=gzip.decompress(archived.read_bytes())
+    if hashlib.sha256(payload).hexdigest()!=key:
+        raise ValueError('corrupt archived root selector')
+    with tempfile.TemporaryDirectory() as temp:
+        path=Path(temp)/'batch_cli.py';path.write_bytes(payload)
+        namespace={'__file__':str(path),'__name__':'_frozen_training_selector'}
+        exec(compile(payload,str(path),'exec'),namespace)
+        namespace['CODE']=CODE
+        namespace['select'](wd,plan)
+    if load(wd/'selection.json')['selector_sha256']!=key:
+        raise ValueError('selection used a different program from registration')
 
 def aggregate(wd):
     examples=[];seen=set();boards=set();provenance=[]
@@ -222,7 +248,8 @@ def main():
             responder.play(a.index,a.arm)
         return
     if a.mode=='aggregate':
-        print(aggregate(wd)['complete_pairs']);return
+        doc=aggregate(wd);write_report(wd)
+        print(doc['complete_pairs']);return
     with (wd/'.intake.schedule.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         if not (wd/'clearance.json').is_file():
@@ -234,10 +261,11 @@ def main():
         else:sg.verify()
         if not (wd/'opportunities.jsonl.gz').is_file():
             opportunities.save(wd/'opportunities.jsonl.gz',intake_dir=wd)
-        if not (wd/'selection.json').is_file():select(wd,plan)
+        if not (wd/'selection.json').is_file():select_registered(wd,plan)
         run_pairs(wd,plan)
         evaluator.finish()
         doc=aggregate(wd)
+        write_report(wd)
         print({k:doc[k] for k in ('distinct_maps','complete_pairs','filled_pairs','fit_support_gate')},flush=True)
 
 if __name__=='__main__':

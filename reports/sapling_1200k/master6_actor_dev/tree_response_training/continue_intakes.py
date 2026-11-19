@@ -75,6 +75,8 @@ def board_state():
         raise ValueError('unbound continuation plan')
     all_rows,seen=verify_sealed(CODE)
     rows=list(all_rows);boards=set(seen.values());finished=[]
+    initial_selection=load(CODE/'selection.json')
+    expected_windows=len(initial_selection['windows']);empty_windows=list(initial_selection['empty_windows'])
     pending=None
     for reg in q['batches']:
         filled=[r for r in rows if r['pay_intent_filled']]
@@ -83,6 +85,8 @@ def board_state():
         area=CODE/'batches'/reg['name']
         if (area/'aggregate.json').exists():
             added,new=verify_sealed(area)
+            selection=load(area/'selection.json')
+            expected_windows+=len(selection['windows']);empty_windows.extend(selection['empty_windows'])
             if boards&set(new.values()) or len(new)!=len(reg['maps']):
                 raise ValueError('source terrain reused')
             chain=load(area/'aggregate.json')
@@ -109,7 +113,10 @@ def board_state():
     negative=sorted({r['seed'] for r in complete if r['target_delta_official_margin']<0})
     support=len(boards)>=8 and len(complete)>=32 and len(positive)>=2 and len(negative)>=2
     terminal='collecting' if pending else ('support_met' if support else 'registered_fill_exhausted_support_incomplete')
-    return {'terminal_state':terminal,'finished_batches':finished,'verified_distinct_maps':len(boards),'verified_paired_roots':len(rows),
+    missing={'distinct_training_maps':max(0,8-len(boards)),'actual_paid_pairs':max(0,32-len(complete)),
+             'positive_effect_maps':max(0,2-len(positive)),'negative_effect_maps':max(0,2-len(negative))}
+    return {'terminal_state':terminal,'finished_batches':finished,'verified_planned_windows':expected_windows,
+            'missing_root_windows':empty_windows,'remaining_training_support':missing,'verified_distinct_maps':len(boards),'verified_paired_roots':len(rows),
             'verified_actual_payments':len(complete),'positive_maps':positive,'negative_maps':negative,
             'fit_support':support,
             'pending':pending,'reserved_development_maps':q['protected_unopened_development_maps'],'development_scheduled':False}
