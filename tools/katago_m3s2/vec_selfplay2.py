@@ -50,6 +50,29 @@ CLI is aligned with vec_selfplay.py (--src/--ckpt/--hof/--games/
 flight in the lockstep pool, default 32) and --batch-cap (max rows per
 single GPU forward chunk inside a round, default 2048; chunking is a
 memory guard only -- a round still issues one logical batch per tag).
+
+Precision tiers (--precision, TorchBatchBackend only): the gate's
+2026-11-20 L20 run (gate md5 1a9a7a26, u mode) FAILED leg (a) under
+the legacy path -- batch-vs-batch-1 policy-logit deviations cur
+0.3125/0.375, m3s2 1.0/1.0 against the 0.25 hard line, while the value
+deviation was only 0.013.  Small-sample measurements on L20 (gen2
+ckpt, 512 production rows; see the fix receipt) established the
+mechanism: the divergence is low-mantissa compute through
+batch-size-dependent kernels -- under BF16 autocast the trunk convs
+and head GEMMs round at BF16 ulp scale (deviations 0.25-1.5, largest
+on the largest-magnitude m3s2 logits; the pooled, small-magnitude
+value head moves only ~0.01).  Two tempting middle tiers measured
+dead: disabling reduced-precision GEMM accumulation changed nothing
+(bit-identical maxima), and disabling cuDNN halved the deviations but
+left 0.5.  Dropping autocast alone also still failed (m3s2 lb 0.271):
+cuDNN fp32 convolutions default to TF32 (10-bit mantissa).  Only true
+fp32 -- no autocast AND TF32 disabled -- collapses the deviations to
+~2.4e-04, three orders inside the line.  Tiers: 'autocast' = the
+legacy behaviour; 'accum32' = autocast compute with fp32 GEMM
+accumulation (kept for the record; measured identical to 'autocast');
+'fp32' = no autocast + TF32 off (the default, and the lightest tier
+that passes).  The tier changes ONLY forward numerics -- RNG streams,
+shard schema, sampling and scheduling are untouched.
 """
 
 import argparse
@@ -454,6 +477,15 @@ class NumpyLocalBackend:
         return lw, lb, v
 
 
+PRECISION_TIERS = ('autocast', 'accum32', 'fp32')
+# Default tier: 'fp32' -- the lightest tier measured to pass the gate
+# (a) hard line (0.25) in the L20 small-sample measurement of
+# 2026-11-20 (max deviation 2.4e-04; both lighter tiers FAIL, see the
+# module docstring).  TorchBatchBackend falls back to this when the
+# caller passes no 'precision' (the gate constructs it that way).
+DEFAULT_PRECISION = 'fp32'
+
+
 class TorchBatchBackend:
     """Owns every net (as vec_selfplay.py's inference server did) and
     serves one batched forward per call."""
@@ -477,6 +509,24 @@ class TorchBatchBackend:
             self.sids[tag] = names.index(layout.SID_NAME) if layout.SID_NAME in names else len(names)
             net.eval().to(self.device)
         self.dtype = {'bf16': torch.bfloat16, 'fp16': torch.float16}.get(cfg['dtype'])
+        # Precision tier (gate (a) FAIL fix, 2026-11-20; see the module
+        # docstring).  The reduced-precision-reduction flags are
+        # process-global; this backend owns the process in both the
+        # generator and the gate, and the tier is fixed at construction
+        # time, before any forward runs.
+        self.precision = cfg.get('precision', DEFAULT_PRECISION)
+        if self.precision not in PRECISION_TIERS:
+            raise ValueError('unknown precision tier: %r' % (self.precision,))
+        if self.precision == 'fp32':
+            self.dtype = None
+            # True fp32: cuDNN fp32 convolutions otherwise default to
+            # TF32 (10-bit mantissa), which alone measured 0.271 on
+            # m3s2 lb -- still over the gate (a) hard line.
+            torch.backends.cuda.matmul.allow_tf32 = False
+            torch.backends.cudnn.allow_tf32 = False
+        elif self.precision == 'accum32':
+            torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = False
+            torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = False
 
     def _forward_chunk(self, tag, X, SC):
         torch = self.torch
@@ -582,6 +632,9 @@ def main():
     ap.add_argument('--deep-frac', type=float, default=0.25)
     ap.add_argument('--device', default='cpu')
     ap.add_argument('--dtype', default='bf16', choices=['bf16', 'fp16', 'fp32'])
+    ap.add_argument('--precision', default=DEFAULT_PRECISION,
+                    choices=list(PRECISION_TIERS),
+                    help='batched-forward precision tier (see module docstring)')
     ap.add_argument('--threads', type=int, default=4)
     ap.add_argument('--pool-games', type=int, default=32,
                     help='games in flight in the lockstep pool')
@@ -620,7 +673,8 @@ def main():
     backend = TorchBatchBackend({'src': args.src, 'ckpt': args.ckpt, 'hof': hof,
                                  'device': args.device, 'dtype': args.dtype,
                                  'threads': args.threads,
-                                 'batch_cap': args.batch_cap})
+                                 'batch_cap': args.batch_cap,
+                                 'precision': args.precision})
     state = {'next_gid': 0, 'buf': [], 'n_shards': 0}
 
     def next_game():
@@ -661,7 +715,8 @@ def main():
                    'deep': {'K': DEEP_K, 'D2': DEEP_D2, 'tau': DEEP_TAU},
                    'generator': 'vec_selfplay2',
                    'pool_games': args.pool_games,
-                   'batch_cap': args.batch_cap}, f, indent=1)
+                   'batch_cap': args.batch_cap,
+                   'precision': args.precision}, f, indent=1)
     print('selfplay2 done: %d games -> %s' % (args.games, args.out))
     return 0
 
