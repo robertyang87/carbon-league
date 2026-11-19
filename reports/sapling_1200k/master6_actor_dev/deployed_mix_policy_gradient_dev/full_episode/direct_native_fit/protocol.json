@@ -1,0 +1,136 @@
+{
+  "center": {
+    "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/selected.py",
+    "sha256": "09b41c24d0b478b8fea42a8919c98674841a690c20176d6992fd02bd0938ec01"
+  },
+  "center_npz": {
+    "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/selected.npz",
+    "sha256": "d7998bb40427642e8a1dc4a60793805ed1ac0d68a665484f67db85fce9befd16"
+  },
+  "upstream_selection": {
+    "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/selection.json",
+    "sha256": "ea580e9d65d4e3cbb4fdfc6f5a8c68b0b7843fca8c65b74f2a3d58ff78d934b5"
+  },
+  "upstream_economy": {
+    "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/independent_audit.json",
+    "sha256": "9b47e3f5bf4646fc079864dfa7f7293408fc9e629bfebbabc51a5bf6758ebc9c"
+  },
+  "examiner": {
+    "path": "sources/master3s2/master3s2.py",
+    "blob": "9c46f6fa4ff401b05939150054c2f88f549c2f7e",
+    "sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5"
+  },
+  "seeds": [
+    621461321,
+    621461322
+  ],
+  "historic_native_tapes": [
+    {
+      "path": "reports/sapling_1200k/master6_actor_dev/actor_partner_dev/native/candidate/raw_621461321_0.json.gz",
+      "sha256": "fb676b802a7a46574c823037c7ed7c59d7e333945966ac56cd27014197d9f518"
+    },
+    {
+      "path": "reports/sapling_1200k/master6_actor_dev/actor_partner_dev/native/candidate/raw_621461321_1.json.gz",
+      "sha256": "c4733e77fc38b3ab8c5c77914ef64a3dba67539d9cd130912c02463f26516224"
+    },
+    {
+      "path": "reports/sapling_1200k/master6_actor_dev/actor_partner_dev/native/candidate/raw_621461322_0.json.gz",
+      "sha256": "08e6b2d9bf548c81155eb91d267e91d30e103109198d36b82711a5658f33f002"
+    },
+    {
+      "path": "reports/sapling_1200k/master6_actor_dev/actor_partner_dev/native/candidate/raw_621461322_1.json.gz",
+      "sha256": "8ef69c4669c07ac5a0076bfcb35ba69c1631fa38d8f8c9b2775df108d8fb825a"
+    }
+  ],
+  "previous_development": {
+    "path": "reports/sapling_1200k/master6_actor_dev/actor_partner_dev/protocol.json",
+    "sha256": "c1715fc22511e7d2dfbec1b462cc48cbc1a3e263df12b01fbdde79473322b67b"
+  },
+  "calibration_seed": 621758343,
+  "calibration_center_games": [
+    {
+      "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_original/games/candidate/raw_621758343_0.json.gz",
+      "sha256": "dafb21483e7b687bc71ed338a7de76e508a1785f35ee46fbe73976772cf56334"
+    },
+    {
+      "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_original/games/candidate/raw_621758343_1.json.gz",
+      "sha256": "e799b54ca2a53a69470558bba6e3adc7b15763e86f58bdd1499213783c4fd364"
+    }
+  ],
+  "excluded_recent": {
+    "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/register.json",
+    "sha256": "66f04e0282d6d886ce0555dd087e258aebe53c11f4248c6bdd73443d82c58300"
+  },
+  "original_recent": {
+    "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_original/protocol.json",
+    "sha256": "5c95872754efa2fc76cab9f852cf583e3c6cb5e8b067e585eda30fc23352fc4c"
+  },
+  "source_revision": "83e4736731c78006807bf710184219abd262d779",
+  "direction": "Use only the two shared worker readout singular components from the first episode study, retaining the original sign convention. In coefficient coordinates choose (\u2212c1*||D1||\u00b2, c0*||D0||\u00b2, 0), normalized to unit coefficient norm, where c are the previous update coefficients. Its FP32 Frobenius inner product with the entire previous update is zero up to rounding. Base and all other learned tensors are fixed, as are the it50 partner and mixed policy logic. Neither original results nor proxy return signs tune this direction.",
+  "radii": [
+    0.3,
+    0.5,
+    0.8
+  ],
+  "radius_rule": "Read both actual center trajectories on map 343. Test every third step from 0 through 297 inclusive (100 roots per physical seat when game lasts the limit), retaining all prior seat-public observations. Try radii in the given order, with the same physical original snapshots in both signs. For each sign require >=3 joint differences vs center and <=30 percent changed overall; union of plus-vs-minus changes must include all three periods [0,100),[100,200),[200,299) and both seats. Choose the smallest passing radius; failure of all means retain center. Never read live training outcomes to choose a radius.",
+  "scheduling": "Original public submission, unmodified 0.58s, temperature=1, independent natural RNG unseeded, exclusive native-clock lock, simultaneous physical orders, actual original official terminal. Historical maps permanently marked exposed/training here. Schedule alternates signed arm by core every wave and reverses seat/core associations across maps. Exactly 8 games, keep all failures, no new terrain.",
+  "waves": [
+    [
+      [
+        "plus",
+        621461321,
+        0,
+        0
+      ],
+      [
+        "minus",
+        621461321,
+        1,
+        1
+      ]
+    ],
+    [
+      [
+        "minus",
+        621461321,
+        0,
+        0
+      ],
+      [
+        "plus",
+        621461321,
+        1,
+        1
+      ]
+    ],
+    [
+      [
+        "plus",
+        621461322,
+        1,
+        0
+      ],
+      [
+        "minus",
+        621461322,
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        "minus",
+        621461322,
+        1,
+        0
+      ],
+      [
+        "plus",
+        621461322,
+        0,
+        1
+      ]
+    ]
+  ],
+  "selection": "Wins first. If total wins differ, consider ONLY the sign with more wins. If tied, choose direction from aggregate official seat-paired score-margin contrast; tie or zero leaves center. To retain either direction it must have no map with fewer wins, mean official score margin higher on BOTH maps, at least 3/4 individually positive margin pairs and no extra extinctions. When the sign has more total wins (and passes these requirements), retain the actually tested endpoint. If win counts tie, demand both map margin advantages >=250 points, then retain HALF of the tested radius, flagged as a new unplayed training candidate. Otherwise retain the byte-identical center. These 2 reused boards identify a direction, not evidence of strength vs the center or independent generalization. No further board is opened here."
+}
