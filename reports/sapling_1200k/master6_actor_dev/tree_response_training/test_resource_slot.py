@@ -122,7 +122,7 @@ class SlotTests(unittest.TestCase):
                 digest=slot.sha(d/name)
                 row={"raw_file":name,"raw_sha256":digest,"actual_transitions":2,"official_score_by_seat":[2,3],"result":("win" if p else "loss"),"seed":s,"candidate_seat":p};r.append(row)
                 o.append({"map_sha256":sig["boards"][str(s)],"transcript_sha256":digest,"steps":2,"official_reward_by_seat":[2,3],"result":row["result"],"statuses":["DONE","DONE"],"seed":s,"seat":p})
-            self.write(d/"results.json",{"header":{"cpus":[0,1],"plan_sha256":None,"configuration":{"size":15},"seeds":[1,2],"examiner_md5":"registered-examiner",**sig["packs"][arm]},"games":r,"status":"complete"})
+            self.write(d/"results.json",{"header":{"cpus":[0,1],"plan_sha256":None,"configuration":{"size":15},"source_sha256":{"arena.py":"a"*64},"seeds":[1,2],"examiner_md5":"registered-examiner",**sig["packs"][arm]},"games":r,"status":"complete"})
             self.write(d/"official_replay.json",{"engine_source_sha256":{"engine.py":"123"},"runs":{arm:{"games":o,"pack_sha256":arm}}})
         self.write(self.dev/"gate.json",{})
         self.write(self.dev/"release_manifest.json",{})

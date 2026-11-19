@@ -97,8 +97,17 @@ def board_state():
                 raise ValueError('incorrect across-map aggregate')
             continue
         source_dir=area/'source'
+        slot=CODE/'resources/veto_dev_slot'
+        priority=None
+        if (reg['name']=='intake_05' and (slot/'granted.json').exists()
+                and not any((slot/name).is_file() for name in ('release.json','cancelled.json'))):
+            dev=CODE/'planter_survival/native_dev'
+            priority={'grant_sha256':sha(slot/'granted.json'),
+                      'game_counts':{arm:len(load(dev/arm/'results.json')['games']) if (dev/arm/'results.json').exists() else 0
+                                     for arm in ('parent','candidate')},'expected_by_arm':4}
         source_n=len(load(source_dir/'results.json')['games']) if (source_dir/'results.json').is_file() else 0
-        if not (area/'clearance.json').exists():stage='clearance'
+        if priority is not None:stage='waiting_for_priority_development'
+        elif not (area/'clearance.json').exists():stage='clearance'
         elif not (area/'source_receipt.json').exists():stage='source_games'
         elif not (area/'opportunities.jsonl.gz').exists():stage='public_opportunities'
         elif not (area/'selection.json').exists():stage='root_selection'
@@ -106,7 +115,7 @@ def board_state():
         else:stage='aggregate'
         pending={'batch':reg['name'],'stage':stage,'registered':(area/'protocol.json').is_file(),'source_games_completed':source_n,
                  'source_games_registered':reg['expected_source_games'],'paired_arms_completed':sum(1 for a in ('parent','alternative') for _ in area.glob(f'case_*/live_{a}.json')),
-                 'live_batch_lock':active_lock(area/'.intake.schedule.lock')}
+                 'live_batch_lock':active_lock(area/'.intake.schedule.lock'),'priority_development':priority}
         break
     complete=[r for r in rows if r['pay_intent_filled']]
     positive=sorted({r['seed'] for r in complete if r['target_delta_official_margin']>0})

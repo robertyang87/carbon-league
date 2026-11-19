@@ -236,9 +236,16 @@ def completed(verify_official):
     expected={(s,p) for s in signed['seeds'] for p in r['physical_seats']}
     files={}
     outcomes={}
+    arena_sha=None
     for name in r["arms"]:
         d=DEV/name;report=read(d/"results.json");pkg=signed["packs"][name]
         head=report["header"];official=read(d/"official_replay.json")
+        observed=head["source_sha256"]
+        require(isinstance(observed,dict) and bool(observed) and all(re.fullmatch(r"[a-f0-9]{64}",h) for h in observed.values()),
+                "missing frozen native arena sources")
+        if arena_sha is None:
+            arena_sha=observed
+        require(observed==arena_sha,"compared arms used different native arena code")
         require(report["status"]=="complete" and head["seeds"]==signed["seeds"] and head["examiner_md5"]==r["examiner_md5"]
                 and head["cpus"]==r["cpus"] and head["plan_sha256"] is None and all(head[k]==v for k,v in pkg.items()),"native identity or status differs")
         require(head["configuration"]==read(HERE/"source/results.json")["header"]["configuration"], "native environment configuration changed")
@@ -277,7 +284,7 @@ def completed(verify_official):
             rr=outcomes[name,pair["seed"],pair["seat"]]
             require(all(pair[name].get(k)==v for k,v in rr.items()), "comparison contains a different official outcome")
     files["comparison.json"]=sha(DEV/"comparison.json")
-    return {"mode":"completed_8_official_games","games":8,"granted_sha256":sha(SLOT/"granted.json"),"verified_files":files}
+    return {"mode":"completed_8_official_games","games":8,"granted_sha256":sha(SLOT/"granted.json"),"verified_files":files,"common_arena_sources":arena_sha}
 
 
 def release():
