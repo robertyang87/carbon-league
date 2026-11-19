@@ -1,5 +1,7 @@
 # 天梯前五逐决策背景查询
 
+截至 `c5c8cf8d`，已核对 1,432 张独立地图、426,601 次联合推进、853,202 个物理席决策。新增 11 场均为前五对外实战，其中 Master5s 6 场、Master6 4 场、ClaudeFable5.2-v7 1 场，共 6,578 个行动前上下文。[逐局现金、攻防与回溯](appendix_c5c8cf8d/README.md) · [上下文收据](context_appendix_c5c8cf8d_receipt.json)
+
 截至 `32b555ee`，前五回放共 1,421 张独立地图、423,312 次联合推进、846,624 个物理席决策。这批新增 Master6 的 14 场对外胜局，共 8,372 个行动前上下文。[逐局回放与收入](appendix_32b555ee/README.md) · [上下文收据](context_appendix_32b555ee_receipt.json)
 
 截至 `1fdacb1b` 再补五场，累计 1,407 张地图、419,126 次联合推进、838,252 个席决策。[四场上下文](context_appendix_f7109df6_receipt.json) · [单场上下文](context_appendix_1fdacb1b_receipt.json)

@@ -1,7 +1,11 @@
 """Synthetic predecision fixtures plus the actual embedded actor-prefix identity."""
 import hashlib
 import unittest
-from opportunities import F, FEATURE_SHA, MOVES, commitments, neighbors, options, quote, state
+import gzip
+import json
+import tempfile
+from unittest.mock import patch
+from opportunities import F, FEATURE_SHA, MOVES, commitments, digest, neighbors, options, quote, save, state
 from pathlib import Path
 
 CFG = {"size":15,"episodeSteps":300,"treeLifespan":50,"plantCost":20,"plantCostInflationRatio":5,
@@ -66,6 +70,27 @@ class Opportunities(unittest.TestCase):
         self.assertEqual(row["history"][0]["predecision"]["heavy_return"],10)
         self.assertFalse(row["history"][1]["predecision"]["worker_present"]);self.assertFalse(row["history"][2]["observed"])
         self.assertEqual(row["actions"]["RIGHT"]["cell"],1)  # seat 1 is physical right as well
+
+    def test_external_intake_uses_only_its_registered_sources(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            here=Path(tmp)
+            source=here/"source"
+            source.mkdir()
+            game=source/"raw_777_1.json.gz"
+            game.write_bytes(b"synthetic non-game for the independent manifest routing fixture")
+            config=json.dumps({"train_maps":[777],"physical_seats":[1]}).encode()
+            (here/"protocol.json").write_bytes(config)
+            receipt={"protocol_sha256":digest(config),"games":[{"seed":777,"seat":1,"raw_sha256":digest(game.read_bytes())}]}
+            (here/"source_receipt.json").write_text(json.dumps(receipt))
+            out=here/"answer.gz"
+            with patch("opportunities.iter_game",return_value=iter([{"seed":777,"seat":1,"t":3}])) as reader:
+                save(out,here)
+            reader.assert_called_once_with(game)
+            self.assertEqual(json.loads(gzip.decompress(out.read_bytes())),{"seed":777,"seat":1,"t":3})
+            game.write_bytes(b"wrong source")
+            with self.assertRaisesRegex(ValueError,"official immutable receipt"):
+                save(here/"fault.gz",here)
+            self.assertFalse((here/"fault.gz").exists())
 
     def test_productive_area_excludes_all_trees_and_bases(self):
         obs=fixture()

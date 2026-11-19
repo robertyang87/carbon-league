@@ -243,14 +243,17 @@ def iter_game(path):
         raise ValueError("source did not reproduce the official terminal")
 
 
-def save(destination):
-    plan=json.loads((HERE/"protocol.json").read_bytes())
+def save(destination, intake_dir=HERE):
+    destination=Path(destination)
+    intake_dir=Path(intake_dir)
+    plan_bytes=(intake_dir/"protocol.json").read_bytes()
+    plan=json.loads(plan_bytes)
     expected=[(seed,seat) for seed in plan["train_maps"] for seat in plan["physical_seats"]]
-    paths=[HERE/"source"/f"raw_{s}_{p}.json.gz" for s,p in expected]
+    paths=[intake_dir/"source"/f"raw_{s}_{p}.json.gz" for s,p in expected]
     if not all(p.exists() for p in paths):
-        raise FileNotFoundError("all four registered training games must exist")
-    receipt=json.loads((HERE/"source_receipt.json").read_bytes())
-    if receipt["protocol_sha256"]!=digest((HERE/"protocol.json").read_bytes()):
+        raise FileNotFoundError("all registered training games must exist")
+    receipt=json.loads((intake_dir/"source_receipt.json").read_bytes())
+    if receipt["protocol_sha256"]!=digest(plan_bytes):
         raise ValueError("source games belong to a different training protocol")
     officials={(r["seed"],r["seat"]):r for r in receipt["games"]}
     if len(receipt["games"])!=len(expected) or set(officials)!=set(expected):
@@ -277,5 +280,7 @@ def save(destination):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--out",type=Path,default=HERE/"opportunities.jsonl.gz")
-    save(p.parse_args().out)
+    p.add_argument("--intake-dir",type=Path,default=HERE,help="Directory containing protocol.json, source_receipt.json and source/")
+    p.add_argument("--out",type=Path,help="Defaults to opportunities.jsonl.gz inside the selected intake")
+    args=p.parse_args()
+    save(args.out or args.intake_dir/"opportunities.jsonl.gz",args.intake_dir)

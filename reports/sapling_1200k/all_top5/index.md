@@ -41,3 +41,5 @@
 [Master5s 新四场，对手含 Echo6 和 Echo5](appendix_f7109df6/README.md) · [Master6 对 Fable v8 新局](appendix_1fdacb1b/README.md)
 
 [截至 32b555ee 新增 14 场 Master6 对外比赛，查每场转折和此前行动](appendix_32b555ee/README.md)
+
+[截至 c5c8cf8d 的 11 局新增对外实战，含双方资金、攻防动作和转折前布局](appendix_c5c8cf8d/README.md)

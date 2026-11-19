@@ -1,5 +1,7 @@
 # 前五所有出场的局面与决策时机
 
+截至 `c5c8cf8d`，前五选手出场的去重比赛共 **1,432 场，互打 115 场、对外 1,317 场**，覆盖 426,601 次双方联合行动。最新 11 局均为对外胜局：Master5s 六局、Master6 四局、ClaudeFable5.2-v7 一局。全部新增局已用两个引擎核分，实际开局地形已加入正式考试的排除集。[11 场逐局行动与 3/5/10 步回溯](appendix_c5c8cf8d/README.md) · [开发与训练图交叉核验](../master6_actor_dev/ladder_overlap_c5c8cf8d.json)
+
 截至 `32b555ee`，冻结前五任一方出场的对局达 **1,421 场**，其中互打 115 场、对外 1,306 场。相对 1,407 局截点新增的 14 局均为 Master6 对外胜局。Master6 全部 337 局为 314 胜、1 平、22 负。[最新逐局账、完整动作与原始回放](appendix_32b555ee/README.md) · [此轮 Sapling 已用及预留开发图对照](../master6_actor_dev/ladder_overlap_32b555ee.json)
 
 到下一截点 `1fdacb1b`，新增五场对外实战，累计 **1,407 场**，其中前五互打 115 场、对外 1,292 场。每场按两个席位复算，并将种子和开局 225 格地碳指纹加入正式地图排除清单。[Master5s 的四场](appendix_f7109df6/README.md) · [Master6 对 Fable v8](appendix_1fdacb1b/README.md)
