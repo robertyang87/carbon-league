@@ -252,7 +252,7 @@ def main():
         print(doc['complete_pairs']);return
     run_intake(wd,plan)
 
-def run_intake(wd,plan,*,clearance_script=None,entrypoint=None,previous=None):
+def run_intake(wd,plan,*,clearance_script=None,entrypoint=None,previous=None,before_source=None):
     with (wd/'.intake.schedule.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         if wd.parent==CODE/'batches' and wd.name=='intake_05':
@@ -261,6 +261,8 @@ def run_intake(wd,plan,*,clearance_script=None,entrypoint=None,previous=None):
         if not (wd/'clearance.json').is_file():
             subprocess.run(['taskset','-c','4',sys.executable,'-u',str(clearance_script or CODE/'batch_clearance.py'),str(wd/'protocol.json')],check=True,env=ENV)
         sg.check_maps()
+        if before_source is not None:
+            before_source(wd,plan)
         if not (wd/'source_receipt.json').is_file():
             while other_native(wd):time.sleep(8)
             sg.play()

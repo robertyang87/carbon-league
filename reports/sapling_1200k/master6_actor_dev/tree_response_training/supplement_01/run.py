@@ -143,7 +143,9 @@ def drain():
                     retain(HERE/'completion.json',{'registration_sha256':sha(HERE/'registration.json'),**state})
                     return
                 name=state['next'];wd,plan,previous=issue(name,reg);engine.modules(wd,plan)
-                engine.run_intake(wd,plan,clearance_script=HERE/'clearance.py',entrypoint=Path(__file__),previous=previous)
+                from priority_slot import wait_before_source
+                engine.run_intake(wd,plan,clearance_script=HERE/'clearance.py',entrypoint=Path(__file__),
+                                  previous=previous,before_source=wait_before_source)
 
 
 def main():

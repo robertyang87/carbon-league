@@ -1,0 +1,10 @@
+{
+  "schema":"sapling-shared-encoder-income-aux-v1",
+  "starting_actor":"f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713",
+  "split":"Existing independent Master6 actor game/terrain splits; exclude opponents whose name contains master3s2; reverify every public shard and source replay. The same old policy holdout is a development panel.",
+  "experiment":"Two matched training arms. Both imitate the same real Master6 public actions and retain a KL anchor to the same frozen Sapling actor. Each gets a linear readout of 8 future economic labels: chronological 10/30-step gross original-actor and rival own delivery and tree income. Readout gradients enter the encoder in candidate only; equal-magnitude detached readout in control. Future outcomes never enter deployment features. A missed horizon is masked.",
+  "seed":6111934,"steps":120,"batch":32,"encoder_lr":0.00003,"decoder_lr":0.00008,"readout_lr":0.002,"income_coefficient":0.25,
+  "role_weights":[0.52,0.27,0.21],"actor_loss":"0.8 actual action cross-entropy plus 0.2 original parent KL; role balanced. Each arm one identical permutation prefix of all eligible training rows. Evaluate fixed last update and int8 action outputs.",
+  "panels":"On holdout require candidate standardized income smooth-L1 lower than detached control; candidate legal-action NLL at most control+0.01 and parent+0.005; at least 1% valid choices change vs parent. Evaluate all maps and both seats; report validation too. Passing permits a separate native comparison, never certifies wins.",
+  "formal":"No new native maps used for this neural training or its diagnostic. Examiner steps/weights and every formal map stay excluded."
+}
