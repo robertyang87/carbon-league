@@ -1,0 +1,17 @@
+{
+  "name": "first_win_blend_dev",
+  "formal": false,
+  "seeds": [621704820,621704821,621704822,621704823],
+  "historical_control_maps": [621704800,621704801],
+  "seats": [0,1],
+  "new_map_games": 8,
+  "additional_candidate_games_on_control_maps": 4,
+  "immutable_parent_control_games": 4,
+  "source_revision": "669b2204aaa0ee080cd38385a0d4e8db7d6873db",
+  "activation": "Only start when first_win_dev has all 16 signed original games and zero wins. Cancel the full 12-game campaign if c5ad obtained a verified new-map win. All six allocated terrains remain development exposures.",
+  "candidate": {"path":"reports/sapling_1200k/master6_actor_dev/blended_actor_dev/serving/candidate.py","sha256":"85c47d5d1f93d39dd66d1b959c0c2b3bdc6ee7187553b3ad992b4915056c6fe4","student_npz_sha256":"2c65117a39edf1963b0adbe92bcfcc6e6350f3bda8696835a2cc803073d7b80f","policy":"unchanged own Echo4 0.75 and blend-trained Sapling 0.25. Normal production interface, guarded return residual."},
+  "reason": "Frozen earlier two-map four-seat comparison of this exact pair reported +430.7825 mean official margin with both maps positive, although candidate 0/4. SHA256 of that comparison a0d51b5eeb7ed1218c12fa7f45fce3de6626786d3ffb2f8e1f7fcfc33a4ac776. Do not add this result to the new-map numerator.",
+  "examiner": {"path":"sources/master3s2/master3s2.py","sha256":"65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5","temperature":1,"_SEED":null,"budget_seconds":0.58,"clock":"production natural wall and native full search, one simultaneous physical-seat worker per pinned core; complete searchable tapes"},
+  "schedule":"Run four fresh maps ascending, shifting the assigned CPU by map/seat as first_win_dev, then the two previously fixed comparison maps in 800/801 order using the same per-seat host-core assignment as earlier controls. For each observe the original independently; historical comparisons do not share RNG. No new game for the old candidate. Preserve every result through extinction or 299. A new-map win is reported at official readback immediately, then finish the planned schedule. A comparison-only win is explicitly tracked separately.",
+  "statistics":"Eight genuinely fresh games: physical scores, per-seat and overall results, map-cluster uncertainty. Four candidate games on exposed maps: each pair vs separately bound historical c5ad cause-confounded with native random stream and clock; no pooled 12-game claim. Independent 100-map exam untouched."
+}

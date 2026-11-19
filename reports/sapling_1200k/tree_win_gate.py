@@ -24,6 +24,7 @@ RESERVED_DEVELOPMENT_PLANS = (
     ("master6_actor_dev/blended_actor_arena/protocol.json", "new_dev", "seeds"),
     ("master6_actor_dev/blended_policy_return_dev/map_declaration.json", None, "new_proxy_development"),
     ("master6_actor_dev/first_win_dev/protocol.json", None, "seeds"),
+    ("master6_actor_dev/first_win_blend_dev/protocol.json", None, "seeds"),
 )
 
 
