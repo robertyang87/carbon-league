@@ -1,0 +1,281 @@
+{
+  "schema": "sapling-natural-original/1",
+  "scope": "Exposed-map development comparison. Two known boards, both physical seats, each of three models on each seat. One naturally sampled trajectory per arm and seat; no inference about population win rate. Training, independent development and the formal examination are distinct.",
+  "hypotheses": {
+    "sampling": "sampled_parent minus greedy_parent, same weights",
+    "weight_update": "sampled_child minus sampled_parent, same sampler",
+    "combined": "sampled_child minus greedy_parent"
+  },
+  "endpoint": "Record all 12 attempts, including infrastructure failures, timeouts, forfeits, draws, terminal official scores where defined, and wall clocks. No replacement or early stopping. Do not assign a made-up official numerical margin to a forfeit with no official score.",
+  "sample_contract": "Natural game entropy in the packaged policy and unchanged examiner. No global RNG seed is injected into either policy. Replaying a command tape recovers official state and score; an independently drawn command need not match. The offline action-menu check uses the actual public history.",
+  "protocol_prior": "The separate held greedy test for 510c failed and remains closed. These new stochastic policies test different deployed behaviors on two previously exposed maps; 444/445 and all final maps are excluded.",
+  "schedule_rule": "Three cyclic Latin-square rows followed by reversal CBA on the fourth seed/seat. Four map-seat blocks cannot exercise all six permutations. Each arm appears in all three positions; within each position arm counts differ by at most one.",
+  "possible_orders": [
+    [
+      "greedy_parent",
+      "sampled_parent",
+      "sampled_child"
+    ],
+    [
+      "greedy_parent",
+      "sampled_child",
+      "sampled_parent"
+    ],
+    [
+      "sampled_parent",
+      "greedy_parent",
+      "sampled_child"
+    ],
+    [
+      "sampled_parent",
+      "sampled_child",
+      "greedy_parent"
+    ],
+    [
+      "sampled_child",
+      "greedy_parent",
+      "sampled_parent"
+    ],
+    [
+      "sampled_child",
+      "sampled_parent",
+      "greedy_parent"
+    ]
+  ],
+  "seeds": [
+    621758345,
+    621758346
+  ],
+  "physical_boards": {
+    "621758345": "ed2477ab358591427c5f92cb23051035c0d1e692752b25902874d194bf968ba0",
+    "621758346": "094481cca13cd662a74cd5d20c584b941e3f966f34202d4032c91056eeb04e78"
+  },
+  "expected_games": 12,
+  "arms": [
+    "greedy_parent",
+    "sampled_parent",
+    "sampled_child"
+  ],
+  "schedule": [
+    {
+      "seed": 621758345,
+      "seat": 0,
+      "order": [
+        "greedy_parent",
+        "sampled_parent",
+        "sampled_child"
+      ]
+    },
+    {
+      "seed": 621758345,
+      "seat": 1,
+      "order": [
+        "sampled_parent",
+        "sampled_child",
+        "greedy_parent"
+      ]
+    },
+    {
+      "seed": 621758346,
+      "seat": 0,
+      "order": [
+        "sampled_child",
+        "greedy_parent",
+        "sampled_parent"
+      ]
+    },
+    {
+      "seed": 621758346,
+      "seat": 1,
+      "order": [
+        "sampled_child",
+        "sampled_parent",
+        "greedy_parent"
+      ]
+    }
+  ],
+  "platform": {
+    "per_candidate_cpu": 1.5,
+    "per_candidate_memory_bytes": 536870912,
+    "swap_headroom_bytes": 0,
+    "network": "none",
+    "containers": 2,
+    "python": "3.12",
+    "numpy": "1.26.4",
+    "opponent_required_torch": "2.5.1+cpu",
+    "source_limit_bytes": 10000000,
+    "init_seconds": 20,
+    "step_soft_seconds": 1,
+    "step_hard_seconds": 3,
+    "slow_steps_per_player": 3,
+    "overage_seconds_per_player": 5,
+    "task_seconds": 1500
+  },
+  "files": {
+    "greedy_parent": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.py",
+      "sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+      "bytes": 6075585
+    },
+    "sampled_parent": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/parent_sampled.py",
+      "sha256": "93d70be43a8cc358c05e4ac3d0870bded1e720aa539208ed0550523fc718e789",
+      "bytes": 6078662
+    },
+    "sampled_child": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/candidate_sampled.py",
+      "sha256": "851c901aa561ce80bf04d03e7c2a8e7876bfa2f24dc6c57ffe22b501979320ee",
+      "bytes": 6078674
+    },
+    "opponent": {
+      "path": "data/master3s2_source.py",
+      "sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+      "bytes": 2897684
+    },
+    "environment": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/carbon.py",
+      "bytes": 11755,
+      "sha256": "72f1f3b561a8715927b809d0e45d621651f9c2c50aaf0109c18a18123a03cc60"
+    },
+    "official_helpers": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/helpers.py",
+      "bytes": 51161,
+      "sha256": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae"
+    },
+    "rules": {
+      "path": "reports/agent-guide.md",
+      "bytes": 9120,
+      "sha256": "ea9276c2c12b61a0425690f121e91306b2ab2780b91f1781f8f99b7d58d9e3c1"
+    },
+    "parent_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.npz",
+      "sha256": "7a677b76f30769eb097162a42d355b13b21acf3bab9ae7e22bfe2e4148ff9923",
+      "bytes": 4861598
+    },
+    "student_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/candidate.npz",
+      "sha256": "bc916190f2f7484055f70a0020f502df137127d8a15b09a5addbc612c0ed849c",
+      "bytes": 4861598
+    },
+    "fit": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/fit.json",
+      "sha256": "51648ab50f0447a282bc46e3b850eb2a47ef240e7221908f1aab13d1bdd04041",
+      "bytes": 16938
+    },
+    "held": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/evidence/results.json",
+      "sha256": "5dd85cc9b5d044df55a4a55b775a251e1f87e98907846877719e078e9f19512f",
+      "bytes": 60848
+    },
+    "training": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/protocol.json",
+      "sha256": "5e5415328bfa2de6389d13dbb55e2ae0102a92a516c8776515bea3a6144159bf",
+      "bytes": 4620
+    },
+    "historical_exam": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/protocol.json",
+      "sha256": "2a32a2b28fa825a8a1ff7e861bc52960300adb332811c865abbde76634e36f3d",
+      "bytes": 1094
+    },
+    "live_registration": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/protocol.json",
+      "sha256": "8bc6122533b139c626323955c0aa0b4dbd8ef771ab04d086df275e5d1641751a",
+      "bytes": 3234
+    },
+    "live": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/live.py",
+      "sha256": "928646196266fdfb40e60be052f82b733d0d95c495a974dab4c1fe492dfa5a80",
+      "bytes": 16011
+    },
+    "worker": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/worker.py",
+      "sha256": "146e4afd9fd2e695fe6bd887e70e11b229e7616e648c0a230b1b90b1943a32b9",
+      "bytes": 4185
+    },
+    "dockerfile": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/Dockerfile",
+      "sha256": "f2e862c3e26bd080969f280018f6bae85d93440fae66de96dcbb65d804bf947e",
+      "bytes": 1072
+    },
+    "runner": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/play.py",
+      "sha256": "17695a8b5f055ef9ae9cc14674b20efe0b776bce0b72365a4336dea393d525d2",
+      "bytes": 5815
+    },
+    "verifier": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/verify_pair.py",
+      "sha256": "a8f42ded66c694c2f9668cfe7c6785b08ae02c231b83d3f4440bf5296cc82051",
+      "bytes": 10621
+    },
+    "adapter": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/matrix.py",
+      "sha256": "ab1eb906b2f26d8bdedb25d6be6c56a5a6fc1ce4b6c538ed91417904d8fb2e87",
+      "bytes": 9210
+    },
+    "guide": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/platform_guide.md",
+      "sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8",
+      "bytes": 11469
+    },
+    "sampler": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/onpolicy_native/training_policy.py",
+      "sha256": "2df318842cddfaf830cf69e5b630e9f19fd1e564926be82702af415d26df05e8",
+      "bytes": 6080386
+    },
+    "training_registration": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/collection_registration.json",
+      "sha256": "bf2df87e797f64308c3001186ffa890f9e6bb82e970bef421a9c777b20fd7dbc",
+      "bytes": 15643
+    },
+    "trained_greedy_source": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/candidate.py",
+      "sha256": "510c527a6f3e88f718e71e4b456e6e065abaeb1474587dc76fd11a5744d7c3d4",
+      "bytes": 6075597
+    },
+    "greedy_parent_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.npz",
+      "sha256": "7a677b76f30769eb097162a42d355b13b21acf3bab9ae7e22bfe2e4148ff9923",
+      "bytes": 4861598
+    },
+    "sampled_parent_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.npz",
+      "sha256": "7a677b76f30769eb097162a42d355b13b21acf3bab9ae7e22bfe2e4148ff9923",
+      "bytes": 4861598
+    },
+    "sampled_child_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/candidate.npz",
+      "sha256": "bc916190f2f7484055f70a0020f502df137127d8a15b09a5addbc612c0ed849c",
+      "bytes": 4861598
+    },
+    "parent_audit": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/parent_audit.json",
+      "sha256": "f21306bd73a72fb9b4f03fe1f7d684798899cce1b3bf95ef8ee2e91fe08a0e29",
+      "bytes": 17393
+    },
+    "parent_natural": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/parent_natural.json",
+      "sha256": "25cc9ba8c9902e236fdd1a60855a6b6707399886171ff5de56d395a478ea4750",
+      "bytes": 2903
+    },
+    "candidate_audit": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/candidate_audit.json",
+      "sha256": "019b46f1622c3974c87a81a75de2cf30a34ee9f5d763615812d7c9869a21e29e",
+      "bytes": 17463
+    },
+    "candidate_natural": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/candidate_natural.json",
+      "sha256": "d51fa845985a76f22f3d30115779c7180a3bc8c5fa3b51a82fa9c43f1ee84971",
+      "bytes": 2901
+    },
+    "prior_621758345": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758345_1.json.gz",
+      "sha256": "e9301a96ee173bebbcc33bfe30f6257d60e7da5a86a379528bafbad26ba91bb4",
+      "bytes": 10042
+    },
+    "prior_621758346": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz",
+      "sha256": "7a5967383c78324d248f4b228541d7eb30f3ac3d39bf18e74f81a011a78c4631",
+      "bytes": 10094
+    }
+  }
+}
