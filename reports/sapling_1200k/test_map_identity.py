@@ -67,8 +67,8 @@ class TerrainTests(unittest.TestCase):
 
     def test_frozen_evidence(self):
         _, seeds, boards = identity.ladder_boards()
-        self.assertEqual(len(seeds),1406)
-        self.assertEqual(len(boards),1406)
+        self.assertEqual(len(seeds),1407)
+        self.assertEqual(len(boards),1407)
         for filename, *_ in identity.SOURCES:
             ledger = Path(__file__).parent / filename
             for line in gzip.decompress(ledger.read_bytes()).splitlines():
