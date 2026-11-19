@@ -171,9 +171,9 @@ def select_registered(wd,plan):
     if load(wd/'selection.json')['selector_sha256']!=key:
         raise ValueError('selection used a different program from registration')
 
-def aggregate(wd):
+def aggregate(wd,previous=None):
     examples=[];seen=set();boards=set();provenance=[]
-    all_dirs=[*phase_dirs(wd.name),wd]
+    all_dirs=[*(phase_dirs(wd.name) if previous is None else previous),wd]
     for area in all_dirs:
         plan=load(area/'protocol.json');sources=load(area/'source_receipt.json');labels=load(area/'training_labels.json')
         if labels['protocol_sha256']!=sha(area/'protocol.json') or labels['selection_sha256']!=sha(area/'selection.json'):
@@ -200,7 +200,7 @@ def aggregate(wd):
     retain(wd/'aggregate.json',doc)
     return doc
 
-def run_pairs(wd,plan):
+def run_pairs(wd,plan,entrypoint=None):
     # One child process per arm is mandatory: original Master3s2 has process-global state.
     items=responder.records()
     def lane(lane_no,cpus):
@@ -217,7 +217,7 @@ def run_pairs(wd,plan):
                               'loadavg_at_launch':Path('/proc/loadavg').read_text().strip(),'allocation_sha256':sha(wd/'response_resources.json')})
             def one(worker):
                 k,cpu=worker;arm='parent' if (k+index//2)%2==0 else 'alternative'
-                subprocess.run(['taskset','-c',str(cpu),sys.executable,'-u',str(Path(__file__)),wd.name,'arm','--index',str(index),'--arm',arm],env=ENV,check=True)
+                subprocess.run(['taskset','-c',str(cpu),sys.executable,'-u',str(entrypoint or Path(__file__)),wd.name,'arm','--index',str(index),'--arm',arm],env=ENV,check=True)
             with ThreadPoolExecutor(max_workers=2) as arms:
                 list(arms.map(one,enumerate(cpus)))
     with ThreadPoolExecutor(max_workers=2) as lanes:
@@ -250,10 +250,16 @@ def main():
     if a.mode=='aggregate':
         doc=aggregate(wd);write_report(wd)
         print(doc['complete_pairs']);return
+    run_intake(wd,plan)
+
+def run_intake(wd,plan,*,clearance_script=None,entrypoint=None,previous=None):
     with (wd/'.intake.schedule.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        if wd.parent==CODE/'batches' and wd.name=='intake_05':
+            from resource_slot import wait_before_source
+            wait_before_source(wd,plan)
         if not (wd/'clearance.json').is_file():
-            subprocess.run(['taskset','-c','4',sys.executable,'-u',str(CODE/'batch_clearance.py'),str(wd/'protocol.json')],check=True,env=ENV)
+            subprocess.run(['taskset','-c','4',sys.executable,'-u',str(clearance_script or CODE/'batch_clearance.py'),str(wd/'protocol.json')],check=True,env=ENV)
         sg.check_maps()
         if not (wd/'source_receipt.json').is_file():
             while other_native(wd):time.sleep(8)
@@ -262,9 +268,9 @@ def main():
         if not (wd/'opportunities.jsonl.gz').is_file():
             opportunities.save(wd/'opportunities.jsonl.gz',intake_dir=wd)
         if not (wd/'selection.json').is_file():select_registered(wd,plan)
-        run_pairs(wd,plan)
+        run_pairs(wd,plan,entrypoint=entrypoint)
         evaluator.finish()
-        doc=aggregate(wd)
+        doc=aggregate(wd,previous=previous)
         write_report(wd)
         print({k:doc[k] for k in ('distinct_maps','complete_pairs','filled_pairs','fit_support_gate')},flush=True)
 

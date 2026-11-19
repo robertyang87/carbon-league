@@ -34,6 +34,38 @@ def official_board(seed):
     return actual
 
 
+def supplementary_nominal_reference(protocol, plan):
+    """Recognize the immutable prospective cross-reference to the original fifth intake."""
+    if plan['intake_name'] != 'intake_05':
+        return None
+    folder = HERE / 'supplement_01'
+    declaration = folder / 'registration.json'
+    if not declaration.exists():
+        return None
+    registration_hash = '03cae8915e514bab1cdd1120edd95b4156e43dd8e851f8ec3e4c6ae5db69b351'
+    issuer_hash = 'd3a3f6fdd271a6882a3e9678b313a4643a87b3dbb653baf87b9664add750aa35'
+    check(digest(declaration) == registration_hash and digest(folder / 'register.py') == issuer_hash,
+          'supplement registration or issuing program differs from pre-outcome freeze')
+    reg = load(declaration)
+    queue_path = HERE / 'next_intake.json'
+    queue = load(queue_path)
+    first = load(HERE / 'clearance.json')
+    booked = dict(first['boards'])
+    for batch in queue['batches']:
+        booked.update(batch['terrain_at_queue_time'])
+    check(reg['schema'] == 'sapling-tree-training-supplement-v1'
+          and reg['state'] == 'frozen_before_previous_intake_05_completion'
+          and reg['register_program_sha256'] == issuer_hash and reg['original_05_must_seal'] is True
+          and reg['original_queue_sha256'] == digest(queue_path) == plan['queue_sha256']
+          and reg['original_protocol_sha256'] == digest(HERE / 'protocol.json')
+          and reg['original_03_aggregate_sha256'] == digest(HERE / 'batches/intake_03/aggregate.json')
+          and reg['previous_predeclared_terrain'] == booked
+          and plan['train_maps'] == queue['batches'][-1]['maps']
+          and queue['batches'][-1]['name'] == protocol.parent.name == plan['intake_name'],
+          'unproven original fifth intake cross-reference')
+    return declaration
+
+
 def reservations(protocol, plan):
     queue_path = HERE / 'next_intake.json'
     queue = load(queue_path)
@@ -63,6 +95,9 @@ def reservations(protocol, plan):
                          'data_parent': digest(resource_parent), 'source_maps': entry['maps']}
     check(load(resource) == expected_resource, 'resource note contains undeclared uses')
     paths = [source, queue_path, protocol, resource]
+    nominal_note = supplementary_nominal_reference(protocol, plan)
+    if nominal_note is not None:
+        paths.append(nominal_note)
     # Only genuine pre-declarations may explain nominal hits. An observed tape never qualifies.
     for path in paths:
         obj = subprocess.run(['git', 'show', plan['source_revision'] + ':' + relative(path)],
@@ -163,6 +198,9 @@ def validate_scan(raw, seed, terrain, protocol, plan, declarations):
     row = json.loads(raw)
     allowed = set(declarations)
     local_allowed = {str((ROOT / path).relative_to(ROOT.parent)) for path in allowed}
+    exact_only = set()
+    if plan.get('intake_name') == 'intake_05':
+        exact_only.add(str((HERE / 'supplement_01/registration.json').relative_to(ROOT.parent)))
     check(row['candidate_seed'] == seed and row['frozen_git_revision'] == plan['source_revision']
           and row['current_declaration']['sha256'] == digest(protocol)
           and row['candidate_initial_terrain_u8_sha256'] == row['official_opening_sha256'] == terrain
@@ -171,14 +209,15 @@ def validate_scan(raw, seed, terrain, protocol, plan, declarations):
         path, how, *extra = conflict
         if path == 'frozen_git' and how == 'unexpected_exact_references' and set(extra[0]) <= allowed:
             continue
-        check(path in local_allowed and how in {'exact_number_or_terrain','recorded_seed'} and not extra,
+        check(path in local_allowed and how in {'exact_number_or_terrain','recorded_seed'}
+              and (path not in exact_only or how == 'exact_number_or_terrain') and not extra,
               f'historical conflict: {conflict}')
     for board, nominal, method in row['same_terrain_matches']:
         check((board, nominal, method) == (terrain, seed, 'inferred_default_native_generator'),
               f'previously observed board: {board}, {nominal}, {method}')
         records = [x for x in row['local_native_or_training_maps']
                    if (x['terrain'], x['seed'], x['method']) == (board, nominal, method)]
-        check(len(records) == 1 and records[0]['source'] and set(records[0]['source']) <= local_allowed,
+        check(len(records) == 1 and records[0]['source'] and set(records[0]['source']) <= local_allowed - exact_only,
               'same terrain has evidence beyond the declared reservation')
         for loc in records[0]['source']:
             check(row['local_source_sha256'][loc] == declarations[relative(ROOT.parent / loc)],
