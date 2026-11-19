@@ -45,3 +45,5 @@ export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
 python reports/sapling_1200k/root_recovery_branches/verify.py
 python reports/sapling_1200k/root_recovery_branches/live_verify.py
 ```
+
+两张额外开发图的预选根以同一流程跑完。靠近敌树的完整续弈分差多 249.87，但从未实际夺到那棵树；留守己树的分差少 227.25，两臂都保住了树直至自然到龄。每根有一对新抽样与完整双边响应，观察到的分差需要更多配对才能估计其稳定性。[两图动作、逐树收支和可恢复运行](responsive_batch_01/README.md)
