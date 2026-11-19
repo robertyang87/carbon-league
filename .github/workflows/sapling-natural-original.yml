@@ -81,7 +81,8 @@ jobs:
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/play.py
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/verify_pair.py
-            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/onpolicy_native/training_policy.py
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/onpolicy_native/build.py
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/onpolicy_native/sampler.py
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/collect.py
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/opponents.py
             /reports/sapling_1200k/official_game_replay.py
@@ -94,7 +95,9 @@ jobs:
           out="$RUNNER_TEMP/receipts"
           mkdir -p "$out"
           echo "$DIGEST  $LANE/protocol.json" | sha256sum --check
-          jq -r '.files[] | "/" + .path' "$LANE/protocol.json" | git sparse-checkout add --stdin
+          jq -r '.files | del(.sampler) | .[] | "/" + .path' "$LANE/protocol.json" | git sparse-checkout add --stdin
+          python3.12 "$CARGO/onpolicy_native/build.py"
+          jq -r '.files.sampler | .sha256 + "  " + .path' "$LANE/protocol.json" | sha256sum --check
           python3.12 "$LANE/matrix.py" check --matrix-sha "$DIGEST"
           jq -n --arg commit "$GITHUB_SHA" --arg workflow_run "$GITHUB_RUN_ID" --arg protocol "$DIGEST" --arg host "$(hostname)" \
               --argjson seed "$SEED" --argjson seat "$SEAT" '{commit:$commit,workflow_run:$workflow_run,protocol_sha256:$protocol,host:$host,seed:$seed,seat:$seat}' > "$out/pair.json"
