@@ -32,3 +32,5 @@ python "$dir/trial.py" evaluate
 两阶段各自保存逐局实录与官方解释器回放。训练更新产物为 `learned_checkpoint.json`，含四个训练终局、输入哈希、四个参数与精确单包哈希。开发验收产物为 `development.json`；训练代码只接口读取 `train_plus/` 和 `train_minus/`，不会使用留图结果更新参数。
 
 [四场训练回报、开发图换席成绩与实发采集指令](RESULTS.md) · [两图追加复核的冻结条件](replication/protocol.json)
+
+[两张预留图的全部八局与分项](replication/README.md) · [考官与历史场的搜索和耗时](examiner_runtime.md)

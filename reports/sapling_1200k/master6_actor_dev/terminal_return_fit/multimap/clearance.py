@@ -82,7 +82,27 @@ def additional():
     return seeds,boards,sorted(set(unknown)),witness
 
 
+def verify_historical_registries(current):
+    paths=sorted(FIT.glob("map_audit_*.json.gz"))+sorted((FIT/"replication").glob("map_clearance_*.json.gz"))
+    assert len(paths)==4
+    historical_seeds=set();historical_terrains=set();sources={}
+    for p in paths:
+        audit=load(p)
+        for row in audit["local_native_or_training_maps"]:
+            if row["seed"] is not None:historical_seeds.add(row["seed"])
+            historical_terrains.add(row["terrain"])
+        sources[str(p.relative_to(FIT))]=sha(p)
+    assert not set(MAPS)&historical_seeds and not set(current["boards"].values())&historical_terrains
+    witness=dict(protocol_sha256=PLAN_SHA,nominal_seed_count=len(historical_seeds),terrain_count=len(historical_terrains),
+                 older_inputs=sources,matches=0)
+    path=HERE/"older_registry_crosscheck.json"
+    if path.exists():assert load(path)==witness
+    else:atomic(path,(json.dumps(witness,indent=2)+"\n").encode())
+
+
 def main():
+    os.sched_setaffinity(0,{0})
+    os.setpriority(os.PRIO_PROCESS,0,19)
     assert sha(PLAN_PATH)==PLAN_SHA and len(set(MAPS))==4
     if (HERE/"clearance.json").exists():
         receipt=load(HERE/"clearance.json")
@@ -91,6 +111,7 @@ def main():
             path=HERE/f"map_audit_{seed}.json.gz"
             assert sha(path)==receipt["per_map_audit_sha256"][str(seed)]
             assert checked(load(path),seed)==receipt["boards"][str(seed)]
+        verify_historical_registries(receipt)
         return
     staging=Path(tempfile.gettempdir())/("sapling-map-audit-"+PLAN_SHA[:16])
     staging.mkdir(exist_ok=True)
@@ -119,6 +140,7 @@ def main():
                 "ladder_board_count":len(ladder_boards),"additional_intake_records":witness,
                 "intake_without_available_opening":unknown}
         atomic(HERE/"clearance.json",(json.dumps(record,indent=2,ensure_ascii=False)+"\n").encode())
+        verify_historical_registries(record)
         print("all four independent terrain identities cleared",boards,flush=True)
 
 

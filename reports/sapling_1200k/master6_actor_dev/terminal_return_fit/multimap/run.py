@@ -82,7 +82,7 @@ def verify(wd,seed,seat,alpha,replay=False):
 
 def game(stage,seed,arm,seat,cpu):
     assert stage in ARMS and arm in ARMS[stage] and seed in PLAN[stage+"_maps"] and seat in PLAN["seats"]
-    assert pdf_ready() and os.sched_getaffinity(0)>={cpu}
+    assert inputs_ready() and os.sched_getaffinity(0)>={cpu}
     os.sched_setaffinity(0,{cpu})
     alpha=alpha_for(stage,arm)
     wd=folder(stage,seed,arm);wd.mkdir(exist_ok=True,parents=True)
@@ -169,8 +169,8 @@ def busy_external_games():
     return active
 
 
-def pdf_ready():
-    if not (HERE/"clearance.json").exists() or not (HERE/"mechanism.json").exists() or not released():return False
+def inputs_ready():
+    if not (HERE/"older_registry_crosscheck.json").exists() or not (HERE/"clearance.json").exists() or not (HERE/"mechanism.json").exists() or not released():return False
     c=load(HERE/"clearance.json");m=load(HERE/"mechanism.json")
     assert c["protocol_sha256"]==m["protocol_sha256"]==PLAN_SHA and c["verdict"]=="eligible_in_checked_scope"
     assert set(map(int,c["boards"]))==set(PLAN["train_maps"]+PLAN["development_maps"])
@@ -219,7 +219,7 @@ def main():
         while True:
             if (HERE/"mechanism.json").exists() and not load(HERE/"mechanism.json")["passed"]:
                 trial.frozen_file(HERE/"stopped.json",dict(reason="no actual action coverage on the preregistered roots",parent=PLAN["parent_sha256"]));return
-            if pdf_ready() and not busy_external_games():break
+            if inputs_ready() and not busy_external_games():break
             time.sleep(12)
         run_stage("train")
         cp=fit();trial.frozen_file(HERE/"checkpoint.json",cp)
@@ -254,6 +254,7 @@ def report():
         lines+=["",f'两图平均分差改变 {out["equal_map_mean_margin_delta"]:+.2f}，平均 ΔU 为 {out["equal_map_mean_U_delta"]:+.4f}。两图四局胜场数 v1 {out["wins"]["v1"]}、新候选 {out["wins"]["candidate"]}。开发条件达成：{out["won_replication_gate"]}。']
     lines+=["",f'本轮保留的提交包 SHA-256 为 `{out["selected_sha256"]}`。每组只有两张独立地图，双席、正负扰动均嵌套在地图内。以上为开发数据，正式胜率仍需独立考试。',"",
             "[预注册](protocol.json) · [地图隔离](clearance.json) · [正交扰动实际改令](mechanism.json) · [训练检查点](checkpoint.json) · [开发结论](development.json) · [各训练席完整行动与官方核验](train/)"]
+    lines+=["","时间口径：验图曾与上一轮第一方向的八局复测共享宿主 4 核总配额。第一轮复测的两臂在同一时间段运行，所有既有结果保留。本轮正负扰动的原版考官对局在前批八份官方核验全部出现后才启动，头两个逻辑核与另两个核在第二张地图交换分组。"]
     atomic(HERE/"README.md",("\n".join(lines)+"\n").encode())
     print("Finished multimap",cp["map_deltas"],cp["training_gate_passed"],out["selected_sha256"],flush=True)
 
