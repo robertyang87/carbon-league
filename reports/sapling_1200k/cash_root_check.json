@@ -1,0 +1,646 @@
+{
+  "scope": "Training-independent diagnostic, original greedy V2 vs policy_v0_1. First discordance per fixed window with own cash <120 and at least one collector carrying >=30. One root joint action changed, both branches then use V2 and the same responsive opponent. Terminal branches may end early. Distinct roots in one game are correlated.",
+  "seeds": [
+    620098011,
+    620098012,
+    620098013
+  ],
+  "windows": [
+    [
+      20,
+      41
+    ],
+    [
+      42,
+      63
+    ],
+    [
+      64,
+      85
+    ]
+  ],
+  "horizon": 12,
+  "source_sha256": {
+    "reports/sapling_1200k/cash_root_check.py": "dea9fa2c44e45113e44fc607d6994291c402f39b799da6999560a7bbd4eea5b5",
+    "data/weights/sapling_1200k/top5_h2h_v2_agent.py": "dc20c132a80424e54c3a61fac7c3c31eca13c79119073165b6693b27cf07ce29",
+    "code/packs/echo4_int8.py": "669e99aebaf2e82da3b3159e0ffabd5e9797aaa4c1f2504b9fffe21684d5a5b2",
+    "code/cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+    "code/cnet2_np.py": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+    "code/fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "code/policy_v0_1.py": "ca2414752c6bd214b721a5b0eda6c040108efbd0dc581e7d8532084db9575303",
+    "reports/sapling_bootstrap/smoke_ab.py": "22fe541c27e92d5e89bc3421769e48bf6c4d3da7e0508410bc0ad20b2ab4058e"
+  },
+  "procedure": "Full simulator, observed student history and opponent policy state are deep-copied after their root observations. Each V2 branch end-state hash matches the untouched main trajectory. The teacher sees public actor observations only.",
+  "games": [
+    {
+      "seed": 620098011,
+      "seat": 0,
+      "main_end": 97,
+      "counts": {
+        "steps_in_windows": 66,
+        "eligible_steps": 24,
+        "selected_disagreements": 2,
+        "later_disagreements_in_used_window": 22
+      },
+      "roots": [
+        {
+          "seed": 620098011,
+          "seat": 0,
+          "step": 20,
+          "initial_cash": 27.66,
+          "max_collector_cargo": 64.29960000000001,
+          "root_state_sha256": "d9d45e6547e35b54816619a848d4af8cab60efbee5f3a9aad89084a2e6805dc6",
+          "student_joint_action": {
+            "player-0-worker-0": "RIGHT",
+            "player-0-worker-4": "UP",
+            "player-0-worker-2": "RIGHT"
+          },
+          "teacher_joint_action": {
+            "player-0-worker-1": "UP",
+            "player-0-worker-0": "DOWN",
+            "player-0-worker-4": "RIGHT",
+            "player-0-worker-2": "DOWN"
+          },
+          "shared_opposing_joint_action": {},
+          "student": {
+            "end_step": 32,
+            "end_cash": 32.61,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 1,
+            "own_positive_delivery_carbon": 56.0472,
+            "end_state_sha256": "aff0c72c129d9e306c3c9d3565104ab565fd25610adad43626b591b90496e91b"
+          },
+          "teacher": {
+            "end_step": 32,
+            "end_cash": 8.86,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 0,
+            "own_positive_delivery_carbon": 0.0,
+            "end_state_sha256": "fbd8ca0700f0b2f2a887c2ae19aef538aed44f0cb790dc4081bbd3df175cb1bc"
+          },
+          "teacher_minus_student": {
+            "end_cash": -23.75,
+            "end_margin": -23.75,
+            "delivery": -56.0472,
+            "same_end_step": true
+          }
+        },
+        {
+          "seed": 620098011,
+          "seat": 0,
+          "step": 42,
+          "initial_cash": 33.94,
+          "max_collector_cargo": 199.41660000000002,
+          "root_state_sha256": "44f08cbb2be6c3cb114202ddc505f79bffffa16589d119f1d8bb2e23505ea9a3",
+          "student_joint_action": {
+            "player-0-worker-1": "RIGHT",
+            "player-0-worker-0": "DOWN",
+            "player-0-worker-5": "UP",
+            "player-0-worker-8": "UP",
+            "player-0-worker-9": "LEFT",
+            "player-0-worker-6": "UP",
+            "player-0-worker-2": "LEFT"
+          },
+          "teacher_joint_action": {
+            "player-0-worker-1": "DOWN",
+            "player-0-worker-0": "DOWN",
+            "player-0-worker-3": "LEFT",
+            "player-0-worker-7": "RIGHT",
+            "player-0-worker-5": "UP",
+            "player-0-worker-8": "UP",
+            "player-0-worker-9": "LEFT",
+            "player-0-worker-2": "LEFT"
+          },
+          "shared_opposing_joint_action": {
+            "player-1-worker-1": "DOWN"
+          },
+          "student": {
+            "end_step": 54,
+            "end_cash": 1016.37,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 5,
+            "own_positive_delivery_carbon": 592.3578000000001,
+            "end_state_sha256": "d6f0b1f4ac0b6d8d2edc6c58885bc4bc5f3e6d3be6aca22f81dfb8a62b3f53ca"
+          },
+          "teacher": {
+            "end_step": 54,
+            "end_cash": 1035.46,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 4,
+            "own_positive_delivery_carbon": 584.7078,
+            "end_state_sha256": "f4aba7d0fe8a8fb53593ee2ee9b6c17d706135356d6755f26481c2f07b7e28e2"
+          },
+          "teacher_minus_student": {
+            "end_cash": 19.090000000000032,
+            "end_margin": 19.090000000000032,
+            "delivery": -7.650000000000091,
+            "same_end_step": true
+          }
+        }
+      ]
+    },
+    {
+      "seed": 620098011,
+      "seat": 1,
+      "main_end": 97,
+      "counts": {
+        "steps_in_windows": 66,
+        "eligible_steps": 17,
+        "selected_disagreements": 1,
+        "later_disagreements_in_used_window": 16
+      },
+      "roots": [
+        {
+          "seed": 620098011,
+          "seat": 1,
+          "step": 20,
+          "initial_cash": 27.66,
+          "max_collector_cargo": 64.29960000000001,
+          "root_state_sha256": "b67c5dd595eb019eeb710f2b818fd6696dfc7ba4accbbb016055fc770a4916f1",
+          "student_joint_action": {
+            "player-1-worker-0": "LEFT",
+            "player-1-worker-4": "UP",
+            "player-1-worker-2": "LEFT"
+          },
+          "teacher_joint_action": {
+            "player-1-worker-1": "UP",
+            "player-1-worker-0": "DOWN",
+            "player-1-worker-4": "LEFT",
+            "player-1-worker-2": "DOWN"
+          },
+          "shared_opposing_joint_action": {},
+          "student": {
+            "end_step": 32,
+            "end_cash": 29.97,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 1,
+            "own_positive_delivery_carbon": 56.0472,
+            "end_state_sha256": "5729b66357b1a6d759f4e6ce4576a3ab012116f0150d1c6b850a61d5c306fb2d"
+          },
+          "teacher": {
+            "end_step": 32,
+            "end_cash": 28.3,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 0,
+            "own_positive_delivery_carbon": 0.0,
+            "end_state_sha256": "ebfde549ee1b24b8d35efc98a9b3a12cc153a2d159adb510eb2170e07a3d36ac"
+          },
+          "teacher_minus_student": {
+            "end_cash": -1.6699999999999982,
+            "end_margin": -1.6699999999999982,
+            "delivery": -56.0472,
+            "same_end_step": true
+          }
+        }
+      ]
+    },
+    {
+      "seed": 620098012,
+      "seat": 0,
+      "main_end": 97,
+      "counts": {
+        "steps_in_windows": 66,
+        "eligible_steps": 20,
+        "selected_disagreements": 2,
+        "later_disagreements_in_used_window": 18
+      },
+      "roots": [
+        {
+          "seed": 620098012,
+          "seat": 0,
+          "step": 52,
+          "initial_cash": 4.51,
+          "max_collector_cargo": 34.6413,
+          "root_state_sha256": "ab28b627d6cf93fd40837661e897a343fe5991bb9d5f2978ae74377614c0a0cd",
+          "student_joint_action": {},
+          "teacher_joint_action": {
+            "player-0-worker-1": "RIGHT"
+          },
+          "shared_opposing_joint_action": {
+            "player-1-worker-1": "RIGHT"
+          },
+          "student": {
+            "end_step": 64,
+            "end_cash": 123.34,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 1,
+            "own_positive_delivery_carbon": 138.8343,
+            "end_state_sha256": "5c55f77f2a6ede2ffbaaad3e02f0583fb477780e0258d4ba3f75f986cb436e66"
+          },
+          "teacher": {
+            "end_step": 64,
+            "end_cash": 123.34,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 1,
+            "own_positive_delivery_carbon": 138.8343,
+            "end_state_sha256": "df5704cd4031589d470957c2730cf98136d8a972df1fb10a9ec1f756e877cccc"
+          },
+          "teacher_minus_student": {
+            "end_cash": 0.0,
+            "end_margin": 0.0,
+            "delivery": 0.0,
+            "same_end_step": true
+          }
+        },
+        {
+          "seed": 620098012,
+          "seat": 0,
+          "step": 67,
+          "initial_cash": 76.58,
+          "max_collector_cargo": 30.0,
+          "root_state_sha256": "52374923b321f5bfd1be7f022a0d0ba1156040edfbd61800a0f580a3fcc76786",
+          "student_joint_action": {
+            "player-0-worker-4": "LEFT",
+            "player-0-worker-3": "UP",
+            "player-0-worker-5": "DOWN",
+            "player-0-worker-2": "LEFT",
+            "player-0-recrtCenter-0": "RECCOLLECTOR",
+            "player-0-recrtCenter-1": "RECCOLLECTOR"
+          },
+          "teacher_joint_action": {
+            "player-0-worker-1": "RIGHT",
+            "player-0-worker-3": "UP",
+            "player-0-worker-5": "RIGHT",
+            "player-0-worker-2": "LEFT",
+            "player-0-recrtCenter-0": "RECPLANTER"
+          },
+          "shared_opposing_joint_action": {
+            "player-1-worker-1": "LEFT",
+            "player-1-worker-0": "RIGHT"
+          },
+          "student": {
+            "end_step": 79,
+            "end_cash": 215.04,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 1,
+            "own_positive_delivery_carbon": 51.0,
+            "end_state_sha256": "54031b929fec9668a4b710cd200154fca673642789899105c1307bddfca52dd1"
+          },
+          "teacher": {
+            "end_step": 79,
+            "end_cash": 211.53,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 3,
+            "own_positive_delivery_carbon": 130.1265,
+            "end_state_sha256": "73d29ac71fe21ac849c570060be7ca40a9dbcf2141a73454b75842484d3a5ef2"
+          },
+          "teacher_minus_student": {
+            "end_cash": -3.509999999999991,
+            "end_margin": -3.509999999999991,
+            "delivery": 79.1265,
+            "same_end_step": true
+          }
+        }
+      ]
+    },
+    {
+      "seed": 620098012,
+      "seat": 1,
+      "main_end": 97,
+      "counts": {
+        "steps_in_windows": 66,
+        "eligible_steps": 25,
+        "selected_disagreements": 2,
+        "later_disagreements_in_used_window": 23
+      },
+      "roots": [
+        {
+          "seed": 620098012,
+          "seat": 1,
+          "step": 20,
+          "initial_cash": 7.8,
+          "max_collector_cargo": 56.054399999999994,
+          "root_state_sha256": "b954acc78be038cc227b1a60594e8dce7b59badb72ed1b9eb583de0a5fc4fcde",
+          "student_joint_action": {
+            "player-1-worker-3": "LEFT"
+          },
+          "teacher_joint_action": {
+            "player-1-worker-1": "RIGHT",
+            "player-1-worker-0": "LEFT",
+            "player-1-worker-3": "RIGHT",
+            "player-1-worker-2": "RIGHT"
+          },
+          "shared_opposing_joint_action": {
+            "player-0-worker-0": "RIGHT"
+          },
+          "student": {
+            "end_step": 32,
+            "end_cash": 7.8,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 0,
+            "own_positive_delivery_carbon": 0.0,
+            "end_state_sha256": "17a20507d55d1a9feb4a81d3b3f130d28241fa16d58a76d91398e0acdc1cd4da"
+          },
+          "teacher": {
+            "end_step": 32,
+            "end_cash": 16.26,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 2,
+            "own_positive_delivery_carbon": 109.476,
+            "end_state_sha256": "e6ed5fa63ce713f066ffb24862fd80e1316443ad296ace1561b50c3408dcfd58"
+          },
+          "teacher_minus_student": {
+            "end_cash": 8.46,
+            "end_margin": 8.46,
+            "delivery": 109.476,
+            "same_end_step": true
+          }
+        },
+        {
+          "seed": 620098012,
+          "seat": 1,
+          "step": 42,
+          "initial_cash": 25.75,
+          "max_collector_cargo": 104.47710000000001,
+          "root_state_sha256": "167d2e737bae74416738b618b01592a015a594ed545fa74485048410000aafbe",
+          "student_joint_action": {
+            "player-1-worker-0": "DOWN",
+            "player-1-worker-6": "RIGHT",
+            "player-1-worker-9": "RIGHT",
+            "player-1-worker-5": "DOWN",
+            "player-1-worker-2": "DOWN",
+            "player-1-worker-7": "UP"
+          },
+          "teacher_joint_action": {
+            "player-1-worker-0": "LEFT",
+            "player-1-worker-6": "RIGHT",
+            "player-1-worker-9": "DOWN",
+            "player-1-worker-5": "DOWN",
+            "player-1-worker-2": "RIGHT",
+            "player-1-worker-7": "UP"
+          },
+          "shared_opposing_joint_action": {
+            "player-0-worker-1": "LEFT"
+          },
+          "student": {
+            "end_step": 54,
+            "end_cash": 519.17,
+            "opponent_end_cash": 89.38,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 3,
+            "own_positive_delivery_carbon": 425.8896,
+            "end_state_sha256": "f12c5d0ff0a4102737db07d5d570b4dafd3ead48d6c5444b90255222894129bb"
+          },
+          "teacher": {
+            "end_step": 54,
+            "end_cash": 631.93,
+            "opponent_end_cash": 89.38,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 4,
+            "own_positive_delivery_carbon": 429.21479999999997,
+            "end_state_sha256": "a0bd4e03f758a5a16614160b89ab9368d9d9a49827e238be36f1de04e2b5e0b5"
+          },
+          "teacher_minus_student": {
+            "end_cash": 112.75999999999999,
+            "end_margin": 112.75999999999999,
+            "delivery": 3.3251999999999953,
+            "same_end_step": true
+          }
+        }
+      ]
+    },
+    {
+      "seed": 620098013,
+      "seat": 0,
+      "main_end": 97,
+      "counts": {
+        "steps_in_windows": 66,
+        "eligible_steps": 23,
+        "selected_disagreements": 2,
+        "later_disagreements_in_used_window": 20,
+        "no_disagreement": 1
+      },
+      "roots": [
+        {
+          "seed": 620098013,
+          "seat": 0,
+          "step": 32,
+          "initial_cash": 13.36,
+          "max_collector_cargo": 30.0,
+          "root_state_sha256": "9bc85da1c04d8487fb36972e4dffbecc2ea74b83f05ca331a3281dcfeb690dc4",
+          "student_joint_action": {
+            "player-0-worker-4": "LEFT",
+            "player-0-worker-1": "DOWN",
+            "player-0-worker-2": "RIGHT",
+            "player-0-worker-3": "RIGHT"
+          },
+          "teacher_joint_action": {
+            "player-0-worker-4": "LEFT",
+            "player-0-worker-1": "DOWN",
+            "player-0-worker-2": "DOWN",
+            "player-0-worker-3": "RIGHT"
+          },
+          "shared_opposing_joint_action": {
+            "player-1-worker-1": "UP",
+            "player-1-worker-0": "LEFT"
+          },
+          "student": {
+            "end_step": 44,
+            "end_cash": 13.36,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 0,
+            "own_positive_delivery_carbon": 0.0,
+            "end_state_sha256": "c302370aaf2bb67a034565b3ab7fd17007b3554ca472703aaa25ed1c73a7dde3"
+          },
+          "teacher": {
+            "end_step": 44,
+            "end_cash": 13.36,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 0,
+            "own_positive_delivery_carbon": 0.0,
+            "end_state_sha256": "18b7ded80e96aa66d523cd62b46dbd75601597b54df141c5087942a13f664579"
+          },
+          "teacher_minus_student": {
+            "end_cash": 0.0,
+            "end_margin": 0.0,
+            "delivery": 0.0,
+            "same_end_step": true
+          }
+        },
+        {
+          "seed": 620098013,
+          "seat": 0,
+          "step": 42,
+          "initial_cash": 13.36,
+          "max_collector_cargo": 162.0348,
+          "root_state_sha256": "95f0aabbab49538c60dffa870c027c34f7188b778b7838c8c20c97229cc48157",
+          "student_joint_action": {
+            "player-0-worker-4": "UP",
+            "player-0-worker-1": "DOWN",
+            "player-0-worker-2": "UP"
+          },
+          "teacher_joint_action": {
+            "player-0-worker-4": "UP",
+            "player-0-worker-1": "DOWN",
+            "player-0-worker-2": "LEFT"
+          },
+          "shared_opposing_joint_action": {
+            "player-1-worker-1": "UP",
+            "player-1-worker-0": "LEFT"
+          },
+          "student": {
+            "end_step": 54,
+            "end_cash": 199.39,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 1,
+            "own_positive_delivery_carbon": 226.0299,
+            "end_state_sha256": "417e46fbeaf40925cfbd70f0d1742760a23b3a29c711b5c63154a1b577a3bdca"
+          },
+          "teacher": {
+            "end_step": 54,
+            "end_cash": 199.39,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 1,
+            "own_positive_delivery_carbon": 226.0299,
+            "end_state_sha256": "b7bac9d2dc7064a96a514c29bc4862c6f83a6b2c2dc3862cdcea4a2f138a7dba"
+          },
+          "teacher_minus_student": {
+            "end_cash": 0.0,
+            "end_margin": 0.0,
+            "delivery": 0.0,
+            "same_end_step": true
+          }
+        }
+      ]
+    },
+    {
+      "seed": 620098013,
+      "seat": 1,
+      "main_end": 97,
+      "counts": {
+        "steps_in_windows": 66,
+        "eligible_steps": 19,
+        "selected_disagreements": 1,
+        "later_disagreements_in_used_window": 17,
+        "no_disagreement": 1
+      },
+      "roots": [
+        {
+          "seed": 620098013,
+          "seat": 1,
+          "step": 21,
+          "initial_cash": 13.36,
+          "max_collector_cargo": 65.6262,
+          "root_state_sha256": "74c490ce33dccaaf51f41f80e9e93c5f28897bd6c5daccbac6d9735891bea497",
+          "student_joint_action": {
+            "player-1-worker-0": "RIGHT",
+            "player-1-worker-1": "LEFT",
+            "player-1-worker-4": "LEFT",
+            "player-1-worker-2": "LEFT",
+            "player-1-worker-3": "DOWN"
+          },
+          "teacher_joint_action": {
+            "player-1-worker-0": "DOWN",
+            "player-1-worker-1": "LEFT",
+            "player-1-worker-4": "RIGHT",
+            "player-1-worker-2": "UP",
+            "player-1-worker-3": "DOWN"
+          },
+          "shared_opposing_joint_action": {
+            "player-0-worker-0": "UP"
+          },
+          "student": {
+            "end_step": 33,
+            "end_cash": 28.67,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 1,
+            "own_positive_delivery_carbon": 79.47659999999999,
+            "end_state_sha256": "f35db82f0f81c82d5bc36a5a529cd1370487bb565102a6b2b7059c45d80a38de"
+          },
+          "teacher": {
+            "end_step": 33,
+            "end_cash": 13.36,
+            "opponent_end_cash": 20.0,
+            "extinct_by_seat": [
+              false,
+              false
+            ],
+            "positive_delivery_events": 0,
+            "own_positive_delivery_carbon": 0.0,
+            "end_state_sha256": "3a07358aad0463636349f00254ba8f3b3116a6883a7edccab9850d16ad3ab46f"
+          },
+          "teacher_minus_student": {
+            "end_cash": -15.310000000000002,
+            "end_margin": -15.310000000000002,
+            "delivery": -79.47659999999999,
+            "same_end_step": true
+          }
+        }
+      ]
+    }
+  ]
+}
