@@ -1,0 +1,61 @@
+{
+  "purpose": "Exactly two old development roots, two full official continuations each, conditioned on previously replayed histories. Normal emitted bc69 vs 61dae only at the archived root, then identical 8da4 against the original to official terminal. These are conditional suffix experiments.",
+  "roots_sha256": "ebd3f71e2cae963122715c7f8515dd06d00b0460ee269efd59923be2e9d641ee",
+  "registration_sha256": "b5c5145134d9a06c76e708d3589a51fb353ebfc1c53f5c757cb2c6d7a95f37e8",
+  "source_roles_sha256": "2062d1dac1b1635b0ed863bff707be4bf6094664f9485ac43c0d23c7c240c6f6",
+  "root_policies": {
+    "alternative_encoder_decoder": "61dae17267eb6f581efba533750134ccc62c6d5316526fce9a0e5db1996d6ead",
+    "parent_encoder_only": "bc69b55e9d61ee06b5c6f3ca038602d2283be4c8b61b0c1fd8f96e92a86ea597"
+  },
+  "continuation_sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "examiner": {
+    "sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+    "md5": "57f9a594cce4f2ec9e3573d8d9d26ca1",
+    "source": "data/master3s2_source.py",
+    "temperature": 1,
+    "random_seed": null,
+    "search_wall_budget_s": 0.58
+  },
+  "cases": [
+    {
+      "id": "621471120_1",
+      "seed": 621471120,
+      "seat": 1,
+      "t": 74,
+      "source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source/raw_621471120_0.json.gz",
+      "source_sha256": "892bfc66bb02729bb21a7fae89d5ddf547c7fcdd9d4fac2ecbc5054c611ba3b8",
+      "terrain": "2920f439bb16a4297298984934b1a9c1ff0932873d318d35b798c89bd6de3845",
+      "prefix_sha256": "955b846841f96d1b761c0c8863ac5eebed4aefd16e3f2a46b092063421efd162",
+      "prefix_file": "621471120_1_prefix.json.gz",
+      "prefix_file_sha256": "88980affbe9ace21957243f35dd4bbd1ff8002267759bd0ff2002dbb1786096c",
+      "public_obs_sha256": "52937c142dbb806674fc1f969481cdff6047e9688eb6d205c08244144af5725f",
+      "root_identity": "dcc07a5aaa883a9d8ea14ed011dc0cac06add77bd08ec89e31d50442f8590205",
+      "arm_order": [
+        "parent",
+        "student"
+      ]
+    },
+    {
+      "id": "621477121_0",
+      "seed": 621477121,
+      "seat": 0,
+      "t": 67,
+      "source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/supplement_01/batches/intake_07/source/raw_621477121_0.json.gz",
+      "source_sha256": "fdcbbfc9313fc962e4f817148981ced5086a59515a9bfa52b3c14c87d54b1e1c",
+      "terrain": "d0ffd6029e4f87d3a7fc3a4b1471de88a814cd9361af296a00ed281ad656d1a0",
+      "prefix_sha256": "65ac7bc5f525136526fa4bd663311142f394b6f45d3bb45297e6660b22395122",
+      "prefix_file": "621477121_0_prefix.json.gz",
+      "prefix_file_sha256": "54d1475582183f9e18a724a5e97318ae79780792d65e23b3bb05c398d483593b",
+      "public_obs_sha256": "8efce14eff3982c2b9ad98cdaa6bebad2232e8587c3911e034683a07f0686a7e",
+      "root_identity": "77aadc77b08225d7c700b73d9ef3784c9ba95d9ac4ed1390e6a8790038869629",
+      "arm_order": [
+        "student",
+        "parent"
+      ]
+    }
+  ],
+  "prefix_method": "Official interpreter replay of exactly the registered joint prefix. Both root actors, common 8da4 continuation and original examiner are invoked via their normal public entries from zero to root. On each prior step the actual archived actions are applied to the referee, and the original's native BeliefTracker.set_actions records the executed historical opponent-side command in place of its hypothetical proposal, an observable action-history correction. Preserve the original's actual natural RNG consumption, search timing, search costs, and prior decisions. The original reads only the appropriate physical seat's public observation. Record natural original proposed commands and timing at every prefix step. Never rely on an archived enemy root command as a substitute for original.",
+  "root_and_suffix": "At the registered root take one new original normal search response under the native real clock. The two arms share its exact action and postdecision search, tracker and RNG snapshot, including Python, legacy NumPy, local tracker RNG and CPU Torch RNG. Verify hash and restore full state before each branch. First own action must be the literal normal encoder parent or new decoder student respectively on the exact registered public root. Thereafter warm 8da4 on the same archived own public prefix including the root and use its actual public command at every state of either arm; original resumes at t+1. No fake clock, no post-hoc resampling/divergence selection, include zero-depth fallback and early terminal. Start each root once, one saved natural draw; resume completed artifacts only under identical bindings.",
+  "resource": "Each root pinned to a distinct idle physical core, one BLAS/thread-pool worker per process, original Torch thread configuration as supplied but constrained to that core. Prefer idle cores 3 and 4 with parent authorization after host switch, otherwise 0 and 1 after the previous four training roots release them. No concurrent arm within a case. Run only after preregistration is pushed.",
+  "evidence": "For both roots save host/checksum bindings, full executed and proposed original prefix, public digests, exact root command and any archived enemy mismatch. Save each full suffix command, post-root public-observation hashes, own public wall times, original native recorder per-decision depth/fallback/wall, all official terminal statuses/rewards/cash. Independently replay official interpreter to terminal plus alternative cash ledger; verify all subsequent own commands are reproducible from the common 8da4. Report symmetric per-physical-seat results, both gains and losses, economic decomposition, horizons and zero-depth counts. No full-game winning or deployed-strength inference."
+}
