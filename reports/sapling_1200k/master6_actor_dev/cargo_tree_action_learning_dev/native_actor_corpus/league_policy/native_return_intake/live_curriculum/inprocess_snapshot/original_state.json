@@ -1,0 +1,113 @@
+{
+  "source_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "source_lines": {
+    "_act": [
+      571,
+      626
+    ],
+    "_turn": [
+      947,
+      973
+    ],
+    "_shift_table": [
+      666,
+      672
+    ],
+    "next_state": [
+      700,
+      918
+    ],
+    "_net": [
+      1124,
+      1146
+    ],
+    "_search": [
+      1252,
+      1484
+    ]
+  },
+  "network_forward_source": {
+    "_Policy": {
+      "sid": {
+        "first": 511,
+        "last": 512,
+        "instance_stores": []
+      },
+      "forward": {
+        "first": 514,
+        "last": 529,
+        "instance_stores": []
+      }
+    },
+    "_TorchNet": {
+      "_conv": {
+        "first": 1022,
+        "last": 1023,
+        "instance_stores": []
+      },
+      "__call__": {
+        "first": 1025,
+        "last": 1043,
+        "instance_stores": []
+      }
+    },
+    "_WinoNet": {
+      "_conv": {
+        "first": 1075,
+        "last": 1078,
+        "instance_stores": []
+      },
+      "__call__": {
+        "first": 1080,
+        "last": 1099,
+        "instance_stores": []
+      }
+    }
+  },
+  "mutable_state": {
+    "_ST": "BeliefTracker, last_dest, every Belief cell/history/class/worker/tree field, physical prev players and full local NumPy RandomState.",
+    "_S_COST": "Measured smoothed and last batch/physics costs. Affects candidate budget and adaptive cutoffs.",
+    "_S_STATS": "Cumulative timing, depth, candidates, rollouts, counters and last search.",
+    "_S_REC": "Optional full search records; None in original default. Preserve outer reference when recording.",
+    "_RX_CFG": "Identity-keyed external configuration and derived merged config; preserve original external pointer and reject changed external contents.",
+    "_SHIFT_T": "Mutable retained per-size geometry lookup used by embedded transitions; copied.",
+    "LAST_STATS": "Embedded simulator’s last cell rent and worker withholding; restored even though the search does not select moves from it.",
+    "ambient": "Python random, NumPy legacy global MT19937, CPU torch RNG. Root sampling has its own captured _ST RandomState; search-local per-depth RNGs are reconstructed from step and seat."
+  },
+  "immutable_runtime": "Keep actual initialized policy, big/rollout Torch or Winograd instances with aliasing and signed weight bytes; pure forward uses local temporary tensors, no running BatchNorm state. Imported source has no assignment defining a _ROLL payload. Coordinate and symmetry tables built at module import are only read thereafter; all per-board rollout states are local.",
+  "boundary": "Snapshots are at public-call boundaries in a single process; no active stack/forward/parallel request. PyTorch/BLAS allocator, oneDNN plans, OS scheduler, load and monotonic physical wall time cannot be rewound. Identical logical initial state does not guarantee identical future depths or chosen moves; retain each actual time/depth/score. Source temp choice at cold init is native; never reset global seeds during play.",
+  "ancestor": "learned_carbon_observation/native_response/run.py capture/sig/restore for _ST, costs, stats and RNGs; extended to simulator memo, native diagnostic state, layer hashes and configuration identity without registering dynamic module names for pickle.",
+  "offline_mechanism_test": {
+    "engine_requests": 0,
+    "game_starts": 0,
+    "native_module_registered_in_sys_modules": false,
+    "synthetic_restores": 2,
+    "prior_mutation_detected": true,
+    "identical_state_and_container_aliases": true,
+    "torch_backend": "_WinoNet",
+    "rollout_alias": true,
+    "immutable_forward_hashes": {
+      "options": "9af3b0af4d9f777a50b43f62b78085a2c593f66276235ada1dc6ff8eccda4c40",
+      "policy": "0f3134c0d73ed2114cd62f078189d0a3d5616ebf87515d7c9a907b587d0f3452",
+      "net": "ecdba397602335c424ca5aa8f4c3b05f16fb6bd25d32007bbee82ab7efffd48b",
+      "rollout": "alias:_NET",
+      "torch_threads": 2,
+      "torch_interop": 5,
+      "torch_deterministic": false,
+      "torch_dtype": "torch.float32"
+    },
+    "changes_exercised": [
+      "tracker.bel.hist",
+      "tracker.last_dest",
+      "previous physical players",
+      "own NumPy RandomState",
+      "recent/smoothed search costs",
+      "stats.time",
+      "optional search record",
+      "transition shift table",
+      "last worker tax",
+      "configuration memo external identity",
+      "ambient Python/NumPy/Torch RNG streams"
+    ]
+  }
+}
