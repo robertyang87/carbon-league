@@ -38,7 +38,8 @@ def run():
                             alt.step(*pair)
                             if k not in alt.workers:break
                             if before and uid not in alt.workers:
-                                dead=any(row[0]==uid and row[4]==seat for row in alt.last_collisions)
+                                dead=(k in alt.workers and alt.workers[k].pos==before.pos and
+                                      any(row[0]==uid and row[4]==seat for row in alt.last_collisions))
                                 break
                         if dead and k in alt.workers:
                             alternatives.append(dict(start=t,finish=t+len(actions)-1,worker=k,start_cargo=w[1],
