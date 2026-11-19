@@ -16,9 +16,24 @@ import uuid
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[4]
-PLAN = json.loads((HERE/'protocol.json').read_text())
+REGISTRATION = HERE / 'protocol.json'
+CLAIM = HERE / 'attempt.json'
+GAME_LOCK = HERE.parents[1] / 'tree_response_training/.continuation.lock'
+PLAN = json.loads(REGISTRATION.read_text())
 RULE = PLAN['platform']
 ROLES = ('opponent','candidate')  # physical seats 0, 1
+
+
+def configure(registration, claim, lock):
+    """Select an immutable match contract before creating either player process."""
+    global PLAN, REGISTRATION, CLAIM, GAME_LOCK, RULE, ROLES
+    plan = json.loads(registration.read_bytes())
+    seat = plan['candidate_seat']
+    if type(seat) is not int or seat not in (0, 1) or plan['opponent_seat'] != 1 - seat:
+        raise ValueError('invalid physical seats')
+    PLAN, REGISTRATION, CLAIM, GAME_LOCK = plan, registration, claim, lock
+    RULE = plan['platform']
+    ROLES = ('candidate', 'opponent') if seat == 0 else ('opponent', 'candidate')
 
 
 def sha(path):
@@ -200,8 +215,8 @@ async def game(procs, result, output):
     ledger=output/'turns.jsonl'; bank=[5.,5.]; slow=[0,0]
     # Claim this registration before an actual attempt. An interrupted match cannot
     # be resampled by changing the output path or by calling this command twice.
-    with (HERE/'attempt.json').open('x') as fd:
-        fd.write(encoded({'seed':PLAN['seed'],'runtime_image':result['image_id'],'protocol_sha256':sha(HERE/'protocol.json')}).decode())
+    with CLAIM.open('x') as fd:
+        fd.write(encoded({'seed':PLAN['seed'],'runtime_image':result['image_id'],'protocol_sha256':sha(REGISTRATION)}).decode())
     result['strategy_initializations']=2
     ready=await asyncio.gather(*(exchange(p,{'load':True},20) for p in procs))
     result['initialization']=ready
@@ -210,7 +225,7 @@ async def game(procs, result, output):
             v=call['response']
             if not v.get('ready') or v.get('sha256')!=PLAN['files'][ROLES[s]]['sha256']:
                 raise RuntimeError('cold load identity differs')
-            if s==0 and v.get('original')!={'_TEMP':1,'_SEED':None,'_S_ABORT':0.58,'_SEARCH_OK':True}:
+            if ROLES[s]=='opponent' and v.get('original')!={'_TEMP':1,'_SEED':None,'_S_ABORT':0.58,'_SEARCH_OK':True}:
                 raise RuntimeError('original search/configuration unavailable')
     lost=failures(ready)
     if lost:return lost
@@ -250,13 +265,13 @@ async def run(args):
         raise RuntimeError('submission file too large')
     dest=args.out; dest.mkdir(parents=True,exist_ok=True); receipt=dest/'receipt.json'
     if receipt.exists(): raise FileExistsError(receipt)
-    result=dict(protocol_sha256=sha(HERE/'protocol.json'),runner_sha256=sha(Path(__file__)),worker_sha256=sha(HERE/'worker.py'),
-                seed=PLAN['seed'],candidate_seat=1,official_transitions=0,action_calls=[0,0],strategy_initializations=0,
+    result=dict(protocol_sha256=sha(REGISTRATION),runner_sha256=sha(Path(__file__)),worker_sha256=sha(HERE/'worker.py'),
+                seed=PLAN['seed'],candidate_seat=ROLES.index('candidate'),official_transitions=0,action_calls=[0,0],strategy_initializations=0,
                 docker_info=json.loads(subprocess.check_output(['docker','info','--format','{{json .}}']))['CgroupDriver'])
     result['image_id']=subprocess.check_output(['docker','image','inspect',args.image,'--format','{{.Id}}'],text=True).strip()
     lock=None
     if args.play:
-        lock=(HERE.parents[1]/'tree_response_training/.continuation.lock').open('a')
+        lock=GAME_LOCK.open('a')
         fcntl.flock(lock,fcntl.LOCK_EX)
     start=time.monotonic()
     try:
