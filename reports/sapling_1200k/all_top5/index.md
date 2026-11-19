@@ -31,3 +31,5 @@
 [收盘后 Master6 主索引新增 12 局](appendix_bd3c0021/README.md) · [六批全部 1,373 局](README.md)
 
 [补编五张图及逐局分析](appendix_5484590b/README.md)
+
+[新增四局逐场资金与布局](appendix_99919cbf/README.md) · [累计 1,382 张唯一地图的双引擎核验](appendix_99919cbf/validation.md)
