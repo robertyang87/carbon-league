@@ -32,7 +32,7 @@ def one(g):
         for kind,owner,val,*rest in sim.cash.events:
             side=int(owner!=s)
             if kind=='tree_absorption':ledger[t+1,2+side]+=val
-            elif kind=='base_deposit':ledger[t+1,4+side]+=val
+            elif kind=='own_delivery':ledger[t+1,4+side]+=val
     future=np.minimum(turns.astype(int)+25,len(frames)-1)
     delta=ledger[future]-ledger[turns]
     labels=np.stack([delta[:,0]-delta[:,1],delta[:,2],delta[:,3],delta[:,4],delta[:,5]],1)
@@ -43,6 +43,7 @@ def main():
         gid,t,targets,h,n=one(g);result.append((gid,t,targets,h));frames+=n
         if i%40==39:print(i+1,'maps',frames,'verified cash steps',flush=True)
     cols=list(zip(*result));arrays=[np.concatenate(v) for v in cols]
+    if (np.count_nonzero(arrays[2],axis=0)<100).any():raise ValueError('degenerate label channel')
     np.savez_compressed(HERE/'labels_25.npz',gid=arrays[0],step=arrays[1],target=arrays[2],horizon=arrays[3])
     (HERE/'economic_labels.json').write_text(json.dumps(dict(cash_steps=frames,maps=len(panel),rows=len(arrays[0]),
         label_columns=['cash differential change','own tree receipts','opp tree receipts','own base deposits','opp base deposits'],

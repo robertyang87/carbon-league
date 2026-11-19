@@ -28,6 +28,7 @@ def main():
     p,oracle,base,net,meta=initialize()
     cards=bc.assemble();train=[g for g in cards if g['split']=='train']
     data=bc.ref.load(train,bc.SHARDS);yfuture=targets(data)
+    if (torch.count_nonzero(yfuture,dim=0)<100).any():raise ValueError('each training outcome must be observable and nondegenerate')
     if data['value'].any() or data['carbon'].any():raise ValueError('privileged actor input')
     phases=np.minimum(3,data['step']//75);weights=np.zeros(len(phases),np.float32)
     for g in train:
