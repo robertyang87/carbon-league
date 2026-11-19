@@ -24,7 +24,8 @@ def prepare():
 if __name__=='__main__':
     if sys.argv[1:]==['prepare']:prepare()
     elif sys.argv[1:]==['verify']:
-        import ledger
+        verify_spec=importlib.util.spec_from_file_location("freight_branch_ledger",SOURCE/"ledger.py")
+        ledger=importlib.util.module_from_spec(verify_spec);verify_spec.loader.exec_module(ledger)
         ledger.summarize(HERE)
     elif len(sys.argv)>1:
         # The pre-frozen action and its continuation use the upstream route implementation verbatim.
