@@ -1,0 +1,172 @@
+name: Sapling native actor two-map development
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: sapling-native-actor-6c548995-development
+  cancel-in-progress: false
+
+env:
+  CARGO: reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev
+  LANE: reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original
+  OPENBLAS_NUM_THREADS: '1'
+  OMP_NUM_THREADS: '1'
+  MKL_NUM_THREADS: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  matrix:
+    if: github.ref == 'refs/heads/main' && github.run_attempt == '1'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    outputs:
+      pairs: ${{ steps.plan.outputs.pairs }}
+      digest: ${{ steps.plan.outputs.digest }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/
+      - id: plan
+        name: Read frozen four-pair schedule
+        run: |
+          set -euo pipefail
+          python3.12 - <<'PY'
+          import hashlib, json, os, pathlib
+          lane = pathlib.Path(os.environ["LANE"])
+          raw = (lane / "protocol.json").read_bytes()
+          digest = hashlib.sha256(raw).hexdigest()
+          if digest != (lane / "matrix.sha256").read_text().split()[0]:
+              raise SystemExit("Development protocol digest differs")
+          plan = json.loads(raw)
+          pairs = [{"seed": r["seed"], "seat": r["seat"]} for r in plan["schedule"]]
+          if len(set(plan["seeds"])) != 2 or len(pairs) != 4 or {(p["seed"], p["seat"]) for p in pairs} != {(seed, seat) for seed in plan["seeds"] for seat in (0, 1)}:
+              raise SystemExit("Incomplete or duplicate seed/seat schedule")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              print("pairs=" + json.dumps({"include": pairs}, separators=(",", ":")), file=out)
+              print("digest=" + digest, file=out)
+          PY
+
+  pair:
+    needs: matrix
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    name: native-actor-${{ matrix.seed }}-${{ matrix.seat }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.matrix.outputs.pairs) }}
+    env:
+      SEED: ${{ matrix.seed }}
+      SEAT: ${{ matrix.seat }}
+      DIGEST: ${{ needs.matrix.outputs.digest }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/sapling-native-actor-development.yml
+            /code/env_src/carbon_challenge-master/zerosum_env/
+            /data/master3s2_source.py
+            /sources/master3s2/master3s2.py
+            /reports/agent-guide.md
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/play.py
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/verify_pair.py
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/original_response/
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/ladder_timing/
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/
+
+      - name: Materialize all registered inputs and verify the gate
+        id: gate
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/receipts"
+          mkdir -p "$out"
+          echo "$DIGEST  $LANE/protocol.json" | sha256sum --check
+          jq -r '.files[] | "/" + .path' "$LANE/protocol.json" | git sparse-checkout add --stdin
+          python3.12 "$LANE/matrix.py" check --matrix "$LANE/protocol.json" --matrix-sha "$DIGEST"
+          jq -n --arg commit "$GITHUB_SHA" --arg workflow_run "$GITHUB_RUN_ID" --arg protocol "$DIGEST" --arg host "$(hostname)" \
+              --argjson seed "$SEED" --argjson seat "$SEAT" '{commit:$commit,workflow_run:$workflow_run,protocol_sha256:$protocol,host:$host,seed:$seed,seat:$seat}' > "$out/pair.json"
+
+      - name: Check prior strategy exposure on this map and seat
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3.12 - <<'PY'
+          import json, os, pathlib, subprocess, tempfile
+          env = os.environ
+          api = "repos/" + env["GITHUB_REPOSITORY"] + "/actions/"
+          def rows(endpoint, key):
+              data = subprocess.check_output(["gh", "api", "--paginate", "--slurp", api + endpoint])
+              return [r for page in json.loads(data) for r in page[key]]
+          job_name = f"native-actor-{env['SEED']}-{env['SEAT']}"
+          for run in rows("workflows/sapling-native-actor-development.yml/runs?branch=main&event=workflow_dispatch&per_page=100", "workflow_runs"):
+              if run["id"] >= int(env["GITHUB_RUN_ID"]):
+                  continue
+              jobs = rows(f"runs/{run['id']}/jobs?filter=all&per_page=100", "jobs")
+              started = any(j["name"] == job_name and any(s["name"] == "Play both registered arms" and s.get("started_at") and s.get("conclusion") != "skipped" for s in j["steps"]) for j in jobs)
+              if not started:
+                  continue
+              with tempfile.TemporaryDirectory() as dest:
+                  subprocess.run(["gh","run","download",str(run["id"]),"--repo",env["GITHUB_REPOSITORY"],"--name",f"{job_name}-{run['id']}","--dir",dest],check=True)
+                  before_load = True
+                  for arm in ("parent", "student"):
+                      path = pathlib.Path(dest, arm)
+                      receipt = json.loads((path / "receipt.json").read_bytes())
+                      before_load &= (not (path / "attempt.json").exists() and receipt["strategy_initializations"] == 0 and receipt["action_calls"] == [0, 0])
+                  if not before_load:
+                      raise SystemExit(f"{job_name} reached strategy exposure in run {run['id']}")
+          PY
+
+      - name: Build locked isolated runtime
+        timeout-minutes: 17
+        run: |
+          set -euo pipefail
+          python3.12 -m venv "$RUNNER_TEMP/carbon-env"
+          "$RUNNER_TEMP/carbon-env/bin/python" -m pip install --only-binary=:all: --disable-pip-version-check --index-url https://pypi.org/simple numpy==1.26.4 requests==2.32.5 jsonschema==4.25.1
+          echo "$RUNNER_TEMP/carbon-env/bin" >> "$GITHUB_PATH"
+          ctx="$RUNNER_TEMP/image-context"
+          mkdir -p "$ctx/code/env_src/carbon_challenge-master"
+          cp -r code/env_src/carbon_challenge-master/zerosum_env "$ctx/code/env_src/carbon_challenge-master/"
+          sed 's|^FROM python:3.12-slim$|FROM python@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b|' "$CARGO/ladder_live/Dockerfile" > "$ctx/Dockerfile"
+          docker build --tag sapling-native-actor:registered "$ctx"
+
+      - name: Play both registered arms
+        id: games
+        timeout-minutes: 53
+        run: |
+          python "$LANE/matrix.py" pair --matrix "$LANE/protocol.json" --matrix-sha "$DIGEST" \
+            --seed "$SEED" --seat "$SEAT" --out "$RUNNER_TEMP/receipts" --image sapling-native-actor:registered
+
+      - name: Independently replay both arms
+        if: always() && steps.games.outcome != 'skipped'
+        run: |
+          set -eo pipefail
+          python "$LANE/matrix.py" verify --matrix "$LANE/protocol.json" --matrix-sha "$DIGEST" \
+            --seed "$SEED" --seat "$SEAT" --out "$RUNNER_TEMP/receipts" | tee "$RUNNER_TEMP/receipts/verification.json"
+
+      - name: Retain pair status
+        if: always()
+        env:
+          PAIR_OUTCOME: ${{ steps.games.outcome }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/receipts"
+          jq -n --arg status "$PAIR_OUTCOME" --arg run "$GITHUB_RUN_ID" --arg commit "$GITHUB_SHA" --arg protocol "$DIGEST" \
+            --argjson seed "$SEED" --argjson seat "$SEAT" '{pair_step_outcome:$status,run_id:$run,commit:$commit,protocol_sha256:$protocol,seed:$seed,seat:$seat}' > "$RUNNER_TEMP/receipts/pair_status.json"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-actor-${{ matrix.seed }}-${{ matrix.seat }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/receipts/
+          if-no-files-found: error
