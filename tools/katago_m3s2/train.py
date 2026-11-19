@@ -41,6 +41,15 @@ Optimizer: AdamW, lr 1.5e-4 cosine-decayed to 3e-5 over the run, batch
 512, BF16 autocast.  Checkpoints are saved in the source npz key layout
 (policy + value keys, float16) so pack_submission.py consumes them
 directly; aux heads never enter the export (see model.py).
+
+Memory (2026-11-19 fix): the dataset is held as a handful of preallocated
+stacked arrays (load_dataset / ReplayData below), NOT as one Python dict
+per row -- the per-row-dict loader cost ~73 KB/row in dict/array object
+overhead and wedged a 256 GiB host at ~207 GB RSS while loading the
+2.83M-row Gen-0 window.  Stacked storage is 28,841 B/row (x in float16:
+the shard stores uint8 = value*100, and integers 0..255 are exact in
+float16, so the per-batch float32 cast is bit-identical to the old
+uint8 path; all other keys keep their shard dtypes).
 """
 
 import argparse
@@ -48,6 +57,7 @@ import glob
 import math
 import os
 import sys
+import time
 
 import numpy as np
 
@@ -128,20 +138,99 @@ def score_utility(d):
     return 0.6 * np.tanh(d / 600.0) + 0.4 * np.clip(d / 2500.0, -1.0, 1.0)
 
 
-def load_rows(dirs):
-    rows = []
-    files = []
+# Storage dtype per shard key in the stacked dataset.  x is stored
+# float16 (see module docstring: exact for the shard's uint8 values);
+# every other key keeps its natural shard dtype.
+STORE_DTYPES = {
+    'x': np.float16,
+    'sc': np.float32,
+    'tw': np.float16,
+    'tb': np.float16,
+    'wmask': np.uint8,
+    'bmask': np.uint8,
+    'carbon': np.float16,
+    'margin': np.float32,
+    'aux_delta': np.float32,
+    'win': np.float32,
+    'searched': np.uint8,
+}
+
+
+def _rss_gb():
+    """Current RSS in GB from /proc (nan where unavailable)."""
+    try:
+        with open('/proc/self/status') as f:
+            for line in f:
+                if line.startswith('VmRSS:'):
+                    return int(line.split()[1]) / 1e6
+    except OSError:
+        pass
+    return float('nan')
+
+
+class ReplayData:
+    """The whole replay window as stacked arrays.
+
+    Row i reads as the same dict of per-key values the old per-row-dict
+    loader produced -- views into the stacked arrays for array keys,
+    numpy scalars for the scalar keys -- so augment() and the batch
+    assembly in main() are unchanged.
+    """
+
+    def __init__(self, arrays):
+        self.arrays = arrays
+        self.n = int(arrays['x'].shape[0])
+
+    def __len__(self):
+        return self.n
+
+    def __getitem__(self, i):
+        return {k: a[i] for k, a in self.arrays.items()}
+
+
+def load_dataset(dirs):
+    """Two-pass stacked load: count rows, preallocate, fill per shard.
+
+    Row order is exactly the old loader's (dirs in order, shards sorted,
+    rows in shard order).  Peak extra memory beyond the stacked arrays
+    themselves is one shard's decompressed arrays.
+    """
+    per_dir = []
+    total = 0
+    keys = None
+    row_shapes = None
+    shard_dtypes = None
     for d in dirs:
-        files += sorted(glob.glob(os.path.join(d, '*.npz')))
-    if not files:
+        files = sorted(glob.glob(os.path.join(d, '*.npz')))
+        counts = []
+        for path in files:
+            with np.load(path) as z:
+                if keys is None:
+                    keys = list(z.files)
+                    row_shapes = {k: z[k].shape[1:] for k in keys}
+                    shard_dtypes = {k: z[k].dtype for k in keys}
+                counts.append(int(z['x'].shape[0]))
+        per_dir.append((d, files, counts))
+        total += sum(counts)
+    if not total:
         raise SystemExit('no replay shards found in %s' % (dirs,))
-    for path in files:
-        z = np.load(path)
-        n = z['x'].shape[0]
-        for i in range(n):
-            rows.append({k: z[k][i] for k in z.files})
-    print('loaded %d rows from %d shards' % (len(rows), len(files)))
-    return rows
+    arrays = {}
+    for k in keys:
+        dt = STORE_DTYPES.get(k, shard_dtypes[k])
+        arrays[k] = np.empty((total,) + row_shapes[k], dtype=dt)
+    off = 0
+    nfiles = 0
+    for d, files, counts in per_dir:
+        for path, n in zip(files, counts):
+            with np.load(path) as z:
+                for k in keys:
+                    arrays[k][off:off + n] = z[k]
+            off += n
+            nfiles += 1
+        print('load: dir %s done, %d/%d rows, rss %.1f GB'
+              % (d, off, total, _rss_gb()), flush=True)
+    print('loaded %d rows from %d shards' % (total, nfiles))
+    return ReplayData(arrays)
 
 
 def main():
@@ -169,7 +258,7 @@ def main():
 
     torch.manual_seed(args.seed)
     rng = np.random.RandomState(args.seed)
-    rows = load_rows([d for d in args.data.split(',') if d])
+    rows = load_dataset([d for d in args.data.split(',') if d])
     net, snames = model_mod.load_main_npz(args.init, n_extra=args.n_extra)
     net.to(args.device)
     sid = snames.index(layout.SID_NAME) if layout.SID_NAME in snames else len(snames)
@@ -183,6 +272,7 @@ def main():
         return args.lr_final + 0.5 * (args.lr - args.lr_final) * (1 + math.cos(math.pi * t))
 
     step = 0
+    t_train = time.time()
     for epoch in range(args.epochs):
         order = rng.permutation(len(rows))
         tot = {}
@@ -230,6 +320,11 @@ def main():
             for k, val in (('loss', loss), ('pw', lp_w), ('pb', lp_b), ('v', l_v),
                            ('delta', l_d), ('fog', l_f), ('win', l_win)):
                 tot[k] = tot.get(k, 0.0) + float(val)
+            if step % 200 == 0:
+                el = time.time() - t_train
+                print('epoch %d step %d/%d: %.0fs elapsed, %.2f steps/s'
+                      % (epoch, step, total_steps, el, step / max(el, 1e-9)),
+                      flush=True)
         print('epoch %d: %s' % (epoch, {k: round(v / nbatches, 4) for k, v in tot.items()}))
 
     out = net.export_source_dict(snames)
