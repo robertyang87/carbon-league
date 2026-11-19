@@ -1,6 +1,8 @@
 # 天梯前五逐决策背景查询
 
-最新冻结截点 `aca9b8a3` 含 1,528 场双席官方分数完整的对局，累计 454,974 步、909,948 个赛前可见的逐席决策视角。另有 1 场执行故障的 257 步正常前缀。新增七场的经济转折前后共 280 个联合步，保留了双方整队、实际命令及现金流水。[七场回放上下文收据](context_appendix_aca9b8a3_receipt.json) · [逐步发令与结算](appendix_aca9b8a3/turn_actions.json.gz) · [新旧实验地图隔离](appendix_aca9b8a3/exposure.json)
+冻结截点 `4a4677c9` 覆盖 1,542 场双席官方分数齐全的对局，累计 459,160 个联合行动、918,320 个行动前的本席可见决策视角。另 1 场执行故障留有 257 步正常前缀。此次追加的 14 场均走满 299 步，新增 8,372 个逐席视角。经济转折窗口保留了 534 个去重后的局内联合行动，可逐步查看交战双方当时的工人、载货、位置、命令和到账。[上下文索引收据](context_appendix_4a4677c9_receipt.json) · [转折前后逐步动作](appendix_4a4677c9/turn_actions.json.gz) · [初盘隔离核验](appendix_4a4677c9/exposure.json)
+
+此前冻结截点 `aca9b8a3` 含 1,528 场双席官方分数完整的对局，累计 454,974 步、909,948 个赛前可见的逐席决策视角。另有 1 场执行故障的 257 步正常前缀。新增七场的经济转折前后共 280 个联合步，保留了双方整队、实际命令及现金流水。[七场回放上下文收据](context_appendix_aca9b8a3_receipt.json) · [逐步发令与结算](appendix_aca9b8a3/turn_actions.json.gz) · [新旧实验地图隔离](appendix_aca9b8a3/exposure.json)
 
 截至仓库快照 `b5e6a7f8`，有完整双方分数的 **1,521 局**共 452,881 次联合推进，按两个物理席索引 **905,762 个行动前视角**。另有 1 场执行故障，双方正常的前 257 步及各自视野保留在单列回放，故障方的官方分数为空。共 1,522 个不同比赛 ID、地图种子和初始碳图。最新 19 局另可逐步读取经济转折前 10 步至窗口结束的双方工人、真实动作和实际结算。
 [最新 19 局上下文](context_appendix_b5e6a7f8_receipt.json) · [转折前后联合动作与收支](appendix_b5e6a7f8/turn_actions.json.gz) · [上批 15 局上下文](context_appendix_2cc7c358_receipt.json) · [故障局的有效前缀](appendix_97de1ebc/unscored/README.md) · [新旧实验地图隔离](appendix_b5e6a7f8/exposure.json)
