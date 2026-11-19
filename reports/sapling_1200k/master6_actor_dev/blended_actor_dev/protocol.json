@@ -1,0 +1,29 @@
+{
+  "panel_sha256": "064c8d46faa82e3f5e5caed352abc829d75fba6cecc97e653703d06da21a93c5",
+  "partner_pack_sha256": "c5ad3f43959a4812e84e89574ee0c6e69765ebb06a8b3ec93f839b0dde128dd3",
+  "parent_weights_sha256": "f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713",
+  "diagnostic_previously_exposed_losses_receipt": "a6a2fa940b3bc155c31488f35fa8a4a68d4aa4bdb40759ba444de845a746c694",
+  "batch_size": 16,
+  "updates": 128,
+  "random_seed": 26368871,
+  "optimizer": "AdamW",
+  "lr": 0.0006,
+  "weight_decay": 0.01,
+  "clip_grad_norm": 1.0,
+  "train_modules": [
+    "h0",
+    "din",
+    "gru",
+    "aemb",
+    "whead",
+    "bhead",
+    "U",
+    "V"
+  ],
+  "schedule": "One deterministic permutation, first 2048 annotated train roots, same order in both arms.",
+  "candidate": "Legal 0.75 frozen deployed Echo4 it20 logit + 0.25 Sapling logit, recorded common prefix, CE averaged over all active multi-choice slots.",
+  "control": "Standalone Sapling CE, same parent, trainable modules, optimizer, examples, minibatch schedule and update count.",
+  "distribution": "Diagnostic softmax over legal mixed scores. Runtime chooses argmax and applies registered return residual and joint fallback.",
+  "gate": "Arena freezes its own primary gate. Mechanism check: map-equal deployed validation CE below original, plus actual altered joint command. Superiority to same-budget CE control reported separately.",
+  "holdout": "All 10 val / 18 holdout maps, separate unseen registration opponent and role reports. These historical monitoring sets contain wins only. All 18 exposed losses form distinct diagnostic set."
+}
