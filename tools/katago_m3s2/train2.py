@@ -29,11 +29,21 @@ Source basis: tools/katago_m3s2/train.py md5 34898e7c0132b1834404bff01f0cde21
 (read verbatim from repo main, 2026-11-20). Functions marked VERBATIM are
 character-level ports of train.py; the only deliberate changes are in
 feeding (plan generation, worker materialization, pinned async copy).
+
+FIX (review item 2.7, 2026-11-20): OrderedFeeder no longer blocks
+forever on a hard-killed worker. Every pooled .get() carries a timeout
+(--feed-timeout, default 600 s -- see DEFAULT_FEED_TIMEOUT below) and a
+timeout raises FeederTimeoutError naming the stuck step, the waited
+time and per-worker liveness, so a dead worker surfaces as an explicit
+failure instead of a silent hang. Nothing in the equivalence contract
+changes: plan generation, the RNG stream and materialization are
+untouched.
 """
 
 import argparse
 import glob
 import math
+import multiprocessing
 import os
 import sys
 import time
@@ -300,6 +310,19 @@ def _worker_task(task):
     return step, materialize_numpy(_W_ARRAYS, idx, gs, _W_FPW)
 
 
+DEFAULT_FEED_TIMEOUT = 600.0
+
+
+class FeederTimeoutError(RuntimeError):
+    """A pooled materialization step did not arrive within feed_timeout.
+
+    Raised instead of blocking forever when a worker has been
+    hard-killed (OOM killer / segfault): multiprocessing.Pool does not
+    re-run a task whose worker died mid-flight, so without a timeout
+    the consumer would hang silently (review item 2.7).
+    """
+
+
 class OrderedFeeder:
     """Prefetch window over a multiprocessing pool, strict in-order yield.
 
@@ -308,7 +331,12 @@ class OrderedFeeder:
     degrades to inline materialization (same code path, no processes).
     """
 
-    def __init__(self, arrays, fast_policy_weight, workers, prefetch):
+    def __init__(self, arrays, fast_policy_weight, workers, prefetch,
+                 feed_timeout=DEFAULT_FEED_TIMEOUT):
+        if not (feed_timeout and float(feed_timeout) > 0):
+            raise ValueError('feed_timeout must be > 0 seconds, got %r'
+                             % (feed_timeout,))
+        self.feed_timeout = float(feed_timeout)
         self.arrays = arrays
         self.fpw = fast_policy_weight
         self.workers = max(0, int(workers))
@@ -320,6 +348,34 @@ class OrderedFeeder:
             self._pool = ctx.Pool(processes=self.workers,
                                   initializer=_worker_init,
                                   initargs=(arrays, fast_policy_weight))
+
+    def _worker_liveness(self):
+        """Per-worker (pid, alive) snapshot for timeout diagnostics."""
+        pool = self._pool
+        if pool is None:
+            return 'no pool (inline feeding)'
+        workers = getattr(pool, '_pool', None)
+        if not workers:
+            return 'pool worker list unavailable'
+        return ', '.join('pid=%s alive=%s' % (w.pid, w.is_alive())
+                         for w in workers)
+
+    def _get_step(self, pending, want):
+        """pending[want].get() under the feed timeout; die naming the step."""
+        ar = pending.pop(want)
+        t0 = time.time()
+        try:
+            step, batch = ar.get(timeout=self.feed_timeout)
+        except multiprocessing.TimeoutError:
+            waited = time.time() - t0
+            raise FeederTimeoutError(
+                'OrderedFeeder stuck on step %d: no result after %.1fs '
+                '(feed_timeout=%.1fs); a materialization worker was '
+                'likely hard-killed (OOM/segfault) and the pool does '
+                'not re-run its task. workers: %s'
+                % (want, waited, self.feed_timeout,
+                   self._worker_liveness()))
+        return step, batch
 
     def run_epoch(self, plan):
         """Yield materialized batches in plan order for one epoch."""
@@ -340,14 +396,14 @@ class OrderedFeeder:
             if want in results:
                 yield results.pop(want)
                 continue
-            step, batch = pending.pop(want).get()
+            step, batch = self._get_step(pending, want)
             assert step == want
             yield batch
             # Opportunistically drain anything already finished so the
             # reorder buffer stays small; order is still enforced above.
             for s in list(pending):
                 if pending[s].ready():
-                    st, bt = pending.pop(s).get()
+                    st, bt = pending.pop(s).get(timeout=self.feed_timeout)
                     results[st] = bt
 
     def close(self):
@@ -400,10 +456,18 @@ def main():
                     help='materialization worker processes (<=1 = inline)')
     ap.add_argument('--prefetch', type=int, default=4,
                     help='steps materialized ahead of consumption (in-order)')
+    ap.add_argument('--feed-timeout', type=float,
+                    default=DEFAULT_FEED_TIMEOUT,
+                    help='max seconds to wait for one materialized step '
+                         'before dying loudly, naming the step (worker '
+                         'hard-death guard, review 2.7; default 600)')
     ap.add_argument('--compile', action='store_true',
                     help='torch.compile the training forward (default OFF; '
                          'keep OFF for equivalence-gate runs)')
     args = ap.parse_args()
+    if not (args.feed_timeout and args.feed_timeout > 0):
+        ap.error('--feed-timeout must be > 0 seconds, got %r'
+                 % (args.feed_timeout,))
 
     import torch
     import torch.nn.functional as F
@@ -430,7 +494,8 @@ def main():
     train_net = torch.compile(net) if args.compile else net
 
     feeder = OrderedFeeder(rows.arrays, args.fast_policy_weight,
-                           args.feed_workers, args.prefetch)
+                           args.feed_workers, args.prefetch,
+                           args.feed_timeout)
     step = 0
     t_train = time.time()
     try:
