@@ -1,0 +1,164 @@
+{
+  "opponents": [
+    {
+      "actor_blob_sha256": "47dfce840dbef32e45aa5ca3a7fed20e1103b37593adde8653173449a03c056c",
+      "conf": {
+        "ABORT_DL": 0.95,
+        "BUDGET": 0.7,
+        "GUARD": true,
+        "GUARD_NARROW": true,
+        "HARD": 0.85,
+        "LATE_STEP": 240,
+        "MIX": false,
+        "MODE": "sweep",
+        "ROLL": "self",
+        "SEARCH": false,
+        "START_DL": null,
+        "TEACHER": 2,
+        "TEACHER_LATE": 2
+      },
+      "embedded_module_md5": {
+        "cnet2_feat": "2a45b08b6f97508541e62867e408748e",
+        "cnet2_np": "d8c15ad4fdd8ee079363cf215d52daf3",
+        "cnet2_search": "94f7fb6438bb7577b141e388f068e122",
+        "fastsim": "aefe6c83826efae4de83bef8c643c80b"
+      },
+      "id": "it50",
+      "iteration": 50,
+      "path": "code/packs/ppou2_m_it50.py",
+      "secondary_network_present": true,
+      "sha256": "57e2557665636a1bbc92ae46a4c33ee9dac609efcffefa1c30df1233746c2211",
+      "size_bytes": 5747649
+    },
+    {
+      "actor_blob_sha256": "d6da21e19b76c37ad6dc1e20988127a12a5c1a48916b6328d46e9093b56a5b3e",
+      "conf": {
+        "ABORT_DL": 0.95,
+        "BUDGET": 0.7,
+        "GUARD": true,
+        "GUARD_NARROW": true,
+        "HARD": 0.85,
+        "LATE_STEP": 240,
+        "MIX": false,
+        "MODE": "sweep",
+        "ROLL": "self",
+        "SEARCH": false,
+        "START_DL": null,
+        "TEACHER": 2,
+        "TEACHER_LATE": 2
+      },
+      "embedded_module_md5": {
+        "cnet2_feat": "2a45b08b6f97508541e62867e408748e",
+        "cnet2_np": "d8c15ad4fdd8ee079363cf215d52daf3",
+        "cnet2_search": "94f7fb6438bb7577b141e388f068e122",
+        "fastsim": "aefe6c83826efae4de83bef8c643c80b"
+      },
+      "id": "it40",
+      "iteration": 40,
+      "path": "code/packs/ppou2_m_it40.py",
+      "secondary_network_present": true,
+      "sha256": "e3cf5ddf98c52d1a1b9fbbd7dd985ee0f33821f6fd2f39a7f607c4f3dfceb1f7",
+      "size_bytes": 5747557
+    },
+    {
+      "actor_blob_sha256": "0d0ce3ff5491a17f9f927b362a1763b042dcf826fb9e78865fde5e4b0f0045af",
+      "conf": {
+        "ABORT_DL": 0.95,
+        "BUDGET": 0.7,
+        "GUARD": true,
+        "GUARD_NARROW": true,
+        "HARD": 0.85,
+        "LATE_STEP": 240,
+        "MIX": false,
+        "MODE": "sweep",
+        "ROLL": "self",
+        "SEARCH": false,
+        "START_DL": null,
+        "TEACHER": 2,
+        "TEACHER_LATE": 2
+      },
+      "embedded_module_md5": {
+        "cnet2_feat": "2a45b08b6f97508541e62867e408748e",
+        "cnet2_np": "d8c15ad4fdd8ee079363cf215d52daf3",
+        "cnet2_search": "94f7fb6438bb7577b141e388f068e122",
+        "fastsim": "aefe6c83826efae4de83bef8c643c80b"
+      },
+      "id": "it20",
+      "iteration": 20,
+      "path": "code/packs/echo4_int8.py",
+      "secondary_network_present": false,
+      "sha256": "669e99aebaf2e82da3b3159e0ffabd5e9797aaa4c1f2504b9fffe21684d5a5b2",
+      "size_bytes": 4601242
+    }
+  ],
+  "probe_numpy": "2.3.5",
+  "probe_scope": "First 64 chronological steps of two existing TRAIN tapes, advancing logged joint actions; both seats represented on different maps. All three opponents see the same public observation and their own persistent state. Joint and per-unit command disagreement includes base and implicit NONE; collections alone do not establish strength or robustness to novel families.",
+  "probes": [
+    {
+      "changed_on_identical_trajectory_repeat": {
+        "it20": 0,
+        "it40": 0,
+        "it50": 0
+      },
+      "pair_counts": {
+        "it40/it20": {
+          "joints_different": 19,
+          "observation_count": 64,
+          "worker_and_base_commands": 556,
+          "worker_and_base_commands_different": 22
+        },
+        "it50/it20": {
+          "joints_different": 20,
+          "observation_count": 64,
+          "worker_and_base_commands": 556,
+          "worker_and_base_commands_different": 21
+        },
+        "it50/it40": {
+          "joints_different": 14,
+          "observation_count": 64,
+          "worker_and_base_commands": 556,
+          "worker_and_base_commands_different": 15
+        }
+      },
+      "seat": 0,
+      "seed": 621495121,
+      "train_tape": "reports/sapling_1200k/master6_actor_dev/symmetry_dev/parent/raw_621495121_0.json.gz",
+      "train_tape_sha256": "4238a645ad576a94c08a3897eceba847db3e2159fa350facaaaaf0d5ed08ef05"
+    },
+    {
+      "changed_on_identical_trajectory_repeat": {
+        "it20": 0,
+        "it40": 0,
+        "it50": 0
+      },
+      "pair_counts": {
+        "it40/it20": {
+          "joints_different": 10,
+          "observation_count": 64,
+          "worker_and_base_commands": 596,
+          "worker_and_base_commands_different": 12
+        },
+        "it50/it20": {
+          "joints_different": 10,
+          "observation_count": 64,
+          "worker_and_base_commands": 596,
+          "worker_and_base_commands_different": 10
+        },
+        "it50/it40": {
+          "joints_different": 8,
+          "observation_count": 64,
+          "worker_and_base_commands": 596,
+          "worker_and_base_commands_different": 10
+        }
+      },
+      "seat": 1,
+      "seed": 621461220,
+      "train_tape": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/dev_learned/raw_621461220_1.json.gz",
+      "train_tape_sha256": "e352ab447ffbfddf825fe70f00ac01a5ada0ce513cdc46f4556ddcfd6b5d0e15"
+    }
+  ],
+  "provenance": "Three separate self-owned PPOU2 main-arm iterations of the same model family. Echo4 is the deployed int8 iteration-20 actor. The preceding policy line used behavioral imitation. These league opponents are surrogate training/development opponents.",
+  "runtime": "Call untouched module.agent(public_observation, configuration) from step 0 onward using one persistent module per side/trajectory. Guard enabled, search and default OPEN_T sampling disabled, root decoder selects argmax. No examiner or candidate hidden state shared. These packages do not sample a new action seed. Repeated maps with these greedy agents replicate the same path unless the opposing learner explores. Keep map, seat and any learner randomness paired in candidate/parent evaluation.",
+  "schema": 1,
+  "source_main": "e848e0b5a29e4f81a88587504e28f02ef064db6d"
+}
