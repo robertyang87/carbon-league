@@ -27,10 +27,12 @@ def build(revision):
     commit = git('rev-parse', '--verify', revision + '^{commit}').decode().strip()
     paths = git('ls-tree', '-r', '--name-only', commit, BASE).decode().splitlines()
     results = sorted(p for p in paths if p.endswith('/results.json'))
+    receipts = sorted(p for p in paths if '/native_games/' in p
+                      and Path(p).match('receipt_*.json'))
     seen = set()
     witnessed = {}
     sources = []
-    for path in [*results, ORIGINAL_SEED_FILE, *ARCHIVES]:
+    for path in [*results, *receipts, ORIGINAL_SEED_FILE, *ARCHIVES]:
         raw = git('show', commit + ':' + path)
         if path in ARCHIVES:
             rows = []
@@ -42,6 +44,14 @@ def build(revision):
                 raise ValueError(f'No per-game seat records in {path}')
         elif path == ORIGINAL_SEED_FILE:
             rows = [{'seed': s} for s in json.loads(raw)['seeds']]
+        elif path in receipts:
+            receipt = json.loads(raw)
+            game, official = receipt['game'], receipt['official']
+            if (official['seed'] != game['seed'] or official['seat'] != game['candidate_seat']
+                    or official['transcript_sha256'] != game['raw_sha256']
+                    or official['map_sha256'] != game['initial_terrain_u8_sha256']):
+                raise ValueError(f'Inconsistent terrain receipt in {path}')
+            rows = [game]
         else:
             document = json.loads(raw)
             rows = document.get('games', []) if isinstance(document, dict) else []

@@ -9,6 +9,39 @@ import statistics
 
 from phase_census import PACK, EXAM, git
 
+ORIGINAL_SHA256 = '65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5'
+
+
+def parent_tapes(commit, path, doc):
+    directory = Path(path).parent
+    header = doc.get('header', {})
+    if header.get('pack_sha256') == PACK and header.get('examiner_md5') == EXAM:
+        if doc.get('status') != 'complete':
+            raise ValueError(f'Unfinished records at {path}')
+        for row in doc['games']:
+            yield row, str(directory / row['raw_file'])
+        return
+
+    binding = doc.get('binding', {})
+    if binding.get('parent_sha256') != PACK or binding.get('original_sha256') != ORIGINAL_SHA256:
+        return
+    if doc.get('status') != 'complete':
+        raise ValueError(f'Unfinished mixed-arm records at {path}')
+    for result in doc['games']:
+        if result['arm'] != 'parent':
+            continue
+        seed, seat = result['seed'], result['seat']
+        parent_dir = directory / 'parent'
+        receipt = json.loads(git('show', f'{commit}:{parent_dir}/receipt_{seed}_{seat}.json'))
+        row, official = receipt['game'], receipt['official']
+        if (receipt['binding'] != binding or (seed, seat) != (row['seed'], row['candidate_seat'])
+                or row['raw_sha256'] != result['raw_sha256'] or official['transcript_sha256'] != row['raw_sha256']
+                or official['statuses'] != ['DONE', 'DONE'] or official['official_reward_by_seat'] != result['scores']
+                or row['official_score_by_seat'] != result['scores'] or row['margin'] != result['margin']
+                or official['result'] != result['result']):
+            raise ValueError(f'Conflicting mixed-arm result for {seed}, seat {seat} at {path}')
+        yield row, str(parent_dir / row['raw_file'])
+
 
 def collect(revision):
     commit = git('rev-parse', '--verify', revision + '^{commit}').decode().strip()
@@ -18,13 +51,7 @@ def collect(revision):
         if not path.endswith('/results.json'):
             continue
         doc = json.loads(git('show', commit + ':' + path))
-        header = doc.get('header', {})
-        if header.get('pack_sha256') != PACK or header.get('examiner_md5') != EXAM:
-            continue
-        if doc.get('status') != 'complete':
-            raise ValueError(f'Unfinished records at {path}')
-        for row in doc['games']:
-            tape_path = str(Path(path).parent / row['raw_file'])
+        for row, tape_path in parent_tapes(commit, path, doc):
             packed = git('show', commit + ':' + tape_path)
             tape = json.loads(gzip.decompress(packed))
             seat = row['candidate_seat']
