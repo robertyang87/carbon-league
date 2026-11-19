@@ -1,8 +1,12 @@
 # Sapling 对 Master3s2 的九成胜率实验
 
-## 先赢一局
+## 当前胜绩与验收
 
-**已经复核一场原版胜局，新开发图尚未复现。** 在先前用过的地图 `621461321`，席 0 的冻结组合 `c5ad3f43` 以 **8,026.31 比 7,644.53** 胜 Master3s2，打满 299 步。考官完成 294 次搜索，其中 233 次到达深度 8，另有 5 步只有一个候选。两席均无内部错误。同图换席分差为 −1,837.30。参赛组合按 75% 自有 Echo4、25% Sapling 融合动作分数；去掉 Sapling 后，此前 68 个实战局面中有 16 个改变整队命令。该版本在本轮以前的 12 局为 1 胜 11 负。[官方逐步回执](master6_actor_dev/actor_partner_dev/native/candidate/receipt_621461321_0.json) · [实际动作消融](master6_actor_dev/actor_partner_dev/attribution.json) · [十二局与换席比分](master6_actor_dev/first_win_analysis/README.md)
+Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜过完整原版 Master3s2，比分 **8034.77 比 7541.14**。连同另外两张图的独立复测，四张开发图换席总计 **1 胜 7 负，平均官方分差 −1200.67**。该包随后在首胜图做限额复测，同图同席落败。独立正式考卷仍封存，目标保持 100 张新图换席至少 180/200 胜，同一批平均官方分差至少 +500。[首胜批次](master6_actor_dev/cargo_tree_action_learning_dev/direct_original/README.md) · [独立复测](master6_actor_dev/cargo_tree_action_learning_dev/replicate_original/README.md) · [限额复测](master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/hosted_attempt/README.md)
+
+## 早期开发记录
+
+**早期冻结组合 `c5ad3f43` 在当时的曝光图取得一胜。** 在先前用过的地图 `621461321`，席 0 的冻结组合 `c5ad3f43` 以 **8,026.31 比 7,644.53** 胜 Master3s2，打满 299 步。考官完成 294 次搜索，其中 233 次到达深度 8，另有 5 步只有一个候选。两席均无内部错误。同图换席分差为 −1,837.30。参赛组合按 75% 自有 Echo4、25% Sapling 融合动作分数；去掉 Sapling 后，此前 68 个实战局面中有 16 个改变整队命令。该版本在本轮以前的 12 局为 1 胜 11 负。[官方逐步回执](master6_actor_dev/actor_partner_dev/native/candidate/receipt_621461321_0.json) · [实际动作消融](master6_actor_dev/actor_partner_dev/attribution.json) · [十二局与换席比分](master6_actor_dev/first_win_analysis/README.md)
 
 | 本轮候选与图组 | 胜 / 平 / 负 | 场均官方分差 |
 |---|---:|---:|
