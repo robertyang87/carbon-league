@@ -191,14 +191,13 @@ def qualify(test):
     for arm, other in (("full", "head"), ("head", "full")):
         diffs = [m["pairs"][arm + "_minus_parent"]["worker"]["changed"] for m in test["by_terrain"].values()]
         accuracy = test["map_equal_accuracy"]
-        role_drops = {r: test["micro"]["arms"][arm][r]["accuracy"] - test["micro"]["arms"]["parent"][r]["accuracy"]
-                      for r in ("collector", "planter")}
+        role_drops = {r: accuracy[arm][r] - accuracy["parent"][r] for r in ("collector", "planter")}
         tests = {"strictly_better_map_equal_worker_vs_both": accuracy[arm]["worker"] > max(accuracy[a]["worker"] for a in ("parent", other)),
                  "worker_changes_on_at_least_two_maps": sum(n > 0 for n in diffs) >= 2,
-                 "each_pooled_role_delta_at_least_minus_002": min(role_drops.values()) >= -0.02}
+                 "each_map_equal_role_delta_at_least_minus_002": min(role_drops.values()) >= -0.02}
         out[arm] = {"passed": all(tests.values()), "tests": tests, "worker_changed_maps": sum(n > 0 for n in diffs),
-                    "pooled_role_deltas_vs_parent": role_drops,
-                    "map_equal_role_deltas_vs_parent": {r: accuracy[arm][r] - accuracy["parent"][r] for r in role_drops}}
+                    "map_equal_role_deltas_vs_parent": role_drops,
+                    "pooled_role_deltas_vs_parent": {r: test["micro"]["arms"][arm][r]["accuracy"] - test["micro"]["arms"]["parent"][r]["accuracy"] for r in role_drops}}
     return out
 
 
@@ -224,8 +223,8 @@ def main():
         results[split] = split_summary(subset, contract["seed"])
     out = {"package_sha256": package_hashes, "source_sha256": binding, "held_commands_sha256": sha(held_path),
            "results": results, "qualification": qualify(results["test"]),
-           "method": "All normal free commands are physical dictionaries from the unmodified public entry. Step zero initializes each arm, and every skipped observation updates that arm's public feature history exactly once. Every sampled active entity counts, including implicit NONE and teacher commands outside the constrained prefix. Equal-map mean weights each observed terrain once. All 4000 paired bootstrap draws retain both seats and their full within-map samples. Gained and lost count changes in correctness against the same original command.",
-           "scope": "These historical native tapes and parent splits have been used in other Sapling studies. Validation and test terrains are withheld from this fit. Each tape uses one fixed historical path. This evaluates agreement with physical examiner commands, with no new opponent games, income effect or independent strength estimate."}
+           "method": "All normal free commands are physical dictionaries from the unmodified public entry. Step zero initializes each arm, and every skipped observation updates that arm's public feature history exactly once. Every sampled active entity counts, including implicit NONE and teacher commands outside the constrained prefix. Equal-map mean weights each observed terrain once for the worker improvement and collector and planter regression criteria. Pooled role deltas are descriptive. All 4000 paired bootstrap draws retain both seats and their full within-map samples. Gained and lost count changes in correctness against the same original command.",
+           "scope": "These historical native tapes and parent splits have been used in other Sapling studies. Seeds 621497120 and 621497121 were previously used for project training diagnostics, 621495120 was previously held, and this corpus overlaps the historical H24 study. Validation and test terrains are withheld from this fit. Each tape uses one fixed historical path. This evaluates agreement with physical examiner commands, with no new opponent games, income effect or independent strength estimate."}
     save(HERE / "held.json", out)
     print(out["qualification"], flush=True)
 

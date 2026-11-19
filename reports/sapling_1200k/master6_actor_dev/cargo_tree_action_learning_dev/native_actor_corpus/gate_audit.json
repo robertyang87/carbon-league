@@ -1,0 +1,84 @@
+{
+  "commands_sha": "726d5d2637a46a3ad15e798255cb65c50bd1fdf9ccd91b91257d30b85312dae9",
+  "final_equal_terrain": {
+    "full": {
+      "map_equal_role_deltas_vs_parent": {
+        "collector": 0.0031891506450213436,
+        "planter": 0.004691296075513773
+      },
+      "passed": true,
+      "pooled_role_deltas_vs_parent": {
+        "collector": 0.0033112582781457123,
+        "planter": 0.0038910505836575737
+      },
+      "tests": {
+        "each_map_equal_role_delta_at_least_minus_002": true,
+        "strictly_better_map_equal_worker_vs_both": true,
+        "worker_changes_on_at_least_two_maps": true
+      },
+      "worker_changed_maps": 6
+    },
+    "head": {
+      "map_equal_role_deltas_vs_parent": {
+        "collector": 0.0023375448816743694,
+        "planter": 0.00019201228878651388
+      },
+      "passed": false,
+      "pooled_role_deltas_vs_parent": {
+        "collector": 0.002365184484389715,
+        "planter": 0.0
+      },
+      "tests": {
+        "each_map_equal_role_delta_at_least_minus_002": true,
+        "strictly_better_map_equal_worker_vs_both": false,
+        "worker_changes_on_at_least_two_maps": true
+      },
+      "worker_changed_maps": 6
+    }
+  },
+  "final_evaluator_sha256": "dab8e6584469028472f8f302f6c7b0123ba78bdf329bc00d34b5a9d64264edab",
+  "frozen_evaluator_sha256": "757fa391e0d576babd4d4b9693b27cba2caf4a16f8c6bf80e2b71411cb3b68dc",
+  "original_pooled": {
+    "full": {
+      "map_equal_role_deltas_vs_parent": {
+        "collector": 0.0031891506450213436,
+        "planter": 0.004691296075513773
+      },
+      "passed": true,
+      "pooled_role_deltas_vs_parent": {
+        "collector": 0.0033112582781457123,
+        "planter": 0.0038910505836575737
+      },
+      "tests": {
+        "each_pooled_role_delta_at_least_minus_002": true,
+        "strictly_better_map_equal_worker_vs_both": true,
+        "worker_changes_on_at_least_two_maps": true
+      },
+      "worker_changed_maps": 6
+    },
+    "head": {
+      "map_equal_role_deltas_vs_parent": {
+        "collector": 0.0023375448816743694,
+        "planter": 0.00019201228878651388
+      },
+      "passed": false,
+      "pooled_role_deltas_vs_parent": {
+        "collector": 0.002365184484389715,
+        "planter": 0.0
+      },
+      "tests": {
+        "each_pooled_role_delta_at_least_minus_002": true,
+        "strictly_better_map_equal_worker_vs_both": false,
+        "worker_changes_on_at_least_two_maps": true
+      },
+      "worker_changed_maps": 6
+    }
+  },
+  "qualification_flipped": {
+    "full": false,
+    "head": false
+  },
+  "script_sha256": "16d3c9dfed32d5f30fdf6f0e76a63f42a3eee6b5557e6207a54230270d5b6b72",
+  "source": "d74e336300e75bf11834461b975bcf0639577fe1",
+  "timing": "The contract registered a -0.02 per-role guard and map-equal primary worker accuracy. Its first implementation at d74e33630 pooled all held workers within each role for the guard. The final evaluator changed only the role-gate weighting to equal terrain after that evaluator was frozen and before the final three-package held replay began or its actions/results were read. Both gates are reapplied independently to the same exact released action dictionaries."
+}
