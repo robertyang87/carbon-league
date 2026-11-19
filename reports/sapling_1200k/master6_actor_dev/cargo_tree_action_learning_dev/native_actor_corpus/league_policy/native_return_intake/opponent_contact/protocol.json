@@ -1,0 +1,42 @@
+{
+  "schema": "sapling-opponent-collector-next-cell/1",
+  "goal": "Learn original Master3s2 collector next order from current acting seat observations, including zero-cargo collectors. Map predictions to the five possible own-planter destinations.",
+  "sources": {
+    "registration": "hosted/training_manifest.json",
+    "sha256": "63daa51e127aafea36401ebdce6400de60faa772d3929a1803ce768e121be5b4",
+    "student": "851c901aa561ce80bf04d03e7c2a8e7876bfa2f24dc6c57ffe22b501979320ee",
+    "examiner": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+    "draws": [
+      "draw_a",
+      "draw_b"
+    ],
+    "seats": [
+      0,
+      1
+    ],
+    "expected_episodes": 24
+  },
+  "fit_terrain_seeds": [
+    621758460,
+    621758461,
+    621758464,
+    621758465
+  ],
+  "heldout_terrain_seeds": [
+    621758462,
+    621758463
+  ],
+  "unit": "Every pre-step visible opposing collector, including newly recruited, empty-cargo and subsequently lost workers. Current own simultaneous order, opponent current order, future fields, terrain/replay identity, player names and seeds never enter its features. Recorded simultaneous enemy order provides label only after features are sealed; missing physical worker action is NONE. Absolute action classes NONE,UP,RIGHT,DOWN,LEFT. Each map has two seats and two independent runs.",
+  "features": "Scaled step/cash/cargo/team population; for each of five toroidal destinations compute pre-observation-only distances and local geometry of bases, trees, own collectors/planters and enemy teammates, relative loads and pressure, and public cell carbon+missingness. Per-worker prior displacement one-hots across last three consecutive observed transitions with separate unknown, plus prior cargo difference and recent net movement. No UID/seed coordinates as model keys. Training-only weighted moments of continuous input columns; categorical indicators kept in their original scale.",
+  "fit": "One preset tanh MLP of 32 hidden units, softmax over five submitted moves, Adam 0.001, 12 epochs, batch 512, initializer/row order seed 621758490. Each map equal, each episode within map equal, each eligible enemy observation within episode equal. Geometry-only identical learned baseline (all history columns removed or zeroed). Persistence reference 80% most recent observed direction, other four 5% each; unknown => uniform. No tuning/calibration or model selection on holdout.",
+  "contact": "For every visible own planter register all five toroidal destinations. For each enemy collector within one move of target, read that worker’s predicted probability for the unique move to that target; joint contact p=1-product(1-p_i), an explicit conditional-independence approximation across enemy collectors. Ground truth: one or more such enemies issued that move, even if later removed. Distinguish this intent from death/loss; no assumption about own issued command.",
+  "evaluation": "Per held map, pooled and equal-map mean: enemy multiclass Brier (sum across five), log loss, top1 and worker observations; union-contact binary Brier and confusion at .20 and .50; all opportunities, structurally reachable, stay, move, reachable stay/move. Report false positives, false negatives, rates with absolute denominators and no prevalence resampling. Describe correlated repeated intents and maps; no binomial game-strength claim.",
+  "decision": "A candidate for a later separate policy ablation only if full-history contact Brier on geometrically reachable targets beats the fitted geometry-only baseline on both held maps; report persistence and point differences per map. No game-strength or deployment claim based on prediction accuracy. Two held maps are insufficient evidence for broad generalization.",
+  "single_case": "Newly exposed live-training 462 seat0 t84 opposing empty worker 7 vs Sapling planter 6; illustrate predicted action and occupy/escape contact scores, then join original response. Exclude the whole live-curriculum trajectory from fit and held metrics; the situation motivated this experiment and is descriptive.",
+  "lower_priority_single_threads_cores": [
+    3,
+    4
+  ],
+  "new_matches": 0,
+  "deployment_change": false
+}
