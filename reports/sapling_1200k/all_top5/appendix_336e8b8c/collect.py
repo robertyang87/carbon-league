@@ -93,7 +93,7 @@ def render(d,m):
     lines[3:3]=["","；".join(n+" "+"，".join(f"席 {s} 为 {row['W']} 胜、{row['D']} 平、{row['L']} 负" for s,row in enumerate(seats))
                             for n,seats in sorted(names.items()))+"。"]
     lines=[line.replace("本批在独立考试排除集中逐图绑定真实 225 格开局。","每场真实 225 格开局均已单独登记，供考场清单下一次更新核入。") for line in lines]
-    lines.extend(["", "新败局 Master6 在 t296 仍领先 238.05，ClaudeFable5.2-v8 的两名采集工下一步分别交回 188.90 和 198.56，从 t297 起领先至终局。两支策略上一次同席对局是 Master6 净胜 8,590.76。八组有历史交手的同名对照、两组逐工回溯与现金账见附页。[同名对手与失利回溯](contrasts.md) · [地图排除候选清单](map_registry_candidate.json) · [未来 10/30 步监督覆盖](future_economy_check.json)"])
+    lines.extend(["", "新败局 Master6 在 t296 仍领先 238.05，ClaudeFable5.2-v8 的两名采集工下一步分别交回 188.90 和 198.56，从 t297 起领先至终局。两支策略上一次同席对局是 Master6 净胜 8,590.76。八组有历史交手的同名对照、两组逐工回溯与现金账见附页。[同名对手与失利回溯](contrasts.md) · [双工回款的库外拦截](terminal_intercept.md) · [地图排除候选清单](map_registry_candidate.json) · [未来 10/30 步监督覆盖](future_economy_check.json)"])
     p.write_text("\n".join(lines)+"\n")
 
 

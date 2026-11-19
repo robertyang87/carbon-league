@@ -21,4 +21,4 @@ RyanX-AIPowercore-it720-preview 席 0 为 0 胜、0 平、1 负，席 1 为 0 �
 
 官方 Board 和 FastCarbon 各复算 2,990 次联合推进，10 场全部吻合。每席行动前上下文复查包括 5,980 个决策，来源仅限本批原始回放；历史局复用已冻结的完整收据。每场真实 225 格开局均已单独登记，供考场清单下一次更新核入。归档文件 2,396,160 字节，SHA-256 `c9b739f9423359326a05d7c3f777ee95f166eecc06d9e4667e32ea3c54625a10`。[双引擎逐局收据](validation_games.jsonl.gz) · [真实棋盘](validation_maps.jsonl.gz) · [对局上下文](../context_appendix_336e8b8c_receipt.json) · [完整无损回放](../../../../data/sapling_all_top5_20261119/appendix_336e8b8c.tar)
 
-新败局 Master6 在 t296 仍领先 238.05，ClaudeFable5.2-v8 的两名采集工下一步分别交回 188.90 和 198.56，从 t297 起领先至终局。两支策略上一次同席对局是 Master6 净胜 8,590.76。八组有历史交手的同名对照、两组逐工回溯与现金账见附页。[同名对手与失利回溯](contrasts.md) · [地图排除候选清单](map_registry_candidate.json) · [未来 10/30 步监督覆盖](future_economy_check.json)
+新败局 Master6 在 t296 仍领先 238.05，ClaudeFable5.2-v8 的两名采集工下一步分别交回 188.90 和 198.56，从 t297 起领先至终局。两支策略上一次同席对局是 Master6 净胜 8,590.76。八组有历史交手的同名对照、两组逐工回溯与现金账见附页。[同名对手与失利回溯](contrasts.md) · [双工回款的库外拦截](terminal_intercept.md) · [地图排除候选清单](map_registry_candidate.json) · [未来 10/30 步监督覆盖](future_economy_check.json)

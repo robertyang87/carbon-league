@@ -1,0 +1,72 @@
+{
+  "version": "early-return-lane-v1",
+  "parent_pack": "data/weights/sapling_1200k/terminal_return_fit_v1.py",
+  "parent_sha256": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0",
+  "examiner_md5": "57f9a594cce4f2ec9e3573d8d9d26ca1",
+  "examiner_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "batches": {
+    "1": {
+      "maps": [
+        621471120,
+        621471121
+      ],
+      "split": "train",
+      "source_receipt": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source_receipt.json",
+      "source_sha256": "adc22ebd0a06769095801c1bfbc9519a23afcd784711f2e9ffa1523579ae2cbe",
+      "official_sha256": "babc2c6b0c2afad92d4203a0486b362fae528fe0992661e38160f4eb4d0f9fdf",
+      "source_pack": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"
+    },
+    "2": {
+      "maps": [
+        621472120,
+        621472121
+      ],
+      "split": "train",
+      "source_receipt": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_02/source_receipt.json",
+      "source_sha256": "05861f714d7e64a5df1d28708a5fe3a557736fe4edb3dfd24464d52906b4d352",
+      "official_sha256": "7c6b64455e4a5e2301c8bd299129157020e4f145325dd1b1314d76a76a1a95ae",
+      "source_pack": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"
+    },
+    "3": {
+      "maps": [
+        621473120,
+        621473121
+      ],
+      "split": "train",
+      "source_receipt": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_03/source_receipt.json",
+      "source_sha256": "57fda758fe5998b507b0c0e13c65b179e6ba074d6a14dd249a9938d91ceec66a",
+      "official_sha256": "bd7b89865a891b01ef80fdd7d460f1d0b5128151ce212c1c92c15d4d6253a86a",
+      "source_pack": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"
+    },
+    "4": {
+      "maps": [
+        621474120,
+        621474121
+      ],
+      "split": "eval",
+      "source_receipt": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_04/source_receipt.json",
+      "source_sha256": "eb8d4c214d2aa4cb9c0c3155d2cd85d3fa099c76fe07bcac6248d893b97e83c8",
+      "official_sha256": "28181e69348ae34a4b50aaee01ad064a37b2184b5a481c857bfb748873d37f7b",
+      "source_pack": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"
+    },
+    "5": {
+      "maps": [
+        621475120,
+        621475121
+      ],
+      "split": "eval",
+      "source_receipt": "reports/sapling_1200k/master6_actor_dev/tree_response_training/batches/intake_05/source_receipt.json",
+      "source_sha256": "f62bf52b126cf11c9edfef0fd4c3e46f7fec8ab7461aaa32095b84c8cd82e78e",
+      "official_sha256": "7ebf9164e905edd793e21dbef8426a84ea9445661ce0a04a6878aa761b3704a8",
+      "source_pack": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"
+    }
+  },
+  "prior": "AMBUSH5 already fitted 3–5-turn single-point intercepts on ladder/V5; 10 timed arrivals but zero synchronized target in live full-Master3s2. Earlier freight_response tested geometric widening over three turns plus predicted receipt; one-step return_denial_training went 0/97 on two terrains. New construction learns horizon-specific absolute occupancy plus explicit OTHER against the true examiner; proposes paired adjacent route coverage by a low-cargo worker arriving early and permits waiting, compares against the best unchanged-v1 lane with cost of own delivery/mining, replans each event and makes no commitment to chase.",
+  "eligibility": "Every actual v1 decision across both seats, t+5 <= signed horizon; enemy collector with cargo>=120, distance to nearest own base>=3; recent approach not required, so stalled/retreating targets are part of fit. Qualified actual sources only. Five intake fixed map pairs. First three batches for training (six unique terrain ids), fixed next 04 and 05 for evaluation separately. For 05 bind both source receipt/official identities now; also wait until its full outer aggregate/training labels are signed/consistent before reading trajectory labels. No selection by downturn or known trajectory.",
+  "outcome": "For h=3 or 5, target class is the same worker location at exact t+h, only if alive with at least 100 cargo and no unloading (to either base) in the intervening transitions. Otherwise use OTHER, included in the normalized distribution. This is a live heavy undelivered worker marker, not guaranteed intact original principal. Use true original trajectory only to train/score a forecast of v1 continuation. The predicted fate after our new action is not observed.",
+  "training": "Two horizon-specific shared linear conditional softmax heads over current toroidal ball radius h plus OTHER. Action-region features from only source observation/public history, no map/seat ID or current enemy command. Map-equal, sample-equal within map, all eligible enemy roots included; L2 .02, zero initialization, exactly 100 full-batch gradient descent steps at learning rate .55. Optimize true labeled location/OTHER log likelihood; register both horizons and independently score. No holdout tailoring.",
+  "baseline": "Fixed staying/nearest-home kernel with 0.20 mass on OTHER. For each reachable physical cell assign mass proportional to exp(0.70*progress_towards_nearest_home -0.65*distance_from_current); scale to 0.80. Report multiclass Brier over every physical cell + OTHER, hit@1, OTHER prevalence per map at each horizon, no renormalization after predicting eligibility.",
+  "chooser": "At most one focal friendly collector, cargo<=35; protect actual original return to own base with carrying load, reject any friendly destination/hire collision, any base and any other immediately lethal enemy collector besides target. Two distinct neighboring non-base cells x (h3),y (h5), y closer to enemy home, each on public shortest route. After first action must reach x by t+2 (can dwell to t3), then reach y by t+4 from x. Static open geometry excludes hazards on first move only. Original joint and alternative each optimize conditional expected cell coverage, 0.5*[P3(x)*reachable-by-deadline + P5(y)*reachable-by-deadline]. Require two early-covered endpoints, P3/P5 each >=.05, coverage gain >=.05 against the best v1 lane, enemy cargo*gain minus known forfeit of local mining and cost 15*extra distance to own home+.15*own cargo*extra distance+2 for change >=8. Real v1 network controls all other moves. Recompute every turn, no persistent chase.",
+  "mechanism_gate": "All must hold: (1) dual-engine exact replay of all original frames and intervention single steps with original simultaneous commands; (2) learned map-equal Brier strictly better than fixed geometry at BOTH horizons in EACH heldout batch; (3) at least one actual first order change on every one of four validation maps and at least eight total; (4) map-equal retrospective gain in anchored two-time reachable occupancy vs best unchanged-v1 lane strictly positive within BOTH heldout batches; (5) no newly dying friendly focal worker and no forgone existing actual normal delivery among issued heldout orders. Favorable, unfavorable and zero/counts per map/seat. No forecast or root statistics alone imply a blockade altered the opponent, prevented delivery or increased money. If gate fails, record refusal for this construction and retain v1; no deployable pack. If all pass, produce portable v1+new head candidate, check actual-package parity on tapes, then request coordinated sparse native experiments.",
+  "sparse_followup": "Freeze a separate evidence-only root plan (all issuable, feasible not issued, no-candidate bins as diagnostic) by minimum hash per map/seat/bin; never choose by hindsight outcome. First check both arms from same factual prefix; paired full v1/no-override and one registered override then execute genuine simultaneous policy responses (including examiner and replan) to terminal, same compatible starting RNG. Predeclare check of enemy actual route/own carried cargo, route delay/settlement across 3/5/10 and terminal official U/margin, standardized across maps; no new opponents booted under this task."
+}
