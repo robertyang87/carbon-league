@@ -37,6 +37,9 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC_DIR = os.path.normpath(os.path.join(HERE, '..', '..', 'src'))
+# Packable chassis files for pack_submission.py: APEX_V4TTA (variant
+# 'v1'), FIX2 ('fix2'), FIX3 ('fix3') and MASTER3S2 itself ('m3s2',
+# the original shell, added 2026-11-19).
 MASTER3S2 = os.path.join(SRC_DIR, 'master3s2.py')
 FIX2 = os.path.join(SRC_DIR, 'apexcarbon_v1_fix2.py')
 FIX3 = os.path.join(SRC_DIR, 'apexcarbon_v1_fix3.py')

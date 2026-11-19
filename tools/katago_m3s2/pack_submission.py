@@ -11,6 +11,14 @@ v1 and fix2).  v1 (the previous default, owner ruling 2026-11-19
 18:29) and src/apexcarbon_v1_fix2.py remain accepted alternates
 (--chassis); the 40-game paired verdict showed the fix2 shell
 significantly weaker than v1's at identical weights.
+The original shell itself, src/master3s2.py (md5 57f9a594...), is
+also an accepted chassis (variant 'm3s2', added 2026-11-19 for the
+same-ruler Gen-0 baseline): it is structurally different from the
+three derivative shells -- no root TTA (a single opponent-view pass),
+no upd_cost (its cost tracker is _search's nested cost()), _S_K=32,
+_S_STAGES=((1, 0.5), (4, 0.25)), _S_D2=8, _S_ABORT=0.58 -- so it
+carries its own patch set below.  Unlike the derivatives it does
+have a _ROLL slot (its _net() reads globals().get('_ROLL')).
 The chassis code is kept untouched except for the mechanical, auditable
 operations below:
 
@@ -37,9 +45,11 @@ operations below:
    pack FAILS LOUDLY (an unpatched chassis is never shipped silently).
    Post-condition asserted on the output: no 'perf_counter' remains
    anywhere in the file.  The patch set is selected by a signature line
-   (the three chassis texts differ slightly; fix3 contains v1's TTA
-   line verbatim, so it is detected first, by its unique upd_cost
-   body); an unrecognized chassis fails loudly.  Sites neutralized
+   (the chassis texts differ; fix3 contains v1's TTA line verbatim, so
+   it is detected first, by its unique upd_cost body; master3s2
+   contains no TTA line and no upd_cost at all, so it is detected last,
+   by its unique cost() body -- no signature can cross-match); an
+   unrecognized chassis fails loudly.  Sites neutralized
    (all chassis unless noted):
      * agent(): t0 = perf_counter()                    -> t0 = 0.0
      * _net(): _S_COST seeded from a timed warmup pass -> nominal constants
@@ -61,6 +71,18 @@ operations below:
    _S_COST remains as dead telemetry state: after the patch nothing reads
    it for a decision (the depth==0 decay in the fix2/fix3 stats tail is
    inert).
+   The m3s2 variant's set (11 patches) covers the same sites in the
+   original shell's own text: agent() t0; _net()'s cost seeding (a
+   timed _RNET pass, factor 1.5, board cost 0.002 -- the warmup pass
+   itself is kept, untimed); the root candidate budget (most fitted
+   via _plan() against _S_FILL/_S_ABORT -> most = _FIXED_K); the
+   three tp sites and the three cost() call sites in look()/other()/
+   play(); cost() itself -> no-op; late() -> always False; the
+   _search stats tail dt -> 0.0.  Only _FIXED_K is baked in: the
+   original shell has no root TTA, so _FIXED_TTA is not applicable
+   (a --fixed-tta value is reported and ignored).  Its extra-rollout
+   loop needs no patch: it is gated by rolls + _S_M <= _S_MMAX with
+   _S_M == _S_MMAX == 1, so it can never run under the fixed plan.
 
 3. VALUE-SCALE BRIDGE (only with --value-scale u; Strategy ruling
    reports/RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119.md).  A checkpoint
@@ -76,13 +98,20 @@ operations below:
    _act's look().  Every other consumer is deliberately untouched: the
    root TTA batch (line ~1291) and other() discard the value output,
    and terminal boards are scored by result() with _terminal on the
-   true cash margin (already native scale).  With the default
+   true cash margin (already native scale).  The m3s2 chassis has the
+   same single interface in its own text: look()'s two value sites --
+   after `vv = vv[::w]` in the _RNET-is-_NET branch and after the
+   `vv = net(...)[2]` line in the separate-rollout-net branch (the
+   latter runs only when a _ROLL payload is embedded).  Its root
+   opponent view and other() likewise discard the value output, and
+   result() scores terminal boards natively, so the bridge covers
+   every value entry point there too.  With the default
    --value-scale terminal (gen-0 / native checkpoints) no bridge code
    is injected at all.  The chosen scale is recorded in the pack report
    (the notes printed by every pack run).  The bridge patch set is
    separate from the clock-removal set: the clock fixture (12 patches
-   for the v1 chassis, 13 for fix3, no perf_counter in the output) is
-   unaffected.
+   for the v1 chassis, 13 for fix3, 11 for m3s2, no perf_counter in
+   the output) is unaffected.
 
 --verify (numpy only, no torch) checks the packed file end to end:
    * it imports standalone and its _Policy loads;
@@ -131,14 +160,94 @@ FIX3_UPD_COST = ("        def upd_cost(i, x):\n"
                  "            _S_COST[i + 2] = x\n")
 UPD_COST_NOOP = ("        def upd_cost(i, x):\n"
                  "            return  # CLOCK-REMOVAL PATCH: cost telemetry disabled; _S_COST feeds no decision\n")
+# m3s2 signature: the original shell's cost tracker (_search's nested
+# cost(), one indent level shallower than the derivatives' upd_cost).
+# Unique across all four chassis: master3s2 has no upd_cost and no TTA
+# line, and none of v1/fix2/fix3 has a cost() def -- see detect_variant.
+M3S2_COST_BODY = ("    def cost(i, x):\n"
+                  "        _S_COST[i] = x if _S_COST[i] == 0.0 else 0.5 * _S_COST[i] + 0.5 * x\n"
+                  "        _S_COST[i + 2] = x\n")
+M3S2_COST_NOOP = ("    def cost(i, x):\n"
+                  "        return  # CLOCK-REMOVAL PATCH: cost telemetry disabled; _S_COST feeds no decision\n")
 STATS_DT_OLD = "        dt = _time.perf_counter() - t0"
 STATS_DT_NEW = ("        dt = 0.0  # CLOCK-REMOVAL PATCH: stats only; "
                 "no wall clock in the decision path")
 
 
+def _m3s2_clock_patches(fixed_k):
+    """Exact-replacement patch list for the original master3s2 shell.
+
+    The original shell's own texts: _search nests cost()/late() one
+    indent level shallower than the derivatives' _act, _net() seeds
+    costs from a timed _RNET pass (kept, untimed), the candidate
+    budget is fitted via _plan() with an _S_M factor the derivatives
+    dropped, and there is no root TTA -- so only _FIXED_K is baked
+    in and fixed_tta is not applicable.  11 patches; together they
+    cover all 12 perf_counter occurrences in the source.
+    """
+    return [
+        ('fixed-constants',
+         "_S_COST = [0.0, 0.0, 0.0, 0.0]    # measured: seconds per network row (its encoding included), per board for both sides' moves and the engine's step;\n"
+         "                      # [0], [1] smoothed, [2], [3] the last ones\n",
+         "_S_COST = [0.0, 0.0, 0.0, 0.0]    # measured: seconds per network row (its encoding included), per board for both sides' moves and the engine's step;\n"
+         "                      # [0], [1] smoothed, [2], [3] the last ones\n"
+         "_FIXED_K = %d         # CLOCK-REMOVAL PATCH: fixed candidate budget per step (the original shell has no root TTA, so no _FIXED_TTA)\n"
+         % fixed_k, 1),
+        ('net-cost-seeding',
+         "        if _S_COST[0] == 0.0:           # first costs from this machine, so that the first turns are planned too: a full pass timed here\n"
+         "            t = _time.perf_counter()    # (1.5x: the rows' encoding is not in it), and a guess for a board's step\n"
+         "            _RNET(np.zeros((_S_ROWS, NPL, 15, 15), np.float32), _SID, np.zeros((_S_ROWS, 5), np.float32) if _RNET is _NET else None)\n"
+         "            _S_COST[0] = _S_COST[2] = 1.5 * (_time.perf_counter() - t) / _S_ROWS\n"
+         "            _S_COST[1] = _S_COST[3] = 0.002\n",
+         "        if _S_COST[0] == 0.0:\n"
+         "            # CLOCK-REMOVAL PATCH: nominal constants; _S_COST feeds no decision (the warmup pass is kept, untimed).\n"
+         "            _RNET(np.zeros((_S_ROWS, NPL, 15, 15), np.float32), _SID, np.zeros((_S_ROWS, 5), np.float32) if _RNET is _NET else None)\n"
+         "            _S_COST[0] = _S_COST[2] = 0.004\n"
+         "            _S_COST[1] = _S_COST[3] = 0.002\n", 1),
+        ('candidate-budget',
+         "    most = _S_K\n"
+         "    if _S_COST[0] > 0.0:            # the most candidates whose whole plan fits the time left at the measured costs\n"
+         "        left = _S_FILL * (_S_ABORT - (_time.perf_counter() - t0))\n"
+         "        most = 2\n"
+         "        for n in range(3, _S_K + 1):\n"
+         "            rows, steps, passes = _plan(n, D2)\n"
+         "            if M * (rows * _S_COST[0] + steps * _S_COST[1]) + passes * _S_CFIX > left:\n"
+         "                break\n"
+         "            most = n\n",
+         "    most = _FIXED_K  # CLOCK-REMOVAL PATCH: fixed candidate budget (was fitted to the time left)\n", 1),
+        ('tp-sites',
+         "        tp = _time.perf_counter()",
+         "        tp = 0.0  # CLOCK-REMOVAL PATCH", 3),
+        ('cost-call-look',
+         "        cost(0, max(0.0, _time.perf_counter() - tp - passes * _S_CFIX) / (w * len(live)))",
+         "        cost(0, 0.0)", 1),
+        ('cost-call-other',
+         "        cost(0, max(0.0, _time.perf_counter() - tp - passes * _S_CFIX) / rows)",
+         "        cost(0, 0.0)", 1),
+        ('cost-call-play',
+         "        cost(1, (_time.perf_counter() - tp) / len(live))",
+         "        cost(1, 0.0)", 1),
+        ('cost-noop', M3S2_COST_BODY, M3S2_COST_NOOP, 1),
+        ('late-predicate',
+         "    def late(rows, steps):\n"
+         "        need = -(-rows // _S_ROWS) * _S_CFIX + rows * max(_S_COST[0], _S_COST[2]) + steps * max(_S_COST[1], _S_COST[3])\n"
+         "        return _time.perf_counter() - t0 + _S_SAFE * need > _S_ABORT\n",
+         "    def late(rows, steps):\n"
+         "        return False  # CLOCK-REMOVAL PATCH: the fixed plan always runs in full\n", 1),
+        ('agent-t0',
+         "def agent(observation, configuration):\n    t0 = _time.perf_counter()",
+         "def agent(observation, configuration):\n    t0 = 0.0  # CLOCK-REMOVAL PATCH: no wall clock in the decision path", 1),
+        ('stats-dt',
+         "    dt = _time.perf_counter() - t0",
+         "    dt = 0.0  # CLOCK-REMOVAL PATCH: stats only; no wall clock in the decision path", 1),
+    ]
+
+
 def clock_patches(fixed_k, fixed_tta, variant):
     """Exact-replacement patch list for one chassis variant
-    ('v1'/'fix2'/'fix3')."""
+    ('v1'/'fix2'/'fix3'/'m3s2')."""
+    if variant == 'm3s2':
+        return _m3s2_clock_patches(fixed_k)
     common = [
         ('fixed-constants',
          "_S_COST = [0.0, 0.0, 0.0, 0.0]\n",
@@ -233,14 +342,20 @@ def detect_variant(text):
     # fix3 first: it contains v1's root-TTA line verbatim, so the TTA
     # lines alone would misclassify it as v1 (and its upd_cost patch
     # would then fail loudly on the v1 pattern -- never silently).
+    # m3s2 last: the original shell contains no TTA line and no
+    # upd_cost at all, and none of the derivative shells contains its
+    # cost() body, so the signatures cannot cross-match in either
+    # direction.
     if FIX3_UPD_COST in text:
         return 'fix3'
     if V1_TTA_LINE in text:
         return 'v1'
     if FIX2_TTA_LINE in text:
         return 'fix2'
+    if M3S2_COST_BODY in text:
+        return 'm3s2'
     raise SystemExit('CLOCK PATCH FAILED: unrecognized chassis (none of '
-                     'the v1, fix2 or fix3 signatures found). Refusing '
+                     'the v1, fix2, fix3 or m3s2 signatures found). Refusing '
                      'to ship an unpatched chassis.')
 
 
@@ -256,6 +371,10 @@ def apply_clock_patch(text, fixed_k, fixed_tta):
         text = text.replace(old, new)
         summary.append('  patch %-18s -%d/+%d lines'
                        % (name, old.count('\n'), new.count('\n')))
+    if variant == 'm3s2':
+        summary.append('  note: the original shell has no root TTA (single '
+                       'opponent-view pass): _FIXED_TTA not applicable, '
+                       'fixed_tta=%d ignored' % fixed_tta)
     if 'perf_counter' in text:
         raise SystemExit('CLOCK PATCH FAILED: perf_counter still present after patching')
     return text, summary
@@ -267,8 +386,10 @@ def apply_clock_patch(text, fixed_k, fixed_tta):
 # the two call sites inside _act's look() -- the only places the net's
 # value output enters search leaf evaluation.  The injected text is
 # identical for the v1, fix2 and fix3 chassis (their _terminal def and
-# look() value lines are byte-identical); counts are asserted like the
-# clock patch's, and any mismatch aborts the pack.
+# look() value lines are byte-identical); the m3s2 chassis shares the
+# def injection but carries its own two call sites (see bridge_patches);
+# counts are asserted like the clock patch's, and any mismatch aborts
+# the pack.
 # ---------------------------------------------------------------------------
 BRIDGE_DEF = '''
 def _u_of_margin(d):
@@ -304,8 +425,29 @@ TERMINAL_DEF = ("def _terminal(m):\n"
                 "    return float(np.clip(m / 3000.0, -2.5, 2.5) + 0.5 * np.sign(m))\n")
 
 
-def bridge_patches():
-    """Exact-replacement patch list for the value-scale bridge injection."""
+def bridge_patches(variant='v1'):
+    """Exact-replacement patch list for the value-scale bridge injection.
+
+    The bridge-def injection is shared (all four chassis carry the
+    identical _terminal def).  The call sites are each chassis' own:
+    for m3s2 they are look()'s two value sites -- after the strided
+    slice in the _RNET-is-_NET branch, and after the direct value call
+    in the separate-rollout-net branch.
+    """
+    if variant == 'm3s2':
+        return [
+            ('bridge-def', TERMINAL_DEF, TERMINAL_DEF + BRIDGE_DEF, 1),
+            ('bridge-look-main',
+             "                lw, lb, vv = net(X, _SID, S)\n"
+             "                vv = vv[::w]\n",
+             "                lw, lb, vv = net(X, _SID, S)\n"
+             "                vv = vv[::w]\n"
+             "                vv = _bridge_u_values(vv)  # VALUE-SCALE BRIDGE: value head -> leaf evaluation\n", 1),
+            ('bridge-look-roll',
+             "                vv = net(np.ascontiguousarray(X[::w]), _SID, np.ascontiguousarray(S[::w]))[2]\n",
+             "                vv = net(np.ascontiguousarray(X[::w]), _SID, np.ascontiguousarray(S[::w]))[2]\n"
+             "                vv = _bridge_u_values(vv)  # VALUE-SCALE BRIDGE: value head -> leaf evaluation\n", 1),
+        ]
     return [
         ('bridge-def', TERMINAL_DEF, TERMINAL_DEF + BRIDGE_DEF, 1),
         ('bridge-look-v4',
@@ -319,9 +461,9 @@ def bridge_patches():
     ]
 
 
-def apply_bridge_patch(text):
+def apply_bridge_patch(text, variant='v1'):
     summary = []
-    for name, old, new, count in bridge_patches():
+    for name, old, new, count in bridge_patches(variant):
         found = text.count(old)
         if found != count:
             raise SystemExit(
@@ -380,7 +522,7 @@ def pack(chassis_path, ckpt, roll, out_path, clock_patch=True, fixed_k=12,
                      % ('present' if has_roll_slot else 'absent'))
     bsummary = []
     if value_scale == 'u':
-        text, bsummary = apply_bridge_patch(text)
+        text, bsummary = apply_bridge_patch(text, detect_variant(text))
         notes.append('value scale: u (trained checkpoint) -- VALUE-SCALE '
                      'BRIDGE injected at the leaf-evaluation interface '
                      '(ruling RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119)')
@@ -479,7 +621,8 @@ def main():
     ap.add_argument('--chassis', default=layout.FIX3,
                     help='chassis source file (default: the fix3 file, owner '
                          'order 2026-11-19 19:28; the v1 and fix2 files are '
-                         'accepted alternates)')
+                         'accepted alternates, as is the master3s2 original '
+                         'shell, variant m3s2)')
     ap.add_argument('--ckpt', required=True, help='trained checkpoint npz (source layout)')
     ap.add_argument('--roll', default=None, help='optional _ROLL npz (policy keys only)')
     ap.add_argument('--out', required=True)
