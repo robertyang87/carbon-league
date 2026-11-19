@@ -30,6 +30,15 @@ def check():
         calls=[{'status':'ok'},{'status':'ok'}];calls[seat]['status']='timeout'
         assert live.failures(calls)==dict(status='forfeit',counted=True,winner_seat=1-seat,failed_seat=seat,reason='timeout')
     assert live.failures([{'status':'error'},{'status':'timeout'}])['status']=='bilateral_failure'
+    complete = dict(status='ok', elapsed=.3, response={'rss_peak_kib':2400,'cgroup_peak_bytes':4000000})
+    late = dict(status='timeout', elapsed=1.02)
+    cold = dict(initialization=[dict(status='ok', elapsed=.5, response={}),dict(status='timeout', elapsed=20.)])
+    summary=live.timing_by_seat(cold,[{'calls':[complete,complete]},{'calls':[complete,late]}])
+    assert summary[0]['observed_wait_seconds_p99']==.3 and summary[1]['observed_wait_seconds_p95']==1.02
+    assert summary[1]['logged_requests']==2 and summary[1]['timed_out_requests']==1
+    assert abs(summary[1]['observed_excess_seconds']-.02)<1e-8 and summary[0]['reported_peak_cgroup_bytes']==4000000
+    empty=live.timing_by_seat(cold,[])[1]
+    assert empty['init_status']=='timeout' and empty['observed_wait_seconds_max'] is None and empty['reported_peak_rss_kib'] is None
     env,cfg=live.official()
     for s in (0,1):
         o=live.observe(env,s,5)

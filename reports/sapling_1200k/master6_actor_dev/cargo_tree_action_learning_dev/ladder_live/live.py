@@ -6,6 +6,7 @@ import fcntl
 import gzip
 import hashlib
 import json
+import math
 from pathlib import Path
 import subprocess
 import sys
@@ -166,6 +167,34 @@ def failures(calls):
     return None
 
 
+def timing_by_seat(result, turns):
+    # Keep the final timed-out exchange in the observed waits. Its wall value is
+    # right-censored: the worker would have needed at least the allowed time.
+    rows = [[], []]
+    for turn in turns:
+        for seat, call in enumerate(turn['calls']):
+            rows[seat].append(call)
+    timing = []
+    for seat, calls in enumerate(rows):
+        init = result.get('initialization', [{}, {}])[seat]
+        waits = sorted(c['elapsed'] for c in calls)
+        samples = [c.get('response', {}) for c in [init, *calls]]
+        def quantile(p):
+            return waits[math.ceil(p * len(waits)) - 1] if waits else None
+        def peak(key):
+            return max((s[key] for s in samples if s.get(key) is not None), default=None)
+        timing.append(dict(seat=seat, role=ROLES[seat], logged_requests=len(calls),
+                           init_seconds=init.get('elapsed'), init_status=init.get('status'),
+                           timed_out_requests=sum(c['status']=='timeout' for c in calls),
+                           error_requests=sum(c['status']=='error' for c in calls),
+                           observed_waits_over_one_second=sum(w>1 for w in waits),
+                           observed_excess_seconds=sum(max(0, w-1) for w in waits),
+                           observed_wait_seconds_p95=quantile(.95), observed_wait_seconds_p99=quantile(.99),
+                           observed_wait_seconds_max=quantile(1), reported_peak_rss_kib=peak('rss_peak_kib'),
+                           reported_peak_cgroup_bytes=peak('cgroup_peak_bytes')))
+    return timing
+
+
 async def game(procs, result, output):
     env, cfg=official()
     ledger=output/'turns.jsonl'; bank=[5.,5.]; slow=[0,0]
@@ -251,7 +280,13 @@ async def run(args):
     result['whole_wall_seconds']=time.monotonic()-start
     if result['whole_wall_seconds']>RULE['task_seconds'] and result.get('status')=='complete':
         result.update(status='whole_task_timeout',counted=False,winner_seat=None)
-    if (dest/'turns.jsonl').is_file():result['turns_sha256']=sha(dest/'turns.jsonl')
+    ledger=dest/'turns.jsonl'
+    if ledger.is_file():
+        result['turns_sha256']=sha(ledger)
+        with ledger.open() as stream:
+            result['timing_by_seat']=timing_by_seat(result, (json.loads(line) for line in stream))
+    elif 'initialization' in result:
+        result['timing_by_seat']=timing_by_seat(result, ())
     save(receipt,result)
     print(result['status'],result.get('blockers',[]),flush=True)
     return 0 if result['status'] in ('complete','forfeit','eligible_probe_only','bilateral_failure') else 2

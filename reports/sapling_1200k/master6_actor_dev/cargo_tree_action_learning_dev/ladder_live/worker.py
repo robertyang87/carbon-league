@@ -10,6 +10,13 @@ def emit(value):
     print(json.dumps(value, separators=(',', ':'), allow_nan=False), flush=True)
 
 
+def memory_sample():
+    import resource
+    peak = Path('/sys/fs/cgroup/memory.peak')
+    return {'rss_peak_kib': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+            'cgroup_peak_bytes': int(peak.read_text()) if peak.is_file() else None}
+
+
 def probe():
     from importlib import metadata
     import importlib.util
@@ -37,7 +44,6 @@ def probe():
 def run(role):
     # Same public entry loading and JSON contract as ladder_timing/worker.py. This
     # lane leaves the CPU set and native torch threading entirely to the real cgroup.
-    import resource
     from types import ModuleType
     source = Path('/submission.py').read_bytes()
     mod = ModuleType('ladder_agent')
@@ -46,15 +52,14 @@ def run(role):
     exec(compile(source, mod.__file__, 'exec'), mod.__dict__)
     identity = hashlib.sha256(source).hexdigest()
     del source
-    ready = dict(ready=True, sha256=identity)
+    ready = dict(ready=True, sha256=identity, **memory_sample())
     if role == 'opponent':
         ready['original'] = {k:getattr(mod,k,None) for k in ('_TEMP','_SEED','_S_ABORT','_SEARCH_OK')}
     emit(ready)
     for line in sys.stdin:
         request = json.loads(line)
         action = mod.agent(request['observation'], request['configuration'])
-        response = dict(action=action, step=request['observation']['step'],
-                        rss_peak_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+        response = dict(action=action, step=request['observation']['step'], **memory_sample())
         if role == 'opponent':
             response['search_counts'] = {key:mod._S_STATS[key] for key in ('searched','single','aborted')}
         emit(response)
