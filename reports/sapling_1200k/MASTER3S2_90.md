@@ -4,6 +4,10 @@
 
 Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜过完整原版 Master3s2，比分 **8034.77 比 7541.14**。连同另外两张图的独立复测，四张开发图换席总计 **1 胜 7 负，平均官方分差 −1200.67**。该包随后在首胜图做限额复测，同图同席落败。独立正式考卷仍封存，目标保持 100 张新图换席至少 180/200 胜，同一批平均官方分差至少 +500。[首胜批次](master6_actor_dev/cargo_tree_action_learning_dev/direct_original/README.md) · [独立复测](master6_actor_dev/cargo_tree_action_learning_dev/replicate_original/README.md) · [限额复测](master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/hosted_attempt/README.md)
 
+新开发图 621758354、621758355 的限额整场对照已打完。窗口版 `4e3701f3` 两席各 0 胜 2 负，四场平均官方分差 −1276.36，父代四场为 −1907.75。冻结权重在 128 次窗口机会里改变了 50 个整队命令。两图的窗口期相对父代分别多赚 −2.18、+817.15 分。四组原版对手的自然采样均在窗口启用之前分叉。12 场双方均在时限内完成，原版零深回退为零。[逐局计分及完整请求计时](master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/windowed/fresh_original/economy/README.md) · [同一可见局面上的动作对照](master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/windowed/fresh_original/same_observations/summary.json)
+
+对 Sapling 加入了 1,473 个参数的碳估计网络，仅更新学生编码器入参。在三张训练外地形的 63,157 个暗格上，平均绝对误差由 2.106 降到 1.546 碳。双席逐帧从公开入口调用，1,794 次决策共改变 17 条指令。首图本地逐步端到端 P99 为 69.49 毫秒，最慢 290.23 毫秒。此前其他 SHA 的托管场计时单独记账。[权重、实际命令与反例](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/README.md) · [预登记的同局面原版响应](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/native_response/protocol.json)
+
 ## 早期开发记录
 
 **早期冻结组合 `c5ad3f43` 在当时的曝光图取得一胜。** 在先前用过的地图 `621461321`，席 0 的冻结组合 `c5ad3f43` 以 **8,026.31 比 7,644.53** 胜 Master3s2，打满 299 步。考官完成 294 次搜索，其中 233 次到达深度 8，另有 5 步只有一个候选。两席均无内部错误。同图换席分差为 −1,837.30。参赛组合按 75% 自有 Echo4、25% Sapling 融合动作分数；去掉 Sapling 后，此前 68 个实战局面中有 16 个改变整队命令。该版本在本轮以前的 12 局为 1 胜 11 负。[官方逐步回执](master6_actor_dev/actor_partner_dev/native/candidate/receipt_621461321_0.json) · [实际动作消融](master6_actor_dev/actor_partner_dev/attribution.json) · [十二局与换席比分](master6_actor_dev/first_win_analysis/README.md)
