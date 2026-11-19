@@ -1,0 +1,23 @@
+{
+ "purpose": "Master3s2 RL-opponent use registration. Strategy-group filing ruling reports/RULING_RL_UNFREEZE_3S2_OPPONENT_20261119.md (commit c586da79, 2026-11-19), on the owner's 2026-11-19 order: the goal is to beat Master3s2 at a 90%+ win rate. The ruling confirms the PPO/RL freeze is superseded by the owner's new order for this new RL line only (start point m3s2r1, fixed opponent Master3s2, reward primarily Terminal-U), and rules that using Master3s2 as an RL opponent is NOT covered by its existing exam-only registration, so this new registration is issued and takes effect on filing.",
+ "registered": "2026-11-19",
+ "registrar": "DGX line (custody/registry)",
+ "version": "rl-opp-v1 (war-room filing order 2026-11-19)",
+ "frozen": true,
+ "standing_rule": "Block changes are recognized ONLY via a filed new version of this registry with its md5; values cited in chat move neither fields nor registry. No new version is issued without an explicit war-room registry-amendment order. The Loop-0 registry (settlement-3, md5 65c400d52fabf8cac8bc106e661e2c5b), the Loop-2 registry (loop2-v2, md5 a8347a80aa7c72f39c80cb02f60e3853), the budget-match registry (budget-v1, md5 8b70affe685cec90c10e711154a5c612), the screen registry (screen-v1, md5 249544ab082a67e5d018aedad7d699bc) and the snap70 registry (snap70-v1, md5 5ccaa74b718ea661a6c34ff34ded05d8) are untouched by this filing.",
+ "subject": {
+  "model": "Master3s2",
+  "existing_registration": "examiner (exam-only): one of the standard calibration pair {Master3s2, Echo6}, anchor on record. That registration does NOT cover use as a training opponent; this filing adds the new use below and does not amend the examiner registration."
+ },
+ "registered_use": {
+  "use": "fixed sparring opponent for opponent-directed RL (the RL line starts from m3s2r1; reward primarily Terminal-U)",
+  "allowed_signals": "only the terminal results of the student's own games: Terminal-U and its WDL / margin components",
+  "forbidden": [
+   "imitating Master3s2's moves",
+   "distilling Master3s2's policy",
+   "using any step-level or internal evaluation information from Master3s2 as a training signal"
+  ]
+ },
+ "firewall": "HARD CONDITION (ruling S2): for any model trained against Master3s2, no reading against Master3s2 may thereafter be cited as neutral examination or calibration evidence. The Master3s2-anchored yardstick (calibrated score = mean vs Master3s2 + 374, and the +150 gate) is VOID for that line. Staged win rates are TARGET metrics, not strength certification, and every citation must be written in that caliber. Beating this one fixed opponent at 90%+ proves beating this opponent, not general strength; the win rate must never be cited as evidence of general or ladder strength (the ladder submission gate is unchanged and remains the owner's alone). This firewall does not reach lines never trained against Master3s2: for them Master3s2 remains a valid examiner, and the Echo6 bridge and the standard calibration pair are unchanged.",
+ "staged_verification": "Tiers 35/50/65/80/90 are verified only on fresh seeds disjoint from all RL training games, pinned before each tier opens (seed blocks pre-registered in data/k0_calib/rl_staged_verify_seed_blocks_20261119.json); win rates are reported as measured on the 200 fresh-seed games with CI. Win rates on training games do not count."
+}
