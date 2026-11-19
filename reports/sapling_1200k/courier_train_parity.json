@@ -1,0 +1,208 @@
+{
+  "schema_version": "sapling-export-parity-v1",
+  "status": "PASS",
+  "tolerance_abs": 3e-05,
+  "device": "CPU",
+  "torch_threads": 1,
+  "python": "3.12.14",
+  "numpy": "1.26.4",
+  "torch": "2.5.1+cpu",
+  "replay_source": {
+    "path": "data/master6s_corpus/21f9889b21072db820926c967d5bdb85-1.json.gz",
+    "compressed_sha256": "954063d6378a61edf7a47317070e8d447a1cb83588c8c86ad8f501c678508583",
+    "roots": [
+      {
+        "seat": 0,
+        "step": 0,
+        "cash": 80.0,
+        "free_slots": 10
+      },
+      {
+        "seat": 0,
+        "step": 1,
+        "cash": 20.0,
+        "free_slots": 8
+      },
+      {
+        "seat": 0,
+        "step": 12,
+        "cash": 11.69,
+        "free_slots": 8
+      },
+      {
+        "seat": 0,
+        "step": 16,
+        "cash": 40.04,
+        "free_slots": 7
+      },
+      {
+        "seat": 0,
+        "step": 49,
+        "cash": 231.93,
+        "free_slots": 1
+      },
+      {
+        "seat": 0,
+        "step": 50,
+        "cash": 210.26,
+        "free_slots": 0
+      },
+      {
+        "seat": 0,
+        "step": 150,
+        "cash": 2805.29,
+        "free_slots": 0
+      },
+      {
+        "seat": 0,
+        "step": 294,
+        "cash": 6580.96,
+        "free_slots": 2
+      },
+      {
+        "seat": 1,
+        "step": 0,
+        "cash": 80.0,
+        "free_slots": 10
+      },
+      {
+        "seat": 1,
+        "step": 1,
+        "cash": 20.0,
+        "free_slots": 8
+      },
+      {
+        "seat": 1,
+        "step": 12,
+        "cash": 17.59,
+        "free_slots": 8
+      },
+      {
+        "seat": 1,
+        "step": 13,
+        "cash": 36.66,
+        "free_slots": 8
+      },
+      {
+        "seat": 1,
+        "step": 41,
+        "cash": 191.22,
+        "free_slots": 1
+      },
+      {
+        "seat": 1,
+        "step": 50,
+        "cash": 345.13,
+        "free_slots": 0
+      },
+      {
+        "seat": 1,
+        "step": 150,
+        "cash": 3935.11,
+        "free_slots": 0
+      },
+      {
+        "seat": 1,
+        "step": 294,
+        "cash": 7711.76,
+        "free_slots": 2
+      }
+    ],
+    "hidden_carbon_passed_to_policy": false,
+    "feature_history": "Sequential public observations from step0."
+  },
+  "weights": {
+    "v6b": {
+      "input_filename": "courier_train_v6b.npz",
+      "input_sha256": "4e5a54686270267ac9e5a599ff499e9f99505c698d5380e88c55958987f9c862",
+      "fp32_numeric_checks": {
+        "parameter_count": 1206476,
+        "cfg": {
+          "C": 93,
+          "NB": 6,
+          "D": 96,
+          "NH": 4,
+          "L": 1,
+          "E": 32,
+          "G": 3,
+          "TA": 0
+        },
+        "numpy_group_count": 3,
+        "torch_group_count": 3,
+        "roots": 16,
+        "legal_joint_candidates": 38,
+        "candidates_changing_prefix_features": 15,
+        "candidates_changing_prefix_legality": 4,
+        "max_abs_errors": {
+          "torch_np_logits": 3.337860107421875e-06,
+          "torch_np_value": 3.8769567312080255e-07,
+          "torch_np_utility": 1.2448947073195882e-07,
+          "torch_sequence_logits": 0.0,
+          "torch_sequence_value": 0.0,
+          "np_batch_tokens": 3.0994415283203125e-06,
+          "np_batch_context": 1.9073486328125e-06,
+          "np_batch_forced_logits": 3.5762786865234375e-06
+        },
+        "batch_greedy_label_differences": 0
+      },
+      "int8_export": {
+        "pack_bytes": 1665318,
+        "pack_md5": "39c7927bfe145f54891dae3be5593203",
+        "pack_sha256": "ea827f3c9712ea275670dde4f8b0ce20dec820765cf3ea1c81bf5f1adaae6b79",
+        "dequantized_sha256": "5af3dab383469edeb8121341129cb52d5d05ae268dda7964da341dc2957b5d11",
+        "metadata_group_count": 3,
+        "actual_pack_deq_calls": 590,
+        "actual_pack_deq_action_differences": 0,
+        "dequantized_numeric_checks": {
+          "parameter_count": 1206476,
+          "cfg": {
+            "C": 93,
+            "NB": 6,
+            "D": 96,
+            "NH": 4,
+            "L": 1,
+            "E": 32,
+            "G": 3,
+            "TA": 0
+          },
+          "numpy_group_count": 3,
+          "torch_group_count": 3,
+          "roots": 16,
+          "legal_joint_candidates": 38,
+          "candidates_changing_prefix_features": 15,
+          "candidates_changing_prefix_legality": 4,
+          "max_abs_errors": {
+            "torch_np_logits": 4.76837158203125e-06,
+            "torch_np_value": 3.7899928073681366e-07,
+            "torch_np_utility": 1.9065645007199095e-07,
+            "torch_sequence_logits": 0.0,
+            "torch_sequence_value": 0.0,
+            "np_batch_tokens": 2.4884939193725586e-06,
+            "np_batch_context": 1.9073486328125e-06,
+            "np_batch_forced_logits": 2.6226043701171875e-06
+          },
+          "batch_greedy_label_differences": 0
+        },
+        "quantization_diagnostic": {
+          "max_abs_same_prefix_logits_change": 0.04475665092468262,
+          "greedy_changed_slots": 0,
+          "active_slots": 119,
+          "note": "FP32/int8 may differ; this is not a claim of preserved game strength."
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "code/cnet2_model.py": "3dc3b3aaaf083c8b7168299acaa0c573c3957d95a63074776d2f0f4aa52add8f",
+    "code/cnet2_np.py": "4571d9eb7485498ec0ec53c6e181f40f15e7a2071deac38f5d22c84b31f5a496",
+    "code/cnet2_search.py": "9b3fdd874e20bfae66deeabeae8902019707a4d4659c75077237fb8166056060",
+    "code/cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+    "code/cnet2_agent.py": "ac159979644b37d57f59db33bd4cb5713fa54f79d6d92220b6bf5f7c774cbe5c",
+    "code/cnet2_pack.py": "f40ddcd749603bdd0e664d544165c307c17b8f901ac7b7fb0f1c58d1fae1aecc",
+    "code/rl2_ppo_cnet2.py": "14ea28a005bcedea8cc793a4620556f136dbd4fbf9f4a6aed523a2c686748a9f"
+  },
+  "limitations": [
+    "Numerical/export acceptance only; no training, strength assessment or platform-resource certification.",
+    "Preserve complete cfg.G metadata. The legacy no-config fallback is G=8 and is not suitable for C=93."
+  ]
+}

@@ -1,0 +1,338 @@
+{
+  "recipe": {
+    "parent_sha256": "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be",
+    "source_labels_sha256": "95d81e417d208b0c042d4c9b142b8063a9fb370a748a4fb41faea7cc3ab8699a",
+    "data_sha256": "566bd7437a997078a751de6a7f0c9d0f8af1f41a901d6c0ea66b9f6192b16a9b",
+    "previous_attempt": "courier_train_fit",
+    "train_games": 26,
+    "phase": "fixed-budget direct paired payoff",
+    "seed": 551207,
+    "updates": 220,
+    "batch": 128,
+    "lr": 0.00018,
+    "advantage": "(Q - E_parent[Q])/100, clipped to [-4,4]. Max E_candidate[advantage], with 0.5*KL(parent||candidate) on courier slots + 1.5*KL on all other free slots.",
+    "trainable": [
+      "U.weight",
+      "U.bias"
+    ],
+    "trainable_parameters": 3104,
+    "trainer_sha256": "82549752615921ae156459b91e0fa893f46495063ef24b1f04a8c54f5fe82d2d"
+  },
+  "training": {
+    "all": {
+      "roots": 1472,
+      "changed": 27,
+      "better": 11,
+      "worse": 13,
+      "mean_cash_plus_salvage_gain": 0.08218145370483398,
+      "mean_soft_gain": 0.4158428907394409
+    },
+    "informative": {
+      "roots": 1310,
+      "changed": 17,
+      "better": 7,
+      "worse": 8,
+      "mean_cash_plus_salvage_gain": 0.09696090221405029,
+      "mean_soft_gain": 0.4676375389099121
+    },
+    "nonfocal_choice_agreement": 0.9883654117584229,
+    "nonfocal_free_slots": 19167,
+    "nonfocal_changed": 223
+  },
+  "validation": {
+    "all": {
+      "roots": 607,
+      "changed": 16,
+      "better": 6,
+      "worse": 7,
+      "mean_cash_plus_salvage_gain": -0.10290529578924179,
+      "mean_soft_gain": 0.3889697194099426
+    },
+    "informative": {
+      "roots": 536,
+      "changed": 14,
+      "better": 5,
+      "worse": 7,
+      "mean_cash_plus_salvage_gain": -0.12487064301967621,
+      "mean_soft_gain": 0.438785582780838
+    },
+    "nonfocal_choice_agreement": 0.9868202209472656,
+    "nonfocal_free_slots": 7815,
+    "nonfocal_changed": 103
+  },
+  "validation_maps": 11,
+  "validation_labels_sha256": "b7093e59472b94005a31536f339de7f52d083051d7989851fc9521b909061df2",
+  "training_trace_gain_kl_anchor": [
+    [
+      1,
+      9.71832836427211e-10,
+      2.407432475592941e-09,
+      -3.4201395188171446e-11
+    ],
+    [
+      41,
+      0.001414175727404654,
+      0.0006052860990166664,
+      0.00029014304163865745
+    ],
+    [
+      81,
+      0.0019739975687116385,
+      0.0009007190819829702,
+      0.0003344521392136812
+    ],
+    [
+      121,
+      0.0018351968610659242,
+      0.0011729998514056206,
+      0.0005551292560994625
+    ],
+    [
+      161,
+      0.0042074392549693584,
+      0.001566311577335,
+      0.0006197288748808205
+    ],
+    [
+      201,
+      0.004712134134024382,
+      0.0016803918406367302,
+      0.0006704225088469684
+    ],
+    [
+      220,
+      0.005879816133528948,
+      0.002297965344041586,
+      0.0007881205528974533
+    ]
+  ],
+  "weight_sha256": "4e5a54686270267ac9e5a599ff499e9f99505c698d5380e88c55958987f9c862",
+  "pack_sha256": "ea827f3c9712ea275670dde4f8b0ce20dec820765cf3ea1c81bf5f1adaae6b79",
+  "scope": "Conditional five-step payoff under fixed surviving recorded commands. Exclusive reserve maps first evaluated after freezing second candidate. Not a match against Master3s2.",
+  "all_heldout_changed_couriers": [
+    {
+      "game": "56169fed54993f0819a29eaaaef38dd7-1",
+      "seat": 1,
+      "step": 118,
+      "unit": "player-1-worker-13",
+      "cargo": 266.0193,
+      "parent_move": 4,
+      "student_move": 2,
+      "delta_five_step_value": 4.467150000000004,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "56169fed54993f0819a29eaaaef38dd7-1",
+      "seat": 0,
+      "step": 181,
+      "unit": "player-0-worker-56",
+      "cargo": 78.0387,
+      "parent_move": 3,
+      "student_move": 4,
+      "delta_five_step_value": 0.0,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "56169fed54993f0819a29eaaaef38dd7-1",
+      "seat": 0,
+      "step": 216,
+      "unit": "player-0-worker-61",
+      "cargo": 131.8539,
+      "parent_move": 1,
+      "student_move": 2,
+      "delta_five_step_value": -9.888750000000073,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "e73135faa0b6e61544b713252d81e2e5-1",
+      "seat": 0,
+      "step": 53,
+      "unit": "player-0-worker-12",
+      "cargo": 38.3721,
+      "parent_move": 2,
+      "student_move": 4,
+      "delta_five_step_value": -52.17282,
+      "delta_bank_own": 38.370000000000005,
+      "delta_bank_opp": 30.0,
+      "delta_taken_from_enemy": -65.7,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "ff09b13031cfcd11d59631affed007d6-1",
+      "seat": 1,
+      "step": 133,
+      "unit": "player-1-worker-10",
+      "cargo": 102.8328,
+      "parent_move": 2,
+      "student_move": 0,
+      "delta_five_step_value": 1.1551500000000487,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "ff09b13031cfcd11d59631affed007d6-1",
+      "seat": 1,
+      "step": 154,
+      "unit": "player-1-worker-2",
+      "cargo": 101.6738,
+      "parent_move": 1,
+      "student_move": 4,
+      "delta_five_step_value": -13.210209999999961,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 10.159999999999854,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "ff09b13031cfcd11d59631affed007d6-1",
+      "seat": 0,
+      "step": 210,
+      "unit": "player-0-worker-24",
+      "cargo": 189.9525,
+      "parent_move": 1,
+      "student_move": 3,
+      "delta_five_step_value": -18.18026999999995,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "09a12e7f6169d13d2b6a924468e0f205-1",
+      "seat": 0,
+      "step": 209,
+      "unit": "player-0-worker-26",
+      "cargo": 98.4804,
+      "parent_move": 2,
+      "student_move": 3,
+      "delta_five_step_value": 0.0,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "abb23c7796d827b211c26e46b99785b3-1",
+      "seat": 0,
+      "step": 56,
+      "unit": "player-0-worker-11",
+      "cargo": 157.4547,
+      "parent_move": 2,
+      "student_move": 1,
+      "delta_five_step_value": 136.74918000000002,
+      "delta_bank_own": -23.74000000000001,
+      "delta_bank_opp": -70.74000000000001,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": -157.4547
+    },
+    {
+      "game": "abb23c7796d827b211c26e46b99785b3-1",
+      "seat": 1,
+      "step": 161,
+      "unit": "player-1-worker-15",
+      "cargo": 27.8451,
+      "parent_move": 0,
+      "student_move": 4,
+      "delta_five_step_value": -12.073890000000006,
+      "delta_bank_own": -2.0100000000002183,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "5fb0f13dacd5a31934a64dcb7917720b-1",
+      "seat": 0,
+      "step": 120,
+      "unit": "player-0-worker-22",
+      "cargo": 81.0,
+      "parent_move": 1,
+      "student_move": 2,
+      "delta_five_step_value": 5.90652,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "d840e4de591fb29628091673c049b6a0-1",
+      "seat": 1,
+      "step": 80,
+      "unit": "player-1-worker-4",
+      "cargo": 286.7838,
+      "parent_move": 4,
+      "student_move": 3,
+      "delta_five_step_value": -180.11979000000008,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 297.2442
+    },
+    {
+      "game": "d840e4de591fb29628091673c049b6a0-1",
+      "seat": 0,
+      "step": 87,
+      "unit": "player-0-worker-0",
+      "cargo": 30.0,
+      "parent_move": 4,
+      "student_move": 3,
+      "delta_five_step_value": 0.0,
+      "delta_bank_own": 0.0,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "d840e4de591fb29628091673c049b6a0-1",
+      "seat": 0,
+      "step": 164,
+      "unit": "player-0-worker-9",
+      "cargo": 83.193,
+      "parent_move": 4,
+      "student_move": 1,
+      "delta_five_step_value": -49.04000000000008,
+      "delta_bank_own": -49.04000000000042,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "d840e4de591fb29628091673c049b6a0-1",
+      "seat": 1,
+      "step": 164,
+      "unit": "player-1-worker-8",
+      "cargo": 47.7255,
+      "parent_move": 1,
+      "student_move": 2,
+      "delta_five_step_value": 60.79000999999994,
+      "delta_bank_own": 17.730000000000018,
+      "delta_bank_opp": -46.779999999999745,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    },
+    {
+      "game": "d840e4de591fb29628091673c049b6a0-1",
+      "seat": 1,
+      "step": 178,
+      "unit": "player-1-worker-7",
+      "cargo": 90.219,
+      "parent_move": 4,
+      "student_move": 2,
+      "delta_five_step_value": 63.154300000000035,
+      "delta_bank_own": 90.2199999999998,
+      "delta_bank_opp": 0.0,
+      "delta_taken_from_enemy": 0.0,
+      "delta_given_to_enemy": 0.0
+    }
+  ]
+}

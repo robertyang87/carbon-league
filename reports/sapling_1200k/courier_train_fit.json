@@ -1,0 +1,107 @@
+{
+  "recipe": {
+    "parent_sha256": "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be",
+    "label_sha256": "95d81e417d208b0c042d4c9b142b8063a9fb370a748a4fb41faea7cc3ab8699a",
+    "elite_manifest_sha256": "566bd7437a997078a751de6a7f0c9d0f8af1f41a901d6c0ea66b9f6192b16a9b",
+    "seed": 551204,
+    "fixed_updates": 240,
+    "batch_roots": 96,
+    "q_temperature": 45.0,
+    "meaningful_min_range": 10,
+    "learning_rate": 0.0008,
+    "weight_decay": 0.002,
+    "anchors_per_game": 24,
+    "nonfocal_forward_kl_weight": 2.5,
+    "trainable": [
+      "U.weight",
+      "U.bias"
+    ],
+    "trainable_parameters": 3104,
+    "architecture_parameters": 1206476,
+    "train_games": 26,
+    "validation_games": 10,
+    "trainer_sha256": "4e02b3073fc1faeb62eb00c393c415038244c2d173a93d351feb247c960abecb"
+  },
+  "training": {
+    "all": {
+      "roots": 1472,
+      "changed": 282,
+      "better": 88,
+      "worse": 155,
+      "mean_cash_plus_salvage_gain": -2.927732467651367,
+      "mean_soft_gain": -7.012049198150635
+    },
+    "informative": {
+      "roots": 1310,
+      "changed": 247,
+      "better": 78,
+      "worse": 135,
+      "mean_cash_plus_salvage_gain": -3.250095844268799,
+      "mean_soft_gain": -7.7712860107421875
+    },
+    "nonfocal_choice_agreement": 0.9006104469299316,
+    "nonfocal_free_slots": 19167,
+    "nonfocal_changed": 1905
+  },
+  "validation": {
+    "all": {
+      "roots": 542,
+      "changed": 113,
+      "better": 33,
+      "worse": 67,
+      "mean_cash_plus_salvage_gain": -3.6227169036865234,
+      "mean_soft_gain": -7.300964832305908
+    },
+    "informative": {
+      "roots": 498,
+      "changed": 101,
+      "better": 30,
+      "worse": 62,
+      "mean_cash_plus_salvage_gain": -3.9061238765716553,
+      "mean_soft_gain": -7.860959529876709
+    },
+    "nonfocal_choice_agreement": 0.9056686758995056,
+    "nonfocal_free_slots": 6827,
+    "nonfocal_changed": 644
+  },
+  "training_trace": [
+    {
+      "update": 1,
+      "ce": 3.2693755626678467,
+      "anchor_kl": 1.4998889907857915e-09
+    },
+    {
+      "update": 41,
+      "ce": 1.9310177564620972,
+      "anchor_kl": 0.10267390310764313
+    },
+    {
+      "update": 81,
+      "ce": 1.9219841957092285,
+      "anchor_kl": 0.09897405654191971
+    },
+    {
+      "update": 121,
+      "ce": 1.9007750749588013,
+      "anchor_kl": 0.11401643604040146
+    },
+    {
+      "update": 161,
+      "ce": 1.9219188690185547,
+      "anchor_kl": 0.09894967824220657
+    },
+    {
+      "update": 201,
+      "ce": 1.898964762687683,
+      "anchor_kl": 0.10570788383483887
+    },
+    {
+      "update": 240,
+      "ce": 1.8997764587402344,
+      "anchor_kl": 0.09950383752584457
+    }
+  ],
+  "weights_sha256": "7c7a7715a48ca35c4c006bff863f78f5f2cc0f7e7c83b52ace2a77dbbf89974e",
+  "pack_sha256": "a2898408dd9a111d4ad0c13426fa4b212f7439557a42af2f6fc33a9ef9c56572",
+  "claim": "Conditional five-transition retrospective utility. Fixed logged continuations cannot substitute for paired whole-game results."
+}
