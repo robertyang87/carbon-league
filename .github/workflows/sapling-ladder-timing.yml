@@ -1,0 +1,133 @@
+name: Sapling exposed-map ladder timing
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sapling-ladder-8da4b465-621758346-seat1
+  cancel-in-progress: false
+
+jobs:
+  timing:
+    if: github.ref == 'refs/heads/main' && github.run_attempt == '1'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    env:
+      LANE: reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /code/env_src/carbon_challenge-master/zerosum_env/
+            /data/master3s2_source.py
+            /sources/master3s2/master3s2.py
+            /reports/agent-guide.md
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.py
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.npz
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/
+
+      - name: Verify registration and install interpreter dependencies
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          echo "8bc6122533b139c626323955c0aa0b4dbd8ef771ab04d086df275e5d1641751a  $LANE/protocol.json" | sha256sum --check
+          test ! -e "$LANE/attempt.json"
+          cmp data/master3s2_source.py sources/master3s2/master3s2.py
+          mkdir -p "$LANE/../../tree_response_training" "$RUNNER_TEMP/receipts"
+          python3.12 -m venv "$RUNNER_TEMP/carbon-env"
+          "$RUNNER_TEMP/carbon-env/bin/python" -m pip install --only-binary=:all: --disable-pip-version-check \
+            --index-url https://pypi.org/simple numpy==1.26.4 requests==2.32.5 jsonschema==4.25.1
+          echo "$RUNNER_TEMP/carbon-env/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/carbon-env/bin/python" - <<'PY'
+          import os, sys
+          sys.path.insert(0, os.environ['LANE'])
+          import live
+          assert all((live.ROOT / entry['path']).stat().st_size == entry['bytes']
+                     and live.sha(live.ROOT / entry['path']) == entry['sha256']
+                     for entry in live.PLAN['files'].values())
+          env, _ = live.official()
+          assert env.states[0].observation.step == 0
+          cores = sorted(os.sched_getaffinity(0))[:2]
+          if len(cores) != 2:
+              raise SystemExit('The registered two-core CPU set is unavailable')
+          with open(os.environ['GITHUB_ENV'], 'a') as settings:
+              print('MATCH_CPUS=' + ','.join(map(str, cores)), file=settings)
+          PY
+
+      - name: Check previous dispatches for this registration
+        timeout-minutes: 2
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          api = 'https://api.github.com/repos/robertyang87/carbon-league/actions/'
+          def pages(path, key):
+              for page in range(1, 101):
+                  with urllib.request.urlopen(api + path + f'?per_page=100&page={page}', timeout=12) as resp:
+                      entries = json.load(resp)[key]
+                  yield from entries
+                  if len(entries) < 100:
+                      return
+              raise RuntimeError('incomplete Actions history')
+          current = int(os.environ['GITHUB_RUN_ID'])
+          for run in pages('workflows/sapling-ladder-timing.yml/runs', 'workflow_runs'):
+              if run['id'] == current or run['head_branch'] != 'main':
+                  continue
+              for job in pages(f"runs/{run['id']}/jobs", 'jobs'):
+                  if any(step['name'] == 'Play registered exposed map' and step.get('started_at')
+                         and step['conclusion'] != 'skipped' for step in job.get('steps', [])):
+                      raise SystemExit(f"Registration already reached the match step in run {run['id']}")
+          PY
+
+      - name: Build isolated CPU runtime
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          ctx="$RUNNER_TEMP/image-context"
+          mkdir -p "$ctx/code/env_src/carbon_challenge-master"
+          cp -r code/env_src/carbon_challenge-master/zerosum_env "$ctx/code/env_src/carbon_challenge-master/"
+          # Use the existing runner Dockerfile with the recorded official base digest.
+          sed 's|^FROM python:3.12-slim$|FROM python@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b|' "$LANE/Dockerfile" > "$ctx/Dockerfile"
+          docker build --tag sapling-ladder:registered "$ctx"
+
+      - name: Read enforced limits from both sandboxes
+        timeout-minutes: 2
+        run: |
+          python "$LANE/live.py" --image sapling-ladder:registered --cpus "$MATCH_CPUS" --out "$RUNNER_TEMP/receipts/preflight"
+
+      - name: Play registered exposed map
+        timeout-minutes: 27
+        run: |
+          python "$LANE/live.py" --image sapling-ladder:registered --cpus "$MATCH_CPUS" --out "$RUNNER_TEMP/receipts/game" --play
+
+      - name: Preserve result and identify incomplete games
+        if: always()
+        run: |
+          if test -e "$LANE/attempt.json"; then cp "$LANE/attempt.json" "$RUNNER_TEMP/receipts/"; fi
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path(os.environ['RUNNER_TEMP']) / 'receipts/game/receipt.json'
+          if not path.exists():
+              raise SystemExit('No match receipt')
+          result = json.loads(path.read_text())
+          print(result['status'], result.get('official_scores_by_seat'), result.get('winner_seat'))
+          if result['status'] != 'complete':
+              raise SystemExit('An incomplete or forfeited game has no full-game timing pass')
+          PY
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: sapling-ladder-8da4b465-${{ github.run_id }}
+          path: ${{ runner.temp }}/receipts/
+          if-no-files-found: warn
