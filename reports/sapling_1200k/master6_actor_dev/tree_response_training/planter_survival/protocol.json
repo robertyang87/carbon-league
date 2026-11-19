@@ -1,0 +1,28 @@
+{
+  "version": "planter-survival-v1",
+  "split": {
+    "train": {
+      "maps": [
+        621471120,
+        621471121
+      ],
+      "receipt_sha256": "adc22ebd0a06769095801c1bfbc9519a23afcd784711f2e9ffa1523579ae2cbe",
+      "opportunities_sha256": "533f56d492a46f40c06ca583b32ddbcf1781ecce58addf770769f2cddbf90ac6"
+    },
+    "validation": {
+      "maps": [
+        621472120,
+        621472121
+      ],
+      "receipt_sha256": "05861f714d7e64a5df1d28708a5fe3a557736fe4edb3dfd24464d52906b4d352",
+      "opportunities_sha256": "bf521f9964cb9b216ea45113aa58fab8174517ea92772259009dbe96a40ec8a0"
+    }
+  },
+  "eligibility": "All horizon turns at both seats, every Sapling planter with a prefix-legal friendly-conflict-free NONE and movement. If the real order moves, only its actual movement; otherwise first unique neighbor by sha256(seed|seat|turn|uid|cmd) ascending over entry-legal, friendly-conflict-free movements. Keep all pairs including unaffordable and nonpayable; flag quote.can_pay_now separately. No counterpart sources or branches from intake03+.",
+  "target": "focal worker dies on the next official transition and whether a surviving stationary focal worker bought a new tree or took ownership, including rebirth after expiry. Opponent simultaneous historical command and other friendly commands identical across both arms; compare one physical pair within a root. Source/original arm must reproduce the official trajectory.",
+  "inputs": "Public acting-seat observation only; no root commands from opponent, no full_carbon. For each action encode public reach of opponent collectors and planters, counts in Manhattan rings, recent direction/closing from previous 1 and 3 positions, public friendly destinations, presence of bases, action type, role-local contact and phase; crop distance/count and never use score after root or seat/map ID as a feature.",
+  "model": "One binary logistic head for next-step death, map-equal then root-equal then arm-equal log loss, no death rebalance. L2=0.02 scaled for sample-mean objective, intercept unpenalized, causal contact mask permitting any opposing worker or enemy base at destination, or friendly traffic. Outside this exact one-step envelope assign zero risk. Newton 30 iterations. No hyperparameter selection. Price/eligibility used for diagnostics only.",
+  "evaluation": "Fixed death alert p>=0.2, secondary >=0.5. Untrained geometric alert if any opposing worker can reach destination in one action or destination is enemy base. Prefer move if stay>=.2 and stay-minus-move>=.05; baseline moves only if stay threatened and move unthreatened. Report maps, seats, workers, pairs, actually paid, feasible-but-dead vs alive-unpaid, FP/FN, map-root Brier, alert precision/recall, pairs by sign, pay opportunity subset. One bootstrap/CI across paired rows is invalid at only two maps; give both map rows and descriptive equal-map pooled metrics.",
+  "boundary": "Second batch maps entirely held out from fitting; discovery that seven selected branches had lost the worker was already known. All-root validation correlated with the source games; never used as a final competition test. No assessment of terminal returns from single-turn substitutions; no new games or policy deployment.",
+  "cost": "one low priority shared CPU; no online play"
+}
