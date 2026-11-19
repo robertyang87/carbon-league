@@ -27,3 +27,5 @@
 以 seat0_ 和 seat1_ 开头的列始终对应物理席。收入金额按现金账分类，抢到的货物在实际入账前仍属在途；最后三十步与三段区间存为 JSON。布局资产快照的数组顺序为 cash、collectors、planters、trees、remaining_tree_turns_30、cargo_total、cargo_near_bank、cargo_approach_threatened、blocked_bases。布局快照只记录对局实际到达的步数。
 
 [11:56 同步的首批 10 局](appendix_555c0c56/README.md) · [04:20 UTC 截止补齐的 4 局](appendix_bf049043/README.md) · [全量 1,361 张图说明](README.md)
+
+[收盘后 Master6 主索引新增 12 局](appendix_bd3c0021/README.md) · [六批全部 1,373 局](README.md)
