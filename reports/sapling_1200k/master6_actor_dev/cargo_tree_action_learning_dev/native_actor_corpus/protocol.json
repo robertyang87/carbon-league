@@ -1,0 +1,53 @@
+{
+  "all_new_dev_seed_interval": [
+    621758300,
+    621758400
+  ],
+  "arms": {
+    "full": "All Sapling policy parameters including convolution, token encoder, GRU and actions; auxiliary/value/WDL/margin frozen.",
+    "head": "Frozen Sapling encoder, GRU and input projection; only whead bhead U V + biases. Same sampled unique roots, minibatches, optimizer rate and update count.",
+    "parent": "unchanged released first-win package."
+  },
+  "batch": 8,
+  "benchmark_sha256": "cedb09942a401bff4156ef1acfe3eb8daf43a704d780036c99df568e2d81cd01",
+  "checkpoint_every": 26,
+  "checkpoint_selection": "Fixed final step 312 regardless of scores. First checkpoint for restoration/smoke, no tuning or held-label feedback. Resume with input, source and contract SHA. Stop on nonfinite gradients, failure of frozen parent parity <0.003 centered score max (two starter roots/tape, all active representable actions), or data receipt mismatch. No additional games.",
+  "clip_gradient_norm": 1.0,
+  "epochs": 1,
+  "evaluation": "Run final unmodified public package.agent per selected root, continue own visible history for skipped roots and replay original transcript. Scores: physical command hit rate all owned workers/base, correct whole joint, counts sent, change vs baseline, both directions vs expert; 6 test maps and 3 validation maps reported separately, map-equal and terrain-cluster paired bootstrap (4000 draws), roles collector/planter/base, stage thirds, both seats. Test only after package hashes frozen. A candidate passes free-command matching qualification only if test mean map worker accuracy strictly beats both others, changes worker commands on >=2 maps, and neither collector nor planter accuracy drops >0.02 vs parent. Single rollout per tape, six historical maps, no strength/win or official exam claim.",
+  "expected_maps": {
+    "excluded": 7,
+    "test": 6,
+    "train": 13,
+    "val": 3
+  },
+  "final_checkpoint_steps": 312,
+  "first_checkpoint_steps": 78,
+  "kl": 0.2,
+  "lr": 0.00012,
+  "mixture": "Frozen released it50 0.75 + quantized first-win Sapling 0.25 under identical logged own prefix. For each root compute released parent's guard using its independent free decodes before reading labels, then hold this discrete branch for supervised loss. Unmodified guarded entries determine actual commands independently for each held package.",
+  "objective": "Real mixed-command CE plus parent mixed KL on representable multi-action slots. Each sampled root equal, within root half equal per represented role and half equal per slot. Root exposure equal per training geography/seat, all phases. AdamW, seed-shuffled one pass. Train independently from deployed dequantized Sapling, add observed delta to archived full precision weights before standard INT8 re-pack.",
+  "panel_sha256": "fb490e72f2df1fac20a7c26310523e165956a5619fad7de46104604096611124",
+  "parent_sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "quarantine": [
+    621471120,
+    621477121,
+    621476120,
+    621461321,
+    621461322,
+    621565120,
+    621565121
+  ],
+  "roots_per_tape": {
+    "test": 24,
+    "train": 96,
+    "val": 24
+  },
+  "runtime": "One Torch and BLAS thread CPU0, 96 sampled roots each of 26 tapes, 2496 unique roots per arm. Rough phase time 2-5 minutes collection, 2-5 minutes optimization, 1-3 minutes evaluations. Release at most two trained policy packages. Reconstructible feature cache/checkpoints local only.",
+  "sampling": "Each tape and both seats separately, 299 steps 0..298 divided into contiguous equal-size bins using numpy.array_split; one uniform deterministic shot in every bin, independently by transcript SHA. Advance actual joint actions and own public feature history each real turn. All active own entities evaluated including implicit NONE. Decode locally forced chronological earlier own slots only during fit; first unrepresentable action excludes that slot and all later slots from CE. Known constrained bases reported. No hidden input, next or opposing action, outcome or teacher score in policy inputs.",
+  "schema": "original-executed-joint-imitation/1",
+  "seed": 861119,
+  "source": "58 signed 299-decision transcripts, complete original Master3s2 policy actions from physical seat 1-card.seat only, one tape per seat per terrain. Frozen original panel 19/4/6, quarantine decoder exposure and predeclared first-win controls before any fit. No gradients from val/test or quarantine.",
+  "weight_decay": 0.0001,
+  "weights_sha256": "7a677b76f30769eb097162a42d355b13b21acf3bab9ae7e22bfe2e4148ff9923"
+}
