@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "seed": 621471120,
+      "seat": 0,
+      "cpu": 0,
+      "source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source/raw_621471120_0.json.gz",
+      "source_sha": "892bfc66bb02729bb21a7fae89d5ddf547c7fcdd9d4fac2ecbc5054c611ba3b8",
+      "terrain": "2920f439bb16a4297298984934b1a9c1ff0932873d318d35b798c89bd6de3845",
+      "warm_source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/case_621471120_0_0/live_shared_init.json",
+      "warm_sha": "1e3ccb0803559a5998bb99fda956d903a7743073df8fb4dff7bc0142699a70f9",
+      "enemy_stream_seed": 1347150,
+      "teacher_stream_seed": 2367150
+    },
+    {
+      "seed": 621471121,
+      "seat": 1,
+      "cpu": 1,
+      "source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source/raw_621471121_1.json.gz",
+      "source_sha": "290685423c6ea9664b210918deb868e2032696720db7abfa5162581df466d304",
+      "terrain": "5b108d4fa2f95cc194b89944e788dada1698006b819c4cdbcca2deb3d646dc34",
+      "warm_source": "reports/sapling_1200k/master6_actor_dev/tree_response_training/case_621471121_1_0/live_shared_init.json",
+      "warm_sha": "14c40f0de23cf84cd9bec7d3bed5fccf7f7bb8c28072798761104e7f98c252f3",
+      "enemy_stream_seed": 1347151,
+      "teacher_stream_seed": 2367151
+    }
+  ],
+  "criterion": "In the first two maps as ordered in tree_response_training/protocol.json, swap physical seat and alternate arm order. At t150..157 replace focal team with original search teacher, then exact same it50 parent through official terminal. Compare candidate minus independently rerun parent at both roots. Positive on both maps with actual command differences warrants limited student on-distribution demonstrations only; nonpositive on either stops expansion. A reference player on two shared-stream samples provides no mathematical upper bound or student wins.",
+  "examiner": "same recorded enemy root command at t150. Both arms resume identical MT stream newly keyed at t151 and same publicly reconstructed tracked history/warm search costs. Subsequently examiner samples and searches independently on its own trajectory, natural temperature 1, cutoff .58 seconds. Teacher starts independent newly keyed RNG t150, preserved 0..149 public own-received observations and actual executed team actions.",
+  "identity": {
+    "parent": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0",
+    "master": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5"
+  },
+  "costs": "Cap four continuations of at most 149 steps each; 16 extra teacher calls total. Each process pinned to one core; teacher and examiner run serially in that process. Same CPU per matched map, reversed arm order, one shared continuation.lock for the four. 220 wall seconds per arm after launching, 500 elapsed per map; abort if budget reached, preserve incompletes without substitutions. Record original per-call CPU,wall,depth,candidates,rolls,zero-depth and host load."
+}
