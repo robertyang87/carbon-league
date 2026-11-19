@@ -4,6 +4,9 @@
 
 用原版真实回报训练的 `da9919ad`，在预登记新图 470、471 对原版 **0 胜 0 平 4 负、场均 −1511.21**；同采样父代 **0 胜 0 平 4 负、−1230.12**。两个地图簇的配对变化为 −560.72、−1.46。双方全程符合限额。新网不晋级，100 张正式地图继续封存。另一个保持完整行动支持的神经评分头在离线六图留一中仅两图改善，未送考。[八场全部官方分及原始证据](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/hosted/settlement.json) · [训练、攻防研究与支出分解](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/README.md)
 
+来自同一原版考官的防守预测头已训练并留图核验。在 17,962 个留出动作上，预测敌采集工下一步去向的命中率从 57.32% 升至 59.78%。该头独立保存，尚无独立整局胜率收益；另一次在旧训练图打满的自然局是 6921.60 比 7605.95，Sapling 负。[防守网络、对照与失败例](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/opponent_contact/README.md) · [树工被截与交仓对照](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/economy_proposals/terminal_intake/README.md)
+
+
 最新训练改动扩充了网络可比较的经营行动。在同一批 48 个历史训练时点，能改变当拍种树的时点从 1 增至 20，能改变交仓的从 2 增至 11。所有 315 条备选令均经官方规则复核。新的原版尾盘比较只取得 1 个双方首拍应答一致且完整结算的标签，已与从开局打到终局的胜绩分账。[训练改动与实测范围](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/README.md)
 
 
