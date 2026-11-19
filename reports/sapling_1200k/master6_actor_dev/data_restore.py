@@ -14,10 +14,13 @@ ROOT=HERE.parents[2]
 sys.path.insert(0,str(HERE.parent/'all_top5'))
 from context import git_blob
 
-def restore(target):
+def restore(target, diagnostic=False):
     target.mkdir(parents=True,exist_ok=True)
     frozen=json.loads((HERE/'data_split.json').read_bytes())['games']
     chosen={r['id']:r for r in frozen if r['split']!='excluded'}
+    if diagnostic:
+        extra=json.loads((HERE/'data_loss_split.json').read_bytes())['games']
+        chosen.update({r['id']:r for r in extra})
     groups=defaultdict(list)
     for name in sorted({r['batch'] for r in chosen.values()}):
         for r in json.loads((HERE.parent/'all_top5'/name/'manifest.json').read_bytes())['games']:
@@ -46,4 +49,5 @@ def restore(target):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,default=Path('/workspace/sapling-all-top5-20261119/replays'))
-    restore(p.parse_args().out)
+    p.add_argument('--include-diagnostic',action='store_true');args=p.parse_args()
+    restore(args.out,args.include_diagnostic)
