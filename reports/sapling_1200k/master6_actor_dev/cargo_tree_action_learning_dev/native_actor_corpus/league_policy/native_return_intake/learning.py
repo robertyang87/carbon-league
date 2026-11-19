@@ -101,8 +101,9 @@ def replay_episode(ep,model,teacher,plan):
                 public=(copy.deepcopy(x),copy.deepcopy(feat.aux),list(feat.own_uid))
                 if actual['supported']:
                     f,r=build_features(model,teacher,feat,x,actual,ep['advantage'],seed,seat)
+                    r['arm']=ep['arm'];r['public_observation_sha256']=h
                     roots.append((f,r,public))
-                sites.append(dict(seed=seed,seat=seat,arm=ep['arm'],step=t,event=actual,public=public))
+                sites.append(dict(seed=seed,seat=seat,arm=ep['arm'],step=t,event=actual,public=public,public_observation_sha256=h))
             else:check(actual is None,'unregistered binary choice')
             bank=list(frame['overage_remaining_seconds']);env.step(cmds)
         rewards=[state.reward for state in env.states]
@@ -193,7 +194,8 @@ def evaluate_trial(child,roots,sites,data,rows):
         kl=p*(lp(g0)-lp(gap))+(1-p)*(lp(-g0)-lp(-gap))
         check(kl>=-1e-13 and math.isfinite(dy),'invalid physical divergence')
         kls.append(max(0.,kl));weighted+=r['advantage']*dy
-        shifted.append(dict(seed=r['seed'],seat=r['seat'],step=r['step'],advantage=r['advantage'],pick=r['pick'],old_logp=r['old_logp'],
+        shifted.append(dict(seed=r['seed'],seat=r['seat'],arm=r['arm'],step=r['step'],public_observation_sha256=r['public_observation_sha256'],
+                            advantage=r['advantage'],pick=r['pick'],old_logp=r['old_logp'],
                             chosen_logp_shift=dy,old_gap=g0,projected_gap=gap,kl=kl))
     check(max_error<=o.LOGIT_TOL,'torch and actual quantized child projection mismatch')
     free=[];counts=[Counter(),Counter()]
@@ -207,7 +209,8 @@ def evaluate_trial(child,roots,sites,data,rows):
         stats['pure_probability_shift']+=int(not new_menu and maximum>=1e-6)
         stats['changed_order_or_probability']+=int(new_menu or maximum>=1e-6)
         missing=compact(old['issued']) not in new;stats['logged_full_order_lost']+=int(missing)
-        free.append(dict(seed=site['seed'],seat=sd,arm=site['arm'],step=site['step'],old=old['options'],child=cmds,
+        free.append(dict(seed=site['seed'],seat=sd,arm=site['arm'],step=site['step'],public_observation_sha256=site['public_observation_sha256'],
+                         old=old['options'],child=cmds,logged_choice=old['choice'],issued=old['issued'],
                          q0=old['probabilities'],q1=p,max_physical_probability_shift=maximum,logged_order_lost=missing))
     weighted/=288;mean_kl=float(np.mean(kls))
     result=dict(conditional_kl_supported=mean_kl,conditional_kl_scheduled=sum(kls)/288,
