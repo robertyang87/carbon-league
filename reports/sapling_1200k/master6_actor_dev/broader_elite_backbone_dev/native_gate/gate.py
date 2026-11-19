@@ -72,6 +72,18 @@ def mechanism(c):
     raw=game(c);seat=c['seat'];cfg=raw['game_configuration'];sim=r.FastCarbon(cfg).reset(seed=raw['seed'])
     assert list(sim.carbon)==raw['initial_full_carbon']
     mods={name:r.live.module(p,'backbone_mech_'+name) for name,p in PACK.items()}
+    def check_prefix(original):
+        def decoded(x,aux):
+            labels=original(x,aux)
+            F=sys.modules["cnet2_feat"];prefix=F.Prefix(x,aux)
+            for slot in np.flatnonzero(x["tok_mask"][:F.OWN]):
+                _,_,legal=prefix.feats(slot);action=int(labels[slot])
+                assert 0<=action<len(legal) and legal[action],"actual final label infeasible on its own prefix"
+                prefix.advance(slot,action)
+            return labels
+        return decoded
+
+    for m in mods.values(): m._mixed_actions=check_prefix(m._mixed_actions)
     for t,pair in enumerate(raw['actions'][:191]):
         v=sim.obs(seat)
         if t==0 or t>=140:

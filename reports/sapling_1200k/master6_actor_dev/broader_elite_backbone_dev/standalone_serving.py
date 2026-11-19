@@ -42,7 +42,9 @@ def main(evaluate):
     pack=load(HERE/'package.json')
     assert sha((HERE/'standalone.py').read_bytes())==pack['standalone_sha256']
     with tempfile.TemporaryDirectory() as tmp:
-        parent=Path(tmp)/'parent_standalone.py';common.pack.main(str(START),str(parent),2)
+        parent=Path(tmp)/'parent_standalone.py'
+        source=Path(tmp)/'parent.npz';source.write_bytes(START.read_bytes())
+        common.pack.main(str(source),str(parent),2)
         models={'parent':imported(parent,'bare_parent'), 'candidate':imported(HERE/'standalone.py','bare_candidate')}
         assert models['parent']._SRC_SHA256==models['candidate']._SRC_SHA256
         assert models['parent']._OPTS==models['candidate']._OPTS and models['candidate']._OPTS['teacher']==2
