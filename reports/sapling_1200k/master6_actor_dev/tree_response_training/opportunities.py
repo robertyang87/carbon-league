@@ -16,7 +16,7 @@ sys.path.insert(0,str(BASE))
 sys.path.insert(0,str(ROOT / "code"))
 import cnet2_feat as F
 from root_recovery_branches.branches import begin, public
-from planter_routes_dev.features import _ROUTE_DEST, _ROUTE_DIST
+from planter_routes_dev.features import PlanterRouteState, route_value, _ROUTE_DEST, _ROUTE_DIST
 
 MOVES = ("NONE","UP","RIGHT","DOWN","LEFT")
 BANK = ("RECCOLLECTOR","RECPLANTER")
@@ -162,7 +162,16 @@ def options(st,commands,uid,prefix,history):
         raise ValueError("ambiguous duplicate historical turn")
     for lag in HISTORY:
         wanted=st["t"]-lag
-        hist.append({"lag":lag,"t":wanted,"observed":wanted in past,"predecision":snapshot(past[wanted],uid) if wanted in past else None})
+        h=past.get(wanted)
+        old=None
+        if h is not None:
+            old=snapshot(h,uid)
+            old["own_tree_entities"]=h["own"][3]
+            old["opponent_tree_entities"]=h["enemy"][3]
+            old["own_worker_entities"]=h["own"][2]
+            old["opponent_worker_entities"]=h["enemy"][2]
+            old["seat_visible_carbon"]=[[p,c] for p,c in h["visible"].items()]
+        hist.append({"lag":lag,"t":wanted,"observed":h is not None,"predecision":old})
     ep=nearest(root,st["ep"])
     return {"t":st["t"],"seat":st["seat"],"uid":uid,"position":root,"parent_command":registered,
             "heavy_return":st["heavy_return"],"productive_area":len(st["footprint"]),"enemy_planter_distance":ep,
@@ -188,12 +197,19 @@ def iter_game(path):
     env=begin(raw)
     feat=F.Feat(seat)
     hist=deque(maxlen=max(HISTORY))
+    route=PlanterRouteState()
+    model_path=HERE.parent/"planter_option/value_weights.json"
+    predictor=json.loads(model_path.read_bytes())
+    model_digest=digest(model_path.read_bytes())
+    if model_digest!="59726c09984f6d2210d28ee90712cf8f0c37033ff9635bd272bdc0ca6e3edaf7":
+        raise ValueError("unregistered route-value head")
     tape_hash=digest(packed)
     for t,joint in enumerate(raw["actions"]):
         if env.done or env.states[0].observation.step!=t:raise ValueError("inconsistent source step")
         obs=public(env,seat)
         if "full_carbon" in obs or "reveal" in obs:raise ValueError("privileged field")
         st=state(obs,cfg)
+        route.observe(obs,seat,obs["carbon"],cfg,t)
         x=feat.observe(obs);pref=F.Prefix(x,feat.aux)
         labels=feat.labels(joint[seat]);prior=[]
         if feat.to_actions(labels)!={k:v for k,v in joint[seat].items() if norm(v)!="NONE"}:
@@ -209,7 +225,16 @@ def iter_game(path):
                 detail={"slot":slot,"prior":list(prior),"legal":[bool(legal[i]) for i in canonical],
                         "reserved":[int(pref.reserved[feat.cpos(int(_ROUTE_DEST[pos,i]))]) for i in range(5)]}
                 row=options(st,joint[seat],uid,detail,hist)
-                yield {"seed":seed,"tape_sha256":tape_hash,**row}
+                for act in row["actions"].values():
+                    scored=route.features(act["cell"])
+                    if scored is None:
+                        act["frozen_route_estimate"]=None
+                    else:
+                        weighted,prob,net=route_value(predictor,scored[0])
+                        act["frozen_route_estimate"]={"estimated_first_tenure_net_if_paid":net,
+                            "estimated_purchase_probability":prob,"weighted_net":weighted,
+                            "model_root_site_price":scored[1]}
+                yield {"seed":seed,"tape_sha256":tape_hash,"route_weights_sha256":model_digest,**row}
             pref.advance(slot,actual)
             prior.append([slot,uid,norm(joint[seat].get(uid))])
         hist.append(st)
