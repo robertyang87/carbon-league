@@ -1,0 +1,30 @@
+{
+  "schema": "sapling-economic-aux-matched-native-v1",
+  "source_revision": "97de1ebc1834785a6648f5876ce803311354a63b",
+  "maps": [
+    621497120,
+    621497121
+  ],
+  "physical_seats": [
+    0,
+    1
+  ],
+  "arms": [
+    "parent",
+    "control",
+    "candidate"
+  ],
+  "parent_pack_sha256": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0",
+  "examiner_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "examiner_md5": "57f9a594cce4f2ec9e3573d8d9d26ca1",
+  "training_protocol_sha256": "03700bc468faa109d57fceab9d62ccf430bb759c12894a9810634f7b8abffc60",
+  "student_actor_sha256": {
+    "control": "2a25dd68a2f810cd156e33431cb021dc55ebb5425f57461e3f6ba8c6c998eedc",
+    "candidate": "8b4e56c87c58a335f049ba5cee6341daca43725f0d435b84aa9298722686ed2e"
+  },
+  "build": "Parent is the existing v1 75/25 hybrid. Swap only the int8 Sapling student blob and its quantization metadata in the control and candidate. Same expert, previous policy and guards, shared legal autoregressive prefix, no auxiliary head in the agent.",
+  "entry": "Original offline holdout checks must pass. Validate int8 actions, weights and at least one actual own worker command contributed by Sapling on the stored public v1 trajectories 621471120 both seats, steps 0,30,...270,298. Independent map and source checks before running.",
+  "native": "Two new development maps, both physical seats per arm, exactly twelve complete original Master3s2 games. Fixed order parent, then control, then candidate. Record every score, extinction, original search, terminal reward and own/opponent joint action. Separate official replay and immutable identical arena revision for all arms.",
+  "decision": "Relative to each of parent and control separately: both map-average official margin differences positive, U improves in at least three of four map-seat pairs, and no fewer wins. Else retain parent. Two development maps cannot promote a formal candidate or establish a population win rate.",
+  "formal": false
+}

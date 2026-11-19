@@ -55,6 +55,15 @@ SOURCES = (
     ("all_top5/appendix_cbd6d545/validation_maps.jsonl.gz", 25,
      "18a1a3385eb99095ca6ab54149f9358bde2fe79ac3e1766215571ce640a7b54e",
      "1dee70025d245beddbdc18878daf612d6a8b1ac6e3c1ee6d7f852fc666eece8e"),
+    ("all_top5/appendix_336e8b8c/validation_maps.jsonl.gz", 10,
+     "045714019f1b94f6440175939ff7e58511ee24b54718e647bfe97868baf1f137",
+     "66eafb838520bc68c32cfa2e8fea1a46318892eba1a0908ace2cf08f2280cefc"),
+    ("all_top5/appendix_97de1ebc/validation_maps.jsonl.gz", 12,
+     "a3e113a2d0b74b6e926c630fb6124a297bf22ef92e7f13e4710e688d82f17487",
+     "910def6fcf7537bf3d5b84efe55c2e37fc48ca5fe63ad3109834b47a1234c467"),
+    ("all_top5/appendix_97de1ebc/unscored/validation_maps.jsonl.gz", 1,
+     "e1fcfdf27564b0b6326e38d3fce4618c02bb4da0e25407d9c65403141f1b2ffe",
+     "345f4168d8988c77d4c34fcfb741add8fe38bd3cc94af3d013f3b719dedfbef1"),
 )
 IDENTITY = "sha256(row-major 15x15 full initial carbon, one unsigned integer byte per cell)"
 SCHEMA = "sapling-90-and-income/4"

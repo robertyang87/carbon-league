@@ -1,0 +1,103 @@
+{
+  "event": "restore_one_supplement_owner_after_external_process_cleanup",
+  "timestamp_utc": "2026-11-19T07:48:46.685033+00:00",
+  "registration_sha256": "38c79bb8d575c7aca23afef41034e4056f673a0e4082e7d7524f7cb1eaa12de7",
+  "source_header_sha256": "bd003f17422757141fc417cc6e149df94dcf3e41c09101c8b4ba820a2ecc8532",
+  "sealed_at_recovery": [
+    {
+      "seed": 621476120,
+      "seat": 0,
+      "raw_file": "raw_621476120_0.json.gz",
+      "raw_sha256": "13430bfada4367328a96b0b14b10829918ffc519e59b7ea584198ca16776ad7a",
+      "official_score": [
+        7267.8,
+        7866.04
+      ]
+    },
+    {
+      "seed": 621476120,
+      "seat": 1,
+      "raw_file": "raw_621476120_1.json.gz",
+      "raw_sha256": "cfe9dcd251c1ea152f346fe54187a37fd5952f22f037da621337794d2fb6b6c6",
+      "official_score": [
+        9413.05,
+        7880.11
+      ]
+    }
+  ],
+  "missing_at_recovery": [
+    [
+      621476121,
+      0
+    ],
+    [
+      621476121,
+      1
+    ]
+  ],
+  "orphan_tapes": [],
+  "processes": {
+    "140272": {
+      "state": "S",
+      "ppid": 1,
+      "sid": 140272,
+      "stdin": "/dev/null",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-u",
+        "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/tree_response_training/supplement_01/run.py",
+        "drain"
+      ]
+    },
+    "140273": {
+      "state": "S",
+      "ppid": 1,
+      "sid": 140273,
+      "stdin": "/dev/null",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-u",
+        "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/tree_response_training/response_head/finish_registered.py",
+        "wait"
+      ]
+    },
+    "140286": {
+      "state": "S",
+      "ppid": 140272,
+      "sid": 140272,
+      "stdin": "/dev/null",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-u",
+        "/workspace/sapling-return-search-nov19/reports/sapling_1200k/tree_pack_arena.py",
+        "--pack",
+        "/tmp/tmpw0vbbzcq/learned.py",
+        "--weights",
+        "/tmp/tmpw0vbbzcq/learned.json",
+        "--pack-sha256",
+        "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0",
+        "--maps",
+        "621476120",
+        "621476121",
+        "--cpus",
+        "0",
+        "1",
+        "--run",
+        "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/tree_response_training/supplement_01/batches/intake_06/source"
+      ]
+    },
+    "140265": {
+      "state": "S",
+      "ppid": 1,
+      "sid": 140265,
+      "stdin": "/dev/null",
+      "command": [
+        "/workspace/carbon-review-venv/bin/python",
+        "-u",
+        "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/early_lane_dev/native_response/run.py",
+        "schedule"
+      ]
+    }
+  },
+  "notes": "The earlier source state retained two complete signed games. Only the other two registered seats were dispatched on recovery; per-game source state cannot recover unrecorded timesteps of live workers."
+}

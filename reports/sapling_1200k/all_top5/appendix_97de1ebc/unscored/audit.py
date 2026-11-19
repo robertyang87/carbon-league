@@ -69,6 +69,13 @@ def main():
          "cash_channels_before_fault":books,"largest_ten_turn_change":{"from_post":tick+1-10,"to_post":tick+1,
              "lead_delta_seat_1":round(leads[tick]-leads[tick-10],2),"earlier_public_states_and_orders":windows}}
     (HERE/"receipt.json").write_text(json.dumps(out,ensure_ascii=False,separators=(",",":"),allow_nan=False)+"\n")
+    manifest={"schema":"official-fault-prefix-map-exclusion/1","revision":"97de1ebc1834785a6648f5876ce803311354a63b",
+              "games":[{"id":key,"seed":out["seed"],"sha256":out["archive_sha256"],"path":path.name,
+                        "source":"official_public_get","status_by_seat":env["statuses"],"score_by_seat":env["rewards"],
+                        "canonical_sha256":hashlib.sha256(fetch.canonical(env)).hexdigest(),
+                        "physical_names":roles,"verified_active_transitions":partial_steps,
+                        "initial_terrain_u8_sha256":terrain}]}
+    (HERE/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n")
     registry={k:out[k] for k in ("id","seed","initial_terrain_u8_sha256")}
     (HERE/"validation_maps.jsonl.gz").write_bytes(gzip.compress(validation.encoded(registry)+b"\n",mtime=0))
     (HERE/"README.md").write_text(
