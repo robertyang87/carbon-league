@@ -29,7 +29,7 @@ def changed_index_ids(names, old, previous, revision):
     return by_name, expected
 
 
-def run(cache, directory, revision, previous, parents):
+def run(cache, directory, revision, previous, parents, unscored=()):
     source = directory / "manifest.json"
     manifest = json.loads(source.read_bytes())
     before = []
@@ -40,6 +40,22 @@ def run(cache, directory, revision, previous, parents):
         before.extend(lines(d/"validation_games.jsonl.gz"))
     seen_ids = {r["id"] for r in before}
     by_file, expected = changed_index_ids({r["name"] for r in manifest["top5"]}, seen_ids, previous, revision)
+    if unscored:
+        if not set(unscored) <= expected:
+            raise ValueError("unscored cases absent from independent score index")
+        cards = json.loads((directory / "unscored/cards.json").read_bytes())
+        if set(cards) != set(unscored):
+            raise ValueError("unscored game register differs")
+        for gid, record in cards.items():
+            card = record["card"]
+            rewards = [card["scores"][s] for s in card["order"]]
+            with gzip.open(directory / "unscored" / (gid + ".json.gz")) as stream:
+                replay = json.load(stream)
+            if (None not in rewards or replay["rewards"] != rewards
+                    or any(value is None and status not in ("ERROR", "TIMEOUT", "INVALID")
+                           for value, status in zip(rewards, replay["statuses"]))):
+                raise ValueError("missing score is not supported by the original public game")
+        expected -= set(unscored)
     rows = manifest["games"]
     if (manifest["revision"] != revision or manifest["state"] != "complete"
             or len(before) != manifest["baseline_games"] or len(seen_ids) != len(before) or len(rows) != len(expected) or {r["id"] for r in rows} != expected

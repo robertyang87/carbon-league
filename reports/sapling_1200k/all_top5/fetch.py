@@ -56,7 +56,7 @@ def sourcefile(path):
             and (name.endswith(".json") or name.endswith(".json.gz")))
 def cardrow(row):
     return {k:row[k] for k in ("id","game","name_a","name_b","order","scores","winner","created","state") if k in row}
-def prepare(m,write=True):
+def prepare(m,write=True,unscored=None):
     paths=tree();sources={}; rows={};extra=Counter()
     candidates=[path for path in paths if sourcefile(path)]
     proc=subprocess.Popen(["git","-C",str(ROOT),"cat-file","--batch"],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
@@ -71,7 +71,16 @@ def prepare(m,write=True):
             if not {row["name_a"],row["name_b"]}&set(NAMES):continue
             if row.get("state","done")!="done":
                 extra["nonterminal_reference"]+=1;continue
-            k=key_of(row);found+=1
+            k=key_of(row)
+            if unscored is not None and sorted(row["order"])==["a","b"] and any(row["scores"].get(s) is None for s in row["order"]):
+                record=unscored.setdefault(k,{"card":cardrow(row),"sources":[]})
+                if record["card"]!=cardrow(row) or k in rows:
+                    raise ValueError("conflicting unscored mirror: "+k)
+                record["sources"].append(path)
+                continue
+            if unscored is not None and k in unscored:
+                raise ValueError("conflicting numeric and unscored mirror: "+k)
+            found+=1
             if k not in rows:rows[k]={"card":cardrow(row),"sources":set()}
             elif identity(rows[k]["card"])!=identity(row):raise ValueError("conflicting mirror: "+k+" "+path)
             rows[k]["sources"].add(path)

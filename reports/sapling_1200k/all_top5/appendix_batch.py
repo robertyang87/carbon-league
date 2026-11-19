@@ -10,7 +10,7 @@ import tarfile
 import fetch
 
 
-def prepare(revision, baselines, where, expected=None):
+def prepare(revision, baselines, where, expected=None, unscored=None):
     where = Path(where)
     archive = "data/sapling_all_top5_20261119/" + where.name + ".tar"
     previous = [json.loads(path.read_bytes()) for path in baselines]
@@ -20,7 +20,7 @@ def prepare(revision, baselines, where, expected=None):
         raise ValueError("overlapping historical publications")
     fetch.REV = revision
     catalog = {}
-    fetch.prepare(catalog, write=False)
+    fetch.prepare(catalog, write=False, unscored=unscored)
     current = {g["id"]: g for g in catalog["games"]}
     if not known.keys() <= current.keys():
         raise ValueError("prior score references missing")
