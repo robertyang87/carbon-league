@@ -12,6 +12,10 @@ Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜�
 
 同一件 6,086,621 字节的 `bc69b55e` 在每席独立 1.5 核、512 MiB、断网容器中复演一张已知图，两席共 598 次公开请求全部复现动作。两席冷启均小于 0.34 秒，P99 分别为 49.73、51.00 毫秒，最慢请求 114.17 毫秒，零慢步、超时和错误。计时复演与完整实战分别记账。[托管计时、逐拍证据与最终包 SHA](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/ladder_timing/hosted/README.md)
 
+在十张训练图里，用首胜包和原版逐席核了 5,980 拍，将四个有实际经济差异、合法且有策略概率支持的替代令固定后，逐一让原版应对至终局。四例改令后的第 10 步都略有现金收益，官方终局分差变化依次为 **+398.82、−563.95、−1,672.69、−2,650.00**。四处的两个部署包原本都选父令，四个对照是训练样本。八条分支逐拍复算，两条被宿主中断的分支用已冻结的敌方根令和随机状态重跑完毕。[八条原版续弈、树息和回款](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/native_training/README.md)
+
+用学习型碳估计同时驱动 Sapling 的棋盘编码和工人动作解码后，固定三图上比仅改棋盘编码多改变了 8 条采集工命令。冻结单文件 `61dae172` 为 6,087,100 字节，在两个限额容器内复演两席共 598 次完整公开调用，最慢 84.79 毫秒，零慢步、超时或错误。两张已知图的两个真实改令均已在读取续弈收益前登记。[实际部署命令](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/README.md) · [独立天梯计时](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/ladder_timing/hosted/README.md) · [两处实际干预](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/real_roots/README.md)
+
 ## 早期开发记录
 
 **早期冻结组合 `c5ad3f43` 在当时的曝光图取得一胜。** 在先前用过的地图 `621461321`，席 0 的冻结组合 `c5ad3f43` 以 **8,026.31 比 7,644.53** 胜 Master3s2，打满 299 步。考官完成 294 次搜索，其中 233 次到达深度 8，另有 5 步只有一个候选。两席均无内部错误。同图换席分差为 −1,837.30。参赛组合按 75% 自有 Echo4、25% Sapling 融合动作分数；去掉 Sapling 后，此前 68 个实战局面中有 16 个改变整队命令。该版本在本轮以前的 12 局为 1 胜 11 负。[官方逐步回执](master6_actor_dev/actor_partner_dev/native/candidate/receipt_621461321_0.json) · [实际动作消融](master6_actor_dev/actor_partner_dev/attribution.json) · [十二局与换席比分](master6_actor_dev/first_win_analysis/README.md)
