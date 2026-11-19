@@ -1,0 +1,57 @@
+"""Publish timing metrics and independent-action agreement for the frozen tapes."""
+import argparse
+import gzip
+import json
+from pathlib import Path
+import numpy as np
+
+def generate(out):
+    p=json.loads((out/'protocol.json').read_text())
+    all_times=[];cards=[]
+    for c in p['cards']:
+        with gzip.open(out/f"receipt_{c['seed']}_{c['seat']}.json.gz") as f:
+            g=json.load(f)
+        assert g['card']==c
+        row={**c,**g['stats'],'checks':g['checks'],'local_pass':g['local_pass']}
+        cards.append(row)
+        all_times.extend(r['external_s'] for r in g['rows'])
+    out_json=dict(candidate=p['pack'],cards=cards,calls=len(all_times),
+                  normal_matches=sum(c['ref_matches'] for c in cards),old_matches=sum(c['historical_matches'] for c in cards),
+                  cold_range_s=[min(c['init_s'] for c in cards),max(c['init_s'] for c in cards)],
+                  peak_rss_mib=max(c['rss_mib'] for c in cards),all_local_checks_pass=all(c['local_pass'] for c in cards),
+                  aggregated_ms={k:float(np.percentile(all_times,n))*1000 for k,n in [('p50',50),('p95',95),('p99',99),('max',100)]},
+                  formal_resource_certification=False,formal_match=False)
+    (out/'summary.json').write_text(json.dumps(out_json,indent=2)+'\n')
+    table=[]
+    for c in cards:
+        table.append(f"| {c['seed']} | {c['seat']} | {c['n']} | {c['ref_matches']} | {c['historical_matches']} | {c['init_s']:.2f} | {c['first_s']*1000:.1f} | {c['p50_s']*1000:.1f} | {c['p95_s']*1000:.1f} | {c['p99_s']*1000:.1f} | {c['max_s']*1000:.1f} | {c['slow']} | {c['excess_s']:.2f} | {c['rss_mib']:.1f} | {c['replay_wall_s']:.2f} |")
+    n=out_json['calls'];times=out_json['aggregated_ms']
+    (out/'README.md').write_text(f"""# 贪心部署包的外部计时与逐拍验证
+
+包 SHA-256 为 `{p['pack']['sha256']}`。共 {len(cards)} 条预登记的曝光轨迹，均从 step 0 到历史终局。**{out_json['normal_matches']}/{n} 拍与同包在独立宿主上的普通公开入口完全一致**。同批行动与对应历史记录相同 {out_json['old_matches']}/{n}，新包改变了 {n-out_json['old_matches']} 拍。全体步骤 P50 / P95 / P99 / 最大延迟为 {times['p50']:.1f} / {times['p95']:.1f} / {times['p99']:.1f} / {times['max']:.1f} ms。
+
+| 地图 | 席 | 调用 | 同包一致 | 旧带一致 | 冷启 s | 首拍 ms | P50 ms | P95 ms | P99 ms | 最慢 ms | >1s | 超额 s | 峰值 RSS MiB | 复演 s |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+"""+'\n'.join(table)+"""
+
+上表列出各席完整调用数。宿主按历史双方动作推进以重建真实可见局面。容器只收到己席可见观测、配置与剩余超额时间，逐拍返回动作。独立参考在容器退出后加载相同字节的普通包，在完全相同的序列化请求上重新用公开 agent 接口从头运行，逐拍核对整队动作。历史带由其他包产生，逐拍相似度描述变化幅度。新动作未推进到新的真实比赛，故无法从这些收据推断胜负。
+
+计时从父端序列化开始，到 Docker 传输及解码完成。每条轨迹重新起持久容器，外部冷启含源码编译、模块和 Docker 启动；机器页缓存可能已热。复演时长含容器启动至退出、历史环境推进，不含参考臂或另一名实时选手。每步基准 1 秒、单步硬顶 3 秒、至多 3 次慢步、总超额不超过 5 秒；冷启 20 秒，整场上限 1500 秒。策略单核 CPU2、进程地址空间限制 512 MiB，单线程 NumPy 1.26.4、Python 3.12、无网络。rootless Docker 的实际 cgroup 继承宿主，详见 ready 收据，未给出真实天梯 cgroup 或完整互动赛事认证。
+
+## 复用到后续确定性策略
+
+在仓根下设 `tool` 为本目录 compare.py，`out` 为新的证据目录。先传包、预期完整 SHA 和按顺序选择的原始对局带冻结协议，再实际运行。更换包不需要改脚本。运行时只读冻结记录中的包、动作带、镜像和协议 worker，沿用相同 Python/NumPy 镜像及宿主 BLAS=1。每个 `receipt_*.json.gz` 保留外部耗时、RSS、三方动作与请求哈希。
+
+```bash
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+taskset -c 3 python "$tool" register --out "$out" --pack "$pack" --expect "$sha256" --tapes "$tape0" "$tape1"
+taskset -c 3 python "$tool" run --out "$out"
+python "$(dirname "$tool")/report.py" --out "$out"
+```
+
+[预登记](protocol.json) · [分局统计与硬门](summary.json) · [通用运行器](compare.py) · [平台公开规则快照](../../ladder_timing/live_rules.json)
+""")
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True)
+    generate(p.parse_args().out)
