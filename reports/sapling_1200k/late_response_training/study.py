@@ -118,7 +118,10 @@ def init(g,r,i):
 def native_run(task,arm):
     wd=HERE/task;cfg=read(wd/"live_protocol.json")
     if digest(Path(live.__file__).read_bytes())!=cfg["live_code_sha256"]:raise ValueError("live runner differs from frozen code")
-    live.run(arm,wd,cfg,resume=True)
+    lock=Path(tempfile.gettempdir())/("sapling-late-arm-"+digest(str((wd/arm).resolve()).encode())+".lock")
+    with lock.open("a") as guard:
+        fcntl.flock(guard,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        live.run(arm,wd,cfg,resume=True)
 
 
 def accounting():
