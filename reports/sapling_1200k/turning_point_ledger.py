@@ -286,8 +286,8 @@ def late_settlement(rows, seat):
     return dict(applicable=True, state_start=269,state_end=299,by_seat=by_seat,purchases=purchases)
 
 
-def audit_game(folder, game, pack, out):
-    verify_raw(folder, game, pack)
+def audit_game(folder, game, pack, weight_identity, out):
+    verify_raw(folder, game, pack, weight_identity)
     validate_game(game)
     raw = json.loads(gzip.decompress((folder/game["raw_file"]).read_bytes()))
     seed, seat = raw["seed"], raw["candidate_seat"]
@@ -373,13 +373,17 @@ def main():
         r=json.loads((run/"results.json").read_bytes())
         if r["status"]!="complete":
             raise ValueError(f"incomplete run {run}")
+        header = r["header"]
+        weight_identity = header["weight_sha256"] or header.get("component_label")
+        if not weight_identity:
+            raise ValueError(f"missing frozen weight identity in {run}")
         seen=set()
         for g in r["games"]:
             key=(g['seed'],g['candidate_seat'])
             if key in seen:
                 raise ValueError(f"duplicate {run}/{key}")
             seen.add(key)
-            summaries.append(audit_game(run,g,r["header"]["pack_sha256"],args.out))
+            summaries.append(audit_game(run,g,header["pack_sha256"],weight_identity,args.out))
         print(f"{run.name}: {len(seen)} scored action histories verified",flush=True)
     write(args.out/"summary.json",dict(
         schema="sapling-turning-points/1", simulator_sha256=sha((ROOT/"code/fastsim.py").read_bytes()),
