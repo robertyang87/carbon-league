@@ -1,0 +1,8 @@
+{
+  "id":"pretraining_frozen_partner_screen_v1",
+  "root_distribution":"All four original V1 public histories from the two screen maps in maps.json, both original seats. Roots t=225 and 275; at 225 let original candidate physical seat act as focal, at 275 take the opposite physical seat. Reconstruct each seat's complete public feature history; no behavior cloning or raw future score enters selection.",
+  "policies":{"it20_self":"c5ad3f43959a4812e84e89574ee0c6e69765ebb06a8b3ec93f839b0dde128dd3","frozen_it50":"9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"},
+  "measurement":"Play frozen it20/Sapling focal against each complete own frozen counterpart from the same root to official terminal. Record all 16 suffixes and replay every joint action using the official interpreter. No Master3s2 continuation, search or formal maps.",
+  "eligibility":"Each opponent must have both focal margin signs, at least half of roots with 0.05 <= official U <= 0.95, and at least two distinct terminal margins. Prefer highest fraction with |margin| <= 1000, then lowest mean absolute margin, then frozen_it50. Ineligible panel stops this registration. Development maps remain unseen.",
+  "budget":"Single thread on CPU3 nice19. Sixteen independent paired-policy suffixes. Once selected opponent and final learning protocol are frozen, screen outcomes do not train the student."
+}
