@@ -37,8 +37,6 @@ class Corpus:
     def __init__(self, root=ROOT, index=None, *, manifest=None):
         self.root=Path(root)
         self._manifest=Path(manifest) if manifest is not None else HERE/"manifest.json"
-        if manifest is None and index and Path(index).name=="context_appendix_499886f1_index.tsv.gz":
-            self._manifest=HERE/"appendix_499886f1/manifest.json"
         self._cards=None
         if manifest is not None and index is not None:raise ValueError("select only one catalog source")
         if manifest is not None:
@@ -48,7 +46,20 @@ class Corpus:
                 from context_catalog import catalog
             rows=catalog(manifest,self.root)
         else:
-            with gzip.open(index or HERE/"context_index.tsv.gz","rt") as stream:
+            data=Path(index or HERE/"context_index.tsv.gz").read_bytes()
+            if index is not None:
+                # Each published receipt binds the index bytes to its batch; copies can be renamed.
+                fingerprint=digest(data)
+                matches=[]
+                for receipt in sorted(HERE.glob("context_*receipt.json")):
+                    if json.loads(receipt.read_bytes())["index_sha256"]==fingerprint:
+                        batch=receipt.stem.removeprefix("context").removesuffix("_receipt").lstrip("_")
+                        matches.append(HERE/batch/"manifest.json")
+                if len(matches)>1:
+                    raise ValueError("decision index belongs to multiple registered batches")
+                if matches:
+                    self._manifest=matches[0]
+            with io.StringIO(gzip.decompress(data).decode("utf-8")) as stream:
                 rows=list(csv.DictReader(stream,delimiter="\t"))
         self.rows={r["id"]:r for r in rows}
         self.order=[r["id"] for r in rows]

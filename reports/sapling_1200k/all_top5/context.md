@@ -18,7 +18,7 @@ python reports/sapling_1200k/all_top5/context.py 011008e4dee32c2fdbfa37044c3c260
 python reports/sapling_1200k/all_top5/context.py --manifest reports/sapling_1200k/all_top5/appendix_499886f1/manifest.json 0
 ```
 
-每个地址由批次、比赛 ID、动作前步号 `t`、物理席 `0/1` 组成。也可使用批内连续整数 `ordinal_begin + 2*t + seat`。索引为每局保存半开区间，`Corpus.locate()` 与 `Corpus.ordinal()` 可以互转。第 0 帧是开局观察。若该局有 T 次推进，最后一个决策为 T−1，归档第 T 帧只供终局标签读取。补编有独立序号空间。
+每个地址由批次、比赛 ID、动作前步号 `t`、物理席 `0/1` 组成。也可使用批内连续整数 `ordinal_begin + 2*t + seat`。索引为每局保存半开区间，`Corpus.locate()` 与 `Corpus.ordinal()` 可以互转。第 0 帧是开局观察。若该局有 T 次推进，最后一个决策为 T−1，归档第 T 帧只供终局标签读取。补编有独立序号空间。 Python 调用方也可用 `Corpus(index=索引路径)` 读取成绩卡身份。程序按索引文件的 SHA-256 匹配对应批次的核验收据，原样复制或改名后仍可定位。
 
 ```python
 from reports.sapling_1200k.all_top5.context import Corpus
