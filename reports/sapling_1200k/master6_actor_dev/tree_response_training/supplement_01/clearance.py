@@ -118,7 +118,10 @@ def scan_training_map(seed, board, protocol, plan, allowed, temporary):
                    check=True, env={**os.environ, 'GIT_CONFIG_COUNT':'1', 'GIT_CONFIG_KEY_0':'grep.threads',
                                     'GIT_CONFIG_VALUE_0':'1'})
     raw = output.read_bytes()
-    report = prior.validate_scan(raw, seed, board, protocol, plan, allowed)
+    from reference_receipts import checked_scan
+    original=json.loads(raw)
+    scanned,nominal=checked_scan(original,seed,board,plan)
+    report=prior.validate_scan(json.dumps(scanned).encode(),seed,board,protocol,plan,allowed)
     require(report['historical_catalog_loaded_sha256'] == prior.digest(catalog) and
             report['sha256_of_this_script'] == prior.digest(scanner), 'full-audit inputs changed')
     archive = temporary / f'clearance_audit_{seed}.zip'
@@ -128,7 +131,8 @@ def scan_training_map(seed, board, protocol, plan, allowed, temporary):
         target.writestr(member, raw)
     result = {'archive':archive.name, 'sha256':prior.digest(archive), 'report_sha256':prior.sha(raw),
               'coverage':report['coverage'], 'frozen_ladder':report['frozen_ladder'],
-              'generic_nominal_conflicts':report['conflicts'], 'generic_terrain_matches':report['same_terrain_matches']}
+              'generic_nominal_conflicts':original['conflicts'], 'generic_terrain_matches':report['same_terrain_matches']}
+    if nominal:result['zero_overlap_report_references']=nominal
     return result, archive
 
 

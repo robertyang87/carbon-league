@@ -29,7 +29,8 @@ def predecessor():
     acceptance=HEAD/'independent_acceptance.json'
     if not acceptance.exists():return None
     head=load(acceptance)
-    check(head['completion_sha256']==sha(HERE/'completion.json')
+    check(head['completion_sha256']==sha(HERE/'completion.json') and head['status_sha256']==sha(HEAD/'status.json')
+          and head['sample_tape_sha256']==sha(HEAD/'samples.json.gz')
           and head['counts']['paid_pairs']==a['filled_pairs'] and head['passed']==load(HEAD/'status.json')['eligible_for_development'],
           'tree eligibility does not belong to the achieved data cutoff')
     out['head_acceptance_sha256']=sha(acceptance)
@@ -46,10 +47,10 @@ def predecessor():
 def verify_tree_development(directory,result):
     """Link every paired result to its distinct raw trajectory, board, policy, and original-engine score."""
     release=load(directory/'release.json')
-    source=load(TRAIN/'protocol.json')
+    source=load(TRAIN/'protocol.json');master_sha=sha(ROOT/'data/master3s2_source.py')
     maps=release['maps']
-    check(maps==source['development_maps'] and len(set(maps))==2 and release['arena_sources']['data/master3s2_source.py']==source['examiner_sha256']
-          and release['development_protocol']==sha(HEAD/'protocol.json') and release['master3s2_sha256']==source['examiner_sha256']
+    check(maps==source['development_maps'] and len(set(maps))==2 and release['arena_sources']['data/master3s2_source.py']==master_sha
+          and release['development_protocol']==sha(HEAD/'protocol.json') and release['master3s2_sha256']==master_sha
           and release['source_protocol']==sha(TRAIN/'protocol.json'),'different tree head development registration or examiner')
     expected={(seed,seat) for seed in maps for seat in (0,1)}
     paired={(r['seed'],r['seat']):r for r in result['pairs']}

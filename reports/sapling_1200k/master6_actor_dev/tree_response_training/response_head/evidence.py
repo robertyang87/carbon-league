@@ -177,6 +177,12 @@ def verify_supplement_clearance(root, area, plan, clearance, entry):
             relative = Path(path)
             return (not relative.is_absolute() and ".." not in relative.parts and len(relative.parts) > 1
                     and relative.parts[0] in roots and str(Path(*relative.parts[1:])) in expected)
+        if item.get("zero_overlap_report_references"):
+            helper_path = CODE / "supplement_01/reference_receipts.py"
+            spec = importlib.util.spec_from_file_location("tree_map_receipts", helper_path)
+            helper = importlib.util.module_from_spec(spec); spec.loader.exec_module(helper)
+            scan, accepted = helper.checked_scan(scan, s, board, plan)
+            equal(accepted, item["zero_overlap_report_references"], "unproven supplementary exposure reference")
         for path, method, *detail in scan["conflicts"]:
             if path == "frozen_git":
                 require(method == "unexpected_exact_references" and len(detail) == 1 and set(detail[0]) <= expected.keys(),

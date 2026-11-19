@@ -45,6 +45,16 @@ def main():
         x,y=a['horizons']['10'],b['horizons']['10']
         lines.append(f"- 十步内己方全队实际新增采集由 {x['own_team_actual_harvest']:.2f} 变为 {y['own_team_actual_harvest']:.2f}，焦点采集工被敌方获得的碰撞货物由 {x['own_focal_collision_to_enemy']:.2f} 变为 {y['own_focal_collision_to_enemy']:.2f}。原版搜索入口两臂各调用 {a['search_calls']} / {b['search_calls']} 次，两臂均已 DONE。[本根完整双账]({p.relative_to(D).as_posix()})")
         lines.append('')
+    lines+=['## 终局分差从哪里来','']
+    if all(ev['metrics']['target_collision_to_ours10_delta']==0 for _,ev,_ in pairs):
+        lines+=['四组的十步内都没有多截获目标敌工的货。','']
+    ranked = sorted(pairs,key=lambda pair:abs(pair[1]['metrics']['delta_margin']),reverse=True)[:2]
+    for row,ev,_ in ranked:
+        seat=row['seat']
+        own,other=(ev['arms'][k]['terminal_by_source'] for k in ('parent','alternative'))
+        delta=(other[seat]['tree']-other[1-seat]['tree'])-(own[seat]['tree']-own[1-seat]['tree'])
+        lines.append(f"- {row['seed']} 席 {seat} 的终局分差变化为 {ev['metrics']['delta_margin']:+,.2f}，其中双方树收入差额贡献 {delta:+,.2f}。")
+    lines+=['','这些是两条完整续弈的实收差额，单次对手采样仍可影响树的归属与落点。','']
     lines+=['[预注册](protocol.json) · [四根八臂总表](result.json) · [复算源](verify.py) · [工位与恢复方式](README.md)']
     (D/'RESULTS.md').write_text('\n'.join(lines)+'\n')
 
