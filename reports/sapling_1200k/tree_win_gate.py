@@ -17,6 +17,10 @@ import secrets
 
 import map_identity
 
+# These development maps have been preflighted even when their game gate stops.
+RESERVED_DEVELOPMENT_PLANS = ("master6_actor_dev/stratified_action_value_dev/source/pilot_plan.json",)
+
+
 INCOME_SCHEMAS = {"sapling-90-and-income/3", "sapling-90-and-income/4", map_identity.SCHEMA}
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,6 +33,18 @@ EXAMINER = "57f9a594cce4f2ec9e3573d8d9d26ca1"
 
 def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def exam_exposures(local_seeds, observed_maps=()):
+    if not isinstance(local_seeds, list):
+        raise ValueError("additional local exposures must be a list")
+    reserved = []
+    for filename in RESERVED_DEVELOPMENT_PLANS:
+        plan = json.loads((Path(__file__).parent / filename).read_bytes())
+        if plan.get("formal") is not False or not plan.get("maps"):
+            raise ValueError(f"invalid registered development maps in {filename}")
+        reserved.extend(plan["maps"])
+    return map_identity.exposed_boards(local_seeds + reserved, observed_maps)
 
 
 def validate_examiner_configuration(configuration):
@@ -72,7 +88,8 @@ def protocol_hashes():
         "reports/sapling_1200k/v5_guard_runtime.py", RULES,
     )
     registry_paths = tuple("reports/sapling_1200k/" + f for f, *_ in map_identity.SOURCES)
-    return {p: digest(ROOT / p) for p in paths + registry_paths}
+    development_plans = tuple("reports/sapling_1200k/" + name for name in RESERVED_DEVELOPMENT_PLANS)
+    return {p: digest(ROOT / p) for p in paths + registry_paths + development_plans}
 
 
 def sapling_shapes(meta):
@@ -173,7 +190,7 @@ def validate(plan, weight_hash, pack_hash, examiner_hash, run):
         raise ValueError("exam overlaps previously exposed reserved maps")
     if plan["schema"] != map_identity.SCHEMA:
         raise ValueError("new exam execution requires the initial-terrain exposure lock; replay old freezes at their recorded source revision")
-    fingerprint, exposed_seeds, exposed_terrains = map_identity.exposed_boards(
+    fingerprint, exposed_seeds, exposed_terrains = exam_exposures(
         plan.get("additional_local_seeds"), plan.get("additional_observed_maps", []))
     for retired_nonce in plan.get("retired_draws", []):
         retired_seeds = seed_list(retired_nonce)
@@ -450,7 +467,7 @@ def main():
     if args.out.exists() or args.run.exists():
         parser.error("allocate a fresh plan path and run directory")
     weights, pack = prove_candidate(args.weights, args.pack)
-    fingerprint, used, exposed_terrains = map_identity.exposed_boards(additional_local_seeds, additional_observed_maps)
+    fingerprint, used, exposed_terrains = exam_exposures(additional_local_seeds, additional_observed_maps)
     retired_draws = []
     while True:
         nonce = secrets.token_hex(32)

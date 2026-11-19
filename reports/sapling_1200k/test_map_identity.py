@@ -87,6 +87,14 @@ class TerrainTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "additional local exposures"):
             identity.exposed_boards(None)
 
+    def test_preflighted_development_maps_never_enter_exam_draw(self):
+        _, seeds, terrains = gate.exam_exposures([])
+        for path in gate.RESERVED_DEVELOPMENT_PLANS:
+            plan = json.loads((identity.HERE / path).read_bytes())
+            for seed in plan["maps"]:
+                self.assertIn(seed, seeds)
+                self.assertIn(identity.local_board(seed), terrains)
+
     def test_frozen_evidence(self):
         _, seeds, boards = identity.ladder_boards()
         newest_ledger = Path(__file__).parent / identity.SOURCES[-1][0]
