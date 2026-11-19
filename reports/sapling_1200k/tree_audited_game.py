@@ -29,6 +29,10 @@ def play(job):
     configuration = {key: getattr(opp,key) for key in exam.SEARCH_KEYS}
     if not (opp._SEARCH_OK and opp._RX and opp._TEMP == 1 and opp._SEED is None):
         raise ValueError("opponent must use original enabled search and unseeded temperature one")
+    from tree_win_gate import GUARDED_V5
+    guarded_candidate = pack_sha == GUARDED_V5
+    unchanged_action_steps = []
+    prior_guard_changes = 0
     agents = [None, None]
     agents[side], agents[1-side] = candidate.agent, opp.agent
     search_events, actions_log, errors, warnings = [], [], [], []
@@ -71,6 +75,11 @@ def play(job):
                 ids = set(sim.player_workers[player]) | {bid for bid,_ in sim.bases[player]}
                 if not isinstance(action, dict) or set(action)-ids or any(a not in ("UP","RIGHT","DOWN","LEFT","RECCOLLECTOR","RECPLANTER",None) for a in action.values()):
                     raise ValueError("invalid action")
+                if guarded_candidate and player == side:
+                    changes = candidate.agent.last_stats["changed_roots"]
+                    if changes == prior_guard_changes and any(action.values()):
+                        unchanged_action_steps.append(sim.step_count)
+                    prior_guard_changes = changes
                 actions.append(action)
             except Exception as e:
                 failures[player] += 1
@@ -103,6 +112,11 @@ def play(job):
            "search_calls":search_events, "official_score_by_seat":scores, "margin":margin, "result":result,
            "last_pre_cash":pre["cash"], "last_post_cash":post["cash"], "steps":steps,
            "extinct_by_seat":extinct, "errors":errors, "audit_messages":warnings}
+    attribution = {}
+    if guarded_candidate:
+        attribution["candidate_guard_stats"] = dict(getattr(candidate.agent, "last_stats", {}))
+        attribution["unchanged_network_action_steps"] = unchanged_action_steps
+        raw.update(attribution)
     path = output / f"raw_{seed}_{side}.json.gz"
     temp = path.with_suffix(".tmp")
     temp.write_bytes(gzip.compress(json.dumps(raw,allow_nan=False).encode(),mtime=0))
@@ -113,7 +127,7 @@ def play(job):
         warnings.append("incomplete source search invocations")
     if not complete:
         warnings.append("game did not complete")
-    return dict(seed=seed,candidate_seat=side,result=result,margin=margin,official_score_by_seat=scores,
+    return dict(**attribution,seed=seed,candidate_seat=side,result=result,margin=margin,official_score_by_seat=scores,
                 actual_transitions=steps,termination="agent_error" if errors else ("extinction" if any(extinct) else "official_episode_limit"),
                 extinct_by_seat=extinct,agent_calls_by_seat=calls,agent_errors_by_seat=failures,errors=errors,
                 scope="direct original search function wrapped for per-call accounting; raw score saved first",

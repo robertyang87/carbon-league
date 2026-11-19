@@ -1,0 +1,989 @@
+{
+  "approaches": false,
+  "features": [
+    "bias",
+    "life_left",
+    "bank",
+    "cash_short",
+    "defender_in_reach",
+    "other_defender_in_reach",
+    "light_defender",
+    "friendly_planter_in_reach",
+    "intruder_escort",
+    "stay_is_only_safe_cell",
+    "near_intruder_home",
+    "near_defender_home",
+    "game_left"
+  ],
+  "weights": [
+    0.7357430939990277,
+    2.2334522505979573,
+    -0.010942583542445362,
+    -0.34981539046220833,
+    -4.296851026471413,
+    -0.20124447546981927,
+    -1.819765922870712,
+    -2.4995504956539936,
+    -0.03712729175608616,
+    0.10331845715520488,
+    0.10802291967311498,
+    0.056484449503268405,
+    0.11766091864526304
+  ],
+  "ridge": 0.002,
+  "frontier": "conditional on an enemy planter adjacent to or on our live tree, respectively. Label is submitted arrival at that tree, including deaths",
+  "manifest_sha256": "566bd7437a997078a751de6a7f0c9d0f8af1f41a901d6c0ea66b9f6192b16a9b",
+  "train_rate": 0.4815245177782942,
+  "train_rate_by_collector_reach": [
+    0.7701453104359313,
+    0.019050498941638946
+  ],
+  "splits": {
+    "train": {
+      "games": 79,
+      "total": {
+        "n": 8606,
+        "target_actions": 4144,
+        "actual_rate": 0.4815245177782942,
+        "predicted": 0.4815245177782942,
+        "brier": 0.07896978025405162,
+        "train_frequency_brier": 0.24965865655667543,
+        "train_coverage_only_brier": 0.116179038656477
+      },
+      "within_collector_reach": {
+        "n": 3307,
+        "target_actions": 63,
+        "actual_rate": 0.019050498941638946,
+        "predicted": 0.04141439367028303,
+        "brier": 0.01915942866581633,
+        "train_frequency_brier": 0.23256979553064053,
+        "train_coverage_only_brier": 0.018687577431713558
+      },
+      "by_game": {
+        "33de9499ab63698020525f27eb0552ee-1": {
+          "n": 111,
+          "target_actions": 44,
+          "actual_rate": 0.3963963963963964,
+          "predicted": 0.40468446902512334,
+          "brier": 0.06146803589216495,
+          "train_frequency_brier": 0.24651309037035846,
+          "train_coverage_only_brier": 0.07456382309704929
+        },
+        "6ea7a65ad77d9bf46a14cd2de7cc3463-1": {
+          "n": 115,
+          "target_actions": 54,
+          "actual_rate": 0.46956521739130436,
+          "predicted": 0.4484933054250901,
+          "brier": 0.07066845303812026,
+          "train_frequency_brier": 0.2492167488733077,
+          "train_coverage_only_brier": 0.11262665010082247
+        },
+        "f7118e8abde06045fce7ef098e985610-1": {
+          "n": 113,
+          "target_actions": 55,
+          "actual_rate": 0.48672566371681414,
+          "predicted": 0.4992868351033155,
+          "brier": 0.09053286889060656,
+          "train_frequency_brier": 0.24985084391531467,
+          "train_coverage_only_brier": 0.13606064323969494
+        },
+        "970bf01cc0e2a312ba4391d5f3686f05-1": {
+          "n": 106,
+          "target_actions": 51,
+          "actual_rate": 0.4811320754716981,
+          "predicted": 0.46313072343868494,
+          "brier": 0.05118778209827359,
+          "train_frequency_brier": 0.24964415543495833,
+          "train_coverage_only_brier": 0.0759367988318773
+        },
+        "d69821e07e7f40527309464adf245894-1": {
+          "n": 134,
+          "target_actions": 54,
+          "actual_rate": 0.40298507462686567,
+          "predicted": 0.4262879531311444,
+          "brier": 0.09134719253480938,
+          "train_frequency_brier": 0.2467565483853816,
+          "train_coverage_only_brier": 0.12355298801445422
+        },
+        "bc097a59409cb2c229e1dd74bf8837eb-1": {
+          "n": 83,
+          "target_actions": 58,
+          "actual_rate": 0.6987951807228916,
+          "predicted": 0.6319461494625007,
+          "brier": 0.10504699812738044,
+          "train_frequency_brier": 0.25768701709773767,
+          "train_coverage_only_brier": 0.11226113282404154
+        },
+        "248c9570faa519c6921969e83fe814af-1": {
+          "n": 116,
+          "target_actions": 54,
+          "actual_rate": 0.46551724137931033,
+          "predicted": 0.4806128743003294,
+          "brier": 0.0680742862896346,
+          "train_frequency_brier": 0.24906717225562067,
+          "train_coverage_only_brier": 0.09121882907239984
+        },
+        "12b8afba17cea6619a102b869e9af325-1": {
+          "n": 131,
+          "target_actions": 46,
+          "actual_rate": 0.3511450381679389,
+          "predicted": 0.3462115218687086,
+          "brier": 0.06199962325508817,
+          "train_frequency_brier": 0.24484100904144265,
+          "train_coverage_only_brier": 0.07550361015701451
+        },
+        "8fc205473028aeb6518e81dddb501a5a-1": {
+          "n": 92,
+          "target_actions": 56,
+          "actual_rate": 0.6086956521739131,
+          "predicted": 0.5332803856251253,
+          "brier": 0.07314125481263331,
+          "train_frequency_brier": 0.25435775262195626,
+          "train_coverage_only_brier": 0.10361595295664083
+        },
+        "ef8e5471962e780b6b77218e336460a4-1": {
+          "n": 102,
+          "target_actions": 47,
+          "actual_rate": 0.46078431372549017,
+          "predicted": 0.4692472792015653,
+          "brier": 0.07732591521639276,
+          "train_frequency_brier": 0.24889228601417118,
+          "train_coverage_only_brier": 0.11752249124172884
+        },
+        "ffac01bf78c476901cbfe79395c10592-1": {
+          "n": 111,
+          "target_actions": 56,
+          "actual_rate": 0.5045045045045045,
+          "predicted": 0.4896607052985268,
+          "brier": 0.08892464073098372,
+          "train_frequency_brier": 0.25050778922910566,
+          "train_coverage_only_brier": 0.14183121592347628
+        },
+        "109570e2df6f6c8fe60811543a35ceda-1": {
+          "n": 114,
+          "target_actions": 60,
+          "actual_rate": 0.5263157894736842,
+          "predicted": 0.4916942810387055,
+          "brier": 0.0612317826801767,
+          "train_frequency_brier": 0.251313737244467,
+          "train_coverage_only_brier": 0.07477575753947736
+        },
+        "077d383b994d3891094d90cc1b6a5d4b-1": {
+          "n": 111,
+          "target_actions": 47,
+          "actual_rate": 0.42342342342342343,
+          "predicted": 0.38908959276110183,
+          "brier": 0.03887087945620499,
+          "train_frequency_brier": 0.24751176508504527,
+          "train_coverage_only_brier": 0.06815442564386429
+        },
+        "6eddbf2dc3077fdbd07d5bfa05eda621-1": {
+          "n": 137,
+          "target_actions": 79,
+          "actual_rate": 0.5766423357664233,
+          "predicted": 0.4975374242336308,
+          "brier": 0.05374583358956128,
+          "train_frequency_brier": 0.25317335166708965,
+          "train_coverage_only_brier": 0.07187143285513094
+        },
+        "4034efbe6f6c9d1c19f8fa1e379510a3-1": {
+          "n": 109,
+          "target_actions": 44,
+          "actual_rate": 0.4036697247706422,
+          "predicted": 0.41503795250178616,
+          "brier": 0.07464932945557226,
+          "train_frequency_brier": 0.24678184686850052,
+          "train_coverage_only_brier": 0.09767800028861236
+        },
+        "45372c44ae8ae95a6a973727bfa897e6-1": {
+          "n": 126,
+          "target_actions": 69,
+          "actual_rate": 0.5476190476190477,
+          "predicted": 0.5077029746364092,
+          "brier": 0.09246704701906835,
+          "train_frequency_brier": 0.25210091317872513,
+          "train_coverage_only_brier": 0.09495895331146194
+        },
+        "928e825a8b987d4324684254c8b10f18-1": {
+          "n": 110,
+          "target_actions": 48,
+          "actual_rate": 0.43636363636363634,
+          "predicted": 0.4278566826778753,
+          "brier": 0.06439369022300365,
+          "train_frequency_brier": 0.24798991843328927,
+          "train_coverage_only_brier": 0.09870132709261227
+        },
+        "79b47fefed45e4029be82c2ae84f758c-1": {
+          "n": 114,
+          "target_actions": 63,
+          "actual_rate": 0.5526315789473685,
+          "predicted": 0.5433415377933692,
+          "brier": 0.08375807490787733,
+          "train_frequency_brier": 0.25228613104560943,
+          "train_coverage_only_brier": 0.11775380834497086
+        },
+        "0bc5422fdbb7c4fd49d2a99eaaaf6a14-1": {
+          "n": 137,
+          "target_actions": 66,
+          "actual_rate": 0.48175182481751827,
+          "predicted": 0.4595140220631354,
+          "brier": 0.06169007436829722,
+          "train_frequency_brier": 0.24966705577099954,
+          "train_coverage_only_brier": 0.08621466776233122
+        },
+        "203462ddecf2ff126c4322c8250e77aa-1": {
+          "n": 131,
+          "target_actions": 66,
+          "actual_rate": 0.5038167938931297,
+          "predicted": 0.49677886211650796,
+          "brier": 0.047908283888691054,
+          "train_frequency_brier": 0.2504823776587574,
+          "train_coverage_only_brier": 0.07204724002804348
+        },
+        "0a815a4c86941b6d187c57727e3e6090-1": {
+          "n": 94,
+          "target_actions": 47,
+          "actual_rate": 0.5,
+          "predicted": 0.47128818066683864,
+          "brier": 0.082177077136845,
+          "train_frequency_brier": 0.25034134344332454,
+          "train_coverage_only_brier": 0.08335175096639591
+        },
+        "73a884b4a7adc8d2feb37d845e50648a-1": {
+          "n": 108,
+          "target_actions": 62,
+          "actual_rate": 0.5740740740740741,
+          "predicted": 0.5596337814821811,
+          "brier": 0.04854110774568413,
+          "train_frequency_brier": 0.25307845192061434,
+          "train_coverage_only_brier": 0.09634705534333149
+        },
+        "a9b1fcf0a020a42efcf51b3d7c359b47-1": {
+          "n": 120,
+          "target_actions": 63,
+          "actual_rate": 0.525,
+          "predicted": 0.5257377435368177,
+          "brier": 0.07177231268825501,
+          "train_frequency_brier": 0.2512651175544099,
+          "train_coverage_only_brier": 0.1095834889195435
+        },
+        "04e2bd65b4b6e81980135e06cfadd7b0-1": {
+          "n": 111,
+          "target_actions": 72,
+          "actual_rate": 0.6486486486486487,
+          "predicted": 0.5641471866553125,
+          "brier": 0.07661250633774297,
+          "train_frequency_brier": 0.25583405437410195,
+          "train_coverage_only_brier": 0.08531223913749723
+        },
+        "01b56d406361dbb513d6d7417dc0184f-1": {
+          "n": 114,
+          "target_actions": 71,
+          "actual_rate": 0.6228070175438597,
+          "predicted": 0.5603212434410316,
+          "brier": 0.060176063448066024,
+          "train_frequency_brier": 0.2548791811819891,
+          "train_coverage_only_brier": 0.0746390202339934
+        },
+        "3509e5b66ffc3e67f03739023d38a03b-1": {
+          "n": 118,
+          "target_actions": 68,
+          "actual_rate": 0.576271186440678,
+          "predicted": 0.5412672128787903,
+          "brier": 0.09868786857390502,
+          "train_frequency_brier": 0.2531596373415509,
+          "train_coverage_only_brier": 0.108634603675188
+        },
+        "1f170a1fa6ae1bc79cf771cfe27f000f-1": {
+          "n": 92,
+          "target_actions": 45,
+          "actual_rate": 0.4891304347826087,
+          "predicted": 0.4693181683843715,
+          "brier": 0.05683623946062312,
+          "train_frequency_brier": 0.24993970252546138,
+          "train_coverage_only_brier": 0.07112909216151046
+        },
+        "2bb0546c0fa8b5de7b4576b31a5b6383-1": {
+          "n": 100,
+          "target_actions": 53,
+          "actual_rate": 0.53,
+          "predicted": 0.4844870174060984,
+          "brier": 0.08812169141907548,
+          "train_frequency_brier": 0.2514498723766269,
+          "train_coverage_only_brier": 0.10523107171434909
+        },
+        "a547b189361afe25e5f0682c73e572e8-1": {
+          "n": 82,
+          "target_actions": 40,
+          "actual_rate": 0.4878048780487805,
+          "predicted": 0.5268014101884226,
+          "brier": 0.12581905325726278,
+          "train_frequency_brier": 0.24989072192572198,
+          "train_coverage_only_brier": 0.12716124540819618
+        },
+        "3686922ec2b2128fbd1ff6bfd7d04d81-1": {
+          "n": 95,
+          "target_actions": 77,
+          "actual_rate": 0.8105263157894737,
+          "predicted": 0.7583890551318331,
+          "brier": 0.09279698641144171,
+          "train_frequency_brier": 0.26181559029680496,
+          "train_coverage_only_brier": 0.12733943784034588
+        },
+        "7d2f125ddec4e3fb476907dadec6883e-1": {
+          "n": 85,
+          "target_actions": 47,
+          "actual_rate": 0.5529411764705883,
+          "predicted": 0.5064206100464193,
+          "brier": 0.0714786007967353,
+          "train_frequency_brier": 0.25229757097268163,
+          "train_coverage_only_brier": 0.07121783134379167
+        },
+        "dcc847457524cef15b6cc068f29ea616-1": {
+          "n": 130,
+          "target_actions": 58,
+          "actual_rate": 0.4461538461538462,
+          "predicted": 0.437916741854737,
+          "brier": 0.08736055065599183,
+          "train_frequency_brier": 0.24835167612714085,
+          "train_coverage_only_brier": 0.12439822198030238
+        },
+        "16c18b65adabdee40d6a79fc9def85b1-1": {
+          "n": 39,
+          "target_actions": 13,
+          "actual_rate": 0.3333333333333333,
+          "predicted": 0.3669104046491949,
+          "brier": 0.08658456744306058,
+          "train_frequency_brier": 0.24418284936942272,
+          "train_coverage_only_brier": 0.07864899456548494
+        },
+        "704a532aab1f77dd3ba0210f9cf8b55b-1": {
+          "n": 55,
+          "target_actions": 27,
+          "actual_rate": 0.4909090909090909,
+          "predicted": 0.4890462754202075,
+          "brier": 0.09896232950130508,
+          "train_frequency_brier": 0.25000542558474814,
+          "train_coverage_only_brier": 0.10156334110013968
+        },
+        "f3d51b78d834bc998582f6657012bd20-1": {
+          "n": 100,
+          "target_actions": 64,
+          "actual_rate": 0.64,
+          "predicted": 0.6136367003658567,
+          "brier": 0.11321450039462073,
+          "train_frequency_brier": 0.25551447846540215,
+          "train_coverage_only_brier": 0.12285801751639332
+        },
+        "d1ecca5e86110600b6dd0add400fe723-1": {
+          "n": 102,
+          "target_actions": 45,
+          "actual_rate": 0.4411764705882353,
+          "predicted": 0.4332369193027706,
+          "brier": 0.06033768321644134,
+          "train_frequency_brier": 0.24816775729959445,
+          "train_coverage_only_brier": 0.06729581923131116
+        },
+        "d0f5e89c975909cd491a987567d751bb-1": {
+          "n": 68,
+          "target_actions": 31,
+          "actual_rate": 0.45588235294117646,
+          "predicted": 0.4508355016940903,
+          "brier": 0.09328811677729376,
+          "train_frequency_brier": 0.24871115383552697,
+          "train_coverage_only_brier": 0.08530268775522629
+        },
+        "c78a918ebd92a08149b394ef8959d161-1": {
+          "n": 130,
+          "target_actions": 57,
+          "actual_rate": 0.43846153846153846,
+          "predicted": 0.5129810956145701,
+          "brier": 0.14383171718190876,
+          "train_frequency_brier": 0.2480674379391146,
+          "train_coverage_only_brier": 0.1419212865672789
+        },
+        "aa7f159538dcd93c4b070c6d120b2272-1": {
+          "n": 91,
+          "target_actions": 50,
+          "actual_rate": 0.5494505494505495,
+          "predicted": 0.5397340366752502,
+          "brier": 0.09216810797383697,
+          "train_frequency_brier": 0.25216858893777894,
+          "train_coverage_only_brier": 0.11387285832342388
+        },
+        "dd6aff420b28edf6960d7b467e529df3-1": {
+          "n": 134,
+          "target_actions": 50,
+          "actual_rate": 0.373134328358209,
+          "predicted": 0.4212635534045707,
+          "brier": 0.11087701223152044,
+          "train_frequency_brier": 0.24565353452139918,
+          "train_coverage_only_brier": 0.17743296840650816
+        },
+        "30330fcb8982d57b36f4c168fb663ced-1": {
+          "n": 130,
+          "target_actions": 58,
+          "actual_rate": 0.4461538461538462,
+          "predicted": 0.4565750505380559,
+          "brier": 0.0852465004454824,
+          "train_frequency_brier": 0.24835167612714085,
+          "train_coverage_only_brier": 0.15388020871953467
+        },
+        "eef68438eba8b4db68f1bb4b8fb918a3-1": {
+          "n": 131,
+          "target_actions": 61,
+          "actual_rate": 0.46564885496183206,
+          "predicted": 0.4517842062991242,
+          "brier": 0.06967400977416875,
+          "train_frequency_brier": 0.2490720355044287,
+          "train_coverage_only_brier": 0.12707030852670811
+        },
+        "13015a90cc59fc48d8b26337df6b8161-1": {
+          "n": 115,
+          "target_actions": 46,
+          "actual_rate": 0.4,
+          "predicted": 0.4056294842435597,
+          "brier": 0.0633870921249854,
+          "train_frequency_brier": 0.24664624699898338,
+          "train_coverage_only_brier": 0.09626685166750572
+        },
+        "ad630693c26ae17b724092518d883ae1-1": {
+          "n": 107,
+          "target_actions": 57,
+          "actual_rate": 0.5327102803738317,
+          "predicted": 0.5285127880080666,
+          "brier": 0.0854125500977616,
+          "train_frequency_brier": 0.2515500198503521,
+          "train_coverage_only_brier": 0.13948999673414292
+        },
+        "85aa69e9678f9bd97020e27a8ef943e2-1": {
+          "n": 132,
+          "target_actions": 67,
+          "actual_rate": 0.5075757575757576,
+          "predicted": 0.5047387005820092,
+          "brier": 0.06969213977441004,
+          "train_frequency_brier": 0.25062127499213827,
+          "train_coverage_only_brier": 0.12578903147050507
+        },
+        "3a3d08498acbb03c5d8ea98479e9bb3b-1": {
+          "n": 123,
+          "target_actions": 52,
+          "actual_rate": 0.42276422764227645,
+          "predicted": 0.4611674528444774,
+          "brier": 0.0831493438042957,
+          "train_frequency_brier": 0.2474874071651749,
+          "train_coverage_only_brier": 0.14302532228843007
+        },
+        "a4cbf1fa9a498523f02de6c84dbdf14e-1": {
+          "n": 90,
+          "target_actions": 52,
+          "actual_rate": 0.5777777777777777,
+          "predicted": 0.5659031882860357,
+          "brier": 0.06731012476309327,
+          "train_frequency_brier": 0.25321530734447883,
+          "train_coverage_only_brier": 0.1097138535761606
+        },
+        "3c26541db076cd630c203e0a41e21cdd-1": {
+          "n": 105,
+          "target_actions": 38,
+          "actual_rate": 0.3619047619047619,
+          "predicted": 0.414848671532808,
+          "brier": 0.05293238857191093,
+          "train_frequency_brier": 0.24523859121066302,
+          "train_coverage_only_brier": 0.12096830776473481
+        },
+        "8e983cb27ec89013fc28873674712c21-1": {
+          "n": 91,
+          "target_actions": 35,
+          "actual_rate": 0.38461538461538464,
+          "predicted": 0.44874763403757567,
+          "brier": 0.10636278117507406,
+          "train_frequency_brier": 0.2460777706229309,
+          "train_coverage_only_brier": 0.1773222062351417
+        },
+        "b4b03f5ecc6781a9c45a8d55ae96c764-1": {
+          "n": 89,
+          "target_actions": 37,
+          "actual_rate": 0.4157303370786517,
+          "predicted": 0.4831199257905171,
+          "brier": 0.11534618975608661,
+          "train_frequency_brier": 0.24722749812505956,
+          "train_coverage_only_brier": 0.16559939117976175
+        },
+        "785db4b4353aea1f2e61c8493ba425b3-1": {
+          "n": 118,
+          "target_actions": 46,
+          "actual_rate": 0.3898305084745763,
+          "predicted": 0.4442170999565098,
+          "brier": 0.0854009341340299,
+          "train_frequency_brier": 0.2462704744792199,
+          "train_coverage_only_brier": 0.1390391915710315
+        },
+        "a349f113d8cd4665b6da581cd7833500-1": {
+          "n": 115,
+          "target_actions": 55,
+          "actual_rate": 0.4782608695652174,
+          "predicted": 0.5021454196890961,
+          "brier": 0.06836051430923235,
+          "train_frequency_brier": 0.24953806160759823,
+          "train_coverage_only_brier": 0.1337006828617859
+        },
+        "f64fa44f1c884f04b4b3941c040c3b39-1": {
+          "n": 110,
+          "target_actions": 54,
+          "actual_rate": 0.4909090909090909,
+          "predicted": 0.5247800636764016,
+          "brier": 0.08808174850552278,
+          "train_frequency_brier": 0.25000542558474814,
+          "train_coverage_only_brier": 0.13138581615485037
+        },
+        "1359247345c9f23c19af46240c47ffa5-1": {
+          "n": 126,
+          "target_actions": 47,
+          "actual_rate": 0.373015873015873,
+          "predicted": 0.42286211033849197,
+          "brier": 0.09337232396134681,
+          "train_frequency_brier": 0.24564915748225644,
+          "train_coverage_only_brier": 0.16828639091807968
+        },
+        "b25e54576d8e4ca28ccd266a3e531a21-1": {
+          "n": 123,
+          "target_actions": 53,
+          "actual_rate": 0.43089430894308944,
+          "predicted": 0.4787814806644705,
+          "brier": 0.08731933625640155,
+          "train_frequency_brier": 0.24778782151024328,
+          "train_coverage_only_brier": 0.19646304514409274
+        },
+        "3d375fad2dd0c7d6e168c5316563e621-1": {
+          "n": 117,
+          "target_actions": 58,
+          "actual_rate": 0.49572649572649574,
+          "predicted": 0.4773102706654495,
+          "brier": 0.054892760502860224,
+          "train_frequency_brier": 0.25018343333886556,
+          "train_coverage_only_brier": 0.07703714092390931
+        },
+        "1bc491f7ef4ac8f24ac17a7a70717c02-1": {
+          "n": 120,
+          "target_actions": 64,
+          "actual_rate": 0.5333333333333333,
+          "predicted": 0.5604489384547736,
+          "brier": 0.07827679315155202,
+          "train_frequency_brier": 0.25157304225810495,
+          "train_coverage_only_brier": 0.16171825594963513
+        },
+        "9723c173fb2c3d7d8fee64dcd64b0ce6-1": {
+          "n": 124,
+          "target_actions": 68,
+          "actual_rate": 0.5483870967741935,
+          "predicted": 0.5526887254102245,
+          "brier": 0.056252278181836604,
+          "train_frequency_brier": 0.2521292933357477,
+          "train_coverage_only_brier": 0.12952385613835002
+        },
+        "14919682e511adc8098c338d7a01be90-1": {
+          "n": 88,
+          "target_actions": 52,
+          "actual_rate": 0.5909090909090909,
+          "predicted": 0.5557963700091437,
+          "brier": 0.049423788098700294,
+          "train_frequency_brier": 0.25370052202908927,
+          "train_coverage_only_brier": 0.07851950670968119
+        },
+        "a15fcfb9c152def4684cbb236d8823d6-1": {
+          "n": 116,
+          "target_actions": 58,
+          "actual_rate": 0.5,
+          "predicted": 0.48432680957852187,
+          "brier": 0.08322146116713083,
+          "train_frequency_brier": 0.2503413434433246,
+          "train_coverage_only_brier": 0.1342579920571019
+        },
+        "30cdbe96f8d6f2c5677483f5c87f4a0a-1": {
+          "n": 122,
+          "target_actions": 64,
+          "actual_rate": 0.5245901639344263,
+          "predicted": 0.5381637937266123,
+          "brier": 0.0783255591155353,
+          "train_frequency_brier": 0.2512499737165232,
+          "train_coverage_only_brier": 0.12020352078330995
+        },
+        "54b1d3e11b3a9a83b488a738de241517-1": {
+          "n": 123,
+          "target_actions": 49,
+          "actual_rate": 0.3983739837398374,
+          "predicted": 0.4390601345456215,
+          "brier": 0.06519458131148652,
+          "train_frequency_brier": 0.24658616412996973,
+          "train_coverage_only_brier": 0.1346817071816695
+        },
+        "929c2717b472cda849d4f413bb7744a4-1": {
+          "n": 106,
+          "target_actions": 67,
+          "actual_rate": 0.6320754716981132,
+          "predicted": 0.6051147332054487,
+          "brier": 0.1037403242679309,
+          "train_frequency_brier": 0.25522165950188835,
+          "train_coverage_only_brier": 0.131580940321712
+        },
+        "b0596cbf9a1da6d8ee0db064fccf850c-1": {
+          "n": 115,
+          "target_actions": 47,
+          "actual_rate": 0.40869565217391307,
+          "predicted": 0.42666530544743575,
+          "brier": 0.058803161684105675,
+          "train_frequency_brier": 0.24696755973327394,
+          "train_coverage_only_brier": 0.13555784530381798
+        },
+        "06591c01cd12b7f46c7215d5b464fb9b-1": {
+          "n": 106,
+          "target_actions": 49,
+          "actual_rate": 0.46226415094339623,
+          "predicted": 0.46670063415670715,
+          "brier": 0.07865272497568579,
+          "train_frequency_brier": 0.24894696742659206,
+          "train_coverage_only_brier": 0.1170788129617066
+        },
+        "6b77b77327fb186f176c76b876c1aea9-1": {
+          "n": 96,
+          "target_actions": 45,
+          "actual_rate": 0.46875,
+          "predicted": 0.4801765987966034,
+          "brier": 0.10043533236117681,
+          "train_frequency_brier": 0.24918662580446801,
+          "train_coverage_only_brier": 0.17974582104865355
+        },
+        "edb585cf77ed804bcf68276515b1f78e-1": {
+          "n": 104,
+          "target_actions": 40,
+          "actual_rate": 0.38461538461538464,
+          "predicted": 0.43333620437707526,
+          "brier": 0.06532523842497372,
+          "train_frequency_brier": 0.24607777062293093,
+          "train_coverage_only_brier": 0.13758114933062648
+        },
+        "ea0da721a26d892c456fe7b0054bb018-1": {
+          "n": 105,
+          "target_actions": 59,
+          "actual_rate": 0.5619047619047619,
+          "predicted": 0.5751024125971289,
+          "brier": 0.0744195139635881,
+          "train_frequency_brier": 0.2526287840993453,
+          "train_coverage_only_brier": 0.14839838420214094
+        },
+        "011008e4dee32c2fdbfa37044c3c2608-1": {
+          "n": 124,
+          "target_actions": 51,
+          "actual_rate": 0.4112903225806452,
+          "predicted": 0.4834176079375113,
+          "brier": 0.13958533850085883,
+          "train_frequency_brier": 0.2470634353072155,
+          "train_coverage_only_brier": 0.19436251466305252
+        },
+        "44f161c5e1a41bf9fb7e1aa255f5080f-1": {
+          "n": 116,
+          "target_actions": 51,
+          "actual_rate": 0.4396551724137931,
+          "predicted": 0.41742862610388454,
+          "brier": 0.09204586800515027,
+          "train_frequency_brier": 0.24811154386484288,
+          "train_coverage_only_brier": 0.11611144401341428
+        },
+        "af7c078e9a0001364d3ce4025b23e1ed-1": {
+          "n": 76,
+          "target_actions": 29,
+          "actual_rate": 0.3815789473684211,
+          "predicted": 0.4057646409494106,
+          "brier": 0.07388843779901459,
+          "train_frequency_brier": 0.24596557133818367,
+          "train_coverage_only_brier": 0.13374394259469333
+        },
+        "ca9868fdb788e855bbf53f8fc2e38f9e-1": {
+          "n": 119,
+          "target_actions": 51,
+          "actual_rate": 0.42857142857142855,
+          "predicted": 0.3913312771302611,
+          "brier": 0.0611412283875682,
+          "train_frequency_brier": 0.24770198884022374,
+          "train_coverage_only_brier": 0.08562642028628278
+        },
+        "b58c6f50466bff30fc183256041de011-1": {
+          "n": 98,
+          "target_actions": 46,
+          "actual_rate": 0.46938775510204084,
+          "predicted": 0.45174746361368906,
+          "brier": 0.057309713525489005,
+          "train_frequency_brier": 0.24921019147056708,
+          "train_coverage_only_brier": 0.09475750656188603
+        },
+        "d2c7d061739bef723dc4abfffb22de2a-1": {
+          "n": 106,
+          "target_actions": 50,
+          "actual_rate": 0.4716981132075472,
+          "predicted": 0.46211673722323904,
+          "brier": 0.08404079481044655,
+          "train_frequency_brier": 0.2492955614307752,
+          "train_coverage_only_brier": 0.0955882620531505
+        },
+        "dfb6af5c020694f6e682187e48303ae7-1": {
+          "n": 99,
+          "target_actions": 46,
+          "actual_rate": 0.46464646464646464,
+          "predicted": 0.4594961985759293,
+          "brier": 0.09558791035518956,
+          "train_frequency_brier": 0.24903499621552722,
+          "train_coverage_only_brier": 0.1301387746285703
+        },
+        "ddd8bf4ef175473cec7ff9d7480be558-1": {
+          "n": 102,
+          "target_actions": 39,
+          "actual_rate": 0.38235294117647056,
+          "predicted": 0.4394284664504516,
+          "brier": 0.10776449186312698,
+          "train_frequency_brier": 0.24599417115586436,
+          "train_coverage_only_brier": 0.1339459073812167
+        },
+        "c682745d307bf8bec8fbbd2cdf419d18-1": {
+          "n": 116,
+          "target_actions": 46,
+          "actual_rate": 0.39655172413793105,
+          "predicted": 0.39081765065999075,
+          "brier": 0.058209610953153634,
+          "train_frequency_brier": 0.24651882988021306,
+          "train_coverage_only_brier": 0.06478004825184393
+        },
+        "51f34379b8018af261ce057ca75692a0-1": {
+          "n": 119,
+          "target_actions": 52,
+          "actual_rate": 0.4369747899159664,
+          "predicted": 0.43022181227603673,
+          "brier": 0.07285878677712805,
+          "train_frequency_brier": 0.24801250114647086,
+          "train_coverage_only_brier": 0.11329337537223519
+        },
+        "02ab03aeb1de04e89d030d0e71b280ec-1": {
+          "n": 113,
+          "target_actions": 48,
+          "actual_rate": 0.4247787610619469,
+          "predicted": 0.457673088537065,
+          "brier": 0.09033719023687001,
+          "train_frequency_brier": 0.2475618461179352,
+          "train_coverage_only_brier": 0.11707325889755088
+        }
+      }
+    },
+    "val": {
+      "games": 21,
+      "total": {
+        "n": 2144,
+        "target_actions": 1054,
+        "actual_rate": 0.4916044776119403,
+        "predicted": 0.4858930142314599,
+        "brier": 0.07599481167724928,
+        "train_frequency_brier": 0.2500311207940795,
+        "train_coverage_only_brier": 0.11553812887239716
+      },
+      "within_collector_reach": {
+        "n": 825,
+        "target_actions": 23,
+        "actual_rate": 0.027878787878787878,
+        "predicted": 0.04128878652951881,
+        "brier": 0.02659131492994901,
+        "train_frequency_brier": 0.2328960093212533,
+        "train_coverage_only_brier": 0.027179499750755214
+      },
+      "by_game": {
+        "56169fed54993f0819a29eaaaef38dd7-1": {
+          "n": 159,
+          "target_actions": 64,
+          "actual_rate": 0.4025157232704403,
+          "predicted": 0.40324480145995134,
+          "brier": 0.06298159339396309,
+          "train_frequency_brier": 0.24673920540009886,
+          "train_coverage_only_brier": 0.10176381921018642
+        },
+        "c0261123738bcb06d57d1ef4770f269d-1": {
+          "n": 112,
+          "target_actions": 52,
+          "actual_rate": 0.4642857142857143,
+          "predicted": 0.417274523700248,
+          "brier": 0.05831149746995436,
+          "train_frequency_brier": 0.24902166614177412,
+          "train_coverage_only_brier": 0.07271895821105114
+        },
+        "e73135faa0b6e61544b713252d81e2e5-1": {
+          "n": 126,
+          "target_actions": 73,
+          "actual_rate": 0.5793650793650794,
+          "predicted": 0.5088865122408105,
+          "brier": 0.07160259856622529,
+          "train_frequency_brier": 0.2532739596689922,
+          "train_coverage_only_brier": 0.09443346138430055
+        },
+        "2e09893b936dcfdb1c5fd10748e169ae-1": {
+          "n": 131,
+          "target_actions": 62,
+          "actual_rate": 0.4732824427480916,
+          "predicted": 0.4441381459565182,
+          "brier": 0.07574407120746093,
+          "train_frequency_brier": 0.24935410393529445,
+          "train_coverage_only_brier": 0.1024290718914905
+        },
+        "3377ed87b195c3c6e84df1c588d97d31-1": {
+          "n": 116,
+          "target_actions": 49,
+          "actual_rate": 0.4224137931034483,
+          "predicted": 0.49995034188914916,
+          "brier": 0.10179407846567112,
+          "train_frequency_brier": 0.24747445827099093,
+          "train_coverage_only_brier": 0.18604732382956146
+        },
+        "f306679c3694d94f4bdb3e868fb15955-1": {
+          "n": 136,
+          "target_actions": 69,
+          "actual_rate": 0.5073529411764706,
+          "predicted": 0.490471803391776,
+          "brier": 0.06251146713782069,
+          "train_frequency_brier": 0.2506130417112908,
+          "train_coverage_only_brier": 0.0903318029410219
+        },
+        "ef8c2fbd6a5f7c9b58bb2b091a96d0c1-1": {
+          "n": 127,
+          "target_actions": 64,
+          "actual_rate": 0.5039370078740157,
+          "predicted": 0.49443604757923587,
+          "brier": 0.0642309133960046,
+          "train_frequency_brier": 0.2504868196812907,
+          "train_coverage_only_brier": 0.09214834452543924
+        },
+        "0e4aac28e06ddc63f8b082966d71f12f-1": {
+          "n": 102,
+          "target_actions": 47,
+          "actual_rate": 0.46078431372549017,
+          "predicted": 0.44228290017368466,
+          "brier": 0.05485624979800132,
+          "train_frequency_brier": 0.24889228601417115,
+          "train_coverage_only_brier": 0.06832464779610858
+        },
+        "b455a0c842ab04a2f37917d0f155b1a5-1": {
+          "n": 91,
+          "target_actions": 41,
+          "actual_rate": 0.45054945054945056,
+          "predicted": 0.47192895523380046,
+          "brier": 0.10559263749188015,
+          "train_frequency_brier": 0.2485140979488701,
+          "train_coverage_only_brier": 0.10868349226581928
+        },
+        "9aae789e16b1eda8a356f2734ad081fe-1": {
+          "n": 109,
+          "target_actions": 45,
+          "actual_rate": 0.41284403669724773,
+          "predicted": 0.4567978470192082,
+          "brier": 0.06278002428163626,
+          "train_frequency_brier": 0.24712084654229327,
+          "train_coverage_only_brier": 0.15254111068833698
+        },
+        "eca9e0ff749ffd031fbc451255d158f1-1": {
+          "n": 100,
+          "target_actions": 51,
+          "actual_rate": 0.51,
+          "predicted": 0.5224999802468847,
+          "brier": 0.06517321606737934,
+          "train_frequency_brier": 0.25071085308775864,
+          "train_coverage_only_brier": 0.12789210168531695
+        },
+        "ff09b13031cfcd11d59631affed007d6-1": {
+          "n": 100,
+          "target_actions": 39,
+          "actual_rate": 0.39,
+          "predicted": 0.44467684903749594,
+          "brier": 0.08197210007481477,
+          "train_frequency_brier": 0.24627673735454927,
+          "train_coverage_only_brier": 0.1575670721052937
+        },
+        "09a12e7f6169d13d2b6a924468e0f205-1": {
+          "n": 66,
+          "target_actions": 53,
+          "actual_rate": 0.803030303030303,
+          "predicted": 0.6498386598487954,
+          "brier": 0.10969815494314605,
+          "train_frequency_brier": 0.26153860539587354,
+          "train_coverage_only_brier": 0.13833792105897566
+        },
+        "5a5f72bc66bdafbc4d8d90edc9870f8e-1": {
+          "n": 45,
+          "target_actions": 29,
+          "actual_rate": 0.6444444444444445,
+          "predicted": 0.6095441704115403,
+          "brier": 0.07164273978920244,
+          "train_frequency_brier": 0.25567870497403966,
+          "train_coverage_only_brier": 0.11321187069647186
+        },
+        "20ab1325ba01b9b75373635ee3d7b1ef-1": {
+          "n": 98,
+          "target_actions": 53,
+          "actual_rate": 0.5408163265306123,
+          "predicted": 0.5623804355614466,
+          "brier": 0.0855047655989215,
+          "train_frequency_brier": 0.2518495460736679,
+          "train_coverage_only_brier": 0.14366272035177802
+        },
+        "0a4b378d35c63912fd4bebe264ffdb43-1": {
+          "n": 94,
+          "target_actions": 46,
+          "actual_rate": 0.48936170212765956,
+          "predicted": 0.48836330519261767,
+          "brier": 0.06920571785892521,
+          "train_frequency_brier": 0.24994824807690527,
+          "train_coverage_only_brier": 0.11138623098274673
+        },
+        "abb23c7796d827b211c26e46b99785b3-1": {
+          "n": 85,
+          "target_actions": 44,
+          "actual_rate": 0.5176470588235295,
+          "predicted": 0.51339878253495,
+          "brier": 0.08246862311166549,
+          "train_frequency_brier": 0.2509934192864436,
+          "train_coverage_only_brier": 0.12190704594328856
+        },
+        "5b4f5ceaa627db4ff6228b2b18e3aecb-1": {
+          "n": 76,
+          "target_actions": 56,
+          "actual_rate": 0.7368421052631579,
+          "predicted": 0.7138142359974099,
+          "brier": 0.07540154672327348,
+          "train_frequency_brier": 0.2590928876536062,
+          "train_coverage_only_brier": 0.12481955355602159
+        },
+        "5fb0f13dacd5a31934a64dcb7917720b-1": {
+          "n": 123,
+          "target_actions": 55,
+          "actual_rate": 0.44715447154471544,
+          "predicted": 0.4449763926974119,
+          "brier": 0.07658178187074065,
+          "train_frequency_brier": 0.24838865020038003,
+          "train_coverage_only_brier": 0.10608140852092007
+        },
+        "d840e4de591fb29628091673c049b6a0-1": {
+          "n": 116,
+          "target_actions": 50,
+          "actual_rate": 0.43103448275862066,
+          "predicted": 0.44112719135582396,
+          "brier": 0.08938211327563958,
+          "train_frequency_brier": 0.24779300106791685,
+          "train_coverage_only_brier": 0.12041933852442592
+        },
+        "e71d5897d9c7908e11c4fb3a870c994f-1": {
+          "n": 32,
+          "target_actions": 12,
+          "actual_rate": 0.375,
+          "predicted": 0.356669726891747,
+          "brier": 0.13555166207393657,
+          "train_frequency_brier": 0.2457224728878981,
+          "train_coverage_only_brier": 0.15097367410324602
+        }
+      }
+    }
+  }
+}

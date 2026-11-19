@@ -31,13 +31,16 @@ def main():
         p.error("candidate or examiner identity mismatch")
     if len(set(args.cpus)) != 2 or not set(args.cpus) <= os.sched_getaffinity(0):
         p.error("two distinct available CPU cores are required")
-    from tree_win_gate import protocol_hashes, validate, validate_game, verdict, verify_raw
+    from tree_win_gate import RESERVED_RANGE, prove_single_pack, protocol_hashes, validate, validate_game, verdict, verify_raw
     plan = None
     if args.final_plan:
         plan = json.loads(args.final_plan.read_text())
-        seeds = validate(plan, weight_sha, args.pack_sha256, PRIOR.EXPECTED_MD5, args.run)
+        rebuilt_weights, rebuilt_pack = prove_single_pack(args.weights, args.pack)
+        seeds = validate(plan, rebuilt_weights, rebuilt_pack, PRIOR.EXPECTED_MD5, args.run)
     else:
         seeds = args.maps
+        if any(RESERVED_RANGE[0] <= s < RESERVED_RANGE[1] for s in seeds):
+            p.error("these seeds are reserved for independent formal exams")
     if len(set(seeds)) != len(seeds):
         p.error("duplicate map")
     args.run.mkdir(parents=True, exist_ok=True)
@@ -88,7 +91,7 @@ def main():
         invalid = []
         for row in report["games"]:
             try:
-                verify_raw(args.run, row, args.pack_sha256)
+                verify_raw(args.run, row, args.pack_sha256, weight_sha, formal=plan is not None)
                 validate_game(row)
             except (KeyError, TypeError, ValueError) as exc:
                 invalid.append([row["seed"], row["candidate_seat"], str(exc)])

@@ -4,6 +4,9 @@ import hashlib
 import gzip
 import json
 import math
+import os
+import shutil
+import tempfile
 import fcntl
 import datetime
 import subprocess
@@ -12,6 +15,9 @@ from pathlib import Path
 import random
 import secrets
 
+ROOT = Path(__file__).resolve().parents[2]
+GUARDED_V5 = "89df51540512d187ad64e82e21890e9f301083fc07ba06357eddaf43fc6692a2"
+RULES = "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/carbon.json"
 N = 100
 RESERVED_RANGE = (1_887_000_000, 1_888_000_000)
 EXAMINER = "57f9a594cce4f2ec9e3573d8d9d26ca1"
@@ -22,7 +28,6 @@ def digest(path):
 
 
 def protocol_hashes():
-    root = Path(__file__).resolve().parents[2]
     paths = (
         "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/tree_v4_exam.py",
         "reports/sapling_1200k/cash_v3_exam.py", "reports/sapling_1200k/external_3s2.py",
@@ -31,8 +36,77 @@ def protocol_hashes():
         "reports/sapling_bootstrap/transfer_3s2.py", "reports/sapling_bootstrap/smoke_ab.py",
         "code/eval_v53.py", "code/fastsim.py", "code/cnet2_pack.py", "code/cnet2_agent.py",
         "code/cnet2_feat.py", "code/cnet2_np.py", "data/master3s2_source.py",
+        "code/init_sapling.py", "code/cnet2_model.py", "code/cnet2_search_pack.py", "code/cnet2_search.py",
+        "code/cnet2_comparator.py", "reports/sapling_1200k/build_v5_guard.py",
+        "reports/sapling_1200k/v5_guard_runtime.py", RULES,
     )
-    return {p: digest(root / p) for p in paths}
+    return {p: digest(ROOT / p) for p in paths}
+
+
+def sapling_shapes(meta):
+    """Construct the declared model on the meta device for its exact tensor schema."""
+    if str(ROOT / "code") not in sys.path:
+        sys.path.insert(0, str(ROOT / "code"))
+    import torch
+    from cnet2_model import CNet2
+    from init_sapling import SAPLING_PRESETS, resolve_preset_metadata
+    cfg = meta.get("cfg", {})
+    if cfg.get("NB") == 12:
+        expected_cfg = dict(SAPLING_PRESETS["sapling-1.2m"]["cfg"], NB=12)
+        if (cfg != expected_cfg or any(type(v) is not int for v in cfg.values())
+                or meta.get("architecture_id") != "sapling-experimental-c93-nb12-deepening-v1"
+                or meta.get("parent_preset") != "sapling-1.2m"
+                or meta.get("params") != 2_143_916):
+            raise ValueError("unknown deep Sapling architecture")
+    else:
+        _, cfg, _ = resolve_preset_metadata(meta)
+    with torch.device("meta"):
+        model = CNet2(**cfg)
+    return {name: tuple(t.shape) for name, t in model.state_dict().items()}
+
+
+def rebuild_guarded_v5(source, directory):
+    # The frozen builder uses repo-relative input/output paths. Preserve that
+    # layout in scratch so an exam cannot overwrite its own candidate.
+    root = directory / "guard-build"
+    actor = root / "data/weights/sapling_1200k"
+    support = root / "reports/sapling_1200k"
+    actor.mkdir(parents=True)
+    support.mkdir(parents=True)
+    (root / "code").symlink_to(ROOT / "code", target_is_directory=True)
+    shutil.copyfile(source, actor / "soft_it50_v5.npz")
+    for name in ("build_v5_guard.py", "v5_guard_runtime.py"):
+        shutil.copyfile(Path(__file__).with_name(name), support / name)
+    subprocess.run([sys.executable, str(support / "build_v5_guard.py")],
+                   check=True, stdout=subprocess.DEVNULL)
+    return actor / "soft_it50_v5_guard_agent.py"
+
+
+def prove_single_pack(weights, pack):
+    """Rebuild the exact one-actor candidate from the given Sapling NPZ."""
+    if Path(weights).suffix.lower() != ".npz":
+        raise ValueError("compound packs need a verified build and attribution adapter before formal use")
+    with tempfile.TemporaryDirectory(prefix="sapling-freeze-") as tmp:
+        source = Path(tmp) / "frozen.npz"
+        output = Path(tmp) / "rebuilt.py"
+        shutil.copyfile(weights, source)
+        import numpy as np
+        with np.load(source, allow_pickle=False) as current:
+            shapes = sapling_shapes(json.loads(str(current["meta"])))
+            if set(current.files) != set(shapes) | {"meta"}:
+                raise ValueError("candidate tensor keys differ from its declared Sapling state")
+            for key, shape in shapes.items():
+                value = current[key]
+                if value.shape != shape or not np.isfinite(value).all():
+                    raise ValueError(f"invalid Sapling parameter {key}")
+        if digest(pack) == GUARDED_V5:
+            output = rebuild_guarded_v5(source, Path(tmp))
+        else:
+            subprocess.run([sys.executable, str(ROOT / "code/cnet2_pack.py"), str(source), str(output), "2"],
+                           check=True, stdout=subprocess.DEVNULL, env=dict(os.environ, CNET2_QMODE="int8"))
+        if digest(output) != digest(pack):
+            raise ValueError("candidate pack differs from the exact rebuild of its supplied source weights")
+        return digest(source), digest(output)
 
 
 def seed_list(nonce):
@@ -41,7 +115,7 @@ def seed_list(nonce):
 
 
 def validate(plan, weight_hash, pack_hash, examiner_hash, run):
-    if (plan["schema"] != "sapling-one-shot-90/1" or plan["weight_sha256"] != weight_hash
+    if (plan["schema"] != "sapling-one-shot-90/2" or plan["weight_sha256"] != weight_hash
             or plan["pack_sha256"] != pack_hash or plan["examiner_md5"] != examiner_hash
             or plan["protocol_sha256"] != protocol_hashes()
             or plan["run_directory"] != Path(run).name):
@@ -49,6 +123,8 @@ def validate(plan, weight_hash, pack_hash, examiner_hash, run):
     seeds = [row["seed"] for row in plan["maps"]]
     if len(plan["nonce"]) != 64 or seeds != seed_list(plan["nonce"]):
         raise ValueError("map allocation differs from the original draw")
+    if set(seeds).intersection(plan["excluded_reserved_seeds"]):
+        raise ValueError("exam overlaps previously exposed reserved maps")
     return seeds
 
 
@@ -71,22 +147,60 @@ def cp_interval(n, k, error=0.025):
     return lower(k), 1 - lower(n-k)
 
 
-def verify_raw(directory, row, pack_sha):
+def verify_terminal_replay(row, raw):
+    # Replay recorded actions only. This never reruns the wall-clock opponent.
+    from tree_audited_game import exam, prior
+    if raw["game_configuration"] != exam.CFG or prior.hashed(raw["actions"]) != row["actions_sha256"]:
+        raise ValueError("game configuration or action digest differs")
+    sim = exam.FastCarbon(exam.CFG).reset(seed=row["seed"])
+    for index, actions in enumerate(raw["actions"], 1):
+        pre_cash = list(sim.cash)
+        sim.step(*actions)
+        state = sim.get_state()
+        extinct = [bool(exam._extinct(state, p)) for p in (0, 1)]
+        terminal = any(extinct) or index == exam.EPISODE_STEPS - 1
+        if terminal != (index == len(raw["actions"])):
+            raise ValueError("action history does not end on the first official terminal")
+    if (prior.hashed(state) != row["final_state_sha256"] or raw["extinct_by_seat"] != extinct
+            or row["extinct_by_seat"] != extinct or row["termination"] != (
+                "extinction" if any(extinct) else "official_episode_limit")
+            or raw["last_pre_cash"] != pre_cash or raw["last_post_cash"] != state["cash"]):
+        raise ValueError("recorded end state differs from replayed actions")
+
+
+def verify_raw(directory, row, pack_sha, weights_sha, formal=False):
     path = Path(directory) / f"raw_{row['seed']}_{row['candidate_seat']}.json.gz"
     if row["raw_file"] != path.name or digest(path) != row["raw_sha256"]:
         raise ValueError("raw transcript missing or changed")
     raw = json.loads(gzip.decompress(path.read_bytes()))
     if (raw["seed"], raw["candidate_seat"], raw["pack_sha256"], raw["examiner_md5"]) != (
-            row["seed"], row["candidate_seat"], pack_sha, EXAMINER):
+            row["seed"], row["candidate_seat"], pack_sha, EXAMINER) or raw["weight_identity"] != weights_sha:
         raise ValueError("raw transcript identity mismatch")
+    if formal and pack_sha == GUARDED_V5:
+        stats = raw.get("candidate_guard_stats")
+        if (not isinstance(stats, dict) or stats != row.get("candidate_guard_stats")
+                or stats["calls"] != row["actual_transitions"]
+                or not 0 <= stats["unchanged_slots"] <= stats["active_slots"]):
+            raise ValueError("guarded candidate has no valid network-action attribution")
+        witnesses = raw["unchanged_network_action_steps"]
+        if (witnesses != row["unchanged_network_action_steps"] or witnesses != sorted(set(witnesses))
+                or len(witnesses) > stats["calls"] - stats["changed_roots"]
+                or any(type(t) is not int or not 0 <= t < len(raw["actions"])
+                       or not any(raw["actions"][t][row["candidate_seat"]].values()) for t in witnesses)):
+            raise ValueError("invalid unchanged non-idle network decisions")
     steps = row["actual_transitions"]
     if raw["errors"] or len(raw["actions"]) != steps or raw["steps"] != steps:
         raise ValueError("incomplete action history")
+    if steps <= 0:
+        raise ValueError("empty action history")
+    verify_terminal_replay(row, raw)
     ext = raw["extinct_by_seat"]
     cash = raw["last_pre_cash"] if any(ext) else raw["last_post_cash"]
     scores = [steps - 301 if ext[seat] else float(cash[seat]) for seat in (0,1)]
     if scores != row["official_score_by_seat"] or scores != raw["official_score_by_seat"]:
         raise ValueError("score differs from the terminal cash and extinction rule")
+    if raw["margin"] != row["margin"] or raw["result"] != row["result"]:
+        raise ValueError("raw outcome differs from the game ledger")
     events = raw["search_calls"]
     kinds = ("searched", "single", "depth_zero_return_base")
     if [e[0] for e in events] != list(range(steps)) or any(e[1] not in kinds for e in events):
@@ -128,6 +242,9 @@ def verdict(plan, games):
         raise ValueError("duplicate, unknown or missing map and seat")
     for row in games:
         validate_game(row)
+    if plan.get("pack_sha256") == GUARDED_V5:
+        if not any(row["unchanged_network_action_steps"] for row in games):
+            raise ValueError("guarded candidate executed no unmodified network decisions")
     seat_wins = [sum(g["candidate_seat"] == seat and g["result"] == "win" for g in games)
                  for seat in (0, 1)]
     counts = [sum(rows[(r["seed"], s)]["result"] == "win" for s in (0, 1))
@@ -181,7 +298,7 @@ def execute():
             raise SystemExit("formal run invalid: keep execution.log; do not reroll a failed game")
         report = json.loads((args.run / "results.json").read_text())
         for row in report["games"]:
-            verify_raw(args.run, row, plan["pack_sha256"])
+            verify_raw(args.run, row, plan["pack_sha256"], plan["weight_sha256"], formal=True)
         if (report["status"] != "complete" or report["header"]["plan_sha256"] != digest(args.plan)
                 or report["verdict"] != verdict(plan, report["games"])):
             raise ValueError("reported final verdict does not match the full game ledger")
@@ -207,15 +324,16 @@ def main():
         parser.error("exclusion ledger is missing known V4 development maps")
     if args.out.exists() or args.run.exists():
         parser.error("allocate a fresh plan path and run directory")
-    weights, pack = digest(args.weights), digest(args.pack)
+    weights, pack = prove_single_pack(args.weights, args.pack)
     while True:
         nonce = secrets.token_hex(32)
         seeds = seed_list(nonce)
         if not used.intersection(seeds):
             break
-    plan = {"schema":"sapling-one-shot-90/1", "weight_sha256":weights, "pack_sha256":pack,
+    plan = {"schema":"sapling-one-shot-90/2", "weight_sha256":weights, "pack_sha256":pack,
             "examiner_md5":EXAMINER, "protocol_sha256":protocol_hashes(), "exclusion_count":len(used),
             "exclusions_sha256":digest(args.exclusions), "nonce":nonce,
+            "excluded_reserved_seeds":sorted(s for s in used if RESERVED_RANGE[0] <= s < RESERVED_RANGE[1]),
             "run_directory":args.run.name, "maps":[{"seed": s} for s in seeds]}
     validate(plan, weights, pack, EXAMINER, args.run)
     with args.out.open("x") as out:

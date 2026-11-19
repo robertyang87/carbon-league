@@ -10,8 +10,8 @@ import tree_audited_game as arena
 from tree_win_gate import validate_game, verify_raw
 
 
-def replay(run, row, pack_sha):
-    verify_raw(run, row, pack_sha)
+def replay(run, row, pack_sha, weight_identity):
+    verify_raw(run, row, pack_sha, weight_identity)
     validate_game(row)
     with gzip.open(run / row['raw_file'], 'rt') as source:
         record = json.load(source)
@@ -49,7 +49,11 @@ def main():
         report = json.loads((run / 'results.json').read_text())
         if report['status'] != 'complete' or run.name in arms:
             raise ValueError('A completed run with a unique name is required')
-        games = [replay(run, row, report['header']['pack_sha256']) for row in report['games']]
+        header = report['header']
+        weight_identity = header['weight_sha256'] or header.get('component_label')
+        if not weight_identity:
+            raise ValueError('run header has no source weight identity')
+        games = [replay(run, row, header['pack_sha256'], weight_identity) for row in report['games']]
         by_phase = {}
         for phase in ('t1_100', 't101_200', 't201_299', 'total'):
             ledgers = [g['total'] if phase == 'total' else g['phases'][phase] for g in games]
