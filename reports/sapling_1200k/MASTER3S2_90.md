@@ -239,3 +239,7 @@ V4r 对两个固定规则对手取得 **16/16**，对同图换席的 Master3s2 �
 冻结包 `09b41c24` 使用 Sapling 和自有 it50 联合出令。对仓内原版 Master3s2 从开局自然打满，席 0 为 7948.10 比 9014.80，席 1 为 7998.56 比 9220.87，合计 0 胜 2 负。父代同图同席也是 0 胜 2 负。新版分别缩小分差 144.25、280.36，未取得新图首胜。四局的考官每局均有 299 次真实调用，双方无灭绝。该开发图及研究过的局面从正式考试排除。[官方比分、公开入口身份及计时](master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_original/README.md)
 
 在两张旧地图上让正负两个神经参数扰动各对完整原版打四局，均为 0 胜；按预登记的两图分差选择负向半步。冻结半步包 `773d21d9` 在独立新开发图 621758344 的席 0、席 1 分别输 1416.08、1243.44，平均 −1329.76，原中心同图两席平均 −1615.86。四局均自然打满。两张旧图上的选模优势和新图上的分差缩小均未带来首胜。[八局训练赛](master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_native_fit/README.md) · [独立新图四场](master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_native_confirmation/README.md)
+
+## 预登记新开发图上的首胜
+
+冻结 Sapling 联合策略 `8da4b465` 在 621758346 席 1 以 **8034.77 比 7541.14** 击败完整原版 Master3s2，官方分差 **+493.63**。这局从开局自然打满 299 步；原版公开调用用时 129.78 秒，232 步搜到深度 8。两张新图均按预登记打完两席，新版总计 **1 胜 0 平 3 负**，席 0 为 0/2，席 1 为 1/2，平均官方分差 **−1039.90**。同图同席父代也为 1/4，唯一胜局在同一图同一席，分差 +94.62。新版分差比父代平均多 87.95 分；按地形分别多 214.54、少 38.63。首胜已实现，稳定胜率及平均 +500 仍待验证。独立 100 图正式考卷尚未启用。[两图八场正式计分与逐拍墙钟](master6_actor_dev/cargo_tree_action_learning_dev/direct_original/README.md)
