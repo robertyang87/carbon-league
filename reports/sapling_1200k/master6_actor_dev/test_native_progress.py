@@ -234,8 +234,10 @@ class ReceiptTests(unittest.TestCase):
         self.head = self.train / "head"
         self.early = self.base / "early/native"
         self.econ = self.base / "economic"
+        self.queue = self.base / "queue"
+        self.hire = self.base / "hire"
         changes = patch.multiple(progress, BASE=self.base, TRAIN=self.train, SUP=self.sup,
-                                 HEAD=self.head, EARLY=self.early, ECON=self.econ)
+                                 HEAD=self.head, EARLY=self.early, ECON=self.econ, QUEUE=self.queue, HIRE=self.hire)
         changes.start()
         self.addCleanup(changes.stop)
 
@@ -246,6 +248,57 @@ class ReceiptTests(unittest.TestCase):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
         return hashlib.sha256(data).hexdigest()
+
+    def test_final_responses_require_all_four_paired_receipts(self):
+        cases = [{"seed": x, "seat": x%2} for x in range(71,75)]
+        plan = self.write(self.queue / "native_protocol.json",
+                          {"cases": cases, "candidate_sha256": "candidate", "source_examiner":"original"})
+        self.assertEqual(progress.summary("endgame_queue")[0], "ready")
+        complete = self.write(self.sup / "completion.json", {"phase":"closed"})
+        grant = self.write(self.sup / "endgame_queue_grant.json", {"cpu":0, "permitted_native_calls":8,
+                           "completion_sha256":complete,"last_move_protocol_sha256":plan})
+        self.assertEqual(progress.summary("endgame_queue")[1]["phase"], "last_turns_granted")
+        bindings = {}
+        for case in cases:
+            path = self.queue / "native_{seed}_{seat}.json.gz".format(**case)
+            both = {arm:{"end":{"status":["DONE","DONE"]},"search_call_count":1} for arm in ("v1","candidate")}
+            bindings[path.name] = self.write(path, {**case, "protocol_sha256":plan, "arms":both})
+        proof = {"protocol_sha256":plan,"grant_sha256":grant,"completion_sha256":complete,
+                 "runner_sha256":self.write(self.queue / "native_last.py", {}),"candidate_sha256":"candidate",
+                 "examiner_sha256":"original","pairs":cases,"native_calls":8,"pair_sha256":bindings}
+        self.write(self.queue / "native_result.json", proof)
+        self.assertEqual(progress.summary("endgame_queue")[0], "complete")
+        self.write(path, {"missing":"one real decision"})
+        with self.assertRaises(ValueError):
+            progress.summary("endgame_queue")
+
+    def test_late_hires_require_all_paired_action_tapes_and_official_scores(self):
+        out = self.hire / "native"
+        cases = [{"seed":71+i,"seat":i,"t":211} for i in range(2)]
+        plan = self.write(out / "protocol.json", {"cases":cases,"parent_sha256":"parent","candidate_sha256":"candidate"})
+        self.assertEqual(progress.summary("late_hiring")[0], "ready")
+        self.write(out / "granted.json", {"protocol_sha256":plan,
+                   "shared_final_probe_sha256":self.write(self.queue/"native_result.json",{}),
+                   "tree_head_acceptance_sha256":self.write(self.head/"independent_acceptance.json",{})})
+        rows = []
+        for c in cases:
+            wd = out / "case_{seed}_{seat}".format(**c)
+            arms = {}
+            for a in ("parent","alternative"):
+                path = wd / f"live_{a}_actions.json.gz"
+                sha = self.write(path, [[{},{}],[{},{}]])
+                self.write(wd/f"live_{a}.json", {"action_sha256":sha,"action_tape":path.name,
+                          "statuses":["DONE","DONE"],"search_calls":1,"score":[20,30]})
+                arms[a]={"score_by_physical_seat":[20,30],"verified_native_search_calls":1,
+                         "raw_sha256":sha,"statuses":["DONE","DONE"]}
+            rows.append({"seed":c["seed"],"seat":c["seat"],"turn":c["t"],
+                         "proof_sha256":self.write(wd/"verified.json.gz", {"official":arms})})
+        self.write(out/"results.json", {"protocol_sha256":plan,"candidate_sha256":"candidate","source_parent_sha256":"parent",
+                   "all_four_responses":True,"formal_games":0,"native_cases":rows,"decision":"do_not_expand"})
+        self.assertEqual(progress.summary("late_hiring")[0], "complete")
+        self.write(path, [[{},{}]])
+        with self.assertRaises(ValueError):
+            progress.summary("late_hiring")
 
     def acceptance(self, passed):
         doc = {

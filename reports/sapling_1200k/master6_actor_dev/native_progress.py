@@ -24,6 +24,8 @@ SUP = TRAIN / 'supplement_01'
 HEAD = TRAIN / 'response_head'
 EARLY = BASE / 'early_lane_dev/native_response'
 ECON = BASE / 'economy_aux_dev/native_dev'
+QUEUE = BASE / 'endgame_queue_dev'
+HIRE = BASE / 'late_workforce_dev'
 
 
 @dataclass(frozen=True)
@@ -48,6 +50,9 @@ JOBS = {
             ('early_lane_dev/native_response/case_*/.parent.lock','early_lane_dev/native_response/case_*/.alternative.lock')),
         Job('economy', ECON/'run.py', 'run', ECON/'.owner.lock', ('economy_aux_dev/native_dev/*/.lock',)),
         Job('economy_report', ECON/'report.py', '--wait', ECON/'.attribution.lock'),
+        Job('endgame_queue', QUEUE/'native_last.py', '--wait', QUEUE/'.native_supervise.lock'),
+        Job('late_hiring', HIRE/'native.py', 'schedule', HIRE/'native/.schedule.lock',
+            ('late_workforce_dev/native/case_*/.parent.lock', 'late_workforce_dev/native/case_*/.alternative.lock')),
     )
 }
 
@@ -69,8 +74,75 @@ def check_binding(obj, key, path):
     require(obj[key]==digest(path), f'{key} does not match {path.name}')
 
 
+def endgame_progress():
+    plan = read(QUEUE/'native_protocol.json')
+    wanted = {(r['seed'], r['seat']) for r in plan['cases']}
+    require(len(wanted) == len(plan['cases']) == 4, 'missing registered terminal case')
+    result = QUEUE/'native_result.json'
+    grant = SUP/'endgame_queue_grant.json'
+    if grant.exists():
+        permit = read(grant)
+        check_binding(permit, 'completion_sha256', SUP/'completion.json')
+        check_binding(permit, 'last_move_protocol_sha256', QUEUE/'native_protocol.json')
+        require(permit['cpu'] == 0 and permit['permitted_native_calls'] == 8, 'wrong final-turn allocation')
+    if not result.exists():
+        return 'ready', {'phase': 'last_turns_granted' if grant.exists() else 'awaiting_intake_08_court',
+                         'signed_native_arms': len(list(QUEUE.glob('last_arm_*.json.gz')))}
+    doc = read(result)
+    for k, p in [('protocol_sha256', QUEUE/'native_protocol.json'), ('grant_sha256', grant),
+                 ('completion_sha256', SUP/'completion.json'), ('runner_sha256', QUEUE/'native_last.py')]:
+        check_binding(doc, k, p)
+    require(doc['candidate_sha256'] == plan['candidate_sha256'] and doc['examiner_sha256'] == plan['source_examiner'],
+            'terminal player identity differs')
+    require(len(doc['pairs']) == 4 and {(r['seed'],r['seat']) for r in doc['pairs']} == wanted and
+            doc['native_calls'] == 8 and len(doc['pair_sha256']) == 4, 'incomplete terminal evidence')
+    for seed, seat in wanted:
+        path = QUEUE/f'native_{seed}_{seat}.json.gz'
+        check_binding(doc['pair_sha256'], path.name, path)
+        case = read(path)
+        require(case['protocol_sha256'] == doc['protocol_sha256'] and (case['seed'],case['seat']) == (seed,seat)
+                and set(case['arms']) == {'v1','candidate'}
+                and all(a['end']['status'] == ['DONE','DONE'] and a['search_call_count'] == 1 for a in case['arms'].values()),
+                'missing terminal callback or official score')
+    return 'complete', {'phase':'signed_original_last_turns', 'pairs':4, 'native_last_turn_calls':8}
+
+
+def hiring_progress():
+    out = HIRE/'native'
+    plan = read(out/'protocol.json')
+    wanted = {(r['seed'], r['seat'], r['t']) for r in plan['cases']}
+    require(len(wanted) == len(plan['cases']) == 2, 'missing registered hiring case')
+    result = out/'results.json'
+    if not result.exists():
+        return 'ready', {'phase': 'live_responses_granted' if (out/'granted.json').exists() else 'awaiting_registered_predecessors',
+                         'signed_native_arms': sum(1 for label in ('parent','alternative') for _ in out.glob(f'case_*/live_{label}.json'))}
+    doc, grant = read(result), read(out/'granted.json')
+    check_binding(doc,'protocol_sha256',out/'protocol.json')
+    check_binding(grant,'protocol_sha256',out/'protocol.json')
+    check_binding(grant,'shared_final_probe_sha256',QUEUE/'native_result.json')
+    check_binding(grant,'tree_head_acceptance_sha256',HEAD/'independent_acceptance.json')
+    require(doc['candidate_sha256'] == plan['candidate_sha256'] and doc['source_parent_sha256'] == plan['parent_sha256']
+            and doc['all_four_responses'] is True and doc['formal_games'] == 0 and len(doc['native_cases']) == 2
+            and {(r['seed'],r['seat'],r['turn']) for r in doc['native_cases']} == wanted, 'incomplete hiring comparison')
+    for row in doc['native_cases']:
+        case = out/f"case_{row['seed']}_{row['seat']}"
+        check_binding(row, 'proof_sha256', case/'verified.json.gz')
+        proof = read(case/'verified.json.gz')
+        require(set(proof['official']) == {'parent','alternative'}, 'missing independent hiring score')
+        for arm, score in proof['official'].items():
+            native = read(case/f'live_{arm}.json')
+            check_binding(native, 'action_sha256', case/native['action_tape'])
+            require(score['statuses'] == native['statuses'] == ['DONE','DONE'] and
+                    score['score_by_physical_seat'] == native['score'] and score['raw_sha256'] == native['action_sha256']
+                    and score['verified_native_search_calls'] == native['search_calls'] > 0,
+                    'hiring score differs from signed replays')
+    return 'complete', {'phase':doc['decision'], 'pairs':2, 'native_arms':4}
+
+
 def summary(name):
     """Read native receipts. Return (phase, detail); a preliminary score is never a terminal seal."""
+    if name=='endgame_queue': return endgame_progress()
+    if name=='late_hiring': return hiring_progress()
     if name=='training':
         finish=SUP/'completion.json'
         if finish.is_file():
