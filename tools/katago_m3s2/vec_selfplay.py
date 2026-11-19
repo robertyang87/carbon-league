@@ -50,6 +50,7 @@ torch; it is not a data-generation mode.
 """
 
 import argparse
+import glob
 import json
 import os
 import sys
@@ -184,11 +185,37 @@ def _accepts(fn, name):
         return False
 
 
+def _onehot_logits(l):
+    """Logits whose softmax is the exact one-hot argmax distribution:
+    0.0 at each row's argmax, -1e30 elsewhere (exp(-1e30) is exactly 0.0,
+    so sampling from them at temperature 1 IS deterministic greedy
+    selection -- with no division by a temperature anywhere)."""
+    l = np.asarray(l)
+    out = np.full(l.shape, -1e30, dtype=np.float64)
+    np.put_along_axis(out, np.argmax(l, axis=-1)[..., None], 0.0, axis=-1)
+    if np.issubdtype(l.dtype, np.floating):
+        out = out.astype(l.dtype, copy=False)
+    return out
+
+
 def sample(mod, players, me, lw, lb, rng, step, temp=1.0, fixed=None, x_feat=None):
     """The chassis' _sample, across the two source API variants:
     fix2 takes temp/x_feat kwargs; master3s2 takes temperature through the
     module-global _TEMP (its _search sets _TEMP around calls the same way).
+
+    temp <= 0 (greedy) is handled HERE, as an exact argmax: the logits
+    are replaced by one-hot logits (see _onehot_logits) and the chassis
+    is called at temperature 1, so a zero temperature never reaches a
+    division or the _TEMP global.  (Stage-1 smoke failure, 2026-11-19:
+    temperature-zero handling that leaked into divisions -- lw0 / 0.0 in
+    the GEN_TABLE loop, and _TEMP = 0 in master3s2's _probs softmax at
+    source line 566 -- produced NaN probabilities and killed every
+    worker.)  For 0 < temp the chassis' own temperature path is used
+    unchanged.
     """
+    if temp <= 0:
+        lw, lb = _onehot_logits(lw), _onehot_logits(lb)
+        temp = 1.0
     if _accepts(mod._sample, 'temp'):
         kw = {'temp': temp, 'fixed': fixed}
         if x_feat is not None and _accepts(mod._sample, 'x_feat'):
@@ -203,7 +230,16 @@ def sample(mod, players, me, lw, lb, rng, step, temp=1.0, fixed=None, x_feat=Non
 
 
 def probs(mod, l, temp=1.0):
-    """The chassis' _probs at a temperature, across the same two variants."""
+    """The chassis' _probs at a temperature, across the same two variants.
+
+    temp <= 0 is the exact argmax one-hot, computed here (identical to
+    both chassis variants' own temp <= 0 branch) so _TEMP is never set
+    to 0; see sample().
+    """
+    if temp <= 0:
+        p = np.zeros_like(np.asarray(l, dtype=np.float64))
+        p[np.argmax(l)] = 1.0
+        return p
     if _accepts(mod._probs, 'temp'):
         return mod._probs(l, temp)
     old = mod._TEMP
@@ -286,7 +322,16 @@ def deep_move(mod, client, my_tag, opp_tag, st, me, rng, tau=DEEP_TAU,
     add(sample(mod, players, me, lw0, lb0, srng, step, temp=0.0))
     for temp, cap in GEN_TABLE:
         new = dups = 0
-        lwt = lw0 if temp == 1.0 else lw0 / temp
+        if temp == 1.0:
+            lwt = lw0
+        elif temp <= 0.0:
+            # Greedy table entry: one-hot argmax targets.  lw0 / temp here
+            # used to divide by zero, turning every logit into +-inf and
+            # the sampled probabilities into NaN (the stage-1 smoke
+            # failure: all workers died on their first deep move).
+            lwt = _onehot_logits(lw0)
+        else:
+            lwt = lw0 / temp
         for _ in range(4 * cap):
             if new >= cap or len(cands) >= k_max or dups >= 8:
                 break
@@ -499,8 +544,10 @@ def main():
     argd = {'src': args.src, 'hof': hof, 'out': args.out, 'seed': args.seed,
             'deep_frac': args.deep_frac}
     procs = []
+    worker_ids = []
     for wid in range(args.workers):
         ids = list(range(wid, args.games, args.workers))
+        worker_ids.append(ids)
         p = ctx.Process(target=_worker_main, args=(wid, ids, argd, req_q, resp_qs[wid]))
         p.start()
         procs.append(p)
@@ -508,6 +555,23 @@ def main():
         p.join()
     req_q.put('STOP')
     server.join()
+    # Worker failure must propagate: a worker that exited nonzero, or that
+    # had games assigned but produced no shard, fails the whole run --
+    # never report 'selfplay done' over dead workers.  (Stage-1 smoke,
+    # 2026-11-19: all 8 workers died on a NaN and the driver still printed
+    # 'selfplay done'.  run_loop.sh runs under set -e, so this exit code
+    # is what stops the generation loop.)
+    failed = []
+    for wid, p in enumerate(procs):
+        n_shards = len(glob.glob(os.path.join(args.out, 'shard_w%d_*.npz' % wid)))
+        if p.exitcode != 0 or (worker_ids[wid] and n_shards == 0):
+            failed.append('worker %d (exit %s, %d games, %d shards)'
+                          % (wid, p.exitcode, len(worker_ids[wid]), n_shards))
+    if server.exitcode != 0:
+        failed.append('inference server (exit %s)' % (server.exitcode,))
+    if failed:
+        print('SELFPLAY FAILED: %s' % '; '.join(failed), file=sys.stderr)
+        return 1
     with open(os.path.join(args.out, 'selfplay_config.json'), 'w') as f:
         json.dump({'games': args.games, 'seed': args.seed,
                    'deep_frac': args.deep_frac, 'ckpt': args.ckpt, 'hof': hof,
