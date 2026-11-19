@@ -1,0 +1,774 @@
+{
+  "regime": "cash-selfplay",
+  "scope": "32 actual mixed-curriculum training games. Each self-play game returns two correlated seat trajectories. Mirror rows are not independent wins or additional games. The examiner was not used in this pilot.",
+  "parent_sha256": "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be",
+  "trainer_sha256": "5f6b4fc2d2e4be5284ae64b611c69df6c54ecba05f173b0bf01c9493fd562101",
+  "opponent_files_sha256": {
+    "policy_v0_5.py": "4d435035e8e274c5c4d49dfcc71ca293c6b4989ebadc974796a90837f9f569c1",
+    "policy_raid_v0_1.py": "a569594a78e0ed5632aa7921399a9e906f2ddbe5b237529d9c0ffb6b1ec5bdc5",
+    "../data/weights/sapling_1200k/cash_v3_agent.py": "4cd4c1fcf40f05217ecba2a59095ba40286c5f96017d2b15285c942a3b0f5348",
+    "packs/ppou2_m_it50.py": "57e2557665636a1bbc92ae46a4c33ee9dac609efcffefa1c30df1233746c2211"
+  },
+  "configuration": {
+    "adapter": "cnet2",
+    "init": "/workspace/sapling-tree-v4/data/weights/sapling_1200k/cash_v3.npz",
+    "ref": null,
+    "out": "/workspace/sapling-win-ppo-002",
+    "iters": 4,
+    "minutes": 1000000000.0,
+    "workers": 2,
+    "games": 8,
+    "lockstep": 2,
+    "overlap": 0,
+    "device": "cpu",
+    "temp": 0.3,
+    "lr": 3e-05,
+    "vlr": 0.0001,
+    "epochs": 1,
+    "mb": 24,
+    "clip": 0.2,
+    "ratio": "joint",
+    "vf": 0.5,
+    "ent": 0.001,
+    "kl": 0.03,
+    "kl_target": 0.0,
+    "gclip": 1.0,
+    "gamma": 1.0,
+    "lam": 1.0,
+    "rscale": 1.0,
+    "reward": "win",
+    "value_head": "tanh",
+    "utility_source": "auto",
+    "allow_u_mode_problems": false,
+    "win_bonus": 0.0,
+    "c_dep": 0.0,
+    "c_lost": 0.0,
+    "shape_iters": 200,
+    "sep_value": 1,
+    "vwarm": 1,
+    "resume_vwarm": 0,
+    "abandon_resume_vwarm": false,
+    "pool": "[[\"policy_v0_5.py\", 1.0], [\"policy_raid_v0_1.py\", 0.5], [\"../data/weights/sapling_1200k/cash_v3_agent.py\", 1.0], [\"packs/ppou2_m_it50.py\", 0.5]]",
+    "pool_authoritative": true,
+    "snap_every": 9999,
+    "snap_prior": 0.5,
+    "max_snaps": 6,
+    "pfsp": 1.0,
+    "round_opps": 0,
+    "ckpt_every": 4,
+    "eval_every": 0,
+    "eval_pairs": 8,
+    "eval_opps": "exp/opp_1cz_v5.py,exp/cand_c1z_v1.py",
+    "eval_seed0": 980000,
+    "seed0": 620165000,
+    "sampler_seed": 551193,
+    "amp": 0,
+    "pre_mb": 24,
+    "server": 0,
+    "self_prior": 3.0,
+    "resume": null,
+    "remote": null,
+    "dec_frac": 0.25,
+    "max_stale": 2
+  },
+  "weight_sha256": "7d0a269e786de99587d0178e5491d085734df3739e2ed09b30462b51d8a2e712",
+  "iterations": [
+    {
+      "it": 1,
+      "t": 1795052778,
+      "games": 12,
+      "srv": null,
+      "dec": 3588,
+      "units": 38197,
+      "roll_s": 42.7,
+      "upd_s": 46.3,
+      "buf_s": 0.0,
+      "pre_s": 24.5,
+      "games_per_min": 16.9,
+      "dec_per_s": 84.0,
+      "pol_s": 60.0,
+      "opp_s": 17.5,
+      "pl": -0.0387,
+      "vl": 0.9924,
+      "ent": 2.831,
+      "kl": 0.0,
+      "kl_coef": 0.03,
+      "clipfrac": 0.0,
+      "gnorm": 0.0,
+      "dlogp": 0.0,
+      "warm": true,
+      "adv_std": 0.994,
+      "v_mean": 0.689,
+      "margin": {
+        "../data/weights/sapling_1200k/cash_v3_agent.py": [
+          1800,
+          3,
+          2
+        ],
+        "SELF": [
+          0,
+          8,
+          4
+        ],
+        "policy_raid_v0_1.py": [
+          4003,
+          1,
+          1
+        ]
+      },
+      "winrate": 0.583,
+      "planted": {
+        "../data/weights/sapling_1200k/cash_v3_agent.py": [
+          41.7,
+          19.7
+        ],
+        "SELF": [
+          24.2,
+          24.2
+        ],
+        "policy_raid_v0_1.py": [
+          27.0,
+          10.0
+        ]
+      },
+      "buf_mb": 38.2,
+      "rss_mb": 759,
+      "workers_rss_mb": 191,
+      "outcomes": [
+        {
+          "seed": 620165000,
+          "side": 0,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": -937.369999999999,
+          "term": false
+        },
+        {
+          "seed": 620165000,
+          "side": 1,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": 5046.819999999999,
+          "term": false
+        },
+        {
+          "seed": 620165001,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -803.6599999999999,
+          "term": false
+        },
+        {
+          "seed": 620165001,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 803.6599999999999,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165001,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 899.289999999999,
+          "term": false
+        },
+        {
+          "seed": 620165001,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -899.289999999999,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165002,
+          "side": 0,
+          "opp": "policy_raid_v0_1.py",
+          "steps": 299,
+          "margin": 4002.71,
+          "term": false
+        },
+        {
+          "seed": 620165002,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -4099.610000000001,
+          "term": false
+        },
+        {
+          "seed": 620165002,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 4099.610000000001,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165003,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -1004.1499999999996,
+          "term": false
+        },
+        {
+          "seed": 620165003,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 1004.1499999999996,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165003,
+          "side": 1,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": 1291.7600000000002,
+          "term": false
+        }
+      ],
+      "checkpoint": {
+        "it": 1,
+        "phase": "train",
+        "files": {
+          "state_last.pt": "e7d0dda60f4552a8fd7131883c8263f39c3a34ab85e4754f1773aaa7ec336206",
+          "ckpt_last.npz": "fb3ad58a0d08f72a705293685b3a5a4a7b8d966e02fa988995628a91262ffc0e"
+        }
+      }
+    },
+    {
+      "it": 2,
+      "t": 1795052871,
+      "games": 12,
+      "srv": null,
+      "dec": 3010,
+      "units": 32089,
+      "roll_s": 44.5,
+      "upd_s": 48.3,
+      "buf_s": 0.0,
+      "pre_s": 22.8,
+      "games_per_min": 16.2,
+      "dec_per_s": 67.6,
+      "pol_s": 50.1,
+      "opp_s": 23.5,
+      "pl": 0.0568,
+      "vl": 1.0243,
+      "ent": 2.814,
+      "kl": 0.0609,
+      "kl_coef": 0.03,
+      "clipfrac": 0.368,
+      "gnorm": 33.798,
+      "dlogp": -0.0595,
+      "warm": false,
+      "adv_std": 0.9818,
+      "v_mean": 0.221,
+      "margin": {
+        "SELF": [
+          0,
+          8,
+          4
+        ],
+        "../data/weights/sapling_1200k/cash_v3_agent.py": [
+          7015,
+          2,
+          1
+        ],
+        "packs/ppou2_m_it50.py": [
+          -7231,
+          1,
+          0
+        ],
+        "policy_v0_5.py": [
+          702,
+          1,
+          1
+        ]
+      },
+      "winrate": 0.5,
+      "planted": {
+        "SELF": [
+          21.6,
+          21.6
+        ],
+        "../data/weights/sapling_1200k/cash_v3_agent.py": [
+          43.5,
+          8.0
+        ],
+        "packs/ppou2_m_it50.py": [
+          13.0,
+          52.0
+        ],
+        "policy_v0_5.py": [
+          6.0,
+          41.0
+        ]
+      },
+      "buf_mb": 32.1,
+      "rss_mb": 759,
+      "workers_rss_mb": 243,
+      "outcomes": [
+        {
+          "seed": 620165008,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -1078.0100000000002,
+          "term": false
+        },
+        {
+          "seed": 620165008,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 1078.0100000000002,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165008,
+          "side": 1,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": -695.4899999999998,
+          "term": false
+        },
+        {
+          "seed": 620165009,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 10,
+          "margin": -323.56,
+          "term": true
+        },
+        {
+          "seed": 620165009,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 10,
+          "margin": 323.56,
+          "term": true,
+          "mirror": true
+        },
+        {
+          "seed": 620165009,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 3170.05,
+          "term": false
+        },
+        {
+          "seed": 620165009,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -3170.05,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165010,
+          "side": 0,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": 14725.97,
+          "term": false
+        },
+        {
+          "seed": 620165010,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 759.7399999999998,
+          "term": false
+        },
+        {
+          "seed": 620165010,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -759.7399999999998,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165011,
+          "side": 0,
+          "opp": "packs/ppou2_m_it50.py",
+          "steps": 299,
+          "margin": -7231.160000000001,
+          "term": false
+        },
+        {
+          "seed": 620165011,
+          "side": 1,
+          "opp": "policy_v0_5.py",
+          "steps": 299,
+          "margin": 701.6499999999996,
+          "term": false
+        }
+      ],
+      "checkpoint": {
+        "it": 2,
+        "phase": "train",
+        "files": {
+          "state_last.pt": "aea0cb2c75c315b7a29ca68760e59ef381402cd9e1ff3a03808805eea5715844",
+          "ckpt_last.npz": "84c1920050a289fdeb66a75d8cd3da2cd6a492e1f8cf51aa524dd4ef5c9ed8c1"
+        }
+      }
+    },
+    {
+      "it": 3,
+      "t": 1795052966,
+      "games": 12,
+      "srv": null,
+      "dec": 3588,
+      "units": 38955,
+      "roll_s": 46.5,
+      "upd_s": 48.3,
+      "buf_s": 0.0,
+      "pre_s": 24.4,
+      "games_per_min": 15.5,
+      "dec_per_s": 77.2,
+      "pol_s": 59.7,
+      "opp_s": 24.0,
+      "pl": -0.0127,
+      "vl": 0.8681,
+      "ent": 2.824,
+      "kl": 0.0945,
+      "kl_coef": 0.03,
+      "clipfrac": 0.279,
+      "gnorm": 28.932,
+      "dlogp": -0.0345,
+      "warm": false,
+      "adv_std": 0.9495,
+      "v_mean": 0.038,
+      "margin": {
+        "SELF": [
+          0,
+          8,
+          4
+        ],
+        "../data/weights/sapling_1200k/cash_v3_agent.py": [
+          2837,
+          2,
+          2
+        ],
+        "packs/ppou2_m_it50.py": [
+          -4908,
+          1,
+          0
+        ],
+        "policy_v0_5.py": [
+          1121,
+          1,
+          1
+        ]
+      },
+      "winrate": 0.583,
+      "planted": {
+        "SELF": [
+          25.5,
+          25.5
+        ],
+        "../data/weights/sapling_1200k/cash_v3_agent.py": [
+          44.0,
+          13.5
+        ],
+        "packs/ppou2_m_it50.py": [
+          14.0,
+          46.0
+        ],
+        "policy_v0_5.py": [
+          18.0,
+          40.0
+        ]
+      },
+      "buf_mb": 38.2,
+      "rss_mb": 759,
+      "workers_rss_mb": 315,
+      "outcomes": [
+        {
+          "seed": 620165016,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 1518.1599999999999,
+          "term": false
+        },
+        {
+          "seed": 620165016,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -1518.1599999999999,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165016,
+          "side": 1,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": 1581.1900000000005,
+          "term": false
+        },
+        {
+          "seed": 620165017,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -1392.6499999999996,
+          "term": false
+        },
+        {
+          "seed": 620165017,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 1392.6499999999996,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165017,
+          "side": 1,
+          "opp": "packs/ppou2_m_it50.py",
+          "steps": 299,
+          "margin": -4907.87,
+          "term": false
+        },
+        {
+          "seed": 620165018,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 517.6000000000004,
+          "term": false
+        },
+        {
+          "seed": 620165018,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -517.6000000000004,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165018,
+          "side": 1,
+          "opp": "policy_v0_5.py",
+          "steps": 299,
+          "margin": 1120.9899999999998,
+          "term": false
+        },
+        {
+          "seed": 620165019,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -414.77999999999975,
+          "term": false
+        },
+        {
+          "seed": 620165019,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 414.77999999999975,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165019,
+          "side": 1,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": 4092.51,
+          "term": false
+        }
+      ],
+      "checkpoint": {
+        "it": 3,
+        "phase": "train",
+        "files": {
+          "state_last.pt": "9cd32073777da9cab430f201df5f0c7eca382be1dd162aa2a62daa33fc9cd477",
+          "ckpt_last.npz": "377f1f2fbfcc664b659ba8cda143b5a5b490840ff2507e21af81a20de27a54c3"
+        }
+      }
+    },
+    {
+      "it": 4,
+      "t": 1795053075,
+      "games": 11,
+      "srv": null,
+      "dec": 3289,
+      "units": 35919,
+      "roll_s": 49.1,
+      "upd_s": 59.6,
+      "buf_s": 0.0,
+      "pre_s": 30.0,
+      "games_per_min": 13.4,
+      "dec_per_s": 67.0,
+      "pol_s": 41.8,
+      "opp_s": 36.4,
+      "pl": -0.0038,
+      "vl": 0.7959,
+      "ent": 2.841,
+      "kl": 0.1631,
+      "kl_coef": 0.03,
+      "clipfrac": 0.311,
+      "gnorm": 33.923,
+      "dlogp": -0.014,
+      "warm": false,
+      "adv_std": 0.9152,
+      "v_mean": 0.05,
+      "margin": {
+        "SELF": [
+          0,
+          6,
+          3
+        ],
+        "packs/ppou2_m_it50.py": [
+          -6352,
+          3,
+          0
+        ],
+        "../data/weights/sapling_1200k/cash_v3_agent.py": [
+          4792,
+          2,
+          2
+        ]
+      },
+      "winrate": 0.455,
+      "planted": {
+        "SELF": [
+          30.7,
+          30.7
+        ],
+        "packs/ppou2_m_it50.py": [
+          12.0,
+          50.0
+        ],
+        "../data/weights/sapling_1200k/cash_v3_agent.py": [
+          37.0,
+          15.0
+        ]
+      },
+      "buf_mb": 35.1,
+      "rss_mb": 759,
+      "workers_rss_mb": 431,
+      "outcomes": [
+        {
+          "seed": 620165024,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -129.97000000000025,
+          "term": false
+        },
+        {
+          "seed": 620165024,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 129.97000000000025,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165024,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 1065.37,
+          "term": false
+        },
+        {
+          "seed": 620165024,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -1065.37,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165025,
+          "side": 0,
+          "opp": "packs/ppou2_m_it50.py",
+          "steps": 299,
+          "margin": -6579.56,
+          "term": false
+        },
+        {
+          "seed": 620165025,
+          "side": 1,
+          "opp": "packs/ppou2_m_it50.py",
+          "steps": 299,
+          "margin": -7365.82,
+          "term": false
+        },
+        {
+          "seed": 620165026,
+          "side": 0,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": 9161.44,
+          "term": false
+        },
+        {
+          "seed": 620165026,
+          "side": 1,
+          "opp": "../data/weights/sapling_1200k/cash_v3_agent.py",
+          "steps": 299,
+          "margin": 423.4800000000014,
+          "term": false
+        },
+        {
+          "seed": 620165027,
+          "side": 0,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": 972.5799999999999,
+          "term": false
+        },
+        {
+          "seed": 620165027,
+          "side": 1,
+          "opp": "SELF",
+          "steps": 299,
+          "margin": -972.5799999999999,
+          "term": false,
+          "mirror": true
+        },
+        {
+          "seed": 620165027,
+          "side": 1,
+          "opp": "packs/ppou2_m_it50.py",
+          "steps": 299,
+          "margin": -5109.26,
+          "term": false
+        }
+      ],
+      "checkpoint": {
+        "it": 4,
+        "phase": "train",
+        "files": {
+          "state_last.pt": "136769f96af6dba239f819a269f56be8ee85cd946648ae2322392f57c31ca0aa",
+          "ckpt_last.npz": "7d0a269e786de99587d0178e5491d085734df3739e2ed09b30462b51d8a2e712"
+        }
+      }
+    }
+  ]
+}
