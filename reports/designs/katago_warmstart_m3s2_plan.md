@@ -2,7 +2,7 @@
 
 - **目标指标**：在 0.58s/步 CPU 推理限时内，对 `master3s2.py` 达成 **胜率 > 90%** 且 **场均净胜 > +1000 分**，同时保持天梯泛化能力（0 超时、0 异常）。
 - **算力基准**：单卡 NVIDIA L20（48GB VRAM）+ 多核 CPU 宿主机。
-- **起点基座**：直接复用 `/home/yangjun/junyang/carbon-league/sources/master3s2/master3s2.py` 的 `_WEIGHTS`（6 层 96 通道 Global-Pooling ResNet，输入 54 通道）与 `_VALUE`（价值头）热启动，**不冷启动**；搜索框架基于已修复的 `/home/yangjun/junyang/carbon-gemini/ApexCarbon-V4TTA-Search.py`。
+- **起点基座**：直接复用 `/home/yangjun/junyang/carbon-league/sources/master3s2/master3s2.py` 的 `_WEIGHTS`（6 层 96 通道 Global-Pooling ResNet，输入 54 通道）与 `_VALUE`（价值头）热启动，**不冷启动**；搜索框架基于已验证最强版本 **`code/apexcarbon_v1_fix3.py`**（基于 v1/Echo7 40 局 +341.5、28 胜，仅保留纯工程防崩与对手 `x_feat=xo` 残局一致性修复）。
 
 > **架构参数说明**：
 > - `54` = 输入特征平面数（`NPL = 54`，形状 `(54, 15, 15)`，含碳分布、单位位置/载重、基地、树/树龄、5 方向必死通道 `25..29`、5 方向对撞通道 `30..34`、历史位置及经济标量平面）。
