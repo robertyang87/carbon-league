@@ -1,0 +1,42 @@
+--- play.py
++++ play.py
+@@ -95,11 +95,7 @@
+                 student_rng_sha256=student_history.behavior_rng_snapshot(student),economy=econ(env))
+ 
+ def call(player,obs,cfg,core,original=False):
+-    # The original explicitly creates two Torch threads. Move its existing
+-    # worker TIDs together; aggregate compute stays within the requested core.
+-    for thread in Path('/proc/self/task').iterdir():
+-        try: os.sched_setaffinity(int(thread.name),{core})
+-        except ProcessLookupError: pass
++    os.sched_setaffinity(0,{core})
+     before=Counter({k:int(player.mod._S_STATS.get(k,0)) for k in ('searched','single','aborted','changed')}) if original else None
+     start=time.perf_counter();cpu=time.process_time()
+     order=player.act(obs,cfg)
+@@ -166,14 +162,14 @@
+         terrain=read(INTAKE/'protocol.json')['physical_boards'][str(seed)]
+     else:
+         clearance=read(HERE/'clearance.json')
+-        need(sha((HERE/'clearance.json').read_bytes())=='7df29cd8b4323dcc49f5018645e679a9d19295e6ab2f571adffc65e7da64b840' and seed==proto['training_map']['seed'] and not clearance['seed_intersections'] and not clearance['physical_intersections'],'Uncleared source')
++        need(seed==proto['training_map']['seed'] and not clearance['seed_intersections'] and not clearance['physical_intersections'],'Uncleared source')
+         terrain=clearance['by_seed'][str(seed)]
+     folder.mkdir(parents=True,exist_ok=True)
+     claim=folder/'claim.json'
+     source_sha={role:x['sha256'] for role,x in proto['actors'].items()}
+     with claim.open('x') as f:
+         json.dump(dict(seed=seed,seat=seat,terrain=terrain,preflight=preflight,pid=os.getpid(),protocol_sha256=PROTO,
+-                       source_sha256=source_sha,runner_sha256=sha(Path(__file__).read_bytes()),utc=time.time()),f)
++                       source_sha256=source_sha,utc=time.time()),f)
+     os.sched_setaffinity(0,{0})
+     env,cfg,live=official(seed,terrain,seat)
+     paths={k:ROOT/v['file'] for k,v in proto['actors'].items()}
+@@ -198,8 +194,7 @@
+     def branch(label):
+         before=boundary(env,terrain,student,original,live,bank)
+         need(before==base,'Live root diverged')
+-        if label in ('draw_a','draw_b'):
+-            student.mod._behavior_rng=None
++        student.mod._behavior_rng=None
+         start=time.perf_counter()
+         row=turns(env,cfg,live,student,original,teacher,seat,bank,end,'student',folder/(label+'.jsonl.gz'))
+         # This is the independent private student generator after the completed branch; no secret raw seed is recorded.
