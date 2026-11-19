@@ -1,0 +1,26 @@
+{
+  "arms": {
+    "parent": "8da4, entire official game after history",
+    "student": "6c548995 for [t0,t0+32), then 8da4 until natural official end"
+  },
+  "files": {
+    "code/fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac",
+    "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/native_response/run.py": "91449427ac7a2361f2a6399396ff6ef8a30d405fba45325aebb1a6ea2feb9b66",
+    "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/original_response/freeze.py": "1d068146e3a308caee989613577eac5bbc582d8fca7ffd2794b471c1473cc7fb",
+    "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/original_response/run.py": "afde089e11dd51eee3acef945e3f95ebddfd80e13d01aa590e5271d275250b65",
+    "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/original_response/settle.py": "36da7e5a2d60372f5f5df6ca8ef4371d801340bfa1d3961c7313665b8a820cff",
+    "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/response/run.py": "1c001800c09527e6d07e207df4fbcb15359f564e54a6f723a6dca4f10f7e1f79",
+    "reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/conditional/responses.py": "2f05a720ce0435044362b8c087fa33ae4d0685968ce9eb767b5b97459fb98e39",
+    "reports/sapling_1200k/native_clock.py": "b255f8314dbe64c499b7efbf9414d3aefe0a0d4d68be9e38d717628cf7b66d6f",
+    "reports/sapling_1200k/root_recovery_branches/branches.py": "2f2928605e8c5f1c9fa47a99c01b6d13af8bc6f8d73d8df68a6be545bb6d9694",
+    "reports/sapling_1200k/root_recovery_branches/live.py": "70f1f3d7c7651f7b2a67508e14481f2e55a1362ea14ac659b58c1d15f7d91b4a",
+    "reports/sapling_1200k/turning_point_ledger.py": "4486ec92f9541112b51f1906df2ea87aef23d19afd85cea05d3b843a6e009cdc"
+  },
+  "hardware": "Same host, one dedicated logical CPU per case and one case lock. Run the two arms serially on their one pinned CPU, reverse arm order across the two cases. Original temperature 1, unseeded internal agent, adaptive .58 s search and native entry/timing. Record every real call including zero-depth fallbacks, with its wall, CPU, candidates, depth and cost telemetry. Separate analyst replays never regenerate the examiner.",
+  "history": "Both normal learner entry points and the unmodified original receive all six own-seat public fields at every observed historical decision. Replay the official joint actions preceding t0 and retarget the original tracker to the actual historical command. Draw one unmodified original root command naturally from the warmed examiner. Save the post-root tracker, adaptive search costs, stats and Python/NumPy/Torch RNG snapshot. Restore that common original state separately before each arm. At later observations the original chooses new commands naturally.",
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "release_sha256": "6742a7d20a76254ac2237f23d50b19db0dd9add629f10f803bd9b993a32a7232",
+  "reporting": "Include both cases and all four branches, even if no deployed learner action changes. Record actual/shadow full commands for each available window turn, both physical seats at the official terminal, official rewards and margin, cash, harvest deposited, recruitment, planting, tree/worker counts and both seats on each trajectory. Report sum and per-map delta. No substitution, extra games, subsequent result-based map selection, tournament-win claim, or fresh-game inference.",
+  "schema": 1,
+  "source": "First two distinct seeds ascending from the six preregistered diagnostic terrains. Use historical candidate seat 0 on the first seed and seat 1 on the second. All prior starts, seeds, seats, windows and arm order fixed independently of returns."
+}
