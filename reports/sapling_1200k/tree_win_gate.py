@@ -19,7 +19,10 @@ import map_identity
 import native_clock
 
 # These development maps have been preflighted even when their game gate stops.
-RESERVED_DEVELOPMENT_PLANS = ("master6_actor_dev/stratified_action_value_dev/source/pilot_plan.json",)
+RESERVED_DEVELOPMENT_PLANS = (
+    "master6_actor_dev/stratified_action_value_dev/source/pilot_plan.json",
+    "master6_actor_dev/blended_actor_arena/protocol.json",
+)
 
 
 INCOME_SCHEMAS = {"sapling-90-and-income/3", "sapling-90-and-income/4", map_identity.SCHEMA}
@@ -42,9 +45,14 @@ def exam_exposures(local_seeds, observed_maps=()):
     reserved = []
     for filename in RESERVED_DEVELOPMENT_PLANS:
         plan = json.loads((Path(__file__).parent / filename).read_bytes())
-        if plan.get("formal") is not False or not plan.get("maps"):
+        if "new_dev" in plan:
+            plan = plan["new_dev"]
+            seeds = plan["seeds"]
+        else:
+            seeds = plan["maps"]
+        if plan.get("formal") is not False or not isinstance(seeds, list) or not seeds:
             raise ValueError(f"invalid registered development maps in {filename}")
-        reserved.extend(plan["maps"])
+        reserved.extend(seeds)
     return map_identity.exposed_boards(local_seeds + reserved, observed_maps)
 
 
