@@ -27,18 +27,16 @@ def simulate(scratch, snap, joint):
     return collision_events(snap, scratch, joint)
 
 
-def census(run, row, parent_events):
+def census(run, row, parent_events, pack_hash):
     seat = row['candidate_seat']
-    verify_raw(run, row, row_pack)
+    verify_raw(run, row, pack_hash)
     validate_game(row)
     raw = json.loads(gzip.decompress((run/row['raw_file']).read_bytes()))
-    if raw['raw_file'] != row['raw_file'] if 'raw_file' in raw else False:
-        raise ValueError('wrong raw file')
     sim = arena.exam.FastCarbon(raw['game_configuration']).reset(seed=row['seed'])
     scratch = arena.exam.FastCarbon(raw['game_configuration'])
     if sim.config['moveCost'] != 0 or sim.config['smeltCost'] != 0:
         raise ValueError('cargo comparisons assume actual zero movement and smelting costs')
-    roots, negative = [], None
+    roots, fixed_contacts, negative = [], [], None
     totals = Counter()
     for tick, joint in enumerate(raw['actions']):
         snap = sim.get_state()
@@ -97,6 +95,10 @@ def census(run, row, parent_events):
                         continue
                     captured.append(dict(enemy=foe.id,origin=foe.pos,recorded_move=joint[1-seat].get(foe.id) or 'NONE',amount=amount,
                                          credited_to='own_cash' if kind=='cash' else 'own_worker'))
+                fixed_contacts.append(dict(step=tick,collector=w.id,own_pre_cargo=w.carbon,alternative=m,destination=dest,
+                                           enemy_base=dest in enemy_bases,targets=[dict(id=f.id,pre_cargo=f.carbon,
+                                           event=events.get(f.id)) for f in possible],attacker_survived=w.id in scratch.workers,
+                                           actual_enemy_cargo_retained=sum(v['amount'] for v in captured)))
                 if not captured:
                     continue
                 friendly = [u.id for u in own if u.id!=w.id and end[u.id]==dest]
@@ -114,7 +116,7 @@ def census(run, row, parent_events):
         sim.step(*joint)
     if arena.prior.hashed(sim.get_state()) != row['final_state_sha256']:
         raise ValueError('terminal hash mismatch')
-    return dict(seat=seat,seed=row['seed'],steps=len(raw['actions']),raw_sha256=row['raw_sha256'],counts=totals,roots=roots,negative=negative)
+    return dict(seat=seat,seed=row['seed'],steps=len(raw['actions']),raw_sha256=row['raw_sha256'],counts=totals,roots=roots,fixed_contacts=fixed_contacts,negative=negative)
 
 
 def aggregate(games, minimum, safe):
@@ -147,7 +149,7 @@ if __name__=='__main__':
         events=lookup[row['seed'],row['candidate_seat']]
         if events['raw_sha256']!=row['raw_sha256']:
             raise ValueError('parent replay identity mismatch')
-        games.append(census(run,row,{e['step']:e for e in events['events']}))
+        games.append(census(run,row,{e['step']:e for e in events['events']},row_pack))
     if sorted((g['seed'],g['seat']) for g in games)!=[(620106811,0),(620106811,1)]:
         raise ValueError('expected both prespecified seats')
     out=dict(scope='Hindsight on the actually visited roots. Only one own collector may change its move. All other commands stay fixed for one transition. Sum of per-root maxima is not cash, a feasible joint trajectory, or a prospective prediction.',
