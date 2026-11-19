@@ -257,3 +257,9 @@ V4r 对两个固定规则对手取得 **16/16**，对同图换席的 Master3s2 �
 将同队碰撞中的货追到收款方后，第 296 步死亡采集工的 149.67 全部转给己方另一工人，并在原局下一步入库。58 场历史比赛的 50 个纯同队碰撞格里，本方死亡工人携带的 4,982.9 碳也都到了本队账户。四张首胜及复测图上，候选在一对一碰撞中被对手工人拿走的货合计 55.6。更大的持续缺口在中盘地面树收入，四图对原版分别每局少 749.93、133.28、539.16、735.73，平均少 539.53。该差额定位了值得比较的经营决策；具体应改哪一个买树、护树或换位动作，仍须以双方重新应对后的终局收益验证。[逐格货权、实际到账与四图分项](master6_actor_dev/cargo_tree_action_learning_dev/counterfactual_safety/collision_audit/README.md)
 
 已有 66 个种植工根、132 条原版应对分支可以检验“当拍留下种树”与移动的收益。重算时将地面吸收、树税与实际支出分开。中盘留出集共 4 图 9 根，留下相对移动的中盘纯地租差为 −61.68、官方终局分差变化为 −69.52，9 个停留动作仅 1 次实际付款。跨图出现的收入缺口值得继续研究，尚不能据此给网络统一提高原地种树的动作分。[训练图、留出图、全部反例及实际付款记录](master6_actor_dev/cargo_tree_action_learning_dev/ground_rent_native_evidence/README.md)
+
+## 带天梯资源限制的原版整局
+
+首胜包 `8da4b465` 在首胜图同席进行独立限额复测，这次以 **7016.02 比 8647.47** 告负。两个独立容器内实读每席 1.5 核、512 MiB、无网络。Sapling 端到端 P99 为 33.26 毫秒，最慢 82.72 毫秒，299 步均按时返回。两次自然采样从第 10 步分叉，最后 99 步正常交仓净差分别为 +916.85 和 −1235.57。该图两次不同结局都保留在各自批次。[限额、官方得分、双方现金转折及动作](master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/hosted_attempt/README.md)
+
+新网络 `adc4d78e` 在 55 张图的 5172 个实录动作和 26 对续局上训练了 Sapling 的动作读出。只在旧图第 128 至 159 步启用新权重时，两张图的官方分差分别改善 369.67 和 1449.55。第二张图的学生臂原版有 118 步零深回退。将同一权重从开局用到终局，在新开发图 352、353 换席得到 **0 胜 0 平 4 负，平均官方分差 −1625.825**；同机父代也是 0/4，平均 −729.300。新版四个配对都退步，平均少 896.525 分，其中前 100 步已平均少 619.24 分。八局全部正常打满，原版共 2388 步完成搜索、4 步只有一个候选、零次零深回退。H24 最慢请求 114 毫秒。这份全局启用的权重停止晋级。独立 100 图仍保留。[留图训练证据](master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/README.md) · [旧图的真实原版响应](master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/response/results.json) · [新图整场逐局账与时钟](master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/economy/README.md)
