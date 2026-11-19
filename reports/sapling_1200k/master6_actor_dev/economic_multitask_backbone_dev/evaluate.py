@@ -1,6 +1,7 @@
 """Compare deployed policies on disjoint maps and names, with retained rows and a train-only financial null."""
 from collections import Counter,defaultdict
 import argparse
+from tempfile import TemporaryDirectory
 import gzip,json,sys
 from pathlib import Path
 import numpy as np
@@ -37,7 +38,10 @@ def summarize(rows):
 
 def eval_arms(pure):
     ctl=BROAD/('standalone.py' if pure else 'candidate.py');tr=HERE/('standalone.py' if pure else 'candidate.py')
-    if pure and not tr.exists():bc.common.pack.main(str(HERE/'candidate.npz'),str(tr),2)
+    if pure and not tr.exists():
+        with TemporaryDirectory() as folder:
+            weights=Path(folder)/'weights.npz';weights.write_bytes((HERE/'candidate.npz').read_bytes())
+            bc.common.pack.main(str(weights),str(tr),2)
     if pure:
         arms={k:bc.imported(path,'economic_solo_'+k) for k,path in [('parent',ctl),('candidate',tr)]}
         if not arms['parent']._OPTS==arms['candidate']._OPTS or arms['parent']._SRC_SHA256!=arms['candidate']._SRC_SHA256:raise ValueError('standalone contract differs')
