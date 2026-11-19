@@ -1,0 +1,11 @@
+{
+  "name": "planter-next-cell-1",
+  "parent_sha256": "b54cc51f4109f19f4a7b508eafc9cf04a28b7e295a9f442c5208f0d33f10a9ca",
+  "new_dev_seed": 621456920, "seats":[0,1], "candidate_cpus":[0,3], "parent_cpus":[1,2],
+  "scope":"Direct original Master3s2 full native search, unseeded opponent temperature and original rule termination. Development only, no formal gate or deployment.",
+  "mechanism":"If the actor already chooses to MOVE a planter at t45..195, compare alternative legal MOVES. Same unit must move and no other order may change after full autoregressive re-decoding. Neither stay nor purchase can be forced. Refuse leaving a directly threatened own-tree cell. Avoid first-step threats and friendly collisions. Keep estimated candidate price plus 30 recruit reserve and prior planter commitments. Same worker cooldown of two complete steps after an intervention. Limit to one changed joint root per turn.",
+  "economic_label":"For each observed public planter relocation, predict whether the same worker actually purchases that landing site one step later, then predict realized absorption plus actual tree collision cash minus paid cost through the entire first tenure. No purchase yields zero for the combined routing target. Only observed relocations are labelled, never invented outcomes for unchosen cells.",
+  "selection":"Old 1324-map source, exclude all 26 examined seeds and development seed. Hash-deduplicate seeds. Training 40 maps, validation 10, test 12, with test containing a six-game unseen-external-opponent subset. Select by stable SHA256 order, cap each map at 300 observed moves, and weight maps equally. No new 8 or 15 appendix fits or tune. Actor identity/seed and hidden carbon excluded from features. The frozen critic uses only currently public board and its own carbon-observation memory.",
+  "model":"Logistic settlement probability, ridge conditional signed net first-tenure receipts on purchasing rows, fixed regularization. Select only moves within 0.85 logits of parent and at least 4 expected net cash above parent, at most once per turn. These engineering cutoffs are set before fit/test/exam outcomes.",
+  "interpretation":"Observed next-site earnings do not identify the counterfactual gain from an unplayed move. Compare played candidate and unchanged parent on the new map; one map is exploratory."
+}
