@@ -11,7 +11,9 @@ def render(r):
     fit = totals["policies"]["fitted"]
     by_map = list(r["maps"].values())
     lines = [
-        "# 付款前撤走种树工：两张新来源图的逐步复验",
+        "# 使用离线已知地图种子抽取移动：付款前撤走种树工",
+        "",
+        "原复验的替代移动按离线已知地图种子抽取，实战 agent 收到的 randomSeed 为空。以下 12 次救工仅属于这套离线选择器。部署版需要用公开信息重新选移动、再验效果。",
         "",
         f"在 {len(by_map)} 张图双席的 {totals['all_source_planter_roots']:,} 个种树工决策中，"
         f"{totals['eligible_payment_intents']} 个同时满足三个条件：v1 原令停留、付得起树价、存在合法且与友军无冲突的移动。"
