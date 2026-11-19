@@ -16,13 +16,15 @@
 
 ### 数据冻结后登记的比赛
 
-本批研究水位为 `bd3c0021`。在训练证据提交期间，`ed71f6cb` 的 Master5s 索引又追加三张新卡。已对六份历史清单去重，以下三局留待下次读取原始回放，当前各表的分母仍为 1,373。[新增赛果原始提交](https://github.com/robertyang87/carbon-league/commit/ed71f6cb)
+本批研究水位为 `bd3c0021`。在训练证据提交期间，`ed71f6cb` 的 Master5s 索引又追加三张新卡。已对六份历史清单去重，这三份赛果卡当时没有计入 1,373 图快照。后续到仓情况见表后。[新增赛果原始提交](https://github.com/robertyang87/carbon-league/commit/ed71f6cb)
 
 | 比赛和局号 | 席位以回放为准的两位报名者 |
 |---|---|
 | `f6c73806cbf44a4ba4bfd095032e43b1-1` | stephen-K4TacSearch-v1、Master5s |
 | `52142f9650e34a3a4b5878d8f7be812c-1` | Krypton-M128Search-v1、Master5s |
 | `c1c4250fdd9a58d9d7c0010f57fda442-1` | Master5s、First111-1 |
+
+在 `5484590b` 的全库扫描中，以上三场 Master5s 与从其他成绩表发现的两场 Master6 都已取得原始回放、逐回合核分并登记为已研究地图。七批合计 **1,378 局**，其中 115 局前五互打、1,263 局对外。410,455 个联合回合可还原 820,910 个行动席位。[这五场的逐局账本、视野与标签](appendix_5484590b/README.md)
 
 ## 一步决策需要什么背景
 

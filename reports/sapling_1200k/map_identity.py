@@ -25,6 +25,9 @@ SOURCES = (
     ("all_top5/appendix_bd3c0021/validation_maps.jsonl.gz", 12,
      "148f8d87ed41e377e77aa37ef4dbe9f24ff441e3957cae4939813f347ad9daf2",
      "39fabae6a683c5f3119865669711cd9134246b6e1ec21556ed8e9f4d36d5fd85"),
+    ("all_top5/appendix_5484590b/validation_maps.jsonl.gz", 5,
+     "eced1e30fe392db5f484b7b2a69b57b08c04a31aab13b391cde0f9b6c83ce99b",
+     "334fdeb43c100fd3fed44ce043bcf41742187cb92ac81aa088e65e3666684565"),
 )
 IDENTITY = "sha256(row-major 15x15 full initial carbon, one unsigned integer byte per cell)"
 SCHEMA = "sapling-90-and-income/4"
