@@ -227,3 +227,9 @@ V4r 对两个固定规则对手取得 **16/16**，对同图换席的 Master3s2 �
 ## 240 张新图重训后的纯 Sapling
 
 预登记开发图 621758340，旧网和新网的推理代码完全相同，只有权重不同。旧网双席 0/2，平均官方分差 −6026.77；新网双席 0/2，平均 −7069.83。两席同向退步，在这张新图上平均少 1043.06 分。20 张留图的专家动作一致率上升 2.57 个百分点未转成胜局。[四局官方比分与训练身份](master6_actor_dev/broader_elite_backbone_dev/pure_native_gate/RESULTS.md)
+
+## 同一组新权重在混合策略上的原版对照
+
+在预登记的另一张开发图 621758339 上，固定混合策略和 Echo4 权重，只替换 Sapling 权重。旧网双席 0/2，平均官方分差 −959.97，新网双席 0/2，平均 −1284.28。席 0 比父代少 878.40 分，席 1 多 229.78 分。四局均打到步限。两个局部续弈转正未能预测这张图从开局打到终局的收益。[逐局比分与墙钟](master6_actor_dev/broader_elite_backbone_dev/native_gate/RESULTS.md)
+
+直接用原版搜索前的动作概率训练 Sapling 后，两个已有地图的独立续弈对照分别少 96.15、696.47 分。五项经济辅助监督改善了现金预测，三份留出数据上的专家动作复现数均下降。两条证据均未达到启用新开发图的条件。[原版动作蒸馏](master6_actor_dev/master3s2_policy_distill_dev/README.md) · [经济辅助监督](master6_actor_dev/economic_multitask_backbone_dev/README.md)
