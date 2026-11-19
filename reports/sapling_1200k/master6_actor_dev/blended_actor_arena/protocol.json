@@ -1,0 +1,49 @@
+{
+  "protocol": "blended-action native development 1",
+  "created_utc": "2026-11-19T11:05:28.304837+00:00",
+  "source_revision": "5d201b1183b77191e99e6b0822595a41b31065ae",
+  "arm_parent": {
+    "path": "reports/sapling_1200k/master6_actor_dev/actor_partner_dev/candidate.py",
+    "sha256": "c5ad3f43959a4812e84e89574ee0c6e69765ebb06a8b3ec93f839b0dde128dd3",
+    "frozen_student": "f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713"
+  },
+  "arm_candidate": {
+    "path": "reports/sapling_1200k/master6_actor_dev/blended_actor_dev/serving/candidate.py",
+    "weights": "reports/sapling_1200k/master6_actor_dev/blended_actor_dev/candidate.npz",
+    "identity": "new student trained on actual same-prefix 75% Echo4 + 25% Sapling CE. Only the Sapling payload may differ from registered parent; preserve .75/.25, same features, style, root ordering, both return-residual decoders, fixed return coefficients, all safety/fallback, no search change."
+  },
+  "control": "same compute, same data individual CE student in serving/control.py to be evaluated as separate diagnostic, never substituted for either registered arm",
+  "admission": {
+    "source": "read back this registration from main; compare all expert/student/package and split hashes",
+    "ce": "use all originally val cached shards in signed data_split (split=val, one map one vote), normalized softmax on each active valid worker/base slot with at least two legal actions, actual demonstration command and prefix common to both networks, mean over valid selected slots per map then equal-map mean. Frozen numeric criterion CE(candidate 75/25) strictly < CE(parent 75/25), excluding identical one-choice slots. Validate every used val physical terrain/seed/ID absent candidate training panels. Always report identical-scored control.",
+    "split_sha256": "156e263bab4f600bcabd076e5197e5c8b9083be6e9015091c52b224da18388f9",
+    "entry_probe": "fresh module per game per arm, warm real public agent from turn 0 through t=298 on four archived V1 trajectories, seeds 621477120 and 621477121, both seats; test only t=19,39,59,79,99,119,139,159,179,199,219,239,259,279,297. Require >=1 distinct executed joint command; retained legal and finite. Same actual pre-action public seat histories/hidden game state excluded. Probe games previously exposed, are not new developer or formal games.",
+    "parity": "Separately compare frozen deployed expert/sapling quantized heads to corresponding torch logits on identical held prefixes; ensure argmax/finite/legality validation, return residual safety readback. No additional effect-size gate or outcome selection."
+  },
+  "new_dev": {
+    "seeds": [
+      621675585,
+      621675586
+    ],
+    "arms": [
+      "parent",
+      "candidate"
+    ],
+    "physical_seats": [
+      0,
+      1
+    ],
+    "max_games": 8,
+    "formal": false,
+    "reserve_even_on_failed_gate": true,
+    "collision_procedure": "Before any candidate results, verify seed and equivalent physical opening vs frozen repository and known training/validation/cache; only on true prior collision predeclare next consecutive unused pair before training/arena evidence. Both chosen maps excluded from future formal banks."
+  },
+  "native": {
+    "original": "sources/master3s2/master3s2.py",
+    "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+    "temp": 1,
+    "termination": "official turn limit or official extinction; no picked seats, no truncated or proxy matches",
+    "scheduling": "paired parent/candidate per map/seat in order, alternating CPU0/1 by both map and seat. Acquire shared continuation.lock. Preserve real examiner natural clock and unrestricted production search budget. Save per-turn depth/fallback, root wall costs and observed host competition; report unavailable intervals. No added cognitive work inside decision loop."
+  },
+  "report": "All eight, official margin and WDL, both seats, by map and paired mean differences, complete received/deposited/raided/trees/hiring/collision accounts with exact sources, and timing. Two development maps do not certify 90% / +500."
+}
