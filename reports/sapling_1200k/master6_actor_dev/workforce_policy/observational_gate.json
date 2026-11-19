@@ -1,0 +1,35 @@
+{
+  "sequence": "Routing restriction chosen from original-game baseline before examining held-out results, saved after the fit finished but before native candidate screening or branch outcomes",
+  "route": "Clock scope remains t8..170. Allow only a pre-existing v1 RECPLANTER order when at least two planters are already alive at the decision (exclude same-turn planned births). The trained model may convert this order to RECCOLLECTOR or NONE; one substitution total, after all previously declared confidence, budget, defense and legal-prefix checks. Disable adding collectors from a prior NONE because total observed collector hiring shows no corresponding deficit.",
+  "evidence": "Six complete histories on three maps, with v1 and the original Master3s2 each side. v1 orders more further planters when at least two are alive and a smaller fraction return a positive individually attributable net. Both roles have positive aggregate realized net. Test conditional quality of an additional hire; leave all other situations with v1.",
+  "official_reference_counts": {
+    "v1": {
+      "hires": 64,
+      "visible_after_first_step": 64,
+      "direct_lifetime_positive": 24,
+      "direct_10step_recovered_fee": 0,
+      "gross_bank": 0.0,
+      "gross_tree": 6852.579,
+      "plant_seize_cost": 4133.027,
+      "hire_cost": 1920,
+      "lifetime_direct_net": 799.552,
+      "median_worker_net": -26.442
+    },
+    "Master3s2": {
+      "hires": 39,
+      "visible_after_first_step": 39,
+      "direct_lifetime_positive": 22,
+      "direct_10step_recovered_fee": 0,
+      "gross_bank": 0.0,
+      "gross_tree": 7421.905,
+      "plant_seize_cost": 3428.488,
+      "hire_cost": 1170,
+      "lifetime_direct_net": 2823.417,
+      "median_worker_net": 31.096
+    }
+  },
+  "baseline_summary_sha256": "9e589121209482440f00e9eda6497ab6c739729e82e26313967b2cec259faf9f",
+  "baseline_games_sha256": "8e861fcfe04c5ae8c6c1377e918217c52f0906a827604f2012fa9fdc22573d68",
+  "route_eligible": true,
+  "correction": "The preliminary negative net numbers were invalid: the original worker ID can be cleared when a worker dies. Attribution now follows each paid tree ID and its ownership tenure through transfer or expiry. Decisions and weights were not changed."
+}
