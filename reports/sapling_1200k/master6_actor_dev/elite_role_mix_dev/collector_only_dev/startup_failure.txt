@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/collector_only_dev/gate.py", line 83, in <module>
+    if __name__=="__main__":run()
+                            ^^^^^
+  File "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/collector_only_dev/gate.py", line 54, in run
+    audits=[choose(c) for c in r.P["exposures"]]
+            ^^^^^^^^^
+  File "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/collector_only_dev/gate.py", line 36, in choose
+    before,after=[r.live.clean(m.agent(view,raw["game_configuration"])) for m in models]
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/collector_only_dev/candidate.py", line 120, in agent
+    return _FEAT.to_actions(_mixed_actions(x, _FEAT.aux))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/collector_only_dev/candidate.py", line 203, in _mixed_actions
+    original = _guarded_parent(x, aux, enc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/sapling-return-search-nov19/reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/collector_only_dev/candidate.py", line 221, in _guarded_parent
+    protected = (np.arange(F.OWN)>=10) | (x["tok_kind"][:F.OWN]==1)
+                           ^
+NameError: name 'F' is not defined
