@@ -1,5 +1,7 @@
 # 天梯前五逐决策背景查询
 
+截至 `b243ff82`，本次新增 2 张图、1,196 个行动前席位视角。两场均追溯到实际交仓工人的行动，来源、可见历史和事后结算按原字段约定保存。[逐局上下文索引](context_appendix_b243ff82_index.tsv.gz) · [核验收据](context_appendix_b243ff82_receipt.json)
+
 截至 `bec6a010`，补齐两局的 1,196 个行动前席位视角，资料覆盖 1,627 场有完整终分的比赛和 1 场历史执行故障。[新增比赛与复算](appendix_bec6a010/README.md) · [公开态索引](context_appendix_bec6a010_index.tsv.gz)
 
 原始数据快照 `8ce29872` 已新增五局、2,990 个席位行动前视角。冻结五名任一方出场的完整终分累计 1,625 场，另有一场历史执行故障。两个新增索引沿用本页的字段、席位与可见性约定。[四局视角索引](context_appendix_559ba262_index.tsv.gz) · [第五局视角索引](context_appendix_8ce29872_index.tsv.gz) · [完整对局覆盖](README.md)
