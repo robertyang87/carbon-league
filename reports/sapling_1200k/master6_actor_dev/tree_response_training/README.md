@@ -23,3 +23,5 @@ python label.py
 [首批八个配对终局及正负训练标签](RESULTS.md) 已签收。下一组的两个新训练图已按独立清单登记，源局、机会索引、干预与结果按批次单独存放。用 `python next_queue.py --status` 可只读查看第一个缺项，已启动的组可用 `python batch_cli.py intake_02 run` 检查身份并从缺项恢复。[跨批次清单](next_intake.json) · [第二批赛前登记](batches/intake_02/protocol.json) · [批次驱动](batch_cli.py)
 
 已登记的后续训练可用 `python continue_intakes.py drain` 顺序接续，运行中可用 `python continue_intakes.py status` 查进度。监督器使用目录下的操作系统文件锁，重复启动会直接返回。各批另有注册锁与运行锁，恢复时按已保存的协议、源局命令、地图指纹、同根动作、原版随机流、官方计分及逐臂命令哈希核对。退出后再次运行同一入口可恢复。监督器只处理清单中的训练批次；补量批仅在八张训练图或三十二个实付配对仍有缺口时启动。完成后，跨地图支持和正负效果各自覆盖的地图数见最新一批的 `aggregate.json`。双席保护开发图另外封存。[顺序监督器](continue_intakes.py) · [训练任务与资金门槛](next_intake.json)
+
+补录中断盘时，赛果表已签收的席位会重核原始命令哈希，只补真正缺失的席位。若命令带已写盘而对应赛果行尚未发布，入口保留原件并停止；应先用该盘的命令、身份和官方终局核回赛事记录。缺失任何无法独立验证的计时或对手搜索证据均保留为待核。监督器不会以重打一局替换。每批选择程序源码可按 `selection.json` 中的 SHA-256 在 `selector_versions/` 中提取并解压。[多进程与部分签收回归](test_continuation.py)

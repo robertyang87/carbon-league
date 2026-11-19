@@ -1,6 +1,8 @@
 """Single-owner continuation for existing registered training tasks; never opens development or formal matches."""
 import argparse
 import fcntl
+import gzip
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -30,6 +32,17 @@ def verify_sealed(area):
             or sources['protocol_sha256']!=sha(area/'protocol.json') or sel['source_receipt_sha256']!=sha(area/'source_receipt.json')
             or sel['all_opportunities_sha256']!=sha(area/'opportunities.jsonl.gz') or len(sel['cases'])!=len(labels['pairs'])):
         raise ValueError(f'unmatched summary/official file or incomplete case set in {area}')
+    selector_key=sel['selector_sha256']
+    if area==CODE:
+        if selector_key!=sha(CODE/'select_roots.py'):
+            raise ValueError('initial root selector source differs')
+    else:
+        archived=CODE/'selector_versions'/(selector_key+'.py.gz')
+        if hashlib.sha256(gzip.decompress(archived.read_bytes())).hexdigest()!=selector_key:
+            raise ValueError('registered selector archive was modified')
+    if (sources['clearance_sha256']!=sha(area/'clearance.json')
+            or sel['protocol_sha256']!=sha(area/'protocol.json')):
+        raise ValueError('different clearance or upstream selection contract')
     expected={(s,seat) for s in protocol['train_maps'] for seat in (0,1)}
     if len(sources['games'])!=len(expected) or {(r['seed'],r['seat']) for r in sources['games']}!=expected:
         raise ValueError('incomplete or repeated source map and physical seat')

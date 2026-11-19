@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 import datetime
 import fcntl
 import gzip
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -48,6 +49,13 @@ def _register(wd,entry):
     old_dirs=phase_dirs(name)
     if not all((q/'training_labels.json').exists() for q in old_dirs):
         raise ValueError('previous independent intake has not completed')
+    for earlier in old_dirs[1:]:
+        summary=earlier/'aggregate.json'
+        if not summary.is_file():
+            raise ValueError('previous intake has not sealed its verified aggregate')
+        link=load(summary)['source_intakes'][-1]
+        if link['dir']!=str(earlier.relative_to(CODE)) or link['labels_sha256']!=sha(earlier/'training_labels.json'):
+            raise ValueError('previous aggregate or labels changed')
     new=set(entry['maps'])
     if new&set(original['development_maps']):
         raise ValueError('reserved development map requested')
@@ -85,6 +93,20 @@ def modules(wd,plan):
     responder.HERE=wd;responder.PLAN=plan
     evaluator.HERE=wd;evaluator.PLAN=plan
 
+def snapshot_selector(path):
+    payload=path.read_bytes()
+    key=hashlib.sha256(payload).hexdigest()
+    dest=CODE/'selector_versions'/(key+'.py.gz')
+    dest.parent.mkdir(exist_ok=True)
+    if dest.exists():
+        if gzip.decompress(dest.read_bytes())!=payload:
+            raise ValueError('different selector under the same content address')
+    else:
+        temp=dest.with_suffix('.part')
+        temp.write_bytes(gzip.compress(payload,mtime=0))
+        os.replace(temp,dest)
+    return key
+
 def select(wd,plan):
     references=load(wd/'source_receipt.json');ledger=wd/'opportunities.jsonl.gz'
     with gzip.open(ledger,'rt') as fp:
@@ -121,7 +143,7 @@ def select(wd,plan):
     retain(wd/'selection.json',{'protocol_sha256':sha(wd/'protocol.json'),'source_receipt_sha256':sha(wd/'source_receipt.json'),
                                 'all_opportunities_sha256':sha(ledger),'covered_maps':plan['train_maps'],'windows':summary,'cases':choices,
                                 'empty_windows':missing,'opponent_future_or_terminal_used_in_selection':False,
-                                'selector_sha256':sha(Path(__file__)),'shared_decode_sha256':sha(Path(selector.__file__))})
+                                'selector_sha256':snapshot_selector(Path(__file__)),'shared_decode_sha256':sha(Path(selector.__file__))})
 
 def aggregate(wd):
     examples=[];seen=set();boards=set();provenance=[]
@@ -194,7 +216,11 @@ def main():
         print(wd/'protocol.json',flush=True);return
     if a.mode=='arm':
         if a.index is None or a.arm is None:raise ValueError('missing case/arm')
-        responder.play(a.index,a.arm);return
+        case_dir=wd/responder.records()[a.index]['case_directory']
+        with (case_dir/f'.response_{a.arm}.lock').open('a') as handle:
+            fcntl.flock(handle,fcntl.LOCK_EX)
+            responder.play(a.index,a.arm)
+        return
     if a.mode=='aggregate':
         print(aggregate(wd)['complete_pairs']);return
     with (wd/'.intake.schedule.lock').open('a') as lock:
