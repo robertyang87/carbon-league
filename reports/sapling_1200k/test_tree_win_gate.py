@@ -18,7 +18,7 @@ def game(seed, seat, win):
                 margin=margin, official_score_by_seat=score, actual_transitions=299,
                 agent_errors_by_seat=[0,0], agent_calls_by_seat=[299,299], termination="official_episode_limit",
                 audit_messages=[], valid=True, search_invocations=299,
-                search=dict(searched=297, single=1, aborted=4),
+                search=dict(searched=297, single=1, aborted=4, depth={"8":297}, time=[0.4]*297),
                 search_return_types=dict(searched=297,single=1,depth_zero_return_base=1))
 
 
@@ -63,9 +63,14 @@ class GateTests(unittest.TestCase):
     def test_real_fallback_and_fabricated_search(self):
         row=game(1,0,True)
         gate.validate_game(row)
+        for missing in ("time", "depth"):
+            search = dict(row["search"])
+            search.pop(missing)
+            with self.subTest(missing=missing), self.assertRaisesRegex(ValueError, "depth/time"):
+                gate.validate_game(dict(row, search=search))
         for patch in (dict(search_invocations=298),
                       dict(search_return_types=dict(searched=297,single=1)),
-                      dict(search=dict(searched=0,single=298,aborted=1),
+                      dict(search=dict(searched=0,single=298,aborted=1,depth={},time=[]),
                            search_return_types=dict(searched=0,single=298,depth_zero_return_base=1)),
                       dict(margin=-12.)):
             with self.subTest(patch=patch), self.assertRaises(ValueError):
@@ -88,7 +93,7 @@ class GateTests(unittest.TestCase):
         row = game(seed,1,True)
         row.update(termination="extinction", actual_transitions=3, agent_calls_by_seat=[3,3],
                    official_score_by_seat=[-298,80],margin=378.,search_invocations=3,
-                   search=dict(searched=3,single=0,aborted=0),
+                   search=dict(searched=3,single=0,aborted=0,depth={"1":3},time=[0.1]*3),
                    search_return_types=dict(searched=3),extinct_by_seat=[True, False],
                    final_state_sha256=prior.hashed(sim.get_state()),actions_sha256=prior.hashed(actions))
         raw = dict(seed=seed,candidate_seat=1,pack_sha256="example",weight_identity="weights",
@@ -137,7 +142,7 @@ class GateTests(unittest.TestCase):
         self.assertEqual(gate.prove_single_pack(v3, pack), (gate.digest(v3),gate.digest(pack)))
         with self.assertRaisesRegex(ValueError, "differs from the exact rebuild"):
             gate.prove_single_pack(weights / "tree_v4.npz", pack)
-        with self.assertRaisesRegex(ValueError, "compound"):
+        with self.assertRaisesRegex(ValueError, "actual Sapling NPZ"):
             gate.prove_single_pack(Path("two_networks.json"), pack)
 
     def test_wider_candidate_schema_and_guarded_v5(self):

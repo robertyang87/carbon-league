@@ -17,7 +17,9 @@ def tests():
     def rejected(key, func):
         try:
             func()
-        except (ValueError, KeyError, FileNotFoundError) as exc:
+        except FileNotFoundError as exc:
+            observed[key] = f"missing file: {Path(exc.filename).name}"
+        except (ValueError, KeyError) as exc:
             observed[key] = str(exc)
         else:
             raise AssertionError(key + " should reject")

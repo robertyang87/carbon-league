@@ -285,9 +285,10 @@ def validate_game(row):
             or searched + single + no_depth != steps):
         raise ValueError("original examiner search coverage not confirmed")
     # The original agent records one positive depth and one elapsed time for each "searched" return.
-    depths, times = search["depth"], search["time"]
-    if (not isinstance(depths, dict) or any(str(d) not in tuple("12345678") or type(n) is not int or n <= 0
-                                            for d, n in depths.items())
+    depths, times = search.get("depth"), search.get("time")
+    if (not isinstance(depths, dict) or not isinstance(times, list)
+            or any(str(d) not in ("1","2","3","4","5","6","7","8") or type(n) is not int or n <= 0
+                   for d, n in depths.items())
             or sum(depths.values()) != searched or len(times) != searched
             or any(type(t) not in (float, int) or not math.isfinite(t) or t < 0 for t in times)):
         raise ValueError("original examiner depth/time observations do not cover every completed search")
