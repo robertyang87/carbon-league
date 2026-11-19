@@ -3,15 +3,40 @@
   "cpu": 2,
   "cash_window": 10,
   "diagnostic": "For each named original archived dual-network vs Master3s2 game, pick the earliest maximizer of the opponent's actual normal own-bank deposits in ten joint steps. This retrospective window may use receipts; it does not select any live intervention. Report every deposited worker, original source of the settled cargo, -10/-5/-3 relative to window start, routes, physically reachable and unreachable opportunities.",
-  "sources": ["master6_actor_dev/hybrid_candidate","master6_actor_dev/hybrid_parent","all_top5_pressure_dev/parent","terminal_economy/original_parent","delivery_parent_dev","planter_routes_dev/parent","planter_routes_dev/candidate"],
+  "sources": [
+    "master6_actor_dev/hybrid_candidate",
+    "master6_actor_dev/hybrid_parent",
+    "all_top5_pressure_dev/parent",
+    "terminal_economy/original_parent",
+    "delivery_parent_dev",
+    "planter_routes_dev/parent",
+    "planter_routes_dev/candidate"
+  ],
   "roles": [
-    {"name":"development","seed":621458920,"source":"master6_actor_dev/hybrid_candidate","pack":"data/weights/sapling_1200k/master6_actor_hybrid.py","sha":"416cc31b8da7d38cc97f66903fbe2797d7eadda0ee175f105227057afe5d3874"},
-    {"name":"historical_holdout","seed":621455920,"source":"all_top5_pressure_dev/parent","pack":"data/weights/sapling_1200k/hybrid_it50_v3.py","sha":"b54cc51f4109f19f4a7b508eafc9cf04a28b7e295a9f442c5208f0d33f10a9ca"}
+    {
+      "name": "development",
+      "seed": 621458920,
+      "source": "master6_actor_dev/hybrid_candidate",
+      "pack": "data/weights/sapling_1200k/master6_actor_hybrid.py",
+      "sha": "416cc31b8da7d38cc97f66903fbe2797d7eadda0ee175f105227057afe5d3874"
+    },
+    {
+      "name": "historical_holdout",
+      "seed": 621455920,
+      "source": "all_top5_pressure_dev/parent",
+      "pack": "data/weights/sapling_1200k/hybrid_it50_v3.py",
+      "sha": "b54cc51f4109f19f4a7b508eafc9cf04a28b7e295a9f442c5208f0d33f10a9ca"
+    }
   ],
   "holdout_scope": "Both maps and officials have been seen. The second map previously served one-step freight prediction and unrelated tree response research. The new fork-denial label is withheld there. Its underlying 75/25 hybrid predates the new actor. Two maps, two actors, no independent strength claim.",
   "forward": "Scan both physical seats without opponent recorded order or future cash/trajectory/outcome. Only roots 219..289 (10..80 steps remaining), enemy collectors carrying >=60 and >=2<=d<=7 to own closest home. Enumerate all strictly decreasing shortest home paths of length min(3,d-1), bank excluded. Require at least two distinct first-step exits.",
   "legal": "Own collector must be strictly lighter. The replacement is a different single root command including NONE, cannot enter opposing base, self-recruit square or a teammate's actual simultaneous landing. Another hostile collector able to reach this landing with <= our cargo rules it out. Collision capture, not holding a planter in the way, is the physical mechanism.",
   "coverage": "For each enumerated enemy path, cover exists if the defender can collide at a pre-bank path position at move h=1,2,3 after its fixed first move, given at most h-1 further free moves. Score is mean among distinct first-exit groups of their covered-path fraction (equal exit group weights). Require >0 coverage in every group under the intervention, and total coverage increase >=0.25 vs archived friendly command. This is geometric reachability, not a prediction or promise of forcing several routes at once.",
   "trigger": "Frozen FreightPredictor.model.predict(public_observation, previous_up_to_5_same_seat_public_observations) for each rival worker at the root. Need p_deposit_10 >=0.40 AND expected_root_cash_10 >=40. Rank by expected_root_cash_10 * coverage gain, then highest minimum group coverage, then SHA256(seed|seat|turn|own_worker|target_worker|alternative). Take at most one root per map, no substitute map, no loosening or retrospective rescue of an empty map. Absent predictor ⇒ geometry diagnostics only.",
-  "live": "One matched pair each available map. Root opponent acts as actually recorded simultaneously, both players generate every later action from their own observations. Original full Master3s2 code/temperature=1 and paired fresh RNG state. Validate real terminal scores by separate official full tape replay, compare opponent target own-bank receipts and whole-fleet economic contribution, real changes including negative/no-effect. One stream per root and time-budgeted opponent search limit attribution."
+  "live": "One matched pair each available map. Root opponent acts as actually recorded simultaneously, both players generate every later action from their own observations. Original full Master3s2 code/temperature=1 and paired fresh RNG state. Validate real terminal scores by separate official full tape replay, compare opponent target own-bank receipts and whole-fleet economic contribution, real changes including negative/no-effect. One stream per root and time-budgeted opponent search limit attribution.",
+  "amendment_before_model_selection": {
+    "supersedes_sha256": "ea2b96e1e30bff04a62435e8ede66a5252b63999048741c096e718e24ef29947",
+    "at": "Before scanning the frozen model on any game or generating branch outcomes; mechanical same-root ties shared with deployable policy",
+    "tie": "Use SHA256(freight-fork-v1|seat|turn|own_worker|target_worker|alternative) with map seed removed. The public policy never needs a map seed; map separation and all numeric criteria stay fixed."
+  }
 }
