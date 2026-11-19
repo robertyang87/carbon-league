@@ -219,7 +219,7 @@ def check_forward(shard_path, ckpt, src, device, dtype, batch_rows,
         blw, blb, bv = backend.forward_batch(tag, X, SC)
         d = {'max_dlw': float(np.max(np.abs(blw - np.stack(rows_lw)))),
              'max_dlb': float(np.max(np.abs(blb - np.stack(rows_lb)))),
-             'max_dv': float(np.max(np.abs(bv - np.concatenate(rows_v))))}
+             'max_dv': float(np.max(np.abs(bv - np.stack(rows_v))))}
         d['hard_pass'] = max(d.values()) <= tol_hard
         d['report_pass'] = max(d.values()) <= tol_report
         out[tag] = d
