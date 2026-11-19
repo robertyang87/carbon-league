@@ -28,6 +28,7 @@ def scan(s):
             ablation.append(dict(t=t,n=len(obs['players'][s][2]),different=diff))
         return act
     net._mixed_actions=probe
+    official=sr.live.begin(raw)
     for t,pair in enumerate(raw['actions']):
         obs=sim.obs(s);baseline=net.agent(obs,sim.config);candidate=dict(baseline)
         change=choose(obs,baseline,sim.config,_D,_TO,_DIRECTION)
@@ -35,13 +36,15 @@ def scan(s):
             candidate[change['worker']]=change['alternative']
             alt.set_state(sim.get_state());cf=list(pair);cf[s]=baseline;alt.step(*cf)
         assert candidate==pair[s],(s,t)
-        sim.step(*pair)
+        sim.step(*pair);official.step(pair)
         if change:
             uid=change['worker']; w=sim.workers.get(uid);v=alt.workers.get(uid)
             changes.append(dict(t=t,choice=change,candidate_cash=list(sim.cash),baseline_cash=list(alt.cash),
                                 candidate_cargo=w.carbon if w else None,baseline_cargo=v.carbon if v else None))
-    assert list(sim.cash)==raw['official_score_by_seat']
-    sr.retain(HERE/f'audit_seat{s}.json',dict(source_sha256=sr.sha(path),edits=changes,ablation=ablation,scores=list(sim.cash)))
+    rewards=[state.reward for state in official.states]
+    assert official.done and rewards==raw['official_score_by_seat']
+    assert any(raw['extinct_by_seat']) or list(sim.cash)==rewards
+    sr.retain(HERE/f'audit_seat{s}.json',dict(source_sha256=sr.sha(path),edits=changes,ablation=ablation,scores=rewards,operating_cash=list(sim.cash)))
     print(s,len(changes),sum(len(a['different']) for a in ablation),list(sim.cash))
 if __name__=='__main__':
     import sys
