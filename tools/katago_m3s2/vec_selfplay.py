@@ -433,6 +433,13 @@ def deep_move(mod, client, my_tag, opp_tag, st, me, rng, tau=DEEP_TAU,
 def play_game(mod, client, game_id, seed, deep_frac, hof_tags, smoke=False,
               max_steps=None, value_scale='terminal'):
     """Play one game; return a list of per-position record dicts."""
+    # Per-game seeds are seed_base + 1000003*gid and grow past numpy's
+    # 2**32-1 limit once gid passes ~4294 (Gen-0 crash, 2026-11-19: all
+    # 8 workers died starting gid 4295).  Wrap modulo 2**32 here -- the
+    # single point where the seed enters any RNG (RandomState below and
+    # np.random.seed inside layout.new_game_state) -- so low gids keep
+    # their exact old seeds and the already-landed shards stay consistent.
+    seed = int(seed) % (2 ** 32)
     rng = np.random.RandomState(seed)
     st = layout.new_game_state(mod, seed)
     last_step = mod.LAST_TURN if max_steps is None else min(mod.LAST_TURN, max_steps - 1)
