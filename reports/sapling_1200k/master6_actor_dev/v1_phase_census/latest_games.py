@@ -5,6 +5,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import re
 import statistics
 
 from phase_census import PACK, EXAM, git
@@ -14,6 +15,21 @@ ORIGINAL_SHA256 = '65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f
 
 def parent_tapes(commit, path, doc):
     directory = Path(path).parent
+    if directory.name == 'parent' and re.fullmatch(r'receipt_[0-9]+_[01]\.json', Path(path).name):
+        binding = doc['binding']
+        if (binding.get('parent_pack_sha256', binding.get('parent_sha256')) != PACK
+                or binding.get('original_sha256') != ORIGINAL_SHA256):
+            return
+        row, official = doc['game'], doc['official']
+        if (official['statuses'] != ['DONE', 'DONE'] or official['steps'] != row['actual_transitions']
+                or official['official_reward_by_seat'] != row['official_score_by_seat']
+                or official['transcript_sha256'] != row['raw_sha256'] or official['result'] != row['result']
+                or official['map_sha256'] != row['initial_terrain_u8_sha256']
+                or (official['seed'], official['seat']) != (row['seed'], row['candidate_seat'])
+                or Path(path).name != f"receipt_{row['seed']}_{row['candidate_seat']}.json"):
+            raise ValueError(f'Conflicting official receipt at {path}')
+        yield row, str(directory / row['raw_file'])
+        return
     header = doc.get('header', {})
     if header.get('pack_sha256') == PACK and header.get('examiner_md5') == EXAM:
         if doc.get('status') != 'complete':
@@ -48,7 +64,7 @@ def collect(revision):
     paths = git('ls-tree', '--name-only', '-r', commit, 'reports/sapling_1200k').decode().splitlines()
     games = {}
     for path in paths:
-        if not path.endswith('/results.json'):
+        if not path.endswith('/results.json') and not re.search(r'/parent/receipt_[0-9]+_[01]\.json$', path):
             continue
         doc = json.loads(git('show', commit + ':' + path))
         for row, tape_path in parent_tapes(commit, path, doc):
@@ -77,7 +93,8 @@ def collect(revision):
                                   actions_sha256=actions_sha, raw_sha256=row['raw_sha256'], sources=[])
             if games[key]['margin'] != margin:
                 raise ValueError(f'Conflicting duplicate score at {tape_path}')
-            games[key]['sources'].append(tape_path)
+            if tape_path not in games[key]['sources']:
+                games[key]['sources'].append(tape_path)
     rows = sorted(games.values(), key=lambda r: (r['seed'], r['seat']))
     if not rows or set(Counter((r['map'],r['seat']) for r in rows).values()) != {1}:
         raise ValueError('New replicates require an explicit map/seat weighting policy')

@@ -4,6 +4,7 @@ import hashlib
 import io
 import json
 from pathlib import Path
+import re
 import subprocess
 import tarfile
 import sys
@@ -27,8 +28,7 @@ def build(revision):
     commit = git('rev-parse', '--verify', revision + '^{commit}').decode().strip()
     paths = git('ls-tree', '-r', '--name-only', commit, BASE).decode().splitlines()
     results = sorted(p for p in paths if p.endswith('/results.json'))
-    receipts = sorted(p for p in paths if '/native_games/' in p
-                      and Path(p).match('receipt_*.json'))
+    receipts = sorted(p for p in paths if re.fullmatch(r'receipt_[0-9]+_[01]\.json', Path(p).name))
     seen = set()
     witnessed = {}
     sources = []

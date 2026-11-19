@@ -6,6 +6,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import subprocess
 import sys
 
 HERE = Path(__file__).resolve().parent
@@ -23,7 +24,10 @@ def read(path):
 
 
 def games(cache):
-    parent = read(HERE / "latest_games.json")
+    # This analysis compares the original 54 games with the frozen ladder cohort.
+    revision = "3d02c08f78e4a2efe954d882c3b8e8648aed2411"
+    ledger = (HERE / "latest_games.json").relative_to(ROOT)
+    parent = json.loads(subprocess.check_output(["git", "-C", str(ROOT), "show", f"{revision}:{ledger}"]))
     for row in parent["games"]:
         path = ROOT / row["sources"][0]
         if hashlib.sha256(path.read_bytes()).hexdigest() != row["raw_sha256"]:
