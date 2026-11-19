@@ -127,6 +127,8 @@ def main():
         lines.append(f"|{dict(gain='改善',loss='恶化',no_change='无变化')[x['kind']]}|{x['seed']} / {x['seat']} / {x['t']}|{x['y']:+,.2f}|")
     lines+=["","终局抽样名单按每张图、每席及已出手／可出手但未出手两类，取事前固定公开身份哈希最小者；没有候选的分层保留空缺。回放分片给出 t−3／5／10 的工号、位置、背包、敌方实际动作以及两臂收支，候选决策不得读取当拍敌令。[预注册](protocol.json) · [下一步预测权重](weights.json) · [指标和分片哈希](results.json) · [稀疏终局抽样名单](future_roots.json)","",
         "过去十步入库预测与三步可达多路覆盖已有各自证据。此次专测离基地三步以上、一个动作能直接占其下一出口的情形。四局新开发考试的最大回撤只提供研究问题，未用于挑选任何根。[十步入库预测](../freight_horizon/README.md) · [先前三步覆盖试验](../freight_response/README.md)"]
+    lines[2:2] = [f"**留图 {z['issued']} 次改令，实际打劫改善 {z['positive']} 次，恶化 {z['negative']} 次，合计货权改变 {z['total']:+,.2f}。** 在可达的本方替代动作中，预测敌工下个最短出口仍然不足以可靠截货。这批保留 v1，当前拦截头不进入正式对局。[逐一排查其他可达落点](ROUTING_AUDIT.md)", ""]
+    lines += ["", "训练图中有一个真截获：621473121 席 1 的 t95，敌工 5 身带 257.22、距基地 3 格。我方工 15 从停留改向左走，敌工同拍向上，碰撞后 257.22 货进入我工背包。它在留图中未出现。"]
     (HERE/"README.md").write_text("\n".join(lines)+"\n")
     print("DONE",va["methods"],va["map_equal_gain_per_source_turn"],flush=True)
 
