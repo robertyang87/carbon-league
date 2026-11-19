@@ -1,0 +1,59 @@
+{
+  "source_revision": "05567f7eceba476c7276f8114bacd5168b071fce",
+  "train": [
+    621896120,
+    621896121,
+    621896122
+  ],
+  "holdout": [
+    621896220,
+    621896221,
+    621896222,
+    621896223
+  ],
+  "seeds": [
+    621896120,
+    621896121,
+    621896122,
+    621896220,
+    621896221,
+    621896222,
+    621896223
+  ],
+  "seats": [
+    0,
+    1
+  ],
+  "parent": {
+    "path": "data/weights/sapling_1200k/terminal_return_fit_v1.py",
+    "sha256": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0"
+  },
+  "opponent": {
+    "path": "reports/sapling_1200k/master6_actor_dev/actor_partner_dev/candidate.py",
+    "sha256": "c5ad3f43959a4812e84e89574ee0c6e69765ebb06a8b3ec93f839b0dde128dd3"
+  },
+  "student_start": {
+    "path": "data/weights/sapling_1200k/master6_actor_v1.npz",
+    "sha256": "f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713"
+  },
+  "perturbation": "Use original FP32 whead and bhead separately, append bias as last column, center across actions. Directions 0/1 are largest two worker singular components, direction 2 largest recruitment component (role-specific contextual rank-one weight axes). Scale by singular value. Antithetic radius .50; final radius .30. Only four original tensors can change. Exact current deployment, expert and return guards fixed.",
+  "objective": "Maximize official terminal U = .5 WDL + .5 sigmoid(margin/1000) from turn zero to official time limit or genuine extinction, map and both seats equal; fixed greedy reacting it20 c5ad3f43, same physical terrain/seat/opponent for +/- and parent/candidate.",
+  "rule": "In each neural direction use mean (Uplus-Uminus)/(2*.50) across the 3 maps and paired seats, giving g with 3 entries. If norm(g)>1e-8 choose sole update .30*g/norm(g), else retain exact parent. Freeze candidate before any held result. Log center/update on training plus fixed independent held result. No tuning.",
+  "held_gate": "On four held map pairs require positive average U, at least 3 maps positive, neither seat negative on average and no additional extinction. Preserve wins/losses, score, margin and durations. No original Master3s2 games.",
+  "behavior_gate": "Counterfactual same observed state with each actual policy public entry at 0,20,40,60,80,100,125,150,175,200,225,250,275,297 on all training center trajectories. At least one changed whole-team command per phase t0-99/100-199/200-298 for full-phase coverage. Complete held evaluation even if behavior gate fails.",
+  "cost": "36 antithetic training games, 6 center + 6 updated train calibration and 16 held games = 64 full proxy games. CPU3 one thread; separate source interpreter checks every official terminal.",
+  "neighbors": {
+    "late_root": {
+      "path": "reports/sapling_1200k/master6_actor_dev/deployed_mix_policy_gradient_dev/protocol.json",
+      "sha256": "5fdc4f9f93d6144d29a4429eddba9f3aba8cea3de5638608be7a71a5d6b7170b"
+    },
+    "full_episode_handcrafted_not_neural": {
+      "path": "reports/sapling_1200k/master6_actor_dev/terminal_return_fit/README.md",
+      "sha256": "ef805f0b124468e73a6daab3c3b1c90d4e235196b4bc846a2d2b6c16c9b43c85"
+    },
+    "late_root_trainable_Sapling": {
+      "path": "reports/sapling_1200k/master6_actor_dev/blended_policy_return_dev/README.md",
+      "sha256": "90efffb83c486bbf19c1735563bebdb9344a173b65e93114e9d84c14aa50094d"
+    }
+  }
+}
