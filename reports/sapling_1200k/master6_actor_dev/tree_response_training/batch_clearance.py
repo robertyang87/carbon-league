@@ -66,6 +66,76 @@ def supplementary_nominal_reference(protocol, plan):
     return declaration
 
 
+def signed_ladder_overlap_note(plan):
+    """Recognize only the independently reproducible archived public/private zero-intersection report."""
+    path = ACTOR / 'ladder_overlap_cbd6d545.json'
+    if not path.exists():
+        return None
+    raw = path.read_bytes()
+    if not any(str(seed).encode() in raw for seed in plan['train_maps']):
+        return None
+    check(sha(raw) == 'd8f0a067717fa5106df85abe8f22c207d3775ee7cd5da36887717b0130ed10b2',
+          'unrecognized ladder overlap note')
+    doc = json.loads(raw)
+    expected = {}
+    def add(source_name, items):
+        signature = digest(ACTOR / source_name)
+        for seed, board in items:
+            key = str(seed)
+            if key in expected:
+                check(expected[key]['terrain'] == board, 'inconsistent archived private openings')
+            else:
+                expected[key] = {'terrain':board, 'source':source_name, 'source_sha256':signature}
+
+    name = 'hybrid_candidate/results.json'
+    results = load(ACTOR / name)
+    add(name, ((g['seed'], g['initial_terrain_u8_sha256']) for g in results['games']))
+    name = 'freight_deployment/first_response/map_preflight.json'
+    first = load(ACTOR / name)
+    check(first['candidate_initial_terrain_u8_sha256'] == first['official_opening_sha256'],
+          'first native and official opening disagree')
+    add(name, [(first['candidate_seed'], first['official_opening_sha256'])])
+    for name in ('terminal_return_fit/map_clearance.json', 'terminal_return_fit/replication/map_clearance.json',
+                 'terminal_return_fit/multimap/clearance.json', 'terminal_return_fit/opponent_transfer/clearance.json',
+                 'planter_option/followup_gate.json', 'tree_response_training/clearance.json',
+                 'tree_response_training/batches/intake_02/clearance.json'):
+        source = load(ACTOR / name)
+        rows = source['conditional_full_development']['maps'] if name.endswith('followup_gate.json') else source['boards']
+        add(name, rows.items() if isinstance(rows, dict) else ((r['seed'], r['initial_terrain_u8_sha256']) for r in rows))
+    queue_name = 'tree_response_training/next_intake.json'
+    for entry in load(ACTOR / queue_name)['batches']:
+        add(queue_name, entry['terrain_at_queue_time'].items())
+    check(expected == doc['development_and_registered_maps'], 'overlap note differs from original private receipts')
+    # An actual play/clearance included in the old public report cannot be reused through this exception.
+    for seed in plan['train_maps']:
+        row = expected.get(str(seed))
+        if row is not None:
+            check(row['source'] == queue_name, 'overlap note has previous real source for candidate')
+    # Validate the current registered evidence first, then reconstruct the signed historical prefix.
+    mi.ladder_boards()
+    public_seeds, public_terrain, packed_hashes, ids = set(), set(), [], set()
+    last = None
+    for name, *_ in mi.SOURCES:
+        packed = (BASE / name).read_bytes()
+        packed_hashes.append(bytes.fromhex(sha(packed)))
+        for line in gzip.decompress(packed).splitlines():
+            row = json.loads(line)
+            check(row['id'] not in ids, 'duplicate public map in archived ladder prefix')
+            ids.add(row['id'])
+            public_seeds.add(row['seed'])
+            public_terrain.add(row['initial_terrain_u8_sha256'])
+        if sha(b''.join(packed_hashes)) == doc['ladder_registry']:
+            last = name
+            break
+    check(last and Path(last).parent.name == 'appendix_' + doc['source_cutoff'][:8]
+          and len(ids) == doc['ladder_game_count']
+          and not (public_seeds & {int(k) for k in expected})
+          and not (public_terrain & {r['terrain'] for r in expected.values()})
+          and doc['match_by_seed'] == [] and doc['match_by_terrain'] == [],
+          'public archive fingerprint, source count or recomputed map intersection disagrees')
+    return path
+
+
 def reservations(protocol, plan):
     queue_path = HERE / 'next_intake.json'
     queue = load(queue_path)
@@ -98,6 +168,9 @@ def reservations(protocol, plan):
     nominal_note = supplementary_nominal_reference(protocol, plan)
     if nominal_note is not None:
         paths.append(nominal_note)
+    comparison_note = signed_ladder_overlap_note(plan) if plan['intake_name'] == 'intake_05' else None
+    if comparison_note is not None:
+        paths.append(comparison_note)
     # Only genuine pre-declarations may explain nominal hits. An observed tape never qualifies.
     for path in paths:
         obj = subprocess.run(['git', 'show', plan['source_revision'] + ':' + relative(path)],
@@ -201,6 +274,7 @@ def validate_scan(raw, seed, terrain, protocol, plan, declarations):
     exact_only = set()
     if plan.get('intake_name') == 'intake_05':
         exact_only.add(str((HERE / 'supplement_01/registration.json').relative_to(ROOT.parent)))
+        exact_only.add(str((ACTOR / 'ladder_overlap_cbd6d545.json').relative_to(ROOT.parent)))
     check(row['candidate_seed'] == seed and row['frozen_git_revision'] == plan['source_revision']
           and row['current_declaration']['sha256'] == digest(protocol)
           and row['candidate_initial_terrain_u8_sha256'] == row['official_opening_sha256'] == terrain

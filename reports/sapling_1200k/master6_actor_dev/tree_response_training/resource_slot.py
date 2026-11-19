@@ -287,10 +287,31 @@ def completed(verify_official):
     return {"mode":"completed_8_official_games","games":8,"granted_sha256":sha(SLOT/"granted.json"),"verified_files":files,"common_arena_sources":arena_sha}
 
 
+# Written release keys are the original four wire fields. The action ledger/arena header
+# files are content-addressed under verified_files, including the common arena identity.
+# Add diagnostics in separate documents. New pass/fail semantics require a new reservation.
+RELEASE_FIELDS=("mode","games","granted_sha256","verified_files")
+
+
+def check_release(receipt, checked):
+    require(isinstance(receipt,dict) and all(k in receipt and receipt[k]==checked[k] for k in RELEASE_FIELDS),
+            "invalid development release")
+    # One historical writer embedded this otherwise derivable annotation in release.json.
+    # Any embedded known assertion must agree. Unknown annotations grant no permissions.
+    if "common_arena_sources" in receipt:
+        require(receipt["common_arena_sources"]==checked["common_arena_sources"],"incorrect archived arena proof")
+
+
 def release():
     with lock(".native-owner.lock", blocking=False),lock(".state.lock"):
-        receipt=completed(verify_official=True)
-        seal(SLOT/"release.json",receipt)
+        checked=completed(verify_official=True)
+        path=SLOT/"release.json"
+        if path.exists():
+            receipt=read(path)
+            check_release(receipt,checked)
+            return receipt
+        receipt={k:checked[k] for k in RELEASE_FIELDS}
+        seal(path,receipt)
         return receipt
 
 
@@ -317,7 +338,7 @@ def wait_before_source(wd, plan):
             if (SLOT/"cancelled.json").is_file():
                 validate_cancelled();return
             if (SLOT/"release.json").is_file():
-                require(read(SLOT/"release.json")==completed(verify_official=False),"invalid development release")
+                check_release(read(SLOT/"release.json"),completed(verify_official=False))
                 return
             grant()
         time.sleep(5)

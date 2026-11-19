@@ -107,6 +107,25 @@ class SlotTests(unittest.TestCase):
             slot.wait_before_source(self.after,{"intake_name":"after"})
         with patch.object(slot,"grant",side_effect=AssertionError):slot.wait_before_source(self.here/"other",{})
 
+    def test_original_signed_release_and_extended_receipt_are_both_accepted(self):
+        checked={"mode":"completed_8_official_games","games":8,"granted_sha256":"grant","verified_files":{"replay":"sha"},
+                 "common_arena_sources":{"arena":"same"}}
+        minimal={k:checked[k] for k in slot.RELEASE_FIELDS}
+        slot.check_release(minimal,checked)
+        slot.check_release(checked,checked)
+        slot.check_release({**minimal,"extra_human_notes":"informational only"},checked)
+        with self.assertRaisesRegex(ValueError,"arena proof"):slot.check_release({**checked,"common_arena_sources":{}},checked)
+        for key in slot.RELEASE_FIELDS:
+            broken=dict(minimal);del broken[key]
+            with self.assertRaisesRegex(ValueError,"invalid development release"):slot.check_release(broken,checked)
+        with patch.object(slot,"completed",return_value=checked):
+            self.assertEqual(slot.release(),minimal)
+            self.assertEqual(slot.read(self.res/"release.json"),minimal)
+        self.write(self.res/"release.json",checked)
+        digest=slot.sha(self.res/"release.json")
+        with patch.object(slot,"completed",return_value=checked):self.assertEqual(slot.release(),checked)
+        self.assertEqual(slot.sha(self.res/"release.json"),digest)
+
     def test_release_requires_eight_seats_two_maps_and_truthful_official_scores(self):
         from source_games import gate
         import official_game_replay as official

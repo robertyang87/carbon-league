@@ -36,6 +36,38 @@ class SupplementReferenceTest(unittest.TestCase):
                 with patch.object(audit, 'HERE', folder.parent), self.assertRaises(ValueError):
                     audit.supplementary_nominal_reference(self.fifth, self.plan)
 
+    def test_ladder_overlap_checked_against_both_original_sides(self):
+        actual = audit.ACTOR / 'ladder_overlap_cbd6d545.json'
+        self.assertEqual(audit.signed_ladder_overlap_note(self.plan), actual)
+        used = audit.load(audit.ACTOR / 'hybrid_candidate/results.json')['games'][0]['seed']
+        with self.assertRaisesRegex(ValueError, 'previous real source'):
+            audit.signed_ladder_overlap_note({'train_maps':[used]})
+        original_load = audit.load
+        def wrong_snapshot(path):
+            value = original_load(path)
+            if path.name == 'followup_gate.json':
+                value['conditional_full_development']['maps'][0]['initial_terrain_u8_sha256'] = 'f' * 64
+            return value
+        with patch.object(audit, 'load', side_effect=wrong_snapshot), self.assertRaisesRegex(ValueError, 'private receipts'):
+            audit.signed_ladder_overlap_note(self.plan)
+        # Keep the disjointness claim as written, then supply a public map with a private seed.
+        # Fingerprint the real packed ledger; inject a single decoded-row collision in the cross-check only.
+        first_file = audit.BASE / audit.mi.SOURCES[0][0]
+        first_bytes = first_file.read_bytes()
+        decompress = audit.gzip.decompress
+        def corrupted(packed):
+            value = decompress(packed)
+            if packed == first_bytes:
+                rows = value.splitlines()
+                head = json.loads(rows[0])
+                head['seed'] = self.plan['train_maps'][0]
+                rows[0] = json.dumps(head).encode()
+                return b'\n'.join(rows)
+            return value
+        with patch.object(audit.mi, 'ladder_boards'), patch.object(audit.gzip, 'decompress', side_effect=corrupted):
+            with self.assertRaisesRegex(ValueError, 'recomputed map intersection'):
+                audit.signed_ladder_overlap_note(self.plan)
+
     def test_only_literal_preview_is_admissible(self):
         declaration = self.tree / 'protocol.json'
         seed = self.plan['train_maps'][0]
