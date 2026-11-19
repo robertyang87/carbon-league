@@ -153,7 +153,7 @@ def replay(tape,cert,arm):
             if cargo:focus[i]=[cargo[0][0]]
     window=dict(pre=tick,post=tick+1,delta_cash_lead=deltas[tick],
                 own_delta=tr[tick]["own_delta"],enemy_delta=tr[tick]["enemy_delta"],
-                components=sum_events(events),delivery_and_collision_cash=hits,focus=focus,
+                components=sum_events(events),delivery_and_collision_cash=hits,focus=[focus[0],focus[1]],
                 states=[snapshot(frames,actions,k) for k in sorted({max(0,tick-j) for j in (10,5,3,1,0)})],
                 nearby_cash=[dict(pre=r["t"],credit_and_costs=[ev for ev in r["events"] if ev[0] not in ("rounding","tree_absorption")],
                                   components=sum_events(r["events"])) for r in tr[max(0,tick-10):tick+1]])
