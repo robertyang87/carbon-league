@@ -58,13 +58,34 @@ class TerrainTests(unittest.TestCase):
         ledger, _, _ = identity.ladder_boards()
         plan=dict(schema=identity.SCHEMA,weight_sha256="w",pack_sha256="p",examiner_md5=gate.EXAMINER,
                   income_metric="official_margin",income_minimum=500,protocol_sha256=gate.protocol_hashes(),
-                  nonce="3"*64,maps=maps,excluded_reserved_seeds=[],run_directory="sandbox",ladder_ledger_sha256=ledger)
+                  nonce="3"*64,maps=maps,additional_local_seeds=[],excluded_reserved_seeds=[],run_directory="sandbox",ladder_ledger_sha256=ledger)
         with patch.object(gate,"seed_list",return_value=[101]):
             self.assertEqual(gate.validate(plan,"w","p",gate.EXAMINER,"sandbox"),[101])
             with self.assertRaisesRegex(ValueError,"initial-terrain exposure lock"):
                 gate.validate(dict(plan,schema="sapling-90-and-income/3"),"w","p",gate.EXAMINER,"sandbox")
             with self.assertRaisesRegex(ValueError,"allocated terrain"):
                 gate.validate(dict(plan,maps=[dict(maps[0],initial_terrain_u8_sha256="9"*64)]),"w","p",gate.EXAMINER,"sandbox")
+
+    def test_different_seed_with_seen_local_terrain_cannot_start(self):
+        known = json.loads((identity.HERE / identity.LOCAL_EXPOSURE).read_bytes())["maps"]
+        archived = known[0]["initial_terrain_u8_sha256"]
+        extra = identity.terrain_sha256([9]*225)
+        with patch.object(identity, "local_board", side_effect={908: extra, 909: archived, 910: extra}.__getitem__):
+            _, seeds, terrains = identity.exposed_boards([908])
+            self.assertIn(known[0]["seed"], seeds)
+            self.assertIn(908, seeds)
+            for different_seed in (909, 910):
+                self.assertNotIn(different_seed, seeds)
+                with self.assertRaisesRegex(identity.OverlappingDraw, "terrain"):
+                    identity.checked_maps([different_seed], seeds, terrains)
+        explicit = {"seed": 711, "initial_full_carbon": [7]*225}
+        _, custom_seeds, custom_terrains = identity.exposed_boards([], [explicit])
+        self.assertIn(711, custom_seeds)
+        self.assertIn(identity.terrain_sha256([7]*225), custom_terrains)
+        with self.assertRaisesRegex(ValueError, "225 integral"):
+            identity.exposed_boards([], [{"seed": 711, "initial_full_carbon": [7]*4}])
+        with self.assertRaisesRegex(ValueError, "additional local exposures"):
+            identity.exposed_boards(None)
 
     def test_frozen_evidence(self):
         _, seeds, boards = identity.ladder_boards()

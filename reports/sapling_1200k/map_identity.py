@@ -1,4 +1,4 @@
-"""Keep all observed ladder terrains out of Sapling's one-shot test draw."""
+"""Keep known ladder and local development terrains out of the one-shot test draw."""
 import gzip
 import hashlib
 import json
@@ -78,7 +78,8 @@ SOURCES = (
      "2957661bf1ff35a187cc6d920c18d28ab4dfc607dd833fd6f03c58b7be2f9d98"),
 )
 IDENTITY = "sha256(row-major 15x15 full initial carbon, one unsigned integer byte per cell)"
-SCHEMA = "sapling-90-and-income/4"
+SCHEMA = "sapling-90-and-income/5"
+LOCAL_EXPOSURE = "known_local_maps/exposure.json"
 
 def terrain_sha256(full_carbon):
     if len(full_carbon) != 225 or any(
@@ -116,6 +117,28 @@ def ladder_boards():
             seeds.add(seed)
             boards.add(terrain)
     return hashlib.sha256(b"".join(artifacts)).hexdigest(), seeds, boards
+
+
+def exposed_boards(additional_seeds, observed_maps=()):
+    """Combine actual ladder terrains, local anchors and operator-supplied local seeds."""
+    if not isinstance(additional_seeds, list) or any(type(seed) is not int or not 0 <= seed < 2**32 for seed in additional_seeds):
+        raise ValueError("additional local exposures must be integer game seeds")
+    ladder_hash, occupied_seeds, occupied_terrains = ladder_boards()
+    known = json.loads((HERE / LOCAL_EXPOSURE).read_bytes())["maps"]
+    local_seeds = set()
+    for row in known:
+        local_seeds.add(row["seed"])
+        occupied_terrains.add(row["initial_terrain_u8_sha256"])
+    for seed in set(additional_seeds) - local_seeds:
+        occupied_terrains.add(local_board(seed))
+    occupied_seeds.update(local_seeds)
+    occupied_seeds.update(additional_seeds)
+    for observation in observed_maps:
+        if not isinstance(observation, dict) or type(observation.get("seed")) is not int:
+            raise ValueError("an observed local map needs its seed and the initial 225 cells")
+        occupied_terrains.add(terrain_sha256(observation.get("initial_full_carbon", ())))
+        occupied_seeds.add(observation["seed"])
+    return ladder_hash, occupied_seeds, occupied_terrains
 
 
 class OverlappingDraw(ValueError):

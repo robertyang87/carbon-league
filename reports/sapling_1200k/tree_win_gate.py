@@ -17,7 +17,7 @@ import secrets
 
 import map_identity
 
-INCOME_SCHEMAS = {"sapling-90-and-income/3", map_identity.SCHEMA}
+INCOME_SCHEMAS = {"sapling-90-and-income/3", "sapling-90-and-income/4", map_identity.SCHEMA}
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARDED_V5 = "89df51540512d187ad64e82e21890e9f301083fc07ba06357eddaf43fc6692a2"
@@ -49,6 +49,7 @@ def require_compound_joint_schema(plan):
 def protocol_hashes():
     paths = (
         "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/map_identity.py",
+        "reports/sapling_1200k/" + map_identity.LOCAL_EXPOSURE,
         "reports/sapling_1200k/tree_v4_exam.py",
         "reports/sapling_1200k/compound_formal.py", "reports/sapling_1200k/terminal_compound_formal.py",
         "reports/sapling_1200k/master6_actor_dev/hybrid_build.py",
@@ -172,10 +173,15 @@ def validate(plan, weight_hash, pack_hash, examiner_hash, run):
         raise ValueError("exam overlaps previously exposed reserved maps")
     if plan["schema"] != map_identity.SCHEMA:
         raise ValueError("new exam execution requires the initial-terrain exposure lock; replay old freezes at their recorded source revision")
-    fingerprint, ladder_seeds, ladder_terrains = map_identity.ladder_boards()
+    fingerprint, exposed_seeds, exposed_terrains = map_identity.exposed_boards(
+        plan.get("additional_local_seeds"), plan.get("additional_observed_maps", []))
+    for retired_nonce in plan.get("retired_draws", []):
+        retired_seeds = seed_list(retired_nonce)
+        exposed_seeds.update(retired_seeds)
+        exposed_terrains.update(map_identity.local_board(seed) for seed in retired_seeds)
     if plan.get("ladder_ledger_sha256") != fingerprint:
         raise ValueError("ladder exposure ledger differs from the frozen plan")
-    actual = map_identity.checked_maps(seeds, ladder_seeds | set(plan["excluded_reserved_seeds"]), ladder_terrains)
+    actual = map_identity.checked_maps(seeds, exposed_seeds | set(plan["excluded_reserved_seeds"]), exposed_terrains)
     if actual != plan["maps"]:
         raise ValueError("allocated terrain differs from the frozen draw")
     return seeds
@@ -326,7 +332,7 @@ def verdict(plan, games):
     rows = {(g["seed"], g["candidate_seat"]):g for g in games}
     if set(rows) != expected:
         raise ValueError("duplicate, unknown or missing map and seat")
-    if plan.get("schema") == map_identity.SCHEMA:
+    if plan.get("schema") in {"sapling-90-and-income/4", map_identity.SCHEMA}:
         maps = {r["seed"]:r["initial_terrain_u8_sha256"] for r in plan["maps"]}
         if (len(set(maps.values())) != N
                 or any(r.get("initial_terrain_u8_sha256") != maps[r["seed"]] for r in games)):
@@ -433,34 +439,32 @@ def main():
     parser.add_argument("--run", type=Path, required=True, help="new, unused run-directory name")
     parser.add_argument("--out", type=Path, required=True, help="new plan file")
     parser.add_argument("--exclusions", type=Path, required=True,
-                        help="JSON array of prior training, validation, diagnostic and exam seeds")
+                        help="JSON array of extra local seeds or objects with seed and initial_full_carbon for custom maps")
     from income_target import FORMAL_METRIC, TARGET
     args = parser.parse_args()
-    used = json.loads(args.exclusions.read_text())
-    if not isinstance(used, list) or any(type(s) is not int for s in used):
-        parser.error("exclusions must be a JSON array of integer seeds")
-    # The reserved range belongs only to final tests. A seed-list collision retires
-    # this independent random draw before any outcomes are generated.
-    used = set(used)
-    if not {620106811, 620106812}.issubset(used):
-        parser.error("exclusion ledger is missing known V4 development maps")
+    exclusions = json.loads(args.exclusions.read_text())
+    if not isinstance(exclusions, list):
+        parser.error("exclusions must be a JSON array of local seeds or observed map records")
+    additional_local_seeds = sorted({item for item in exclusions if type(item) is int})
+    additional_observed_maps = [item for item in exclusions if type(item) is not int]
     if args.out.exists() or args.run.exists():
         parser.error("allocate a fresh plan path and run directory")
     weights, pack = prove_candidate(args.weights, args.pack)
-    fingerprint, ladder_seeds, ladder_terrains = map_identity.ladder_boards()
-    used.update(ladder_seeds)
+    fingerprint, used, exposed_terrains = map_identity.exposed_boards(additional_local_seeds, additional_observed_maps)
     retired_draws = []
     while True:
         nonce = secrets.token_hex(32)
         seeds = seed_list(nonce)
         try:
-            maps = map_identity.checked_maps(seeds, used, ladder_terrains)
+            maps = map_identity.checked_maps(seeds, used, exposed_terrains)
         except map_identity.OverlappingDraw:
             used.update(seeds)
+            exposed_terrains.update(map_identity.local_board(seed) for seed in seeds)
             retired_draws.append(nonce)
             continue
         break
     plan = {"schema":map_identity.SCHEMA, "ladder_ledger_sha256":fingerprint,
+            "additional_local_seeds":additional_local_seeds, "additional_observed_maps":additional_observed_maps,
             "retired_draws":retired_draws, "income_metric":FORMAL_METRIC,
             "income_minimum":TARGET, "weight_sha256":weights, "pack_sha256":pack,
             "examiner_md5":EXAMINER, "protocol_sha256":protocol_hashes(), "exclusion_count":len(used),
