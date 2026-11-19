@@ -1,0 +1,3865 @@
+{
+  "ablation": "Same active composite with student_weight=0; expert_weight=.75 and return residual retained, which matters to the scale of the correction.",
+  "macro_terrain_equal": {
+    "active/base_demo_agreement": 0.9305555555555556,
+    "active/collector_demo_agreement": 0.7490337246200195,
+    "active/demo_joint_agreement": 0.17129629629629628,
+    "active/planter_demo_agreement": 0.6885491481724711,
+    "candidate/base_demo_agreement": 0.8958333333333334,
+    "candidate/collector_demo_agreement": 0.7403999091338512,
+    "candidate/demo_joint_agreement": 0.06018518518518518,
+    "candidate/planter_demo_agreement": 0.6680413154097365,
+    "candidate_vs_active/changed_joint": 0.6111111111111112,
+    "candidate_vs_control/changed_joint": 0.6157407407407408,
+    "candidate_vs_no_sapling/changed_joint": 0.5972222222222223,
+    "control/base_demo_agreement": 0.9305555555555556,
+    "control/collector_demo_agreement": 0.7524917428571212,
+    "control/demo_joint_agreement": 0.16666666666666666,
+    "control/planter_demo_agreement": 0.6884029493420618,
+    "no_sapling/base_demo_agreement": 0.9351851851851853,
+    "no_sapling/collector_demo_agreement": 0.7457341635968812,
+    "no_sapling/demo_joint_agreement": 0.15740740740740738,
+    "no_sapling/planter_demo_agreement": 0.694365068816823
+  },
+  "macro_terrain_equal_per_split": {
+    "diagnostic_seen_loss": {
+      "active/base_demo_agreement": 0.9305555555555556,
+      "active/collector_demo_agreement": 0.7490337246200195,
+      "active/demo_joint_agreement": 0.17129629629629628,
+      "active/planter_demo_agreement": 0.6885491481724711,
+      "candidate/base_demo_agreement": 0.8958333333333334,
+      "candidate/collector_demo_agreement": 0.7403999091338512,
+      "candidate/demo_joint_agreement": 0.06018518518518518,
+      "candidate/planter_demo_agreement": 0.6680413154097365,
+      "candidate_vs_active/changed_joint": 0.6111111111111112,
+      "candidate_vs_control/changed_joint": 0.6157407407407408,
+      "candidate_vs_no_sapling/changed_joint": 0.5972222222222223,
+      "control/base_demo_agreement": 0.9305555555555556,
+      "control/collector_demo_agreement": 0.7524917428571212,
+      "control/demo_joint_agreement": 0.16666666666666666,
+      "control/planter_demo_agreement": 0.6884029493420618,
+      "no_sapling/base_demo_agreement": 0.9351851851851853,
+      "no_sapling/collector_demo_agreement": 0.7457341635968812,
+      "no_sapling/demo_joint_agreement": 0.15740740740740738,
+      "no_sapling/planter_demo_agreement": 0.694365068816823
+    }
+  },
+  "map_seats": 18,
+  "maps": 18,
+  "panel_sha256": "064c8d46faa82e3f5e5caed352abc829d75fba6cecc97e653703d06da21a93c5",
+  "probe_sha256": "e3a8f19b9b04140b756eeb28e4698f12892dc0400bb884e05b55dca7fb9c5de2",
+  "protocol_sha256": "f4695c6f3e0ce0bd3f23120426815f97e7d4a22466053c21fc7a110967c6289f",
+  "quantized_packages": {
+    "base_pack_sha256": "c5ad3f43959a4812e84e89574ee0c6e69765ebb06a8b3ec93f839b0dde128dd3",
+    "build_sha256": "8fa116bca40b1c7762fea24a9436f4a1f4341eb717c5848e9a53b78a65e03f1d",
+    "cnet2_pack_sha256": "f40ddcd749603bdd0e664d544165c307c17b8f901ac7b7fb0f1c58d1fae1aecc",
+    "expert_payload_sha256": "55dfc41605da3207a0cb084783b1959de48d579344f0c74b125f05d245f50196",
+    "packages": {
+      "candidate": {
+        "bytes": 6075535,
+        "deployed_sha256": "85c47d5d1f93d39dd66d1b959c0c2b3bdc6ee7187553b3ad992b4915056c6fe4",
+        "embedded_int8_sapling_sha256": "4869c7bfd852223147f95b2501c1c272cbda138f5c01dfe8d0862f8eb0897be8",
+        "npz_sha256": "2c65117a39edf1963b0adbe92bcfcc6e6350f3bda8696835a2cc803073d7b80f"
+      },
+      "control": {
+        "bytes": 6075353,
+        "deployed_sha256": "96999753b26aa1539ff3f543df22c6b30717c4a2baf1a0457b694f63bb46a541",
+        "embedded_int8_sapling_sha256": "f86ea22c0178397ee17aaed454c47fcc8ab794b613355053096345660a2b76d8",
+        "npz_sha256": "e3990cafd8ded7ed67c4c58458ff8b98c64cecae482f70f2a241c545d5a75ad6"
+      }
+    },
+    "parent_npz_sha256": "f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713",
+    "parent_quantized_roundtrip": true,
+    "preserved_source_excluding_student": true
+  },
+  "registered_terrains": 246,
+  "roots_sha256": "6a79befac7a3a2ec5dedc29eeb2cc6594f26b94e5b35a1ef82f522fc7ff8fdaa",
+  "scope": "Public decisions on demonstrated histories. Each normal entry completes its own legal autoregressive prefix and applies the frozen return correction. Non-sampled frames only advance the actual acting-seat observation history. No live responding game or counterfactual score in this receipt.",
+  "split": "exposed_loss",
+  "steps": [
+    0,
+    20,
+    50,
+    80,
+    110,
+    140,
+    170,
+    200,
+    230,
+    260,
+    285,
+    297
+  ],
+  "tables": {
+    "all": {
+      "counts": {
+        "active/expert_joint_agreement": 37,
+        "candidate/expert_joint_agreement": 13,
+        "candidate_vs_active/changed_joint": 132,
+        "candidate_vs_control/changed_joint": 133,
+        "candidate_vs_no_sapling/changed_joint": 129,
+        "control/expert_joint_agreement": 36,
+        "no_sapling/expert_joint_agreement": 34,
+        "roots": 216
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 27,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 188,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.004629629629629629,
+          "fallback_fraction_of_proposals": 0.03571428571428571,
+          "proposal_roots": 28
+        },
+        "candidate": {
+          "counts": {
+            "applied": 28,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 188,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 28
+        },
+        "control": {
+          "counts": {
+            "applied": 22,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 193,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.004629629629629629,
+          "fallback_fraction_of_proposals": 0.043478260869565216,
+          "proposal_roots": 23
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 30,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 186,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 30
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 105,
+          "active/demo_agreement": 402,
+          "active/demo_legal_own_prefix": 430,
+          "active/nonforced_own_prefix": 133,
+          "candidate/demo_agree_among_nonforced": 87,
+          "candidate/demo_agreement": 387,
+          "candidate/demo_legal_own_prefix": 429,
+          "candidate/nonforced_own_prefix": 129,
+          "candidate_vs_active/changed_slots": 28,
+          "candidate_vs_control/changed_slots": 28,
+          "candidate_vs_no_sapling/changed_slots": 28,
+          "control/demo_agree_among_nonforced": 105,
+          "control/demo_agreement": 402,
+          "control/demo_legal_own_prefix": 430,
+          "control/nonforced_own_prefix": 133,
+          "no_sapling/demo_agree_among_nonforced": 107,
+          "no_sapling/demo_agreement": 404,
+          "no_sapling/demo_legal_own_prefix": 430,
+          "no_sapling/nonforced_own_prefix": 133,
+          "occupied": 432
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 1093,
+          "active/demo_agreement": 1093,
+          "active/demo_legal_own_prefix": 1458,
+          "active/nonforced_own_prefix": 1458,
+          "candidate/demo_agree_among_nonforced": 1080,
+          "candidate/demo_agreement": 1080,
+          "candidate/demo_legal_own_prefix": 1458,
+          "candidate/nonforced_own_prefix": 1458,
+          "candidate_vs_active/changed_slots": 132,
+          "candidate_vs_control/changed_slots": 128,
+          "candidate_vs_no_sapling/changed_slots": 118,
+          "control/demo_agree_among_nonforced": 1098,
+          "control/demo_agreement": 1098,
+          "control/demo_legal_own_prefix": 1458,
+          "control/nonforced_own_prefix": 1458,
+          "no_sapling/demo_agree_among_nonforced": 1088,
+          "no_sapling/demo_agreement": 1088,
+          "no_sapling/demo_legal_own_prefix": 1458,
+          "no_sapling/nonforced_own_prefix": 1458,
+          "occupied": 1458
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 215,
+          "active/demo_agreement": 215,
+          "active/demo_legal_own_prefix": 311,
+          "active/nonforced_own_prefix": 311,
+          "candidate/demo_agree_among_nonforced": 210,
+          "candidate/demo_agreement": 210,
+          "candidate/demo_legal_own_prefix": 311,
+          "candidate/nonforced_own_prefix": 311,
+          "candidate_vs_active/changed_slots": 43,
+          "candidate_vs_control/changed_slots": 45,
+          "candidate_vs_no_sapling/changed_slots": 48,
+          "control/demo_agree_among_nonforced": 215,
+          "control/demo_agreement": 215,
+          "control/demo_legal_own_prefix": 311,
+          "control/nonforced_own_prefix": 311,
+          "no_sapling/demo_agree_among_nonforced": 216,
+          "no_sapling/demo_agreement": 216,
+          "no_sapling/demo_legal_own_prefix": 311,
+          "no_sapling/nonforced_own_prefix": 311,
+          "occupied": 311
+        }
+      }
+    },
+    "opponent/ClaudeFable5.2-v7": {
+      "counts": {
+        "active/expert_joint_agreement": 3,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 16,
+        "candidate_vs_control/changed_joint": 17,
+        "candidate_vs_no_sapling/changed_joint": 15,
+        "control/expert_joint_agreement": 3,
+        "no_sapling/expert_joint_agreement": 3,
+        "roots": 24
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 22,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 23,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 23,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 22,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 13,
+          "active/demo_agreement": 45,
+          "active/demo_legal_own_prefix": 48,
+          "active/nonforced_own_prefix": 16,
+          "candidate/demo_agree_among_nonforced": 9,
+          "candidate/demo_agreement": 42,
+          "candidate/demo_legal_own_prefix": 48,
+          "candidate/nonforced_own_prefix": 15,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 4,
+          "candidate_vs_no_sapling/changed_slots": 4,
+          "control/demo_agree_among_nonforced": 13,
+          "control/demo_agreement": 45,
+          "control/demo_legal_own_prefix": 48,
+          "control/nonforced_own_prefix": 16,
+          "no_sapling/demo_agree_among_nonforced": 13,
+          "no_sapling/demo_agreement": 45,
+          "no_sapling/demo_legal_own_prefix": 48,
+          "no_sapling/nonforced_own_prefix": 16,
+          "occupied": 48
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 127,
+          "active/demo_agreement": 127,
+          "active/demo_legal_own_prefix": 167,
+          "active/nonforced_own_prefix": 167,
+          "candidate/demo_agree_among_nonforced": 127,
+          "candidate/demo_agreement": 127,
+          "candidate/demo_legal_own_prefix": 167,
+          "candidate/nonforced_own_prefix": 167,
+          "candidate_vs_active/changed_slots": 15,
+          "candidate_vs_control/changed_slots": 16,
+          "candidate_vs_no_sapling/changed_slots": 11,
+          "control/demo_agree_among_nonforced": 128,
+          "control/demo_agreement": 128,
+          "control/demo_legal_own_prefix": 167,
+          "control/nonforced_own_prefix": 167,
+          "no_sapling/demo_agree_among_nonforced": 126,
+          "no_sapling/demo_agreement": 126,
+          "no_sapling/demo_legal_own_prefix": 167,
+          "no_sapling/nonforced_own_prefix": 167,
+          "occupied": 167
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 20,
+          "active/demo_agreement": 20,
+          "active/demo_legal_own_prefix": 29,
+          "active/nonforced_own_prefix": 29,
+          "candidate/demo_agree_among_nonforced": 21,
+          "candidate/demo_agreement": 21,
+          "candidate/demo_legal_own_prefix": 29,
+          "candidate/nonforced_own_prefix": 29,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 4,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 20,
+          "control/demo_agreement": 20,
+          "control/demo_legal_own_prefix": 29,
+          "control/nonforced_own_prefix": 29,
+          "no_sapling/demo_agree_among_nonforced": 20,
+          "no_sapling/demo_agreement": 20,
+          "no_sapling/demo_legal_own_prefix": 29,
+          "no_sapling/nonforced_own_prefix": 29,
+          "occupied": 29
+        }
+      }
+    },
+    "opponent/RyanX-AIPowercore-M9XJ-630": {
+      "counts": {
+        "active/expert_joint_agreement": 14,
+        "candidate/expert_joint_agreement": 6,
+        "candidate_vs_active/changed_joint": 37,
+        "candidate_vs_control/changed_joint": 37,
+        "candidate_vs_no_sapling/changed_joint": 35,
+        "control/expert_joint_agreement": 14,
+        "no_sapling/expert_joint_agreement": 11,
+        "roots": 60
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 8,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 51,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.016666666666666666,
+          "fallback_fraction_of_proposals": 0.1111111111111111,
+          "proposal_roots": 9
+        },
+        "candidate": {
+          "counts": {
+            "applied": 8,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 52,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 8
+        },
+        "control": {
+          "counts": {
+            "applied": 7,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 52,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.016666666666666666,
+          "fallback_fraction_of_proposals": 0.125,
+          "proposal_roots": 8
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 8,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 52,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 8
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 29,
+          "active/demo_agreement": 114,
+          "active/demo_legal_own_prefix": 120,
+          "active/nonforced_own_prefix": 35,
+          "candidate/demo_agree_among_nonforced": 25,
+          "candidate/demo_agreement": 110,
+          "candidate/demo_legal_own_prefix": 120,
+          "candidate/nonforced_own_prefix": 35,
+          "candidate_vs_active/changed_slots": 6,
+          "candidate_vs_control/changed_slots": 6,
+          "candidate_vs_no_sapling/changed_slots": 6,
+          "control/demo_agree_among_nonforced": 29,
+          "control/demo_agreement": 114,
+          "control/demo_legal_own_prefix": 120,
+          "control/nonforced_own_prefix": 35,
+          "no_sapling/demo_agree_among_nonforced": 29,
+          "no_sapling/demo_agreement": 114,
+          "no_sapling/demo_legal_own_prefix": 120,
+          "no_sapling/nonforced_own_prefix": 35,
+          "occupied": 120
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 328,
+          "active/demo_agreement": 328,
+          "active/demo_legal_own_prefix": 414,
+          "active/nonforced_own_prefix": 414,
+          "candidate/demo_agree_among_nonforced": 325,
+          "candidate/demo_agreement": 325,
+          "candidate/demo_legal_own_prefix": 414,
+          "candidate/nonforced_own_prefix": 414,
+          "candidate_vs_active/changed_slots": 28,
+          "candidate_vs_control/changed_slots": 25,
+          "candidate_vs_no_sapling/changed_slots": 25,
+          "control/demo_agree_among_nonforced": 328,
+          "control/demo_agreement": 328,
+          "control/demo_legal_own_prefix": 414,
+          "control/nonforced_own_prefix": 414,
+          "no_sapling/demo_agree_among_nonforced": 327,
+          "no_sapling/demo_agreement": 327,
+          "no_sapling/demo_legal_own_prefix": 414,
+          "no_sapling/nonforced_own_prefix": 414,
+          "occupied": 414
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 56,
+          "active/demo_agreement": 56,
+          "active/demo_legal_own_prefix": 88,
+          "active/nonforced_own_prefix": 88,
+          "candidate/demo_agree_among_nonforced": 55,
+          "candidate/demo_agreement": 55,
+          "candidate/demo_legal_own_prefix": 88,
+          "candidate/nonforced_own_prefix": 88,
+          "candidate_vs_active/changed_slots": 16,
+          "candidate_vs_control/changed_slots": 16,
+          "candidate_vs_no_sapling/changed_slots": 17,
+          "control/demo_agree_among_nonforced": 56,
+          "control/demo_agreement": 56,
+          "control/demo_legal_own_prefix": 88,
+          "control/nonforced_own_prefix": 88,
+          "no_sapling/demo_agree_among_nonforced": 56,
+          "no_sapling/demo_agreement": 56,
+          "no_sapling/demo_legal_own_prefix": 88,
+          "no_sapling/nonforced_own_prefix": 88,
+          "occupied": 88
+        }
+      }
+    },
+    "opponent/RyanX-AIPowercore-it720-preview": {
+      "counts": {
+        "active/expert_joint_agreement": 15,
+        "candidate/expert_joint_agreement": 5,
+        "candidate_vs_active/changed_joint": 63,
+        "candidate_vs_control/changed_joint": 63,
+        "candidate_vs_no_sapling/changed_joint": 63,
+        "control/expert_joint_agreement": 15,
+        "no_sapling/expert_joint_agreement": 15,
+        "roots": 108
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 15,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 93,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 15
+        },
+        "candidate": {
+          "counts": {
+            "applied": 17,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 91,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 17
+        },
+        "control": {
+          "counts": {
+            "applied": 12,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 96,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 12
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 17,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 91,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 17
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 49,
+          "active/demo_agreement": 198,
+          "active/demo_legal_own_prefix": 214,
+          "active/nonforced_own_prefix": 65,
+          "candidate/demo_agree_among_nonforced": 40,
+          "candidate/demo_agreement": 190,
+          "candidate/demo_legal_own_prefix": 213,
+          "candidate/nonforced_own_prefix": 63,
+          "candidate_vs_active/changed_slots": 14,
+          "candidate_vs_control/changed_slots": 14,
+          "candidate_vs_no_sapling/changed_slots": 13,
+          "control/demo_agree_among_nonforced": 49,
+          "control/demo_agreement": 198,
+          "control/demo_legal_own_prefix": 214,
+          "control/nonforced_own_prefix": 65,
+          "no_sapling/demo_agree_among_nonforced": 50,
+          "no_sapling/demo_agreement": 199,
+          "no_sapling/demo_legal_own_prefix": 214,
+          "no_sapling/nonforced_own_prefix": 65,
+          "occupied": 216
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 518,
+          "active/demo_agreement": 518,
+          "active/demo_legal_own_prefix": 717,
+          "active/nonforced_own_prefix": 717,
+          "candidate/demo_agree_among_nonforced": 517,
+          "candidate/demo_agreement": 517,
+          "candidate/demo_legal_own_prefix": 717,
+          "candidate/nonforced_own_prefix": 717,
+          "candidate_vs_active/changed_slots": 68,
+          "candidate_vs_control/changed_slots": 67,
+          "candidate_vs_no_sapling/changed_slots": 65,
+          "control/demo_agree_among_nonforced": 523,
+          "control/demo_agreement": 523,
+          "control/demo_legal_own_prefix": 717,
+          "control/nonforced_own_prefix": 717,
+          "no_sapling/demo_agree_among_nonforced": 517,
+          "no_sapling/demo_agreement": 517,
+          "no_sapling/demo_legal_own_prefix": 717,
+          "no_sapling/nonforced_own_prefix": 717,
+          "occupied": 717
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 112,
+          "active/demo_agreement": 112,
+          "active/demo_legal_own_prefix": 158,
+          "active/nonforced_own_prefix": 158,
+          "candidate/demo_agree_among_nonforced": 108,
+          "candidate/demo_agreement": 108,
+          "candidate/demo_legal_own_prefix": 158,
+          "candidate/nonforced_own_prefix": 158,
+          "candidate_vs_active/changed_slots": 18,
+          "candidate_vs_control/changed_slots": 20,
+          "candidate_vs_no_sapling/changed_slots": 23,
+          "control/demo_agree_among_nonforced": 112,
+          "control/demo_agreement": 112,
+          "control/demo_legal_own_prefix": 158,
+          "control/nonforced_own_prefix": 158,
+          "no_sapling/demo_agree_among_nonforced": 114,
+          "no_sapling/demo_agreement": 114,
+          "no_sapling/demo_legal_own_prefix": 158,
+          "no_sapling/nonforced_own_prefix": 158,
+          "occupied": 158
+        }
+      }
+    },
+    "opponent/小肥鱼v5": {
+      "counts": {
+        "active/expert_joint_agreement": 5,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 16,
+        "candidate_vs_control/changed_joint": 16,
+        "candidate_vs_no_sapling/changed_joint": 16,
+        "control/expert_joint_agreement": 4,
+        "no_sapling/expert_joint_agreement": 5,
+        "roots": 24
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 22,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "candidate": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 22,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 22,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 21,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 14,
+          "active/demo_agreement": 45,
+          "active/demo_legal_own_prefix": 48,
+          "active/nonforced_own_prefix": 17,
+          "candidate/demo_agree_among_nonforced": 13,
+          "candidate/demo_agreement": 45,
+          "candidate/demo_legal_own_prefix": 48,
+          "candidate/nonforced_own_prefix": 16,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 4,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 14,
+          "control/demo_agreement": 45,
+          "control/demo_legal_own_prefix": 48,
+          "control/nonforced_own_prefix": 17,
+          "no_sapling/demo_agree_among_nonforced": 15,
+          "no_sapling/demo_agreement": 46,
+          "no_sapling/demo_legal_own_prefix": 48,
+          "no_sapling/nonforced_own_prefix": 17,
+          "occupied": 48
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 120,
+          "active/demo_agreement": 120,
+          "active/demo_legal_own_prefix": 160,
+          "active/nonforced_own_prefix": 160,
+          "candidate/demo_agree_among_nonforced": 111,
+          "candidate/demo_agreement": 111,
+          "candidate/demo_legal_own_prefix": 160,
+          "candidate/nonforced_own_prefix": 160,
+          "candidate_vs_active/changed_slots": 21,
+          "candidate_vs_control/changed_slots": 20,
+          "candidate_vs_no_sapling/changed_slots": 17,
+          "control/demo_agree_among_nonforced": 119,
+          "control/demo_agreement": 119,
+          "control/demo_legal_own_prefix": 160,
+          "control/nonforced_own_prefix": 160,
+          "no_sapling/demo_agree_among_nonforced": 118,
+          "no_sapling/demo_agreement": 118,
+          "no_sapling/demo_legal_own_prefix": 160,
+          "no_sapling/nonforced_own_prefix": 160,
+          "occupied": 160
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 27,
+          "active/demo_agreement": 27,
+          "active/demo_legal_own_prefix": 36,
+          "active/nonforced_own_prefix": 36,
+          "candidate/demo_agree_among_nonforced": 26,
+          "candidate/demo_agreement": 26,
+          "candidate/demo_legal_own_prefix": 36,
+          "candidate/nonforced_own_prefix": 36,
+          "candidate_vs_active/changed_slots": 5,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 27,
+          "control/demo_agreement": 27,
+          "control/demo_legal_own_prefix": 36,
+          "control/nonforced_own_prefix": 36,
+          "no_sapling/demo_agree_among_nonforced": 26,
+          "no_sapling/demo_agreement": 26,
+          "no_sapling/demo_legal_own_prefix": 36,
+          "no_sapling/nonforced_own_prefix": 36,
+          "occupied": 36
+        }
+      }
+    },
+    "seat/0": {
+      "counts": {
+        "active/expert_joint_agreement": 16,
+        "candidate/expert_joint_agreement": 5,
+        "candidate_vs_active/changed_joint": 63,
+        "candidate_vs_control/changed_joint": 62,
+        "candidate_vs_no_sapling/changed_joint": 65,
+        "control/expert_joint_agreement": 16,
+        "no_sapling/expert_joint_agreement": 14,
+        "roots": 96
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 8,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 87,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.010416666666666666,
+          "fallback_fraction_of_proposals": 0.1111111111111111,
+          "proposal_roots": 9
+        },
+        "candidate": {
+          "counts": {
+            "applied": 14,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 82,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 14
+        },
+        "control": {
+          "counts": {
+            "applied": 6,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 89,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.010416666666666666,
+          "fallback_fraction_of_proposals": 0.14285714285714285,
+          "proposal_roots": 7
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 11,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 85,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 11
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 49,
+          "active/demo_agreement": 180,
+          "active/demo_legal_own_prefix": 192,
+          "active/nonforced_own_prefix": 61,
+          "candidate/demo_agree_among_nonforced": 40,
+          "candidate/demo_agreement": 173,
+          "candidate/demo_legal_own_prefix": 192,
+          "candidate/nonforced_own_prefix": 59,
+          "candidate_vs_active/changed_slots": 14,
+          "candidate_vs_control/changed_slots": 14,
+          "candidate_vs_no_sapling/changed_slots": 13,
+          "control/demo_agree_among_nonforced": 49,
+          "control/demo_agreement": 180,
+          "control/demo_legal_own_prefix": 192,
+          "control/nonforced_own_prefix": 61,
+          "no_sapling/demo_agree_among_nonforced": 50,
+          "no_sapling/demo_agreement": 181,
+          "no_sapling/demo_legal_own_prefix": 192,
+          "no_sapling/nonforced_own_prefix": 61,
+          "occupied": 192
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 468,
+          "active/demo_agreement": 468,
+          "active/demo_legal_own_prefix": 636,
+          "active/nonforced_own_prefix": 636,
+          "candidate/demo_agree_among_nonforced": 472,
+          "candidate/demo_agreement": 472,
+          "candidate/demo_legal_own_prefix": 636,
+          "candidate/nonforced_own_prefix": 636,
+          "candidate_vs_active/changed_slots": 61,
+          "candidate_vs_control/changed_slots": 58,
+          "candidate_vs_no_sapling/changed_slots": 60,
+          "control/demo_agree_among_nonforced": 469,
+          "control/demo_agreement": 469,
+          "control/demo_legal_own_prefix": 636,
+          "control/nonforced_own_prefix": 636,
+          "no_sapling/demo_agree_among_nonforced": 469,
+          "no_sapling/demo_agreement": 469,
+          "no_sapling/demo_legal_own_prefix": 636,
+          "no_sapling/nonforced_own_prefix": 636,
+          "occupied": 636
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 105,
+          "active/demo_agreement": 105,
+          "active/demo_legal_own_prefix": 150,
+          "active/nonforced_own_prefix": 150,
+          "candidate/demo_agree_among_nonforced": 103,
+          "candidate/demo_agreement": 103,
+          "candidate/demo_legal_own_prefix": 150,
+          "candidate/nonforced_own_prefix": 150,
+          "candidate_vs_active/changed_slots": 30,
+          "candidate_vs_control/changed_slots": 31,
+          "candidate_vs_no_sapling/changed_slots": 32,
+          "control/demo_agree_among_nonforced": 105,
+          "control/demo_agreement": 105,
+          "control/demo_legal_own_prefix": 150,
+          "control/nonforced_own_prefix": 150,
+          "no_sapling/demo_agree_among_nonforced": 104,
+          "no_sapling/demo_agreement": 104,
+          "no_sapling/demo_legal_own_prefix": 150,
+          "no_sapling/nonforced_own_prefix": 150,
+          "occupied": 150
+        }
+      }
+    },
+    "seat/1": {
+      "counts": {
+        "active/expert_joint_agreement": 21,
+        "candidate/expert_joint_agreement": 8,
+        "candidate_vs_active/changed_joint": 69,
+        "candidate_vs_control/changed_joint": 71,
+        "candidate_vs_no_sapling/changed_joint": 64,
+        "control/expert_joint_agreement": 20,
+        "no_sapling/expert_joint_agreement": 20,
+        "roots": 120
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 19,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 101,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 19
+        },
+        "candidate": {
+          "counts": {
+            "applied": 14,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 106,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 14
+        },
+        "control": {
+          "counts": {
+            "applied": 16,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 104,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 16
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 19,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 101,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 19
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 56,
+          "active/demo_agreement": 222,
+          "active/demo_legal_own_prefix": 238,
+          "active/nonforced_own_prefix": 72,
+          "candidate/demo_agree_among_nonforced": 47,
+          "candidate/demo_agreement": 214,
+          "candidate/demo_legal_own_prefix": 237,
+          "candidate/nonforced_own_prefix": 70,
+          "candidate_vs_active/changed_slots": 14,
+          "candidate_vs_control/changed_slots": 14,
+          "candidate_vs_no_sapling/changed_slots": 15,
+          "control/demo_agree_among_nonforced": 56,
+          "control/demo_agreement": 222,
+          "control/demo_legal_own_prefix": 238,
+          "control/nonforced_own_prefix": 72,
+          "no_sapling/demo_agree_among_nonforced": 57,
+          "no_sapling/demo_agreement": 223,
+          "no_sapling/demo_legal_own_prefix": 238,
+          "no_sapling/nonforced_own_prefix": 72,
+          "occupied": 240
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 625,
+          "active/demo_agreement": 625,
+          "active/demo_legal_own_prefix": 822,
+          "active/nonforced_own_prefix": 822,
+          "candidate/demo_agree_among_nonforced": 608,
+          "candidate/demo_agreement": 608,
+          "candidate/demo_legal_own_prefix": 822,
+          "candidate/nonforced_own_prefix": 822,
+          "candidate_vs_active/changed_slots": 71,
+          "candidate_vs_control/changed_slots": 70,
+          "candidate_vs_no_sapling/changed_slots": 58,
+          "control/demo_agree_among_nonforced": 629,
+          "control/demo_agreement": 629,
+          "control/demo_legal_own_prefix": 822,
+          "control/nonforced_own_prefix": 822,
+          "no_sapling/demo_agree_among_nonforced": 619,
+          "no_sapling/demo_agreement": 619,
+          "no_sapling/demo_legal_own_prefix": 822,
+          "no_sapling/nonforced_own_prefix": 822,
+          "occupied": 822
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 110,
+          "active/demo_agreement": 110,
+          "active/demo_legal_own_prefix": 161,
+          "active/nonforced_own_prefix": 161,
+          "candidate/demo_agree_among_nonforced": 107,
+          "candidate/demo_agreement": 107,
+          "candidate/demo_legal_own_prefix": 161,
+          "candidate/nonforced_own_prefix": 161,
+          "candidate_vs_active/changed_slots": 13,
+          "candidate_vs_control/changed_slots": 14,
+          "candidate_vs_no_sapling/changed_slots": 16,
+          "control/demo_agree_among_nonforced": 110,
+          "control/demo_agreement": 110,
+          "control/demo_legal_own_prefix": 161,
+          "control/nonforced_own_prefix": 161,
+          "no_sapling/demo_agree_among_nonforced": 112,
+          "no_sapling/demo_agreement": 112,
+          "no_sapling/demo_legal_own_prefix": 161,
+          "no_sapling/nonforced_own_prefix": 161,
+          "occupied": 161
+        }
+      }
+    },
+    "split/diagnostic_seen_loss": {
+      "counts": {
+        "active/expert_joint_agreement": 37,
+        "candidate/expert_joint_agreement": 13,
+        "candidate_vs_active/changed_joint": 132,
+        "candidate_vs_control/changed_joint": 133,
+        "candidate_vs_no_sapling/changed_joint": 129,
+        "control/expert_joint_agreement": 36,
+        "no_sapling/expert_joint_agreement": 34,
+        "roots": 216
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 27,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 188,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.004629629629629629,
+          "fallback_fraction_of_proposals": 0.03571428571428571,
+          "proposal_roots": 28
+        },
+        "candidate": {
+          "counts": {
+            "applied": 28,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 188,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 28
+        },
+        "control": {
+          "counts": {
+            "applied": 22,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 193,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.004629629629629629,
+          "fallback_fraction_of_proposals": 0.043478260869565216,
+          "proposal_roots": 23
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 30,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 186,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 30
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 105,
+          "active/demo_agreement": 402,
+          "active/demo_legal_own_prefix": 430,
+          "active/nonforced_own_prefix": 133,
+          "candidate/demo_agree_among_nonforced": 87,
+          "candidate/demo_agreement": 387,
+          "candidate/demo_legal_own_prefix": 429,
+          "candidate/nonforced_own_prefix": 129,
+          "candidate_vs_active/changed_slots": 28,
+          "candidate_vs_control/changed_slots": 28,
+          "candidate_vs_no_sapling/changed_slots": 28,
+          "control/demo_agree_among_nonforced": 105,
+          "control/demo_agreement": 402,
+          "control/demo_legal_own_prefix": 430,
+          "control/nonforced_own_prefix": 133,
+          "no_sapling/demo_agree_among_nonforced": 107,
+          "no_sapling/demo_agreement": 404,
+          "no_sapling/demo_legal_own_prefix": 430,
+          "no_sapling/nonforced_own_prefix": 133,
+          "occupied": 432
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 1093,
+          "active/demo_agreement": 1093,
+          "active/demo_legal_own_prefix": 1458,
+          "active/nonforced_own_prefix": 1458,
+          "candidate/demo_agree_among_nonforced": 1080,
+          "candidate/demo_agreement": 1080,
+          "candidate/demo_legal_own_prefix": 1458,
+          "candidate/nonforced_own_prefix": 1458,
+          "candidate_vs_active/changed_slots": 132,
+          "candidate_vs_control/changed_slots": 128,
+          "candidate_vs_no_sapling/changed_slots": 118,
+          "control/demo_agree_among_nonforced": 1098,
+          "control/demo_agreement": 1098,
+          "control/demo_legal_own_prefix": 1458,
+          "control/nonforced_own_prefix": 1458,
+          "no_sapling/demo_agree_among_nonforced": 1088,
+          "no_sapling/demo_agreement": 1088,
+          "no_sapling/demo_legal_own_prefix": 1458,
+          "no_sapling/nonforced_own_prefix": 1458,
+          "occupied": 1458
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 215,
+          "active/demo_agreement": 215,
+          "active/demo_legal_own_prefix": 311,
+          "active/nonforced_own_prefix": 311,
+          "candidate/demo_agree_among_nonforced": 210,
+          "candidate/demo_agreement": 210,
+          "candidate/demo_legal_own_prefix": 311,
+          "candidate/nonforced_own_prefix": 311,
+          "candidate_vs_active/changed_slots": 43,
+          "candidate_vs_control/changed_slots": 45,
+          "candidate_vs_no_sapling/changed_slots": 48,
+          "control/demo_agree_among_nonforced": 215,
+          "control/demo_agreement": 215,
+          "control/demo_legal_own_prefix": 311,
+          "control/nonforced_own_prefix": 311,
+          "no_sapling/demo_agree_among_nonforced": 216,
+          "no_sapling/demo_agreement": 216,
+          "no_sapling/demo_legal_own_prefix": 311,
+          "no_sapling/nonforced_own_prefix": 311,
+          "occupied": 311
+        }
+      }
+    },
+    "split/diagnostic_seen_loss/opponent_seen": {
+      "counts": {
+        "active/expert_joint_agreement": 5,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 16,
+        "candidate_vs_control/changed_joint": 16,
+        "candidate_vs_no_sapling/changed_joint": 16,
+        "control/expert_joint_agreement": 4,
+        "no_sapling/expert_joint_agreement": 5,
+        "roots": 24
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 22,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "candidate": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 22,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 22,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 21,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 14,
+          "active/demo_agreement": 45,
+          "active/demo_legal_own_prefix": 48,
+          "active/nonforced_own_prefix": 17,
+          "candidate/demo_agree_among_nonforced": 13,
+          "candidate/demo_agreement": 45,
+          "candidate/demo_legal_own_prefix": 48,
+          "candidate/nonforced_own_prefix": 16,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 4,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 14,
+          "control/demo_agreement": 45,
+          "control/demo_legal_own_prefix": 48,
+          "control/nonforced_own_prefix": 17,
+          "no_sapling/demo_agree_among_nonforced": 15,
+          "no_sapling/demo_agreement": 46,
+          "no_sapling/demo_legal_own_prefix": 48,
+          "no_sapling/nonforced_own_prefix": 17,
+          "occupied": 48
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 120,
+          "active/demo_agreement": 120,
+          "active/demo_legal_own_prefix": 160,
+          "active/nonforced_own_prefix": 160,
+          "candidate/demo_agree_among_nonforced": 111,
+          "candidate/demo_agreement": 111,
+          "candidate/demo_legal_own_prefix": 160,
+          "candidate/nonforced_own_prefix": 160,
+          "candidate_vs_active/changed_slots": 21,
+          "candidate_vs_control/changed_slots": 20,
+          "candidate_vs_no_sapling/changed_slots": 17,
+          "control/demo_agree_among_nonforced": 119,
+          "control/demo_agreement": 119,
+          "control/demo_legal_own_prefix": 160,
+          "control/nonforced_own_prefix": 160,
+          "no_sapling/demo_agree_among_nonforced": 118,
+          "no_sapling/demo_agreement": 118,
+          "no_sapling/demo_legal_own_prefix": 160,
+          "no_sapling/nonforced_own_prefix": 160,
+          "occupied": 160
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 27,
+          "active/demo_agreement": 27,
+          "active/demo_legal_own_prefix": 36,
+          "active/nonforced_own_prefix": 36,
+          "candidate/demo_agree_among_nonforced": 26,
+          "candidate/demo_agreement": 26,
+          "candidate/demo_legal_own_prefix": 36,
+          "candidate/nonforced_own_prefix": 36,
+          "candidate_vs_active/changed_slots": 5,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 27,
+          "control/demo_agreement": 27,
+          "control/demo_legal_own_prefix": 36,
+          "control/nonforced_own_prefix": 36,
+          "no_sapling/demo_agree_among_nonforced": 26,
+          "no_sapling/demo_agreement": 26,
+          "no_sapling/demo_legal_own_prefix": 36,
+          "no_sapling/nonforced_own_prefix": 36,
+          "occupied": 36
+        }
+      }
+    },
+    "split/diagnostic_seen_loss/opponent_unseen": {
+      "counts": {
+        "active/expert_joint_agreement": 32,
+        "candidate/expert_joint_agreement": 12,
+        "candidate_vs_active/changed_joint": 116,
+        "candidate_vs_control/changed_joint": 117,
+        "candidate_vs_no_sapling/changed_joint": 113,
+        "control/expert_joint_agreement": 32,
+        "no_sapling/expert_joint_agreement": 29,
+        "roots": 192
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 25,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 166,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.005208333333333333,
+          "fallback_fraction_of_proposals": 0.038461538461538464,
+          "proposal_roots": 26
+        },
+        "candidate": {
+          "counts": {
+            "applied": 26,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 166,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 26
+        },
+        "control": {
+          "counts": {
+            "applied": 20,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 171,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.005208333333333333,
+          "fallback_fraction_of_proposals": 0.047619047619047616,
+          "proposal_roots": 21
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 27,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 165,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 27
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 91,
+          "active/demo_agreement": 357,
+          "active/demo_legal_own_prefix": 382,
+          "active/nonforced_own_prefix": 116,
+          "candidate/demo_agree_among_nonforced": 74,
+          "candidate/demo_agreement": 342,
+          "candidate/demo_legal_own_prefix": 381,
+          "candidate/nonforced_own_prefix": 113,
+          "candidate_vs_active/changed_slots": 24,
+          "candidate_vs_control/changed_slots": 24,
+          "candidate_vs_no_sapling/changed_slots": 23,
+          "control/demo_agree_among_nonforced": 91,
+          "control/demo_agreement": 357,
+          "control/demo_legal_own_prefix": 382,
+          "control/nonforced_own_prefix": 116,
+          "no_sapling/demo_agree_among_nonforced": 92,
+          "no_sapling/demo_agreement": 358,
+          "no_sapling/demo_legal_own_prefix": 382,
+          "no_sapling/nonforced_own_prefix": 116,
+          "occupied": 384
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 973,
+          "active/demo_agreement": 973,
+          "active/demo_legal_own_prefix": 1298,
+          "active/nonforced_own_prefix": 1298,
+          "candidate/demo_agree_among_nonforced": 969,
+          "candidate/demo_agreement": 969,
+          "candidate/demo_legal_own_prefix": 1298,
+          "candidate/nonforced_own_prefix": 1298,
+          "candidate_vs_active/changed_slots": 111,
+          "candidate_vs_control/changed_slots": 108,
+          "candidate_vs_no_sapling/changed_slots": 101,
+          "control/demo_agree_among_nonforced": 979,
+          "control/demo_agreement": 979,
+          "control/demo_legal_own_prefix": 1298,
+          "control/nonforced_own_prefix": 1298,
+          "no_sapling/demo_agree_among_nonforced": 970,
+          "no_sapling/demo_agreement": 970,
+          "no_sapling/demo_legal_own_prefix": 1298,
+          "no_sapling/nonforced_own_prefix": 1298,
+          "occupied": 1298
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 188,
+          "active/demo_agreement": 188,
+          "active/demo_legal_own_prefix": 275,
+          "active/nonforced_own_prefix": 275,
+          "candidate/demo_agree_among_nonforced": 184,
+          "candidate/demo_agreement": 184,
+          "candidate/demo_legal_own_prefix": 275,
+          "candidate/nonforced_own_prefix": 275,
+          "candidate_vs_active/changed_slots": 38,
+          "candidate_vs_control/changed_slots": 40,
+          "candidate_vs_no_sapling/changed_slots": 43,
+          "control/demo_agree_among_nonforced": 188,
+          "control/demo_agreement": 188,
+          "control/demo_legal_own_prefix": 275,
+          "control/nonforced_own_prefix": 275,
+          "no_sapling/demo_agree_among_nonforced": 190,
+          "no_sapling/demo_agreement": 190,
+          "no_sapling/demo_legal_own_prefix": 275,
+          "no_sapling/nonforced_own_prefix": 275,
+          "occupied": 275
+        }
+      }
+    },
+    "terrain/0a8851a4bed6a9604f59527db50d723b0b7f607c048f3b83076aaf8d09a069c8": {
+      "counts": {
+        "active/expert_joint_agreement": 2,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 7,
+        "candidate_vs_control/changed_joint": 8,
+        "candidate_vs_no_sapling/changed_joint": 6,
+        "control/expert_joint_agreement": 2,
+        "no_sapling/expert_joint_agreement": 2,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "candidate": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 4,
+          "active/demo_agreement": 23,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 5,
+          "candidate/demo_agree_among_nonforced": 4,
+          "candidate/demo_agreement": 23,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 5,
+          "candidate_vs_active/changed_slots": 2,
+          "candidate_vs_control/changed_slots": 2,
+          "candidate_vs_no_sapling/changed_slots": 2,
+          "control/demo_agree_among_nonforced": 4,
+          "control/demo_agreement": 23,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 5,
+          "no_sapling/demo_agree_among_nonforced": 4,
+          "no_sapling/demo_agreement": 23,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 5,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 65,
+          "active/demo_agreement": 65,
+          "active/demo_legal_own_prefix": 79,
+          "active/nonforced_own_prefix": 79,
+          "candidate/demo_agree_among_nonforced": 64,
+          "candidate/demo_agreement": 64,
+          "candidate/demo_legal_own_prefix": 79,
+          "candidate/nonforced_own_prefix": 79,
+          "candidate_vs_active/changed_slots": 5,
+          "candidate_vs_control/changed_slots": 6,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 66,
+          "control/demo_agreement": 66,
+          "control/demo_legal_own_prefix": 79,
+          "control/nonforced_own_prefix": 79,
+          "no_sapling/demo_agree_among_nonforced": 65,
+          "no_sapling/demo_agreement": 65,
+          "no_sapling/demo_legal_own_prefix": 79,
+          "no_sapling/nonforced_own_prefix": 79,
+          "occupied": 79
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 13,
+          "active/demo_agreement": 13,
+          "active/demo_legal_own_prefix": 22,
+          "active/nonforced_own_prefix": 22,
+          "candidate/demo_agree_among_nonforced": 13,
+          "candidate/demo_agreement": 13,
+          "candidate/demo_legal_own_prefix": 22,
+          "candidate/nonforced_own_prefix": 22,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 2,
+          "control/demo_agree_among_nonforced": 13,
+          "control/demo_agreement": 13,
+          "control/demo_legal_own_prefix": 22,
+          "control/nonforced_own_prefix": 22,
+          "no_sapling/demo_agree_among_nonforced": 14,
+          "no_sapling/demo_agreement": 14,
+          "no_sapling/demo_legal_own_prefix": 22,
+          "no_sapling/nonforced_own_prefix": 22,
+          "occupied": 22
+        }
+      }
+    },
+    "terrain/0bee077f42489ed6172142d6e4e7ff784b620b65b3836791c94879ff103be975": {
+      "counts": {
+        "active/expert_joint_agreement": 2,
+        "candidate/expert_joint_agreement": 0,
+        "candidate_vs_active/changed_joint": 10,
+        "candidate_vs_control/changed_joint": 9,
+        "candidate_vs_no_sapling/changed_joint": 10,
+        "control/expert_joint_agreement": 2,
+        "no_sapling/expert_joint_agreement": 1,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "candidate": {
+          "counts": {
+            "applied": 4,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 8,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 4
+        },
+        "control": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 4,
+          "active/demo_agreement": 23,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 5,
+          "candidate/demo_agree_among_nonforced": 3,
+          "candidate/demo_agreement": 22,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 5,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 4,
+          "control/demo_agreement": 23,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 5,
+          "no_sapling/demo_agree_among_nonforced": 4,
+          "no_sapling/demo_agreement": 23,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 5,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 55,
+          "active/demo_agreement": 55,
+          "active/demo_legal_own_prefix": 78,
+          "active/nonforced_own_prefix": 78,
+          "candidate/demo_agree_among_nonforced": 56,
+          "candidate/demo_agreement": 56,
+          "candidate/demo_legal_own_prefix": 78,
+          "candidate/nonforced_own_prefix": 78,
+          "candidate_vs_active/changed_slots": 12,
+          "candidate_vs_control/changed_slots": 11,
+          "candidate_vs_no_sapling/changed_slots": 14,
+          "control/demo_agree_among_nonforced": 56,
+          "control/demo_agreement": 56,
+          "control/demo_legal_own_prefix": 78,
+          "control/nonforced_own_prefix": 78,
+          "no_sapling/demo_agree_among_nonforced": 52,
+          "no_sapling/demo_agreement": 52,
+          "no_sapling/demo_legal_own_prefix": 78,
+          "no_sapling/nonforced_own_prefix": 78,
+          "occupied": 78
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 13,
+          "active/demo_agreement": 13,
+          "active/demo_legal_own_prefix": 20,
+          "active/nonforced_own_prefix": 20,
+          "candidate/demo_agree_among_nonforced": 11,
+          "candidate/demo_agreement": 11,
+          "candidate/demo_legal_own_prefix": 20,
+          "candidate/nonforced_own_prefix": 20,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 14,
+          "control/demo_agreement": 14,
+          "control/demo_legal_own_prefix": 20,
+          "control/nonforced_own_prefix": 20,
+          "no_sapling/demo_agree_among_nonforced": 14,
+          "no_sapling/demo_agreement": 14,
+          "no_sapling/demo_legal_own_prefix": 20,
+          "no_sapling/nonforced_own_prefix": 20,
+          "occupied": 20
+        }
+      }
+    },
+    "terrain/0cb887a89f56cdc72ff15b99d845f9ae59d3d53cbafa68175b764deca6c6e04c": {
+      "counts": {
+        "active/expert_joint_agreement": 1,
+        "candidate/expert_joint_agreement": 0,
+        "candidate_vs_active/changed_joint": 9,
+        "candidate_vs_control/changed_joint": 9,
+        "candidate_vs_no_sapling/changed_joint": 9,
+        "control/expert_joint_agreement": 1,
+        "no_sapling/expert_joint_agreement": 1,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "candidate": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "control": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 6,
+          "active/demo_agreement": 22,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 8,
+          "candidate/demo_agree_among_nonforced": 3,
+          "candidate/demo_agreement": 20,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 7,
+          "candidate_vs_active/changed_slots": 3,
+          "candidate_vs_control/changed_slots": 3,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 6,
+          "control/demo_agreement": 22,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 8,
+          "no_sapling/demo_agree_among_nonforced": 6,
+          "no_sapling/demo_agreement": 22,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 8,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 61,
+          "active/demo_agreement": 61,
+          "active/demo_legal_own_prefix": 82,
+          "active/nonforced_own_prefix": 82,
+          "candidate/demo_agree_among_nonforced": 62,
+          "candidate/demo_agreement": 62,
+          "candidate/demo_legal_own_prefix": 82,
+          "candidate/nonforced_own_prefix": 82,
+          "candidate_vs_active/changed_slots": 7,
+          "candidate_vs_control/changed_slots": 7,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 61,
+          "control/demo_agreement": 61,
+          "control/demo_legal_own_prefix": 82,
+          "control/nonforced_own_prefix": 82,
+          "no_sapling/demo_agree_among_nonforced": 60,
+          "no_sapling/demo_agreement": 60,
+          "no_sapling/demo_legal_own_prefix": 82,
+          "no_sapling/nonforced_own_prefix": 82,
+          "occupied": 82
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 11,
+          "active/demo_agreement": 11,
+          "active/demo_legal_own_prefix": 17,
+          "active/nonforced_own_prefix": 17,
+          "candidate/demo_agree_among_nonforced": 12,
+          "candidate/demo_agreement": 12,
+          "candidate/demo_legal_own_prefix": 17,
+          "candidate/nonforced_own_prefix": 17,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 4,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 11,
+          "control/demo_agreement": 11,
+          "control/demo_legal_own_prefix": 17,
+          "control/nonforced_own_prefix": 17,
+          "no_sapling/demo_agree_among_nonforced": 11,
+          "no_sapling/demo_agreement": 11,
+          "no_sapling/demo_legal_own_prefix": 17,
+          "no_sapling/nonforced_own_prefix": 17,
+          "occupied": 17
+        }
+      }
+    },
+    "terrain/16b1013eb99873f4b33e120f88be46ab7264ee0acc30e06ee8ebc78493fbbb29": {
+      "counts": {
+        "active/expert_joint_agreement": 2,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 5,
+        "candidate_vs_control/changed_joint": 5,
+        "candidate_vs_no_sapling/changed_joint": 4,
+        "control/expert_joint_agreement": 2,
+        "no_sapling/expert_joint_agreement": 2,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "candidate": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 8,
+          "active/demo_agreement": 22,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 10,
+          "candidate/demo_agree_among_nonforced": 7,
+          "candidate/demo_agreement": 21,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 10,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 8,
+          "control/demo_agreement": 22,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 10,
+          "no_sapling/demo_agree_among_nonforced": 8,
+          "no_sapling/demo_agreement": 22,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 10,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 65,
+          "active/demo_agreement": 65,
+          "active/demo_legal_own_prefix": 82,
+          "active/nonforced_own_prefix": 82,
+          "candidate/demo_agree_among_nonforced": 63,
+          "candidate/demo_agreement": 63,
+          "candidate/demo_legal_own_prefix": 82,
+          "candidate/nonforced_own_prefix": 82,
+          "candidate_vs_active/changed_slots": 5,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 65,
+          "control/demo_agreement": 65,
+          "control/demo_legal_own_prefix": 82,
+          "control/nonforced_own_prefix": 82,
+          "no_sapling/demo_agree_among_nonforced": 64,
+          "no_sapling/demo_agreement": 64,
+          "no_sapling/demo_legal_own_prefix": 82,
+          "no_sapling/nonforced_own_prefix": 82,
+          "occupied": 82
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 12,
+          "active/demo_agreement": 12,
+          "active/demo_legal_own_prefix": 16,
+          "active/nonforced_own_prefix": 16,
+          "candidate/demo_agree_among_nonforced": 12,
+          "candidate/demo_agreement": 12,
+          "candidate/demo_legal_own_prefix": 16,
+          "candidate/nonforced_own_prefix": 16,
+          "candidate_vs_active/changed_slots": 0,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 12,
+          "control/demo_agreement": 12,
+          "control/demo_legal_own_prefix": 16,
+          "control/nonforced_own_prefix": 16,
+          "no_sapling/demo_agree_among_nonforced": 13,
+          "no_sapling/demo_agreement": 13,
+          "no_sapling/demo_legal_own_prefix": 16,
+          "no_sapling/nonforced_own_prefix": 16,
+          "occupied": 16
+        }
+      }
+    },
+    "terrain/1945e8185388fa19eaaa76f00bbde298bff1aa2b535af32a55f77ab0d8db7b4a": {
+      "counts": {
+        "active/expert_joint_agreement": 2,
+        "candidate/expert_joint_agreement": 0,
+        "candidate_vs_active/changed_joint": 10,
+        "candidate_vs_control/changed_joint": 10,
+        "candidate_vs_no_sapling/changed_joint": 8,
+        "control/expert_joint_agreement": 2,
+        "no_sapling/expert_joint_agreement": 1,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 8,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.08333333333333333,
+          "fallback_fraction_of_proposals": 0.25,
+          "proposal_roots": 4
+        },
+        "candidate": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.08333333333333333,
+          "fallback_fraction_of_proposals": 0.3333333333333333,
+          "proposal_roots": 3
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 5,
+          "active/demo_agreement": 23,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 6,
+          "candidate/demo_agree_among_nonforced": 4,
+          "candidate/demo_agreement": 22,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 6,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 5,
+          "control/demo_agreement": 23,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 6,
+          "no_sapling/demo_agree_among_nonforced": 5,
+          "no_sapling/demo_agreement": 23,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 6,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 59,
+          "active/demo_agreement": 59,
+          "active/demo_legal_own_prefix": 85,
+          "active/nonforced_own_prefix": 85,
+          "candidate/demo_agree_among_nonforced": 59,
+          "candidate/demo_agreement": 59,
+          "candidate/demo_legal_own_prefix": 85,
+          "candidate/nonforced_own_prefix": 85,
+          "candidate_vs_active/changed_slots": 11,
+          "candidate_vs_control/changed_slots": 10,
+          "candidate_vs_no_sapling/changed_slots": 9,
+          "control/demo_agree_among_nonforced": 58,
+          "control/demo_agreement": 58,
+          "control/demo_legal_own_prefix": 85,
+          "control/nonforced_own_prefix": 85,
+          "no_sapling/demo_agree_among_nonforced": 59,
+          "no_sapling/demo_agreement": 59,
+          "no_sapling/demo_legal_own_prefix": 85,
+          "no_sapling/nonforced_own_prefix": 85,
+          "occupied": 85
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 11,
+          "active/demo_agreement": 11,
+          "active/demo_legal_own_prefix": 18,
+          "active/nonforced_own_prefix": 18,
+          "candidate/demo_agree_among_nonforced": 12,
+          "candidate/demo_agreement": 12,
+          "candidate/demo_legal_own_prefix": 18,
+          "candidate/nonforced_own_prefix": 18,
+          "candidate_vs_active/changed_slots": 5,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 4,
+          "control/demo_agree_among_nonforced": 11,
+          "control/demo_agreement": 11,
+          "control/demo_legal_own_prefix": 18,
+          "control/nonforced_own_prefix": 18,
+          "no_sapling/demo_agree_among_nonforced": 12,
+          "no_sapling/demo_agreement": 12,
+          "no_sapling/demo_legal_own_prefix": 18,
+          "no_sapling/nonforced_own_prefix": 18,
+          "occupied": 18
+        }
+      }
+    },
+    "terrain/3317e734afbabb1d9b8759e9cea8852aa25effc8bfc830c3aadb73f47a59e98e": {
+      "counts": {
+        "active/expert_joint_agreement": 1,
+        "candidate/expert_joint_agreement": 0,
+        "candidate_vs_active/changed_joint": 5,
+        "candidate_vs_control/changed_joint": 5,
+        "candidate_vs_no_sapling/changed_joint": 6,
+        "control/expert_joint_agreement": 1,
+        "no_sapling/expert_joint_agreement": 1,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 5,
+          "active/demo_agreement": 21,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 8,
+          "candidate/demo_agree_among_nonforced": 5,
+          "candidate/demo_agreement": 22,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 7,
+          "candidate_vs_active/changed_slots": 5,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 4,
+          "control/demo_agree_among_nonforced": 5,
+          "control/demo_agreement": 21,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 8,
+          "no_sapling/demo_agree_among_nonforced": 6,
+          "no_sapling/demo_agreement": 22,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 8,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 49,
+          "active/demo_agreement": 49,
+          "active/demo_legal_own_prefix": 76,
+          "active/nonforced_own_prefix": 76,
+          "candidate/demo_agree_among_nonforced": 52,
+          "candidate/demo_agreement": 52,
+          "candidate/demo_legal_own_prefix": 76,
+          "candidate/nonforced_own_prefix": 76,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 48,
+          "control/demo_agreement": 48,
+          "control/demo_legal_own_prefix": 76,
+          "control/nonforced_own_prefix": 76,
+          "no_sapling/demo_agree_among_nonforced": 49,
+          "no_sapling/demo_agreement": 49,
+          "no_sapling/demo_legal_own_prefix": 76,
+          "no_sapling/nonforced_own_prefix": 76,
+          "occupied": 76
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 12,
+          "active/demo_agreement": 12,
+          "active/demo_legal_own_prefix": 19,
+          "active/nonforced_own_prefix": 19,
+          "candidate/demo_agree_among_nonforced": 10,
+          "candidate/demo_agreement": 10,
+          "candidate/demo_legal_own_prefix": 19,
+          "candidate/nonforced_own_prefix": 19,
+          "candidate_vs_active/changed_slots": 5,
+          "candidate_vs_control/changed_slots": 4,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 11,
+          "control/demo_agreement": 11,
+          "control/demo_legal_own_prefix": 19,
+          "control/nonforced_own_prefix": 19,
+          "no_sapling/demo_agree_among_nonforced": 12,
+          "no_sapling/demo_agreement": 12,
+          "no_sapling/demo_legal_own_prefix": 19,
+          "no_sapling/nonforced_own_prefix": 19,
+          "occupied": 19
+        }
+      }
+    },
+    "terrain/37449e2582ea85be6f84540b1815159a90390647de06f980fc74959948e8921b": {
+      "counts": {
+        "active/expert_joint_agreement": 3,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 7,
+        "candidate_vs_control/changed_joint": 6,
+        "candidate_vs_no_sapling/changed_joint": 6,
+        "control/expert_joint_agreement": 3,
+        "no_sapling/expert_joint_agreement": 2,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        },
+        "candidate": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 5,
+          "active/demo_agreement": 22,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 7,
+          "candidate/demo_agree_among_nonforced": 4,
+          "candidate/demo_agreement": 21,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 7,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 5,
+          "control/demo_agreement": 22,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 7,
+          "no_sapling/demo_agree_among_nonforced": 5,
+          "no_sapling/demo_agreement": 22,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 7,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 74,
+          "active/demo_agreement": 74,
+          "active/demo_legal_own_prefix": 90,
+          "active/nonforced_own_prefix": 90,
+          "candidate/demo_agree_among_nonforced": 72,
+          "candidate/demo_agreement": 72,
+          "candidate/demo_legal_own_prefix": 90,
+          "candidate/nonforced_own_prefix": 90,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 3,
+          "candidate_vs_no_sapling/changed_slots": 4,
+          "control/demo_agree_among_nonforced": 74,
+          "control/demo_agreement": 74,
+          "control/demo_legal_own_prefix": 90,
+          "control/nonforced_own_prefix": 90,
+          "no_sapling/demo_agree_among_nonforced": 73,
+          "no_sapling/demo_agreement": 73,
+          "no_sapling/demo_legal_own_prefix": 90,
+          "no_sapling/nonforced_own_prefix": 90,
+          "occupied": 90
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 6,
+          "active/demo_agreement": 6,
+          "active/demo_legal_own_prefix": 10,
+          "active/nonforced_own_prefix": 10,
+          "candidate/demo_agree_among_nonforced": 4,
+          "candidate/demo_agreement": 4,
+          "candidate/demo_legal_own_prefix": 10,
+          "candidate/nonforced_own_prefix": 10,
+          "candidate_vs_active/changed_slots": 2,
+          "candidate_vs_control/changed_slots": 2,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 6,
+          "control/demo_agreement": 6,
+          "control/demo_legal_own_prefix": 10,
+          "control/nonforced_own_prefix": 10,
+          "no_sapling/demo_agree_among_nonforced": 7,
+          "no_sapling/demo_agreement": 7,
+          "no_sapling/demo_legal_own_prefix": 10,
+          "no_sapling/nonforced_own_prefix": 10,
+          "occupied": 10
+        }
+      }
+    },
+    "terrain/3e0fbaae4b6ab55b2ccb61d992537a1423f445ae60c76542cd575ccdbe565c3e": {
+      "counts": {
+        "active/expert_joint_agreement": 2,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 7,
+        "candidate_vs_control/changed_joint": 8,
+        "candidate_vs_no_sapling/changed_joint": 6,
+        "control/expert_joint_agreement": 2,
+        "no_sapling/expert_joint_agreement": 2,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 7,
+          "active/demo_agreement": 23,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 8,
+          "candidate/demo_agree_among_nonforced": 6,
+          "candidate/demo_agreement": 22,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 8,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 7,
+          "control/demo_agreement": 23,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 8,
+          "no_sapling/demo_agree_among_nonforced": 7,
+          "no_sapling/demo_agreement": 23,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 8,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 66,
+          "active/demo_agreement": 66,
+          "active/demo_legal_own_prefix": 85,
+          "active/nonforced_own_prefix": 85,
+          "candidate/demo_agree_among_nonforced": 65,
+          "candidate/demo_agreement": 65,
+          "candidate/demo_legal_own_prefix": 85,
+          "candidate/nonforced_own_prefix": 85,
+          "candidate_vs_active/changed_slots": 8,
+          "candidate_vs_control/changed_slots": 9,
+          "candidate_vs_no_sapling/changed_slots": 6,
+          "control/demo_agree_among_nonforced": 67,
+          "control/demo_agreement": 67,
+          "control/demo_legal_own_prefix": 85,
+          "control/nonforced_own_prefix": 85,
+          "no_sapling/demo_agree_among_nonforced": 66,
+          "no_sapling/demo_agreement": 66,
+          "no_sapling/demo_legal_own_prefix": 85,
+          "no_sapling/nonforced_own_prefix": 85,
+          "occupied": 85
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 9,
+          "active/demo_agreement": 9,
+          "active/demo_legal_own_prefix": 12,
+          "active/nonforced_own_prefix": 12,
+          "candidate/demo_agree_among_nonforced": 9,
+          "candidate/demo_agreement": 9,
+          "candidate/demo_legal_own_prefix": 12,
+          "candidate/nonforced_own_prefix": 12,
+          "candidate_vs_active/changed_slots": 0,
+          "candidate_vs_control/changed_slots": 0,
+          "candidate_vs_no_sapling/changed_slots": 0,
+          "control/demo_agree_among_nonforced": 9,
+          "control/demo_agreement": 9,
+          "control/demo_legal_own_prefix": 12,
+          "control/nonforced_own_prefix": 12,
+          "no_sapling/demo_agree_among_nonforced": 9,
+          "no_sapling/demo_agreement": 9,
+          "no_sapling/demo_legal_own_prefix": 12,
+          "no_sapling/nonforced_own_prefix": 12,
+          "occupied": 12
+        }
+      }
+    },
+    "terrain/706008aabd9b63c1e6755c220680c094435c4a3af97dfcdef420dc3b55262e69": {
+      "counts": {
+        "active/expert_joint_agreement": 2,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 7,
+        "candidate_vs_control/changed_joint": 7,
+        "candidate_vs_no_sapling/changed_joint": 7,
+        "control/expert_joint_agreement": 2,
+        "no_sapling/expert_joint_agreement": 3,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 6,
+          "active/demo_agreement": 23,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 7,
+          "candidate/demo_agree_among_nonforced": 5,
+          "candidate/demo_agreement": 22,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 7,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 6,
+          "control/demo_agreement": 23,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 7,
+          "no_sapling/demo_agree_among_nonforced": 6,
+          "no_sapling/demo_agreement": 23,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 7,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 61,
+          "active/demo_agreement": 61,
+          "active/demo_legal_own_prefix": 78,
+          "active/nonforced_own_prefix": 78,
+          "candidate/demo_agree_among_nonforced": 61,
+          "candidate/demo_agreement": 61,
+          "candidate/demo_legal_own_prefix": 78,
+          "candidate/nonforced_own_prefix": 78,
+          "candidate_vs_active/changed_slots": 9,
+          "candidate_vs_control/changed_slots": 9,
+          "candidate_vs_no_sapling/changed_slots": 7,
+          "control/demo_agree_among_nonforced": 61,
+          "control/demo_agreement": 61,
+          "control/demo_legal_own_prefix": 78,
+          "control/nonforced_own_prefix": 78,
+          "no_sapling/demo_agree_among_nonforced": 63,
+          "no_sapling/demo_agreement": 63,
+          "no_sapling/demo_legal_own_prefix": 78,
+          "no_sapling/nonforced_own_prefix": 78,
+          "occupied": 78
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 19,
+          "active/demo_agreement": 19,
+          "active/demo_legal_own_prefix": 20,
+          "active/nonforced_own_prefix": 20,
+          "candidate/demo_agree_among_nonforced": 19,
+          "candidate/demo_agreement": 19,
+          "candidate/demo_legal_own_prefix": 20,
+          "candidate/nonforced_own_prefix": 20,
+          "candidate_vs_active/changed_slots": 0,
+          "candidate_vs_control/changed_slots": 0,
+          "candidate_vs_no_sapling/changed_slots": 2,
+          "control/demo_agree_among_nonforced": 19,
+          "control/demo_agreement": 19,
+          "control/demo_legal_own_prefix": 20,
+          "control/nonforced_own_prefix": 20,
+          "no_sapling/demo_agree_among_nonforced": 19,
+          "no_sapling/demo_agreement": 19,
+          "no_sapling/demo_legal_own_prefix": 20,
+          "no_sapling/nonforced_own_prefix": 20,
+          "occupied": 20
+        }
+      }
+    },
+    "terrain/7e8dc2d2f1593a9116ffb4b6c4604a093fc70c726f7fc84443a3f806899d25d1": {
+      "counts": {
+        "active/expert_joint_agreement": 1,
+        "candidate/expert_joint_agreement": 0,
+        "candidate_vs_active/changed_joint": 6,
+        "candidate_vs_control/changed_joint": 6,
+        "candidate_vs_no_sapling/changed_joint": 4,
+        "control/expert_joint_agreement": 1,
+        "no_sapling/expert_joint_agreement": 1,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 4,
+          "active/demo_agreement": 19,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 9,
+          "candidate/demo_agree_among_nonforced": 2,
+          "candidate/demo_agreement": 17,
+          "candidate/demo_legal_own_prefix": 23,
+          "candidate/nonforced_own_prefix": 8,
+          "candidate_vs_active/changed_slots": 2,
+          "candidate_vs_control/changed_slots": 2,
+          "candidate_vs_no_sapling/changed_slots": 2,
+          "control/demo_agree_among_nonforced": 4,
+          "control/demo_agreement": 19,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 9,
+          "no_sapling/demo_agree_among_nonforced": 4,
+          "no_sapling/demo_agreement": 19,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 9,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 58,
+          "active/demo_agreement": 58,
+          "active/demo_legal_own_prefix": 82,
+          "active/nonforced_own_prefix": 82,
+          "candidate/demo_agree_among_nonforced": 56,
+          "candidate/demo_agreement": 56,
+          "candidate/demo_legal_own_prefix": 82,
+          "candidate/nonforced_own_prefix": 82,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 4,
+          "candidate_vs_no_sapling/changed_slots": 2,
+          "control/demo_agree_among_nonforced": 58,
+          "control/demo_agreement": 58,
+          "control/demo_legal_own_prefix": 82,
+          "control/nonforced_own_prefix": 82,
+          "no_sapling/demo_agree_among_nonforced": 56,
+          "no_sapling/demo_agreement": 56,
+          "no_sapling/demo_legal_own_prefix": 82,
+          "no_sapling/nonforced_own_prefix": 82,
+          "occupied": 82
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 13,
+          "active/demo_agreement": 13,
+          "active/demo_legal_own_prefix": 17,
+          "active/nonforced_own_prefix": 17,
+          "candidate/demo_agree_among_nonforced": 13,
+          "candidate/demo_agreement": 13,
+          "candidate/demo_legal_own_prefix": 17,
+          "candidate/nonforced_own_prefix": 17,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 13,
+          "control/demo_agreement": 13,
+          "control/demo_legal_own_prefix": 17,
+          "control/nonforced_own_prefix": 17,
+          "no_sapling/demo_agree_among_nonforced": 13,
+          "no_sapling/demo_agreement": 13,
+          "no_sapling/demo_legal_own_prefix": 17,
+          "no_sapling/nonforced_own_prefix": 17,
+          "occupied": 17
+        }
+      }
+    },
+    "terrain/86547a4ce334dfab5f57cb410c9543e0dad4c640221a0c27325497cf8bc107f4": {
+      "counts": {
+        "active/expert_joint_agreement": 2,
+        "candidate/expert_joint_agreement": 0,
+        "candidate_vs_active/changed_joint": 6,
+        "candidate_vs_control/changed_joint": 6,
+        "candidate_vs_no_sapling/changed_joint": 7,
+        "control/expert_joint_agreement": 1,
+        "no_sapling/expert_joint_agreement": 2,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 9,
+          "active/demo_agreement": 23,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 10,
+          "candidate/demo_agree_among_nonforced": 8,
+          "candidate/demo_agreement": 22,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 10,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 2,
+          "control/demo_agree_among_nonforced": 9,
+          "control/demo_agreement": 23,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 10,
+          "no_sapling/demo_agree_among_nonforced": 10,
+          "no_sapling/demo_agreement": 24,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 10,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 61,
+          "active/demo_agreement": 61,
+          "active/demo_legal_own_prefix": 82,
+          "active/nonforced_own_prefix": 82,
+          "candidate/demo_agree_among_nonforced": 56,
+          "candidate/demo_agreement": 56,
+          "candidate/demo_legal_own_prefix": 82,
+          "candidate/nonforced_own_prefix": 82,
+          "candidate_vs_active/changed_slots": 8,
+          "candidate_vs_control/changed_slots": 7,
+          "candidate_vs_no_sapling/changed_slots": 7,
+          "control/demo_agree_among_nonforced": 60,
+          "control/demo_agreement": 60,
+          "control/demo_legal_own_prefix": 82,
+          "control/nonforced_own_prefix": 82,
+          "no_sapling/demo_agree_among_nonforced": 59,
+          "no_sapling/demo_agreement": 59,
+          "no_sapling/demo_legal_own_prefix": 82,
+          "no_sapling/nonforced_own_prefix": 82,
+          "occupied": 82
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 11,
+          "active/demo_agreement": 11,
+          "active/demo_legal_own_prefix": 17,
+          "active/nonforced_own_prefix": 17,
+          "candidate/demo_agree_among_nonforced": 9,
+          "candidate/demo_agreement": 9,
+          "candidate/demo_legal_own_prefix": 17,
+          "candidate/nonforced_own_prefix": 17,
+          "candidate_vs_active/changed_slots": 2,
+          "candidate_vs_control/changed_slots": 2,
+          "candidate_vs_no_sapling/changed_slots": 2,
+          "control/demo_agree_among_nonforced": 11,
+          "control/demo_agreement": 11,
+          "control/demo_legal_own_prefix": 17,
+          "control/nonforced_own_prefix": 17,
+          "no_sapling/demo_agree_among_nonforced": 10,
+          "no_sapling/demo_agreement": 10,
+          "no_sapling/demo_legal_own_prefix": 17,
+          "no_sapling/nonforced_own_prefix": 17,
+          "occupied": 17
+        }
+      }
+    },
+    "terrain/90a0c3141a3c5062bade45cca5466806445eb1f235433afe61de25163f6552b6": {
+      "counts": {
+        "active/expert_joint_agreement": 4,
+        "candidate/expert_joint_agreement": 2,
+        "candidate_vs_active/changed_joint": 7,
+        "candidate_vs_control/changed_joint": 7,
+        "candidate_vs_no_sapling/changed_joint": 8,
+        "control/expert_joint_agreement": 4,
+        "no_sapling/expert_joint_agreement": 3,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 8,
+          "active/demo_agreement": 23,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 9,
+          "candidate/demo_agree_among_nonforced": 7,
+          "candidate/demo_agreement": 22,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 9,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 8,
+          "control/demo_agreement": 23,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 9,
+          "no_sapling/demo_agree_among_nonforced": 8,
+          "no_sapling/demo_agreement": 23,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 9,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 65,
+          "active/demo_agreement": 65,
+          "active/demo_legal_own_prefix": 78,
+          "active/nonforced_own_prefix": 78,
+          "candidate/demo_agree_among_nonforced": 65,
+          "candidate/demo_agreement": 65,
+          "candidate/demo_legal_own_prefix": 78,
+          "candidate/nonforced_own_prefix": 78,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 4,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 65,
+          "control/demo_agreement": 65,
+          "control/demo_legal_own_prefix": 78,
+          "control/nonforced_own_prefix": 78,
+          "no_sapling/demo_agree_among_nonforced": 63,
+          "no_sapling/demo_agreement": 63,
+          "no_sapling/demo_legal_own_prefix": 78,
+          "no_sapling/nonforced_own_prefix": 78,
+          "occupied": 78
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 13,
+          "active/demo_agreement": 13,
+          "active/demo_legal_own_prefix": 20,
+          "active/nonforced_own_prefix": 20,
+          "candidate/demo_agree_among_nonforced": 12,
+          "candidate/demo_agreement": 12,
+          "candidate/demo_legal_own_prefix": 20,
+          "candidate/nonforced_own_prefix": 20,
+          "candidate_vs_active/changed_slots": 5,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 13,
+          "control/demo_agreement": 13,
+          "control/demo_legal_own_prefix": 20,
+          "control/nonforced_own_prefix": 20,
+          "no_sapling/demo_agree_among_nonforced": 10,
+          "no_sapling/demo_agreement": 10,
+          "no_sapling/demo_legal_own_prefix": 20,
+          "no_sapling/nonforced_own_prefix": 20,
+          "occupied": 20
+        }
+      }
+    },
+    "terrain/91f50aac73fa34337d0960056dc6f2e07759ae83fa5eddc0302461b897c7dd28": {
+      "counts": {
+        "active/expert_joint_agreement": 2,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 9,
+        "candidate_vs_control/changed_joint": 9,
+        "candidate_vs_no_sapling/changed_joint": 9,
+        "control/expert_joint_agreement": 2,
+        "no_sapling/expert_joint_agreement": 2,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 4,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 8,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 4
+        },
+        "candidate": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 5,
+          "active/demo_agreement": 22,
+          "active/demo_legal_own_prefix": 23,
+          "active/nonforced_own_prefix": 6,
+          "candidate/demo_agree_among_nonforced": 4,
+          "candidate/demo_agreement": 21,
+          "candidate/demo_legal_own_prefix": 23,
+          "candidate/nonforced_own_prefix": 6,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 5,
+          "control/demo_agreement": 22,
+          "control/demo_legal_own_prefix": 23,
+          "control/nonforced_own_prefix": 6,
+          "no_sapling/demo_agree_among_nonforced": 5,
+          "no_sapling/demo_agreement": 22,
+          "no_sapling/demo_legal_own_prefix": 23,
+          "no_sapling/nonforced_own_prefix": 6,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 58,
+          "active/demo_agreement": 58,
+          "active/demo_legal_own_prefix": 83,
+          "active/nonforced_own_prefix": 83,
+          "candidate/demo_agree_among_nonforced": 58,
+          "candidate/demo_agreement": 58,
+          "candidate/demo_legal_own_prefix": 83,
+          "candidate/nonforced_own_prefix": 83,
+          "candidate_vs_active/changed_slots": 12,
+          "candidate_vs_control/changed_slots": 10,
+          "candidate_vs_no_sapling/changed_slots": 11,
+          "control/demo_agree_among_nonforced": 62,
+          "control/demo_agreement": 62,
+          "control/demo_legal_own_prefix": 83,
+          "control/nonforced_own_prefix": 83,
+          "no_sapling/demo_agree_among_nonforced": 59,
+          "no_sapling/demo_agreement": 59,
+          "no_sapling/demo_legal_own_prefix": 83,
+          "no_sapling/nonforced_own_prefix": 83,
+          "occupied": 83
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 7,
+          "active/demo_agreement": 7,
+          "active/demo_legal_own_prefix": 14,
+          "active/nonforced_own_prefix": 14,
+          "candidate/demo_agree_among_nonforced": 6,
+          "candidate/demo_agreement": 6,
+          "candidate/demo_legal_own_prefix": 14,
+          "candidate/nonforced_own_prefix": 14,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 7,
+          "control/demo_agreement": 7,
+          "control/demo_legal_own_prefix": 14,
+          "control/nonforced_own_prefix": 14,
+          "no_sapling/demo_agree_among_nonforced": 7,
+          "no_sapling/demo_agreement": 7,
+          "no_sapling/demo_legal_own_prefix": 14,
+          "no_sapling/nonforced_own_prefix": 14,
+          "occupied": 14
+        }
+      }
+    },
+    "terrain/9c5c5e7ca49be1c9181dd3aec09acc026f129360d9d949a7f40ba938a3440e2b": {
+      "counts": {
+        "active/expert_joint_agreement": 1,
+        "candidate/expert_joint_agreement": 0,
+        "candidate_vs_active/changed_joint": 5,
+        "candidate_vs_control/changed_joint": 5,
+        "candidate_vs_no_sapling/changed_joint": 6,
+        "control/expert_joint_agreement": 1,
+        "no_sapling/expert_joint_agreement": 1,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "candidate": {
+          "counts": {
+            "applied": 4,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 8,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 4
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 5,
+          "active/demo_agreement": 22,
+          "active/demo_legal_own_prefix": 23,
+          "active/nonforced_own_prefix": 6,
+          "candidate/demo_agree_among_nonforced": 4,
+          "candidate/demo_agreement": 21,
+          "candidate/demo_legal_own_prefix": 23,
+          "candidate/nonforced_own_prefix": 6,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 5,
+          "control/demo_agreement": 22,
+          "control/demo_legal_own_prefix": 23,
+          "control/nonforced_own_prefix": 6,
+          "no_sapling/demo_agree_among_nonforced": 5,
+          "no_sapling/demo_agreement": 22,
+          "no_sapling/demo_legal_own_prefix": 23,
+          "no_sapling/nonforced_own_prefix": 6,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 57,
+          "active/demo_agreement": 57,
+          "active/demo_legal_own_prefix": 78,
+          "active/nonforced_own_prefix": 78,
+          "candidate/demo_agree_among_nonforced": 58,
+          "candidate/demo_agreement": 58,
+          "candidate/demo_legal_own_prefix": 78,
+          "candidate/nonforced_own_prefix": 78,
+          "candidate_vs_active/changed_slots": 2,
+          "candidate_vs_control/changed_slots": 2,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 57,
+          "control/demo_agreement": 57,
+          "control/demo_legal_own_prefix": 78,
+          "control/nonforced_own_prefix": 78,
+          "no_sapling/demo_agree_among_nonforced": 57,
+          "no_sapling/demo_agreement": 57,
+          "no_sapling/demo_legal_own_prefix": 78,
+          "no_sapling/nonforced_own_prefix": 78,
+          "occupied": 78
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 12,
+          "active/demo_agreement": 12,
+          "active/demo_legal_own_prefix": 19,
+          "active/nonforced_own_prefix": 19,
+          "candidate/demo_agree_among_nonforced": 13,
+          "candidate/demo_agreement": 13,
+          "candidate/demo_legal_own_prefix": 19,
+          "candidate/nonforced_own_prefix": 19,
+          "candidate_vs_active/changed_slots": 3,
+          "candidate_vs_control/changed_slots": 3,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 12,
+          "control/demo_agreement": 12,
+          "control/demo_legal_own_prefix": 19,
+          "control/nonforced_own_prefix": 19,
+          "no_sapling/demo_agree_among_nonforced": 12,
+          "no_sapling/demo_agreement": 12,
+          "no_sapling/demo_legal_own_prefix": 19,
+          "no_sapling/nonforced_own_prefix": 19,
+          "occupied": 19
+        }
+      }
+    },
+    "terrain/aa070cf1de791daff1a0b288b1e76ce75300a81a55f4c02e7d7e222fd062bf4c": {
+      "counts": {
+        "active/expert_joint_agreement": 1,
+        "candidate/expert_joint_agreement": 0,
+        "candidate_vs_active/changed_joint": 9,
+        "candidate_vs_control/changed_joint": 9,
+        "candidate_vs_no_sapling/changed_joint": 10,
+        "control/expert_joint_agreement": 1,
+        "no_sapling/expert_joint_agreement": 1,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        },
+        "candidate": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 8,
+          "active/demo_agreement": 22,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 10,
+          "candidate/demo_agree_among_nonforced": 7,
+          "candidate/demo_agreement": 21,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 10,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 8,
+          "control/demo_agreement": 22,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 10,
+          "no_sapling/demo_agree_among_nonforced": 8,
+          "no_sapling/demo_agreement": 22,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 10,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 53,
+          "active/demo_agreement": 53,
+          "active/demo_legal_own_prefix": 77,
+          "active/nonforced_own_prefix": 77,
+          "candidate/demo_agree_among_nonforced": 52,
+          "candidate/demo_agreement": 52,
+          "candidate/demo_legal_own_prefix": 77,
+          "candidate/nonforced_own_prefix": 77,
+          "candidate_vs_active/changed_slots": 10,
+          "candidate_vs_control/changed_slots": 10,
+          "candidate_vs_no_sapling/changed_slots": 11,
+          "control/demo_agree_among_nonforced": 55,
+          "control/demo_agreement": 55,
+          "control/demo_legal_own_prefix": 77,
+          "control/nonforced_own_prefix": 77,
+          "no_sapling/demo_agree_among_nonforced": 56,
+          "no_sapling/demo_agreement": 56,
+          "no_sapling/demo_legal_own_prefix": 77,
+          "no_sapling/nonforced_own_prefix": 77,
+          "occupied": 77
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 13,
+          "active/demo_agreement": 13,
+          "active/demo_legal_own_prefix": 18,
+          "active/nonforced_own_prefix": 18,
+          "candidate/demo_agree_among_nonforced": 13,
+          "candidate/demo_agreement": 13,
+          "candidate/demo_legal_own_prefix": 18,
+          "candidate/nonforced_own_prefix": 18,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 5,
+          "candidate_vs_no_sapling/changed_slots": 5,
+          "control/demo_agree_among_nonforced": 13,
+          "control/demo_agreement": 13,
+          "control/demo_legal_own_prefix": 18,
+          "control/nonforced_own_prefix": 18,
+          "no_sapling/demo_agree_among_nonforced": 13,
+          "no_sapling/demo_agreement": 13,
+          "no_sapling/demo_legal_own_prefix": 18,
+          "no_sapling/nonforced_own_prefix": 18,
+          "occupied": 18
+        }
+      }
+    },
+    "terrain/c2b05c4ced9f8dd99dd698425d43d9340f076cb918b134288ed7805881b25af4": {
+      "counts": {
+        "active/expert_joint_agreement": 3,
+        "candidate/expert_joint_agreement": 1,
+        "candidate_vs_active/changed_joint": 10,
+        "candidate_vs_control/changed_joint": 10,
+        "candidate_vs_no_sapling/changed_joint": 9,
+        "control/expert_joint_agreement": 3,
+        "no_sapling/expert_joint_agreement": 3,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 5,
+          "active/demo_agreement": 22,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 7,
+          "candidate/demo_agree_among_nonforced": 5,
+          "candidate/demo_agreement": 23,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 6,
+          "candidate_vs_active/changed_slots": 3,
+          "candidate_vs_control/changed_slots": 3,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 5,
+          "control/demo_agreement": 22,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 7,
+          "no_sapling/demo_agree_among_nonforced": 5,
+          "no_sapling/demo_agreement": 22,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 7,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 59,
+          "active/demo_agreement": 59,
+          "active/demo_legal_own_prefix": 78,
+          "active/nonforced_own_prefix": 78,
+          "candidate/demo_agree_among_nonforced": 55,
+          "candidate/demo_agreement": 55,
+          "candidate/demo_legal_own_prefix": 78,
+          "candidate/nonforced_own_prefix": 78,
+          "candidate_vs_active/changed_slots": 13,
+          "candidate_vs_control/changed_slots": 13,
+          "candidate_vs_no_sapling/changed_slots": 10,
+          "control/demo_agree_among_nonforced": 59,
+          "control/demo_agreement": 59,
+          "control/demo_legal_own_prefix": 78,
+          "control/nonforced_own_prefix": 78,
+          "no_sapling/demo_agree_among_nonforced": 59,
+          "no_sapling/demo_agreement": 59,
+          "no_sapling/demo_legal_own_prefix": 78,
+          "no_sapling/nonforced_own_prefix": 78,
+          "occupied": 78
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 16,
+          "active/demo_agreement": 16,
+          "active/demo_legal_own_prefix": 19,
+          "active/nonforced_own_prefix": 19,
+          "candidate/demo_agree_among_nonforced": 17,
+          "candidate/demo_agreement": 17,
+          "candidate/demo_legal_own_prefix": 19,
+          "candidate/nonforced_own_prefix": 19,
+          "candidate_vs_active/changed_slots": 3,
+          "candidate_vs_control/changed_slots": 3,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 16,
+          "control/demo_agreement": 16,
+          "control/demo_legal_own_prefix": 19,
+          "control/nonforced_own_prefix": 19,
+          "no_sapling/demo_agree_among_nonforced": 16,
+          "no_sapling/demo_agreement": 16,
+          "no_sapling/demo_legal_own_prefix": 19,
+          "no_sapling/nonforced_own_prefix": 19,
+          "occupied": 19
+        }
+      }
+    },
+    "terrain/e84691292426a9d3923dbd236e8b5e39ee38021d79b9596d2757d024fc6ded43": {
+      "counts": {
+        "active/expert_joint_agreement": 3,
+        "candidate/expert_joint_agreement": 2,
+        "candidate_vs_active/changed_joint": 6,
+        "candidate_vs_control/changed_joint": 6,
+        "candidate_vs_no_sapling/changed_joint": 7,
+        "control/expert_joint_agreement": 3,
+        "no_sapling/expert_joint_agreement": 3,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        },
+        "candidate": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "control": {
+          "counts": {
+            "applied": 1,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 11,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 1
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 0,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 12,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": null,
+          "proposal_roots": 0
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 7,
+          "active/demo_agreement": 23,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 8,
+          "candidate/demo_agree_among_nonforced": 6,
+          "candidate/demo_agreement": 22,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 8,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 7,
+          "control/demo_agreement": 23,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 8,
+          "no_sapling/demo_agree_among_nonforced": 7,
+          "no_sapling/demo_agreement": 23,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 8,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 65,
+          "active/demo_agreement": 65,
+          "active/demo_legal_own_prefix": 82,
+          "active/nonforced_own_prefix": 82,
+          "candidate/demo_agree_among_nonforced": 65,
+          "candidate/demo_agreement": 65,
+          "candidate/demo_legal_own_prefix": 82,
+          "candidate/nonforced_own_prefix": 82,
+          "candidate_vs_active/changed_slots": 4,
+          "candidate_vs_control/changed_slots": 2,
+          "candidate_vs_no_sapling/changed_slots": 4,
+          "control/demo_agree_among_nonforced": 65,
+          "control/demo_agreement": 65,
+          "control/demo_legal_own_prefix": 82,
+          "control/nonforced_own_prefix": 82,
+          "no_sapling/demo_agree_among_nonforced": 67,
+          "no_sapling/demo_agreement": 67,
+          "no_sapling/demo_legal_own_prefix": 82,
+          "no_sapling/nonforced_own_prefix": 82,
+          "occupied": 82
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 13,
+          "active/demo_agreement": 13,
+          "active/demo_legal_own_prefix": 18,
+          "active/nonforced_own_prefix": 18,
+          "candidate/demo_agree_among_nonforced": 14,
+          "candidate/demo_agreement": 14,
+          "candidate/demo_legal_own_prefix": 18,
+          "candidate/nonforced_own_prefix": 18,
+          "candidate_vs_active/changed_slots": 3,
+          "candidate_vs_control/changed_slots": 3,
+          "candidate_vs_no_sapling/changed_slots": 3,
+          "control/demo_agree_among_nonforced": 13,
+          "control/demo_agreement": 13,
+          "control/demo_legal_own_prefix": 18,
+          "control/nonforced_own_prefix": 18,
+          "no_sapling/demo_agree_among_nonforced": 13,
+          "no_sapling/demo_agreement": 13,
+          "no_sapling/demo_legal_own_prefix": 18,
+          "no_sapling/nonforced_own_prefix": 18,
+          "occupied": 18
+        }
+      }
+    },
+    "terrain/fe5cdf91c2f60493e85343d26d20af75223411bf8631b61945dd2a052725a980": {
+      "counts": {
+        "active/expert_joint_agreement": 3,
+        "candidate/expert_joint_agreement": 2,
+        "candidate_vs_active/changed_joint": 7,
+        "candidate_vs_control/changed_joint": 8,
+        "candidate_vs_no_sapling/changed_joint": 7,
+        "control/expert_joint_agreement": 3,
+        "no_sapling/expert_joint_agreement": 3,
+        "roots": 12
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "candidate": {
+          "counts": {
+            "applied": 3,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 9,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 3
+        },
+        "control": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 2,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 10,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 2
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 4,
+          "active/demo_agreement": 24,
+          "active/demo_legal_own_prefix": 24,
+          "active/nonforced_own_prefix": 4,
+          "candidate/demo_agree_among_nonforced": 3,
+          "candidate/demo_agreement": 23,
+          "candidate/demo_legal_own_prefix": 24,
+          "candidate/nonforced_own_prefix": 4,
+          "candidate_vs_active/changed_slots": 1,
+          "candidate_vs_control/changed_slots": 1,
+          "candidate_vs_no_sapling/changed_slots": 1,
+          "control/demo_agree_among_nonforced": 4,
+          "control/demo_agreement": 24,
+          "control/demo_legal_own_prefix": 24,
+          "control/nonforced_own_prefix": 4,
+          "no_sapling/demo_agree_among_nonforced": 4,
+          "no_sapling/demo_agreement": 24,
+          "no_sapling/demo_legal_own_prefix": 24,
+          "no_sapling/nonforced_own_prefix": 4,
+          "occupied": 24
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 62,
+          "active/demo_agreement": 62,
+          "active/demo_legal_own_prefix": 83,
+          "active/nonforced_own_prefix": 83,
+          "candidate/demo_agree_among_nonforced": 61,
+          "candidate/demo_agreement": 61,
+          "candidate/demo_legal_own_prefix": 83,
+          "candidate/nonforced_own_prefix": 83,
+          "candidate_vs_active/changed_slots": 10,
+          "candidate_vs_control/changed_slots": 11,
+          "candidate_vs_no_sapling/changed_slots": 9,
+          "control/demo_agree_among_nonforced": 61,
+          "control/demo_agreement": 61,
+          "control/demo_legal_own_prefix": 83,
+          "control/nonforced_own_prefix": 83,
+          "no_sapling/demo_agree_among_nonforced": 61,
+          "no_sapling/demo_agreement": 61,
+          "no_sapling/demo_legal_own_prefix": 83,
+          "no_sapling/nonforced_own_prefix": 83,
+          "occupied": 83
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 11,
+          "active/demo_agreement": 11,
+          "active/demo_legal_own_prefix": 15,
+          "active/nonforced_own_prefix": 15,
+          "candidate/demo_agree_among_nonforced": 11,
+          "candidate/demo_agreement": 11,
+          "candidate/demo_legal_own_prefix": 15,
+          "candidate/nonforced_own_prefix": 15,
+          "candidate_vs_active/changed_slots": 0,
+          "candidate_vs_control/changed_slots": 0,
+          "candidate_vs_no_sapling/changed_slots": 0,
+          "control/demo_agree_among_nonforced": 11,
+          "control/demo_agreement": 11,
+          "control/demo_legal_own_prefix": 15,
+          "control/nonforced_own_prefix": 15,
+          "no_sapling/demo_agree_among_nonforced": 11,
+          "no_sapling/demo_agreement": 11,
+          "no_sapling/demo_legal_own_prefix": 15,
+          "no_sapling/nonforced_own_prefix": 15,
+          "occupied": 15
+        }
+      }
+    },
+    "wdl/L": {
+      "counts": {
+        "active/expert_joint_agreement": 37,
+        "candidate/expert_joint_agreement": 13,
+        "candidate_vs_active/changed_joint": 132,
+        "candidate_vs_control/changed_joint": 133,
+        "candidate_vs_no_sapling/changed_joint": 129,
+        "control/expert_joint_agreement": 36,
+        "no_sapling/expert_joint_agreement": 34,
+        "roots": 216
+      },
+      "return_residual": {
+        "active": {
+          "counts": {
+            "applied": 27,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 188,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.004629629629629629,
+          "fallback_fraction_of_proposals": 0.03571428571428571,
+          "proposal_roots": 28
+        },
+        "candidate": {
+          "counts": {
+            "applied": 28,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 188,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 28
+        },
+        "control": {
+          "counts": {
+            "applied": 22,
+            "new_conflict_fallback": 1,
+            "no_proposed_change": 193,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.004629629629629629,
+          "fallback_fraction_of_proposals": 0.043478260869565216,
+          "proposal_roots": 23
+        },
+        "no_sapling": {
+          "counts": {
+            "applied": 30,
+            "new_conflict_fallback": 0,
+            "no_proposed_change": 186,
+            "protected_role_fallback": 0,
+            "residual_disabled": 0
+          },
+          "fallback_fraction_of_all": 0.0,
+          "fallback_fraction_of_proposals": 0.0,
+          "proposal_roots": 30
+        }
+      },
+      "roles": {
+        "base": {
+          "active/demo_agree_among_nonforced": 105,
+          "active/demo_agreement": 402,
+          "active/demo_legal_own_prefix": 430,
+          "active/nonforced_own_prefix": 133,
+          "candidate/demo_agree_among_nonforced": 87,
+          "candidate/demo_agreement": 387,
+          "candidate/demo_legal_own_prefix": 429,
+          "candidate/nonforced_own_prefix": 129,
+          "candidate_vs_active/changed_slots": 28,
+          "candidate_vs_control/changed_slots": 28,
+          "candidate_vs_no_sapling/changed_slots": 28,
+          "control/demo_agree_among_nonforced": 105,
+          "control/demo_agreement": 402,
+          "control/demo_legal_own_prefix": 430,
+          "control/nonforced_own_prefix": 133,
+          "no_sapling/demo_agree_among_nonforced": 107,
+          "no_sapling/demo_agreement": 404,
+          "no_sapling/demo_legal_own_prefix": 430,
+          "no_sapling/nonforced_own_prefix": 133,
+          "occupied": 432
+        },
+        "collector": {
+          "active/demo_agree_among_nonforced": 1093,
+          "active/demo_agreement": 1093,
+          "active/demo_legal_own_prefix": 1458,
+          "active/nonforced_own_prefix": 1458,
+          "candidate/demo_agree_among_nonforced": 1080,
+          "candidate/demo_agreement": 1080,
+          "candidate/demo_legal_own_prefix": 1458,
+          "candidate/nonforced_own_prefix": 1458,
+          "candidate_vs_active/changed_slots": 132,
+          "candidate_vs_control/changed_slots": 128,
+          "candidate_vs_no_sapling/changed_slots": 118,
+          "control/demo_agree_among_nonforced": 1098,
+          "control/demo_agreement": 1098,
+          "control/demo_legal_own_prefix": 1458,
+          "control/nonforced_own_prefix": 1458,
+          "no_sapling/demo_agree_among_nonforced": 1088,
+          "no_sapling/demo_agreement": 1088,
+          "no_sapling/demo_legal_own_prefix": 1458,
+          "no_sapling/nonforced_own_prefix": 1458,
+          "occupied": 1458
+        },
+        "planter": {
+          "active/demo_agree_among_nonforced": 215,
+          "active/demo_agreement": 215,
+          "active/demo_legal_own_prefix": 311,
+          "active/nonforced_own_prefix": 311,
+          "candidate/demo_agree_among_nonforced": 210,
+          "candidate/demo_agreement": 210,
+          "candidate/demo_legal_own_prefix": 311,
+          "candidate/nonforced_own_prefix": 311,
+          "candidate_vs_active/changed_slots": 43,
+          "candidate_vs_control/changed_slots": 45,
+          "candidate_vs_no_sapling/changed_slots": 48,
+          "control/demo_agree_among_nonforced": 215,
+          "control/demo_agreement": 215,
+          "control/demo_legal_own_prefix": 311,
+          "control/nonforced_own_prefix": 311,
+          "no_sapling/demo_agree_among_nonforced": 216,
+          "no_sapling/demo_agreement": 216,
+          "no_sapling/demo_legal_own_prefix": 311,
+          "no_sapling/nonforced_own_prefix": 311,
+          "occupied": 311
+        }
+      }
+    }
+  }
+}

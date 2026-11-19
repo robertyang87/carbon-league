@@ -1,0 +1,1044 @@
+{
+  "design": {
+    "scope": "Post-training explanation only. Never substitute an actor or touch arena eligibility.",
+    "training_root_pick": "For all 218 training maps take four rows without replacement using RNG 4403879; calibrate by equally weighted maps.",
+    "seed": 4403879,
+    "roots_per_train_map": 4,
+    "temperature_bounds": [
+      0.25,
+      4.0
+    ],
+    "sample_splits": [
+      "train",
+      "val",
+      "holdout"
+    ],
+    "grouping": "Aggregate legal multi-choice demonstration slots within map, then average maps.",
+    "evaluation": "Compare temperature-fitted original ensemble CE against published original/candidate; retain original raw greedy and return correction unchanged."
+  },
+  "fit_sha256": "3c6f98eb70558be45865b276112e628ed090ebc01e1357b08cec8a1cfbf6eac2",
+  "script_sha256": "3e8ca345bffe13b9b2e78598d0adace2760cebf8004e002cc6812e1c130607ff",
+  "sets": {
+    "train": {
+      "maps": 218,
+      "slots": 8170,
+      "roots": 872,
+      "fitted_temperature": 2.013401465961934,
+      "original": 1.1722495895140692,
+      "temperature_only": 0.9642639650478728,
+      "changed_base_slot_argmax": 0,
+      "by_map": {
+        "fad86a53b1935132820f24b92e9bdded-1": {
+          "original": 1.9181908568979225,
+          "temperature_only": 1.3288967217701149
+        },
+        "c4fa4b449c4d3c5f62a29e5a4475cf62-1": {
+          "original": 1.1761885120209012,
+          "temperature_only": 0.9345219877879357
+        },
+        "1c4129dd97facd73433a6f1127f07b66-1": {
+          "original": 0.6389576172958051,
+          "temperature_only": 0.6632378243490585
+        },
+        "ed50a8ff6c3cbc1f0e7d3566c9e4e1a2-1": {
+          "original": 3.1393179761330847,
+          "temperature_only": 1.9551869930180144
+        },
+        "46fa82b5b5a79fb969d3b640c62c5bab-1": {
+          "original": 1.8136601531827823,
+          "temperature_only": 1.3097621591809099
+        },
+        "bda9da62333b0cf018b1cddd9f6b0e86-1": {
+          "original": 1.444681546935985,
+          "temperature_only": 1.129258632063566
+        },
+        "7a92e5a3c1f0bd550d075d45ee3ff26b-1": {
+          "original": 0.5510966667107638,
+          "temperature_only": 0.6292903558990383
+        },
+        "a5339b36de9977c9a825bf6de5691cac-1": {
+          "original": 0.6100246389580043,
+          "temperature_only": 0.6788683608199408
+        },
+        "43d25777fff76d74f873df66cb8a739d-1": {
+          "original": 2.293656276806217,
+          "temperature_only": 1.5567546248457014
+        },
+        "b4b95a9c8bf827a2684ef801ebd8b920-1": {
+          "original": 1.3705947636056897,
+          "temperature_only": 1.1107007802541708
+        },
+        "778f48d3919f85fce6a83346c9c33159-1": {
+          "original": 1.0128530524226786,
+          "temperature_only": 0.9189496897351304
+        },
+        "59456541a62bd2d1acf1c42fcfa72107-1": {
+          "original": 2.6658705830540277,
+          "temperature_only": 1.6901320003791618
+        },
+        "f1e4f4bd9c59bc73c14dc61aef686eb5-1": {
+          "original": 1.7424188274370145,
+          "temperature_only": 1.2676270227775632
+        },
+        "a7c3f2f09f52651844bc5effa60fc674-1": {
+          "original": 1.041835348525198,
+          "temperature_only": 0.8565675208127184
+        },
+        "6807d1ae9127e910607e45ea4039ace7-1": {
+          "original": 0.454915158606496,
+          "temperature_only": 0.5672014618932016
+        },
+        "679bb68235c516308da2acf36b130c00-1": {
+          "original": 2.405623778820078,
+          "temperature_only": 1.551900009203377
+        },
+        "81518c976fa3bfe77d4bd6b3e1498a2b-1": {
+          "original": 0.5567446542809519,
+          "temperature_only": 0.6455113196049778
+        },
+        "df1002840c44b1b3055ceaad5a5c061e-1": {
+          "original": 0.7260902125584624,
+          "temperature_only": 0.6983366410816835
+        },
+        "2063cf3e7e535c5847ffb830c1a34379-1": {
+          "original": 1.830273905464836,
+          "temperature_only": 1.3573528369798982
+        },
+        "7d651b81bb589a01eca3ff86a2b5f3c7-1": {
+          "original": 0.6859132830313013,
+          "temperature_only": 0.7034590791430306
+        },
+        "e12b32e058beffcfe344df78a69b71af-1": {
+          "original": 0.54029985806345,
+          "temperature_only": 0.6000665119584061
+        },
+        "7b25f74073abf215fbbcd5a7373694dd-1": {
+          "original": 0.8480787438856197,
+          "temperature_only": 0.7827108274905992
+        },
+        "2c62cc5c7d86a9bd7554001a972f15b2-1": {
+          "original": 1.134700717844889,
+          "temperature_only": 0.9868074878502988
+        },
+        "6a978d3f2ded0608d1b52c9b17ab0986-1": {
+          "original": 0.6098486582499774,
+          "temperature_only": 0.691216446372788
+        },
+        "3e9f194c71f605890e8ea50f06038cd2-1": {
+          "original": 0.8305703493899103,
+          "temperature_only": 0.7878366901334364
+        },
+        "0912c5589f78c5e0510783b1ada9b3e4-1": {
+          "original": 0.7623509033192084,
+          "temperature_only": 0.7777568762160252
+        },
+        "f59c4a6ea2d96ae70a90440c893c949b-1": {
+          "original": 0.7756931956530526,
+          "temperature_only": 0.7541283582391246
+        },
+        "c7b6871ddaa4ae5462f8a96e7f7743a1-1": {
+          "original": 1.251391302965637,
+          "temperature_only": 1.06864369265845
+        },
+        "2ba36ce809c070807f1df8ce9d9896a5-1": {
+          "original": 1.3367346643703248,
+          "temperature_only": 1.0579925108334751
+        },
+        "f2bf32abf85d0e395d54f0f7545917dc-1": {
+          "original": 1.1530545286484464,
+          "temperature_only": 0.9804328433952749
+        },
+        "c6e8900903560d742b48733a54a20ef5-1": {
+          "original": 2.740160118387955,
+          "temperature_only": 1.761202440552451
+        },
+        "f6bfa602792e97292aa7d84788606363-1": {
+          "original": 1.0804930180755554,
+          "temperature_only": 0.931958342757798
+        },
+        "9756aa749f6487a6593e2133b3ae4fd5-1": {
+          "original": 0.7108136513978803,
+          "temperature_only": 0.7405898636209416
+        },
+        "0241b43180b3840ce9e07ccdeddda374-1": {
+          "original": 1.1766516384061962,
+          "temperature_only": 0.9621758211400351
+        },
+        "a23c4a625124df668c717f864f76a9ab-1": {
+          "original": 0.39645951501785615,
+          "temperature_only": 0.5768404331266888
+        },
+        "050f7cf068e8e27adf244ca4aade334e-1": {
+          "original": 0.6312377468353297,
+          "temperature_only": 0.6703984037436835
+        },
+        "4776deb382cafbda838ceaeb5441473f-1": {
+          "original": 0.4364680613215544,
+          "temperature_only": 0.5465007481402032
+        },
+        "f54daea3e868c4f8aa7e4ca241e51f78-1": {
+          "original": 1.4215658985683015,
+          "temperature_only": 1.0903261327141143
+        },
+        "4175ce2fb8e7c8b110c5de0e225c84f3-1": {
+          "original": 0.5698289902818884,
+          "temperature_only": 0.6188941296005364
+        },
+        "918874a5a3fe275ed997dd773123ce62-1": {
+          "original": 1.9215096522109236,
+          "temperature_only": 1.3004416692154084
+        },
+        "2a52bf1b3ca98f85e616ed395eb1023b-1": {
+          "original": 2.6529338813922,
+          "temperature_only": 1.6780359450128597
+        },
+        "a0b06c2df17f21dc9821fc6175c7d7a8-1": {
+          "original": 1.4218130199328178,
+          "temperature_only": 1.0922581244252723
+        },
+        "00b490c13c7f3afd6419725df29a09a4-1": {
+          "original": 1.5545080228261865,
+          "temperature_only": 1.1451127164597275
+        },
+        "4ed9d90532588246c93c2705e92ca86f-1": {
+          "original": 0.8904822291452598,
+          "temperature_only": 0.8203696051658825
+        },
+        "dccadac084ca2d5df35fe4fa0543ecff-1": {
+          "original": 0.4139862882663775,
+          "temperature_only": 0.5632531117289457
+        },
+        "b89da539fda8c75bad5c0c54d28827b0-1": {
+          "original": 0.7645296747616265,
+          "temperature_only": 0.7704966667854376
+        },
+        "cfba262ed5c201356759b834f156b5b5-1": {
+          "original": 0.3947841393977115,
+          "temperature_only": 0.5459408438952823
+        },
+        "529b2d23cdd33e27a10b54cf557c6810-1": {
+          "original": 1.2691724515948948,
+          "temperature_only": 1.0266480189651177
+        },
+        "d77adda4082645819a97e5f71e2c541e-1": {
+          "original": 0.49574243873003815,
+          "temperature_only": 0.5754727477846086
+        },
+        "393025d96d4d767c1e0eeb0e0761bd0e-1": {
+          "original": 0.647308334481049,
+          "temperature_only": 0.706873534981726
+        },
+        "ebaaf39c01dadae4059fb32b8508fc85-1": {
+          "original": 1.8946886678412809,
+          "temperature_only": 1.3227842653226376
+        },
+        "8c7bd6ea5904d6984735a528833d5ed6-1": {
+          "original": 1.841199973819548,
+          "temperature_only": 1.2918920833586771
+        },
+        "176aab183f1b1f586ed4a0a6f6fece30-1": {
+          "original": 0.6484747867824929,
+          "temperature_only": 0.7298465681177109
+        },
+        "043181cc87f4e8d569a46681c3c617a7-1": {
+          "original": 0.8092580730193912,
+          "temperature_only": 0.7658390295691679
+        },
+        "881edae94331196f34895341e52fcf78-1": {
+          "original": 2.207824940411244,
+          "temperature_only": 1.5054116535484012
+        },
+        "791ae149851d64f1b7252c0e44fa5b99-1": {
+          "original": 1.1013390322329015,
+          "temperature_only": 0.9650486340503545
+        },
+        "be764e5947a438d9b9a6d0c338559e29-1": {
+          "original": 1.9577047789915163,
+          "temperature_only": 1.3810940620156866
+        },
+        "b8757536bd56dedfbab0c694b0b735ef-1": {
+          "original": 0.9649194506946014,
+          "temperature_only": 0.8485421009992555
+        },
+        "20f31dbccbfe279e2893fcfda0ae8298-1": {
+          "original": 1.5153737959458033,
+          "temperature_only": 1.1968344509271924
+        },
+        "d33649cbd5d54c358fae2729f039436f-1": {
+          "original": 1.7670899085599703,
+          "temperature_only": 1.2913733964630238
+        },
+        "a81d56feb1e755ed457d3b365697a1ec-1": {
+          "original": 0.5648715510282528,
+          "temperature_only": 0.6253459031031674
+        },
+        "20cf86d80e4621391c705158ad187584-1": {
+          "original": 0.775312135838281,
+          "temperature_only": 0.7515952592080456
+        },
+        "e96d4dcf4e69f5e9d9af66a9000256e6-1": {
+          "original": 0.6584739709038987,
+          "temperature_only": 0.6815930323366566
+        },
+        "6fe4eb3c61132e6736b0ff785d2d2878-1": {
+          "original": 1.283571109681597,
+          "temperature_only": 1.023616411474969
+        },
+        "a9bd811872abe215523a26a799f83b2d-1": {
+          "original": 1.9841673482395359,
+          "temperature_only": 1.3660762791583259
+        },
+        "8215da6e9d67928dc6c918742566c953-1": {
+          "original": 0.39122022353258074,
+          "temperature_only": 0.587475976326975
+        },
+        "e3b9aaabd94bcc73f07b24d1beda59dc-1": {
+          "original": 0.8399867644405327,
+          "temperature_only": 0.812770773193332
+        },
+        "62a40fb959ccfd214262ff66d6fe07ac-1": {
+          "original": 0.3970142602826181,
+          "temperature_only": 0.5468816845261272
+        },
+        "d2a3b420acce68d396b69e350814139e-1": {
+          "original": 1.279569781026904,
+          "temperature_only": 1.0474899273231224
+        },
+        "c20010c4b5eca56cd4a307f87dc35689-1": {
+          "original": 1.0520388067056334,
+          "temperature_only": 0.9108769368039887
+        },
+        "0ec137b74f50cb88ee57a9e5077a9e75-1": {
+          "original": 1.0427463130403722,
+          "temperature_only": 0.8776025944428166
+        },
+        "80edafd08cd808c222ba57fe83d15048-1": {
+          "original": 0.6917797615064535,
+          "temperature_only": 0.7031591184526738
+        },
+        "2d7af73e124320d425f26eac812e0ad0-1": {
+          "original": 2.1382386556657322,
+          "temperature_only": 1.4879415081127052
+        },
+        "997232d2523741adbd0403e3750efd03-1": {
+          "original": 0.7694249554536703,
+          "temperature_only": 0.7445012687937125
+        },
+        "9f27c951e34659a048dc3f0afb864fa2-1": {
+          "original": 1.356750469682925,
+          "temperature_only": 1.0491266564374215
+        },
+        "a76284dd75a05d851d42e1d97582fb17-1": {
+          "original": 1.2506388145075693,
+          "temperature_only": 1.048203678102405
+        },
+        "7e4939bdbff00f87c862ba6ceab0d3a8-1": {
+          "original": 1.2609623027995096,
+          "temperature_only": 1.064278849372098
+        },
+        "bd11332a58f618d3f3750b1193eace81-1": {
+          "original": 1.5388345019209875,
+          "temperature_only": 1.165848669207676
+        },
+        "1b81abd365f2ed46c3d1da6b24a4903f-1": {
+          "original": 0.46956055061705737,
+          "temperature_only": 0.581551031778803
+        },
+        "4531d3c026f93ba19397b85a1535d505-1": {
+          "original": 0.5118791027510325,
+          "temperature_only": 0.5574269311674312
+        },
+        "9e0f21cfd1b7cb04e90174cd255b7d86-1": {
+          "original": 1.431093314570976,
+          "temperature_only": 1.1525636192807256
+        },
+        "590146b91a6be88c74092d74b54d1e6c-1": {
+          "original": 0.48732420069482557,
+          "temperature_only": 0.5684944964532866
+        },
+        "abf36a0bafae44ff51c367aca6967547-1": {
+          "original": 1.4303511524896493,
+          "temperature_only": 1.165372076882886
+        },
+        "a9ad40519ea3f8a68b263c713db71bbc-1": {
+          "original": 1.7158751901344058,
+          "temperature_only": 1.2423777917121388
+        },
+        "95d18ab1be530b142cc29fe159ad1823-1": {
+          "original": 2.0205082371750516,
+          "temperature_only": 1.408703433457927
+        },
+        "337d835612fef5b624dcf4d232334a48-1": {
+          "original": 1.007917880139615,
+          "temperature_only": 0.9220303295243081
+        },
+        "21548060ac200dbec3df57d35ee513c3-1": {
+          "original": 0.8928856951837314,
+          "temperature_only": 0.8089016768678562
+        },
+        "d1982baa7f56397eca02d7fc882e9a33-1": {
+          "original": 0.8502519605075112,
+          "temperature_only": 0.8228408149572344
+        },
+        "87e98d34df2495fffdf11f908efab870-1": {
+          "original": 1.1851409392777863,
+          "temperature_only": 0.9878567913596724
+        },
+        "d3c73bba6b5492b947256c7d33f0605b-1": {
+          "original": 1.6040595947888956,
+          "temperature_only": 1.2534158566174383
+        },
+        "8a563a5e59432d54074bbef70c9d8a54-1": {
+          "original": 0.9084157195003922,
+          "temperature_only": 0.8887643226282824
+        },
+        "667461a4372f19a45e63afece64b203d-1": {
+          "original": 0.5752378619057938,
+          "temperature_only": 0.631746924489454
+        },
+        "7f0ef2011cc22070ae0ab8800e5a8a94-1": {
+          "original": 1.966961624561577,
+          "temperature_only": 1.3367486716839334
+        },
+        "c96ce8e7c46f59aeabe0e490884fb228-1": {
+          "original": 0.7464819059693792,
+          "temperature_only": 0.7334360519538372
+        },
+        "e491764985e6784408ef152ce35920ae-1": {
+          "original": 0.6984127420119268,
+          "temperature_only": 0.7048216652579337
+        },
+        "f77c665418dbe73426f743a07922be06-1": {
+          "original": 0.9834031864200817,
+          "temperature_only": 0.9269398320306831
+        },
+        "f8a6bc149397325799ff80e2de38804d-1": {
+          "original": 1.6031808106265935,
+          "temperature_only": 1.1945763010812442
+        },
+        "29744abbc65fc6cb45cb1c020feca97e-1": {
+          "original": 1.176937075968962,
+          "temperature_only": 1.0347919129893464
+        },
+        "5c56922e61e50f31d194e30658df29ea-1": {
+          "original": 2.706752317668297,
+          "temperature_only": 1.7399546847009617
+        },
+        "a3cd09d94c8d5719ab564f53c68db493-1": {
+          "original": 1.895717796712176,
+          "temperature_only": 1.376756343402072
+        },
+        "a9d8deba12fd8896f3bc3e2c357f70fb-1": {
+          "original": 0.9802019425570496,
+          "temperature_only": 0.8786021969863267
+        },
+        "bf1723a977f4ae066fed92292ec7e6a7-1": {
+          "original": 1.4030662157789235,
+          "temperature_only": 1.1056203448618753
+        },
+        "84c38a4e06bec75014d64fc52155866c-1": {
+          "original": 0.6328581705034784,
+          "temperature_only": 0.6564138420667293
+        },
+        "6c3d9ad534354040af3e2db6e43a436e-1": {
+          "original": 0.5969912367163351,
+          "temperature_only": 0.6492616878969815
+        },
+        "1105b8f37c1ab04df11ba512dfce35f5-1": {
+          "original": 1.6401642138334374,
+          "temperature_only": 1.2059897589669124
+        },
+        "1841c9fb5bf77087b4129693495faac3-1": {
+          "original": 1.6417861798561173,
+          "temperature_only": 1.2429993241041086
+        },
+        "a68916e8094ea33450423fbff12cf52f-1": {
+          "original": 2.6849654288808575,
+          "temperature_only": 1.7154790246525597
+        },
+        "be51be0daa809b964da213cb1bc99842-1": {
+          "original": 0.4185163921564176,
+          "temperature_only": 0.5378821874117972
+        },
+        "35906b33fd22a900c46b1bcf28af3f8f-1": {
+          "original": 0.5377474214704414,
+          "temperature_only": 0.6090255396124495
+        },
+        "dfade732264f7716034817877dfaa308-1": {
+          "original": 0.9035424665874644,
+          "temperature_only": 0.8077323455246586
+        },
+        "c19bac2d53e54dd015856d1646629436-1": {
+          "original": 0.9924578251932828,
+          "temperature_only": 0.8893024692472897
+        },
+        "dd08a437669794077c5324288a61eac9-1": {
+          "original": 1.3094147654301145,
+          "temperature_only": 1.0272572064983088
+        },
+        "bef6d5664071eef80955b1a5855f05f7-1": {
+          "original": 1.9609330703376346,
+          "temperature_only": 1.3669242880458192
+        },
+        "0a93f327e9ef8200ba227adfe97bd8a8-1": {
+          "original": 1.428350056720514,
+          "temperature_only": 1.089217347674857
+        },
+        "55e8d9d827dd30e1d72e06a932b43083-1": {
+          "original": 0.713427415116145,
+          "temperature_only": 0.7377061549916353
+        },
+        "f09df48d6d35a3ba4fb622a9f2bfac93-1": {
+          "original": 0.9505465005940508,
+          "temperature_only": 0.8516488723873551
+        },
+        "2accf1735ff914396b72e8b2c614ec50-1": {
+          "original": 1.5826291255577563,
+          "temperature_only": 1.1781173472701654
+        },
+        "79960a8111a1698d069e3c58ff986487-1": {
+          "original": 0.8827356735305903,
+          "temperature_only": 0.8556237186505968
+        },
+        "8ae4cba4b39e3fed83f7ed109ef64ad2-1": {
+          "original": 1.4096388758500256,
+          "temperature_only": 1.1120469246671534
+        },
+        "cce3d705b482142c1dccfe6bafa13784-1": {
+          "original": 0.6315511294417715,
+          "temperature_only": 0.6507968019384279
+        },
+        "fd9f6d09ac2e4494f77d3ccbe1cc8441-1": {
+          "original": 1.4914290265821804,
+          "temperature_only": 1.1065699582811583
+        },
+        "572c2e316de751384ae0b127e417005a-1": {
+          "original": 1.3960764615120385,
+          "temperature_only": 1.068876956490308
+        },
+        "b9f76da9aaa1349b95eb8d767a059f53-1": {
+          "original": 0.8256540882676848,
+          "temperature_only": 0.7663827001875124
+        },
+        "820765c31f8317343794b048ba65fd51-1": {
+          "original": 0.7198830050296013,
+          "temperature_only": 0.7749897946024615
+        },
+        "45cf345ccaac3a65490a8b096ba1e031-1": {
+          "original": 0.7807644354556863,
+          "temperature_only": 0.7043541096960648
+        },
+        "f75e3739888938ca1df2d6a29228c046-1": {
+          "original": 1.2875428602295558,
+          "temperature_only": 1.0278863487619796
+        },
+        "e90b9e02d0187e39388af883e6ba37d6-1": {
+          "original": 0.44847930982636425,
+          "temperature_only": 0.5283719032020453
+        },
+        "481a728f3c0bfdca4497ed20cf869254-1": {
+          "original": 1.3263418265481746,
+          "temperature_only": 1.0653487875034189
+        },
+        "c42f8d6140839e3974cfbdf2b9a51922-1": {
+          "original": 0.9596209992646454,
+          "temperature_only": 0.8774514885471255
+        },
+        "76a7c94fee77341606d80cdfb48321eb-1": {
+          "original": 1.7285461492432417,
+          "temperature_only": 1.2566768081592363
+        },
+        "00b853aabfec65bd9ecee24c0b8bb7dc-1": {
+          "original": 0.8516299051640827,
+          "temperature_only": 0.7770698784771396
+        },
+        "8dd16c3798485f2d87bc232fe71345be-1": {
+          "original": 1.629986926331818,
+          "temperature_only": 1.2167617108268463
+        },
+        "4faed60a26df9192cc9643cbcd47a7c8-1": {
+          "original": 0.9693818768222003,
+          "temperature_only": 0.8602440293045761
+        },
+        "4d6f8e4e72a28532c2b4e9b82e317390-1": {
+          "original": 0.6488777261636425,
+          "temperature_only": 0.6788796180821167
+        },
+        "37aef17893efcf4c27ebafe6859177c4-1": {
+          "original": 1.5954525863912252,
+          "temperature_only": 1.204331428119247
+        },
+        "8ace8ed61af9859060c6b29f66931b92-1": {
+          "original": 1.209134112501429,
+          "temperature_only": 0.9859105899654673
+        },
+        "37565c5666fe4150a19427cb75b978a3-1": {
+          "original": 0.6658350995542694,
+          "temperature_only": 0.648696452039648
+        },
+        "b807deb80d8cc55df578a02236428db1-1": {
+          "original": 0.5946084691111893,
+          "temperature_only": 0.6375889424710637
+        },
+        "2b36d9c3899abac5f4601a09508fe2da-1": {
+          "original": 2.196269171766685,
+          "temperature_only": 1.4898833312733513
+        },
+        "6e0935557f8406a96b29dce58659e670-1": {
+          "original": 2.9670867594618793,
+          "temperature_only": 1.8718796624044898
+        },
+        "8576857b881006a65658502aa0fce156-1": {
+          "original": 1.6053052555159502,
+          "temperature_only": 1.2446102260495535
+        },
+        "77d8c3ae9b4c52234ace5d61f137c5d7-1": {
+          "original": 0.9853828339394876,
+          "temperature_only": 0.8842728510724288
+        },
+        "cc5df60d50f8dd9f4e527acb7373a187-1": {
+          "original": 1.9732239831139593,
+          "temperature_only": 1.3750555963992812
+        },
+        "217b7ffa09cd5838cedbe2cd7b6d45dd-1": {
+          "original": 0.6623138186539709,
+          "temperature_only": 0.6717199057537362
+        },
+        "5ddcefaf07f1af139387a8ec0a3eb96f-1": {
+          "original": 0.3882644332372214,
+          "temperature_only": 0.5424854665205003
+        },
+        "de65c460c775f6adbedb6a2217c50c67-1": {
+          "original": 0.5375578467512098,
+          "temperature_only": 0.6450643121599393
+        },
+        "daa91aaf72aa60408f5c36888977dbb8-1": {
+          "original": 0.6625437851556027,
+          "temperature_only": 0.6767610033801639
+        },
+        "6dcbd507378ab984b19ff9c9b7015b6e-1": {
+          "original": 1.3268396926822155,
+          "temperature_only": 1.0807103529037678
+        },
+        "b30ab36f856969cac5d2dae5565d9197-1": {
+          "original": 0.8571703302863858,
+          "temperature_only": 0.8152012326328784
+        },
+        "669523683958722b320356f498e02709-1": {
+          "original": 1.638828574971857,
+          "temperature_only": 1.1920137817853718
+        },
+        "868dc237acc2ef0e69e8e91b224e6409-1": {
+          "original": 0.6992717707658379,
+          "temperature_only": 0.6923805814449158
+        },
+        "dc0190bece37880c391663a537397013-1": {
+          "original": 1.625792626476527,
+          "temperature_only": 1.2275134921463438
+        },
+        "29a5d11dd8709bee1e35d534a72c8eca-1": {
+          "original": 3.0771795042396444,
+          "temperature_only": 1.9260491856353403
+        },
+        "472971224e2271b4da33a1def70e7d0e-1": {
+          "original": 0.9687040097233567,
+          "temperature_only": 0.8501089960126761
+        },
+        "6c7d3c49cad8818146c636dbab05b9e5-1": {
+          "original": 1.3598345645085588,
+          "temperature_only": 1.0967311577879737
+        },
+        "02a73d9effe7d04131e46c61a036b0cb-1": {
+          "original": 2.313909576035652,
+          "temperature_only": 1.534217141572874
+        },
+        "3d0d21d6bbb3b30c49075c0156690b59-1": {
+          "original": 0.9028251106188291,
+          "temperature_only": 0.8069799943777037
+        },
+        "62393017e805fa7147e10fc3670da0b0-1": {
+          "original": 0.7498190839803789,
+          "temperature_only": 0.7405730845087575
+        },
+        "ee48fd77f50b11aace52810f6eb32540-1": {
+          "original": 2.1594921201188506,
+          "temperature_only": 1.5001297882444546
+        },
+        "27b612db5474263ecb2909a57df24505-1": {
+          "original": 0.4159057663044582,
+          "temperature_only": 0.5531735171449592
+        },
+        "0dd8c60148733fe7d1187fa6b12b674a-1": {
+          "original": 2.159494986814041,
+          "temperature_only": 1.452838559541682
+        },
+        "5f5daa03787e1af574075785c5c3c276-1": {
+          "original": 0.9136829204106447,
+          "temperature_only": 0.805534370632329
+        },
+        "cbdb85bb656b406dd338629b90b6f816-1": {
+          "original": 0.6487044769349734,
+          "temperature_only": 0.6737474382660334
+        },
+        "f5eb1e3e34442a53542a5263bf0589d2-1": {
+          "original": 0.7798818911934553,
+          "temperature_only": 0.7977400223807293
+        },
+        "7951977b9832d6c694e59caf0df53f83-1": {
+          "original": 0.8804433382817198,
+          "temperature_only": 0.8337964556367272
+        },
+        "036cb350850848e47b66b5032fab60e9-1": {
+          "original": 0.5190527415953975,
+          "temperature_only": 0.5966959021714452
+        },
+        "5b5e53f50e478dc437fd64aff92fe1d6-1": {
+          "original": 1.7136973990037334,
+          "temperature_only": 1.244683655760472
+        },
+        "989823698f16fb6dbeb8673cc3cc47e6-1": {
+          "original": 1.6904282393839125,
+          "temperature_only": 1.2664070701107597
+        },
+        "afac7d66b6ca8a4d13967df93d77cad9-1": {
+          "original": 0.7193077948988156,
+          "temperature_only": 0.6892151431379583
+        },
+        "ea0e9ba31a2ffbf5e21fc0e385e7fcf4-1": {
+          "original": 1.7808488155553333,
+          "temperature_only": 1.2997171268917211
+        },
+        "1e76ecf014201754b3b45989bd3724db-1": {
+          "original": 1.5859370351380826,
+          "temperature_only": 1.1618485500032778
+        },
+        "c7a43acf0b27bec94831acf5f63e2c1d-1": {
+          "original": 0.798857681021315,
+          "temperature_only": 0.8102028035958234
+        },
+        "e80e7d3886d13fea2bb412fa5122831a-1": {
+          "original": 0.5133281746491662,
+          "temperature_only": 0.6029533280954785
+        },
+        "17b212c865815d895cb9255af8415ea4-1": {
+          "original": 0.44115109580875905,
+          "temperature_only": 0.5918154914398848
+        },
+        "ba8f2a3377e8f67ec08cecd603790e43-1": {
+          "original": 1.1394207902524007,
+          "temperature_only": 0.9273592891051952
+        },
+        "6bfc439e37be544e61bfbe5cf8f70efa-1": {
+          "original": 1.137588890622785,
+          "temperature_only": 0.9512629153706221
+        },
+        "a8e0e210ed73a3b52d49b7503f37d015-1": {
+          "original": 1.3697757491395495,
+          "temperature_only": 1.0536668822535649
+        },
+        "8fefb27600ec429ba04a3850e38cb98e-1": {
+          "original": 0.6099856093691798,
+          "temperature_only": 0.6763866234744231
+        },
+        "73e61d8ed73ece998391151ac3b82148-1": {
+          "original": 0.4249352445759631,
+          "temperature_only": 0.5546560763340599
+        },
+        "90a1caf06102d9dc67f052d178b25004-1": {
+          "original": 1.8409395801794104,
+          "temperature_only": 1.2964497456264044
+        },
+        "f70ac81c272f7310afe225589cfc2f88-1": {
+          "original": 0.7596046113075883,
+          "temperature_only": 0.7379186428681672
+        },
+        "421b817dceb3fe811cac6c7ead8e1730-1": {
+          "original": 1.9365235533605316,
+          "temperature_only": 1.4146839015463355
+        },
+        "be73806ef6f30deb3e08f926c7ff4c30-1": {
+          "original": 1.087401157300199,
+          "temperature_only": 0.9148783695938695
+        },
+        "5444e7e5540b75cddfd73ce02c479a30-1": {
+          "original": 1.3092914959362871,
+          "temperature_only": 1.0585786213939214
+        },
+        "6caa154b24f14e688be3c241a5033350-1": {
+          "original": 0.8152069140685146,
+          "temperature_only": 0.79025317326199
+        },
+        "b7bf53df0b46e2aaab9ae34f244b49a0-1": {
+          "original": 0.5245506046492248,
+          "temperature_only": 0.5676434054029986
+        },
+        "1cdd726ef54f66516e0d315693c85bf1-1": {
+          "original": 0.39747185214663805,
+          "temperature_only": 0.5146309787656722
+        },
+        "0f976fbab719fdc1377137109920f960-1": {
+          "original": 0.773844473704373,
+          "temperature_only": 0.8069828719160294
+        },
+        "9df8e96aa0d450a42960627f0c273eb7-1": {
+          "original": 2.3459871894537088,
+          "temperature_only": 1.599840693117888
+        },
+        "ae37404b861c56944d40ee8ee0605e80-1": {
+          "original": 1.0044567760496101,
+          "temperature_only": 0.8565694569760952
+        },
+        "e0319a225f8e35a2143a64dae4960d4a-1": {
+          "original": 1.5404754757085026,
+          "temperature_only": 1.1952765586715555
+        },
+        "0892c1671ab180361a184b6c0ddb0abe-1": {
+          "original": 1.9148552898313842,
+          "temperature_only": 1.3902954191930452
+        },
+        "2ec207ea1b4fa65d04edf1764f74ffd4-1": {
+          "original": 0.8877637768977555,
+          "temperature_only": 0.8176175169679001
+        },
+        "2f09025d3cfbd4028af4efaff1813dbe-1": {
+          "original": 1.942690753286891,
+          "temperature_only": 1.3740727886874295
+        },
+        "4a88beaf0cb2452e134481e5f926fa85-1": {
+          "original": 0.383529911840596,
+          "temperature_only": 0.517452920323378
+        },
+        "3cefb5267a6300ebe841eed28fbd9766-1": {
+          "original": 2.0435516348474425,
+          "temperature_only": 1.4277308406277291
+        },
+        "fe6fff0b1df597dcbf8bafa23c8c8572-1": {
+          "original": 0.6031456785645132,
+          "temperature_only": 0.6654764942287047
+        },
+        "cd474f81632df2f1bc577aff9056429e-1": {
+          "original": 0.4852758743814499,
+          "temperature_only": 0.5800142888362785
+        },
+        "e39fcc4b89b2994853bb8e8b897487eb-1": {
+          "original": 0.6888160245568067,
+          "temperature_only": 0.6950378617977455
+        },
+        "16fe44ae57a6707c88cb25fac96cb7a9-1": {
+          "original": 0.7849215580981529,
+          "temperature_only": 0.7387920256138106
+        },
+        "79a6f726539d4747b696666900578ef6-1": {
+          "original": 0.4331192689662268,
+          "temperature_only": 0.5755445675732891
+        },
+        "5f69ba737b6b4dfcfffcd08c6c6fbf5d-1": {
+          "original": 0.9713696289037391,
+          "temperature_only": 0.887403608319903
+        },
+        "3c04ddc7308d37adadf7a93f4d02763a-1": {
+          "original": 1.0124795576609844,
+          "temperature_only": 0.896640925362172
+        },
+        "72754f2abee913f2c18d7f67a02026b4-1": {
+          "original": 0.8363818584182917,
+          "temperature_only": 0.7757198160367563
+        },
+        "e68c53ccdd731443fdbc0493a46ce999-1": {
+          "original": 0.8741021808029777,
+          "temperature_only": 0.801294574297344
+        },
+        "498610b364b806b298782c4d2e3614d9-1": {
+          "original": 0.6795888375938206,
+          "temperature_only": 0.724315831174894
+        },
+        "4da2642d8d22b1fa336bcff2174d2e35-1": {
+          "original": 1.5010536285290943,
+          "temperature_only": 1.1349137663182094
+        },
+        "8803da5a000d66c3deb133d3f0a34fc6-1": {
+          "original": 0.5357341287595643,
+          "temperature_only": 0.6012949796464306
+        },
+        "65941a14eb3c07234032ecb53188e2fd-1": {
+          "original": 0.5938382486176284,
+          "temperature_only": 0.6603596386614698
+        },
+        "376cb926d190a4f0c21cac0417b9ad8b-1": {
+          "original": 2.0593706433983026,
+          "temperature_only": 1.4072227730557842
+        },
+        "1fce7056bf01172a1bdf026799141f24-1": {
+          "original": 0.5977269030543243,
+          "temperature_only": 0.6107290991993223
+        },
+        "640cf4d5ac8e464b66bf93455c6deba2-1": {
+          "original": 0.8618745089318524,
+          "temperature_only": 0.7844722007625031
+        },
+        "826b5156312c8daa3e5137854816b997-1": {
+          "original": 1.4565183169949736,
+          "temperature_only": 1.138073342053389
+        },
+        "3b8f19a9546db6992cfe656001f64f32-1": {
+          "original": 0.5969539776838614,
+          "temperature_only": 0.6799758888909762
+        },
+        "e7e42ca5896934a3a0115f3e1baa136c-1": {
+          "original": 0.8375241601603417,
+          "temperature_only": 0.8201240347536065
+        },
+        "a3c8f8179e3e0ba6c9e60f3d490de6b0-1": {
+          "original": 1.4186901446354423,
+          "temperature_only": 1.1292877015605336
+        },
+        "f75aeef3d363100c2b170ba8cdeda20b-1": {
+          "original": 1.4212252223310797,
+          "temperature_only": 1.1240162540471152
+        },
+        "4abeffae2b78b601f00be3980084ea0d-1": {
+          "original": 2.6978391489839852,
+          "temperature_only": 1.7378576521289948
+        }
+      }
+    },
+    "val": {
+      "maps": 10,
+      "slots": 3041,
+      "roots": 320,
+      "fitted_temperature": 2.013401465961934,
+      "original": 1.0280738742804563,
+      "temperature_only": 0.892113192817238,
+      "changed_base_slot_argmax": 0,
+      "by_map": {
+        "6152f299171f9a618200ad565a16fe5b-1": {
+          "original": 1.4084461125733547,
+          "temperature_only": 1.1127046748539633
+        },
+        "58a2b5d42bf3bb59d1c5a50686d20754-1": {
+          "original": 0.6088365509568137,
+          "temperature_only": 0.6527337115791796
+        },
+        "861b551ca49af8a2b678b9dadb31ef77-1": {
+          "original": 0.728683141876776,
+          "temperature_only": 0.7412860487457501
+        },
+        "d1b481cef134458a1207f6c5ca701817-1": {
+          "original": 1.3738697494995507,
+          "temperature_only": 1.0698576132100723
+        },
+        "56e5766e44cbc278ad8034bb160dbbaa-1": {
+          "original": 1.459532723925019,
+          "temperature_only": 1.1233517303708083
+        },
+        "38efaed5c44c9c0e211dac4c6e7e2c46-1": {
+          "original": 1.4754538707924825,
+          "temperature_only": 1.1375973095684115
+        },
+        "f7383346cc915f55f6ffc7fc65a9bbff-1": {
+          "original": 1.3015434276173534,
+          "temperature_only": 1.0401183018773426
+        },
+        "3aaf0e82ecf5cb950bd5fd3762203ed5-1": {
+          "original": 0.6529451597347382,
+          "temperature_only": 0.6835879172186684
+        },
+        "0d905658ba602069a4f1b9cb38ff1ad8-1": {
+          "original": 0.6442554260282852,
+          "temperature_only": 0.6897102402927471
+        },
+        "e0468a8df59451395a2394812123ba11-1": {
+          "original": 0.6271725798001895,
+          "temperature_only": 0.6701843804554369
+        }
+      },
+      "trained_candidate": 0.9508836305798631,
+      "candidate_minus_temperature_only": 0.05877043776262514
+    },
+    "holdout": {
+      "maps": 18,
+      "slots": 5365,
+      "roots": 576,
+      "fitted_temperature": 2.013401465961934,
+      "original": 1.314842193413078,
+      "temperature_only": 1.035800765264153,
+      "changed_base_slot_argmax": 0,
+      "by_map": {
+        "be92de8b4803d8f1f41f4067cbdcd5f5-1": {
+          "original": 2.3840414315320064,
+          "temperature_only": 1.5959865060379077
+        },
+        "142a3a773e9774256f7d48ebe107327d-1": {
+          "original": 0.6280169333624971,
+          "temperature_only": 0.6859550742529573
+        },
+        "4fc155bdaa799efdb900c3eab01ea987-1": {
+          "original": 0.5641992766496626,
+          "temperature_only": 0.6275285625074682
+        },
+        "52044e23d2838181a8aa2b8e772d1f8d-1": {
+          "original": 2.630634477511542,
+          "temperature_only": 1.7207008949251381
+        },
+        "a9c0c0c8cc3260769a37c211500c9aa9-1": {
+          "original": 0.6779711435661657,
+          "temperature_only": 0.6817373938831708
+        },
+        "d13e41a490d3fcb4a90f76ece63be0b4-1": {
+          "original": 2.0489936601511336,
+          "temperature_only": 1.4175306285082938
+        },
+        "297601f292e449c76c437d40893403de-1": {
+          "original": 1.9496000186164724,
+          "temperature_only": 1.3925740539913891
+        },
+        "6b944f86ab3689f1ce9c0a7b36a727f8-1": {
+          "original": 0.6897498828450469,
+          "temperature_only": 0.7039005454223326
+        },
+        "1d3203e5348d5b488a1918d571518029-1": {
+          "original": 1.6315781345552336,
+          "temperature_only": 1.2009946683083168
+        },
+        "9883e67df38e4932b3e7ee413805af08-1": {
+          "original": 0.6508362298086099,
+          "temperature_only": 0.6841373223270913
+        },
+        "83594fca79ec2053dfaeb52a58ebc619-1": {
+          "original": 2.1639972747859626,
+          "temperature_only": 1.4920289843495003
+        },
+        "5ba2e49c92526b8216cdfee59c5f9afe-1": {
+          "original": 0.7000131956424748,
+          "temperature_only": 0.7245272041367368
+        },
+        "97c24cd1356748ac273da9f754f2c1a8-1": {
+          "original": 0.6606604445542233,
+          "temperature_only": 0.6863595761659277
+        },
+        "42ae8754050a463fc8af73b18cc5f21d-1": {
+          "original": 2.0420174688350783,
+          "temperature_only": 1.3861048783578043
+        },
+        "d2ffb8163182114e5da829f6a6808328-1": {
+          "original": 1.388987661077089,
+          "temperature_only": 1.095542620312679
+        },
+        "14d019369dad7b51e71f8e17e99eec67-1": {
+          "original": 0.7016144173615056,
+          "temperature_only": 0.7052867655078978
+        },
+        "d98e60b82522e262cd976cd146ba52d6-1": {
+          "original": 0.628111814110518,
+          "temperature_only": 0.669474924312746
+        },
+        "3ab3eff6d1e7155539310da7ee17fa89-1": {
+          "original": 1.5261360164701803,
+          "temperature_only": 1.1740431714473998
+        }
+      },
+      "trained_candidate": 1.2265260239275504,
+      "candidate_minus_temperature_only": 0.1907252586633974
+    }
+  }
+}
