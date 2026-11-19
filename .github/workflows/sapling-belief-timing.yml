@@ -47,6 +47,9 @@ jobs:
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/full.py
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fit.json
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/protocol.json
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/held.json
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/gate_audit.json
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/ladder_timing/
             /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/ladder_timing/time_replay.py
 
@@ -79,6 +82,16 @@ jobs:
           set -euo pipefail
           lane="$CARGO/native_actor_corpus/ladder_timing"
           echo "LANE=$lane" >> "$GITHUB_ENV"
+          python3.12 - "$CARGO/native_actor_corpus" <<'PYTHON'
+          import hashlib, json, pathlib, sys
+          folder=pathlib.Path(sys.argv[1])
+          held=json.loads((folder/"held.json").read_bytes())
+          audit=json.loads((folder/"gate_audit.json").read_bytes())
+          actual=hashlib.sha256((folder/"full.py").read_bytes()).hexdigest()
+          if (actual != held["package_sha256"]["full"] or not held["qualification"]["full"]["passed"]
+              or not audit["original_pooled"]["full"]["passed"] or not audit["final_equal_terrain"]["full"]["passed"]):
+              raise SystemExit("The timed package must pass both registered command checks")
+          PYTHON
           python3.12 -m venv "$RUNNER_TEMP/carbon-env"
           "$RUNNER_TEMP/carbon-env/bin/python" -m pip install --only-binary=:all: --disable-pip-version-check --index-url https://pypi.org/simple numpy==1.26.4 requests==2.32.5 jsonschema==4.25.1
           echo "$RUNNER_TEMP/carbon-env/bin" >> "$GITHUB_PATH"
