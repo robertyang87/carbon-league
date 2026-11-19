@@ -28,6 +28,11 @@ def decision(rows):
     return dict(inferred_direction=label,wins_differ=bool(w),signed_plus_minus_mean_margin=diff,pairs=pairs,by_sign=table,
                 provisional_map_margin_advantage=advantages,checks=checks,radius_fraction_retained=factor)
 def apply():
+    if (HERE/'selection.json').exists():
+        previous=f.read(HERE/'selection.json')
+        assert previous['protocol']==sha(HERE/'protocol.json') and previous['score_sha256']==sha(HERE/'scores.json')
+        assert sha(ROOT/previous['selected_pack_file'])==previous['selected_pack_sha256'] and sha(ROOT/previous['selected_weights_file'])==previous['selected_weights_sha256']
+        return
     b=f.read(HERE/'binding.json');rows=f.read(HERE/'scores.json');data=decision(rows)
     assert len(rows)==8
     for r in rows:

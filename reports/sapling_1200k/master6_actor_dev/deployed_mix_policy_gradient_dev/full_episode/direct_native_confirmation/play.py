@@ -1,5 +1,6 @@
 """Confirm the sole native-trained update from the pre-registered opening on both seats."""
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import sys
 
 HERE = Path(__file__).resolve().parent
@@ -36,6 +37,18 @@ def main():
         return driver
     fixture.driver = native.driver = bound
     native.save(HERE / "weight_binding.json", dict(wrapper=native.sha(Path(__file__)), fixture=native.sha(Path(fixture.__file__)), selection=native.sha(FIT / "selection.json"), candidate=native.sha(candidate), parent=native.sha(center), protocol=native.REG))
+    # New ladder games can extend the registry after preregistration.
+    # Preserve the original receipt and independently clear the same physical boards.
+    recorded = native.read(HERE / "clearance.json")
+    with TemporaryDirectory() as scratch:
+        native.HERE = Path(scratch)
+        try:
+            current = native.clearance()
+        finally:
+            native.HERE = HERE
+    assert current["physical_boards"] == recorded["physical_boards"]
+    native.save(HERE / "runtime_clearance.json", current)
+    native.clearance = lambda: current
     fixture.main()
 
 if __name__ == "__main__":

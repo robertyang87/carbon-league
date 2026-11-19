@@ -2,6 +2,7 @@
 from concurrent.futures import ProcessPoolExecutor
 import fcntl
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import sys
 
 HERE = Path(__file__).resolve().parent
@@ -42,7 +43,18 @@ def main():
     assert auth["evidence"] == native.sha(FIT / auth["evidence_file"])
     assert all(auth["changed_turns_by_seat"][str(seat)] > 0 for seat in (0,1))
     assert native.sha(FIT / "contract.json") == plan["training"]
-    boards = native.clearance()["physical_boards"]
+    # New ladder games can extend the registry after preregistration.
+    # Preserve the original receipt and independently clear the same physical boards.
+    recorded = native.read(HERE / "clearance.json")
+    with TemporaryDirectory() as scratch:
+        native.HERE = Path(scratch)
+        try:
+            current = native.clearance()
+        finally:
+            native.HERE = HERE
+    assert current["physical_boards"] == recorded["physical_boards"]
+    native.save(HERE / "runtime_clearance.json", current)
+    boards = current["physical_boards"]
     held = set(boards.values())
     for reg in ACTOR.rglob("clearance.json"):
         doc = native.read(reg)
