@@ -21,10 +21,18 @@ Policy losses are masked cross-entropies against the marginalized targets
 fast plan carry the net's own probabilities, so their policy weight is 0
 by default (--fast-policy-weight to change); value/aux train on all rows.
 Value target: the Score Utility U(d) = 0.6*tanh(d/600) + 0.4*clip(d/2500,
--1, 1) of the final margin.  NOTE (plan-vs-source tension, flagged in the
-build report): the chassis' own search mixes critic values with
-_terminal(m) = clip(m/3000, -2.5, 2.5) + 0.5*sign(m) terminal values, a
-different scale; training the critic toward U(d) follows the plan/brief.
+-1, 1) of the final margin.  The scale tension with the chassis' search
+(whose arithmetic runs on _terminal(m) = clip(m/3000, -2.5, 2.5) +
+0.5*sign(m)) is RESOLVED by Strategy ruling
+reports/RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119.md: the value head
+keeps training toward U (this file is unchanged by the ruling), and the
+exact bridge B(u) = _terminal(U^{-1}(u)) -- bridge.py in this directory
+-- is applied at the single interface where the value head's output
+enters search leaf evaluation: pack_submission.py injects it into the
+packed chassis' look() for trained checkpoints (--value-scale u), and
+vec_selfplay.py applies it to deep-plan leaf values under the same
+flag.  Raw final margins stay in the replay shards, so both scales
+remain exactly recoverable from the same records.
 
 aux targets: delta = (margin change at +15/+40/+80) / 1000; fog = true
 carbon / 100; win = the shard's win label (BCE on the logit).

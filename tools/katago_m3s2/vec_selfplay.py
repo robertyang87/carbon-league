@@ -24,6 +24,16 @@ side carries NO wall-clock budget and no step-time calibration at all:
     the units that moved: worker cells get a 5-way distribution, base
     cells a 3-way distribution.
 
+Value scale (Strategy ruling reports/RULING_KATAGO_VALUE_SCALE_BRIDGE_
+20261119.md): the deep plan's Q arithmetic is the chassis' _terminal
+scale, and terminal boards below are scored with mod._terminal directly
+(never bridged).  When the acting checkpoint ('cur') is a trained one,
+its value head outputs the plan's Score Utility U scale instead; then
+--value-scale u applies the exact bridge B(u) = _terminal(U^-1(u))
+(bridge.py) to the leaf values at exactly that consumption point.
+Gen-0 / native checkpoints use the default --value-scale terminal and
+pass through unbridged.  The choice is recorded in selfplay_config.json.
+
 Self-play observation convention (documented divergence from the ladder):
 positions are encoded with the TRUE carbon map and known = all ones,
 exactly like the chassis' own _search rollouts (its `view()`), instead of
@@ -58,6 +68,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import bridge
 import layout
 
 DEEP_TAU = 1.0
@@ -285,7 +296,7 @@ def fast_action(mod, client, tag, st, me, rng, prev):
 
 
 def deep_move(mod, client, my_tag, opp_tag, st, me, rng, tau=DEEP_TAU,
-              k_max=DEEP_K, d2=DEEP_D2):
+              k_max=DEEP_K, d2=DEEP_D2, value_scale='terminal'):
     """Fixed-plan search for one move.  Returns (action, targets, root_info).
 
     Deterministic given the nets: candidate counts, opponent responses and
@@ -386,6 +397,14 @@ def deep_move(mod, client, my_tag, opp_tag, st, me, rng, tau=DEEP_TAU,
                                             boards[k].carbon, full, None)) for k in leaf])
         SC = np.stack([mod._scalars(boards[k].players, boards[k].step, me) for k in leaf])
         _, _, v = client.forward(my_tag, X, SC)
+        if value_scale == 'u':
+            # VALUE-SCALE BRIDGE (ruling RULING_KATAGO_VALUE_SCALE_BRIDGE_
+            # 20261119): the acting net is a trained checkpoint whose value
+            # head outputs the plan's U scale; the deep plan's Q arithmetic
+            # is the chassis' _terminal scale, so leaf values cross scales
+            # exactly here.  Terminal boards above use mod._terminal on the
+            # true margin and are never bridged.
+            v = bridge.bridge(v)
         for k, vv in zip(leaf, v):
             vals[k] = float(vv)
     q = np.array([np.mean([vals[ci, mi] for mi in range(len(opp_resp))])
@@ -412,7 +431,7 @@ def deep_move(mod, client, my_tag, opp_tag, st, me, rng, tau=DEEP_TAU,
 # Game loop (worker)
 # --------------------------------------------------------------------------
 def play_game(mod, client, game_id, seed, deep_frac, hof_tags, smoke=False,
-              max_steps=None):
+              max_steps=None, value_scale='terminal'):
     """Play one game; return a list of per-position record dicts."""
     rng = np.random.RandomState(seed)
     st = layout.new_game_state(mod, seed)
@@ -441,7 +460,8 @@ def play_game(mod, client, game_id, seed, deep_frac, hof_tags, smoke=False,
                     and rng.rand() < deep_frac)
             if deep:
                 act, (tw, tb), (x, sc) = deep_move(
-                    mod, client, 'cur', tags[1 - me], st, me, rng)
+                    mod, client, 'cur', tags[1 - me], st, me, rng,
+                    value_scale=value_scale)
                 step_info[me] = (x, sc, tw, tb, 1)
             else:
                 act, (x, sc, lw, lb) = fast_action(mod, client, tag, st, me, rng, prev)
@@ -490,7 +510,8 @@ def _worker_main(wid, game_ids, args, req_q, resp_q):
     buf, n_shards = [], 0
     for gid in game_ids:
         buf.extend(play_game(mod, client, gid, args['seed'] + 1000003 * gid,
-                             args['deep_frac'], hof_tags))
+                             args['deep_frac'], hof_tags,
+                             value_scale=args.get('value_scale', 'terminal')))
         if len(buf) >= 1024:
             write_shard(os.path.join(args['out'], 'shard_w%d_%03d.npz' % (wid, n_shards)), buf)
             n_shards += 1
@@ -513,6 +534,13 @@ def main():
     ap.add_argument('--device', default='cpu')
     ap.add_argument('--dtype', default='bf16', choices=['bf16', 'fp16', 'fp32'])
     ap.add_argument('--threads', type=int, default=4)
+    ap.add_argument('--value-scale', choices=['terminal', 'u'], default='terminal',
+                    help='scale of the --ckpt value head: terminal = native '
+                         'chassis _terminal scale (gen-0; leaf values pass '
+                         'through unbridged); u = trained Score Utility scale '
+                         '-- apply the exact bridge B(u) = _terminal(U^-1(u)) '
+                         'to deep-plan leaf values (ruling '
+                         'RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119)')
     ap.add_argument('--smoke', action='store_true',
                     help='numpy-only plumbing check: 2 short games, fast moves only')
     args = ap.parse_args()
@@ -542,7 +570,7 @@ def main():
     server = ctx.Process(target=_server_main, args=(req_q, resp_qs, cfg))
     server.start()
     argd = {'src': args.src, 'hof': hof, 'out': args.out, 'seed': args.seed,
-            'deep_frac': args.deep_frac}
+            'deep_frac': args.deep_frac, 'value_scale': args.value_scale}
     procs = []
     worker_ids = []
     for wid in range(args.workers):
@@ -575,6 +603,7 @@ def main():
     with open(os.path.join(args.out, 'selfplay_config.json'), 'w') as f:
         json.dump({'games': args.games, 'seed': args.seed,
                    'deep_frac': args.deep_frac, 'ckpt': args.ckpt, 'hof': hof,
+                   'value_scale': args.value_scale,
                    'deep': {'K': DEEP_K, 'D2': DEEP_D2, 'tau': DEEP_TAU}}, f, indent=1)
     print('selfplay done: %d games -> %s' % (args.games, args.out))
     return 0

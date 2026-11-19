@@ -5,8 +5,8 @@ md5 70e7a9ac...) by default -- owner ruling 2026-11-19 18:29: the
 40-game paired verdict showed the fix2 shell significantly weaker than
 v1's at identical weights, so v1 is the default chassis and
 src/apexcarbon_v1_fix2.py remains an accepted alternate (--chassis).
-The chassis code is kept untouched except for two mechanical, auditable
-operations:
+The chassis code is kept untouched except for the mechanical, auditable
+operations below:
 
 1. PAYLOAD SWAP.  The _WEIGHTS / _VALUE base64 payloads are replaced by
    the trained checkpoint's (source key layout, float16, npz-compressed
@@ -51,6 +51,27 @@ operations:
        v1 has no such line)
    _S_COST remains as dead telemetry state: after the patch nothing reads
    it for a decision (fix2's depth==0 decay in the stats tail is inert).
+
+3. VALUE-SCALE BRIDGE (only with --value-scale u; Strategy ruling
+   reports/RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119.md).  A checkpoint
+   trained by train.py has its value head on the plan's Score Utility
+   scale U(d) = 0.6*tanh(d/600) + 0.4*clip(d/2500, -1, 1), while the
+   chassis' search arithmetic is tuned on its native _terminal scale.
+   For such a checkpoint -- and only then -- the pack injects the exact
+   bridge B(u) = _terminal(U^{-1}(u)) (reference implementation:
+   bridge.py in this directory; exact inversion through the margin
+   domain, recovered margin clamped to +/-3000, no fitted
+   approximation) at the single interface where the value head's output
+   enters search leaf evaluation: the two `vv = net(...)` sites inside
+   _act's look().  Every other consumer is deliberately untouched: the
+   root TTA batch (line ~1291) and other() discard the value output,
+   and terminal boards are scored by result() with _terminal on the
+   true cash margin (already native scale).  With the default
+   --value-scale terminal (gen-0 / native checkpoints) no bridge code
+   is injected at all.  The chosen scale is recorded in the pack report
+   (the notes printed by every pack run).  The bridge patch set is
+   separate from the clock-removal set: the clock fixture (12 patches
+   for the v1 chassis, no perf_counter in the output) is unaffected.
 
 --verify (numpy only, no torch) checks the packed file end to end:
    * it imports standalone and its _Policy loads;
@@ -205,6 +226,81 @@ def apply_clock_patch(text, fixed_k, fixed_tta):
 
 
 # ---------------------------------------------------------------------------
+# Value-scale bridge injection (ruling RULING_KATAGO_VALUE_SCALE_BRIDGE_
+# 20261119): a self-contained twin of bridge.py's exact inversion, plus
+# the two call sites inside _act's look() -- the only places the net's
+# value output enters search leaf evaluation.  The injected text is
+# identical for the v1 and fix2 chassis (their _terminal def and look()
+# value lines are byte-identical); counts are asserted like the clock
+# patch's, and any mismatch aborts the pack.
+# ---------------------------------------------------------------------------
+BRIDGE_DEF = '''
+def _u_of_margin(d):
+    # VALUE-SCALE BRIDGE (Strategy ruling RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119):
+    # the plan's Score Utility U(d) = 0.6*tanh(d/600) + 0.4*clip(d/2500, -1, 1).
+    return 0.6 * np.tanh(d / 600.0) + 0.4 * np.clip(d / 2500.0, -1.0, 1.0)
+
+
+def _bridge_u_values(u):
+    # B(u) = _terminal(U^-1(u)): exact inversion of U through the margin
+    # domain (bisection on the strictly increasing U; no fitted bridge),
+    # the recovered margin clamped to +/-3000 (registered clamp); |u| at
+    # or beyond U(+/-3000) saturates at _terminal(+/-3000) = +/-1.5, and
+    # u == 0 maps to margin 0 exactly, preserving _terminal's +-0.5 jump
+    # at the origin.  Applied ONLY to the net's value output inside
+    # look() -- the single interface where the value head enters search
+    # leaf evaluation; terminal boards are scored by result()/_terminal
+    # on the true margin and are never bridged.
+    u = np.clip(np.asarray(u, dtype=np.float64), -1.0, 1.0)
+    lo = np.full(u.shape, -3000.0)
+    hi = np.full(u.shape, 3000.0)
+    for _ in range(64):
+        mid = 0.5 * (lo + hi)
+        right = _u_of_margin(mid) < u
+        lo = np.where(right, mid, lo)
+        hi = np.where(right, hi, mid)
+    d = np.where(u == 0.0, 0.0, 0.5 * (lo + hi))
+    return np.array([_terminal(float(x)) for x in d.flat],
+                    dtype=np.float64).reshape(d.shape)
+'''
+
+TERMINAL_DEF = ("def _terminal(m):\n"
+                "    return float(np.clip(m / 3000.0, -2.5, 2.5) + 0.5 * np.sign(m))\n")
+
+
+def bridge_patches():
+    """Exact-replacement patch list for the value-scale bridge injection."""
+    return [
+        ('bridge-def', TERMINAL_DEF, TERMINAL_DEF + BRIDGE_DEF, 1),
+        ('bridge-look-v4',
+         "                    _, _, vv = net(X, _SID, S)\n",
+         "                    _, _, vv = net(X, _SID, S)\n"
+         "                    vv = _bridge_u_values(vv)  # VALUE-SCALE BRIDGE: value head -> leaf evaluation\n", 1),
+        ('bridge-look-main',
+         "                lw, lb, vv = net(X, _SID, S)\n",
+         "                lw, lb, vv = net(X, _SID, S)\n"
+         "                vv = _bridge_u_values(vv)  # VALUE-SCALE BRIDGE: value head -> leaf evaluation\n", 1),
+    ]
+
+
+def apply_bridge_patch(text):
+    summary = []
+    for name, old, new, count in bridge_patches():
+        found = text.count(old)
+        if found != count:
+            raise SystemExit(
+                'BRIDGE PATCH FAILED at %r: pattern found %d times, expected %d. '
+                'Refusing to ship a mis-bridged chassis.' % (name, found, count))
+        text = text.replace(old, new)
+        summary.append('  bridge patch %-16s -%d/+%d lines'
+                       % (name, old.count('\n'), new.count('\n')))
+    if text.count('_bridge_u_values(vv)') != 2 or 'def _bridge_u_values' not in text:
+        raise SystemExit('BRIDGE PATCH FAILED: post-condition unmet '
+                         '(need the def and exactly 2 call sites in look())')
+    return text, summary
+
+
+# ---------------------------------------------------------------------------
 # Packing
 # ---------------------------------------------------------------------------
 def load_ckpt(path):
@@ -213,7 +309,7 @@ def load_ckpt(path):
 
 
 def pack(chassis_path, ckpt, roll, out_path, clock_patch=True, fixed_k=12,
-         fixed_tta=None):
+         fixed_tta=None, value_scale='terminal'):
     text = open(chassis_path).read()
     if fixed_tta is None:
         # v1's quality branch is TTA=4 (used whenever the machine is fast);
@@ -245,13 +341,27 @@ def pack(chassis_path, ckpt, roll, out_path, clock_patch=True, fixed_k=12,
     else:
         notes.append('no --roll given; chassis _ROLL wiring: %s'
                      % ('present' if has_roll_slot else 'absent'))
+    bsummary = []
+    if value_scale == 'u':
+        text, bsummary = apply_bridge_patch(text)
+        notes.append('value scale: u (trained checkpoint) -- VALUE-SCALE '
+                     'BRIDGE injected at the leaf-evaluation interface '
+                     '(ruling RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119)')
+    elif value_scale == 'terminal':
+        if '_bridge_u_values' in text:
+            raise SystemExit('chassis already contains a value bridge; '
+                             'refusing to pack it as a native-scale file')
+        notes.append('value scale: terminal (native/gen-0 checkpoint) -- '
+                     'no value bridge injected')
+    else:
+        raise SystemExit('unknown value_scale %r (want terminal or u)' % (value_scale,))
     summary = []
     if clock_patch:
         text, summary = apply_clock_patch(text, fixed_k, fixed_tta)
     compile(text, out_path, 'exec')
     with open(out_path, 'w') as f:
         f.write(text)
-    return notes, summary
+    return notes, summary, bsummary
 
 
 # ---------------------------------------------------------------------------
@@ -343,6 +453,13 @@ def main():
     ap.add_argument('--fixed-tta', type=int, default=None,
                     help='fixed root TTA count (default: 4 for the v1 chassis, '
                          '2 for fix2 -- each chassis\' own quality branch)')
+    ap.add_argument('--value-scale', choices=['terminal', 'u'], default='terminal',
+                    help='scale of the checkpoint\'s value head: terminal = the '
+                         'chassis\' native _terminal scale (gen-0 / untrained; '
+                         'no bridge injected); u = trained on the plan\'s Score '
+                         'Utility U -- inject the exact bridge '
+                         'B(u) = _terminal(U^-1(u)) at the leaf-evaluation '
+                         'interface (ruling RULING_KATAGO_VALUE_SCALE_BRIDGE_20261119)')
     ap.add_argument('--verify', action='store_true')
     ap.add_argument('--verify-games', type=int, default=1,
                     help='full self-games for the determinism/timing check '
@@ -351,12 +468,16 @@ def main():
 
     ckpt = load_ckpt(args.ckpt)
     roll = load_ckpt(args.roll) if args.roll else None
-    notes, summary = pack(args.chassis, ckpt, roll, args.out,
-                          clock_patch=not args.no_clock_patch,
-                          fixed_k=args.fixed_k, fixed_tta=args.fixed_tta)
+    notes, summary, bsummary = pack(args.chassis, ckpt, roll, args.out,
+                                    clock_patch=not args.no_clock_patch,
+                                    fixed_k=args.fixed_k, fixed_tta=args.fixed_tta,
+                                    value_scale=args.value_scale)
     print('packed %s (chassis %s)' % (args.out, os.path.basename(args.chassis)))
     for n in notes:
         print('  note: %s' % n)
+    if bsummary:
+        print('value-scale bridge applied (--value-scale u):')
+        print('\n'.join(bsummary))
     if summary:
         print('clock-removal patch applied:')
         print('\n'.join(summary))
