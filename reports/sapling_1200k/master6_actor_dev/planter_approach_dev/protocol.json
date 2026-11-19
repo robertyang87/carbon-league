@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "parent": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0",
+  "value_sha256": "59726c09984f6d2210d28ee90712cf8f0c37033ff9635bd272bdc0ca6e3edaf7",
+  "source_receipt": "adc22ebd0a06769095801c1bfbc9519a23afcd784711f2e9ffa1523579ae2cbe",
+  "public_source_games": [
+    {
+      "seed": 621471120,
+      "seat": 0,
+      "raw_sha256": "892bfc66bb02729bb21a7fae89d5ddf547c7fcdd9d4fac2ecbc5054c611ba3b8",
+      "raw_path": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source/raw_621471120_0.json.gz",
+      "map_sha256": "2920f439bb16a4297298984934b1a9c1ff0932873d318d35b798c89bd6de3845"
+    },
+    {
+      "seed": 621471120,
+      "seat": 1,
+      "raw_sha256": "1a9916343d134e8b842e45664de2cc8058591214d076b4c66d7db204e3df7b85",
+      "raw_path": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source/raw_621471120_1.json.gz",
+      "map_sha256": "2920f439bb16a4297298984934b1a9c1ff0932873d318d35b798c89bd6de3845"
+    },
+    {
+      "seed": 621471121,
+      "seat": 0,
+      "raw_sha256": "a2eeae17e17289f51b6dbc8c8345268fea8e8e5a0060092f2e3a1d3b1ab5f7a6",
+      "raw_path": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source/raw_621471121_0.json.gz",
+      "map_sha256": "5b108d4fa2f95cc194b89944e788dada1698006b819c4cdbcca2deb3d646dc34"
+    },
+    {
+      "seed": 621471121,
+      "seat": 1,
+      "raw_sha256": "290685423c6ea9664b210918deb868e2032696720db7abfa5162581df466d304",
+      "raw_path": "reports/sapling_1200k/master6_actor_dev/tree_response_training/source/raw_621471121_1.json.gz",
+      "map_sha256": "5b108d4fa2f95cc194b89944e788dada1698006b819c4cdbcca2deb3d646dc34"
+    }
+  ],
+  "source_selection": "all four original v1 games of first tree-response training intake. All four were seen in past work. No new map. No scoring or phase-specific route replay used to set this protocol.",
+  "window": [
+    50,
+    180
+  ],
+  "radius": [
+    2,
+    4
+  ],
+  "min_head_net": 25,
+  "min_edge_vs_parent": 8,
+  "travel_charge_per_step": 3,
+  "arrival_min_net": 8,
+  "min_recent_neighbors": 2,
+  "opp_distance": 2,
+  "life_turns_after_arrival": 10,
+  "minimum_backup_cash": 30,
+  "per_game": 1,
+  "maximum_move_steps": 4,
+  "deadline_after_start": 4,
+  "guard": "real parent moving planter, legal prefix, maximum 1.5 logit gap, exactly focal actual command changes, no added collisions. Each step reprice and withdraw for cash, public contest, insufficient recent neighbor evidence or a different tree; if safe, on arrival issue one legal stay including accounting for other committed spending. All other actions unchanged.",
+  "counterexamples": [
+    "reduce public cash to zero and check no launch",
+    "enemy worker next to target at exercise must cancel",
+    "make neighboring evidence stale on empty target: reject"
+  ],
+  "mechanism": "Count all 4x131 public steps and both seats; actual parent command verified at selected root. Look ahead at most 5 with identical prerecorded opponent commands for both paths, no strength inference. If both physical seats yield a prefix-valid launch and at least one of the four first launches results in purchase on tape-conditional simulation, run exactly one full original pair. Otherwise close before original.",
+  "native_order": [
+    [
+      621471120,
+      0
+    ],
+    [
+      621471121,
+      1
+    ],
+    [
+      621471120,
+      1
+    ],
+    [
+      621471121,
+      0
+    ]
+  ],
+  "native_selection": "first prefix-valid launch in the first available game in native_order regardless of its later purchase or score; no post-selection on return. Parent vs same parent with one approach episode and its guarded optional purchase. Both then resume v1.",
+  "native_rng": 3994511,
+  "decision": "A single root can diagnose execution. Do not promote on one terminal result or run official maps."
+}
