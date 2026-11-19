@@ -1,0 +1,16 @@
+{
+  "sources": [
+    "https://117.72.210.134/static/agent-guide.md",
+    "https://132.232.176.153/static/agent-guide.md"
+  ],
+  "transport": "HTTPS using the directly addressed IP and TLS peer verification disabled",
+  "sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8",
+  "readback": "2026-11-19T18:04:20.606565+00:00",
+  "relevant_lines": [
+    "- Python 3.12、标准库、NumPy 1.26.4，以及 `zerosum_env.envs.carbon.helpers` 可用。PyTorch 2.5.1+cpu 可用于 CPU 推理；不要依赖额外文件或网络下载。",
+    "- 单文件非空，最大 10 MB（10,000,000 字节）。模型参数须包含在本文件内，可直接使用 NumPy／PyTorch CPU 参数数组，无需强制编码；特别大的参数可编码保存以节省资源。仍须满足运行内存和动作时间预算；没有 CUDA，也不安装 torchvision/torchaudio。",
+    "- 每局策略进程持续处理多步，可以保存局内内存状态；在 step=0 时初始化。不要假设不同比赛共享状态。",
+    "- 平台优先调用顶层 `agent(observation, configuration)`，辅助函数可以定义在它之后；模块顶层只执行一次，在初始化限时内完成。没有可调用的 `agent` 时，旧策略仍按原版的最后一个可调用对象规则加载。离线使用原版环境时，建议显式 `from submission import agent` 并将 `agent` 函数传给 `env.run`；直接传文件路径仍遵循原版的最后一个可调用对象规则。",
+    "- 每个策略最多 1.5 核 CPU、512 MiB 内存，无网络、隔离执行。每步基准 1 秒（`configuration.actTimeout=1`），单步最多 3 秒。每局双方各最多 3 次超过 1 秒的慢步，额外耗时合计最多 5 秒（`remainingOverageTime` 初始为 5）；快步不补充额度，次数用尽后只剩每步 1 秒。计时包含进程通信，超过任何一项本步可用限制即判本局负。初始化上限 20 秒，包含源码编译、模块导入及顶层参数加载；写在 `agent()` 内的延迟加载仍计入该步 1 秒。排名赛整场任务上限 1500 秒。保持决策快速，不要进行在线重训练。"
+  ]
+}
