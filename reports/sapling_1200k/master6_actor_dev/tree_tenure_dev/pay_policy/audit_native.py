@@ -87,14 +87,25 @@ def main(paths):
         for s in (0,1):
             c=grouped[seed,s,'candidate']; b=grouped[seed,s,'parent']
             assert c['terrain']==b['terrain']
+            tapes=[read(ROOT/r['raw'])['actions'] for r in (c,b)]
+            divergences=[next((i for i,(u,v) in enumerate(zip(*tapes)) if u[side]!=v[side]),None) for side in (s,1-s)]
+            changed_turns=[t['t'] for t in c['selected'] if t['actual_changed_by_policy']]
+            first_change=min(changed_turns,default=None)
             delta={}
             for i,label in [(s,'own'),(1-s,'rival')]:
                 delta[label]={k:c['cash_events_by_seat'][i].get(k,0)-b['cash_events_by_seat'][i].get(k,0) for k in KEYS}
-            paired.append(dict(seed=seed,seat=s,official_own=c['official'][s]-b['official'][s],
+            paired.append(dict(seed=seed,seat=s,first_own_command_difference=divergences[0],
+                               first_rival_command_difference=divergences[1],first_candidate_change_from_current_v1=first_change,
+                               equal_joint_transcript_until_first_intervention=all(d is None or d>=first_change for d in divergences) if first_change is not None else None,
+                               official_own=c['official'][s]-b['official'][s],
                                official_minus_rival=b['official'][1-s]-c['official'][1-s],margin=c['official_margin']-b['official_margin'],cash_delta=delta))
     csel=[x for r in rows if r['arm']=='candidate' for x in r['selected']]
     out=dict(protocol_sha256=sha(D/'protocol.json'),package_sha256=meta['candidate_sha256'],games=rows,paired=paired,summary=dict(
         games_per_arm=4,wins={arm:sum(r['wdl']=='win' for r in rows if r['arm']==arm) for arm in ('candidate','parent')},
+        per_map_delta={str(seed):sum(rec['margin'] for rec in paired if rec['seed']==seed)/2 for seed in p['new_dev']['seeds']},
+        same_enemy_focal_survival_on_changed={k:sum(tr['same_enemy_both_actions'][k]['alive_after'] for tr in csel if tr['changed']) for k in ('parent','pay')},
+        extra_same_enemy_focal_deaths_on_changed=sum(tr['same_enemy_both_actions']['survival_flip']==-1 for tr in csel if tr['changed']),
+        by_physical_seat={str(seat):sum(rec['margin'] for rec in paired if rec['seat']==seat)/2 for seat in (0,1)},
         mean_margin_difference=sum(d['margin'] for d in paired)/4,mean_own_difference=sum(d['official_own'] for d in paired)/4,
         mean_minus_rival_difference=sum(d['official_minus_rival'] for d in paired)/4,selected=len(csel),changed=sum(x['changed'] for x in csel),
         charged_after_changed=sum(x['debited']>0 for x in csel if x['changed']),
