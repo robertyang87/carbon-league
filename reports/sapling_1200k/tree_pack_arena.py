@@ -91,7 +91,11 @@ def main():
         invalid = []
         for row in report["games"]:
             try:
-                verify_raw(args.run, row, args.pack_sha256, weight_sha, formal=plan is not None)
+                require_income = plan is not None and plan["schema"] == "sapling-90-and-income/3"
+                account = verify_raw(args.run, row, args.pack_sha256, weight_sha, formal=plan is not None,
+                                     income=require_income)
+                if require_income:
+                    row["income_account"] = account
                 validate_game(row)
             except (KeyError, TypeError, ValueError) as exc:
                 invalid.append([row["seed"], row["candidate_seat"], str(exc)])

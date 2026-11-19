@@ -37,6 +37,29 @@ class GateTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             gate.verdict(plan,rows)
 
+    def test_official_margin_and_win_targets_must_both_pass(self):
+        plan = dict(schema="sapling-90-and-income/3", income_metric="official_margin",
+                    income_minimum=500., maps=[{"seed":s} for s in range(100)])
+        def sample(seed, seat, win, absolute):
+            row = game(seed, seat, win)
+            scores = [0., 0.]
+            scores[seat if win else 1-seat] = absolute
+            margin = scores[seat]-scores[1-seat]
+            return dict(row, official_score_by_seat=scores, margin=margin,
+                        income_account={"official_margin":margin})
+        rows=[sample(s,seat,seat==0 or s<80,600. if seat==0 or s<80 else 400.)
+              for s in range(100) for seat in (0,1)]
+        self.assertTrue(gate.verdict(plan,rows)["observed_joint_target_met"])
+        rows[0]=sample(0,0,True,599.)
+        result = gate.verdict(plan,rows)
+        self.assertTrue(result["observed_90_percent_met"])
+        self.assertFalse(result["observed_joint_target_met"])
+        rows[0]=sample(0,0,True,3000.)
+        rows[1]=sample(0,1,False,400.)
+        self.assertFalse(gate.verdict(plan,rows)["observed_joint_target_met"])
+        with self.assertRaisesRegex(ValueError,"official margin target"):
+            gate.verdict(dict(plan, income_metric="gross_receipts"),rows)
+
     def test_real_fallback_and_fabricated_search(self):
         row=game(1,0,True)
         gate.validate_game(row)

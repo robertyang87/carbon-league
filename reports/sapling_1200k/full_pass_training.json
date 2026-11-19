@@ -1,0 +1,109 @@
+{
+  "recipe": {
+    "parent": "df0cf175db407712f31c188184c1395c0ac9b9c26ddc6b37b9dacda9fc43e5be",
+    "dataset": "566bd7437a997078a751de6a7f0c9d0f8af1f41a901d6c0ea66b9f6192b16a9b",
+    "code": "5c1b425b8ff1d900ddb1c21aa519a08a70cd5ccd74c06c8dbf66d04ddd481efc",
+    "seed": 551218,
+    "batch_size": 48,
+    "threads": 1,
+    "train_roots": 47168,
+    "train_slots": 431619,
+    "train_games": 79,
+    "val_games": 21,
+    "validation_roots": 672,
+    "shuffle_sha256": "28d462300349962c98f5db24b1373ef4421390e802437bbcc8bb08d2b07a0362",
+    "learnable": 97032,
+    "decoder": [
+      "h0.",
+      "aemb.",
+      "din.",
+      "gru.",
+      "U.",
+      "V.",
+      "bhead.",
+      "whead."
+    ],
+    "optimizer": "AdamW",
+    "lr": 0.0001,
+    "weight_decay": 0.0001,
+    "objective": "unweighted actionable expert choices on their recorded prefixes; one complete shuffled epoch"
+  },
+  "before": {
+    "collector": {
+      "n": 4373,
+      "correct": 2732,
+      "mean_ce": 0.9897364388061775
+    },
+    "planter": {
+      "n": 1316,
+      "correct": 692,
+      "mean_ce": 1.173187548628694
+    },
+    "base": {
+      "n": 293,
+      "correct": 149,
+      "mean_ce": 0.9364546590290785
+    }
+  },
+  "after": {
+    "collector": {
+      "n": 4373,
+      "correct": 2920,
+      "mean_ce": 0.8585087243844954
+    },
+    "planter": {
+      "n": 1316,
+      "correct": 701,
+      "mean_ce": 1.1257652700128526
+    },
+    "base": {
+      "n": 293,
+      "correct": 145,
+      "mean_ce": 0.922902332637904
+    }
+  },
+  "history": [
+    [
+      0,
+      0.796090841293335
+    ],
+    [
+      4800,
+      0.6643836498260498
+    ],
+    [
+      9600,
+      0.7621021270751953
+    ],
+    [
+      14400,
+      0.8409255146980286
+    ],
+    [
+      19200,
+      0.8072217702865601
+    ],
+    [
+      24000,
+      0.8017379641532898
+    ],
+    [
+      28800,
+      0.6767430901527405
+    ],
+    [
+      33600,
+      0.7244057655334473
+    ],
+    [
+      38400,
+      0.6876446008682251
+    ],
+    [
+      43200,
+      0.774583637714386
+    ]
+  ],
+  "train_seconds": 450.9806828159999,
+  "weight_sha256": "425613ce14a674fd591cf8bfc69ad9a473c48da019af6093ed9a508ea0a14ccd"
+}

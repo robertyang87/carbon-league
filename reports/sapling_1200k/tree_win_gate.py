@@ -30,6 +30,7 @@ def digest(path):
 def protocol_hashes():
     paths = (
         "reports/sapling_1200k/tree_win_gate.py", "reports/sapling_1200k/tree_v4_exam.py",
+        "reports/sapling_1200k/income_target.py", "reports/sapling_1200k/turning_point_ledger.py",
         "reports/sapling_1200k/cash_v3_exam.py", "reports/sapling_1200k/external_3s2.py",
         "reports/sapling_1200k/tree_audited_game.py", "reports/sapling_1200k/tree_pack_arena.py",
         "reports/sapling_1200k/it50_v3_audited_seat.py", "reports/sapling_1200k/it50_v3_exam.py",
@@ -115,11 +116,16 @@ def seed_list(nonce):
 
 
 def validate(plan, weight_hash, pack_hash, examiner_hash, run):
-    if (plan["schema"] != "sapling-one-shot-90/2" or plan["weight_sha256"] != weight_hash
+    if (plan["schema"] not in ("sapling-one-shot-90/2", "sapling-90-and-income/3")
+            or plan["weight_sha256"] != weight_hash
             or plan["pack_sha256"] != pack_hash or plan["examiner_md5"] != examiner_hash
             or plan["protocol_sha256"] != protocol_hashes()
             or plan["run_directory"] != Path(run).name):
         raise ValueError("final plan does not match this run and exact frozen candidate")
+    if plan["schema"] == "sapling-90-and-income/3":
+        from income_target import FORMAL_METRIC, TARGET
+        if plan.get("income_metric") != FORMAL_METRIC or plan.get("income_minimum") != TARGET:
+            raise ValueError("invalid frozen income target")
     seeds = [row["seed"] for row in plan["maps"]]
     if len(plan["nonce"]) != 64 or seeds != seed_list(plan["nonce"]):
         raise ValueError("map allocation differs from the original draw")
@@ -168,7 +174,7 @@ def verify_terminal_replay(row, raw):
         raise ValueError("recorded end state differs from replayed actions")
 
 
-def verify_raw(directory, row, pack_sha, weights_sha, formal=False):
+def verify_raw(directory, row, pack_sha, weights_sha, formal=False, income=False):
     path = Path(directory) / f"raw_{row['seed']}_{row['candidate_seat']}.json.gz"
     if row["raw_file"] != path.name or digest(path) != row["raw_sha256"]:
         raise ValueError("raw transcript missing or changed")
@@ -207,6 +213,12 @@ def verify_raw(directory, row, pack_sha, weights_sha, formal=False):
         raise ValueError("missing or invalid original search call")
     if any(sum(e[1] == k for e in events) != row["search_return_types"].get(k,0) for k in kinds):
         raise ValueError("search trace differs from per-game ledger")
+    if income:
+        from income_target import reconstruct
+        account = reconstruct(row, raw)
+        if "income_account" in row and row["income_account"] != account:
+            raise ValueError("reported income differs from replayed cash bookings")
+        return account
 
 
 def validate_game(row):
@@ -256,13 +268,22 @@ def verdict(plan, games):
     ci = [(x+y)/2 for x,y in zip(left,right)]
     total = sum(counts)
     seat_intervals = [list(cp_interval(N, k)) for k in seat_wins]
-    return {"games": 2*N, "independent_map_units": N, "wins": total, "draws":
+    result = {"games": 2*N, "independent_map_units": N, "wins": total, "draws":
             sum(g["result"] == "draw" for g in games), "seat_wins": seat_wins,
             "observed_win_rate": total / (2*N), "observed_90_percent_met": 10*total >= 9*(2*N),
             "each_seat_observed_90_percent_met": all(k >= .90 * N for k in seat_wins),
             "seat_win_rates_simultaneous_95pct_intervals": seat_intervals,
             "maps_with_at_least_one_win": any_win, "maps_with_two_wins": both_win,
             "win_rate_95pct_map_interval": ci, "population_lower_bound_at_least_90_percent": ci[0] >= .90}
+    if plan.get("schema") == "sapling-90-and-income/3":
+        from income_target import FORMAL_METRIC, TARGET, summarize
+        if plan.get("income_metric") != FORMAL_METRIC or plan.get("income_minimum") != TARGET:
+            raise ValueError("invalid frozen official margin target")
+        income = summarize(games, FORMAL_METRIC)
+        result["income"] = income
+        result["mean_official_margin"] = income["mean_difference"]
+        result["observed_joint_target_met"] = result["observed_90_percent_met"] and income["observed_at_least_500"]
+    return result
 
 
 def execute():
@@ -298,7 +319,8 @@ def execute():
             raise SystemExit("formal run invalid: keep execution.log; do not reroll a failed game")
         report = json.loads((args.run / "results.json").read_text())
         for row in report["games"]:
-            verify_raw(args.run, row, plan["pack_sha256"], plan["weight_sha256"], formal=True)
+            verify_raw(args.run, row, plan["pack_sha256"], plan["weight_sha256"], formal=True,
+                       income=plan["schema"] == "sapling-90-and-income/3")
         if (report["status"] != "complete" or report["header"]["plan_sha256"] != digest(args.plan)
                 or report["verdict"] != verdict(plan, report["games"])):
             raise ValueError("reported final verdict does not match the full game ledger")
@@ -313,6 +335,7 @@ def main():
     parser.add_argument("--out", type=Path, required=True, help="new plan file")
     parser.add_argument("--exclusions", type=Path, required=True,
                         help="JSON array of prior training, validation, diagnostic and exam seeds")
+    from income_target import FORMAL_METRIC, TARGET
     args = parser.parse_args()
     used = json.loads(args.exclusions.read_text())
     if not isinstance(used, list) or any(type(s) is not int for s in used):
@@ -330,7 +353,8 @@ def main():
         seeds = seed_list(nonce)
         if not used.intersection(seeds):
             break
-    plan = {"schema":"sapling-one-shot-90/2", "weight_sha256":weights, "pack_sha256":pack,
+    plan = {"schema":"sapling-90-and-income/3", "income_metric":FORMAL_METRIC,
+            "income_minimum":TARGET, "weight_sha256":weights, "pack_sha256":pack,
             "examiner_md5":EXAMINER, "protocol_sha256":protocol_hashes(), "exclusion_count":len(used),
             "exclusions_sha256":digest(args.exclusions), "nonce":nonce,
             "excluded_reserved_seeds":sorted(s for s in used if RESERVED_RANGE[0] <= s < RESERVED_RANGE[1]),
