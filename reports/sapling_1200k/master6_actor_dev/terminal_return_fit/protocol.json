@@ -1,0 +1,20 @@
+{
+  "version": "terminal-return-SPSA-v1",
+  "parent": "416cc31b8da7d38cc97f66903fbe2797d7eadda0ee175f105227057afe5d3874",
+  "examiner_md5": "57f9a594cce4f2ec9e3573d8d9d26ca1",
+  "training_seed": 621461120,
+  "blind_development_seed": 621461220,
+  "seats": [0,1],
+  "coordinates": ["bank_or_progress_with_cargo","cargo_collision_exposure","recoverable_opponent_cargo","safe_harvest_after_tax"],
+  "direction": [1,-1,1,1],
+  "perturbation": 0.65,
+  "learning_rate": 3.0,
+  "coordinate_clip": 0.75,
+  "initial": [0,0,0,0],
+  "objective": "For a completed official game m=our score minus opponent score. w=1/0.5/0 for win/draw/loss. U=.5*w+.5*sigmoid(m/1000). J=.65*tanh(m/3000)+.35*(2*U-1). Both seat rewards have equal weight. Update exactly once using dJ=(mean Jplus - mean Jminus)/(2*.65) and theta=clip(3*dJ*direction,-.75,.75).",
+  "training": "Freeze before gameplay. Run plus=+.65*direction and minus=-.65*direction on the training map once each in both seats. All four native original Master3s2 games must finish legally and pass full tape replay. Use only four terminal outcomes; no logged action, future label, validation outcome or internal Master3s2 parameters enter the update. One direction estimates its one-dimensional projection; four independent coefficients cannot be identified from it. No retries to improve a score.",
+  "development": "After writing and freezing the updated checkpoint, on the distinct development map play both seats for each updated/unchanged parent, four full original games. Pre-register paired seat margins and U, mean margin, wins, losses, draws. Replication signal if mean paired margin improves and both seats improve U. No adaptation using the development result. A single map cannot certify transfer or the 90% target. A zero gradient remains a valid published checkpoint and advances no candidate.",
+  "isolation": "Named training and blind development maps both outside formal range; verify terrain, nominal seeds and prior map records before launch. Retire a conflicted map, never silently swap it. Development outcomes inaccessible to update even if present. Acquired training/development maps excluded from final independent exam.",
+  "sampling": "Original 3s2 search and temperature with its native unseeded sampling. Seat/map pairing controls terrain and assignment only. No shared random numbers asserted. One lucky encounter can move the gradient. The raw four games plus full transcripts remain evidence of training signal only.",
+  "fallback": "Apply a learned logit residual only to collectors. If a changed autoregressive joint plan changes any planter or base command, introduces a self collision or occupies an allied recruiting base not already contested by the same worker, return the unchanged dual-network plan. Both preliminary and altered decoder streams use the same parent encodings and their own full legal prefix."
+}
