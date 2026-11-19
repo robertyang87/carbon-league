@@ -52,6 +52,10 @@ def native_session():
 
 
 def wait_before_source(wd,plan):
+    if wd.resolve()==HERE/'batches/intake_08':
+        from economy_lease import wait_before_source as wait_for_economic_heads
+        wait_for_economic_heads(wd,plan)
+        return
     if wd.resolve()==HERE/'batches/intake_07':
         from early_lease import wait_before_source as wait_for_early_lane
         wait_for_early_lane(wd,plan)

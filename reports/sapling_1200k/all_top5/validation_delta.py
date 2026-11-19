@@ -29,7 +29,7 @@ def changed_index_ids(names, old, previous, revision):
     return by_name, expected
 
 
-def run(cache, directory, revision, previous, parents, unscored=()):
+def run(cache, directory, revision, previous, parents, unscored=(), previous_fault_ledgers=()):
     source = directory / "manifest.json"
     manifest = json.loads(source.read_bytes())
     before = []
@@ -39,7 +39,18 @@ def run(cache, directory, revision, previous, parents, unscored=()):
             raise ValueError("prior frozen terrain register changed")
         before.extend(lines(d/"validation_games.jsonl.gz"))
     seen_ids = {r["id"] for r in before}
-    by_file, expected = changed_index_ids({r["name"] for r in manifest["top5"]}, seen_ids, previous, revision)
+    past_fault_ids = set()
+    for ledger in previous_fault_ledgers:
+        reg = json.loads(ledger.read_bytes())
+        for fault in reg["games"]:
+            if None not in fault["score_by_seat"] or not any(s not in ("ACTIVE","DONE") for s in fault["status_by_seat"]):
+                raise ValueError("previously excluded fault lacks official evidence")
+            if audit.sha((ledger.parent / fault["path"]).read_bytes()) != fault["sha256"]:
+                raise ValueError("fault replay hash changed")
+            past_fault_ids.add(fault["id"])
+    if past_fault_ids & seen_ids:
+        raise ValueError("fault appears in numeric registry")
+    by_file, expected = changed_index_ids({r["name"] for r in manifest["top5"]}, seen_ids | past_fault_ids, previous, revision)
     if unscored:
         if not set(unscored) <= expected:
             raise ValueError("unscored cases absent from independent score index")
