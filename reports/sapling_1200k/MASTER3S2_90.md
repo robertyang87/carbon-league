@@ -2,9 +2,11 @@
 
 ## 当前胜绩与验收
 
+精确到同一单文件，Sapling 首胜包 `8da4b465` 在 10 张首次登记的开发图对原版 Master3s2 共 **2 胜 0 平 18 负（10%）**，场均官方分差 **−1164.13**。席 0 为 0/10，席 1 为 2/10。以整张图为单位重抽，观察胜率的描述性 95% 区间为 0%–25%，平均分差区间为 −1590.22 至 −792.81。前 8 场保留本机考官逐拍时钟，后 12 场使用每席独立限额执行器。另列的一场同图同席复测为负。100 张正式新图仍封存，验收要求同一批 200 局至少赢 180 局且平均官方分差至少 +500。[逐场身份、两席与墙钟](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/incumbent_history/README.md) · [两次胜局与十八次败局的回款对照](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/incumbent_history/cash_paths/README.md)
+
 最新的独立开发对照中，首胜包 `8da4b465` 在第二张不同的新图赢了原版 Master3s2。图 621758400，席 1，**7496.01 比 7013.31（+482.70）**。本批两张新图换席，原包 **1 胜 3 负**，平均官方分差 **−782.27**。重训全骨干 `6c548995` 对同一考官 **0 胜 4 负**（两席各 0/2），平均 **−2076.33**，四个配对分差均下降。两图各自的平均下降为 1595.46 和 992.67 分。新版每局自身平均少交仓 624.68、额外招工支出 300、额外种树支出 227.51。本轮保留原包。八场正常打满 299 步，双方均无慢步、超时或内部错误。原版共 2388 次正深搜索、4 次单候选；100 张独立正式考卷仍保留。[全部八局、逐步时钟及现金转折](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/fresh_original/hosted/README.md)
 
-Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜过完整原版 Master3s2，比分 **8034.77 比 7541.14**。连同另外两张图的独立复测，四张开发图换席总计 **1 胜 7 负，平均官方分差 −1200.67**。该包随后在首胜图做限额复测，同图同席落败。独立正式考卷仍封存，目标保持 100 张新图换席至少 180/200 胜，同一批平均官方分差至少 +500。[首胜批次](master6_actor_dev/cargo_tree_action_learning_dev/direct_original/README.md) · [独立复测](master6_actor_dev/cargo_tree_action_learning_dev/replicate_original/README.md) · [限额复测](master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/hosted_attempt/README.md)
+Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜过完整原版 Master3s2，比分 **8034.77 比 7541.14**。最初两批共四张开发图换席，当时合计 **1 胜 7 负，平均官方分差 −1200.67**。该包随后在首胜图做限额复测，同图同席落败。独立正式考卷仍封存，目标保持 100 张新图换席至少 180/200 胜，同一批平均官方分差至少 +500。[首胜批次](master6_actor_dev/cargo_tree_action_learning_dev/direct_original/README.md) · [独立复测](master6_actor_dev/cargo_tree_action_learning_dev/replicate_original/README.md) · [限额复测](master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/hosted_attempt/README.md)
 
 新开发图 621758354、621758355 的限额整场对照已打完。窗口版 `4e3701f3` 两席各 0 胜 2 负，四场平均官方分差 −1276.36，父代四场为 −1907.75。冻结权重在 128 次窗口机会里改变了 50 个整队命令。两图的窗口期相对父代分别多赚 −2.18、+817.15 分。四组原版对手的自然采样均在窗口启用之前分叉。12 场双方均在时限内完成，原版零深回退为零。[逐局计分及完整请求计时](master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/windowed/fresh_original/economy/README.md) · [同一可见局面上的动作对照](master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/windowed/fresh_original/same_observations/summary.json)
 
@@ -22,7 +24,7 @@ Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜�
 
 首胜包的 Sapling 骨干直接从原版实际发出的整队指令学习。13 张训练图、双方席位共 2,496 个不重复局面、23,880 个可选单位命令，候选 `6c548995` 更新了 1,158,585 个参数。六张诊断图的工人动作命中率从 79.34% 升到 79.68%，三张验证图下降 0.45 个百分点。两个旧图窗口内让新网络连续出令 32 步，再用共同父代续弈至终局。新策略比父代分别多改 14、13 条工人命令，最终官方分差改善 **19.81、77.77** 分；四支均负。对这两次改善的经济复算显示，地面树租均提高，正常入库净差均降低。该包在独立天梯限额下有 598 次完整回放请求，最慢 88.36 毫秒，无慢步、超时和错误。[网络、训练控制和留图原始动作](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/README.md) · [两图实际原版响应与结算](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/original_response/README.md) · [天梯计时](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/ladder_timing/hosted/README.md)
 
-截至数据快照 `b243ff82`，前五出场有官方终分的回放为 1,629 局，其中互打 121 局、对外 1,508 局；另有一场官方故障记录。新增的一胜一败都对阵 it920-evo31，两图和双方逐步行动已归档并排除出独立考试。[当前逐局索引](all_top5/README.md)
+截至数据快照 `56e1e613`，前五任一方出场且有官方终分的回放有 1,630 局，其中互打 121 局、对外 1,509 局。另有一场官方故障。新收录的 Fable v7 对 it920-evo31 终场负 794.68 分，已复核决策前历史、双方指令及地形排除。[当前逐局索引](all_top5/README.md)
 
 ## 早期开发记录
 
