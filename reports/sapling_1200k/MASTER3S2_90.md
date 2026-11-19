@@ -237,3 +237,5 @@ V4r 对两个固定规则对手取得 **16/16**，对同图换席的 Master3s2 �
 ## 神经读出更新后直接打原版，开发图 621758343
 
 冻结包 `09b41c24` 使用 Sapling 和自有 it50 联合出令。对仓内原版 Master3s2 从开局自然打满，席 0 为 7948.10 比 9014.80，席 1 为 7998.56 比 9220.87，合计 0 胜 2 负。父代同图同席也是 0 胜 2 负。新版分别缩小分差 144.25、280.36，未取得新图首胜。四局的考官每局均有 299 次真实调用，双方无灭绝。该开发图及研究过的局面从正式考试排除。[官方比分、公开入口身份及计时](master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_original/README.md)
+
+在两张旧地图上让正负两个神经参数扰动各对完整原版打四局，均为 0 胜；按预登记的两图分差选择负向半步。冻结半步包 `773d21d9` 在独立新开发图 621758344 的席 0、席 1 分别输 1416.08、1243.44，平均 −1329.76，原中心同图两席平均 −1615.86。四局均自然打满。两张旧图上的选模优势和新图上的分差缩小均未带来首胜。[八局训练赛](master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_native_fit/README.md) · [独立新图四场](master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_native_confirmation/README.md)
