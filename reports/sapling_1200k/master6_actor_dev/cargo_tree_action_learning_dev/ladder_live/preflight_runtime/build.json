@@ -1,0 +1,41 @@
+{
+  "dockerfile_sha256": "f2e862c3e26bd080969f280018f6bae85d93440fae66de96dcbb65d804bf947e",
+  "source_starts_from": "python:3.12-slim",
+  "base_image_id": "sha256:78976a69c067520ef8be34cde307ef9f6fea6dcefa50edb57039773d241ca0db",
+  "base_registry_digests": [
+    "python@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b"
+  ],
+  "result_image_tag": "sapling-ladder-live:cpu",
+  "image_id": "sha256:17f48d27456c3eeaf3eb5671f502bea48fb46ab88e40cdbcf7414c9fe8a5533d",
+  "image_size_bytes_on_disk": 997864468,
+  "runtime_architecture": "amd64",
+  "runtime_os": "linux",
+  "agent_sources_in_build_context": false,
+  "copied_sources": [
+    "code/env_src/carbon_challenge-master/zerosum_env"
+  ],
+  "expected_versions": {
+    "python": "3.12",
+    "numpy": "1.26.4",
+    "torch": "2.5.1+cpu",
+    "requests": "2.32.5",
+    "jsonschema": "4.25.1"
+  },
+  "normal_build_attempt": {
+    "success": false,
+    "source_requires_extra_local_base": false,
+    "raw_build_log_sha256": "96ca672d7b6faa1b263759867d8c81a359c59651cdc1122319d4c8f4fad9d70f",
+    "error": "PyPI: CERTIFICATE_VERIFY_FAILED (untrusted TLS certificate chain of this host’s egress). pip stopped before fetching numpy.",
+    "verified_on_final_dockerfile_without_cache": true
+  },
+  "completed_build": {
+    "success": true,
+    "tls_verify": true,
+    "buildkit_secret_id": "pip_ca",
+    "optional_build_environment": "Host OS public CA bundle presented read-only during pip steps. No dependency directories or policy sources mounted. CA mount does not persist in image.",
+    "verified_official_board_import": true,
+    "verified_torch_cpu_tensor_sum": 5,
+    "raw_build_log_sha256": "9d5dcf54856fdcfcdb00d068f77dacd24dcba14b53eec023fb0f0f764928793c",
+    "image_sha256_verified": true
+  }
+}

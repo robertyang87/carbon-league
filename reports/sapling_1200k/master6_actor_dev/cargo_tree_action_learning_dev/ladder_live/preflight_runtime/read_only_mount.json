@@ -1,0 +1,186 @@
+{
+  "protocol_sha256": "8bc6122533b139c626323955c0aa0b4dbd8ef771ab04d086df275e5d1641751a",
+  "runner_sha256": "d4029fb53a66600ce6684f97328e683dc6552ebf99c7508e2d4ffc4dea45a3a6",
+  "eligibility_source_sha256": "6d3f5a50a810448ac8c92aeed51f188b62ee4c329cdbc2f7a101cab4b589fd42",
+  "worker_sha256": "c126d09828eea617957bb648ba5f56d682b0e5c75e72aa079dd000f4765b876b",
+  "image_id": "sha256:78976a69c067520ef8be34cde307ef9f6fea6dcefa50edb57039773d241ca0db",
+  "image_reference": "python:3.12-slim",
+  "mode": "read_only_installed_packages",
+  "dependencies_mounted": true,
+  "strategy_source_mounted": false,
+  "strategy_initializations": 0,
+  "action_calls": [
+    0,
+    0
+  ],
+  "docker_cgroup_driver": "none",
+  "blockers": [
+    "opponent: cpu.max=400000 100000, expected 1.5 cores",
+    "opponent: memory.max=17179869184, expected 536870912",
+    "opponent: memory.swap.max=max, expected 0",
+    "candidate: cpu.max=400000 100000, expected 1.5 cores",
+    "candidate: memory.max=17179869184, expected 536870912",
+    "candidate: memory.swap.max=max, expected 0",
+    "both containers see the same cgroup directory inode"
+  ],
+  "containers": [
+    {
+      "id": "950fbeed3b904d71fc6ddc3fb705cef93e68ccd660a97d3ae8b85899456fba5e",
+      "image": "sha256:78976a69c067520ef8be34cde307ef9f6fea6dcefa50edb57039773d241ca0db",
+      "network": "none",
+      "cpuset": "2,3",
+      "nano_cpus": 1500000000,
+      "memory": 536870912,
+      "memory_swap": 536870912,
+      "readonly_root": true,
+      "binds": [
+        {
+          "target": "/probe/runtime_probe.py",
+          "readonly": true
+        },
+        {
+          "target": "/probe/worker.py",
+          "readonly": true
+        },
+        {
+          "target": "/runtime/site_0",
+          "readonly": true
+        },
+        {
+          "target": "/runtime/site_1",
+          "readonly": true
+        },
+        {
+          "target": "/runtime/official/zerosum_env",
+          "readonly": true
+        }
+      ]
+    },
+    {
+      "id": "bb896f93286af65cccab3e269907cec0f4d1859f06a390bb2d01d162b1e316bc",
+      "image": "sha256:78976a69c067520ef8be34cde307ef9f6fea6dcefa50edb57039773d241ca0db",
+      "network": "none",
+      "cpuset": "2,3",
+      "nano_cpus": 1500000000,
+      "memory": 536870912,
+      "memory_swap": 536870912,
+      "readonly_root": true,
+      "binds": [
+        {
+          "target": "/probe/runtime_probe.py",
+          "readonly": true
+        },
+        {
+          "target": "/probe/worker.py",
+          "readonly": true
+        },
+        {
+          "target": "/runtime/site_0",
+          "readonly": true
+        },
+        {
+          "target": "/runtime/site_1",
+          "readonly": true
+        },
+        {
+          "target": "/runtime/official/zerosum_env",
+          "readonly": true
+        }
+      ]
+    }
+  ],
+  "probes": [
+    {
+      "cgroup": {
+        "cpu.max": "400000 100000",
+        "memory.max": "17179869184",
+        "memory.swap.max": "max",
+        "cpuset.cpus.effective": "0-4"
+      },
+      "cgroup_inode": 148,
+      "affinity": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "interfaces": [
+        "lo"
+      ],
+      "python": [
+        3,
+        12,
+        16
+      ],
+      "numpy": "1.26.4",
+      "torch": "2.5.1+cpu",
+      "helper_sha256": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae",
+      "loaded": {
+        "numpy": "1.26.4",
+        "torch": "2.5.1+cpu",
+        "torch_cuda": null,
+        "helper": "zerosum_env.envs.carbon.helpers.Board",
+        "requests": "2.34.2",
+        "jsonschema": "4.26.0",
+        "binary_smoke_result": [
+          8.0,
+          18.0
+        ],
+        "sha256": {
+          "torch_extension": "98f029f1fe6c9e804fdeea0167b49356bd6646df976147fb9f7a1f27c2d86d26",
+          "libtorch_cpu": "dacb42735f5a59a8b2abbf06fe7fdeba359849a08f418ad830a84ffadc316802",
+          "numpy_multiarray": "6a650810a8735cbdb988f74729973740a337645dd1585fef696e73e2dbc65beb",
+          "official_helpers": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae"
+        }
+      }
+    },
+    {
+      "cgroup": {
+        "cpu.max": "400000 100000",
+        "memory.max": "17179869184",
+        "memory.swap.max": "max",
+        "cpuset.cpus.effective": "0-4"
+      },
+      "cgroup_inode": 148,
+      "affinity": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "interfaces": [
+        "lo"
+      ],
+      "python": [
+        3,
+        12,
+        16
+      ],
+      "numpy": "1.26.4",
+      "torch": "2.5.1+cpu",
+      "helper_sha256": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae",
+      "loaded": {
+        "numpy": "1.26.4",
+        "torch": "2.5.1+cpu",
+        "torch_cuda": null,
+        "helper": "zerosum_env.envs.carbon.helpers.Board",
+        "requests": "2.34.2",
+        "jsonschema": "4.26.0",
+        "binary_smoke_result": [
+          8.0,
+          18.0
+        ],
+        "sha256": {
+          "torch_extension": "98f029f1fe6c9e804fdeea0167b49356bd6646df976147fb9f7a1f27c2d86d26",
+          "libtorch_cpu": "dacb42735f5a59a8b2abbf06fe7fdeba359849a08f418ad830a84ffadc316802",
+          "numpy_multiarray": "6a650810a8735cbdb988f74729973740a337645dd1585fef696e73e2dbc65beb",
+          "official_helpers": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae"
+        }
+      }
+    }
+  ],
+  "counted": false,
+  "status": "BLOCKED_BEFORE_AGENT_LOAD"
+}
