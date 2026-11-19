@@ -233,3 +233,7 @@ V4r 对两个固定规则对手取得 **16/16**，对同图换席的 Master3s2 �
 在预登记的另一张开发图 621758339 上，固定混合策略和 Echo4 权重，只替换 Sapling 权重。旧网双席 0/2，平均官方分差 −959.97，新网双席 0/2，平均 −1284.28。席 0 比父代少 878.40 分，席 1 多 229.78 分。四局均打到步限。两个局部续弈转正未能预测这张图从开局打到终局的收益。[逐局比分与墙钟](master6_actor_dev/broader_elite_backbone_dev/native_gate/RESULTS.md)
 
 直接用原版搜索前的动作概率训练 Sapling 后，两个已有地图的独立续弈对照分别少 96.15、696.47 分。五项经济辅助监督改善了现金预测，三份留出数据上的专家动作复现数均下降。两条证据均未达到启用新开发图的条件。[原版动作蒸馏](master6_actor_dev/master3s2_policy_distill_dev/README.md) · [经济辅助监督](master6_actor_dev/economic_multitask_backbone_dev/README.md)
+
+## 神经读出更新后直接打原版，开发图 621758343
+
+冻结包 `09b41c24` 使用 Sapling 和自有 it50 联合出令。对仓内原版 Master3s2 从开局自然打满，席 0 为 7948.10 比 9014.80，席 1 为 7998.56 比 9220.87，合计 0 胜 2 负。父代同图同席也是 0 胜 2 负。新版分别缩小分差 144.25、280.36，未取得新图首胜。四局的考官每局均有 299 次真实调用，双方无灭绝。该开发图及研究过的局面从正式考试排除。[官方比分、公开入口身份及计时](master6_actor_dev/deployed_mix_policy_gradient_dev/full_episode/direct_original/README.md)
