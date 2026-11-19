@@ -229,7 +229,7 @@ def verify_map(cases, data_dir, packages, source_cards, expected_cpu):
     clock=S.clock_proof(bank["clock"],0,last+1)
     models={k:R.live.module(p,"settle_return_"+k) for k,p in packages.items()}
     env=K.checked_env(raw)
-    verified, different = [], []
+    verified, different, staged = [], [], []
     for t,record in enumerate(bank["trace"]):
         own,enemy=K.public(env,seat),K.public(env,1-seat)
         assert not env.done and record["t"]==own["step"]==enemy["step"]==t
@@ -238,13 +238,20 @@ def verify_map(cases, data_dir, packages, source_cards, expected_cpu):
         assert all(record[arm]==cmd for arm,cmd in orders.items())
         if t in by_t:
             case=by_t[t]
-            verified.append(verify_root(case,folder/case["id"],bank,shared_sha,raw,own,enemy,orders,models["parent"]))
+            # The official referee resets process-wide worker/tree ID counters for each game.
+            # Finish the archived prefix before opening any isolated suffix replay.
+            parent=models["parent"]
+            staged.append((case,deepcopy(own),deepcopy(enemy),deepcopy(orders),deepcopy((parent._FEAT,parent._COUNTS))))
         if t < last:
             joint=raw["actions"][t]
             assert record["archived_enemy"]==R.live.clean(joint[1-seat])
             if record["original_proposed"]!=record["archived_enemy"]:
                 different.append(t)
             env.step(joint)
+    parent=models["parent"]
+    for case,own,enemy,orders,state in staged:
+        parent._FEAT,parent._COUNTS=state
+        verified.append(verify_root(case,folder/case["id"],bank,shared_sha,raw,own,enemy,orders,parent))
     return verified,dict(seed=seed,seat=seat,terrain=first["terrain"],root_ids=[r["id"] for r in verified],
                          shared_sha256=shared_sha,source_sha256=first["source_sha256"],native_prefix_clock=clock,
                          original_proposal_differs_from_executed_opening_steps=different)
