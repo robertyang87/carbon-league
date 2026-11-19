@@ -35,8 +35,15 @@ def phase_dirs(name):
     return [CODE]+[CODE/'batches'/r['name'] for r in load(CODE/'next_intake.json')['batches'] if r['name']<batch['name']]
 
 def register(name):
-    entry=registry(name);wd=CODE/'batches'/name
+    entry=registry(name)
+    wd=CODE/'batches'/entry['name']
     wd.mkdir(parents=True,exist_ok=True)
+    with (wd/'.registration.lock').open('a') as handle:
+        fcntl.flock(handle,fcntl.LOCK_EX)
+        return _register(wd,entry)
+
+def _register(wd,entry):
+    name=entry['name']
     original=load(CODE/'protocol.json')
     old_dirs=phase_dirs(name)
     if not all((q/'training_labels.json').exists() for q in old_dirs):

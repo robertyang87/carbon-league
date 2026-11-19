@@ -132,6 +132,33 @@ def ladder():
                             'ledger_files_sha256':files, 'extra':extra}
 
 
+def historical_catalogs(initial, boards):
+    """Include removed-workspace evidence retained by the initial cross-project audit."""
+    terrains, seeds = set(), set()
+    for relative_name, record in initial['prior_catalogs'].items():
+        path = ROOT / relative_name
+        check(digest(path) == record['sha256'], 'historical catalog changed: ' + relative_name)
+        old = load(path)
+        for row in old.get('local_native_or_training_maps', []):
+            terrains.add(row['terrain'])
+            if row['seed'] is not None:
+                seeds.add(row['seed'])
+        named = old.get('boards', {})
+        if isinstance(named, dict):
+            for key, value in named.items():
+                if isinstance(value, dict):
+                    value = value.get('terrain_sha256', value.get('initial_terrain_u8_sha256'))
+                if str(key).isdigit() and isinstance(value, str) and len(value) == 64:
+                    terrains.add(value)
+                    seeds.add(int(key))
+    check(len(terrains) == initial['historical_terrains'] and len(seeds) == initial['historical_nominal_seeds'],
+          'historical catalog cardinality changed')
+    check(not (set(boards.values()) & terrains or set(map(int, boards)) & seeds),
+          'map overlaps retained historical catalogs')
+    return {'distinct_terrains':len(terrains), 'nominal_seeds':len(seeds),
+            'source_sha256':{name:r['sha256'] for name,r in initial['prior_catalogs'].items()}}
+
+
 def validate_scan(raw, seed, terrain, protocol, plan, declarations):
     row = json.loads(raw)
     allowed = set(declarations)
@@ -177,6 +204,7 @@ def main():
     boards = {str(s):official_board(s) for s in train + protected}
     check(len(set(boards.values())) == len(boards), 'two registered seeds generate the same terrain')
     first = load(HERE / 'clearance.json')
+    legacy = historical_catalogs(first, boards)
     check(protected == load(HERE / 'protocol.json')['development_maps']
           and all(boards[str(s)] == first['boards'][str(s)] for s in protected)
           and all(boards[str(s)] == entry['terrain_at_queue_time'][str(s)] for s in train),
@@ -229,10 +257,11 @@ def main():
             dest.replace(target)
         save(final,{'stage':'dynamic_observed_maps_and_historical_seed_ranges','verdict':'eligible_in_checked_scope',
                     'source_revision':plan['source_revision'],'declaration_sha256':digest(protocol),'boards':boards,
+                    'historical_catalogs':legacy,
                     'training_maps':train,'protected_identity_only':protected,
                     'initial_clearance_sha256':digest(HERE/'clearance.json'),'prior_sources':previous,
                     'reservations_sha256':declarations,'ladder':ladder_report,'full_audits':audits,
-                    'scope':'Full seed/range/terrain scans of training maps. Reserved development openings are regenerated only for identity and collision checks, without playing. Nominal schedule references are allowed only with bound progam, queue, declaration or resource bytes; observed boards cannot qualify.',
+                    'scope':'Full seed/range/terrain scans of training maps. Reserved development openings are regenerated only for identity and collision checks, without playing. Nominal schedule references are allowed only with bound program, queue, declaration or resource bytes; observed boards cannot qualify.',
                     'audit_code_sha256':digest(Path(__file__))})
         print('eligible_in_checked_scope',digest(final),boards,flush=True)
 
