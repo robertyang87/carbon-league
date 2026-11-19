@@ -1,0 +1,12 @@
+{
+  "fit_seeds":[621704800,621704801,621704802,621704803,621704804,621704805],
+  "held_seeds":[621704806,621704807],
+  "diagnostic_seeds":[621758340],
+  "train_source":"Only first_win_dev/games/candidate. Both full physical seats, examiner role exclusively, every turn. The 340 map and its four trajectories are diagnostic only. No later, reserved or formal map can enter this allowlist.",
+  "control":"Raw temperature-1 same-seat original policy, conditioned on reconstructed public belief history, projected through each executed previous slot's legal prefix.",
+  "residual":"On native-clock team changed=true only, equal mixture of the projected raw distribution and the one-hot finally executed action; otherwise same raw target as control. There is no initial sampled command per unit in these receipts. No claim of slot-level search credit. Both arms drop an infeasible recorded command and its entire suffix; forced slots do not enter loss.",
+  "selection":"Visit complete trajectories and keep a sealed shard per trajectory. Each training round shuffles the six fit terrains and both physical seats. Select uniformly from each taped trajectory. Shared draws, initialization, architecture, optimizer and resource budget. Time unit is a map pair, not a slot.",
+  "updates":48,"batch":8,"lr":0.00008,"seed":912487,"residual_weight":0.5,
+  "primary":"On the two held maps equally weighted, report examiner post-search executed-action NLL on changed roots, raw KL, unit agreement, joint command agreement under recorded prefixes, plus unchanged roots, both seats and full denominator. Precondition to consider new formal work is improved changed-root NLL on both held maps and unchanged-root agreement at most 2 percentage points down vs matched raw control. This experiment does not authorize any native match. Primary held map count is only two.",
+  "operating_limit":"CPU3, one thread, nice 19, no live examiner, each raw original policy forward runs offline without search. Frozen candidate uses Sapling weights only."
+}
