@@ -242,7 +242,7 @@ def main():
       interpretation="Conditional accounting of realized actions on two previously observed maps with natural sampling by the trained and reference agents. Each price and cash movement follows the official rules. Different trajectories do not isolate policy causation.",
       interval_semantics="State t is immediately before simultaneous orders at t. [start,end) means recorded source commands from start through end-1. References at -3/-5/-10 stop at the initial state. First tied max/min in cents.",
       worker_tuple="position, carried carbon, is_collector, physical owner, toroidal distance to nearest own base",
-      collision_tuple="dead worker ID, physical owner of dead worker, carbon carried, beneficiary seat or null, surviving collector ID or null",
+      collision_tuple="dead worker ID, physical owner of dead worker, carbon carried, beneficiary seat or null, surviving collector owner seat or null",
       signed_costs="Recruitment/planting/seizure are negative; ground_rent excludes the opponent cargo tax portion of tree income; collision payments are separate. Terminal adjustment equals official score less final physical cash.",
       games=list(games.values()),paired_comparisons=comparisons,means=means)
     write(HOSTED/"economy.json.gz",artifact,True)
