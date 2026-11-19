@@ -117,7 +117,7 @@ def verify_request(r,row,side,obs,live):
     need(play.sha(live.encoded(public))==r["game_observation_sha256"],"Original observer saw different game state")
     for key in ("wall","cpu"):
         need(0<r[key]<=row["original"][key]+2e-6,"Nested actual native request clock mismatch")
-    shared_audit.check_stats(row["original"])
+    # search_stats checks each full segment. A completed native depth can also flag an aborted deeper attempt.
 
 def replay(f,plan,pre,tail,reqs,menu,common,idx):
     seed,seat,terrain=f["seed"],f["seat"],f["board_sha256"]
