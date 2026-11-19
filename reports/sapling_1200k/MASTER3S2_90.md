@@ -8,6 +8,10 @@ Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜�
 
 对 Sapling 加入了 1,473 个参数的碳估计网络，仅更新学生编码器入参。在三张训练外地形的 63,157 个暗格上，平均绝对误差由 2.106 降到 1.546 碳。双席逐帧从公开入口调用，1,794 次决策共改变 17 条指令。首图本地逐步端到端 P99 为 69.49 毫秒，最慢 290.23 毫秒。此前其他 SHA 的托管场计时单独记账。[权重、实际命令与反例](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/README.md) · [预登记的同局面原版响应](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/native_response/protocol.json)
 
+在相同初盘、相同真实原版对手根步指令的续弈中，`bc69b55e` 在图 621758327 席 0 第 26 步让种植工留下而存活，父代左移后该工人当拍死亡。两条分支随后都交还父代出令，考官各自应对至终局。新令分支 7556.88 比 9066.84，父令分支 8257.46 比 9559.70，新令让官方分差减少 207.72。净地租增加 318.94，正常回库净额减少 243.87，种夺树支出净现金流减少 313.14。图 621758335 席 1 在登记窗口内没有改令，按事先约定保留零干预记录。[根步指令、终分与整局经济结算](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/native_response/README.md)
+
+同一件 6,086,621 字节的 `bc69b55e` 在每席独立 1.5 核、512 MiB、断网容器中复演一张已知图，两席共 598 次公开请求全部复现动作。两席冷启均小于 0.34 秒，P99 分别为 49.73、51.00 毫秒，最慢请求 114.17 毫秒，零慢步、超时和错误。计时复演与完整实战分别记账。[托管计时、逐拍证据与最终包 SHA](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/ladder_timing/hosted/README.md)
+
 ## 早期开发记录
 
 **早期冻结组合 `c5ad3f43` 在当时的曝光图取得一胜。** 在先前用过的地图 `621461321`，席 0 的冻结组合 `c5ad3f43` 以 **8,026.31 比 7,644.53** 胜 Master3s2，打满 299 步。考官完成 294 次搜索，其中 233 次到达深度 8，另有 5 步只有一个候选。两席均无内部错误。同图换席分差为 −1,837.30。参赛组合按 75% 自有 Echo4、25% Sapling 融合动作分数；去掉 Sapling 后，此前 68 个实战局面中有 16 个改变整队命令。该版本在本轮以前的 12 局为 1 胜 11 负。[官方逐步回执](master6_actor_dev/actor_partner_dev/native/candidate/receipt_621461321_0.json) · [实际动作消融](master6_actor_dev/actor_partner_dev/attribution.json) · [十二局与换席比分](master6_actor_dev/first_win_analysis/README.md)
