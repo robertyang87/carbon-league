@@ -2,7 +2,12 @@ import unittest
 import sys
 from pathlib import Path
 
-from policy import LateRecruit
+import importlib.util
+
+_spec=importlib.util.spec_from_file_location("late_recruit_implementation",Path(__file__).with_name("policy.py"))
+_impl=importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_impl)
+LateRecruit=_impl.LateRecruit
 sys.path.insert(0,str(Path(__file__).resolve().parents[4]/'code'))
 from fastsim import DEFAULT_CONFIG
 

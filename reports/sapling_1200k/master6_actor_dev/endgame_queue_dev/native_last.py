@@ -171,6 +171,13 @@ def score_cases(spec, path):
             master._S_COST[:]=costs
             master._S_STATS.clear();master._S_STATS.update(copy.deepcopy(initial_stats))
             master._S_REC=[]
+            actual_rng=master._ST["rng"].get_state()
+            stream_readback={"seed":seed,"seat":seat,"algorithm":actual_rng[0],"keys":actual_rng[1].tolist(),
+                             "index":actual_rng[2],"gaussian":actual_rng[3],"cached":actual_rng[4]}
+            require(canonical(stream_readback)==canonical(stream) and list(master._S_COST)==costs,
+                    "different RNG or measured starting cost across arms")
+            cost_before=list(master._S_COST)
+            own_last_observation_sha256=canonical(sim.obs(seat))
             before=len(calls);obs=sim.obs(enemy)
             t0=time.perf_counter()
             real=clean(master.agent(obs,cfg))
@@ -184,8 +191,11 @@ def score_cases(spec, path):
             require(end["status"]==["DONE","DONE"],"missing terminal")
             outcomes[role]={"first_joint":joint,"first_joint_sha256":canonical(joint),
                 "last_joint":last,"last_joint_sha256":canonical(last),
-                "own_visible_sha256":canonical(g["history"]["297"][seat]),
+                "own_root_visible_sha256":canonical(g["history"]["297"][seat]),
+                "own_last_visible_sha256":own_last_observation_sha256,
                 "enemy_last_visible_sha256":canonical(obs),"search_call_count":len(calls)-before,
+                "search_callback_seat_step":calls[before:],"rng_before_sha256":canonical(stream_readback),
+                "cost_before":cost_before,
                 "native_search":copy.deepcopy(master._S_STATS),"root_candidates_reported":copy.deepcopy(master._S_REC),
                 "rng_after_sha256":canonical([master._ST["rng"].get_state()[1].tolist(),master._ST["rng"].get_state()[2]]),
                 "native_action_wall_s":wall,"cost_after":list(master._S_COST),"first":first,"end":end,
