@@ -1,0 +1,109 @@
+{
+  "protocol_sha256": "8bc6122533b139c626323955c0aa0b4dbd8ef771ab04d086df275e5d1641751a",
+  "runner_sha256": "6d3f5a50a810448ac8c92aeed51f188b62ee4c329cdbc2f7a101cab4b589fd42",
+  "worker_sha256": "c126d09828eea617957bb648ba5f56d682b0e5c75e72aa079dd000f4765b876b",
+  "seed": 621758346,
+  "candidate_seat": 1,
+  "official_transitions": 0,
+  "action_calls": [
+    0,
+    0
+  ],
+  "strategy_initializations": 0,
+  "docker_info": "none",
+  "image_id": "sha256:2f445f778232869f363260113f0c41076b1f17f55306220e6fc3917639e589f9",
+  "probes": [
+    {
+      "cgroup": {
+        "cpu.max": "400000 100000",
+        "memory.max": "17179869184",
+        "memory.swap.max": "max",
+        "cpuset.cpus.effective": "0-4"
+      },
+      "cgroup_inode": 148,
+      "affinity": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "interfaces": [
+        "lo"
+      ],
+      "python": [
+        3,
+        12,
+        16
+      ],
+      "numpy": "1.26.4",
+      "torch": null,
+      "helper_sha256": null
+    },
+    {
+      "cgroup": {
+        "cpu.max": "400000 100000",
+        "memory.max": "17179869184",
+        "memory.swap.max": "max",
+        "cpuset.cpus.effective": "0-4"
+      },
+      "cgroup_inode": 148,
+      "affinity": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "interfaces": [
+        "lo"
+      ],
+      "python": [
+        3,
+        12,
+        16
+      ],
+      "numpy": "1.26.4",
+      "torch": null,
+      "helper_sha256": null
+    }
+  ],
+  "containers": [
+    {
+      "id": "fe2f85befc310f4c2c11800ddd61da8e1552126bed82eb5d943b95d7adb89743",
+      "image": "sha256:2f445f778232869f363260113f0c41076b1f17f55306220e6fc3917639e589f9",
+      "network": "none",
+      "nano_cpus": 1500000000,
+      "memory": 536870912,
+      "memory_swap": 536870912,
+      "cpuset": "0,1",
+      "read_only_root": true
+    },
+    {
+      "id": "f99f7a0554337a3b4643779e27f48cd0c0df39fb9d1820fb06e8a114851f0f63",
+      "image": "sha256:2f445f778232869f363260113f0c41076b1f17f55306220e6fc3917639e589f9",
+      "network": "none",
+      "nano_cpus": 1500000000,
+      "memory": 536870912,
+      "memory_swap": 536870912,
+      "cpuset": "0,1",
+      "read_only_root": true
+    }
+  ],
+  "blockers": [
+    "opponent: cpu.max=400000 100000, expected 1.5 cores",
+    "opponent: memory.max=17179869184, expected 536870912",
+    "opponent: memory.swap.max=max, expected 0",
+    "opponent: dependency versions [3, 12, 16]/1.26.4/None",
+    "opponent: official helper SHA differs or is missing",
+    "candidate: cpu.max=400000 100000, expected 1.5 cores",
+    "candidate: memory.max=17179869184, expected 536870912",
+    "candidate: memory.swap.max=max, expected 0",
+    "candidate: dependency versions [3, 12, 16]/1.26.4/None",
+    "candidate: official helper SHA differs or is missing",
+    "both containers see the same cgroup directory inode"
+  ],
+  "status": "BLOCKED_BEFORE_AGENT_LOAD",
+  "counted": false,
+  "whole_wall_seconds": 7.150148185995931
+}
