@@ -1,0 +1,280 @@
+{
+  "schema": "sapling-native-return-holdout/1",
+  "purpose": "Development on two unused physical maps; independent final exam remains reserved.",
+  "platform": {
+    "per_candidate_cpu": 1.5,
+    "per_candidate_memory_bytes": 536870912,
+    "swap_headroom_bytes": 0,
+    "network": "none",
+    "containers": 2,
+    "python": "3.12",
+    "numpy": "1.26.4",
+    "opponent_required_torch": "2.5.1+cpu",
+    "source_limit_bytes": 10000000,
+    "init_seconds": 20,
+    "step_soft_seconds": 1,
+    "step_hard_seconds": 3,
+    "slow_steps_per_player": 3,
+    "overage_seconds_per_player": 5,
+    "task_seconds": 1500
+  },
+  "arms": [
+    "sampled_parent",
+    "sampled_child"
+  ],
+  "seeds": [
+    621758470,
+    621758471
+  ],
+  "physical_boards": {
+    "621758470": "2cb0d3141931b80df4aa6e0b1be24de5581e21feb03b1abd882ddcb7e3405251",
+    "621758471": "6fd4b1581d93ef45dd3a4cfa91e9eb90851bb82897479d291bcc7be5e77ad35b"
+  },
+  "expected_games": 8,
+  "schedule": [
+    {
+      "seed": 621758470,
+      "seat": 0,
+      "order": [
+        "sampled_parent",
+        "sampled_child"
+      ]
+    },
+    {
+      "seed": 621758470,
+      "seat": 1,
+      "order": [
+        "sampled_child",
+        "sampled_parent"
+      ]
+    },
+    {
+      "seed": 621758471,
+      "seat": 0,
+      "order": [
+        "sampled_child",
+        "sampled_parent"
+      ]
+    },
+    {
+      "seed": 621758471,
+      "seat": 1,
+      "order": [
+        "sampled_parent",
+        "sampled_child"
+      ]
+    }
+  ],
+  "source_fit": {
+    "training_commit": "c0a0cf858b42b9f8a8e579b62a9d2d9965477e04",
+    "candidate_sha256": "da9919ad3c0d455b0368a10a518441d75374f59bdb85ed3da387818381292c91",
+    "fit_sha256": "c15af07ca56476adb10999cb8651ed86aaaf6757c6a802d6e968964de7c76f3c",
+    "weights_sha256": "58d800ba998a336b70299fa379a8ca6a91e7a4e16e71152bc1bf6ab8d52ba118",
+    "training_manifest_sha256": "63daa51e127aafea36401ebdce6400de60faa772d3929a1803ce768e121be5b4"
+  },
+  "selected_step": 0.1,
+  "endpoint": "One full frozen parent–candidate pair at each map and seat, all eight attempts. Report full official win/draw/loss including timeouts, extinction rewards and per-seat means, paired official margin deltas by each map and seat, plus their two map means. Missing official margins stay missing. All wins are descriptive development outcomes.",
+  "execution": "Original public temperature one, unseeded 0.58 s wall-adaptive search, both natural learners unseeded. Run paired arms cold on the same host/CPU set in serial order AB/BA/BA/AB without repeating exposed tickets. Recovery after a setup failure requires independently confirmed zero prior exposure across all four tickets. Include public I/O, step zero, game-level slow steps and original search depth.",
+  "files": {
+    "opponent": {
+      "path": "data/master3s2_source.py",
+      "sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+      "bytes": 2897684
+    },
+    "environment": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/carbon.py",
+      "bytes": 11755,
+      "sha256": "72f1f3b561a8715927b809d0e45d621651f9c2c50aaf0109c18a18123a03cc60"
+    },
+    "official_helpers": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/helpers.py",
+      "bytes": 51161,
+      "sha256": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae"
+    },
+    "rules": {
+      "path": "reports/agent-guide.md",
+      "bytes": 9120,
+      "sha256": "ea9276c2c12b61a0425690f121e91306b2ab2780b91f1781f8f99b7d58d9e3c1"
+    },
+    "live_registration": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/protocol.json",
+      "sha256": "8bc6122533b139c626323955c0aa0b4dbd8ef771ab04d086df275e5d1641751a",
+      "bytes": 3234
+    },
+    "live": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/live.py",
+      "sha256": "928646196266fdfb40e60be052f82b733d0d95c495a974dab4c1fe492dfa5a80",
+      "bytes": 16011
+    },
+    "worker": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/worker.py",
+      "sha256": "146e4afd9fd2e695fe6bd887e70e11b229e7616e648c0a230b1b90b1943a32b9",
+      "bytes": 4185
+    },
+    "dockerfile": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/Dockerfile",
+      "sha256": "f2e862c3e26bd080969f280018f6bae85d93440fae66de96dcbb65d804bf947e",
+      "bytes": 1072
+    },
+    "runner": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/play.py",
+      "sha256": "17695a8b5f055ef9ae9cc14674b20efe0b776bce0b72365a4336dea393d525d2",
+      "bytes": 5815
+    },
+    "verifier": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/verify_pair.py",
+      "sha256": "a8f42ded66c694c2f9668cfe7c6785b08ae02c231b83d3f4440bf5296cc82051",
+      "bytes": 10621
+    },
+    "guide": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/platform_guide.md",
+      "sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8",
+      "bytes": 11469
+    },
+    "fit": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/fit.json",
+      "sha256": "51648ab50f0447a282bc46e3b850eb2a47ef240e7221908f1aab13d1bdd04041",
+      "bytes": 16938
+    },
+    "original_settle": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/settle.py",
+      "sha256": "a613e02f4dfc1b8f66c12d9802f32adcb82b35d614c8fe79bc09d575d8e894b5",
+      "bytes": 17426
+    },
+    "support_check": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/audit_menu.py",
+      "sha256": "6b28b50ef8fd51e8360188d6d5b0a43e38fb57a0ff5b7bc5f98c82fb013a9114",
+      "bytes": 8333
+    },
+    "exporter": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/export_behavior.py",
+      "sha256": "002ef364d28470c46f6cea9f817938b4d29386daffd91ec20c147d2ec0837829",
+      "bytes": 5869
+    },
+    "collector": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/collect.py",
+      "sha256": "5a0f57719a507864331044dbd6f04d39a290a63984c72cc3fa46f02462f734df",
+      "bytes": 15286
+    },
+    "initial_configuration": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz",
+      "sha256": "7a5967383c78324d248f4b228541d7eb30f3ac3d39bf18e74f81a011a78c4631",
+      "bytes": 10094
+    },
+    "reference_source": {
+      "path": "sources/master3s2/master3s2.py",
+      "sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+      "bytes": 2897684
+    },
+    "exposed_matrix": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/matrix.py",
+      "sha256": "ab1eb906b2f26d8bdedb25d6be6c56a5a6fc1ce4b6c538ed91417904d8fb2e87",
+      "bytes": 9210
+    },
+    "verified_matrix": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/fresh_repeat/matrix.py",
+      "sha256": "664964d60ebec4f36e1d567feb074fb3d5e04ed83f7a4e481cca89197719bee7",
+      "bytes": 14733
+    },
+    "sampled_parent": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/candidate_sampled.py",
+      "sha256": "851c901aa561ce80bf04d03e7c2a8e7876bfa2f24dc6c57ffe22b501979320ee",
+      "bytes": 6078674
+    },
+    "sampled_parent_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/candidate.npz",
+      "sha256": "bc916190f2f7484055f70a0020f502df137127d8a15b09a5addbc612c0ed849c",
+      "bytes": 4861598
+    },
+    "sampled_child": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/candidate.py",
+      "sha256": "da9919ad3c0d455b0368a10a518441d75374f59bdb85ed3da387818381292c91",
+      "bytes": 6078702
+    },
+    "sampled_child_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/candidate.npz",
+      "sha256": "58d800ba998a336b70299fa379a8ca6a91e7a4e16e71152bc1bf6ab8d52ba118",
+      "bytes": 4861598
+    },
+    "source_training": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/learning.json",
+      "sha256": "d348f38843eb899886b6643527dc57ba40d8c551ce8e2afd7f2640f63c56e75a",
+      "bytes": 5052
+    },
+    "fit_result": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/fit.json",
+      "sha256": "c15af07ca56476adb10999cb8651ed86aaaf6757c6a802d6e968964de7c76f3c",
+      "bytes": 8492
+    },
+    "fit_decisions": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/fit_decisions.json.gz",
+      "sha256": "61130ec2739618d95133875ed95bedcb327830f40b45eddc0f4ece3a8f217dbb",
+      "bytes": 301839
+    },
+    "learner": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/learning.py",
+      "sha256": "f13064e2e2426d55289924099ae9888041f1a90fbb2b5677fde24b9123fedda6",
+      "bytes": 18938
+    },
+    "intake_plan": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/protocol.json",
+      "sha256": "f720c89c4d221f43f3cec81a73a3ce765c4d70c14dae44ee76c289a04ad346fc",
+      "bytes": 16447
+    },
+    "training_manifest": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/hosted/training_manifest.json",
+      "sha256": "63daa51e127aafea36401ebdce6400de60faa772d3929a1803ce768e121be5b4",
+      "bytes": 976338
+    },
+    "training_settlement": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/hosted/settlement.json",
+      "sha256": "3a8a603b95660bf47273c9b7c8df760f7d433ea1d60712d921a4566ca8067cae",
+      "bytes": 107635
+    },
+    "validation_clearance": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/clearance.json",
+      "sha256": "058488d6996cb51821cf8764f2efdbdaa2fe1ddba70426aa68caa76d4363b45f",
+      "bytes": 10266
+    },
+    "validation_clearance_code": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/clearance.py",
+      "sha256": "8ad90e640a3afea35838ba84d1e9c740906d1336236f29039ae83239d4b168fa",
+      "bytes": 10511
+    },
+    "validation_release": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/release.json",
+      "sha256": "1715fbc2c93bc6ff6426f42145e18b1b55756726ee26ae44f03df48404aac782",
+      "bytes": 428
+    },
+    "validation_matrix": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/matrix.py",
+      "sha256": "9df923a502ce71c71066a8572bc8b69fc46ad48a58c3a0bff7ad1ef743566669",
+      "bytes": 11052
+    },
+    "validation_merge": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/merge.py",
+      "sha256": "a833f8b80e5b1d81d89b950093a920bfece2d5d07fec9bd427f562e9eba47f29",
+      "bytes": 8651
+    },
+    "validation_menu": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/menu.py",
+      "sha256": "f9cc484934f4241977d94c1cf36fbac2e30211910fdd59f65393e752878b7257",
+      "bytes": 3728
+    },
+    "validation_helper": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/workflow_cli.py",
+      "sha256": "feeb2601537476667f2cb40703d5a98d8b174711fe37b65f975e850cf9f6f0b6",
+      "bytes": 6952
+    },
+    "source_exposure_helper": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/fresh_repeat/workflow_cli.py",
+      "sha256": "061c4e2e42329dd2f424edddedcbe2e20c578d465c0041fcdef3319c62023794",
+      "bytes": 5944
+    },
+    "validation_workflow": {
+      "path": ".github/workflows/sapling-native-return-validation.yml",
+      "sha256": "3f830ff458f73088ea4e6c53c7edb87aae41f90f2ee6963b01008ff12317c23d",
+      "bytes": 7841
+    }
+  }
+}
