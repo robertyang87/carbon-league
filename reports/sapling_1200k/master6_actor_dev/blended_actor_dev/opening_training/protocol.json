@@ -1,0 +1,12 @@
+{
+  "title": "Learn the first pair of base orders on physically observed Master6 opening turns",
+  "outside_step_zero_reference": "85c47d5d1f93d39dd66d1b959c0c2b3bdc6ee7187553b3ad992b4915056c6fe4",
+  "student_npz": "2c65117a39edf1963b0adbe92bcfcc6e6350f3bda8696835a2cc803073d7b80f",
+  "training": "All 218 previously signed train maps exactly once per epoch, one real physical-seat t0 with all legal base slots. Balanced by map and inverse square-root train-set base role frequency within each map. No early-turn proxies, no terminal rewards or future state.",
+  "model": "One shared additive FP32 linear layer mapping the active Sapling decoder hidden state at a base slot to three raw Sapling scores, zero initialization. Active only during public step zero, normal 75/25 mixing afterwards. No seat, seed, map identifier, base UID, fixed composition or slot-specific weights.",
+  "optimizer": {"algorithm": "full-batch Adam", "max_steps": 180, "lr": 0.025, "weight_l2_mean": 0.0001, "gradient_clip": 1.0},
+  "training_stop": "Stop if all demonstration-prefix training base predictions are correct and CE is below 0.04 for five consecutive updates, nonfinite is an error. Final step is used, no checkpoint choice or tuning on val/holdout.",
+  "gate": {"panels": ["val","holdout"], "each_panel_composition_match_minimum": 0.80, "each_panel_exact_joint_match_minimum": 0.50, "each_panel_exact_joint_gain_over_active_minimum": 0.15, "nonopening_normal_entry_differences_allowed": 0, "t0_disabled_differences_vs_active_allowed": 0, "changed_on_each_physical_seat": true},
+  "comparators": "Exact original active 85c47d5d, older original composite c5ad3f43, same-budget standalone control 96999753, and most common exact ordered base-command pair in training (diagnostic only). Report both base-order orientations, only actual economic comp selection signals are observational.",
+  "validation": "All historical 10 val and 18 holdout, and 18 earlier-exposed losses separately. Fixed 12 step normal-entry calendar from preceding probe. All off-window policies must agree with the active composite on the same given history, even when the real opening command differs. No new original games from this code."
+}
