@@ -1,0 +1,5521 @@
+{
+  "revision": "499a8555c16d21eb56a78de1b8db1a1362b58f60",
+  "ranks": [
+    "claude-AlphaCarbon-Master5s",
+    "claude-AlphaCarbon-Master6",
+    "RyanX-AIPowercore-it720-preview",
+    "RyanX-AIPowercore-M9XJ-630",
+    "ClaudeFable5.2-v7"
+  ],
+  "selection": "Keep the 2026-11-18 heavy-board ranks fixed. Audit all completed mutual games in the five official score-table snapshots at revision, including seven games beyond the original 101.",
+  "original_snapshot": {
+    "matches": 101,
+    "joint_turns": 30162,
+    "archive_sources": {
+      "git": 76,
+      "cached": 19,
+      "public": 6
+    },
+    "git_matches": 86,
+    "multiple_git_paths": 40,
+    "totals": {
+      "intercept_opportunity": 39603,
+      "intercept_chosen": 27606,
+      "intercept_confirmed": 21,
+      "cargo_endangered": 47203,
+      "cargo_safe_landing_chosen": 46109,
+      "heavy_clear_home_opportunity": 5853,
+      "heavy_clear_home_chosen": 4563,
+      "enemy_on_own_tree": 10881,
+      "friendly_contest": 4577,
+      "tree_captured": 4236
+    },
+    "contributing_matches": {
+      "intercept_opportunity": 101,
+      "intercept_chosen": 101,
+      "intercept_confirmed": 18,
+      "cargo_endangered": 101,
+      "cargo_safe_landing_chosen": 101,
+      "heavy_clear_home_opportunity": 101,
+      "heavy_clear_home_chosen": 101,
+      "enemy_on_own_tree": 101,
+      "friendly_contest": 101,
+      "tree_captured": 101
+    }
+  },
+  "latest_score_tables_sha256": {
+    "data/master5s_matches.json": "3eb477b1d9a1f223fec8a193090ee6a17048594a0d35c820f08c6fdcd54fce9b",
+    "data/master6_matches.json": "71bed69ef00cdba9f236afc539a234b479b25cdebc4a825d9921abf9d2145b38",
+    "data/it720preview_matches.json": "6e2dab5d7aa0a0d6e9ecea24047956ca42cb5437639c132ccfae19f271f95796",
+    "data/m9xj630_matches.json": "2185680eb14093c6f28942d19e492d029b2998398ed17054b67c875614c509ff",
+    "data/fablev7_matches.json": "c277e790fccbd04ae76436461590a00ada2026c80e1b9d47a4e2707e31c9d348"
+  },
+  "denominators": "Two recorded players per match. Counts are worker- or tree-turns; an opportunity can repeat across turns. Supporting games are unique IDs. Alternative attack and defense labels can coexist.",
+  "definitions": {
+    "intercept": "Empty collector adjacent to exactly one eligible loaded opposing collector on a non-base cell. Confirmed requires hunter entering its cell, victim staying then disappearing, hunter surviving.",
+    "cargo": "Loaded collector would risk lethal/tie collision if staying and has a nonlethal currently free alternative, away from enemy bases. Chosen counts any nonlethal landing.",
+    "heavy_clear_home": "Quiet comparison local to the carrier: cargo >=100, sole adjacent free friendly base, alternate safe landing, no enemy can reach the base; chosen means entering it, not necessarily a deposit.",
+    "tree": "Enemy planter standing on a non-expiring owned tree; friendly contest is a friendly worker targeting that square. Captures checked using ownership transitions."
+  },
+  "input_sha256": {
+    "top5_score_rows": "5b13d5efd211174127d3ea645f6a49b81a130ca675d0079cd347b3c3ff3b5e19",
+    "top5_inventory": "e1eff2ad495d133bda7186cf0b51388f9f697658067ecbadbf52ae5861f43268",
+    "top5_defense": "2b4028267df5d1f96dbc9aa84c4f9a34f0470685c88b7651602e7e2e9f29c667"
+  },
+  "cargo_code_sha256": "3dc6b310660ba5b30a97a1831ddc815b8378644fadc09577e9f0515b093b9f89",
+  "overall": {
+    "matches": 108,
+    "joint_turns": 32255,
+    "archive_sources": {
+      "git": 77,
+      "cached": 19,
+      "public": 12
+    },
+    "git_matches": 87,
+    "multiple_git_paths": 40,
+    "totals": {
+      "intercept_opportunity": 42523,
+      "intercept_chosen": 29648,
+      "intercept_confirmed": 24,
+      "cargo_endangered": 50755,
+      "cargo_safe_landing_chosen": 49567,
+      "heavy_clear_home_opportunity": 6254,
+      "heavy_clear_home_chosen": 4884,
+      "enemy_on_own_tree": 11689,
+      "friendly_contest": 4925,
+      "tree_captured": 4551
+    },
+    "contributing_matches": {
+      "intercept_opportunity": 108,
+      "intercept_chosen": 108,
+      "intercept_confirmed": 20,
+      "cargo_endangered": 108,
+      "cargo_safe_landing_chosen": 108,
+      "heavy_clear_home_opportunity": 108,
+      "heavy_clear_home_chosen": 108,
+      "enemy_on_own_tree": 108,
+      "friendly_contest": 108,
+      "tree_captured": 108
+    }
+  },
+  "pairs": {
+    "1-2": {
+      "matches": 2,
+      "joint_turns": 598,
+      "archive_sources": {
+        "git": 2
+      },
+      "git_matches": 2,
+      "multiple_git_paths": 0,
+      "totals": {
+        "intercept_opportunity": 581,
+        "intercept_chosen": 394,
+        "intercept_confirmed": 2,
+        "cargo_endangered": 664,
+        "cargo_safe_landing_chosen": 640,
+        "heavy_clear_home_opportunity": 109,
+        "heavy_clear_home_chosen": 77,
+        "enemy_on_own_tree": 145,
+        "friendly_contest": 59,
+        "tree_captured": 50
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 2,
+        "intercept_chosen": 2,
+        "intercept_confirmed": 2,
+        "cargo_endangered": 2,
+        "cargo_safe_landing_chosen": 2,
+        "heavy_clear_home_opportunity": 2,
+        "heavy_clear_home_chosen": 2,
+        "enemy_on_own_tree": 2,
+        "friendly_contest": 2,
+        "tree_captured": 2
+      }
+    },
+    "1-3": {
+      "matches": 15,
+      "joint_turns": 4485,
+      "archive_sources": {
+        "cached": 9,
+        "git": 4,
+        "public": 2
+      },
+      "git_matches": 4,
+      "multiple_git_paths": 4,
+      "totals": {
+        "intercept_opportunity": 6593,
+        "intercept_chosen": 4461,
+        "intercept_confirmed": 0,
+        "cargo_endangered": 7883,
+        "cargo_safe_landing_chosen": 7704,
+        "heavy_clear_home_opportunity": 847,
+        "heavy_clear_home_chosen": 678,
+        "enemy_on_own_tree": 1641,
+        "friendly_contest": 674,
+        "tree_captured": 706
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 15,
+        "intercept_chosen": 15,
+        "intercept_confirmed": 0,
+        "cargo_endangered": 15,
+        "cargo_safe_landing_chosen": 15,
+        "heavy_clear_home_opportunity": 15,
+        "heavy_clear_home_chosen": 15,
+        "enemy_on_own_tree": 15,
+        "friendly_contest": 15,
+        "tree_captured": 15
+      }
+    },
+    "1-4": {
+      "matches": 11,
+      "joint_turns": 3289,
+      "archive_sources": {
+        "git": 11
+      },
+      "git_matches": 11,
+      "multiple_git_paths": 11,
+      "totals": {
+        "intercept_opportunity": 4605,
+        "intercept_chosen": 3116,
+        "intercept_confirmed": 1,
+        "cargo_endangered": 5453,
+        "cargo_safe_landing_chosen": 5301,
+        "heavy_clear_home_opportunity": 618,
+        "heavy_clear_home_chosen": 491,
+        "enemy_on_own_tree": 1293,
+        "friendly_contest": 543,
+        "tree_captured": 505
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 11,
+        "intercept_chosen": 11,
+        "intercept_confirmed": 1,
+        "cargo_endangered": 11,
+        "cargo_safe_landing_chosen": 11,
+        "heavy_clear_home_opportunity": 11,
+        "heavy_clear_home_chosen": 11,
+        "enemy_on_own_tree": 11,
+        "friendly_contest": 11,
+        "tree_captured": 11
+      }
+    },
+    "1-5": {
+      "matches": 13,
+      "joint_turns": 3887,
+      "archive_sources": {
+        "git": 9,
+        "cached": 2,
+        "public": 2
+      },
+      "git_matches": 9,
+      "multiple_git_paths": 8,
+      "totals": {
+        "intercept_opportunity": 5450,
+        "intercept_chosen": 3841,
+        "intercept_confirmed": 0,
+        "cargo_endangered": 6616,
+        "cargo_safe_landing_chosen": 6552,
+        "heavy_clear_home_opportunity": 858,
+        "heavy_clear_home_chosen": 641,
+        "enemy_on_own_tree": 1481,
+        "friendly_contest": 647,
+        "tree_captured": 677
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 13,
+        "intercept_chosen": 13,
+        "intercept_confirmed": 0,
+        "cargo_endangered": 13,
+        "cargo_safe_landing_chosen": 13,
+        "heavy_clear_home_opportunity": 13,
+        "heavy_clear_home_chosen": 13,
+        "enemy_on_own_tree": 13,
+        "friendly_contest": 13,
+        "tree_captured": 13
+      }
+    },
+    "2-3": {
+      "matches": 14,
+      "joint_turns": 4186,
+      "archive_sources": {
+        "git": 9,
+        "public": 2,
+        "cached": 3
+      },
+      "git_matches": 14,
+      "multiple_git_paths": 0,
+      "totals": {
+        "intercept_opportunity": 5829,
+        "intercept_chosen": 3948,
+        "intercept_confirmed": 6,
+        "cargo_endangered": 6677,
+        "cargo_safe_landing_chosen": 6464,
+        "heavy_clear_home_opportunity": 815,
+        "heavy_clear_home_chosen": 627,
+        "enemy_on_own_tree": 1495,
+        "friendly_contest": 592,
+        "tree_captured": 558
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 14,
+        "intercept_chosen": 14,
+        "intercept_confirmed": 5,
+        "cargo_endangered": 14,
+        "cargo_safe_landing_chosen": 14,
+        "heavy_clear_home_opportunity": 14,
+        "heavy_clear_home_chosen": 14,
+        "enemy_on_own_tree": 14,
+        "friendly_contest": 14,
+        "tree_captured": 14
+      }
+    },
+    "2-4": {
+      "matches": 13,
+      "joint_turns": 3887,
+      "archive_sources": {
+        "git": 10,
+        "cached": 2,
+        "public": 1
+      },
+      "git_matches": 12,
+      "multiple_git_paths": 0,
+      "totals": {
+        "intercept_opportunity": 4746,
+        "intercept_chosen": 3349,
+        "intercept_confirmed": 6,
+        "cargo_endangered": 5653,
+        "cargo_safe_landing_chosen": 5472,
+        "heavy_clear_home_opportunity": 688,
+        "heavy_clear_home_chosen": 545,
+        "enemy_on_own_tree": 1295,
+        "friendly_contest": 549,
+        "tree_captured": 449
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 13,
+        "intercept_chosen": 13,
+        "intercept_confirmed": 5,
+        "cargo_endangered": 13,
+        "cargo_safe_landing_chosen": 13,
+        "heavy_clear_home_opportunity": 13,
+        "heavy_clear_home_chosen": 13,
+        "enemy_on_own_tree": 13,
+        "friendly_contest": 13,
+        "tree_captured": 13
+      }
+    },
+    "2-5": {
+      "matches": 13,
+      "joint_turns": 3850,
+      "archive_sources": {
+        "git": 9,
+        "cached": 3,
+        "public": 1
+      },
+      "git_matches": 12,
+      "multiple_git_paths": 0,
+      "totals": {
+        "intercept_opportunity": 2982,
+        "intercept_chosen": 2197,
+        "intercept_confirmed": 2,
+        "cargo_endangered": 3473,
+        "cargo_safe_landing_chosen": 3405,
+        "heavy_clear_home_opportunity": 647,
+        "heavy_clear_home_chosen": 465,
+        "enemy_on_own_tree": 1196,
+        "friendly_contest": 446,
+        "tree_captured": 377
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 13,
+        "intercept_chosen": 13,
+        "intercept_confirmed": 2,
+        "cargo_endangered": 13,
+        "cargo_safe_landing_chosen": 13,
+        "heavy_clear_home_opportunity": 13,
+        "heavy_clear_home_chosen": 13,
+        "enemy_on_own_tree": 13,
+        "friendly_contest": 13,
+        "tree_captured": 13
+      }
+    },
+    "3-4": {
+      "matches": 2,
+      "joint_turns": 598,
+      "archive_sources": {
+        "git": 2
+      },
+      "git_matches": 2,
+      "multiple_git_paths": 0,
+      "totals": {
+        "intercept_opportunity": 935,
+        "intercept_chosen": 651,
+        "intercept_confirmed": 1,
+        "cargo_endangered": 1168,
+        "cargo_safe_landing_chosen": 1127,
+        "heavy_clear_home_opportunity": 133,
+        "heavy_clear_home_chosen": 103,
+        "enemy_on_own_tree": 200,
+        "friendly_contest": 90,
+        "tree_captured": 80
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 2,
+        "intercept_chosen": 2,
+        "intercept_confirmed": 1,
+        "cargo_endangered": 2,
+        "cargo_safe_landing_chosen": 2,
+        "heavy_clear_home_opportunity": 2,
+        "heavy_clear_home_chosen": 2,
+        "enemy_on_own_tree": 2,
+        "friendly_contest": 2,
+        "tree_captured": 2
+      }
+    },
+    "3-5": {
+      "matches": 13,
+      "joint_turns": 3887,
+      "archive_sources": {
+        "git": 11,
+        "public": 2
+      },
+      "git_matches": 11,
+      "multiple_git_paths": 9,
+      "totals": {
+        "intercept_opportunity": 5803,
+        "intercept_chosen": 4169,
+        "intercept_confirmed": 5,
+        "cargo_endangered": 7090,
+        "cargo_safe_landing_chosen": 6965,
+        "heavy_clear_home_opportunity": 817,
+        "heavy_clear_home_chosen": 664,
+        "enemy_on_own_tree": 1544,
+        "friendly_contest": 700,
+        "tree_captured": 610
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 13,
+        "intercept_chosen": 13,
+        "intercept_confirmed": 3,
+        "cargo_endangered": 13,
+        "cargo_safe_landing_chosen": 13,
+        "heavy_clear_home_opportunity": 13,
+        "heavy_clear_home_chosen": 13,
+        "enemy_on_own_tree": 13,
+        "friendly_contest": 13,
+        "tree_captured": 13
+      }
+    },
+    "4-5": {
+      "matches": 12,
+      "joint_turns": 3588,
+      "archive_sources": {
+        "git": 10,
+        "public": 2
+      },
+      "git_matches": 10,
+      "multiple_git_paths": 8,
+      "totals": {
+        "intercept_opportunity": 4999,
+        "intercept_chosen": 3522,
+        "intercept_confirmed": 1,
+        "cargo_endangered": 6078,
+        "cargo_safe_landing_chosen": 5937,
+        "heavy_clear_home_opportunity": 722,
+        "heavy_clear_home_chosen": 593,
+        "enemy_on_own_tree": 1399,
+        "friendly_contest": 625,
+        "tree_captured": 539
+      },
+      "contributing_matches": {
+        "intercept_opportunity": 12,
+        "intercept_chosen": 12,
+        "intercept_confirmed": 1,
+        "cargo_endangered": 12,
+        "cargo_safe_landing_chosen": 12,
+        "heavy_clear_home_opportunity": 12,
+        "heavy_clear_home_chosen": 12,
+        "enemy_on_own_tree": 12,
+        "friendly_contest": 12,
+        "tree_captured": 12
+      }
+    }
+  },
+  "games": {
+    "011008e4dee32c2fdbfa37044c3c2608-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1071174382,
+      "env_uuid": "0ac35dc1-e344-11f1-a4b6-fa163e881fe8",
+      "official_scores": [
+        8580.13,
+        8453.05
+      ],
+      "is_later": false,
+      "canonical_sha256": "31e31a46673dd89d3974654dcfca88375e6281a657252b26558a888fd87e09b8",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/011008e4dee32c2fdbfa37044c3c2608/1",
+      "git_paths": [
+        "data/master6_corpus/011008e4dee32c2fdbfa37044c3c2608-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 188,
+          "intercept_chosen": 131,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 206,
+          "cargo_safe_landing_chosen": 200,
+          "heavy_clear_home_opportunity": 35,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 63,
+          "friendly_contest": 21,
+          "tree_captured": 27
+        },
+        {
+          "intercept_opportunity": 165,
+          "intercept_chosen": 104,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 208,
+          "cargo_safe_landing_chosen": 202,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 61,
+          "friendly_contest": 36,
+          "tree_captured": 20
+        }
+      ]
+    },
+    "01b56d406361dbb513d6d7417dc0184f-1": {
+      "ranks": [
+        1,
+        5
+      ],
+      "length": 299,
+      "random_seed": 963183905,
+      "env_uuid": "5d7bcfaf-e1d5-11f1-af8d-fa163e881fe8",
+      "official_scores": [
+        8952.45,
+        5954.11
+      ],
+      "is_later": false,
+      "canonical_sha256": "879832d500174c4ea6a120db497277348ebf8fcc5313c150e1ca6754b3c67283",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/01b56d406361dbb513d6d7417dc0184f/1",
+      "git_paths": [
+        "data/fablev7_corpus/01b56d406361dbb513d6d7417dc0184f-1.json.gz",
+        "data/master5s_corpus/01b56d406361dbb513d6d7417dc0184f-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 303,
+          "intercept_chosen": 222,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 197,
+          "cargo_safe_landing_chosen": 189,
+          "heavy_clear_home_opportunity": 47,
+          "heavy_clear_home_chosen": 31,
+          "enemy_on_own_tree": 80,
+          "friendly_contest": 39,
+          "tree_captured": 34
+        },
+        {
+          "intercept_opportunity": 181,
+          "intercept_chosen": 116,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 343,
+          "cargo_safe_landing_chosen": 340,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 17,
+          "enemy_on_own_tree": 34,
+          "friendly_contest": 12,
+          "tree_captured": 22
+        }
+      ]
+    },
+    "02ab03aeb1de04e89d030d0e71b280ec-1": {
+      "ranks": [
+        1,
+        2
+      ],
+      "length": 299,
+      "random_seed": 58923703,
+      "env_uuid": "bf8cea52-e34e-11f1-bb08-fa163e881fe8",
+      "official_scores": [
+        6131.9,
+        6803.83
+      ],
+      "is_later": false,
+      "canonical_sha256": "2152c43274faf70f7274e0fee5629572d31b3fda6957be74b011222587db11e1",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/02ab03aeb1de04e89d030d0e71b280ec/1",
+      "git_paths": [
+        "data/master6_corpus/02ab03aeb1de04e89d030d0e71b280ec-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 127,
+          "intercept_chosen": 94,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 205,
+          "cargo_safe_landing_chosen": 202,
+          "heavy_clear_home_opportunity": 15,
+          "heavy_clear_home_chosen": 15,
+          "enemy_on_own_tree": 26,
+          "friendly_contest": 8,
+          "tree_captured": 11
+        },
+        {
+          "intercept_opportunity": 186,
+          "intercept_chosen": 120,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 154,
+          "cargo_safe_landing_chosen": 146,
+          "heavy_clear_home_opportunity": 40,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 87,
+          "friendly_contest": 33,
+          "tree_captured": 29
+        }
+      ]
+    },
+    "04e2bd65b4b6e81980135e06cfadd7b0-1": {
+      "ranks": [
+        1,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1333338956,
+      "env_uuid": "22d0e3cd-e2b0-11f1-84cd-fa163e881fe8",
+      "official_scores": [
+        9413.54,
+        6948.9
+      ],
+      "is_later": false,
+      "canonical_sha256": "af7b4278dceba538134cbd3eb8d0aae966b8218d489dfd913a73f0a937d0ecb9",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/04e2bd65b4b6e81980135e06cfadd7b0/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 277,
+          "intercept_chosen": 206,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 199,
+          "cargo_safe_landing_chosen": 197,
+          "heavy_clear_home_opportunity": 45,
+          "heavy_clear_home_chosen": 29,
+          "enemy_on_own_tree": 65,
+          "friendly_contest": 29,
+          "tree_captured": 28
+        },
+        {
+          "intercept_opportunity": 167,
+          "intercept_chosen": 115,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 316,
+          "cargo_safe_landing_chosen": 315,
+          "heavy_clear_home_opportunity": 40,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 46,
+          "friendly_contest": 14,
+          "tree_captured": 30
+        }
+      ]
+    },
+    "06591c01cd12b7f46c7215d5b464fb9b-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1652064993,
+      "env_uuid": "1c641aa9-e365-11f1-8935-fa163e881fe8",
+      "official_scores": [
+        6507.88,
+        6531.12
+      ],
+      "is_later": false,
+      "canonical_sha256": "ad4e4e1ce67979f92cf35d708429d191f6f47fea2ac884d910869337b1df9302",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/06591c01cd12b7f46c7215d5b464fb9b/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 204,
+          "intercept_chosen": 144,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 326,
+          "cargo_safe_landing_chosen": 323,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 45,
+          "friendly_contest": 14,
+          "tree_captured": 21
+        },
+        {
+          "intercept_opportunity": 325,
+          "intercept_chosen": 246,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 244,
+          "cargo_safe_landing_chosen": 238,
+          "heavy_clear_home_opportunity": 30,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 61,
+          "friendly_contest": 22,
+          "tree_captured": 20
+        }
+      ]
+    },
+    "077d383b994d3891094d90cc1b6a5d4b-1": {
+      "ranks": [
+        5,
+        3
+      ],
+      "length": 299,
+      "random_seed": 159872527,
+      "env_uuid": "da8ebb74-e250-11f1-b0c5-fa163e881fe8",
+      "official_scores": [
+        8685.48,
+        8227.99
+      ],
+      "is_later": false,
+      "canonical_sha256": "810e9cbbe17b9c01fe0a54e93225071ced15e7ebbfbe8f43e1283bd2188f4046",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/077d383b994d3891094d90cc1b6a5d4b/1",
+      "git_paths": [
+        "data/fablev7_corpus/077d383b994d3891094d90cc1b6a5d4b-1.json.gz",
+        "data/it720_corpus/077d383b994d3891094d90cc1b6a5d4b-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 315,
+          "intercept_chosen": 249,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 310,
+          "cargo_safe_landing_chosen": 310,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 50,
+          "friendly_contest": 31,
+          "tree_captured": 15
+        },
+        {
+          "intercept_opportunity": 268,
+          "intercept_chosen": 197,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 388,
+          "cargo_safe_landing_chosen": 380,
+          "heavy_clear_home_opportunity": 34,
+          "heavy_clear_home_chosen": 32,
+          "enemy_on_own_tree": 61,
+          "friendly_contest": 24,
+          "tree_captured": 25
+        }
+      ]
+    },
+    "09a12e7f6169d13d2b6a924468e0f205-1": {
+      "ranks": [
+        2,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1003155986,
+      "env_uuid": "082d26f5-e34c-11f1-9cc8-fa163e881fe8",
+      "official_scores": [
+        10245.27,
+        1140.64
+      ],
+      "is_later": false,
+      "canonical_sha256": "12b5ecdb45b2c23e0c6302e6e7d006f451fbba1f2e3bf629f39afd76a4f7b8de",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/09a12e7f6169d13d2b6a924468e0f205/1",
+      "git_paths": [
+        "data/master6_corpus/09a12e7f6169d13d2b6a924468e0f205-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 193,
+          "intercept_chosen": 153,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 35,
+          "cargo_safe_landing_chosen": 32,
+          "heavy_clear_home_opportunity": 50,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 55,
+          "friendly_contest": 9,
+          "tree_captured": 13
+        },
+        {
+          "intercept_opportunity": 26,
+          "intercept_chosen": 12,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 170,
+          "cargo_safe_landing_chosen": 163,
+          "heavy_clear_home_opportunity": 4,
+          "heavy_clear_home_chosen": 3,
+          "enemy_on_own_tree": 11,
+          "friendly_contest": 7,
+          "tree_captured": 3
+        }
+      ]
+    },
+    "0a4b378d35c63912fd4bebe264ffdb43-1": {
+      "ranks": [
+        3,
+        1
+      ],
+      "length": 299,
+      "random_seed": 371111151,
+      "env_uuid": "39abd770-e239-11f1-9f1b-fa163e881fe8",
+      "official_scores": [
+        6306.62,
+        7993.11
+      ],
+      "is_later": false,
+      "canonical_sha256": "e16f1820b8ffc0fa3ed75a1129e56bb9cb1217fc2308a7428f371412a1e219d3",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/0a4b378d35c63912fd4bebe264ffdb43/1",
+      "git_paths": [
+        "data/it720_corpus/0a4b378d35c63912fd4bebe264ffdb43-1.json.gz",
+        "data/master5s_corpus/0a4b378d35c63912fd4bebe264ffdb43-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 167,
+          "intercept_chosen": 111,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 272,
+          "cargo_safe_landing_chosen": 263,
+          "heavy_clear_home_opportunity": 36,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 45,
+          "friendly_contest": 17,
+          "tree_captured": 25
+        },
+        {
+          "intercept_opportunity": 215,
+          "intercept_chosen": 137,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 224,
+          "cargo_safe_landing_chosen": 220,
+          "heavy_clear_home_opportunity": 26,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 49,
+          "friendly_contest": 29,
+          "tree_captured": 13
+        }
+      ]
+    },
+    "0a815a4c86941b6d187c57727e3e6090-1": {
+      "ranks": [
+        5,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1406658585,
+      "env_uuid": "be3a8fec-e1f4-11f1-a2ee-fa163e881fe8",
+      "official_scores": [
+        7619.48,
+        8551.04
+      ],
+      "is_later": false,
+      "canonical_sha256": "eebbd25e2f7c59f1e6246cf60e86fa4e565f9ed65978872f28a87cef8f082ca8",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/0a815a4c86941b6d187c57727e3e6090/1",
+      "git_paths": [
+        "data/fablev7_corpus/0a815a4c86941b6d187c57727e3e6090-1.json.gz",
+        "data/master5s_corpus/0a815a4c86941b6d187c57727e3e6090-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 213,
+          "intercept_chosen": 158,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 260,
+          "cargo_safe_landing_chosen": 260,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 42,
+          "friendly_contest": 18,
+          "tree_captured": 21
+        },
+        {
+          "intercept_opportunity": 187,
+          "intercept_chosen": 126,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 273,
+          "cargo_safe_landing_chosen": 272,
+          "heavy_clear_home_opportunity": 27,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 52,
+          "friendly_contest": 29,
+          "tree_captured": 16
+        }
+      ]
+    },
+    "0bc5422fdbb7c4fd49d2a99eaaaf6a14-1": {
+      "ranks": [
+        3,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1649383386,
+      "env_uuid": "e9e33ff6-e25d-11f1-bfa5-fa163e881fe8",
+      "official_scores": [
+        8902.65,
+        9308.66
+      ],
+      "is_later": false,
+      "canonical_sha256": "4af92c7f62c92ddb9616e069d426d26c7f8b762df8ca883c1712c2494c6f19c4",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/0bc5422fdbb7c4fd49d2a99eaaaf6a14/1",
+      "git_paths": [
+        "data/fablev7_corpus/0bc5422fdbb7c4fd49d2a99eaaaf6a14-1.json.gz",
+        "data/it720_corpus/0bc5422fdbb7c4fd49d2a99eaaaf6a14-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 214,
+          "intercept_chosen": 151,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 295,
+          "cargo_safe_landing_chosen": 285,
+          "heavy_clear_home_opportunity": 37,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 66,
+          "friendly_contest": 28,
+          "tree_captured": 24
+        },
+        {
+          "intercept_opportunity": 250,
+          "intercept_chosen": 192,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 282,
+          "cargo_safe_landing_chosen": 280,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 71,
+          "friendly_contest": 33,
+          "tree_captured": 29
+        }
+      ]
+    },
+    "0e4aac28e06ddc63f8b082966d71f12f-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1968549222,
+      "env_uuid": "77627c47-e34d-11f1-abd0-fa163e881fe8",
+      "official_scores": [
+        6860.57,
+        6615.44
+      ],
+      "is_later": false,
+      "canonical_sha256": "654d00368843fde976101d296cf8d8cdd679a42214da359781d65a8b31fb38ab",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/0e4aac28e06ddc63f8b082966d71f12f/1",
+      "git_paths": [
+        "data/master6_corpus/0e4aac28e06ddc63f8b082966d71f12f-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 321,
+          "intercept_chosen": 233,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 199,
+          "cargo_safe_landing_chosen": 192,
+          "heavy_clear_home_opportunity": 27,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 80,
+          "friendly_contest": 28,
+          "tree_captured": 31
+        },
+        {
+          "intercept_opportunity": 132,
+          "intercept_chosen": 85,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 385,
+          "cargo_safe_landing_chosen": 385,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 22,
+          "friendly_contest": 9,
+          "tree_captured": 9
+        }
+      ]
+    },
+    "109570e2df6f6c8fe60811543a35ceda-1": {
+      "ranks": [
+        5,
+        3
+      ],
+      "length": 299,
+      "random_seed": 834570159,
+      "env_uuid": "b29406a5-e239-11f1-a8f0-fa163e881fe8",
+      "official_scores": [
+        8539.99,
+        7953.05
+      ],
+      "is_later": false,
+      "canonical_sha256": "e764bec1ab484f354c42d0bdd77f576343c95c7d6194f1da4b567429031b1dae",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/109570e2df6f6c8fe60811543a35ceda/1",
+      "git_paths": [
+        "data/fablev7_corpus/109570e2df6f6c8fe60811543a35ceda-1.json.gz",
+        "data/it720_corpus/109570e2df6f6c8fe60811543a35ceda-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 282,
+          "intercept_chosen": 214,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 303,
+          "cargo_safe_landing_chosen": 302,
+          "heavy_clear_home_opportunity": 35,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 47,
+          "friendly_contest": 21,
+          "tree_captured": 23
+        },
+        {
+          "intercept_opportunity": 193,
+          "intercept_chosen": 132,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 358,
+          "cargo_safe_landing_chosen": 352,
+          "heavy_clear_home_opportunity": 41,
+          "heavy_clear_home_chosen": 34,
+          "enemy_on_own_tree": 67,
+          "friendly_contest": 16,
+          "tree_captured": 26
+        }
+      ]
+    },
+    "12b8afba17cea6619a102b869e9af325-1": {
+      "ranks": [
+        5,
+        4
+      ],
+      "length": 299,
+      "random_seed": 2062396596,
+      "env_uuid": "e4b67f03-e1bc-11f1-8b89-fa163e881fe8",
+      "official_scores": [
+        5493.64,
+        6545.26
+      ],
+      "is_later": false,
+      "canonical_sha256": "def8f3806f0587230007e0c69caa6906887114c50d1a458a912102cd692233d2",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/12b8afba17cea6619a102b869e9af325/1",
+      "git_paths": [
+        "data/fablev7_corpus/12b8afba17cea6619a102b869e9af325-1.json.gz",
+        "data/m9xj630_corpus/12b8afba17cea6619a102b869e9af325-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 154,
+          "intercept_chosen": 107,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 205,
+          "cargo_safe_landing_chosen": 204,
+          "heavy_clear_home_opportunity": 21,
+          "heavy_clear_home_chosen": 18,
+          "enemy_on_own_tree": 33,
+          "friendly_contest": 18,
+          "tree_captured": 11
+        },
+        {
+          "intercept_opportunity": 136,
+          "intercept_chosen": 93,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 185,
+          "cargo_safe_landing_chosen": 179,
+          "heavy_clear_home_opportunity": 38,
+          "heavy_clear_home_chosen": 30,
+          "enemy_on_own_tree": 98,
+          "friendly_contest": 46,
+          "tree_captured": 25
+        }
+      ]
+    },
+    "13015a90cc59fc48d8b26337df6b8161-1": {
+      "ranks": [
+        1,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1502546424,
+      "env_uuid": "3856f452-e192-11f1-81b5-fa163e881fe8",
+      "official_scores": [
+        7947.02,
+        7892.29
+      ],
+      "is_later": false,
+      "canonical_sha256": "f089103aaa327dad45867bcd3f8d7ba1fb60113f28040b74353da4edd285138a",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/13015a90cc59fc48d8b26337df6b8161/1",
+      "git_paths": [
+        "data/m9xj630_corpus/13015a90cc59fc48d8b26337df6b8161-1.json.gz",
+        "data/master5s_corpus/13015a90cc59fc48d8b26337df6b8161-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 175,
+          "intercept_chosen": 109,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 277,
+          "cargo_safe_landing_chosen": 274,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 19,
+          "enemy_on_own_tree": 54,
+          "friendly_contest": 32,
+          "tree_captured": 18
+        },
+        {
+          "intercept_opportunity": 249,
+          "intercept_chosen": 168,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 214,
+          "cargo_safe_landing_chosen": 200,
+          "heavy_clear_home_opportunity": 37,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 61,
+          "friendly_contest": 26,
+          "tree_captured": 25
+        }
+      ]
+    },
+    "1359247345c9f23c19af46240c47ffa5-1": {
+      "ranks": [
+        2,
+        4
+      ],
+      "length": 299,
+      "random_seed": 218213950,
+      "env_uuid": "f508e85b-e341-11f1-b692-fa163e881fe8",
+      "official_scores": [
+        5578.72,
+        4945.79
+      ],
+      "is_later": false,
+      "canonical_sha256": "d497ba8a1b291814a0721917e6a6c342e56183f0589a12b01bc6476f75ccbe31",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/1359247345c9f23c19af46240c47ffa5/1",
+      "git_paths": [
+        "data/master6_corpus/1359247345c9f23c19af46240c47ffa5-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 167,
+          "intercept_chosen": 115,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 217,
+          "cargo_safe_landing_chosen": 216,
+          "heavy_clear_home_opportunity": 21,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 68,
+          "friendly_contest": 30,
+          "tree_captured": 23
+        },
+        {
+          "intercept_opportunity": 154,
+          "intercept_chosen": 99,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 194,
+          "cargo_safe_landing_chosen": 187,
+          "heavy_clear_home_opportunity": 20,
+          "heavy_clear_home_chosen": 17,
+          "enemy_on_own_tree": 58,
+          "friendly_contest": 40,
+          "tree_captured": 10
+        }
+      ]
+    },
+    "14919682e511adc8098c338d7a01be90-1": {
+      "ranks": [
+        3,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1094399275,
+      "env_uuid": "69e27905-e345-11f1-98db-fa163e881fe8",
+      "official_scores": [
+        6138.76,
+        6199.46
+      ],
+      "is_later": false,
+      "canonical_sha256": "25449b3be0cc704990def3a14f644e423f61b16c8a2ef7dd05626b7e54a6c70e",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/14919682e511adc8098c338d7a01be90/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 179,
+          "intercept_chosen": 129,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 287,
+          "cargo_safe_landing_chosen": 281,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 43,
+          "friendly_contest": 14,
+          "tree_captured": 23
+        },
+        {
+          "intercept_opportunity": 264,
+          "intercept_chosen": 176,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 271,
+          "cargo_safe_landing_chosen": 267,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 17,
+          "enemy_on_own_tree": 45,
+          "friendly_contest": 18,
+          "tree_captured": 24
+        }
+      ]
+    },
+    "16c18b65adabdee40d6a79fc9def85b1-1": {
+      "ranks": [
+        5,
+        2
+      ],
+      "length": 299,
+      "random_seed": 387351725,
+      "env_uuid": "05bac165-e35c-11f1-8192-fa163e881fe8",
+      "official_scores": [
+        15.01,
+        9822.44
+      ],
+      "is_later": false,
+      "canonical_sha256": "4e5e918e7f8df31f548785ebb851ce886b03bde65e3eafa05bc982ac8ddbddcc",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/16c18b65adabdee40d6a79fc9def85b1/1",
+      "git_paths": [
+        "data/master6_corpus/16c18b65adabdee40d6a79fc9def85b1-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 1,
+          "intercept_chosen": 0,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 14,
+          "cargo_safe_landing_chosen": 14,
+          "heavy_clear_home_opportunity": 0,
+          "heavy_clear_home_chosen": 0,
+          "enemy_on_own_tree": 7,
+          "friendly_contest": 2,
+          "tree_captured": 5
+        },
+        {
+          "intercept_opportunity": 13,
+          "intercept_chosen": 10,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 2,
+          "cargo_safe_landing_chosen": 2,
+          "heavy_clear_home_opportunity": 56,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 32,
+          "friendly_contest": 20,
+          "tree_captured": 6
+        }
+      ]
+    },
+    "1bc491f7ef4ac8f24ac17a7a70717c02-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1383673089,
+      "env_uuid": "8707b65a-e340-11f1-89a7-fa163e881fe8",
+      "official_scores": [
+        6535.84,
+        6141.54
+      ],
+      "is_later": false,
+      "canonical_sha256": "9a04a32218737f37f12edd67e31e36ac3fa98b6696aab0d73b6abf81543cce4d",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/1bc491f7ef4ac8f24ac17a7a70717c02/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 255,
+          "intercept_chosen": 187,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 269,
+          "cargo_safe_landing_chosen": 265,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 51,
+          "friendly_contest": 14,
+          "tree_captured": 30
+        },
+        {
+          "intercept_opportunity": 237,
+          "intercept_chosen": 158,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 304,
+          "cargo_safe_landing_chosen": 298,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 19,
+          "enemy_on_own_tree": 69,
+          "friendly_contest": 33,
+          "tree_captured": 24
+        }
+      ]
+    },
+    "1f170a1fa6ae1bc79cf771cfe27f000f-1": {
+      "ranks": [
+        5,
+        1
+      ],
+      "length": 299,
+      "random_seed": 143499414,
+      "env_uuid": "d074be0a-e1f8-11f1-b093-fa163e881fe8",
+      "official_scores": [
+        6562.98,
+        8538.98
+      ],
+      "is_later": false,
+      "canonical_sha256": "3104a13b74300e5b6b6e96ec697906e08add1ac9bb2a5b32db624cf62a83be4d",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/1f170a1fa6ae1bc79cf771cfe27f000f/1",
+      "git_paths": [
+        "data/fablev7_corpus/1f170a1fa6ae1bc79cf771cfe27f000f-1.json.gz",
+        "data/master5s_corpus/1f170a1fa6ae1bc79cf771cfe27f000f-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 148,
+          "intercept_chosen": 102,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 314,
+          "cargo_safe_landing_chosen": 313,
+          "heavy_clear_home_opportunity": 35,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 29,
+          "friendly_contest": 8,
+          "tree_captured": 19
+        },
+        {
+          "intercept_opportunity": 261,
+          "intercept_chosen": 184,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 188,
+          "cargo_safe_landing_chosen": 184,
+          "heavy_clear_home_opportunity": 37,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 63,
+          "friendly_contest": 32,
+          "tree_captured": 19
+        }
+      ]
+    },
+    "203462ddecf2ff126c4322c8250e77aa-1": {
+      "ranks": [
+        1,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1330172345,
+      "env_uuid": "e2ef3410-e1c7-11f1-8a8b-fa163e881fe8",
+      "official_scores": [
+        7498.82,
+        6389.63
+      ],
+      "is_later": false,
+      "canonical_sha256": "92e4cb36a2ebf30bbcc0650b8f10956f2f7746d6814474205673818444dd9925",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/203462ddecf2ff126c4322c8250e77aa/1",
+      "git_paths": [
+        "data/fablev7_corpus/203462ddecf2ff126c4322c8250e77aa-1.json.gz",
+        "data/master5s_corpus/203462ddecf2ff126c4322c8250e77aa-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 229,
+          "intercept_chosen": 162,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 261,
+          "cargo_safe_landing_chosen": 258,
+          "heavy_clear_home_opportunity": 36,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 85,
+          "friendly_contest": 50,
+          "tree_captured": 30
+        },
+        {
+          "intercept_opportunity": 201,
+          "intercept_chosen": 134,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 284,
+          "cargo_safe_landing_chosen": 283,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 46,
+          "friendly_contest": 10,
+          "tree_captured": 32
+        }
+      ]
+    },
+    "20ab1325ba01b9b75373635ee3d7b1ef-1": {
+      "ranks": [
+        3,
+        1
+      ],
+      "length": 299,
+      "random_seed": 67975856,
+      "env_uuid": "c6b3be92-e33f-11f1-bb43-fa163e881fe8",
+      "official_scores": [
+        6538.98,
+        7671.76
+      ],
+      "is_later": false,
+      "canonical_sha256": "bc792997c605fd112b4f08162851a52f754775e0fd0497e9ea5250f2b6d184c4",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/20ab1325ba01b9b75373635ee3d7b1ef/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 234,
+          "intercept_chosen": 168,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 283,
+          "cargo_safe_landing_chosen": 277,
+          "heavy_clear_home_opportunity": 34,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 40,
+          "friendly_contest": 13,
+          "tree_captured": 22
+        },
+        {
+          "intercept_opportunity": 225,
+          "intercept_chosen": 161,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 273,
+          "cargo_safe_landing_chosen": 269,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 58,
+          "friendly_contest": 24,
+          "tree_captured": 26
+        }
+      ]
+    },
+    "248c9570faa519c6921969e83fe814af-1": {
+      "ranks": [
+        4,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1714303405,
+      "env_uuid": "4707f115-e1c7-11f1-b393-fa163e881fe8",
+      "official_scores": [
+        8016.47,
+        7925.39
+      ],
+      "is_later": false,
+      "canonical_sha256": "f49bae281472735b83cba27a783ac879ebef41cb16fda618cb06ba49f52982e5",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/248c9570faa519c6921969e83fe814af/1",
+      "git_paths": [
+        "data/fablev7_corpus/248c9570faa519c6921969e83fe814af-1.json.gz",
+        "data/m9xj630_corpus/248c9570faa519c6921969e83fe814af-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 291,
+          "intercept_chosen": 225,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 215,
+          "cargo_safe_landing_chosen": 205,
+          "heavy_clear_home_opportunity": 34,
+          "heavy_clear_home_chosen": 34,
+          "enemy_on_own_tree": 59,
+          "friendly_contest": 19,
+          "tree_captured": 28
+        },
+        {
+          "intercept_opportunity": 151,
+          "intercept_chosen": 100,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 349,
+          "cargo_safe_landing_chosen": 348,
+          "heavy_clear_home_opportunity": 35,
+          "heavy_clear_home_chosen": 34,
+          "enemy_on_own_tree": 57,
+          "friendly_contest": 22,
+          "tree_captured": 22
+        }
+      ]
+    },
+    "2bb0546c0fa8b5de7b4576b31a5b6383-1": {
+      "ranks": [
+        5,
+        1
+      ],
+      "length": 299,
+      "random_seed": 489388662,
+      "env_uuid": "689ffe42-e1bc-11f1-8e48-fa163e881fe8",
+      "official_scores": [
+        7894.19,
+        7575.49
+      ],
+      "is_later": false,
+      "canonical_sha256": "90285d796d9229729693e6d2f09723bcd5ffd195b51bf174b49d8c815909e9ff",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/2bb0546c0fa8b5de7b4576b31a5b6383/1",
+      "git_paths": [
+        "data/fablev7_corpus/2bb0546c0fa8b5de7b4576b31a5b6383-1.json.gz",
+        "data/master5s_corpus/2bb0546c0fa8b5de7b4576b31a5b6383-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 268,
+          "intercept_chosen": 195,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 281,
+          "cargo_safe_landing_chosen": 278,
+          "heavy_clear_home_opportunity": 36,
+          "heavy_clear_home_chosen": 29,
+          "enemy_on_own_tree": 48,
+          "friendly_contest": 22,
+          "tree_captured": 21
+        },
+        {
+          "intercept_opportunity": 231,
+          "intercept_chosen": 164,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 293,
+          "cargo_safe_landing_chosen": 289,
+          "heavy_clear_home_opportunity": 30,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 52,
+          "friendly_contest": 29,
+          "tree_captured": 19
+        }
+      ]
+    },
+    "2e09893b936dcfdb1c5fd10748e169ae-1": {
+      "ranks": [
+        5,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1757013468,
+      "env_uuid": "a9c003bc-e270-11f1-975c-fa163e881fe8",
+      "official_scores": [
+        6039.21,
+        7430.83
+      ],
+      "is_later": false,
+      "canonical_sha256": "036579063358dcca2a2a321fc714a5b288532a2f9c490aa62a37451350906d4d",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/2e09893b936dcfdb1c5fd10748e169ae/1",
+      "git_paths": [
+        "data/it720_corpus/2e09893b936dcfdb1c5fd10748e169ae-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 168,
+          "intercept_chosen": 111,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 280,
+          "cargo_safe_landing_chosen": 279,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 56,
+          "friendly_contest": 28,
+          "tree_captured": 26
+        },
+        {
+          "intercept_opportunity": 235,
+          "intercept_chosen": 167,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 210,
+          "cargo_safe_landing_chosen": 203,
+          "heavy_clear_home_opportunity": 30,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 75,
+          "friendly_contest": 37,
+          "tree_captured": 26
+        }
+      ]
+    },
+    "30330fcb8982d57b36f4c168fb663ced-1": {
+      "ranks": [
+        1,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1484155011,
+      "env_uuid": "ccbddc3d-e170-11f1-beaf-fa163e881fe8",
+      "official_scores": [
+        8668.83,
+        8124.76
+      ],
+      "is_later": false,
+      "canonical_sha256": "1ab6934d3149b8ac774d04020c9560fc1bfb5ac35aa227a19f96b25046cb373e",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/30330fcb8982d57b36f4c168fb663ced/1",
+      "git_paths": [
+        "data/m9xj630_corpus/30330fcb8982d57b36f4c168fb663ced-1.json.gz",
+        "data/master5s_corpus/30330fcb8982d57b36f4c168fb663ced-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 178,
+          "intercept_chosen": 105,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 294,
+          "cargo_safe_landing_chosen": 293,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 30,
+          "enemy_on_own_tree": 54,
+          "friendly_contest": 21,
+          "tree_captured": 24
+        },
+        {
+          "intercept_opportunity": 245,
+          "intercept_chosen": 176,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 228,
+          "cargo_safe_landing_chosen": 221,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 18,
+          "enemy_on_own_tree": 76,
+          "friendly_contest": 29,
+          "tree_captured": 27
+        }
+      ]
+    },
+    "30cdbe96f8d6f2c5677483f5c87f4a0a-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 395372489,
+      "env_uuid": "f1e762a4-e33e-11f1-a8bc-fa163e881fe8",
+      "official_scores": [
+        7219.01,
+        7041.51
+      ],
+      "is_later": false,
+      "canonical_sha256": "1ed33c9cfe5d3efbc7c7342086c1eb814c8b786496ed0e7478e0c2c88f3178f1",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/30cdbe96f8d6f2c5677483f5c87f4a0a/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 223,
+          "intercept_chosen": 135,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 185,
+          "cargo_safe_landing_chosen": 179,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 17,
+          "enemy_on_own_tree": 65,
+          "friendly_contest": 29,
+          "tree_captured": 30
+        },
+        {
+          "intercept_opportunity": 154,
+          "intercept_chosen": 100,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 234,
+          "cargo_safe_landing_chosen": 228,
+          "heavy_clear_home_opportunity": 39,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 57,
+          "friendly_contest": 17,
+          "tree_captured": 28
+        }
+      ]
+    },
+    "3377ed87b195c3c6e84df1c588d97d31-1": {
+      "ranks": [
+        3,
+        5
+      ],
+      "length": 299,
+      "random_seed": 76289370,
+      "env_uuid": "8be7fc79-e25b-11f1-834e-fa163e881fe8",
+      "official_scores": [
+        8035.14,
+        9011.6
+      ],
+      "is_later": false,
+      "canonical_sha256": "f734b30277398298e96a8b717e572dd27353497d7a020575cabb6b305ab5422b",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/3377ed87b195c3c6e84df1c588d97d31/1",
+      "git_paths": [
+        "data/fablev7_corpus/3377ed87b195c3c6e84df1c588d97d31-1.json.gz",
+        "data/it720_corpus/3377ed87b195c3c6e84df1c588d97d31-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 200,
+          "intercept_chosen": 130,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 279,
+          "cargo_safe_landing_chosen": 268,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 56,
+          "friendly_contest": 25,
+          "tree_captured": 17
+        },
+        {
+          "intercept_opportunity": 223,
+          "intercept_chosen": 156,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 250,
+          "cargo_safe_landing_chosen": 248,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 60,
+          "friendly_contest": 31,
+          "tree_captured": 22
+        }
+      ]
+    },
+    "33de9499ab63698020525f27eb0552ee-1": {
+      "ranks": [
+        5,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1530672617,
+      "env_uuid": "bd3e70f1-e228-11f1-a2f5-fa163e881fe8",
+      "official_scores": [
+        8951.55,
+        7444.85
+      ],
+      "is_later": false,
+      "canonical_sha256": "c4804cfe26b8f1bcf11bffeb2591cf598223a52e07cd2029c315cd3a66fe92ac",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/33de9499ab63698020525f27eb0552ee/1",
+      "git_paths": [
+        "data/fablev7_corpus/33de9499ab63698020525f27eb0552ee-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 109,
+          "intercept_chosen": 75,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 271,
+          "cargo_safe_landing_chosen": 269,
+          "heavy_clear_home_opportunity": 40,
+          "heavy_clear_home_chosen": 33,
+          "enemy_on_own_tree": 48,
+          "friendly_contest": 15,
+          "tree_captured": 19
+        },
+        {
+          "intercept_opportunity": 272,
+          "intercept_chosen": 186,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 155,
+          "cargo_safe_landing_chosen": 152,
+          "heavy_clear_home_opportunity": 30,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 63,
+          "friendly_contest": 36,
+          "tree_captured": 22
+        }
+      ]
+    },
+    "3509e5b66ffc3e67f03739023d38a03b-1": {
+      "ranks": [
+        5,
+        1
+      ],
+      "length": 299,
+      "random_seed": 560226872,
+      "env_uuid": "da9332bd-e1bd-11f1-b892-fa163e881fe8",
+      "official_scores": [
+        6915.62,
+        7203.99
+      ],
+      "is_later": false,
+      "canonical_sha256": "91263db4dac5cc6be559e74e3222609082f4f98d9f7e59760b2a4e8e5800b358",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/3509e5b66ffc3e67f03739023d38a03b/1",
+      "git_paths": [
+        "data/fablev7_corpus/3509e5b66ffc3e67f03739023d38a03b-1.json.gz",
+        "data/master5s_corpus/3509e5b66ffc3e67f03739023d38a03b-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 195,
+          "intercept_chosen": 139,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 259,
+          "cargo_safe_landing_chosen": 256,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 59,
+          "friendly_contest": 22,
+          "tree_captured": 31
+        },
+        {
+          "intercept_opportunity": 212,
+          "intercept_chosen": 149,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 263,
+          "cargo_safe_landing_chosen": 260,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 30,
+          "enemy_on_own_tree": 59,
+          "friendly_contest": 23,
+          "tree_captured": 26
+        }
+      ]
+    },
+    "3686922ec2b2128fbd1ff6bfd7d04d81-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1689720299,
+      "env_uuid": "3b85517d-e340-11f1-9740-fa163e881fe8",
+      "official_scores": [
+        12752.03,
+        1979.57
+      ],
+      "is_later": false,
+      "canonical_sha256": "5a46397337b3720eea57868745f2a0fb09cf8888247cfeecab2cdff3c54726fb",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/3686922ec2b2128fbd1ff6bfd7d04d81/1",
+      "git_paths": [
+        "data/master6_corpus/3686922ec2b2128fbd1ff6bfd7d04d81-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 30,
+          "intercept_chosen": 19,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 29,
+          "cargo_safe_landing_chosen": 28,
+          "heavy_clear_home_opportunity": 54,
+          "heavy_clear_home_chosen": 30,
+          "enemy_on_own_tree": 86,
+          "friendly_contest": 8,
+          "tree_captured": 8
+        },
+        {
+          "intercept_opportunity": 19,
+          "intercept_chosen": 8,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 39,
+          "cargo_safe_landing_chosen": 37,
+          "heavy_clear_home_opportunity": 4,
+          "heavy_clear_home_chosen": 3,
+          "enemy_on_own_tree": 9,
+          "friendly_contest": 5,
+          "tree_captured": 4
+        }
+      ]
+    },
+    "36e68802e4465ab013073813a646602e-1": {
+      "ranks": [
+        1,
+        5
+      ],
+      "length": 299,
+      "random_seed": 867485671,
+      "env_uuid": "21c95c00-e386-11f1-8a03-fa163e881fe8",
+      "official_scores": [
+        7347.13,
+        5186.1
+      ],
+      "is_later": true,
+      "canonical_sha256": "a475774a6cbacb2eca80318a9e262e9ac0195a9ec758e22e8167ab98df401946",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/36e68802e4465ab013073813a646602e/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 235,
+          "intercept_chosen": 174,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 198,
+          "cargo_safe_landing_chosen": 197,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 86,
+          "friendly_contest": 44,
+          "tree_captured": 28
+        },
+        {
+          "intercept_opportunity": 163,
+          "intercept_chosen": 113,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 244,
+          "cargo_safe_landing_chosen": 238,
+          "heavy_clear_home_opportunity": 21,
+          "heavy_clear_home_chosen": 15,
+          "enemy_on_own_tree": 41,
+          "friendly_contest": 21,
+          "tree_captured": 19
+        }
+      ]
+    },
+    "3a3d08498acbb03c5d8ea98479e9bb3b-1": {
+      "ranks": [
+        1,
+        4
+      ],
+      "length": 299,
+      "random_seed": 2019267316,
+      "env_uuid": "c4b5f31e-e188-11f1-aee6-fa163e881fe8",
+      "official_scores": [
+        6955.23,
+        6414.36
+      ],
+      "is_later": false,
+      "canonical_sha256": "4ffc85911c9784beddeb1b2154292341b2ed6fd41483f11b9dde7bba82ef035f",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/3a3d08498acbb03c5d8ea98479e9bb3b/1",
+      "git_paths": [
+        "data/m9xj630_corpus/3a3d08498acbb03c5d8ea98479e9bb3b-1.json.gz",
+        "data/master5s_corpus/3a3d08498acbb03c5d8ea98479e9bb3b-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 188,
+          "intercept_chosen": 115,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 275,
+          "cargo_safe_landing_chosen": 271,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 17,
+          "enemy_on_own_tree": 42,
+          "friendly_contest": 22,
+          "tree_captured": 18
+        },
+        {
+          "intercept_opportunity": 254,
+          "intercept_chosen": 191,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 226,
+          "cargo_safe_landing_chosen": 212,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 81,
+          "friendly_contest": 29,
+          "tree_captured": 27
+        }
+      ]
+    },
+    "3c26541db076cd630c203e0a41e21cdd-1": {
+      "ranks": [
+        2,
+        4
+      ],
+      "length": 299,
+      "random_seed": 55652166,
+      "env_uuid": "d761024d-e356-11f1-8390-fa163e881fe8",
+      "official_scores": [
+        8753.67,
+        7949.16
+      ],
+      "is_later": false,
+      "canonical_sha256": "6d605a4b4609be8a53e98fea38a2ca64047da0ec3b416824ccf414d082a19907",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/3c26541db076cd630c203e0a41e21cdd/1",
+      "git_paths": [
+        "data/master6_corpus/3c26541db076cd630c203e0a41e21cdd-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 115,
+          "intercept_chosen": 72,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 339,
+          "cargo_safe_landing_chosen": 331,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 32,
+          "enemy_on_own_tree": 62,
+          "friendly_contest": 28,
+          "tree_captured": 26
+        },
+        {
+          "intercept_opportunity": 280,
+          "intercept_chosen": 201,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 176,
+          "cargo_safe_landing_chosen": 168,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 43,
+          "friendly_contest": 21,
+          "tree_captured": 12
+        }
+      ]
+    },
+    "3d375fad2dd0c7d6e168c5316563e621-1": {
+      "ranks": [
+        4,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1910509060,
+      "env_uuid": "75d48441-e350-11f1-ae30-fa163e881fe8",
+      "official_scores": [
+        8254.92,
+        8186.29
+      ],
+      "is_later": false,
+      "canonical_sha256": "e23150ad1b4bf0c2a5a616e944a7fa8baf3781e5607a07820c60012b0b432a9f",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/3d375fad2dd0c7d6e168c5316563e621/1",
+      "git_paths": [
+        "data/master6_corpus/3d375fad2dd0c7d6e168c5316563e621-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 165,
+          "intercept_chosen": 114,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 311,
+          "cargo_safe_landing_chosen": 291,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 39,
+          "friendly_contest": 17,
+          "tree_captured": 19
+        },
+        {
+          "intercept_opportunity": 244,
+          "intercept_chosen": 167,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 217,
+          "cargo_safe_landing_chosen": 214,
+          "heavy_clear_home_opportunity": 39,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 78,
+          "friendly_contest": 29,
+          "tree_captured": 30
+        }
+      ]
+    },
+    "4034efbe6f6c9d1c19f8fa1e379510a3-1": {
+      "ranks": [
+        3,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1507330271,
+      "env_uuid": "1bae2b13-e295-11f1-a5ba-fa163e881fe8",
+      "official_scores": [
+        6642.01,
+        6031.96
+      ],
+      "is_later": false,
+      "canonical_sha256": "6c321084bf762eaa56bb74d1540dd9c3ff2cef362c4a7fdf65c14137eb647b6f",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/4034efbe6f6c9d1c19f8fa1e379510a3/1",
+      "git_paths": [
+        "data/it720_corpus/4034efbe6f6c9d1c19f8fa1e379510a3-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 218,
+          "intercept_chosen": 149,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 233,
+          "cargo_safe_landing_chosen": 224,
+          "heavy_clear_home_opportunity": 38,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 65,
+          "friendly_contest": 16,
+          "tree_captured": 17
+        },
+        {
+          "intercept_opportunity": 197,
+          "intercept_chosen": 130,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 271,
+          "cargo_safe_landing_chosen": 268,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 18,
+          "enemy_on_own_tree": 44,
+          "friendly_contest": 22,
+          "tree_captured": 20
+        }
+      ]
+    },
+    "44f161c5e1a41bf9fb7e1aa255f5080f-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 2137080163,
+      "env_uuid": "5c694353-e372-11f1-91a4-fa163e881fe8",
+      "official_scores": [
+        7488.62,
+        6923.52
+      ],
+      "is_later": false,
+      "canonical_sha256": "006b8a12e5bf661da5e1911a45d148fe0db52803a2364b3ec1ace39d31049d32",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/44f161c5e1a41bf9fb7e1aa255f5080f/1",
+      "git_paths": [
+        "data/master6_corpus/44f161c5e1a41bf9fb7e1aa255f5080f-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 168,
+          "intercept_chosen": 120,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 192,
+          "cargo_safe_landing_chosen": 190,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 27,
+          "friendly_contest": 14,
+          "tree_captured": 10
+        },
+        {
+          "intercept_opportunity": 163,
+          "intercept_chosen": 107,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 193,
+          "cargo_safe_landing_chosen": 188,
+          "heavy_clear_home_opportunity": 39,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 89,
+          "friendly_contest": 40,
+          "tree_captured": 31
+        }
+      ]
+    },
+    "45372c44ae8ae95a6a973727bfa897e6-1": {
+      "ranks": [
+        5,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1117481639,
+      "env_uuid": "e02f96ce-e248-11f1-af8f-fa163e881fe8",
+      "official_scores": [
+        7166.78,
+        8854.47
+      ],
+      "is_later": false,
+      "canonical_sha256": "12840e2992ea1f7024c0f71c738d8d22871921271192abdfe24f940d5fee7651",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/45372c44ae8ae95a6a973727bfa897e6/1",
+      "git_paths": [
+        "data/fablev7_corpus/45372c44ae8ae95a6a973727bfa897e6-1.json.gz",
+        "data/it720_corpus/45372c44ae8ae95a6a973727bfa897e6-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 237,
+          "intercept_chosen": 166,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 266,
+          "cargo_safe_landing_chosen": 261,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 52,
+          "friendly_contest": 19,
+          "tree_captured": 29
+        },
+        {
+          "intercept_opportunity": 213,
+          "intercept_chosen": 153,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 263,
+          "cargo_safe_landing_chosen": 256,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 30,
+          "enemy_on_own_tree": 74,
+          "friendly_contest": 40,
+          "tree_captured": 25
+        }
+      ]
+    },
+    "51f34379b8018af261ce057ca75692a0-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1858184528,
+      "env_uuid": "30160c79-e357-11f1-b95d-fa163e881fe8",
+      "official_scores": [
+        6203.03,
+        7177.28
+      ],
+      "is_later": false,
+      "canonical_sha256": "3a76bf8c40feccd9df31b3f84ef06ac470eb895c4e278084d5f467e2f9934183",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/51f34379b8018af261ce057ca75692a0/1",
+      "git_paths": [
+        "data/master6_corpus/51f34379b8018af261ce057ca75692a0-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 196,
+          "intercept_chosen": 141,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 258,
+          "cargo_safe_landing_chosen": 250,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 39,
+          "friendly_contest": 14,
+          "tree_captured": 20
+        },
+        {
+          "intercept_opportunity": 245,
+          "intercept_chosen": 159,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 200,
+          "cargo_safe_landing_chosen": 193,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 80,
+          "friendly_contest": 34,
+          "tree_captured": 24
+        }
+      ]
+    },
+    "54b1d3e11b3a9a83b488a738de241517-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 393248600,
+      "env_uuid": "b1f9de9d-e341-11f1-af94-fa163e881fe8",
+      "official_scores": [
+        5282.87,
+        5278.43
+      ],
+      "is_later": false,
+      "canonical_sha256": "2efc43c9dda43598265296094b61eeb464e050cec292397356e42cbb75bfa085",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/54b1d3e11b3a9a83b488a738de241517/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 190,
+          "intercept_chosen": 117,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 216,
+          "cargo_safe_landing_chosen": 210,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 74,
+          "friendly_contest": 37,
+          "tree_captured": 28
+        },
+        {
+          "intercept_opportunity": 171,
+          "intercept_chosen": 116,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 255,
+          "cargo_safe_landing_chosen": 247,
+          "heavy_clear_home_opportunity": 20,
+          "heavy_clear_home_chosen": 19,
+          "enemy_on_own_tree": 49,
+          "friendly_contest": 14,
+          "tree_captured": 19
+        }
+      ]
+    },
+    "56169fed54993f0819a29eaaaef38dd7-1": {
+      "ranks": [
+        4,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1893675878,
+      "env_uuid": "7213b28a-e20d-11f1-95d3-fa163e881fe8",
+      "official_scores": [
+        6735.96,
+        6836.7
+      ],
+      "is_later": false,
+      "canonical_sha256": "f4507698a5ab2946ad564f950b293e8aeb21a53368b55b0afd7c170156699584",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/56169fed54993f0819a29eaaaef38dd7/1",
+      "git_paths": [
+        "data/fablev7_corpus/56169fed54993f0819a29eaaaef38dd7-1.json.gz",
+        "data/m9xj630_corpus/56169fed54993f0819a29eaaaef38dd7-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 137,
+          "intercept_chosen": 96,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 224,
+          "cargo_safe_landing_chosen": 212,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 108,
+          "friendly_contest": 51,
+          "tree_captured": 33
+        },
+        {
+          "intercept_opportunity": 176,
+          "intercept_chosen": 108,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 184,
+          "cargo_safe_landing_chosen": 182,
+          "heavy_clear_home_opportunity": 26,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 51,
+          "friendly_contest": 23,
+          "tree_captured": 25
+        }
+      ]
+    },
+    "5a5f72bc66bdafbc4d8d90edc9870f8e-1": {
+      "ranks": [
+        4,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1420971972,
+      "env_uuid": "486f0465-e345-11f1-a3b9-fa163e881fe8",
+      "official_scores": [
+        3.54,
+        8665.3
+      ],
+      "is_later": false,
+      "canonical_sha256": "b390b2871ff108289f5aa14366a0d700f4cb8871a9c9293aaa172a3921b7e201",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/5a5f72bc66bdafbc4d8d90edc9870f8e/1",
+      "git_paths": [
+        "data/master6_corpus/5a5f72bc66bdafbc4d8d90edc9870f8e-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 12,
+          "intercept_chosen": 11,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 215,
+          "cargo_safe_landing_chosen": 210,
+          "heavy_clear_home_opportunity": 2,
+          "heavy_clear_home_chosen": 2,
+          "enemy_on_own_tree": 6,
+          "friendly_contest": 2,
+          "tree_captured": 3
+        },
+        {
+          "intercept_opportunity": 252,
+          "intercept_chosen": 225,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 12,
+          "cargo_safe_landing_chosen": 12,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 20,
+          "enemy_on_own_tree": 39,
+          "friendly_contest": 10,
+          "tree_captured": 6
+        }
+      ]
+    },
+    "5b4f5ceaa627db4ff6228b2b18e3aecb-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 232673471,
+      "env_uuid": "84c302d5-e339-11f1-8abc-fa163e881fe8",
+      "official_scores": [
+        1719.86,
+        10298.6
+      ],
+      "is_later": false,
+      "canonical_sha256": "39b7a522a86f3df135cfd44a13ee2e092eb01cf38fe1aaeb898141d32f3f0a4c",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/5b4f5ceaa627db4ff6228b2b18e3aecb/1",
+      "git_paths": [
+        "data/master6_corpus/5b4f5ceaa627db4ff6228b2b18e3aecb-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 58,
+          "intercept_chosen": 33,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 281,
+          "cargo_safe_landing_chosen": 276,
+          "heavy_clear_home_opportunity": 7,
+          "heavy_clear_home_chosen": 6,
+          "enemy_on_own_tree": 19,
+          "friendly_contest": 3,
+          "tree_captured": 13
+        },
+        {
+          "intercept_opportunity": 254,
+          "intercept_chosen": 221,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 91,
+          "cargo_safe_landing_chosen": 81,
+          "heavy_clear_home_opportunity": 49,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 57,
+          "friendly_contest": 12,
+          "tree_captured": 10
+        }
+      ]
+    },
+    "5fb0f13dacd5a31934a64dcb7917720b-1": {
+      "ranks": [
+        2,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1136336973,
+      "env_uuid": "fefe509a-e352-11f1-a1ba-fa163e881fe8",
+      "official_scores": [
+        8040.09,
+        9290.49
+      ],
+      "is_later": false,
+      "canonical_sha256": "f321147e33a74c6b8fe49499181969c9a69bf010bb9485f33a7c46ad12abba85",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/5fb0f13dacd5a31934a64dcb7917720b/1",
+      "git_paths": [
+        "data/master6_corpus/5fb0f13dacd5a31934a64dcb7917720b-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 221,
+          "intercept_chosen": 136,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 248,
+          "cargo_safe_landing_chosen": 239,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 81,
+          "friendly_contest": 45,
+          "tree_captured": 24
+        },
+        {
+          "intercept_opportunity": 199,
+          "intercept_chosen": 145,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 274,
+          "cargo_safe_landing_chosen": 271,
+          "heavy_clear_home_opportunity": 38,
+          "heavy_clear_home_chosen": 29,
+          "enemy_on_own_tree": 42,
+          "friendly_contest": 9,
+          "tree_captured": 27
+        }
+      ]
+    },
+    "67dd2b66f44a1897249a0081517826bd-1": {
+      "ranks": [
+        3,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1614617514,
+      "env_uuid": "8de3dd23-e388-11f1-88a2-fa163e881fe8",
+      "official_scores": [
+        7526.04,
+        8390.59
+      ],
+      "is_later": true,
+      "canonical_sha256": "2ffacce86702a69ab431264a263548f16f7a1925df6747421b60ab30636b135a",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/67dd2b66f44a1897249a0081517826bd/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 210,
+          "intercept_chosen": 145,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 210,
+          "cargo_safe_landing_chosen": 205,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 74,
+          "friendly_contest": 27,
+          "tree_captured": 29
+        },
+        {
+          "intercept_opportunity": 154,
+          "intercept_chosen": 100,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 249,
+          "cargo_safe_landing_chosen": 246,
+          "heavy_clear_home_opportunity": 41,
+          "heavy_clear_home_chosen": 30,
+          "enemy_on_own_tree": 70,
+          "friendly_contest": 39,
+          "tree_captured": 23
+        }
+      ]
+    },
+    "6b77b77327fb186f176c76b876c1aea9-1": {
+      "ranks": [
+        3,
+        1
+      ],
+      "length": 299,
+      "random_seed": 19542024,
+      "env_uuid": "bb23857f-e243-11f1-8fc1-fa163e881fe8",
+      "official_scores": [
+        5563.25,
+        5282.33
+      ],
+      "is_later": false,
+      "canonical_sha256": "0f3150bb75650e803a8453e1153c6569136fe3a488d7c0fbebaa843764f3b235",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/6b77b77327fb186f176c76b876c1aea9/1",
+      "git_paths": [
+        "data/it720_corpus/6b77b77327fb186f176c76b876c1aea9-1.json.gz",
+        "data/master5s_corpus/6b77b77327fb186f176c76b876c1aea9-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 311,
+          "intercept_chosen": 217,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 235,
+          "cargo_safe_landing_chosen": 218,
+          "heavy_clear_home_opportunity": 18,
+          "heavy_clear_home_chosen": 17,
+          "enemy_on_own_tree": 47,
+          "friendly_contest": 19,
+          "tree_captured": 21
+        },
+        {
+          "intercept_opportunity": 159,
+          "intercept_chosen": 92,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 356,
+          "cargo_safe_landing_chosen": 351,
+          "heavy_clear_home_opportunity": 15,
+          "heavy_clear_home_chosen": 14,
+          "enemy_on_own_tree": 49,
+          "friendly_contest": 27,
+          "tree_captured": 17
+        }
+      ]
+    },
+    "6ea7a65ad77d9bf46a14cd2de7cc3463-1": {
+      "ranks": [
+        4,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1361468681,
+      "env_uuid": "f2d425d3-e334-11f1-85fa-fa163e881fe8",
+      "official_scores": [
+        7713.73,
+        8283.17
+      ],
+      "is_later": false,
+      "canonical_sha256": "0094d7a9db64cd1aeba0b281570925c2cf9360caed169291b1413846b4db02dc",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/6ea7a65ad77d9bf46a14cd2de7cc3463/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 187,
+          "intercept_chosen": 136,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 204,
+          "cargo_safe_landing_chosen": 195,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 71,
+          "friendly_contest": 34,
+          "tree_captured": 23
+        },
+        {
+          "intercept_opportunity": 168,
+          "intercept_chosen": 112,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 231,
+          "cargo_safe_landing_chosen": 229,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 44,
+          "friendly_contest": 25,
+          "tree_captured": 17
+        }
+      ]
+    },
+    "6eddbf2dc3077fdbd07d5bfa05eda621-1": {
+      "ranks": [
+        3,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1907600848,
+      "env_uuid": "90e64d8f-e2e0-11f1-9261-fa163e881fe8",
+      "official_scores": [
+        9064.46,
+        8244.93
+      ],
+      "is_later": false,
+      "canonical_sha256": "5ebc6c63ab5d1672ee84ab7cb752ca0cd9be6514d7ca5e8de3d6b96bfb8242d0",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/6eddbf2dc3077fdbd07d5bfa05eda621/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 222,
+          "intercept_chosen": 139,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 222,
+          "cargo_safe_landing_chosen": 217,
+          "heavy_clear_home_opportunity": 36,
+          "heavy_clear_home_chosen": 31,
+          "enemy_on_own_tree": 85,
+          "friendly_contest": 40,
+          "tree_captured": 32
+        },
+        {
+          "intercept_opportunity": 185,
+          "intercept_chosen": 123,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 258,
+          "cargo_safe_landing_chosen": 255,
+          "heavy_clear_home_opportunity": 38,
+          "heavy_clear_home_chosen": 33,
+          "enemy_on_own_tree": 52,
+          "friendly_contest": 20,
+          "tree_captured": 30
+        }
+      ]
+    },
+    "704a532aab1f77dd3ba0210f9cf8b55b-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 415502076,
+      "env_uuid": "d1f36416-e364-11f1-aae3-fa163e881fe8",
+      "official_scores": [
+        12363.92,
+        1775.07
+      ],
+      "is_later": false,
+      "canonical_sha256": "c48fa07a5a9106e40c259e85f11872e1d77d07959824ef20c969607847ac7b7b",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/704a532aab1f77dd3ba0210f9cf8b55b/1",
+      "git_paths": [
+        "data/master6_corpus/704a532aab1f77dd3ba0210f9cf8b55b-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 71,
+          "intercept_chosen": 51,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 20,
+          "cargo_safe_landing_chosen": 20,
+          "heavy_clear_home_opportunity": 45,
+          "heavy_clear_home_chosen": 32,
+          "enemy_on_own_tree": 45,
+          "friendly_contest": 23,
+          "tree_captured": 11
+        },
+        {
+          "intercept_opportunity": 14,
+          "intercept_chosen": 7,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 77,
+          "cargo_safe_landing_chosen": 75,
+          "heavy_clear_home_opportunity": 5,
+          "heavy_clear_home_chosen": 5,
+          "enemy_on_own_tree": 10,
+          "friendly_contest": 5,
+          "tree_captured": 5
+        }
+      ]
+    },
+    "73a884b4a7adc8d2feb37d845e50648a-1": {
+      "ranks": [
+        5,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1676054102,
+      "env_uuid": "197f182a-e2cc-11f1-b4cc-fa163e881fe8",
+      "official_scores": [
+        6400.36,
+        7640.26
+      ],
+      "is_later": false,
+      "canonical_sha256": "fb2762f383d5e74b6dd899cc2d1fcb92915463b22832a528840025e37f0a0346",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/73a884b4a7adc8d2feb37d845e50648a/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 174,
+          "intercept_chosen": 115,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 185,
+          "cargo_safe_landing_chosen": 185,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 45,
+          "friendly_contest": 17,
+          "tree_captured": 23
+        },
+        {
+          "intercept_opportunity": 156,
+          "intercept_chosen": 107,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 206,
+          "cargo_safe_landing_chosen": 201,
+          "heavy_clear_home_opportunity": 30,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 63,
+          "friendly_contest": 22,
+          "tree_captured": 34
+        }
+      ]
+    },
+    "785db4b4353aea1f2e61c8493ba425b3-1": {
+      "ranks": [
+        2,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1529750660,
+      "env_uuid": "18473e2c-e359-11f1-8e9d-fa163e881fe8",
+      "official_scores": [
+        8680.61,
+        8167.94
+      ],
+      "is_later": false,
+      "canonical_sha256": "c8f64f17738012cdb944c82a61dc7abd8af8c30178378a3a45ab656f2a58b803",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/785db4b4353aea1f2e61c8493ba425b3/1",
+      "git_paths": [
+        "data/master6_corpus/785db4b4353aea1f2e61c8493ba425b3-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 135,
+          "intercept_chosen": 74,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 276,
+          "cargo_safe_landing_chosen": 265,
+          "heavy_clear_home_opportunity": 40,
+          "heavy_clear_home_chosen": 32,
+          "enemy_on_own_tree": 68,
+          "friendly_contest": 26,
+          "tree_captured": 24
+        },
+        {
+          "intercept_opportunity": 241,
+          "intercept_chosen": 157,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 204,
+          "cargo_safe_landing_chosen": 194,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 50,
+          "friendly_contest": 23,
+          "tree_captured": 17
+        }
+      ]
+    },
+    "79b47fefed45e4029be82c2ae84f758c-1": {
+      "ranks": [
+        5,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1500133014,
+      "env_uuid": "af36619b-e256-11f1-ada0-fa163e881fe8",
+      "official_scores": [
+        6279.56,
+        7734.23
+      ],
+      "is_later": false,
+      "canonical_sha256": "f6525ee1a8750dbeae152602eead4c279c1802c5ce7aaa377796a2108ddba9a4",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/79b47fefed45e4029be82c2ae84f758c/1",
+      "git_paths": [
+        "data/fablev7_corpus/79b47fefed45e4029be82c2ae84f758c-1.json.gz",
+        "data/it720_corpus/79b47fefed45e4029be82c2ae84f758c-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 255,
+          "intercept_chosen": 197,
+          "intercept_confirmed": 2,
+          "cargo_endangered": 307,
+          "cargo_safe_landing_chosen": 307,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 45,
+          "friendly_contest": 18,
+          "tree_captured": 25
+        },
+        {
+          "intercept_opportunity": 258,
+          "intercept_chosen": 198,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 304,
+          "cargo_safe_landing_chosen": 290,
+          "heavy_clear_home_opportunity": 45,
+          "heavy_clear_home_chosen": 32,
+          "enemy_on_own_tree": 69,
+          "friendly_contest": 30,
+          "tree_captured": 26
+        }
+      ]
+    },
+    "7d2f125ddec4e3fb476907dadec6883e-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1590226899,
+      "env_uuid": "6060d5bb-e35a-11f1-b4b3-fa163e881fe8",
+      "official_scores": [
+        9874.36,
+        1624.19
+      ],
+      "is_later": false,
+      "canonical_sha256": "7ef3e7a6b297d346098566899b42c9e46e4223c9edd4313090a70a48b267f580",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/7d2f125ddec4e3fb476907dadec6883e/1",
+      "git_paths": [
+        "data/master6_corpus/7d2f125ddec4e3fb476907dadec6883e-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 141,
+          "intercept_chosen": 122,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 35,
+          "cargo_safe_landing_chosen": 35,
+          "heavy_clear_home_opportunity": 45,
+          "heavy_clear_home_chosen": 33,
+          "enemy_on_own_tree": 63,
+          "friendly_contest": 33,
+          "tree_captured": 21
+        },
+        {
+          "intercept_opportunity": 22,
+          "intercept_chosen": 13,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 143,
+          "cargo_safe_landing_chosen": 143,
+          "heavy_clear_home_opportunity": 11,
+          "heavy_clear_home_chosen": 9,
+          "enemy_on_own_tree": 22,
+          "friendly_contest": 7,
+          "tree_captured": 13
+        }
+      ]
+    },
+    "82f195473526f6b251d88d1c8c894988-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1317683235,
+      "env_uuid": "55e39c93-e396-11f1-8014-fa163e881fe8",
+      "official_scores": [
+        7706.36,
+        6524.61
+      ],
+      "is_later": true,
+      "canonical_sha256": "d565853cd93e5c46c2a86ba7c2c0c077c97d0f72b566da2d9c24b9c7bc772c90",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/82f195473526f6b251d88d1c8c894988/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 245,
+          "intercept_chosen": 175,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 302,
+          "cargo_safe_landing_chosen": 282,
+          "heavy_clear_home_opportunity": 40,
+          "heavy_clear_home_chosen": 32,
+          "enemy_on_own_tree": 81,
+          "friendly_contest": 24,
+          "tree_captured": 25
+        },
+        {
+          "intercept_opportunity": 236,
+          "intercept_chosen": 158,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 295,
+          "cargo_safe_landing_chosen": 293,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 36,
+          "friendly_contest": 15,
+          "tree_captured": 17
+        }
+      ]
+    },
+    "85aa69e9678f9bd97020e27a8ef943e2-1": {
+      "ranks": [
+        4,
+        1
+      ],
+      "length": 299,
+      "random_seed": 47508299,
+      "env_uuid": "07fd4bff-e172-11f1-bee5-fa163e881fe8",
+      "official_scores": [
+        4634.0,
+        6294.48
+      ],
+      "is_later": false,
+      "canonical_sha256": "ce2dcf088361d1b8e3c3c52bfb2e3b6ee32cbcf33e8a7813f4b9772ed7d8a206",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/85aa69e9678f9bd97020e27a8ef943e2/1",
+      "git_paths": [
+        "data/m9xj630_corpus/85aa69e9678f9bd97020e27a8ef943e2-1.json.gz",
+        "data/master5s_corpus/85aa69e9678f9bd97020e27a8ef943e2-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 118,
+          "intercept_chosen": 79,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 227,
+          "cargo_safe_landing_chosen": 220,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 15,
+          "enemy_on_own_tree": 65,
+          "friendly_contest": 24,
+          "tree_captured": 26
+        },
+        {
+          "intercept_opportunity": 237,
+          "intercept_chosen": 155,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 153,
+          "cargo_safe_landing_chosen": 149,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 16,
+          "enemy_on_own_tree": 67,
+          "friendly_contest": 28,
+          "tree_captured": 30
+        }
+      ]
+    },
+    "8e983cb27ec89013fc28873674712c21-1": {
+      "ranks": [
+        2,
+        4
+      ],
+      "length": 299,
+      "random_seed": 647996297,
+      "env_uuid": "df1d1ff5-e339-11f1-b015-fa163e881fe8",
+      "official_scores": [
+        6798.36,
+        6933.74
+      ],
+      "is_later": false,
+      "canonical_sha256": "ef105ded594b8d01bce249a29cbc3d3410113fd3d1ccdcfe3451fa9f5f94e63d",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/8e983cb27ec89013fc28873674712c21/1",
+      "git_paths": [
+        "data/master6_corpus/8e983cb27ec89013fc28873674712c21-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 190,
+          "intercept_chosen": 141,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 279,
+          "cargo_safe_landing_chosen": 272,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 54,
+          "friendly_contest": 12,
+          "tree_captured": 25
+        },
+        {
+          "intercept_opportunity": 227,
+          "intercept_chosen": 167,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 213,
+          "cargo_safe_landing_chosen": 207,
+          "heavy_clear_home_opportunity": 26,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 37,
+          "friendly_contest": 22,
+          "tree_captured": 7
+        }
+      ]
+    },
+    "8fc205473028aeb6518e81dddb501a5a-1": {
+      "ranks": [
+        4,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1016624433,
+      "env_uuid": "3fb145a6-e1cd-11f1-af30-fa163e881fe8",
+      "official_scores": [
+        7984.11,
+        8057.66
+      ],
+      "is_later": false,
+      "canonical_sha256": "3b9c51880d2021350c1faaef5c30d2e6ff28f887a380a8fe30e1d8a0d2725007",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/8fc205473028aeb6518e81dddb501a5a/1",
+      "git_paths": [
+        "data/fablev7_corpus/8fc205473028aeb6518e81dddb501a5a-1.json.gz",
+        "data/m9xj630_corpus/8fc205473028aeb6518e81dddb501a5a-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 194,
+          "intercept_chosen": 137,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 265,
+          "cargo_safe_landing_chosen": 252,
+          "heavy_clear_home_opportunity": 39,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 54,
+          "friendly_contest": 24,
+          "tree_captured": 27
+        },
+        {
+          "intercept_opportunity": 254,
+          "intercept_chosen": 190,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 256,
+          "cargo_safe_landing_chosen": 254,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 20,
+          "enemy_on_own_tree": 38,
+          "friendly_contest": 16,
+          "tree_captured": 19
+        }
+      ]
+    },
+    "928e825a8b987d4324684254c8b10f18-1": {
+      "ranks": [
+        3,
+        5
+      ],
+      "length": 299,
+      "random_seed": 990439357,
+      "env_uuid": "2f11d818-e2d6-11f1-ac58-fa163e881fe8",
+      "official_scores": [
+        6443.83,
+        5262.49
+      ],
+      "is_later": false,
+      "canonical_sha256": "c3274ec1c3d39473a3d8fd78a6f42b6e232a29abdb9fb8fe79468dd18f3ad101",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/928e825a8b987d4324684254c8b10f18/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 183,
+          "intercept_chosen": 129,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 267,
+          "cargo_safe_landing_chosen": 260,
+          "heavy_clear_home_opportunity": 26,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 72,
+          "friendly_contest": 39,
+          "tree_captured": 22
+        },
+        {
+          "intercept_opportunity": 216,
+          "intercept_chosen": 155,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 248,
+          "cargo_safe_landing_chosen": 248,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 38,
+          "friendly_contest": 19,
+          "tree_captured": 16
+        }
+      ]
+    },
+    "929c2717b472cda849d4f413bb7744a4-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1220773575,
+      "env_uuid": "972d5d4d-e371-11f1-b8d5-fa163e881fe8",
+      "official_scores": [
+        4774.81,
+        4806.34
+      ],
+      "is_later": false,
+      "canonical_sha256": "7a7170e1acded938269c50fc01b29d68ac6cf56ee93aaf697b050e3a2e055ceb",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/929c2717b472cda849d4f413bb7744a4/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 161,
+          "intercept_chosen": 93,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 311,
+          "cargo_safe_landing_chosen": 306,
+          "heavy_clear_home_opportunity": 17,
+          "heavy_clear_home_chosen": 16,
+          "enemy_on_own_tree": 47,
+          "friendly_contest": 16,
+          "tree_captured": 25
+        },
+        {
+          "intercept_opportunity": 275,
+          "intercept_chosen": 192,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 202,
+          "cargo_safe_landing_chosen": 201,
+          "heavy_clear_home_opportunity": 19,
+          "heavy_clear_home_chosen": 13,
+          "enemy_on_own_tree": 59,
+          "friendly_contest": 17,
+          "tree_captured": 29
+        }
+      ]
+    },
+    "970bf01cc0e2a312ba4391d5f3686f05-1": {
+      "ranks": [
+        4,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1430895112,
+      "env_uuid": "58241a36-e202-11f1-a3e6-fa163e881fe8",
+      "official_scores": [
+        7455.91,
+        8679.85
+      ],
+      "is_later": false,
+      "canonical_sha256": "1de083d540113f731227f99393f53fb32dacf8eea49854350c5c83b24f8e244d",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/970bf01cc0e2a312ba4391d5f3686f05/1",
+      "git_paths": [
+        "data/fablev7_corpus/970bf01cc0e2a312ba4391d5f3686f05-1.json.gz",
+        "data/m9xj630_corpus/970bf01cc0e2a312ba4391d5f3686f05-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 195,
+          "intercept_chosen": 122,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 265,
+          "cargo_safe_landing_chosen": 256,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 72,
+          "friendly_contest": 29,
+          "tree_captured": 25
+        },
+        {
+          "intercept_opportunity": 218,
+          "intercept_chosen": 155,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 253,
+          "cargo_safe_landing_chosen": 250,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 34,
+          "friendly_contest": 9,
+          "tree_captured": 20
+        }
+      ]
+    },
+    "9723c173fb2c3d7d8fee64dcd64b0ce6-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 685736005,
+      "env_uuid": "3a90c73e-e349-11f1-b351-fa163e881fe8",
+      "official_scores": [
+        7454.12,
+        6444.49
+      ],
+      "is_later": false,
+      "canonical_sha256": "4d5f5986216d79d58d6d43514057c5ca47b7c16d14116c34f75dc89628c24c68",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/9723c173fb2c3d7d8fee64dcd64b0ce6/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 192,
+          "intercept_chosen": 115,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 260,
+          "cargo_safe_landing_chosen": 257,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 57,
+          "friendly_contest": 27,
+          "tree_captured": 27
+        },
+        {
+          "intercept_opportunity": 228,
+          "intercept_chosen": 156,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 246,
+          "cargo_safe_landing_chosen": 237,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 67,
+          "friendly_contest": 26,
+          "tree_captured": 34
+        }
+      ]
+    },
+    "9aae789e16b1eda8a356f2734ad081fe-1": {
+      "ranks": [
+        4,
+        3
+      ],
+      "length": 299,
+      "random_seed": 404427197,
+      "env_uuid": "d012ab67-e264-11f1-a0c8-fa163e881fe8",
+      "official_scores": [
+        8252.66,
+        8162.53
+      ],
+      "is_later": false,
+      "canonical_sha256": "1bfca986f46c3b69a9e56a5d81943d590566ec14cf0d82b7e975b2c0dca64438",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/9aae789e16b1eda8a356f2734ad081fe/1",
+      "git_paths": [
+        "data/it720_corpus/9aae789e16b1eda8a356f2734ad081fe-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 352,
+          "intercept_chosen": 278,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 233,
+          "cargo_safe_landing_chosen": 222,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 20,
+          "enemy_on_own_tree": 65,
+          "friendly_contest": 32,
+          "tree_captured": 23
+        },
+        {
+          "intercept_opportunity": 174,
+          "intercept_chosen": 119,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 368,
+          "cargo_safe_landing_chosen": 362,
+          "heavy_clear_home_opportunity": 34,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 44,
+          "friendly_contest": 23,
+          "tree_captured": 15
+        }
+      ]
+    },
+    "a15fcfb9c152def4684cbb236d8823d6-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1210923621,
+      "env_uuid": "158fa39d-e33e-11f1-b082-fa163e881fe8",
+      "official_scores": [
+        7895.7,
+        7458.53
+      ],
+      "is_later": false,
+      "canonical_sha256": "38973b1d3b42f4e212d8e1e4f9db211f8bc92e167a8411a3bb21f06e25b1e108",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/a15fcfb9c152def4684cbb236d8823d6/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 310,
+          "intercept_chosen": 226,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 195,
+          "cargo_safe_landing_chosen": 193,
+          "heavy_clear_home_opportunity": 46,
+          "heavy_clear_home_chosen": 30,
+          "enemy_on_own_tree": 36,
+          "friendly_contest": 13,
+          "tree_captured": 20
+        },
+        {
+          "intercept_opportunity": 147,
+          "intercept_chosen": 110,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 315,
+          "cargo_safe_landing_chosen": 309,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 18,
+          "enemy_on_own_tree": 80,
+          "friendly_contest": 32,
+          "tree_captured": 29
+        }
+      ]
+    },
+    "a349f113d8cd4665b6da581cd7833500-1": {
+      "ranks": [
+        4,
+        2
+      ],
+      "length": 299,
+      "random_seed": 946418876,
+      "env_uuid": "477f09e5-e341-11f1-8b46-fa163e881fe8",
+      "official_scores": [
+        6169.05,
+        6998.91
+      ],
+      "is_later": false,
+      "canonical_sha256": "28a21e5e35d2d8cdc53a09801db9557d71acee698527f38e035c34b38244afad",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/a349f113d8cd4665b6da581cd7833500/1",
+      "git_paths": [
+        "data/master6_corpus/a349f113d8cd4665b6da581cd7833500-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 115,
+          "intercept_chosen": 68,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 263,
+          "cargo_safe_landing_chosen": 254,
+          "heavy_clear_home_opportunity": 20,
+          "heavy_clear_home_chosen": 19,
+          "enemy_on_own_tree": 53,
+          "friendly_contest": 20,
+          "tree_captured": 22
+        },
+        {
+          "intercept_opportunity": 226,
+          "intercept_chosen": 149,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 160,
+          "cargo_safe_landing_chosen": 158,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 62,
+          "friendly_contest": 28,
+          "tree_captured": 25
+        }
+      ]
+    },
+    "a4cbf1fa9a498523f02de6c84dbdf14e-1": {
+      "ranks": [
+        4,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1364335533,
+      "env_uuid": "86970f77-e187-11f1-8c17-fa163e881fe8",
+      "official_scores": [
+        5969.71,
+        7661.34
+      ],
+      "is_later": false,
+      "canonical_sha256": "e47b2d6b25cf8b0a95a8c0081509a822fa996674c6086b72dec7e58e22bc9493",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/a4cbf1fa9a498523f02de6c84dbdf14e/1",
+      "git_paths": [
+        "data/m9xj630_corpus/a4cbf1fa9a498523f02de6c84dbdf14e-1.json.gz",
+        "data/master5s_corpus/a4cbf1fa9a498523f02de6c84dbdf14e-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 242,
+          "intercept_chosen": 176,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 221,
+          "cargo_safe_landing_chosen": 204,
+          "heavy_clear_home_opportunity": 27,
+          "heavy_clear_home_chosen": 19,
+          "enemy_on_own_tree": 43,
+          "friendly_contest": 14,
+          "tree_captured": 21
+        },
+        {
+          "intercept_opportunity": 198,
+          "intercept_chosen": 128,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 256,
+          "cargo_safe_landing_chosen": 255,
+          "heavy_clear_home_opportunity": 35,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 47,
+          "friendly_contest": 17,
+          "tree_captured": 24
+        }
+      ]
+    },
+    "a547b189361afe25e5f0682c73e572e8-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1954851402,
+      "env_uuid": "371cf040-e33a-11f1-b5fd-fa163e881fe8",
+      "official_scores": [
+        10195.33,
+        13.4
+      ],
+      "is_later": false,
+      "canonical_sha256": "112d5860f3e674701267409dac0fe00f74cceb67d8be4ebc780192e39933d636",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/a547b189361afe25e5f0682c73e572e8/1",
+      "git_paths": [
+        "data/master6_corpus/a547b189361afe25e5f0682c73e572e8-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 42,
+          "intercept_chosen": 36,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 0,
+          "cargo_safe_landing_chosen": 0,
+          "heavy_clear_home_opportunity": 45,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 76,
+          "friendly_contest": 27,
+          "tree_captured": 7
+        },
+        {
+          "intercept_opportunity": 0,
+          "intercept_chosen": 0,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 37,
+          "cargo_safe_landing_chosen": 35,
+          "heavy_clear_home_opportunity": 1,
+          "heavy_clear_home_chosen": 1,
+          "enemy_on_own_tree": 6,
+          "friendly_contest": 1,
+          "tree_captured": 3
+        }
+      ]
+    },
+    "a7e7a131ac7d151fc2cccf6e4daf6d38-1": {
+      "ranks": [
+        4,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1587744075,
+      "env_uuid": "377f79f9-e3ad-11f1-b208-fa163e881fe8",
+      "official_scores": [
+        6384.86,
+        7259.65
+      ],
+      "is_later": true,
+      "canonical_sha256": "88bc9345eb7e2c56377f6600830390b807ca3d63ba39e9dbc4351abb1400a28b",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/a7e7a131ac7d151fc2cccf6e4daf6d38/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 192,
+          "intercept_chosen": 138,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 242,
+          "cargo_safe_landing_chosen": 232,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 61,
+          "friendly_contest": 25,
+          "tree_captured": 22
+        },
+        {
+          "intercept_opportunity": 239,
+          "intercept_chosen": 176,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 267,
+          "cargo_safe_landing_chosen": 263,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 66,
+          "friendly_contest": 33,
+          "tree_captured": 25
+        }
+      ]
+    },
+    "a9b1fcf0a020a42efcf51b3d7c359b47-1": {
+      "ranks": [
+        1,
+        5
+      ],
+      "length": 299,
+      "random_seed": 971565785,
+      "env_uuid": "091da69d-e26e-11f1-b385-fa163e881fe8",
+      "official_scores": [
+        7943.53,
+        5924.23
+      ],
+      "is_later": false,
+      "canonical_sha256": "fadca259c9530bae7a00cedca551393fb3ece85af1c44117d9bd809996d95d37",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/a9b1fcf0a020a42efcf51b3d7c359b47/1",
+      "git_paths": [
+        "data/master5s_corpus/a9b1fcf0a020a42efcf51b3d7c359b47-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 224,
+          "intercept_chosen": 156,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 244,
+          "cargo_safe_landing_chosen": 241,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 29,
+          "enemy_on_own_tree": 66,
+          "friendly_contest": 29,
+          "tree_captured": 31
+        },
+        {
+          "intercept_opportunity": 195,
+          "intercept_chosen": 141,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 276,
+          "cargo_safe_landing_chosen": 275,
+          "heavy_clear_home_opportunity": 27,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 54,
+          "friendly_contest": 21,
+          "tree_captured": 26
+        }
+      ]
+    },
+    "aa7f159538dcd93c4b070c6d120b2272-1": {
+      "ranks": [
+        4,
+        3
+      ],
+      "length": 299,
+      "random_seed": 2137242600,
+      "env_uuid": "2d4e1e40-e297-11f1-ae2c-fa163e881fe8",
+      "official_scores": [
+        5742.49,
+        7450.17
+      ],
+      "is_later": false,
+      "canonical_sha256": "f40ad5c41461bf5be794e50e886b46667ce7a4a7f52169c4dff6ac4a25bc4421",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/aa7f159538dcd93c4b070c6d120b2272/1",
+      "git_paths": [
+        "data/it720_corpus/aa7f159538dcd93c4b070c6d120b2272-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 208,
+          "intercept_chosen": 129,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 291,
+          "cargo_safe_landing_chosen": 274,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 52,
+          "friendly_contest": 22,
+          "tree_captured": 21
+        },
+        {
+          "intercept_opportunity": 201,
+          "intercept_chosen": 125,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 276,
+          "cargo_safe_landing_chosen": 269,
+          "heavy_clear_home_opportunity": 37,
+          "heavy_clear_home_chosen": 32,
+          "enemy_on_own_tree": 39,
+          "friendly_contest": 13,
+          "tree_captured": 21
+        }
+      ]
+    },
+    "abb23c7796d827b211c26e46b99785b3-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1312724186,
+      "env_uuid": "675234b9-e238-11f1-910f-fa163e881fe8",
+      "official_scores": [
+        7405.24,
+        7276.92
+      ],
+      "is_later": false,
+      "canonical_sha256": "d85ae55e380e2f7d38a0feb0ead241bb36385a5d640d7060ccac9c26a6e57a5a",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/abb23c7796d827b211c26e46b99785b3/1",
+      "git_paths": [
+        "data/it720_corpus/abb23c7796d827b211c26e46b99785b3-1.json.gz",
+        "data/master5s_corpus/abb23c7796d827b211c26e46b99785b3-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 304,
+          "intercept_chosen": 220,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 333,
+          "cargo_safe_landing_chosen": 326,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 45,
+          "friendly_contest": 24,
+          "tree_captured": 20
+        },
+        {
+          "intercept_opportunity": 290,
+          "intercept_chosen": 196,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 320,
+          "cargo_safe_landing_chosen": 315,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 40,
+          "friendly_contest": 13,
+          "tree_captured": 20
+        }
+      ]
+    },
+    "ad630693c26ae17b724092518d883ae1-1": {
+      "ranks": [
+        4,
+        1
+      ],
+      "length": 299,
+      "random_seed": 264683901,
+      "env_uuid": "21ca1f26-e190-11f1-9cf0-fa163e881fe8",
+      "official_scores": [
+        7326.38,
+        6716.02
+      ],
+      "is_later": false,
+      "canonical_sha256": "52811d1e158d92894475f3d051919abcbd7184d648326853f8ec14b811058c32",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/ad630693c26ae17b724092518d883ae1/1",
+      "git_paths": [
+        "data/m9xj630_corpus/ad630693c26ae17b724092518d883ae1-1.json.gz",
+        "data/master5s_corpus/ad630693c26ae17b724092518d883ae1-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 246,
+          "intercept_chosen": 166,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 222,
+          "cargo_safe_landing_chosen": 211,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 56,
+          "friendly_contest": 16,
+          "tree_captured": 29
+        },
+        {
+          "intercept_opportunity": 207,
+          "intercept_chosen": 131,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 269,
+          "cargo_safe_landing_chosen": 262,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 51,
+          "friendly_contest": 25,
+          "tree_captured": 21
+        }
+      ]
+    },
+    "af7c078e9a0001364d3ce4025b23e1ed-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1603844357,
+      "env_uuid": "aa7ba5d0-e343-11f1-b3bb-fa163e881fe8",
+      "official_scores": [
+        4732.92,
+        9609.74
+      ],
+      "is_later": false,
+      "canonical_sha256": "d2af9c41fceae6fc3028032d62b71f334c2ef1425e39f833c5c070fd84299d79",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/af7c078e9a0001364d3ce4025b23e1ed/1",
+      "git_paths": [
+        "data/master6_corpus/af7c078e9a0001364d3ce4025b23e1ed-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 115,
+          "intercept_chosen": 78,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 248,
+          "cargo_safe_landing_chosen": 245,
+          "heavy_clear_home_opportunity": 20,
+          "heavy_clear_home_chosen": 16,
+          "enemy_on_own_tree": 32,
+          "friendly_contest": 12,
+          "tree_captured": 11
+        },
+        {
+          "intercept_opportunity": 218,
+          "intercept_chosen": 160,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 137,
+          "cargo_safe_landing_chosen": 131,
+          "heavy_clear_home_opportunity": 30,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 44,
+          "friendly_contest": 16,
+          "tree_captured": 8
+        }
+      ]
+    },
+    "b0596cbf9a1da6d8ee0db064fccf850c-1": {
+      "ranks": [
+        1,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1342912506,
+      "env_uuid": "5713d2fb-e34a-11f1-9b0e-fa163e881fe8",
+      "official_scores": [
+        8340.89,
+        9040.23
+      ],
+      "is_later": false,
+      "canonical_sha256": "476585e6e1dd21ab5e93c3ba6b28c940e2a007b24393692df7dab432f9b56d06",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/b0596cbf9a1da6d8ee0db064fccf850c/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 255,
+          "intercept_chosen": 165,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 199,
+          "cargo_safe_landing_chosen": 197,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 46,
+          "friendly_contest": 28,
+          "tree_captured": 13
+        },
+        {
+          "intercept_opportunity": 136,
+          "intercept_chosen": 84,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 300,
+          "cargo_safe_landing_chosen": 291,
+          "heavy_clear_home_opportunity": 34,
+          "heavy_clear_home_chosen": 31,
+          "enemy_on_own_tree": 69,
+          "friendly_contest": 27,
+          "tree_captured": 28
+        }
+      ]
+    },
+    "b25e54576d8e4ca28ccd266a3e531a21-1": {
+      "ranks": [
+        4,
+        2
+      ],
+      "length": 299,
+      "random_seed": 488844444,
+      "env_uuid": "ee724746-e345-11f1-892e-fa163e881fe8",
+      "official_scores": [
+        1444.05,
+        6002.73
+      ],
+      "is_later": false,
+      "canonical_sha256": "03437441ed81c4ff58b842908745205dba6c35aee842d0dd1f19407c3d461181",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/b25e54576d8e4ca28ccd266a3e531a21/1",
+      "git_paths": [
+        "data/master6_corpus/b25e54576d8e4ca28ccd266a3e531a21-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 27,
+          "intercept_chosen": 18,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 299,
+          "cargo_safe_landing_chosen": 287,
+          "heavy_clear_home_opportunity": 11,
+          "heavy_clear_home_chosen": 9,
+          "enemy_on_own_tree": 32,
+          "friendly_contest": 18,
+          "tree_captured": 8
+        },
+        {
+          "intercept_opportunity": 299,
+          "intercept_chosen": 252,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 40,
+          "cargo_safe_landing_chosen": 38,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 91,
+          "friendly_contest": 43,
+          "tree_captured": 22
+        }
+      ]
+    },
+    "b455a0c842ab04a2f37917d0f155b1a5-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1896901912,
+      "env_uuid": "42da3d08-e34f-11f1-aa9c-fa163e881fe8",
+      "official_scores": [
+        10132.85,
+        2710.96
+      ],
+      "is_later": false,
+      "canonical_sha256": "cc500069a73a61d11ba84d2101346998b7553ff6320dd17fe407a8f926c4e53f",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/b455a0c842ab04a2f37917d0f155b1a5/1",
+      "git_paths": [
+        "data/master6_corpus/b455a0c842ab04a2f37917d0f155b1a5-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 81,
+          "intercept_chosen": 50,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 22,
+          "cargo_safe_landing_chosen": 21,
+          "heavy_clear_home_opportunity": 42,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 70,
+          "friendly_contest": 31,
+          "tree_captured": 13
+        },
+        {
+          "intercept_opportunity": 18,
+          "intercept_chosen": 10,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 98,
+          "cargo_safe_landing_chosen": 97,
+          "heavy_clear_home_opportunity": 14,
+          "heavy_clear_home_chosen": 9,
+          "enemy_on_own_tree": 21,
+          "friendly_contest": 11,
+          "tree_captured": 7
+        }
+      ]
+    },
+    "b4b03f5ecc6781a9c45a8d55ae96c764-1": {
+      "ranks": [
+        2,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1163318668,
+      "env_uuid": "8fe60383-e348-11f1-bf34-fa163e881fe8",
+      "official_scores": [
+        7999.96,
+        8696.77
+      ],
+      "is_later": false,
+      "canonical_sha256": "4c180fb6244fd34243b4b5a8bed663f3385f83488bf8a8d1751b788ae4b9abcb",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/b4b03f5ecc6781a9c45a8d55ae96c764/1",
+      "git_paths": [
+        "data/master6_corpus/b4b03f5ecc6781a9c45a8d55ae96c764-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 189,
+          "intercept_chosen": 110,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 272,
+          "cargo_safe_landing_chosen": 265,
+          "heavy_clear_home_opportunity": 43,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 46,
+          "friendly_contest": 18,
+          "tree_captured": 18
+        },
+        {
+          "intercept_opportunity": 254,
+          "intercept_chosen": 183,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 257,
+          "cargo_safe_landing_chosen": 253,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 43,
+          "friendly_contest": 18,
+          "tree_captured": 15
+        }
+      ]
+    },
+    "b58c6f50466bff30fc183256041de011-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 758000401,
+      "env_uuid": "71947911-e344-11f1-bec0-fa163e881fe8",
+      "official_scores": [
+        5868.51,
+        6205.82
+      ],
+      "is_later": false,
+      "canonical_sha256": "8b6cf1eb483e66fa47adb8ea6f988be76661ac970c76890aeeca5bc6bcfbcd29",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/b58c6f50466bff30fc183256041de011/1",
+      "git_paths": [
+        "data/master6_corpus/b58c6f50466bff30fc183256041de011-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 219,
+          "intercept_chosen": 151,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 243,
+          "cargo_safe_landing_chosen": 236,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 21,
+          "enemy_on_own_tree": 38,
+          "friendly_contest": 13,
+          "tree_captured": 16
+        },
+        {
+          "intercept_opportunity": 201,
+          "intercept_chosen": 129,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 236,
+          "cargo_safe_landing_chosen": 229,
+          "heavy_clear_home_opportunity": 36,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 60,
+          "friendly_contest": 23,
+          "tree_captured": 24
+        }
+      ]
+    },
+    "bc097a59409cb2c229e1dd74bf8837eb-1": {
+      "ranks": [
+        5,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1999376957,
+      "env_uuid": "4352fb17-e1bc-11f1-bd2f-fa163e881fe8",
+      "official_scores": [
+        8068.04,
+        7596.47
+      ],
+      "is_later": false,
+      "canonical_sha256": "062985e1a04453c0340e9fd11093b8b3e7ec38373cf834892efbf96c7a94ffe7",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/bc097a59409cb2c229e1dd74bf8837eb/1",
+      "git_paths": [
+        "data/fablev7_corpus/bc097a59409cb2c229e1dd74bf8837eb-1.json.gz",
+        "data/m9xj630_corpus/bc097a59409cb2c229e1dd74bf8837eb-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 248,
+          "intercept_chosen": 167,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 374,
+          "cargo_safe_landing_chosen": 374,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 32,
+          "friendly_contest": 11,
+          "tree_captured": 19
+        },
+        {
+          "intercept_opportunity": 283,
+          "intercept_chosen": 213,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 314,
+          "cargo_safe_landing_chosen": 297,
+          "heavy_clear_home_opportunity": 38,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 51,
+          "friendly_contest": 20,
+          "tree_captured": 28
+        }
+      ]
+    },
+    "bc551c365258a92404b9d73888061070-1": {
+      "ranks": [
+        5,
+        1
+      ],
+      "length": 299,
+      "random_seed": 409586251,
+      "env_uuid": "bbe75573-e38f-11f1-8236-fa163e881fe8",
+      "official_scores": [
+        6044.58,
+        7972.35
+      ],
+      "is_later": true,
+      "canonical_sha256": "56ef7516393f8fdb47ad9e70f2bdf5ad7ad32988dead58e07fbc5d95322c1a78",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/bc551c365258a92404b9d73888061070/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 209,
+          "intercept_chosen": 151,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 235,
+          "cargo_safe_landing_chosen": 234,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 41,
+          "friendly_contest": 8,
+          "tree_captured": 24
+        },
+        {
+          "intercept_opportunity": 187,
+          "intercept_chosen": 124,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 276,
+          "cargo_safe_landing_chosen": 274,
+          "heavy_clear_home_opportunity": 34,
+          "heavy_clear_home_chosen": 29,
+          "enemy_on_own_tree": 62,
+          "friendly_contest": 26,
+          "tree_captured": 28
+        }
+      ]
+    },
+    "c0261123738bcb06d57d1ef4770f269d-1": {
+      "ranks": [
+        5,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1174064537,
+      "env_uuid": "69b3bf55-e1cf-11f1-bff8-fa163e881fe8",
+      "official_scores": [
+        7898.87,
+        7553.91
+      ],
+      "is_later": false,
+      "canonical_sha256": "c045defb65de5e1275340a2c2552f489dcaf56a89f2469b06ea41a42e6261b40",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/c0261123738bcb06d57d1ef4770f269d/1",
+      "git_paths": [
+        "data/fablev7_corpus/c0261123738bcb06d57d1ef4770f269d-1.json.gz",
+        "data/m9xj630_corpus/c0261123738bcb06d57d1ef4770f269d-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 140,
+          "intercept_chosen": 86,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 280,
+          "cargo_safe_landing_chosen": 279,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 19,
+          "enemy_on_own_tree": 49,
+          "friendly_contest": 28,
+          "tree_captured": 14
+        },
+        {
+          "intercept_opportunity": 247,
+          "intercept_chosen": 174,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 206,
+          "cargo_safe_landing_chosen": 194,
+          "heavy_clear_home_opportunity": 38,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 63,
+          "friendly_contest": 32,
+          "tree_captured": 27
+        }
+      ]
+    },
+    "c682745d307bf8bec8fbbd2cdf419d18-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1347884046,
+      "env_uuid": "7f0db929-e356-11f1-869f-fa163e881fe8",
+      "official_scores": [
+        8176.08,
+        8124.01
+      ],
+      "is_later": false,
+      "canonical_sha256": "58136d74fdaf99a5a47ff0ca92cfd593ba34c55126fc169e1778f9142436d105",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/c682745d307bf8bec8fbbd2cdf419d18/1",
+      "git_paths": [
+        "data/master6_corpus/c682745d307bf8bec8fbbd2cdf419d18-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 258,
+          "intercept_chosen": 162,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 251,
+          "cargo_safe_landing_chosen": 242,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 33,
+          "friendly_contest": 8,
+          "tree_captured": 17
+        },
+        {
+          "intercept_opportunity": 242,
+          "intercept_chosen": 161,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 278,
+          "cargo_safe_landing_chosen": 266,
+          "heavy_clear_home_opportunity": 34,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 83,
+          "friendly_contest": 30,
+          "tree_captured": 26
+        }
+      ]
+    },
+    "c78a918ebd92a08149b394ef8959d161-1": {
+      "ranks": [
+        5,
+        2
+      ],
+      "length": 262,
+      "random_seed": 2115466162,
+      "env_uuid": "6a7de981-e352-11f1-a68d-fa163e881fe8",
+      "official_scores": [
+        -39,
+        3827.92
+      ],
+      "is_later": false,
+      "canonical_sha256": "6b64640204303b372f48a6348b06bfaeee9a814ce8730e200adaf9d2392f82c2",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/c78a918ebd92a08149b394ef8959d161/1",
+      "git_paths": [
+        "data/master6_corpus/c78a918ebd92a08149b394ef8959d161-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 4,
+          "intercept_chosen": 2,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 164,
+          "cargo_safe_landing_chosen": 162,
+          "heavy_clear_home_opportunity": 1,
+          "heavy_clear_home_chosen": 1,
+          "enemy_on_own_tree": 22,
+          "friendly_contest": 5,
+          "tree_captured": 14
+        },
+        {
+          "intercept_opportunity": 176,
+          "intercept_chosen": 157,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 4,
+          "cargo_safe_landing_chosen": 4,
+          "heavy_clear_home_opportunity": 10,
+          "heavy_clear_home_chosen": 7,
+          "enemy_on_own_tree": 108,
+          "friendly_contest": 39,
+          "tree_captured": 22
+        }
+      ]
+    },
+    "ca9868fdb788e855bbf53f8fc2e38f9e-1": {
+      "ranks": [
+        2,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1033438352,
+      "env_uuid": "6bcdcaae-e373-11f1-923a-fa163e881fe8",
+      "official_scores": [
+        5607.92,
+        4852.44
+      ],
+      "is_later": false,
+      "canonical_sha256": "d10f69612748ccb100f046fbc2897559e9abe1e410509f02a7cb03e0db56ed52",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/ca9868fdb788e855bbf53f8fc2e38f9e/1",
+      "git_paths": [
+        "data/master6_corpus/ca9868fdb788e855bbf53f8fc2e38f9e-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 227,
+          "intercept_chosen": 148,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 204,
+          "cargo_safe_landing_chosen": 196,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 16,
+          "enemy_on_own_tree": 77,
+          "friendly_contest": 31,
+          "tree_captured": 27
+        },
+        {
+          "intercept_opportunity": 154,
+          "intercept_chosen": 91,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 254,
+          "cargo_safe_landing_chosen": 247,
+          "heavy_clear_home_opportunity": 20,
+          "heavy_clear_home_chosen": 19,
+          "enemy_on_own_tree": 42,
+          "friendly_contest": 17,
+          "tree_captured": 18
+        }
+      ]
+    },
+    "d0f5e89c975909cd491a987567d751bb-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 302496176,
+      "env_uuid": "60b0ac0d-e33e-11f1-b26e-fa163e881fe8",
+      "official_scores": [
+        9696.34,
+        1721.16
+      ],
+      "is_later": false,
+      "canonical_sha256": "34be3096b5aafd658db988f7bb82f714e9ed3affdbe114953dadeb62d15076dd",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/d0f5e89c975909cd491a987567d751bb/1",
+      "git_paths": [
+        "data/master6_corpus/d0f5e89c975909cd491a987567d751bb-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 279,
+          "intercept_chosen": 227,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 60,
+          "cargo_safe_landing_chosen": 55,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 55,
+          "friendly_contest": 29,
+          "tree_captured": 16
+        },
+        {
+          "intercept_opportunity": 32,
+          "intercept_chosen": 17,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 260,
+          "cargo_safe_landing_chosen": 255,
+          "heavy_clear_home_opportunity": 4,
+          "heavy_clear_home_chosen": 4,
+          "enemy_on_own_tree": 13,
+          "friendly_contest": 3,
+          "tree_captured": 9
+        }
+      ]
+    },
+    "d1ecca5e86110600b6dd0add400fe723-1": {
+      "ranks": [
+        5,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1538759212,
+      "env_uuid": "cce6c575-e344-11f1-b3f2-fa163e881fe8",
+      "official_scores": [
+        7388.64,
+        7243.48
+      ],
+      "is_later": false,
+      "canonical_sha256": "8aeb369a705a9c358ca9d7c755ab67383f5dbcc3ab6aa4a9f1e3c771ffc03119",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/d1ecca5e86110600b6dd0add400fe723/1",
+      "git_paths": [
+        "data/master6_corpus/d1ecca5e86110600b6dd0add400fe723-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 281,
+          "intercept_chosen": 219,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 289,
+          "cargo_safe_landing_chosen": 288,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 25,
+          "friendly_contest": 8,
+          "tree_captured": 12
+        },
+        {
+          "intercept_opportunity": 225,
+          "intercept_chosen": 158,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 300,
+          "cargo_safe_landing_chosen": 292,
+          "heavy_clear_home_opportunity": 33,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 77,
+          "friendly_contest": 33,
+          "tree_captured": 28
+        }
+      ]
+    },
+    "d2c7d061739bef723dc4abfffb22de2a-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1302886992,
+      "env_uuid": "f93f2a5e-e338-11f1-a6d0-fa163e881fe8",
+      "official_scores": [
+        8448.02,
+        8409.65
+      ],
+      "is_later": false,
+      "canonical_sha256": "83b670b435704f29a29599812ca9d82363c2d6ccb4ed526c1eb1bba9906bddc9",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/d2c7d061739bef723dc4abfffb22de2a/1",
+      "git_paths": [
+        "data/master6_corpus/d2c7d061739bef723dc4abfffb22de2a-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 234,
+          "intercept_chosen": 128,
+          "intercept_confirmed": 2,
+          "cargo_endangered": 311,
+          "cargo_safe_landing_chosen": 303,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 30,
+          "friendly_contest": 12,
+          "tree_captured": 14
+        },
+        {
+          "intercept_opportunity": 294,
+          "intercept_chosen": 206,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 270,
+          "cargo_safe_landing_chosen": 259,
+          "heavy_clear_home_opportunity": 36,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 76,
+          "friendly_contest": 25,
+          "tree_captured": 27
+        }
+      ]
+    },
+    "d69821e07e7f40527309464adf245894-1": {
+      "ranks": [
+        5,
+        4
+      ],
+      "length": 299,
+      "random_seed": 1905020853,
+      "env_uuid": "8f0b2ea9-e24f-11f1-9249-fa163e881fe8",
+      "official_scores": [
+        7233.18,
+        8811.74
+      ],
+      "is_later": false,
+      "canonical_sha256": "e66e3208fca1f37c5079ec5900b1f5af28e2ebbea58b3a3370dc917c54b0dba8",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/d69821e07e7f40527309464adf245894/1",
+      "git_paths": [
+        "data/fablev7_corpus/d69821e07e7f40527309464adf245894-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 220,
+          "intercept_chosen": 159,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 291,
+          "cargo_safe_landing_chosen": 288,
+          "heavy_clear_home_opportunity": 27,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 55,
+          "friendly_contest": 19,
+          "tree_captured": 26
+        },
+        {
+          "intercept_opportunity": 250,
+          "intercept_chosen": 179,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 246,
+          "cargo_safe_landing_chosen": 239,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 79,
+          "friendly_contest": 44,
+          "tree_captured": 20
+        }
+      ]
+    },
+    "d840e4de591fb29628091673c049b6a0-1": {
+      "ranks": [
+        3,
+        2
+      ],
+      "length": 299,
+      "random_seed": 99093956,
+      "env_uuid": "69050c30-e353-11f1-92f1-fa163e881fe8",
+      "official_scores": [
+        6926.08,
+        6362.28
+      ],
+      "is_later": false,
+      "canonical_sha256": "f040e2adab883731a7efd2e8c4807aa901382e21078ba405cdc17bdd049c53e7",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/d840e4de591fb29628091673c049b6a0/1",
+      "git_paths": [
+        "data/master6_corpus/d840e4de591fb29628091673c049b6a0-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 247,
+          "intercept_chosen": 183,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 209,
+          "cargo_safe_landing_chosen": 201,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 43,
+          "friendly_contest": 20,
+          "tree_captured": 15
+        },
+        {
+          "intercept_opportunity": 190,
+          "intercept_chosen": 133,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 303,
+          "cargo_safe_landing_chosen": 294,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 73,
+          "friendly_contest": 33,
+          "tree_captured": 28
+        }
+      ]
+    },
+    "dcc847457524cef15b6cc068f29ea616-1": {
+      "ranks": [
+        2,
+        5
+      ],
+      "length": 299,
+      "random_seed": 44442704,
+      "env_uuid": "fb95bbe2-e346-11f1-a3ed-fa163e881fe8",
+      "official_scores": [
+        7583.52,
+        7678.17
+      ],
+      "is_later": false,
+      "canonical_sha256": "fd508300289628096cd8f9d1032ca1b512ecfa5960234c6fc1f3afbbe1b014ee",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/dcc847457524cef15b6cc068f29ea616/1",
+      "git_paths": [
+        "data/master6_corpus/dcc847457524cef15b6cc068f29ea616-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 232,
+          "intercept_chosen": 172,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 313,
+          "cargo_safe_landing_chosen": 306,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 93,
+          "friendly_contest": 28,
+          "tree_captured": 32
+        },
+        {
+          "intercept_opportunity": 230,
+          "intercept_chosen": 160,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 237,
+          "cargo_safe_landing_chosen": 235,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 37,
+          "friendly_contest": 16,
+          "tree_captured": 17
+        }
+      ]
+    },
+    "dd6aff420b28edf6960d7b467e529df3-1": {
+      "ranks": [
+        4,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1015066068,
+      "env_uuid": "542f3fe4-e17f-11f1-98db-fa163e881fe8",
+      "official_scores": [
+        6384.47,
+        6716.51
+      ],
+      "is_later": false,
+      "canonical_sha256": "9491039f653b639bd6bdcd36b045aeeca1d004b63a4e00938280e16242fac0fd",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/dd6aff420b28edf6960d7b467e529df3/1",
+      "git_paths": [
+        "data/m9xj630_corpus/dd6aff420b28edf6960d7b467e529df3-1.json.gz",
+        "data/master5s_corpus/dd6aff420b28edf6960d7b467e529df3-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 191,
+          "intercept_chosen": 130,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 278,
+          "cargo_safe_landing_chosen": 271,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 79,
+          "friendly_contest": 31,
+          "tree_captured": 19
+        },
+        {
+          "intercept_opportunity": 230,
+          "intercept_chosen": 161,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 238,
+          "cargo_safe_landing_chosen": 235,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 28,
+          "enemy_on_own_tree": 55,
+          "friendly_contest": 23,
+          "tree_captured": 25
+        }
+      ]
+    },
+    "ddd8bf4ef175473cec7ff9d7480be558-1": {
+      "ranks": [
+        2,
+        3
+      ],
+      "length": 299,
+      "random_seed": 270116419,
+      "env_uuid": "ca7dfcbe-e353-11f1-bc2d-fa163e881fe8",
+      "official_scores": [
+        7604.63,
+        7402.43
+      ],
+      "is_later": false,
+      "canonical_sha256": "86d9ea9fc65097d7558da1d6bfea8ba3662dd52e3e6b0f26e783fd2d99b829f3",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/ddd8bf4ef175473cec7ff9d7480be558/1",
+      "git_paths": [
+        "data/master6_corpus/ddd8bf4ef175473cec7ff9d7480be558-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 243,
+          "intercept_chosen": 156,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 236,
+          "cargo_safe_landing_chosen": 224,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 29,
+          "enemy_on_own_tree": 71,
+          "friendly_contest": 32,
+          "tree_captured": 20
+        },
+        {
+          "intercept_opportunity": 198,
+          "intercept_chosen": 145,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 293,
+          "cargo_safe_landing_chosen": 283,
+          "heavy_clear_home_opportunity": 30,
+          "heavy_clear_home_chosen": 27,
+          "enemy_on_own_tree": 31,
+          "friendly_contest": 10,
+          "tree_captured": 13
+        }
+      ]
+    },
+    "dfade934a41b69385a7143b586c75759-1": {
+      "ranks": [
+        4,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1168705184,
+      "env_uuid": "d49a77bb-e17c-11f1-b768-fa163e881fe8",
+      "official_scores": [
+        6550.95,
+        7476.36
+      ],
+      "is_later": false,
+      "canonical_sha256": "6f98d5150127f833e4f2eb9987382a26c0268f3d5c7d00c2f3c304fe1ba490cd",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/dfade934a41b69385a7143b586c75759/1",
+      "git_paths": [
+        "data/m9xj630_corpus/dfade934a41b69385a7143b586c75759-1.json.gz",
+        "data/master5s_corpus/dfade934a41b69385a7143b586c75759-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 208,
+          "intercept_chosen": 149,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 248,
+          "cargo_safe_landing_chosen": 241,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 68,
+          "friendly_contest": 40,
+          "tree_captured": 17
+        },
+        {
+          "intercept_opportunity": 196,
+          "intercept_chosen": 142,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 226,
+          "cargo_safe_landing_chosen": 224,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 63,
+          "friendly_contest": 26,
+          "tree_captured": 24
+        }
+      ]
+    },
+    "dfb6af5c020694f6e682187e48303ae7-1": {
+      "ranks": [
+        2,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1364651157,
+      "env_uuid": "3dc86a15-e354-11f1-9365-fa163e881fe8",
+      "official_scores": [
+        6457.99,
+        7983.51
+      ],
+      "is_later": false,
+      "canonical_sha256": "99d732ef34e9226aaea9ea20fb5ae5332311862397dadd3e5b70adaa0ef58536",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/dfb6af5c020694f6e682187e48303ae7/1",
+      "git_paths": [
+        "data/master6_corpus/dfb6af5c020694f6e682187e48303ae7-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 230,
+          "intercept_chosen": 143,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 330,
+          "cargo_safe_landing_chosen": 313,
+          "heavy_clear_home_opportunity": 27,
+          "heavy_clear_home_chosen": 19,
+          "enemy_on_own_tree": 54,
+          "friendly_contest": 22,
+          "tree_captured": 22
+        },
+        {
+          "intercept_opportunity": 293,
+          "intercept_chosen": 195,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 259,
+          "cargo_safe_landing_chosen": 252,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 45,
+          "friendly_contest": 20,
+          "tree_captured": 14
+        }
+      ]
+    },
+    "e71d5897d9c7908e11c4fb3a870c994f-1": {
+      "ranks": [
+        1,
+        2
+      ],
+      "length": 299,
+      "random_seed": 1960813663,
+      "env_uuid": "dd096afb-e34d-11f1-bf1d-fa163e881fe8",
+      "official_scores": [
+        3221.1,
+        10299.65
+      ],
+      "is_later": false,
+      "canonical_sha256": "8f1acf8ad359a747eaa07f7b45787425cb00f1548805f69b444ee66936785716",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/e71d5897d9c7908e11c4fb3a870c994f/1",
+      "git_paths": [
+        "data/master6_corpus/e71d5897d9c7908e11c4fb3a870c994f-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 42,
+          "intercept_chosen": 23,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 239,
+          "cargo_safe_landing_chosen": 226,
+          "heavy_clear_home_opportunity": 15,
+          "heavy_clear_home_chosen": 13,
+          "enemy_on_own_tree": 23,
+          "friendly_contest": 15,
+          "tree_captured": 5
+        },
+        {
+          "intercept_opportunity": 226,
+          "intercept_chosen": 157,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 66,
+          "cargo_safe_landing_chosen": 66,
+          "heavy_clear_home_opportunity": 39,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 9,
+          "friendly_contest": 3,
+          "tree_captured": 5
+        }
+      ]
+    },
+    "e73135faa0b6e61544b713252d81e2e5-1": {
+      "ranks": [
+        5,
+        3
+      ],
+      "length": 299,
+      "random_seed": 2041795125,
+      "env_uuid": "1ba39f91-e237-11f1-a075-fa163e881fe8",
+      "official_scores": [
+        4768.68,
+        6887.07
+      ],
+      "is_later": false,
+      "canonical_sha256": "c887acec2bec016ba8e8ef61b32fb247f8538abc32512c43b8d7972f9a4881e0",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/e73135faa0b6e61544b713252d81e2e5/1",
+      "git_paths": [
+        "data/fablev7_corpus/e73135faa0b6e61544b713252d81e2e5-1.json.gz",
+        "data/it720_corpus/e73135faa0b6e61544b713252d81e2e5-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 161,
+          "intercept_chosen": 120,
+          "intercept_confirmed": 2,
+          "cargo_endangered": 290,
+          "cargo_safe_landing_chosen": 288,
+          "heavy_clear_home_opportunity": 19,
+          "heavy_clear_home_chosen": 14,
+          "enemy_on_own_tree": 50,
+          "friendly_contest": 21,
+          "tree_captured": 25
+        },
+        {
+          "intercept_opportunity": 270,
+          "intercept_chosen": 212,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 212,
+          "cargo_safe_landing_chosen": 208,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 76,
+          "friendly_contest": 37,
+          "tree_captured": 32
+        }
+      ]
+    },
+    "ea0da721a26d892c456fe7b0054bb018-1": {
+      "ranks": [
+        2,
+        3
+      ],
+      "length": 299,
+      "random_seed": 703079157,
+      "env_uuid": "63c80a16-e360-11f1-8ba5-fa163e881fe8",
+      "official_scores": [
+        4770.5,
+        5681.67
+      ],
+      "is_later": false,
+      "canonical_sha256": "613ea9194b75e70028b76b7fae10ebd640c8ccce1f9bd252c6ea78c62581089f",
+      "original_source": "cached",
+      "public_url": "https://117.72.210.134/replay/ea0da721a26d892c456fe7b0054bb018/1",
+      "git_paths": [
+        "data/master6_corpus/ea0da721a26d892c456fe7b0054bb018-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 214,
+          "intercept_chosen": 158,
+          "intercept_confirmed": 1,
+          "cargo_endangered": 219,
+          "cargo_safe_landing_chosen": 212,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 64,
+          "friendly_contest": 21,
+          "tree_captured": 34
+        },
+        {
+          "intercept_opportunity": 195,
+          "intercept_chosen": 124,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 245,
+          "cargo_safe_landing_chosen": 241,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 20,
+          "enemy_on_own_tree": 41,
+          "friendly_contest": 19,
+          "tree_captured": 18
+        }
+      ]
+    },
+    "eca9e0ff749ffd031fbc451255d158f1-1": {
+      "ranks": [
+        1,
+        4
+      ],
+      "length": 299,
+      "random_seed": 706747844,
+      "env_uuid": "54ef4809-e197-11f1-ae38-fa163e881fe8",
+      "official_scores": [
+        7710.49,
+        6902.85
+      ],
+      "is_later": false,
+      "canonical_sha256": "3d6d37dfe23cb78b06575b5330eb6d4ba0241e6e476e3c83dadfc4b76d76b15b",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/eca9e0ff749ffd031fbc451255d158f1/1",
+      "git_paths": [
+        "data/m9xj630_corpus/eca9e0ff749ffd031fbc451255d158f1-1.json.gz",
+        "data/master5s_corpus/eca9e0ff749ffd031fbc451255d158f1-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 185,
+          "intercept_chosen": 123,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 314,
+          "cargo_safe_landing_chosen": 309,
+          "heavy_clear_home_opportunity": 40,
+          "heavy_clear_home_chosen": 29,
+          "enemy_on_own_tree": 51,
+          "friendly_contest": 13,
+          "tree_captured": 28
+        },
+        {
+          "intercept_opportunity": 243,
+          "intercept_chosen": 175,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 246,
+          "cargo_safe_landing_chosen": 238,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 49,
+          "friendly_contest": 24,
+          "tree_captured": 17
+        }
+      ]
+    },
+    "edb585cf77ed804bcf68276515b1f78e-1": {
+      "ranks": [
+        3,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1997039256,
+      "env_uuid": "c33bda8a-e241-11f1-a5ab-fa163e881fe8",
+      "official_scores": [
+        7175.09,
+        7549.02
+      ],
+      "is_later": false,
+      "canonical_sha256": "d4a01fbf62651979ce6d0a8ad28f0ed6a581cca76d4e31cc3ca1a21032ecb578",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/edb585cf77ed804bcf68276515b1f78e/1",
+      "git_paths": [
+        "data/it720_corpus/edb585cf77ed804bcf68276515b1f78e-1.json.gz",
+        "data/master5s_corpus/edb585cf77ed804bcf68276515b1f78e-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 216,
+          "intercept_chosen": 141,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 240,
+          "cargo_safe_landing_chosen": 223,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 61,
+          "friendly_contest": 22,
+          "tree_captured": 25
+        },
+        {
+          "intercept_opportunity": 202,
+          "intercept_chosen": 124,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 269,
+          "cargo_safe_landing_chosen": 264,
+          "heavy_clear_home_opportunity": 31,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 43,
+          "friendly_contest": 22,
+          "tree_captured": 13
+        }
+      ]
+    },
+    "eef68438eba8b4db68f1bb4b8fb918a3-1": {
+      "ranks": [
+        4,
+        1
+      ],
+      "length": 299,
+      "random_seed": 60459157,
+      "env_uuid": "54c484fd-e17e-11f1-a0d2-fa163e881fe8",
+      "official_scores": [
+        6489.92,
+        7695.35
+      ],
+      "is_later": false,
+      "canonical_sha256": "a042079d5beb73e15118d9c461131d87ff09fd32ebb035047eedc5d3128ff36d",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/eef68438eba8b4db68f1bb4b8fb918a3/1",
+      "git_paths": [
+        "data/m9xj630_corpus/eef68438eba8b4db68f1bb4b8fb918a3-1.json.gz",
+        "data/master5s_corpus/eef68438eba8b4db68f1bb4b8fb918a3-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 140,
+          "intercept_chosen": 92,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 249,
+          "cargo_safe_landing_chosen": 242,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 54,
+          "friendly_contest": 17,
+          "tree_captured": 22
+        },
+        {
+          "intercept_opportunity": 198,
+          "intercept_chosen": 119,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 170,
+          "cargo_safe_landing_chosen": 167,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 20,
+          "enemy_on_own_tree": 77,
+          "friendly_contest": 34,
+          "tree_captured": 26
+        }
+      ]
+    },
+    "ef8c2fbd6a5f7c9b58bb2b091a96d0c1-1": {
+      "ranks": [
+        5,
+        1
+      ],
+      "length": 299,
+      "random_seed": 336556402,
+      "env_uuid": "ae580923-e1c9-11f1-a1f0-fa163e881fe8",
+      "official_scores": [
+        7111.39,
+        8338.91
+      ],
+      "is_later": false,
+      "canonical_sha256": "cac0ffae3ce7622e51cc7fe7d3af11a1f6a05bd06cedb1ddfe60cce0e050f837",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/ef8c2fbd6a5f7c9b58bb2b091a96d0c1/1",
+      "git_paths": [
+        "data/fablev7_corpus/ef8c2fbd6a5f7c9b58bb2b091a96d0c1-1.json.gz",
+        "data/master5s_corpus/ef8c2fbd6a5f7c9b58bb2b091a96d0c1-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 226,
+          "intercept_chosen": 164,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 178,
+          "cargo_safe_landing_chosen": 176,
+          "heavy_clear_home_opportunity": 38,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 54,
+          "friendly_contest": 20,
+          "tree_captured": 27
+        },
+        {
+          "intercept_opportunity": 109,
+          "intercept_chosen": 61,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 266,
+          "cargo_safe_landing_chosen": 265,
+          "heavy_clear_home_opportunity": 50,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 73,
+          "friendly_contest": 40,
+          "tree_captured": 29
+        }
+      ]
+    },
+    "ef8e5471962e780b6b77218e336460a4-1": {
+      "ranks": [
+        3,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1844740699,
+      "env_uuid": "89ee95c6-e251-11f1-83b6-fa163e881fe8",
+      "official_scores": [
+        7579.96,
+        6722.4
+      ],
+      "is_later": false,
+      "canonical_sha256": "0406c42ae5da7fb38f7f4c71683aa960ed666b785d13e7dc97b3ea3f0e508f91",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/ef8e5471962e780b6b77218e336460a4/1",
+      "git_paths": [
+        "data/fablev7_corpus/ef8e5471962e780b6b77218e336460a4-1.json.gz",
+        "data/it720_corpus/ef8e5471962e780b6b77218e336460a4-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 133,
+          "intercept_chosen": 90,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 264,
+          "cargo_safe_landing_chosen": 262,
+          "heavy_clear_home_opportunity": 39,
+          "heavy_clear_home_chosen": 32,
+          "enemy_on_own_tree": 56,
+          "friendly_contest": 24,
+          "tree_captured": 22
+        },
+        {
+          "intercept_opportunity": 207,
+          "intercept_chosen": 148,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 202,
+          "cargo_safe_landing_chosen": 199,
+          "heavy_clear_home_opportunity": 32,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 46,
+          "friendly_contest": 27,
+          "tree_captured": 14
+        }
+      ]
+    },
+    "f306679c3694d94f4bdb3e868fb15955-1": {
+      "ranks": [
+        5,
+        1
+      ],
+      "length": 299,
+      "random_seed": 690570019,
+      "env_uuid": "e130a38d-e1cd-11f1-88e6-fa163e881fe8",
+      "official_scores": [
+        6928.1,
+        8757.41
+      ],
+      "is_later": false,
+      "canonical_sha256": "2e8e160528fad01566e0e7ed0d4e4fef35b2744e016334198c133f54b58f769b",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/f306679c3694d94f4bdb3e868fb15955/1",
+      "git_paths": [
+        "data/fablev7_corpus/f306679c3694d94f4bdb3e868fb15955-1.json.gz",
+        "data/master5s_corpus/f306679c3694d94f4bdb3e868fb15955-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 187,
+          "intercept_chosen": 131,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 351,
+          "cargo_safe_landing_chosen": 348,
+          "heavy_clear_home_opportunity": 27,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 55,
+          "friendly_contest": 17,
+          "tree_captured": 30
+        },
+        {
+          "intercept_opportunity": 312,
+          "intercept_chosen": 232,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 226,
+          "cargo_safe_landing_chosen": 224,
+          "heavy_clear_home_opportunity": 27,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 81,
+          "friendly_contest": 45,
+          "tree_captured": 30
+        }
+      ]
+    },
+    "f3d51b78d834bc998582f6657012bd20-1": {
+      "ranks": [
+        5,
+        2
+      ],
+      "length": 299,
+      "random_seed": 117070563,
+      "env_uuid": "d224534d-e33a-11f1-b9f8-fa163e881fe8",
+      "official_scores": [
+        1885.93,
+        8556.38
+      ],
+      "is_later": false,
+      "canonical_sha256": "ac50e6086b6dde5538069de9ed133a50d2981d668957d89403c2f7cd37c8063c",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/f3d51b78d834bc998582f6657012bd20/1",
+      "git_paths": [
+        "data/master6_corpus/f3d51b78d834bc998582f6657012bd20-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 18,
+          "intercept_chosen": 10,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 124,
+          "cargo_safe_landing_chosen": 124,
+          "heavy_clear_home_opportunity": 7,
+          "heavy_clear_home_chosen": 6,
+          "enemy_on_own_tree": 41,
+          "friendly_contest": 17,
+          "tree_captured": 18
+        },
+        {
+          "intercept_opportunity": 119,
+          "intercept_chosen": 98,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 25,
+          "cargo_safe_landing_chosen": 25,
+          "heavy_clear_home_opportunity": 43,
+          "heavy_clear_home_chosen": 26,
+          "enemy_on_own_tree": 59,
+          "friendly_contest": 19,
+          "tree_captured": 24
+        }
+      ]
+    },
+    "f64fa44f1c884f04b4b3941c040c3b39-1": {
+      "ranks": [
+        2,
+        4
+      ],
+      "length": 299,
+      "random_seed": 2052220717,
+      "env_uuid": "d5824ff5-e338-11f1-9727-fa163e881fe8",
+      "official_scores": [
+        6017.06,
+        7211.92
+      ],
+      "is_later": false,
+      "canonical_sha256": "b59cf204af76578be07803f7e3813c31b6e169ac3a2fc4be5e61c23fb4996e29",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/f64fa44f1c884f04b4b3941c040c3b39/1",
+      "git_paths": [
+        "data/master6_corpus/f64fa44f1c884f04b4b3941c040c3b39-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 237,
+          "intercept_chosen": 169,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 210,
+          "cargo_safe_landing_chosen": 203,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 59,
+          "friendly_contest": 27,
+          "tree_captured": 27
+        },
+        {
+          "intercept_opportunity": 148,
+          "intercept_chosen": 104,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 260,
+          "cargo_safe_landing_chosen": 258,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 25,
+          "enemy_on_own_tree": 51,
+          "friendly_contest": 15,
+          "tree_captured": 19
+        }
+      ]
+    },
+    "f7118e8abde06045fce7ef098e985610-1": {
+      "ranks": [
+        4,
+        5
+      ],
+      "length": 299,
+      "random_seed": 1222082681,
+      "env_uuid": "5e127e23-e1f3-11f1-8226-fa163e881fe8",
+      "official_scores": [
+        7846.15,
+        7659.82
+      ],
+      "is_later": false,
+      "canonical_sha256": "f9b0f745f7aa8bcb509cc9e48f30640ab47b31bba1a293f49aff26866da541bd",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/f7118e8abde06045fce7ef098e985610/1",
+      "git_paths": [
+        "data/fablev7_corpus/f7118e8abde06045fce7ef098e985610-1.json.gz",
+        "data/m9xj630_corpus/f7118e8abde06045fce7ef098e985610-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 317,
+          "intercept_chosen": 233,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 263,
+          "cargo_safe_landing_chosen": 254,
+          "heavy_clear_home_opportunity": 38,
+          "heavy_clear_home_chosen": 29,
+          "enemy_on_own_tree": 56,
+          "friendly_contest": 19,
+          "tree_captured": 23
+        },
+        {
+          "intercept_opportunity": 221,
+          "intercept_chosen": 155,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 333,
+          "cargo_safe_landing_chosen": 330,
+          "heavy_clear_home_opportunity": 21,
+          "heavy_clear_home_chosen": 15,
+          "enemy_on_own_tree": 57,
+          "friendly_contest": 27,
+          "tree_captured": 19
+        }
+      ]
+    },
+    "f8028deec3901b3fd25bf870a1a20d56-1": {
+      "ranks": [
+        2,
+        4
+      ],
+      "length": 299,
+      "random_seed": 753599469,
+      "env_uuid": "f4c3d6ff-e393-11f1-812c-fa163e881fe8",
+      "official_scores": [
+        5628.64,
+        3998.22
+      ],
+      "is_later": true,
+      "canonical_sha256": "70d753d0d992f28b0ccaac021261687c0a45df426025dd7e2379c3d928abb837",
+      "original_source": "public",
+      "public_url": "https://117.72.210.134/replay/f8028deec3901b3fd25bf870a1a20d56/1",
+      "git_paths": [],
+      "git_copies": 0,
+      "by_seat": [
+        {
+          "intercept_opportunity": 178,
+          "intercept_chosen": 123,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 323,
+          "cargo_safe_landing_chosen": 320,
+          "heavy_clear_home_opportunity": 23,
+          "heavy_clear_home_chosen": 17,
+          "enemy_on_own_tree": 52,
+          "friendly_contest": 15,
+          "tree_captured": 22
+        },
+        {
+          "intercept_opportunity": 259,
+          "intercept_chosen": 194,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 218,
+          "cargo_safe_landing_chosen": 213,
+          "heavy_clear_home_opportunity": 16,
+          "heavy_clear_home_chosen": 12,
+          "enemy_on_own_tree": 41,
+          "friendly_contest": 24,
+          "tree_captured": 12
+        }
+      ]
+    },
+    "f975d32b62d02b7cb49a185f918254b5-1": {
+      "ranks": [
+        4,
+        2
+      ],
+      "length": 299,
+      "random_seed": 2126432888,
+      "env_uuid": "cf56827d-e37b-11f1-9a25-fa163e881fe8",
+      "official_scores": [
+        6985.54,
+        7767.85
+      ],
+      "is_later": true,
+      "canonical_sha256": "2480ce8b76ddddacd7b5dca61c65b06afc3508d23c5d337e309b2efd4280002f",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/f975d32b62d02b7cb49a185f918254b5/1",
+      "git_paths": [
+        "data/master6_corpus/f975d32b62d02b7cb49a185f918254b5-1.json.gz"
+      ],
+      "git_copies": 1,
+      "by_seat": [
+        {
+          "intercept_opportunity": 166,
+          "intercept_chosen": 99,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 272,
+          "cargo_safe_landing_chosen": 253,
+          "heavy_clear_home_opportunity": 29,
+          "heavy_clear_home_chosen": 20,
+          "enemy_on_own_tree": 47,
+          "friendly_contest": 30,
+          "tree_captured": 14
+        },
+        {
+          "intercept_opportunity": 247,
+          "intercept_chosen": 172,
+          "intercept_confirmed": 2,
+          "cargo_endangered": 221,
+          "cargo_safe_landing_chosen": 208,
+          "heavy_clear_home_opportunity": 28,
+          "heavy_clear_home_chosen": 20,
+          "enemy_on_own_tree": 50,
+          "friendly_contest": 17,
+          "tree_captured": 27
+        }
+      ]
+    },
+    "ff09b13031cfcd11d59631affed007d6-1": {
+      "ranks": [
+        4,
+        1
+      ],
+      "length": 299,
+      "random_seed": 1638700706,
+      "env_uuid": "caf05939-e181-11f1-8d5c-fa163e881fe8",
+      "official_scores": [
+        6789.58,
+        7877.39
+      ],
+      "is_later": false,
+      "canonical_sha256": "0abca3caff908c9ff034eeec8d5e02504fa1377e0c2051629a7cd4af962507a7",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/ff09b13031cfcd11d59631affed007d6/1",
+      "git_paths": [
+        "data/m9xj630_corpus/ff09b13031cfcd11d59631affed007d6-1.json.gz",
+        "data/master5s_corpus/ff09b13031cfcd11d59631affed007d6-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 266,
+          "intercept_chosen": 192,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 285,
+          "cargo_safe_landing_chosen": 269,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 23,
+          "enemy_on_own_tree": 52,
+          "friendly_contest": 28,
+          "tree_captured": 18
+        },
+        {
+          "intercept_opportunity": 211,
+          "intercept_chosen": 134,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 337,
+          "cargo_safe_landing_chosen": 333,
+          "heavy_clear_home_opportunity": 24,
+          "heavy_clear_home_chosen": 22,
+          "enemy_on_own_tree": 48,
+          "friendly_contest": 24,
+          "tree_captured": 19
+        }
+      ]
+    },
+    "ffac01bf78c476901cbfe79395c10592-1": {
+      "ranks": [
+        5,
+        3
+      ],
+      "length": 299,
+      "random_seed": 1878024946,
+      "env_uuid": "fcc610c8-e249-11f1-a4f5-fa163e881fe8",
+      "official_scores": [
+        6799.34,
+        7042.71
+      ],
+      "is_later": false,
+      "canonical_sha256": "71b6586c2a88371c892b548d08a2d20a639a4f9c2fe1aaad5282c61fd463b0a6",
+      "original_source": "git",
+      "public_url": "https://117.72.210.134/replay/ffac01bf78c476901cbfe79395c10592/1",
+      "git_paths": [
+        "data/fablev7_corpus/ffac01bf78c476901cbfe79395c10592-1.json.gz",
+        "data/it720_corpus/ffac01bf78c476901cbfe79395c10592-1.json.gz"
+      ],
+      "git_copies": 2,
+      "by_seat": [
+        {
+          "intercept_opportunity": 255,
+          "intercept_chosen": 185,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 274,
+          "cargo_safe_landing_chosen": 271,
+          "heavy_clear_home_opportunity": 25,
+          "heavy_clear_home_chosen": 18,
+          "enemy_on_own_tree": 43,
+          "friendly_contest": 24,
+          "tree_captured": 13
+        },
+        {
+          "intercept_opportunity": 245,
+          "intercept_chosen": 176,
+          "intercept_confirmed": 0,
+          "cargo_endangered": 254,
+          "cargo_safe_landing_chosen": 244,
+          "heavy_clear_home_opportunity": 36,
+          "heavy_clear_home_chosen": 24,
+          "enemy_on_own_tree": 68,
+          "friendly_contest": 30,
+          "tree_captured": 29
+        }
+      ]
+    }
+  }
+}

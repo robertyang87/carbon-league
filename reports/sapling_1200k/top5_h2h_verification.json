@@ -1,0 +1,184 @@
+{
+  "schema": "sapling-top-five-independent-verification/1",
+  "dataset_manifest_sha256": "566bd7437a997078a751de6a7f0c9d0f8af1f41a901d6c0ea66b9f6192b16a9b",
+  "frozen_top5_strategy_ids": {
+    "claude-AlphaCarbon-Master5s": "9d61f0056baf7f63703a671cd438bef2",
+    "claude-AlphaCarbon-Master6": "ecde65e596acbeb9ba5feca22e05f100",
+    "RyanX-AIPowercore-it720-preview": "d1ab80fcc01010c949592984c617db30",
+    "RyanX-AIPowercore-M9XJ-630": "b3fa633052e17329f34054bab0090128",
+    "ClaudeFable5.2-v7": "2d4e4c772f057208b7121ed76dba4f33"
+  },
+  "verified_unique_matches": 100,
+  "verified_unique_engine_seeds": 100,
+  "score_table_sha256": "5b13d5efd211174127d3ea645f6a49b81a130ca675d0079cd347b3c3ff3b5e19",
+  "paired_seats_verified_using_public_score_order_and_replay_rewards": true,
+  "training_validation_distinct_game_ids_and_engine_seeds": true,
+  "prior_v1_games": 16,
+  "prior_direct_3s2_holdout_games": 4,
+  "overlapping_prior_game_ids_or_seeds": 0,
+  "overlap_with_formal_exam_seed_range_and_three_earlier_research_maps": 0,
+  "eligible_pair_split_counts": {
+    "ClaudeFable5.2-v7 vs RyanX-AIPowercore-M9XJ-630": {
+      "val": 2,
+      "train": 9
+    },
+    "ClaudeFable5.2-v7 vs RyanX-AIPowercore-it720-preview": {
+      "val": 3,
+      "train": 10
+    },
+    "ClaudeFable5.2-v7 vs claude-AlphaCarbon-Master5s": {
+      "val": 2,
+      "train": 9
+    },
+    "ClaudeFable5.2-v7 vs claude-AlphaCarbon-Master6": {
+      "val": 2,
+      "train": 10
+    },
+    "RyanX-AIPowercore-M9XJ-630 vs RyanX-AIPowercore-it720-preview": {
+      "val": 1,
+      "train": 1
+    },
+    "RyanX-AIPowercore-M9XJ-630 vs claude-AlphaCarbon-Master5s": {
+      "val": 2,
+      "train": 8
+    },
+    "RyanX-AIPowercore-M9XJ-630 vs claude-AlphaCarbon-Master6": {
+      "val": 2,
+      "train": 9
+    },
+    "RyanX-AIPowercore-it720-preview vs claude-AlphaCarbon-Master5s": {
+      "val": 3,
+      "train": 11
+    },
+    "RyanX-AIPowercore-it720-preview vs claude-AlphaCarbon-Master6": {
+      "val": 3,
+      "train": 11
+    },
+    "claude-AlphaCarbon-Master5s vs claude-AlphaCarbon-Master6": {
+      "val": 1,
+      "train": 1
+    }
+  },
+  "counts": {
+    "val": {
+      "rows": 12558,
+      "active_slots": 131079,
+      "actionable_slots": 111821,
+      "forced_base_none": 19258,
+      "actionable_other": 94262,
+      "attack": 5911,
+      "cargo_defense": 9771,
+      "tree_defense": 2007,
+      "defense": 11648,
+      "mask_roots_independently_rebuilt": 420,
+      "actual_expert_labels_independently_rebuilt": 3593,
+      "mask_worker_spots_independently_rebuilt": 2753
+    },
+    "train": {
+      "rows": 47168,
+      "active_slots": 501325,
+      "actionable_slots": 431619,
+      "forced_base_none": 69706,
+      "actionable_other": 362956,
+      "attack": 24273,
+      "cargo_defense": 36958,
+      "tree_defense": 7974,
+      "defense": 44390,
+      "mask_roots_independently_rebuilt": 1580,
+      "actual_expert_labels_independently_rebuilt": 13506,
+      "mask_worker_spots_independently_rebuilt": 10346
+    }
+  },
+  "tactical_opportunity_check": "Independent reconstruction from current publicly observed players state, legal move geometry, remaining time and rule configuration. No actions or hidden carbons used to infer opportunity. Logged actions used separately to check expert y.",
+  "actionable_definition": "Active slot with at least two legal choices; forced base NONE excluded.",
+  "late_holdout": {
+    "games": 7,
+    "manifest_sha256": "d132c41d4b93de18f6db8ee7393426fd83a564bc34cf33c789c2a63df2bbaa7f",
+    "source_digest_verified_each": true,
+    "overlapping_game_ids_or_seeds": 0,
+    "evaluation_sha256": "413a7c0236a463ea907d31204ea299994b2a9b77973f2f7bc71ba7d81996eade",
+    "verified_v2_weights_match": true,
+    "actionable_slots": 2569,
+    "forced_none_excluded": 362
+  },
+  "strategy_id_provenance": "Unique score-table names mapped to the five ranking registration IDs. Score records provide names and seat order, and replay rewards confirm seat orientation.",
+  "model_export": {
+    "weight_sha256": "cef478dcbb96b1ac9304b9da56623cff578994283e71a6893dd6530978a33646",
+    "pack_sha256": "dc20c132a80424e54c3a61fac7c3c31eca13c79119073165b6693b27cf07ce29",
+    "pack_bytes": 1674060,
+    "parameter_count": 1206476,
+    "changed_weight_arrays": 95,
+    "total_weight_arrays": 105,
+    "unchanged_auxiliary_and_value_arrays": 10,
+    "numeric_checks": {
+      "parameter_count": 1206476,
+      "cfg": {
+        "C": 93,
+        "NB": 6,
+        "D": 96,
+        "NH": 4,
+        "L": 1,
+        "E": 32,
+        "G": 3,
+        "TA": 0
+      },
+      "numpy_group_count": 3,
+      "torch_group_count": 3,
+      "roots": 16,
+      "legal_joint_candidates": 38,
+      "candidates_changing_prefix_features": 14,
+      "candidates_changing_prefix_legality": 4,
+      "max_abs_errors": {
+        "torch_np_logits": 2.4437904357910156e-06,
+        "torch_np_value": 3.8538289542922044e-07,
+        "torch_np_utility": 1.244995371241231e-07,
+        "torch_sequence_logits": 0.0,
+        "torch_sequence_value": 0.0,
+        "np_batch_tokens": 2.7418136596679688e-06,
+        "np_batch_context": 1.9073486328125e-06,
+        "np_batch_forced_logits": 2.6226043701171875e-06
+      },
+      "batch_greedy_label_differences": 0
+    },
+    "sequential_public_pack_vs_dequantized_calls": 16,
+    "input_sha256": "954063d6378a61edf7a47317070e8d447a1cb83588c8c86ad8f501c678508583",
+    "source": "data/master6s_corpus/21f9889b21072db820926c967d5bdb85-1.json.gz"
+  },
+  "direct_exam": {
+    "rehashed_live_temporary_exam_pack_sha256": "dc20c132a80424e54c3a61fac7c3c31eca13c79119073165b6693b27cf07ce29",
+    "release_pack_matched": true,
+    "exam_receipt": "elite_exam_top5_h2h_v2.json",
+    "exam_receipt_sha256": "3730385aa406c3b567e0144deac70cd8858fea627090795aac32b1f70a1e7f64",
+    "map": 620081731,
+    "unique_maps": 1,
+    "distinct_seats": 2,
+    "registered_exam": false,
+    "comparator_map_reused": true
+  },
+  "heldout_actionable_all_from_training_receipt": {
+    "before": {
+      "all": {
+        "slots": 111821,
+        "ce": 1.0611686331469385,
+        "agreement": 0.5742123572495328
+      },
+      "other": {
+        "slots": 94262,
+        "ce": 1.0719243236614908,
+        "agreement": 0.5704313509155333
+      }
+    },
+    "after": {
+      "all": {
+        "slots": 111821,
+        "ce": 0.9494794242640345,
+        "agreement": 0.6199282782303861
+      },
+      "other": {
+        "slots": 94262,
+        "ce": 0.9557835726246015,
+        "agreement": 0.6183085442702255
+      }
+    }
+  }
+}

@@ -1,0 +1,1864 @@
+{
+  "format": "sapling-top5-h2h-bc/2",
+  "parent_sha256": "c75b2848eec7f35a20f3e39486d3da4ef551e1c0d9a0176de2d0503e06c28196",
+  "dataset_manifest_sha256": "566bd7437a997078a751de6a7f0c9d0f8af1f41a901d6c0ea66b9f6192b16a9b",
+  "prior_dataset_manifest_sha256": "5f089495d6578c06dad13e933c21aefe08a5be3d8143b636c1b1b72cc2cacec3",
+  "settings": {
+    "updates": 256,
+    "bs": 24,
+    "lr": 0.00025,
+    "threads": 2,
+    "device": "cpu",
+    "tactical_factor": 1.5,
+    "seed": 551189
+  },
+  "style": 2,
+  "runner_sha256": "9fabd9c7d65301f94fb8e96c2286110495e1210211e97224f96ce4ee784b0af6",
+  "params": 1206476,
+  "train_games": 79,
+  "val_games": 21,
+  "train_rows": 47168,
+  "val_rows": 12558,
+  "train_rows_seen": 5747,
+  "train_games_seen": 79,
+  "tactical_slot_exposures": {
+    "attack": 3132,
+    "defense": 5756,
+    "cargo_defense": 4811,
+    "tree_defense": 1021
+  },
+  "weighting": "sqrt role/action BC, forced base NONE excluded; attack or defense x factor once",
+  "tactical_fraction_unweighted_decisions": 0.1590824314962965,
+  "weight_mass_tactical_before": 0.16120028495788574,
+  "weight_mass_tactical_after": 0.22376488149166107,
+  "train_tactical_slot_counts": {
+    "attack": 24273,
+    "defense": 44390,
+    "cargo_defense": 36958,
+    "tree_defense": 7974
+  },
+  "objective": "policy CE; no terminal returns, full-carbon targets or future signals",
+  "before": {
+    "train": {
+      "contexts": {
+        "attack": {
+          "slots": 131,
+          "games": 64,
+          "ce": 1.0061162331404576,
+          "agreement": 0.6564885496183206,
+          "by_role": {
+            "collector": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "planter": {
+              "slots": 131,
+              "games": 64,
+              "ce": 1.0061162331404576,
+              "agreement": 0.6564885496183206
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "defense": {
+          "slots": 221,
+          "games": 74,
+          "ce": 1.0047873852003315,
+          "agreement": 0.5565610859728507,
+          "by_role": {
+            "collector": {
+              "slots": 221,
+              "games": 74,
+              "ce": 1.0047873852003315,
+              "agreement": 0.5565610859728507
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "cargo_defense": {
+          "slots": 179,
+          "games": 68,
+          "ce": 0.9570247499381489,
+          "agreement": 0.547486033519553,
+          "by_role": {
+            "collector": {
+              "slots": 179,
+              "games": 68,
+              "ce": 0.9570247499381489,
+              "agreement": 0.547486033519553
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "tree_defense": {
+          "slots": 46,
+          "games": 37,
+          "ce": 1.172050598522891,
+          "agreement": 0.5869565217391305,
+          "by_role": {
+            "collector": {
+              "slots": 46,
+              "games": 37,
+              "ce": 1.172050598522891,
+              "agreement": 0.5869565217391305
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "all": {
+          "slots": 2723,
+          "games": 79,
+          "ce": 0.9192730936378595,
+          "agreement": 0.6327579875137715,
+          "by_role": {
+            "collector": {
+              "slots": 1667,
+              "games": 79,
+              "ce": 1.0183370229839803,
+              "agreement": 0.5974805038992201
+            },
+            "planter": {
+              "slots": 544,
+              "games": 79,
+              "ce": 1.1737104896456003,
+              "agreement": 0.5349264705882353
+            },
+            "base": {
+              "slots": 512,
+              "games": 79,
+              "ce": 0.32639513729372993,
+              "agreement": 0.8515625
+            }
+          }
+        },
+        "tactical": {
+          "slots": 352,
+          "games": 77,
+          "ce": 1.0052819280416854,
+          "agreement": 0.59375,
+          "by_role": {
+            "collector": {
+              "slots": 221,
+              "games": 74,
+              "ce": 1.0047873852003315,
+              "agreement": 0.5565610859728507
+            },
+            "planter": {
+              "slots": 131,
+              "games": 64,
+              "ce": 1.0061162331404576,
+              "agreement": 0.6564885496183206
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "overlap": {
+          "slots": 0,
+          "games": 0,
+          "ce": null,
+          "agreement": null,
+          "by_role": {
+            "collector": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "other": {
+          "slots": 2371,
+          "games": 79,
+          "ce": 0.90650417347331,
+          "agreement": 0.6385491353859131,
+          "by_role": {
+            "collector": {
+              "slots": 1446,
+              "games": 79,
+              "ce": 1.0204078874031963,
+              "agreement": 0.6037344398340249
+            },
+            "planter": {
+              "slots": 413,
+              "games": 79,
+              "ce": 1.226869926938999,
+              "agreement": 0.4963680387409201
+            },
+            "base": {
+              "slots": 512,
+              "games": 79,
+              "ce": 0.32639513729372993,
+              "agreement": 0.8515625
+            }
+          }
+        }
+      },
+      "roles": {
+        "collector": {
+          "n": 1667,
+          "label_counts": [
+            429,
+            333,
+            313,
+            275,
+            317
+          ],
+          "prediction_counts": [
+            476,
+            301,
+            262,
+            317,
+            311
+          ],
+          "confusion_label_by_pred": [
+            [
+              316,
+              23,
+              19,
+              40,
+              31
+            ],
+            [
+              43,
+              182,
+              30,
+              30,
+              48
+            ],
+            [
+              49,
+              40,
+              161,
+              36,
+              27
+            ],
+            [
+              33,
+              20,
+              32,
+              161,
+              29
+            ],
+            [
+              35,
+              36,
+              20,
+              50,
+              176
+            ]
+          ],
+          "accuracy": 0.5974805038992201,
+          "macro_recall_supported_actions": 0.5876359745443105
+        },
+        "planter": {
+          "n": 544,
+          "label_counts": [
+            67,
+            107,
+            110,
+            133,
+            127
+          ],
+          "prediction_counts": [
+            69,
+            105,
+            85,
+            137,
+            148
+          ],
+          "confusion_label_by_pred": [
+            [
+              43,
+              4,
+              6,
+              7,
+              7
+            ],
+            [
+              8,
+              53,
+              10,
+              13,
+              23
+            ],
+            [
+              9,
+              11,
+              45,
+              23,
+              22
+            ],
+            [
+              5,
+              22,
+              14,
+              73,
+              19
+            ],
+            [
+              4,
+              15,
+              10,
+              21,
+              77
+            ]
+          ],
+          "accuracy": 0.5349264705882353,
+          "macro_recall_supported_actions": 0.540276089944064
+        },
+        "base": {
+          "n": 512,
+          "label_counts": [
+            446,
+            36,
+            30,
+            0,
+            0
+          ],
+          "prediction_counts": [
+            408,
+            99,
+            5,
+            0,
+            0
+          ],
+          "confusion_label_by_pred": [
+            [
+              401,
+              41,
+              4,
+              0,
+              0
+            ],
+            [
+              2,
+              34,
+              0,
+              0,
+              0
+            ],
+            [
+              5,
+              24,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "accuracy": 0.8515625,
+          "macro_recall_supported_actions": 0.6256269722637436
+        },
+        "base_recruit_available": {
+          "n": 152,
+          "teacher_recruits": 66,
+          "predicted_recruits": 104,
+          "correct": 76
+        },
+        "base_forced_none_n": 360
+      }
+    },
+    "val": {
+      "contexts": {
+        "attack": {
+          "slots": 5911,
+          "games": 21,
+          "ce": 1.0701022268425924,
+          "agreement": 0.611740822195906,
+          "by_role": {
+            "collector": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "planter": {
+              "slots": 5911,
+              "games": 21,
+              "ce": 1.0701022268425924,
+              "agreement": 0.611740822195906
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "defense": {
+          "slots": 11648,
+          "games": 21,
+          "ce": 0.9695941678638235,
+          "agreement": 0.5857657967032966,
+          "by_role": {
+            "collector": {
+              "slots": 11648,
+              "games": 21,
+              "ce": 0.9695941678638235,
+              "agreement": 0.5857657967032966
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "cargo_defense": {
+          "slots": 9771,
+          "games": 21,
+          "ce": 0.9666308428842092,
+          "agreement": 0.5701565858151674,
+          "by_role": {
+            "collector": {
+              "slots": 9771,
+              "games": 21,
+              "ce": 0.9666308428842092,
+              "agreement": 0.5701565858151674
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "tree_defense": {
+          "slots": 2007,
+          "games": 21,
+          "ce": 1.0084306466795494,
+          "agreement": 0.6552067762830095,
+          "by_role": {
+            "collector": {
+              "slots": 2007,
+              "games": 21,
+              "ce": 1.0084306466795494,
+              "agreement": 0.6552067762830095
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "all": {
+          "slots": 131079,
+          "games": 21,
+          "ce": 0.9052627631208952,
+          "agreement": 0.6367686662241854,
+          "by_role": {
+            "collector": {
+              "slots": 81547,
+              "games": 21,
+              "ce": 1.0084276386321738,
+              "agreement": 0.6072449017131225
+            },
+            "planter": {
+              "slots": 24416,
+              "games": 21,
+              "ce": 1.2459064564824567,
+              "agreement": 0.48390399737876805
+            },
+            "base": {
+              "slots": 25116,
+              "games": 21,
+              "ce": 0.23915579861882028,
+              "agreement": 0.8812310877528269
+            }
+          }
+        },
+        "tactical": {
+          "slots": 17559,
+          "games": 21,
+          "ce": 1.00342884732299,
+          "agreement": 0.594509937923572,
+          "by_role": {
+            "collector": {
+              "slots": 11648,
+              "games": 21,
+              "ce": 0.9695941678638235,
+              "agreement": 0.5857657967032966
+            },
+            "planter": {
+              "slots": 5911,
+              "games": 21,
+              "ce": 1.0701022268425924,
+              "agreement": 0.611740822195906
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "overlap": {
+          "slots": 0,
+          "games": 0,
+          "ce": null,
+          "agreement": null,
+          "by_role": {
+            "collector": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "other": {
+          "slots": 113520,
+          "games": 21,
+          "ce": 0.8900786698113059,
+          "agreement": 0.6433051444679352,
+          "by_role": {
+            "collector": {
+              "slots": 69899,
+              "games": 21,
+              "ce": 1.0148988652235376,
+              "agreement": 0.6108241891872559
+            },
+            "planter": {
+              "slots": 18505,
+              "games": 21,
+              "ce": 1.3020631061123533,
+              "agreement": 0.44306944069170495
+            },
+            "base": {
+              "slots": 25116,
+              "games": 21,
+              "ce": 0.23915579861882028,
+              "agreement": 0.8812310877528269
+            }
+          }
+        }
+      },
+      "roles": {
+        "collector": {
+          "n": 81547,
+          "label_counts": [
+            21438,
+            15094,
+            15134,
+            14783,
+            15098
+          ],
+          "prediction_counts": [
+            23111,
+            13391,
+            13418,
+            16378,
+            15249
+          ],
+          "confusion_label_by_pred": [
+            [
+              16150,
+              1070,
+              1155,
+              1520,
+              1543
+            ],
+            [
+              1966,
+              7844,
+              1695,
+              1610,
+              1979
+            ],
+            [
+              1734,
+              1771,
+              7991,
+              2310,
+              1328
+            ],
+            [
+              1624,
+              1122,
+              1464,
+              8854,
+              1719
+            ],
+            [
+              1637,
+              1584,
+              1113,
+              2084,
+              8680
+            ]
+          ],
+          "accuracy": 0.6072449017131225,
+          "macro_recall_supported_actions": 0.5949740135586966
+        },
+        "planter": {
+          "n": 24416,
+          "label_counts": [
+            3110,
+            5519,
+            5334,
+            5317,
+            5136
+          ],
+          "prediction_counts": [
+            3518,
+            4585,
+            3714,
+            6918,
+            5681
+          ],
+          "confusion_label_by_pred": [
+            [
+              2007,
+              209,
+              142,
+              419,
+              333
+            ],
+            [
+              462,
+              2243,
+              641,
+              1049,
+              1124
+            ],
+            [
+              445,
+              809,
+              1966,
+              1366,
+              748
+            ],
+            [
+              296,
+              636,
+              468,
+              3020,
+              897
+            ],
+            [
+              308,
+              688,
+              497,
+              1064,
+              2579
+            ]
+          ],
+          "accuracy": 0.48390399737876805,
+          "macro_recall_supported_actions": 0.498092393195617
+        },
+        "base": {
+          "n": 25116,
+          "label_counts": [
+            22186,
+            1783,
+            1147,
+            0,
+            0
+          ],
+          "prediction_counts": [
+            20948,
+            3976,
+            192,
+            0,
+            0
+          ],
+          "confusion_label_by_pred": [
+            [
+              20596,
+              1509,
+              81,
+              0,
+              0
+            ],
+            [
+              213,
+              1498,
+              72,
+              0,
+              0
+            ],
+            [
+              139,
+              969,
+              39,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "accuracy": 0.8812310877528269,
+          "macro_recall_supported_actions": 0.6008306551554732
+        },
+        "base_recruit_available": {
+          "n": 5858,
+          "teacher_recruits": 2930,
+          "predicted_recruits": 4168,
+          "correct": 2875
+        },
+        "base_forced_none_n": 19258
+      }
+    }
+  },
+  "after": {
+    "train": {
+      "contexts": {
+        "attack": {
+          "slots": 131,
+          "games": 64,
+          "ce": 0.8002571786632975,
+          "agreement": 0.6946564885496184,
+          "by_role": {
+            "collector": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "planter": {
+              "slots": 131,
+              "games": 64,
+              "ce": 0.8002571786632975,
+              "agreement": 0.6946564885496184
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "defense": {
+          "slots": 221,
+          "games": 74,
+          "ce": 0.9353513532008436,
+          "agreement": 0.5927601809954751,
+          "by_role": {
+            "collector": {
+              "slots": 221,
+              "games": 74,
+              "ce": 0.9353513532008436,
+              "agreement": 0.5927601809954751
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "cargo_defense": {
+          "slots": 179,
+          "games": 68,
+          "ce": 0.8886104326359615,
+          "agreement": 0.5810055865921788,
+          "by_role": {
+            "collector": {
+              "slots": 179,
+              "games": 68,
+              "ce": 0.8886104326359615,
+              "agreement": 0.5810055865921788
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "tree_defense": {
+          "slots": 46,
+          "games": 37,
+          "ce": 1.1259537806491489,
+          "agreement": 0.6304347826086957,
+          "by_role": {
+            "collector": {
+              "slots": 46,
+              "games": 37,
+              "ce": 1.1259537806491489,
+              "agreement": 0.6304347826086957
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "all": {
+          "slots": 2723,
+          "games": 79,
+          "ce": 0.806615816714802,
+          "agreement": 0.6749908189496878,
+          "by_role": {
+            "collector": {
+              "slots": 1667,
+              "games": 79,
+              "ce": 0.9169357804671331,
+              "agreement": 0.6286742651469706
+            },
+            "planter": {
+              "slots": 544,
+              "games": 79,
+              "ce": 0.9954455556238399,
+              "agreement": 0.6194852941176471
+            },
+            "base": {
+              "slots": 512,
+              "games": 79,
+              "ce": 0.24679793089126179,
+              "agreement": 0.884765625
+            }
+          }
+        },
+        "tactical": {
+          "slots": 352,
+          "games": 77,
+          "ce": 0.8850748280178364,
+          "agreement": 0.6306818181818182,
+          "by_role": {
+            "collector": {
+              "slots": 221,
+              "games": 74,
+              "ce": 0.9353513532008436,
+              "agreement": 0.5927601809954751
+            },
+            "planter": {
+              "slots": 131,
+              "games": 64,
+              "ce": 0.8002571786632975,
+              "agreement": 0.6946564885496184
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "overlap": {
+          "slots": 0,
+          "games": 0,
+          "ce": null,
+          "agreement": null,
+          "by_role": {
+            "collector": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "other": {
+          "slots": 2371,
+          "games": 79,
+          "ce": 0.794967747554672,
+          "agreement": 0.681568958245466,
+          "by_role": {
+            "collector": {
+              "slots": 1446,
+              "games": 79,
+              "ce": 0.9141212288944153,
+              "agreement": 0.6341632088520055
+            },
+            "planter": {
+              "slots": 413,
+              "games": 79,
+              "ce": 1.057357607395828,
+              "agreement": 0.5956416464891041
+            },
+            "base": {
+              "slots": 512,
+              "games": 79,
+              "ce": 0.24679793089126179,
+              "agreement": 0.884765625
+            }
+          }
+        }
+      },
+      "roles": {
+        "collector": {
+          "n": 1667,
+          "label_counts": [
+            429,
+            333,
+            313,
+            275,
+            317
+          ],
+          "prediction_counts": [
+            527,
+            278,
+            325,
+            258,
+            279
+          ],
+          "confusion_label_by_pred": [
+            [
+              358,
+              16,
+              18,
+              17,
+              20
+            ],
+            [
+              43,
+              176,
+              48,
+              18,
+              48
+            ],
+            [
+              42,
+              38,
+              192,
+              27,
+              14
+            ],
+            [
+              40,
+              17,
+              43,
+              150,
+              25
+            ],
+            [
+              44,
+              31,
+              24,
+              46,
+              172
+            ]
+          ],
+          "accuracy": 0.6286742651469706,
+          "macro_recall_supported_actions": 0.612897437924398
+        },
+        "planter": {
+          "n": 544,
+          "label_counts": [
+            67,
+            107,
+            110,
+            133,
+            127
+          ],
+          "prediction_counts": [
+            62,
+            124,
+            113,
+            135,
+            110
+          ],
+          "confusion_label_by_pred": [
+            [
+              47,
+              9,
+              5,
+              5,
+              1
+            ],
+            [
+              4,
+              66,
+              12,
+              7,
+              18
+            ],
+            [
+              5,
+              18,
+              62,
+              19,
+              6
+            ],
+            [
+              3,
+              11,
+              20,
+              88,
+              11
+            ],
+            [
+              3,
+              20,
+              14,
+              16,
+              74
+            ]
+          ],
+          "accuracy": 0.6194852941176471,
+          "macro_recall_supported_actions": 0.6252565263098029
+        },
+        "base": {
+          "n": 512,
+          "label_counts": [
+            446,
+            36,
+            30,
+            0,
+            0
+          ],
+          "prediction_counts": [
+            445,
+            48,
+            19,
+            0,
+            0
+          ],
+          "confusion_label_by_pred": [
+            [
+              423,
+              18,
+              5,
+              0,
+              0
+            ],
+            [
+              12,
+              20,
+              4,
+              0,
+              0
+            ],
+            [
+              10,
+              10,
+              10,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "accuracy": 0.884765625,
+          "macro_recall_supported_actions": 0.6124397940541438
+        },
+        "base_recruit_available": {
+          "n": 152,
+          "teacher_recruits": 66,
+          "predicted_recruits": 67,
+          "correct": 93
+        },
+        "base_forced_none_n": 360
+      }
+    },
+    "val": {
+      "contexts": {
+        "attack": {
+          "slots": 5911,
+          "games": 21,
+          "ce": 0.9357891377392713,
+          "agreement": 0.6421925224158349,
+          "by_role": {
+            "collector": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "planter": {
+              "slots": 5911,
+              "games": 21,
+              "ce": 0.9357891377392713,
+              "agreement": 0.6421925224158349
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "defense": {
+          "slots": 11648,
+          "games": 21,
+          "ce": 0.9054101978632891,
+          "agreement": 0.6217376373626373,
+          "by_role": {
+            "collector": {
+              "slots": 11648,
+              "games": 21,
+              "ce": 0.9054101978632891,
+              "agreement": 0.6217376373626373
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "cargo_defense": {
+          "slots": 9771,
+          "games": 21,
+          "ce": 0.9101214637055527,
+          "agreement": 0.605567495650394,
+          "by_role": {
+            "collector": {
+              "slots": 9771,
+              "games": 21,
+              "ce": 0.9101214637055527,
+              "agreement": 0.605567495650394
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "tree_defense": {
+          "slots": 2007,
+          "games": 21,
+          "ce": 0.896124428588717,
+          "agreement": 0.6955655206776283,
+          "by_role": {
+            "collector": {
+              "slots": 2007,
+              "games": 21,
+              "ce": 0.896124428588717,
+              "agreement": 0.6955655206776283
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "all": {
+          "slots": 131079,
+          "games": 21,
+          "ce": 0.8099828248661387,
+          "agreement": 0.6757680482762304,
+          "by_role": {
+            "collector": {
+              "slots": 81547,
+              "games": 21,
+              "ce": 0.911846458873365,
+              "agreement": 0.6428807926717108
+            },
+            "planter": {
+              "slots": 24416,
+              "games": 21,
+              "ce": 1.0914605678213014,
+              "agreement": 0.5566841415465269
+            },
+            "base": {
+              "slots": 25116,
+              "games": 21,
+              "ce": 0.20561770564410758,
+              "agreement": 0.8983118330944417
+            }
+          }
+        },
+        "tactical": {
+          "slots": 17559,
+          "games": 21,
+          "ce": 0.9156368573317628,
+          "agreement": 0.6286234979212939,
+          "by_role": {
+            "collector": {
+              "slots": 11648,
+              "games": 21,
+              "ce": 0.9054101978632891,
+              "agreement": 0.6217376373626373
+            },
+            "planter": {
+              "slots": 5911,
+              "games": 21,
+              "ce": 0.9357891377392713,
+              "agreement": 0.6421925224158349
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "overlap": {
+          "slots": 0,
+          "games": 0,
+          "ce": null,
+          "agreement": null,
+          "by_role": {
+            "collector": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "planter": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            },
+            "base": {
+              "slots": 0,
+              "games": 0,
+              "ce": null,
+              "agreement": null
+            }
+          }
+        },
+        "other": {
+          "slots": 113520,
+          "games": 21,
+          "ce": 0.7936405137662101,
+          "agreement": 0.6830602536997886,
+          "by_role": {
+            "collector": {
+              "slots": 69899,
+              "games": 21,
+              "ce": 0.9129190002293982,
+              "agreement": 0.6464040973404483
+            },
+            "planter": {
+              "slots": 18505,
+              "games": 21,
+              "ce": 1.1411862540258342,
+              "agreement": 0.5293704404215077
+            },
+            "base": {
+              "slots": 25116,
+              "games": 21,
+              "ce": 0.20561770564410758,
+              "agreement": 0.8983118330944417
+            }
+          }
+        }
+      },
+      "roles": {
+        "collector": {
+          "n": 81547,
+          "label_counts": [
+            21438,
+            15094,
+            15134,
+            14783,
+            15098
+          ],
+          "prediction_counts": [
+            25729,
+            12411,
+            16969,
+            13499,
+            12939
+          ],
+          "confusion_label_by_pred": [
+            [
+              18013,
+              734,
+              1147,
+              761,
+              783
+            ],
+            [
+              2009,
+              8052,
+              2375,
+              1104,
+              1554
+            ],
+            [
+              1824,
+              1232,
+              9711,
+              1542,
+              825
+            ],
+            [
+              1926,
+              959,
+              2172,
+              8299,
+              1427
+            ],
+            [
+              1957,
+              1434,
+              1564,
+              1793,
+              8350
+            ]
+          ],
+          "accuracy": 0.6428807926717108,
+          "macro_recall_supported_actions": 0.6259606397166992
+        },
+        "planter": {
+          "n": 24416,
+          "label_counts": [
+            3110,
+            5519,
+            5334,
+            5317,
+            5136
+          ],
+          "prediction_counts": [
+            3074,
+            5526,
+            5605,
+            6205,
+            4006
+          ],
+          "confusion_label_by_pred": [
+            [
+              2164,
+              249,
+              253,
+              261,
+              183
+            ],
+            [
+              229,
+              2963,
+              953,
+              760,
+              614
+            ],
+            [
+              242,
+              856,
+              2955,
+              931,
+              350
+            ],
+            [
+              201,
+              597,
+              764,
+              3203,
+              552
+            ],
+            [
+              238,
+              861,
+              680,
+              1050,
+              2307
+            ]
+          ],
+          "accuracy": 0.5566841415465269,
+          "macro_recall_supported_actions": 0.5676550847911848
+        },
+        "base": {
+          "n": 25116,
+          "label_counts": [
+            22186,
+            1783,
+            1147,
+            0,
+            0
+          ],
+          "prediction_counts": [
+            22488,
+            1683,
+            945,
+            0,
+            0
+          ],
+          "confusion_label_by_pred": [
+            [
+              21400,
+              506,
+              280,
+              0,
+              0
+            ],
+            [
+              680,
+              800,
+              303,
+              0,
+              0
+            ],
+            [
+              408,
+              377,
+              362,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "accuracy": 0.8983118330944417,
+          "macro_recall_supported_actions": 0.5762867259720192
+        },
+        "base_recruit_available": {
+          "n": 5858,
+          "teacher_recruits": 2930,
+          "predicted_recruits": 2628,
+          "correct": 3304
+        },
+        "base_forced_none_n": 19258
+      }
+    }
+  },
+  "reported_train_rows": 256,
+  "logged_loss": [
+    1.1630752086639404,
+    1.1443963050842285,
+    1.161455512046814,
+    1.092471957206726,
+    1.1425772905349731,
+    1.0555039644241333,
+    0.9701682329177856,
+    1.090533971786499,
+    1.1333974599838257,
+    1.0880444049835205,
+    0.9762678146362305,
+    1.0230352878570557,
+    1.1017162799835205,
+    1.117483377456665,
+    0.9322296977043152,
+    1.136401891708374,
+    0.9990348219871521,
+    1.0058897733688354,
+    0.9505724310874939,
+    1.0836584568023682,
+    1.0265107154846191,
+    1.1311016082763672,
+    0.9687761664390564,
+    1.1270406246185303,
+    1.081586480140686,
+    1.0193514823913574,
+    1.1133067607879639,
+    0.9837482571601868,
+    1.061009407043457,
+    0.9700545072555542,
+    1.1056363582611084,
+    1.1171479225158691,
+    0.9882262349128723,
+    1.0480395555496216,
+    1.1749433279037476,
+    1.119550347328186,
+    0.9620652198791504,
+    1.0928441286087036,
+    1.1237882375717163,
+    1.0689910650253296,
+    0.9572803378105164,
+    0.9402846693992615,
+    1.0466063022613525,
+    0.9791622757911682,
+    1.0765671730041504,
+    0.9642534852027893,
+    1.0580723285675049,
+    0.9316692352294922,
+    1.0400536060333252,
+    1.0501071214675903,
+    1.0183815956115723,
+    0.9741024971008301,
+    1.071141242980957,
+    0.9968879222869873,
+    0.9870214462280273,
+    1.0210158824920654,
+    1.0102044343948364,
+    0.994003415107727,
+    0.9505438804626465,
+    1.0772948265075684,
+    1.135781168937683,
+    1.0596158504486084,
+    0.9484632015228271,
+    0.9125638008117676,
+    0.9760783910751343,
+    0.9273286461830139,
+    1.0456331968307495,
+    1.0396156311035156,
+    1.010672688484192,
+    1.0069233179092407,
+    0.9860292077064514,
+    1.0031579732894897,
+    1.1287637948989868,
+    1.06608247756958,
+    0.9856200218200684,
+    1.0213769674301147,
+    0.9723290205001831,
+    1.0292625427246094,
+    1.0098094940185547,
+    1.0298453569412231,
+    1.0808802843093872,
+    1.112958550453186,
+    0.9927189350128174,
+    0.9588108062744141,
+    1.0553736686706543,
+    1.056877613067627,
+    1.0189419984817505,
+    0.904801070690155,
+    0.9352439045906067,
+    1.0432965755462646,
+    0.9089421629905701,
+    1.0646101236343384,
+    1.0147937536239624,
+    0.8794305920600891,
+    1.054880976676941,
+    1.0632063150405884,
+    1.0244312286376953,
+    1.047992467880249,
+    0.9153472781181335,
+    1.020472526550293,
+    1.083096981048584,
+    1.1075881719589233,
+    0.9872192144393921,
+    0.952512800693512,
+    1.1031346321105957,
+    0.9596965312957764,
+    0.9475736618041992,
+    1.0001778602600098,
+    1.0431103706359863,
+    1.021317481994629,
+    1.028826355934143,
+    0.960444986820221,
+    1.0525411367416382,
+    1.0504043102264404,
+    1.0469163656234741,
+    1.1130396127700806,
+    0.9661173820495605,
+    0.9997069239616394,
+    0.901923418045044,
+    0.9332709312438965,
+    0.9916421175003052,
+    1.025396466255188,
+    0.9580402970314026,
+    0.9812845587730408,
+    0.9206297993659973,
+    1.023600459098816,
+    0.9366239905357361,
+    0.9929499626159668,
+    0.9878297448158264,
+    0.9297102689743042,
+    0.9017661809921265,
+    1.0385013818740845,
+    1.014404296875,
+    0.9690620303153992,
+    0.829045832157135,
+    0.9800679683685303,
+    0.958122730255127,
+    0.9796576499938965,
+    1.0533710718154907,
+    0.9824848175048828,
+    0.8898457884788513,
+    1.0144985914230347,
+    0.9285215735435486,
+    1.0045303106307983,
+    0.9017540216445923,
+    1.045332431793213,
+    0.8930572271347046,
+    0.999064028263092,
+    0.9619284272193909,
+    0.9953245520591736,
+    1.0084502696990967,
+    0.9396785497665405,
+    0.935589075088501,
+    0.9490180611610413,
+    0.9212779998779297,
+    0.9380178451538086,
+    1.0261681079864502,
+    0.9664310812950134,
+    0.9948118329048157,
+    0.9754748344421387,
+    0.994610071182251,
+    0.8895850777626038,
+    0.8805604577064514,
+    1.0340790748596191,
+    0.9912555813789368,
+    0.9735720753669739,
+    1.0300451517105103,
+    0.9752225875854492,
+    0.9743335247039795,
+    0.8719919323921204,
+    1.0062150955200195,
+    0.9012852907180786,
+    0.8964402675628662,
+    0.9849005341529846,
+    1.1209805011749268,
+    0.9317827820777893,
+    1.0316672325134277,
+    0.980869710445404,
+    0.9697038531303406,
+    1.019895315170288,
+    1.0135483741760254,
+    0.99411940574646,
+    0.9549407958984375,
+    0.9610155820846558,
+    1.0540995597839355,
+    0.9150292277336121,
+    0.9600217342376709,
+    0.9208652377128601,
+    0.9971664547920227,
+    0.9477348923683167,
+    0.9126012921333313,
+    1.0093327760696411,
+    0.9798277020454407,
+    1.0710557699203491,
+    1.0233546495437622,
+    1.021829605102539,
+    0.8791742920875549,
+    0.8917508125305176,
+    0.9824306964874268,
+    1.12056303024292,
+    0.8882524371147156,
+    0.9798195958137512,
+    1.0517916679382324,
+    1.0007153749465942,
+    0.9339961409568787,
+    1.019760251045227,
+    0.8416634798049927,
+    0.9490672945976257,
+    0.9793906211853027,
+    1.0164085626602173,
+    1.0241038799285889,
+    1.0172500610351562,
+    0.8778778910636902,
+    1.0012215375900269,
+    0.8888005614280701,
+    1.0760818719863892,
+    0.9688094854354858,
+    0.9239856004714966,
+    0.9637073278427124,
+    0.9382531642913818,
+    0.8987605571746826,
+    1.0176602602005005,
+    0.9503373503684998,
+    0.9371553063392639,
+    1.0871257781982422,
+    0.9736401438713074,
+    0.9155277609825134,
+    0.9944320917129517,
+    0.9898923635482788,
+    0.8722967505455017,
+    1.0293248891830444,
+    0.9506705403327942,
+    0.903546929359436,
+    0.8640186786651611,
+    1.0080152750015259,
+    0.8326517343521118,
+    0.9887707233428955,
+    1.0700603723526,
+    0.8942441344261169,
+    0.9778515100479126,
+    0.9682270884513855,
+    0.9831721186637878,
+    0.986159086227417,
+    0.9816376566886902,
+    1.0630302429199219,
+    0.899638295173645,
+    0.962582528591156,
+    0.9323818683624268,
+    0.9578245282173157,
+    0.8969155550003052,
+    1.0227314233779907,
+    0.915967583656311,
+    0.8516255021095276,
+    0.9472278952598572,
+    0.9493547081947327,
+    0.9286155104637146
+  ],
+  "torch_version": "2.5.1+cpu",
+  "numpy_version": "1.26.4",
+  "elapsed_seconds": 155.69129295000016,
+  "trained_sha256": "cef478dcbb96b1ac9304b9da56623cff578994283e71a6893dd6530978a33646"
+}
