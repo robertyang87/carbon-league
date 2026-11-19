@@ -1,0 +1,765 @@
+{
+  "recipe": {
+    "parent": "b54cc51f4109f19f4a7b508eafc9cf04a28b7e295a9f442c5208f0d33f10a9ca",
+    "opponent": "4675f0ca7e1d1db523f06b351c8cf0419051f255345635abe67135053a90fc97",
+    "train": [
+      621453700,
+      621453701
+    ],
+    "hold": [
+      621453800,
+      621453801
+    ],
+    "arms": {
+      "parent": [
+        [
+          0.25,
+          0.25,
+          0.25
+        ],
+        [
+          0.25,
+          0.25,
+          0.25
+        ]
+      ],
+      "plus": [
+        [
+          0.15,
+          0.36,
+          0.37
+        ],
+        [
+          0.35,
+          0.17,
+          0.16
+        ]
+      ],
+      "minus": [
+        [
+          0.35,
+          0.14,
+          0.13
+        ],
+        [
+          0.15,
+          0.33,
+          0.34
+        ]
+      ]
+    },
+    "source_sha256": "2f03e45e337a58cc70e525e5deec6b41a00e0bb7ec003bd79b99e68f87228ab2",
+    "phase_boundary": 180,
+    "selection": "Among two symmetric perturbations choose highest mean training U then mean margin. Compare the winner to the parent on independent proxy holdout maps. To expose a frozen candidate to original-examiner development, require positive U and margin relative to parent on both training and holdout means, with actual Sapling decisions."
+  },
+  "games": [
+    {
+      "stage": "train",
+      "seed": 621453700,
+      "candidate_seat": 0,
+      "arm": "parent",
+      "U": 0.23012453412347028,
+      "margin": -159.34000000000015,
+      "result": "loss",
+      "official_score_by_seat": [
+        9133.92,
+        9293.26
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453700_0_parent.json.gz",
+      "raw_sha256": "af3f712b947fc705042ee60cfa3b71cd86179385ef63ece8bd23211324dc6ea5",
+      "neutral_parity_calls": 20,
+      "student_slots_selected_in_disagreement": 126,
+      "original_interpreter": {
+        "seed": 621453700,
+        "seat": 0,
+        "map_sha256": "260745036cd024393c41f98c8a320aa408cf2b54a71929cc4e44d2baf5356bfa",
+        "transcript_sha256": "af3f712b947fc705042ee60cfa3b71cd86179385ef63ece8bd23211324dc6ea5",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          9133.92,
+          9293.26
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453700,
+      "candidate_seat": 1,
+      "arm": "parent",
+      "U": 0.23012453412347028,
+      "margin": -159.34000000000015,
+      "result": "loss",
+      "official_score_by_seat": [
+        9293.26,
+        9133.92
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453700_1_parent.json.gz",
+      "raw_sha256": "1433c9cb633805446e1b950367fef0da5514880088c2f421f7a4c17125dfa8fd",
+      "neutral_parity_calls": 20,
+      "student_slots_selected_in_disagreement": 126,
+      "original_interpreter": {
+        "seed": 621453700,
+        "seat": 1,
+        "map_sha256": "260745036cd024393c41f98c8a320aa408cf2b54a71929cc4e44d2baf5356bfa",
+        "transcript_sha256": "1433c9cb633805446e1b950367fef0da5514880088c2f421f7a4c17125dfa8fd",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          9293.26,
+          9133.92
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453700,
+      "candidate_seat": 0,
+      "arm": "plus",
+      "U": 0.1400767830327463,
+      "margin": -943.7000000000007,
+      "result": "loss",
+      "official_score_by_seat": [
+        9301.67,
+        10245.37
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453700_0_plus.json.gz",
+      "raw_sha256": "5c35c31260b081bdf706cf83e0427242568b8d6bc3d488b9dec009954bb1bddb",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 113,
+      "original_interpreter": {
+        "seed": 621453700,
+        "seat": 0,
+        "map_sha256": "260745036cd024393c41f98c8a320aa408cf2b54a71929cc4e44d2baf5356bfa",
+        "transcript_sha256": "5c35c31260b081bdf706cf83e0427242568b8d6bc3d488b9dec009954bb1bddb",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          9301.67,
+          10245.37
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453700,
+      "candidate_seat": 1,
+      "arm": "plus",
+      "U": 0.1400767830327463,
+      "margin": -943.7000000000007,
+      "result": "loss",
+      "official_score_by_seat": [
+        10245.37,
+        9301.67
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453700_1_plus.json.gz",
+      "raw_sha256": "6ccb6fa8c83079029aff4ddbcceaf4ef653d7aa8f2af43a78b438ca5f4dc24f2",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 113,
+      "original_interpreter": {
+        "seed": 621453700,
+        "seat": 1,
+        "map_sha256": "260745036cd024393c41f98c8a320aa408cf2b54a71929cc4e44d2baf5356bfa",
+        "transcript_sha256": "6ccb6fa8c83079029aff4ddbcceaf4ef653d7aa8f2af43a78b438ca5f4dc24f2",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          10245.37,
+          9301.67
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453700,
+      "candidate_seat": 0,
+      "arm": "minus",
+      "U": 0.2372236404160331,
+      "margin": -102.29999999999927,
+      "result": "loss",
+      "official_score_by_seat": [
+        8648.79,
+        8751.09
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453700_0_minus.json.gz",
+      "raw_sha256": "1618e15bb6c5d833bf2743ea5db0a7f056fb421fd9b584cb66472a9eb4917226",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 105,
+      "original_interpreter": {
+        "seed": 621453700,
+        "seat": 0,
+        "map_sha256": "260745036cd024393c41f98c8a320aa408cf2b54a71929cc4e44d2baf5356bfa",
+        "transcript_sha256": "1618e15bb6c5d833bf2743ea5db0a7f056fb421fd9b584cb66472a9eb4917226",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          8648.79,
+          8751.09
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453700,
+      "candidate_seat": 1,
+      "arm": "minus",
+      "U": 0.2372236404160331,
+      "margin": -102.29999999999927,
+      "result": "loss",
+      "official_score_by_seat": [
+        8751.09,
+        8648.79
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453700_1_minus.json.gz",
+      "raw_sha256": "ae534b22c063f2d4c1c855bd2c93e061f31bbe61ef00aa9f2f9380203ad0e5d2",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 105,
+      "original_interpreter": {
+        "seed": 621453700,
+        "seat": 1,
+        "map_sha256": "260745036cd024393c41f98c8a320aa408cf2b54a71929cc4e44d2baf5356bfa",
+        "transcript_sha256": "ae534b22c063f2d4c1c855bd2c93e061f31bbe61ef00aa9f2f9380203ad0e5d2",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          8751.09,
+          8648.79
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453701,
+      "candidate_seat": 0,
+      "arm": "parent",
+      "U": 0.13553604875086397,
+      "margin": -989.1900000000005,
+      "result": "loss",
+      "official_score_by_seat": [
+        9336.74,
+        10325.93
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453701_0_parent.json.gz",
+      "raw_sha256": "c648bac13b005299f87914adabf18e55181c1d9e21550e34c52d157f89c4a373",
+      "neutral_parity_calls": 20,
+      "student_slots_selected_in_disagreement": 123,
+      "original_interpreter": {
+        "seed": 621453701,
+        "seat": 0,
+        "map_sha256": "35961a830cacd0a4c2cde744597aeab87d8134c4b07ca70194833672f3f6bab7",
+        "transcript_sha256": "c648bac13b005299f87914adabf18e55181c1d9e21550e34c52d157f89c4a373",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          9336.74,
+          10325.93
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453701,
+      "candidate_seat": 1,
+      "arm": "parent",
+      "U": 0.13553604875086397,
+      "margin": -989.1900000000005,
+      "result": "loss",
+      "official_score_by_seat": [
+        10325.93,
+        9336.74
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453701_1_parent.json.gz",
+      "raw_sha256": "fa9de5b7c09bce37206f163fc0572d7db813f8b8edc92828a7fc95e306b94146",
+      "neutral_parity_calls": 20,
+      "student_slots_selected_in_disagreement": 123,
+      "original_interpreter": {
+        "seed": 621453701,
+        "seat": 1,
+        "map_sha256": "35961a830cacd0a4c2cde744597aeab87d8134c4b07ca70194833672f3f6bab7",
+        "transcript_sha256": "fa9de5b7c09bce37206f163fc0572d7db813f8b8edc92828a7fc95e306b94146",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          10325.93,
+          9336.74
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453701,
+      "candidate_seat": 0,
+      "arm": "plus",
+      "U": 0.14643559022465732,
+      "margin": -881.4799999999996,
+      "result": "loss",
+      "official_score_by_seat": [
+        9085.11,
+        9966.59
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453701_0_plus.json.gz",
+      "raw_sha256": "ca6c57b54ba87e2d3bbcade8bde7d8ac93058dd432d71631eb06d0b59c14e207",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 164,
+      "original_interpreter": {
+        "seed": 621453701,
+        "seat": 0,
+        "map_sha256": "35961a830cacd0a4c2cde744597aeab87d8134c4b07ca70194833672f3f6bab7",
+        "transcript_sha256": "ca6c57b54ba87e2d3bbcade8bde7d8ac93058dd432d71631eb06d0b59c14e207",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          9085.11,
+          9966.59
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453701,
+      "candidate_seat": 1,
+      "arm": "plus",
+      "U": 0.14643559022465732,
+      "margin": -881.4799999999996,
+      "result": "loss",
+      "official_score_by_seat": [
+        9966.59,
+        9085.11
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453701_1_plus.json.gz",
+      "raw_sha256": "d8f381db4fd13ac4d4ce5731cf430d5528c8bc34437762bc303d6317b3641392",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 164,
+      "original_interpreter": {
+        "seed": 621453701,
+        "seat": 1,
+        "map_sha256": "35961a830cacd0a4c2cde744597aeab87d8134c4b07ca70194833672f3f6bab7",
+        "transcript_sha256": "d8f381db4fd13ac4d4ce5731cf430d5528c8bc34437762bc303d6317b3641392",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          9966.59,
+          9085.11
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453701,
+      "candidate_seat": 0,
+      "arm": "minus",
+      "U": 0.15571740061946657,
+      "margin": -793.4200000000001,
+      "result": "loss",
+      "official_score_by_seat": [
+        9647.31,
+        10440.73
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453701_0_minus.json.gz",
+      "raw_sha256": "2747ef0efcc5766ca27ca006778b092a1691fe4ed19b57d3fc58eed88e9ed7ed",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 118,
+      "original_interpreter": {
+        "seed": 621453701,
+        "seat": 0,
+        "map_sha256": "35961a830cacd0a4c2cde744597aeab87d8134c4b07ca70194833672f3f6bab7",
+        "transcript_sha256": "2747ef0efcc5766ca27ca006778b092a1691fe4ed19b57d3fc58eed88e9ed7ed",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          9647.31,
+          10440.73
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "train",
+      "seed": 621453701,
+      "candidate_seat": 1,
+      "arm": "minus",
+      "U": 0.15571740061946657,
+      "margin": -793.4200000000001,
+      "result": "loss",
+      "official_score_by_seat": [
+        10440.73,
+        9647.31
+      ],
+      "actual_transitions": 299,
+      "raw_file": "train_621453701_1_minus.json.gz",
+      "raw_sha256": "098a3506cf751fbcd8312f279a26ec49b0a639e54a70941257829c7f20491f5b",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 118,
+      "original_interpreter": {
+        "seed": 621453701,
+        "seat": 1,
+        "map_sha256": "35961a830cacd0a4c2cde744597aeab87d8134c4b07ca70194833672f3f6bab7",
+        "transcript_sha256": "098a3506cf751fbcd8312f279a26ec49b0a639e54a70941257829c7f20491f5b",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          10440.73,
+          9647.31
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "holdout",
+      "seed": 621453800,
+      "candidate_seat": 0,
+      "arm": "parent",
+      "U": 0.18687295521237013,
+      "margin": -516.1800000000003,
+      "result": "loss",
+      "official_score_by_seat": [
+        7305.2,
+        7821.38
+      ],
+      "actual_transitions": 299,
+      "raw_file": "holdout_621453800_0_parent.json.gz",
+      "raw_sha256": "4a5b8772b452bee8326b2b16781f31b9ed03e35b9ea91c0a4e3eb3ab0ed2a2bc",
+      "neutral_parity_calls": 20,
+      "student_slots_selected_in_disagreement": 105,
+      "original_interpreter": {
+        "seed": 621453800,
+        "seat": 0,
+        "map_sha256": "5795b15004b8a936ea5d91be15ebe48259ab4d07a888a87e3bd107639a485fb9",
+        "transcript_sha256": "4a5b8772b452bee8326b2b16781f31b9ed03e35b9ea91c0a4e3eb3ab0ed2a2bc",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          7305.2,
+          7821.38
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "holdout",
+      "seed": 621453800,
+      "candidate_seat": 1,
+      "arm": "parent",
+      "U": 0.18687295521237013,
+      "margin": -516.1800000000003,
+      "result": "loss",
+      "official_score_by_seat": [
+        7821.38,
+        7305.2
+      ],
+      "actual_transitions": 299,
+      "raw_file": "holdout_621453800_1_parent.json.gz",
+      "raw_sha256": "79991f4e3c574b4018e5eed754f58a6c3eebbae9b6ceeba2ff32bde456adafe9",
+      "neutral_parity_calls": 20,
+      "student_slots_selected_in_disagreement": 105,
+      "original_interpreter": {
+        "seed": 621453800,
+        "seat": 1,
+        "map_sha256": "5795b15004b8a936ea5d91be15ebe48259ab4d07a888a87e3bd107639a485fb9",
+        "transcript_sha256": "79991f4e3c574b4018e5eed754f58a6c3eebbae9b6ceeba2ff32bde456adafe9",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          7821.38,
+          7305.2
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "holdout",
+      "seed": 621453800,
+      "candidate_seat": 0,
+      "arm": "minus",
+      "U": 0.7676555594783803,
+      "margin": 141.47999999999956,
+      "result": "win",
+      "official_score_by_seat": [
+        8008.53,
+        7867.05
+      ],
+      "actual_transitions": 299,
+      "raw_file": "holdout_621453800_0_minus.json.gz",
+      "raw_sha256": "f2b92558f62922a0d699506583a024e9686640a6a69912d233fa8cd26fe7e607",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 124,
+      "original_interpreter": {
+        "seed": 621453800,
+        "seat": 0,
+        "map_sha256": "5795b15004b8a936ea5d91be15ebe48259ab4d07a888a87e3bd107639a485fb9",
+        "transcript_sha256": "f2b92558f62922a0d699506583a024e9686640a6a69912d233fa8cd26fe7e607",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          8008.53,
+          7867.05
+        ],
+        "result": "win"
+      }
+    },
+    {
+      "stage": "holdout",
+      "seed": 621453800,
+      "candidate_seat": 1,
+      "arm": "minus",
+      "U": 0.7676555594783803,
+      "margin": 141.47999999999956,
+      "result": "win",
+      "official_score_by_seat": [
+        7867.05,
+        8008.53
+      ],
+      "actual_transitions": 299,
+      "raw_file": "holdout_621453800_1_minus.json.gz",
+      "raw_sha256": "63b088ad84fd4e232fe59da6555cb36cf9ca74927ad604010db0c47b1b5c6748",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 124,
+      "original_interpreter": {
+        "seed": 621453800,
+        "seat": 1,
+        "map_sha256": "5795b15004b8a936ea5d91be15ebe48259ab4d07a888a87e3bd107639a485fb9",
+        "transcript_sha256": "63b088ad84fd4e232fe59da6555cb36cf9ca74927ad604010db0c47b1b5c6748",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          7867.05,
+          8008.53
+        ],
+        "result": "win"
+      }
+    },
+    {
+      "stage": "holdout",
+      "seed": 621453801,
+      "candidate_seat": 0,
+      "arm": "parent",
+      "U": 0.8847411232167288,
+      "margin": 1205.3899999999994,
+      "result": "win",
+      "official_score_by_seat": [
+        8193.55,
+        6988.16
+      ],
+      "actual_transitions": 299,
+      "raw_file": "holdout_621453801_0_parent.json.gz",
+      "raw_sha256": "63a02de977b2468f81eb498afb2aabe983bb28cbd6cf019261b44928b5946fd2",
+      "neutral_parity_calls": 20,
+      "student_slots_selected_in_disagreement": 106,
+      "original_interpreter": {
+        "seed": 621453801,
+        "seat": 0,
+        "map_sha256": "79404c1797a2a74d334f69e087300f2a3c6a10915e2e60d1418a4cb5a25f7773",
+        "transcript_sha256": "63a02de977b2468f81eb498afb2aabe983bb28cbd6cf019261b44928b5946fd2",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          8193.55,
+          6988.16
+        ],
+        "result": "win"
+      }
+    },
+    {
+      "stage": "holdout",
+      "seed": 621453801,
+      "candidate_seat": 1,
+      "arm": "parent",
+      "U": 0.8847411232167288,
+      "margin": 1205.3899999999994,
+      "result": "win",
+      "official_score_by_seat": [
+        6988.16,
+        8193.55
+      ],
+      "actual_transitions": 299,
+      "raw_file": "holdout_621453801_1_parent.json.gz",
+      "raw_sha256": "498085ddf79cf60cb7fb25b412cfea554e06e3d3c0c81400ef5e9a683bd1d346",
+      "neutral_parity_calls": 20,
+      "student_slots_selected_in_disagreement": 106,
+      "original_interpreter": {
+        "seed": 621453801,
+        "seat": 1,
+        "map_sha256": "79404c1797a2a74d334f69e087300f2a3c6a10915e2e60d1418a4cb5a25f7773",
+        "transcript_sha256": "498085ddf79cf60cb7fb25b412cfea554e06e3d3c0c81400ef5e9a683bd1d346",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          6988.16,
+          8193.55
+        ],
+        "result": "win"
+      }
+    },
+    {
+      "stage": "holdout",
+      "seed": 621453801,
+      "candidate_seat": 0,
+      "arm": "minus",
+      "U": 0.10914494657190495,
+      "margin": -1275.6600000000008,
+      "result": "loss",
+      "official_score_by_seat": [
+        6861.44,
+        8137.1
+      ],
+      "actual_transitions": 299,
+      "raw_file": "holdout_621453801_0_minus.json.gz",
+      "raw_sha256": "5c20385613501eb08963df57bda1a52c81b273a5290be0539a7a426661494556",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 143,
+      "original_interpreter": {
+        "seed": 621453801,
+        "seat": 0,
+        "map_sha256": "79404c1797a2a74d334f69e087300f2a3c6a10915e2e60d1418a4cb5a25f7773",
+        "transcript_sha256": "5c20385613501eb08963df57bda1a52c81b273a5290be0539a7a426661494556",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          6861.44,
+          8137.1
+        ],
+        "result": "loss"
+      }
+    },
+    {
+      "stage": "holdout",
+      "seed": 621453801,
+      "candidate_seat": 1,
+      "arm": "minus",
+      "U": 0.10914494657190495,
+      "margin": -1275.6600000000008,
+      "result": "loss",
+      "official_score_by_seat": [
+        8137.1,
+        6861.44
+      ],
+      "actual_transitions": 299,
+      "raw_file": "holdout_621453801_1_minus.json.gz",
+      "raw_sha256": "4163b922faddec104f51afa95650b9cd03a5ab586b07156c629bfcd67be80407",
+      "neutral_parity_calls": 0,
+      "student_slots_selected_in_disagreement": 143,
+      "original_interpreter": {
+        "seed": 621453801,
+        "seat": 1,
+        "map_sha256": "79404c1797a2a74d334f69e087300f2a3c6a10915e2e60d1418a4cb5a25f7773",
+        "transcript_sha256": "4163b922faddec104f51afa95650b9cd03a5ab586b07156c629bfcd67be80407",
+        "steps": 299,
+        "statuses": [
+          "DONE",
+          "DONE"
+        ],
+        "official_reward_by_seat": [
+          8137.1,
+          6861.44
+        ],
+        "result": "loss"
+      }
+    }
+  ],
+  "status": "complete",
+  "train_means": {
+    "parent": {
+      "U": 0.18283029143716711,
+      "margin": -574.2650000000003
+    },
+    "plus": {
+      "U": 0.14325618662870182,
+      "margin": -912.5900000000001
+    },
+    "minus": {
+      "U": 0.19647052051774982,
+      "margin": -447.8599999999997
+    }
+  },
+  "holdout_means": {
+    "parent": {
+      "U": 0.5358070392145495,
+      "margin": 344.60499999999956
+    },
+    "minus": {
+      "U": 0.4384002530251426,
+      "margin": -567.0900000000006
+    }
+  },
+  "chosen": "minus",
+  "admitted_to_original_development": false,
+  "chosen_pack_sha256": "37ad305e108221c1f36eea0516a56dcbb155daa33c1319089119e4d154a61163"
+}
