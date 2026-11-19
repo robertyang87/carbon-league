@@ -35,3 +35,5 @@
 [新增四局逐场资金与布局](appendix_99919cbf/README.md) · [累计 1,382 张唯一地图的双引擎核验](appendix_99919cbf/validation.md)
 
 [截至 0137949d 的 Master5s 对外四局及逐步收支](appendix_0137949d/README.md) · [累计 1,386 局](appendix_0137949d/validation.md)
+
+[截至 41e4177e 的 16 场新对外局及行动追溯](appendix_41e4177e/README.md) · [累计 1,402 张唯一地图、两种引擎核分及正式考试隔离](appendix_41e4177e/validation.md)

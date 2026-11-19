@@ -1,0 +1,66 @@
+{
+  "registered_utc": "2026-11-19T05:15:53.998277+00:00",
+  "source_revision": "6956a267985fbe7b5befbd8f57782073c7635a30",
+  "parent_sha256": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0",
+  "v1_checkpoint_sha256": "3efaf4b81f21620803ec5b29ba57e61408b547e3dbc4ab72457a8e09a3f5ac0a",
+  "v1_theta": [
+    0.6435502812730072,
+    -0.6435502812730072,
+    0.6435502812730072,
+    0.6435502812730072
+  ],
+  "underlying_pack_sha256": "416cc31b8da7d38cc97f66903fbe2797d7eadda0ee175f105227057afe5d3874",
+  "student_sha256": "f82bfd47a904aa1fbfa4e95fbfcdd13e623c1f1eb216a8e736694a1d282cc713",
+  "examiner_md5": "57f9a594cce4f2ec9e3573d8d9d26ca1",
+  "examiner_source_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "source_file_sha256": {
+    "build.py": "4482b3680067eba9d24ac80f3489848d7220ed1249755e8c1c65fbab8b7584bb",
+    "runtime.py": "e1cbc74e78d6010edcc5e8e5661e62c898198b578c4ec6ec628a5bacf7998c3b",
+    "trial.py": "65489d8b4bb0b6861cdeae39545e4ea0c4162898d84446011ecdc19f43a12580",
+    "replication/run.py": "91f8b1c30fcff9ebe630840221cc3c2125452540e154033b597627c1cc369488"
+  },
+  "train_maps": [
+    621461471,
+    621461482
+  ],
+  "development_maps": [
+    621461571,
+    621461582
+  ],
+  "seats": [
+    0,
+    1
+  ],
+  "base_direction": [
+    1,
+    -1,
+    1,
+    1
+  ],
+  "direction": [
+    1,
+    -1,
+    -1,
+    -1
+  ],
+  "coordinate_order": [
+    "bank_or_progress_with_cargo",
+    "cargo_collision_exposure",
+    "recoverable_opponent_cargo",
+    "safe_harvest_after_tax"
+  ],
+  "epsilon": 0.4,
+  "scalar_update_cap": 0.35,
+  "coordinate_absolute_cap": 1.1,
+  "learning_rate": 1.2,
+  "minimum_each_absolute_map_delta_J": 0.025,
+  "minimum_absolute_map_mean_delta_J": 0.06,
+  "min_same_sign_seats": 3,
+  "objective": "U = 0.5·WDL + 0.5·sigmoid(margin / 1000); J = 0.65·tanh(margin / 3000) + 0.35·(2U−1). Both from official terminal scores. The derivative for displacement alpha along the unnormalised direction divides mean-map J(+.40)−J(−.40) by .80. Set alpha to clip(1.2·derivative,−.35,+.35) only if gate passes. No per-coordinate clipping. Original logits, learned networks, complete prefix and production fallback identical when alpha=0.",
+  "training_gate": "Each map: pair plus and minus by the same physical seat and average the two J contrasts. Map contrasts must have the same strict sign and each absolute contrast >=0.025. Their equally weighted mean must have absolute value >=0.06. At least three of the four seat contrasts must have that sign. Thresholds are prespecified engineering decisions, not statistical confidence. Every draw/loss counts. If unmet freeze v1 byte-identically and stop, without running identical development arms. Never choose a direction after looking at validation games.",
+  "development": "If gate passes freeze one candidate, play v1 and candidate on both seats of each distinct development map. Report all 8 terminal outcomes, both seat deltas and both equally weighted map deltas. Evidence for keeping the new branch only if on both maps mean delta margin>0 and mean delta U>0, >=3 of 4 seat delta U>0, and total wins not below v1. Otherwise retain v1. No further tuning or exam from this batch.",
+  "sampling": "Native original full-search Master3s2 temperature=1, uncontrolled native sampling/timing. Matched map and seat, no assumed common random numbers. Split train/dev/final separated by nominal seed and physical opening terrain. Native runs wait for all eight older replication receipts; an already completed valid game is never rerolled. Four independent CPU slots, swapping positive and negative core pairs across training maps, likewise v1/candidate across development, to limit machine-group confounding.",
+  "unit": "One map is one independent terrain. Two seats, plus/minus and native random draws are nested. Two training maps plus at most two disjoint development maps. No estimate of 90% success.",
+  "mechanism_before_train": "Compare actual emitted plus/minus and v1 commands on previously exposed historical parent map at every eligible 5th step of each seat (t=4,9,...,294); require each perturbation to differ from center at >=1 sampled root and opposing perturbations differ at >=1 root. Confirm new source at alpha0 byte-equal to v1 and exact symmetric coefficient projections; if inactive, stop and do not burn full games.",
+  "clearance": "For every new map run the existing comprehensive source/terrain audit against the pinned revision and current workspace, then check extra ladder intake and any older released replication maps separately. Scope excludes unpublished private remote maps and references with no known opening."
+}
