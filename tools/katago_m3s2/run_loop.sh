@@ -24,7 +24,7 @@ set -euo pipefail
 TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="$(cd "$TOOLS_DIR/../.." && pwd)"
 SRC_DIR="$BUILD_DIR/src"
-CHASSIS="${CHASSIS:-$SRC_DIR/apexcarbon_v4tta_search.py}"   # owner ruling 18:29: v1 chassis (fix2 alternate)
+CHASSIS="${CHASSIS:-$SRC_DIR/apexcarbon_v1_fix3.py}"   # owner order 2026-11-19 19:28: fix3 chassis (v1/fix2 alternates via $CHASSIS)
 MASTER="${MASTER:-$SRC_DIR/master3s2.py}"
 WORK="${WORK:-$BUILD_DIR/runs}"
 GEN="${GEN:-1}"                                        # generation to produce
