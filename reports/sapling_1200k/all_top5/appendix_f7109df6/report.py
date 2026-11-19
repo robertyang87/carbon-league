@@ -10,7 +10,7 @@ def read(path):
     return json.loads(gzip.decompress(data) if path.suffix=='.gz' else data)
 
 
-def build(directory):
+def build(directory, total_mutual=115):
     m=read(directory/'manifest.json')
     delta=read(directory/'score_delta.json')
     v=read(directory/'validation.json')
@@ -40,7 +40,7 @@ def build(directory):
                      'lookback':lookback})
     ar=m['new_archives'][0]
     lines=['# 前五回放追加核验','',
-           f"截止 `{m['revision'][:8]}`，{delta['source']} 从 {delta['old_reference_count']} 条增加到 {delta['new_reference_count']} 条，本次核验其中 {len(rows)} 张新图。此前已归档的重复引用 {delta['existing_references']} 条，双方均未进入冻结前五的新增引用 {delta.get('non_top_five_refs',0)} 条。累计 {delta['union_games']:,} 张图，互打 115 张。每张图的物理席、官方比分、种子与真实棋盘均已核对。[逐条去重清单](score_delta.json) · [归档及回放身份](manifest.json)",'',
+           f"截止 `{m['revision'][:8]}`，{delta['source']} 从 {delta['old_reference_count']} 条增加到 {delta['new_reference_count']} 条，本次核验其中 {len(rows)} 张新图。此前已归档的重复引用 {delta['existing_references']} 条，双方均未进入冻结前五的新增引用 {delta.get('non_top_five_refs',0)} 条。累计 {delta['union_games']:,} 张图，互打 {total_mutual} 张。每张图的物理席、官方比分、种子与真实棋盘均已核对。[逐条去重清单](score_delta.json) · [归档及回放身份](manifest.json)",'',
            '|前五策略 / 席|对手|终局现金（前五 / 对手）|最大十步窗口|窗口内分差变化|正常回存（前五 / 对手）|树收入（前五 / 对手）|',
            '|---|---|---:|---|---:|---:|---:|']
     for r in rows:

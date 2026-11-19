@@ -1,5 +1,6 @@
 """Regression tests on synthetic and previously used development maps only."""
 import gzip
+import hashlib
 import json
 from pathlib import Path
 import unittest
@@ -67,8 +68,14 @@ class TerrainTests(unittest.TestCase):
 
     def test_frozen_evidence(self):
         _, seeds, boards = identity.ladder_boards()
-        self.assertEqual(len(seeds),1465)
-        self.assertEqual(len(boards),1465)
+        newest_ledger = Path(__file__).parent / identity.SOURCES[-1][0]
+        receipt = json.loads(newest_ledger.with_name("exposure.json").read_bytes())
+        source_digest = hashlib.sha256(json.dumps(identity.SOURCES, separators=(",", ":")).encode()).hexdigest()
+        self.assertEqual(source_digest, receipt["all_source_sha256"])
+        count = receipt["distinct_ids_seeds_and_initial_terrains"]
+        self.assertEqual(count, sum(n for _, n, *_ in identity.SOURCES))
+        self.assertEqual(len(seeds), count)
+        self.assertEqual(len(boards), count)
         for filename, *_ in identity.SOURCES:
             ledger = Path(__file__).parent / filename
             for line in gzip.decompress(ledger.read_bytes()).splitlines():

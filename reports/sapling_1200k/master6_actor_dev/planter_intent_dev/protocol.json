@@ -1,0 +1,79 @@
+{
+  "schema": "sapling-planter-orders/1",
+  "training_batches": [
+    {
+      "dir": ".",
+      "labels_sha256": "84b3c6cd3b0be3ba50bc7d08a52af551ef54f1e4dfe8c7ba594b56effaabc30a"
+    },
+    {
+      "dir": "batches/intake_02",
+      "labels_sha256": "aa00c9dcbcb1295a18af4d7d7e425b300cfa2c3b9b831c7424dda832c308158a"
+    },
+    {
+      "dir": "batches/intake_03",
+      "labels_sha256": "f310e0ed46723e0aa091902d345bfafd8b64554785bdf78d14ec3c00b23834e8"
+    },
+    {
+      "dir": "batches/intake_04",
+      "labels_sha256": "5abb8e8ae4307517740d44209323d452e6a171ae6f00ab7cf667abd62f3a7f5c"
+    },
+    {
+      "dir": "batches/intake_05",
+      "labels_sha256": "22f396627c73807168ae66c246a4c0df90bea9c68822bf8c744ba0982106c3f1"
+    },
+    {
+      "dir": "supplement_01/batches/intake_06",
+      "labels_sha256": "9ad68a94dc1548adc878fe574c94ffd3a3dd838ce1525a4f7c663a6f85fec5a2"
+    },
+    {
+      "dir": "supplement_01/batches/intake_07",
+      "labels_sha256": "0336fccaf2219d1594cf80e6bcce28e7f4fecb06b86aa38cfc554449b69714ef"
+    }
+  ],
+  "heldout_batch": "supplement_01/batches/intake_08",
+  "configuration": {
+    "episodeSteps": 300,
+    "startingCarbon": 2500,
+    "size": 15,
+    "carbonCoverage": 45,
+    "numberOfBases": 2,
+    "startPosOffset": 1,
+    "startingCellCarbon": 50,
+    "maxCellCarbon": 100,
+    "recCollectorCost": 30,
+    "recCollectorIncreaseCost": 0,
+    "recPlanterCost": 30,
+    "recPlanterIncreaseCost": 0,
+    "moveCost": 0,
+    "smeltCost": 0,
+    "workerLimit": 10,
+    "planterLimit": 1,
+    "collectorLimit": 2,
+    "plantCost": 20,
+    "plantCostInflationRatio": 5,
+    "plantCostInflationBase": 1.235,
+    "playerTreeProtectiveNumber": 0,
+    "co2FrmWithered": 30,
+    "seizeCost": 20,
+    "initialCollectRate": 0.3,
+    "collectDecreaseRate": 0.0,
+    "regenRate": 0.03,
+    "treeLifespan": 50,
+    "cellAbsorptionRate": 0.0375,
+    "collectorAbsorptionRate": 0.1,
+    "randomSeed": null,
+    "agentTimeout": 60,
+    "actTimeout": 1,
+    "runTimeout": 9600
+  },
+  "parent": "9c54df17eba7cfecf6ac2698eccbbadc2607665e16ab613925188131ce5514e0",
+  "original_md5": "57f9a594cce4f2ec9e3573d8d9d26ca1",
+  "training_design": "All 56 registered isolated stay-vs-move intentions on 14 pre-exposed maps, including the unpaid intentions. No parameter selection; 01-07 results were already published or seen. Each terrain has equal total weight. Signed pay-minus-defer official margin, no clipping. Use the five frozen public cost/area/tenure/cover/freight features plus three physical features, comparing adjacent hostile collectors, adjacent hostile planters, and whether the present target is an existing enemy tree. Grouping and labels are offline only.",
+  "weights": {
+    "intercept_penalty": 0.1,
+    "slope_penalty": 0.2,
+    "minimum_predicted_departure": 100,
+    "support_pad": 0.05
+  },
+  "comparison": "Frozen v1 and equal-map train-only intercept, same support bounds and departure threshold. Score all selected opportunities in supplemental intake 08; seal decisions for the entire selection with both seats before any response score is loaded. Retain sign and magnitude for every focal action; report no-op, misses and actual purchases separately as diagnostics with denominator. Report mean by terrain, each physical seat, terrain directional agreement, realized loss if wrong. No root is a new game win. No promotion to a full match on this two-map comparison. No new simulation or new maps consumed by this experiment."
+}

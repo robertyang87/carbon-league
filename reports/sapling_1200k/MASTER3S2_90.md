@@ -8,7 +8,9 @@
 
 原版规则中，工人可移动或留守，种植工留守可新种或夺树。树息在每次结算时入账；到龄时碳回到格子，玩家没有主动售树指令。父代在第 285–294 步新种 25 棵，其中 19 棵在终局前收回成本，合计直接净收入 +375.06；最后五步仅看到一笔新种，净亏 56.50。终盘投资要看还有几个结算步、当地碳量和被夺风险。[官方动作与结算源码](../../code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/helpers.py) · [原版逐树验证与反例](master6_actor_dev/symmetry_dev/economy/README.md)
 
-截至仓库快照 `2cc7c358`，已登记前五任一方出场的 **1,503 张不同初盘**。1,502 场的双方分数可复核，另 1 场官方给故障方空分，其 257 个正常行动步和真实地图照样归档。所有这些地图都进入正式排除。[新增逐局复盘](all_top5/appendix_2cc7c358/README.md) · [异常局的官方原始记录](all_top5/appendix_97de1ebc/unscored/README.md) · [完整排除清单](all_top5/appendix_2cc7c358/exposure.json)
+截至仓库快照 `b5e6a7f8`，已逐图登记 **1,522 张不同初盘**，其中 119 场前五互打，1,403 场对外。1,521 场双方分数完整，另一场官方给故障方空分，其 257 个正常行动步单列。新批 19 场里，Master6 曾用一个空载工换掉缺钱对手的最后一个采集工，让对手在余下 208 步始终无法重新开工；另有赢 7,706 分却没有阻止对手持续交货的反例。[新增 19 场逐局与现金转折](all_top5/appendix_b5e6a7f8/README.md) · [同名对手对照及双边工号](all_top5/appendix_b5e6a7f8/matched.md) · [独立考试排除清单](all_top5/appendix_b5e6a7f8/exposure.json)
+
+另用原版双方真实续弈训练种植工付款选择，保留因碰撞等原因未能成交的指令。14 张已曝光图中近一半付款意图落空。逐图留出时，学到的选择在 56 根改了 6 根，6 次官方终局分差都恶化，按图平均 −44.97。没有把这一改动加进参赛包。[新的动作价值训练与实战反例](master6_actor_dev/planter_intent_dev/README.md)
 
 较早的撤离开发对照在两张新图上由父代和冻结的撤离模型各执两席，对手均为仓内原版 Master3s2。**候选席 0、席 1 各 0/2，总计 0 胜 4 负，平均官方分差 −1,377.49。父代也是 0/4，平均 −1,592.41。** 候选回放中的 53 次实际改令，经同一回合同一敌令的双引擎重放，50 次使原本阵亡的种植工存活，0 次造成额外阵亡，另 3 次放弃付款 92.11。两张图的席 0 分差改善，席 1 恶化。预注册要求至少三个同图同席的 U 改善，本次为两个，所以保留父代，独立正式考卷未开。[八局原版比分和逐席对照](master6_actor_dev/tree_response_training/planter_survival/native_dev/RESULTS.md) · [单文件候选与风险模型身份](master6_actor_dev/tree_response_training/planter_survival/native_dev/release_manifest.json) · [逐笔撤离复算](master6_actor_dev/tree_response_training/planter_survival/native_dev/actual_edits.json)
 

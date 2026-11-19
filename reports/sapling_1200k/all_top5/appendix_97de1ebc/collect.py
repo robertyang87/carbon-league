@@ -22,14 +22,17 @@ def save(path, data):
     path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n")
 
 
-def inventories():
-    sources = {r:all_sources(r) for r in (OLD, REV)}
-    changed = set(fetch.git("diff","--name-only","--no-renames",OLD,REV).decode().splitlines()) & set.union(*sources.values())
-    known = {g["id"] for b in PAST for g in fetch.load(TOP/b/"manifest.json")["games"]}
+def inventories(previous=None,revision=None,batches=None):
+    old_revision = previous or OLD
+    new_revision = revision or REV
+    prior_batches = PAST if batches is None else batches
+    sources = {r:all_sources(r) for r in (old_revision, new_revision)}
+    changed = set(fetch.git("diff","--name-only","--no-renames",old_revision,new_revision).decode().splitlines()) & set.union(*sources.values())
+    known = {g["id"] for b in prior_batches for g in fetch.load(TOP/b/"manifest.json")["games"]}
     additions = {}
     counts = Counter()
     for path in sorted(changed):
-        before, after = [read_score(path,r,sources[r]) for r in (OLD,REV)]
+        before, after = [read_score(path,r,sources[r]) for r in (old_revision,new_revision)]
         if before.keys()-after.keys():
             raise ValueError(f"removed scores in {path}")
         counts["before"]+=len(before); counts["after"]+=len(after)
@@ -46,7 +49,7 @@ def inventories():
             counts[category]+=1
     new = {k:v for k,v in additions.items() if v["class"]=="top"}
     partial={k:v for k,v in new.items() if v["unscored"]}
-    return {"unscored_new_ids":sorted(partial),"indexed_distinct":len(known)+len(new),"source":"本次有更新的成绩索引","previous_score_revision":OLD,"revision":REV,"old_reference_count":counts["before"],
+    return {"unscored_new_ids":sorted(partial),"indexed_distinct":len(known)+len(new),"source":"本次有更新的成绩索引","previous_score_revision":old_revision,"revision":new_revision,"old_reference_count":counts["before"],
             "new_reference_count":counts["after"],"existing_references":counts["old"],"non_top_five_refs":counts["other"],
             "union_games":len(known)+len(new)-len(partial),"new_count":len(new)-len(partial),"new_mutual":sum(r["mutual"] for r in new.values()),
             "all_added_references_by_id":additions}

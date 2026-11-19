@@ -1,5 +1,9 @@
 # 天梯前五逐决策背景查询
 
+截至仓库快照 `b5e6a7f8`，有完整双方分数的 **1,521 局**共 452,881 次联合推进，按两个物理席索引 **905,762 个行动前视角**。另有 1 场执行故障，双方正常的前 257 步及各自视野保留在单列回放，故障方的官方分数为空。共 1,522 个不同比赛 ID、地图种子和初始碳图。最新 19 局另可逐步读取经济转折前 10 步至窗口结束的双方工人、真实动作和实际结算。
+[最新 19 局上下文](context_appendix_b5e6a7f8_receipt.json) · [转折前后联合动作与收支](appendix_b5e6a7f8/turn_actions.json.gz) · [上批 15 局上下文](context_appendix_2cc7c358_receipt.json) · [故障局的有效前缀](appendix_97de1ebc/unscored/README.md) · [新旧实验地图隔离](appendix_b5e6a7f8/exposure.json)
+
+
 截至 `cbd6d545`，冻结前五累计 **1,465 局、436,331 个联合回合、872,662 个行动前物理席位视角**。新批 25 局的 14,676 个决策均核对两席公开碳图、现金与命令。24 局走到步限，1 局正式灭绝提前结束。[本批逐局实收和转折](appendix_cbd6d545/README.md) · [决策上下文收据](context_appendix_cbd6d545_receipt.json)
 
 截至 `39a745e0`，冻结前五累计 1,440 张独立地图、428,993 次联合推进、857,986 个物理席决策。本批 8 场均为 Master6 对外实战，共 4,784 个行动前上下文。[双方现金、行动与转折前局面](appendix_39a745e0/README.md) · [上下文收据](context_appendix_39a745e0_receipt.json)
