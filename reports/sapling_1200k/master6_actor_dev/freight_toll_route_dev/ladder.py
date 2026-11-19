@@ -3,7 +3,7 @@ from collections import defaultdict
 import gzip,json
 from measure import HERE,sr
 
-def collect():
+def collect(include_stages=False):
     root=HERE.parents[1]/'all_top5'
     manifest=sr.load(root/'manifest.json')
     elite={p['name'] for p in manifest['top5']}
@@ -20,6 +20,14 @@ def collect():
                         outcome=int(game['score_by_seat'][s]>game['score_by_seat'][other])-int(game['score_by_seat'][s]<game['score_by_seat'][other]),
                         bank=b['bank'],opponent_bank=opp['bank'],received=b['tree_from_enemy_carried'],
                         paid=opp['tree_from_enemy_carried'],tree=b['tree'],other_tree=opp['tree']))
+            if include_stages:
+                stages={}
+                for stage in record['stages']:
+                    lo=stage['a']
+                    if lo not in (0,100,200):raise ValueError(f'unexpected stage {lo}')
+                    stats=stage['seats']
+                    stages[lo]=[stats[idx]['bank'] for idx in (s,other)]+[stats[idx]['bank_count'] for idx in (s,other)]
+                rows[-1]['stages']=stages
     base={g['id']:g for g in manifest['games']}
     for path in sorted((root/'economy_data').glob('*.jsonl.gz')):
         for line in gzip.open(path):
