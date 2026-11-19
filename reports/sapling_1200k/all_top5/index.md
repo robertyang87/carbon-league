@@ -45,3 +45,5 @@
 [截至 c5c8cf8d 的 11 局新增对外实战，含双方资金、攻防动作和转折前布局](appendix_c5c8cf8d/README.md)
 
 [截至 39a745e0 新增的 Master6 对外八局，含两引擎复算与每局双方的现金转折](appendix_39a745e0/README.md)
+
+[截至 cbd6d545 的 25 场新增回放](appendix_cbd6d545/README.md) · [Master6 的败局与同一对手两种收入结局](appendix_cbd6d545/contrasts.md)

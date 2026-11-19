@@ -1,5 +1,7 @@
 # 天梯前五逐决策背景查询
 
+截至 `cbd6d545`，冻结前五累计 **1,465 局、436,331 个联合回合、872,662 个行动前物理席位视角**。新批 25 局的 14,676 个决策均核对两席公开碳图、现金与命令。24 局走到步限，1 局正式灭绝提前结束。[本批逐局实收和转折](appendix_cbd6d545/README.md) · [决策上下文收据](context_appendix_cbd6d545_receipt.json)
+
 截至 `39a745e0`，冻结前五累计 1,440 张独立地图、428,993 次联合推进、857,986 个物理席决策。本批 8 场均为 Master6 对外实战，共 4,784 个行动前上下文。[双方现金、行动与转折前局面](appendix_39a745e0/README.md) · [上下文收据](context_appendix_39a745e0_receipt.json)
 
 截至 `c5c8cf8d`，已核对 1,432 张独立地图、426,601 次联合推进、853,202 个物理席决策。新增 11 场均为前五对外实战，其中 Master5s 6 场、Master6 4 场、ClaudeFable5.2-v7 1 场，共 6,578 个行动前上下文。[逐局现金、攻防与回溯](appendix_c5c8cf8d/README.md) · [上下文收据](context_appendix_c5c8cf8d_receipt.json)
