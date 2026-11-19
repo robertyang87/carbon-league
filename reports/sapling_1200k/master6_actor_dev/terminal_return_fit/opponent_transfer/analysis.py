@@ -68,14 +68,17 @@ def render():
                 r = next(x for x in result["games"][name] if (x["seed"],x["candidate_seat"]) == (cluster["seed"],s))
                 score = r["official_score_by_seat"]
                 return f"{score[s]:,.2f}／{score[1-s]:,.2f}"
-            lines.append(f"| {cluster['seed']} | {s} | {by_arm('parent')} | {by_arm('learned')} | {pair['delta_margin']:+,.2f} | {pair['delta_U']:+.4f} | {pair['first_joint_divergence_turn']} |")
+            lines.append(f"| {cluster['seed']} | {s} | {by_arm('parent')} | {by_arm('learned')} | {pair['delta_margin']:+,.2f} | {pair['delta_U']:+.7f} | {pair['first_joint_divergence_turn']} |")
     lines.extend(["", "| 两图、四局 | 胜／平／负 | 平均分差 | 平均 U |","|---|---:|---:|---:|"])
     for arm,label in (("parent","父代"),("learned","v1")):
         r=result["arms"][arm]
         lines.append(f"| {label} | {'／'.join(map(str,r['WDL']))} | {r['mean_margin']:+,.2f} | {r['mean_U']:.5f} |")
-    lines.extend(["", "两张地图分别将两个席位的配对结果等权平均。"])
+    total_margin = result["arms"]["learned"]["mean_margin"] - result["arms"]["parent"]["mean_margin"]
+    total_u = result["arms"]["learned"]["mean_U"] - result["arms"]["parent"]["mean_U"]
+    improvements = sum(pair["delta_margin"] > 0 for m in result["map_clusters"] for pair in m["pairs"])
+    lines.extend(["",f"v1 相对父代平均分差改变 {total_margin:+,.2f}，平均 ΔU {total_u:+.7f}。四组同图同席有 {improvements} 组分差提高。这一对手的胜负与 U 已接近上限。", "", "两张地图分别将两个席位的配对结果等权平均。",""])
     for c in result["map_clusters"]:
-        lines.append(f"- 图 {c['seed']} 平均 Δ分差 {c['mean_delta_margin']:+,.2f}，平均 ΔU {c['mean_delta_U']:+.4f}。")
+        lines.append(f"- 图 {c['seed']} 平均 Δ分差 {c['mean_delta_margin']:+,.3f}，平均 ΔU {c['mean_delta_U']:+.7f}。")
     lines.extend(["", "| 地图 | 席 | v1 相对父代己方回库 | 对手回库 | 己方树息 | 对手树息 |","|---|---:|---:|---:|---:|---:|"])
     for p,n in zip(econ["parent"],econ["learned"]):
         seed,s=n["seed"],n["candidate_seat"]
