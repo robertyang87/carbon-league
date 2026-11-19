@@ -1,0 +1,32 @@
+{
+  "purpose": "training map with independent constant diagnostic weights checks the held-driver code paths without reading held responses",
+  "script_sha256": "3af18c45881ecddde3c3c9dbb6fe3185032837860f24de19df1add54971d5bfe",
+  "positive": {
+    "seed": 621476120,
+    "seat": 0,
+    "map": "2a7d4f94ed871802c7e99e168aae9decd0f03058fff4e91c0ad68b7450dc14de",
+    "source_sha256": "13430bfada4367328a96b0b14b10829918ffc519e59b7ea584198ca16776ad7a",
+    "expected": "621476120-0-255-bank_route",
+    "observed": {
+      "id": "621476120-0-255-bank_route",
+      "t": 255,
+      "uid": "player-0-worker-51",
+      "action": "LEFT",
+      "original": "RIGHT"
+    },
+    "same_before": 255,
+    "public_commands_sha256": "2f1016786d50a5ba020ad5f9c0054d7e2d69ba38859a65454a51ab8e2bb3bd99",
+    "passed": true
+  },
+  "negative": {
+    "seed": 621476120,
+    "seat": 0,
+    "map": "2a7d4f94ed871802c7e99e168aae9decd0f03058fff4e91c0ad68b7450dc14de",
+    "source_sha256": "13430bfada4367328a96b0b14b10829918ffc519e59b7ea584198ca16776ad7a",
+    "expected": null,
+    "observed": null,
+    "same_before": 296,
+    "public_commands_sha256": "8070e47c09f6bf868e6e9ef455c3bbc0fbd33c98a5aca74767ffe68979c32b3e",
+    "passed": true
+  }
+}
