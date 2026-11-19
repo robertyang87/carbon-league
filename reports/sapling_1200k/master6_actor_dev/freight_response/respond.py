@@ -25,7 +25,9 @@ def prepare(name):
         assert digest(model.read_bytes())==reg['model_sha256']
         forecast=FreightPredictor(model).predict(obs,prefix[-5:])
         full=choose_intervention(obs,raw['game_configuration'],s,a,forecast)
-        if not full or any(r[key]!=full[key] for key in full):raise ValueError('whole policy selector inconsistent')
+        canonical=json.loads(json.dumps(full,allow_nan=False)) if full else {}
+        differences={key:(r.get(key),val) for key,val in canonical.items() if r.get(key)!=val}
+        if not canonical or differences:raise ValueError(('whole policy selector inconsistent',differences))
         save(wd/'root_input.json.gz',dict(public_observation=obs,public_history=prefix[-5:],own_base_actions=a,forecasts=forecast,selection=full))
     case=dict(seed=role['seed'],seat=s,family='fork_denial',root_t=r['t'],source_dir=str((BASE/role['source']).relative_to(ROOT)),
         record=dict(seed=role['seed'],seat=s,source=r['source'],source_sha256=r['source_sha256']),root={**r,'enemy_worker':r['target_worker']},
