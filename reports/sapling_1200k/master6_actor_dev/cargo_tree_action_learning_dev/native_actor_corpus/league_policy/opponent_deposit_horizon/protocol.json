@@ -1,0 +1,26 @@
+{
+  "schema": "opponent-deposit-horizons/1",
+  "horizons": [
+    3,
+    5,
+    10
+  ],
+  "forecast_endpoint": "For each currently living positive-cargo opposing collector, any own-warehouse positive deposit by that exact worker in the next horizon (joint moves t..t+h-1 inclusive, truncate at actual terminal). Mid-window collections may contribute. Do not include gifts, tree revenue, cash changes, or collision money.",
+  "inputs": "Frozen public opponent_cargo_calibration_dev H3/H5 and freight_horizon H10; at time t, observer's own seat public state and up to ten past consecutive public frames. Rank alarm by cargo*probability, tie break by string worker ID; product is exposure rank only.",
+  "baseline": "H3/H5 original distance logistic and supplemental distance + cargo table fitted solely on the original short-head fitting maps (same native feature archive). H10 uses shipped frozen distance-and-cargo boosting. No labels from current assessment.",
+  "metrics": "All eligible worker turns: equal physical-map Brier and ten fixed equal-width probability bins with reliability, mean forecast/outcome. Each h-transition nonoverlapping block: rank 1 cargo*probability among workers with cargo>=100, assign hit only if that worker delivers before block end. Report top warnings by h, median/mean flags per game, threshold 0.7 for high confidence. Chronological first threshold-crossing high-cargo worker per match is one alarm. Further report first nontrivial lead, min distance 2/3/4 for H3/5/10. Retain no-alarm matches. Alert false means no true positive cash by original worker. First 10 false and 10 true sorted by source/turn.",
+  "excluded_seeds": [
+    621758450,
+    621758451,
+    621758460,
+    621758461,
+    621758462,
+    621758463,
+    621758464,
+    621758465,
+    621758470,
+    621758471
+  ],
+  "physical_exclusions": "Remove all short-head fitting and calibration physical boards, long-head fitting boards, and all listed excluded seeds. No independent final tests. Include all verifiable original exposures in the repository census, including later complete original hosted games, deduplicating identical action tapes per map and seat. Record source inventory, duplicate/exclusions and proof scope.",
+  "purpose": "Offline external forecast evaluation; no change to actor, no live matches or hard rules, no causal inference about successful interceptions."
+}
