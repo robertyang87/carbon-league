@@ -18,6 +18,10 @@ Sapling 首胜包 `8da4b465` 在预先登记的新开发图 621758346 席 1 胜�
 
 两个采集工在相同的历史公开局面分别用旧、新学生自由选令，两臂共享当拍原版实令，随后均用首胜包续弈，原版独立应对至终局。图 621471120 席 1 的官方分差由 −1,743.86 变为 −1,033.46（改善 710.40）；图 621477121 席 0 由 −806.15 变为 −1,111.94（退步 305.79）。第二例里焦点工一生交仓从 96.22 增至 639.88，全队相对对手的交仓差却恶化 679.06。四条分支均负，910 次根后原版搜索均达到正深度。此解码器止于这轮旧图对照。[两图全部收据和经济分项](master6_actor_dev/cargo_tree_action_learning_dev/learned_carbon_observation/decoder/real_roots/README.md)
 
+首胜包的 Sapling 骨干直接从原版实际发出的整队指令学习。13 张训练图、双方席位共 2,496 个不重复局面、23,880 个可选单位命令，候选 `6c548995` 更新了 1,158,585 个参数。六张诊断图的工人动作命中率从 79.34% 升到 79.68%，三张验证图下降 0.45 个百分点。两个旧图窗口内让新网络连续出令 32 步，再用共同父代续弈至终局。新策略比父代分别多改 14、13 条工人命令，最终官方分差改善 **19.81、77.77** 分；四支均负。对这两次改善的经济复算显示，地面树租均提高，正常入库净差均降低。该包在独立天梯限额下有 598 次完整回放请求，最慢 88.36 毫秒，无慢步、超时和错误。[网络、训练控制和留图原始动作](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/README.md) · [两图实际原版响应与结算](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/original_response/README.md) · [天梯计时](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/ladder_timing/hosted/README.md)
+
+截至数据快照 `b243ff82`，前五出场有官方终分的回放为 1,629 局，其中互打 121 局、对外 1,508 局；另有一场官方故障记录。新增的一胜一败都对阵 it920-evo31，两图和双方逐步行动已归档并排除出独立考试。[当前逐局索引](all_top5/README.md)
+
 ## 早期开发记录
 
 **早期冻结组合 `c5ad3f43` 在当时的曝光图取得一胜。** 在先前用过的地图 `621461321`，席 0 的冻结组合 `c5ad3f43` 以 **8,026.31 比 7,644.53** 胜 Master3s2，打满 299 步。考官完成 294 次搜索，其中 233 次到达深度 8，另有 5 步只有一个候选。两席均无内部错误。同图换席分差为 −1,837.30。参赛组合按 75% 自有 Echo4、25% Sapling 融合动作分数；去掉 Sapling 后，此前 68 个实战局面中有 16 个改变整队命令。该版本在本轮以前的 12 局为 1 胜 11 负。[官方逐步回执](master6_actor_dev/actor_partner_dev/native/candidate/receipt_621461321_0.json) · [实际动作消融](master6_actor_dev/actor_partner_dev/attribution.json) · [十二局与换席比分](master6_actor_dev/first_win_analysis/README.md)
