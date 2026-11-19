@@ -1,0 +1,12 @@
+{
+  "experiment": "pressure-return-1",
+  "development_map": 621455920,
+  "seats": [0, 1],
+  "exam": "unchanged native full-search Master3s2 with temperature 1, no original opponent RNG seed, normal termination and original interpreter cash replay",
+  "parent": "b54cc51f4109f19f4a7b508eafc9cf04a28b7e295a9f442c5208f0d33f10a9ca",
+  "targets": "Choose among five possible next destinations of a visible enemy collector carrying at least 50, when our strictly lighter collector is at most two toroidal steps away. Labels are the observed enemy move; all four unchosen options supply negatives. Both current workers, public bases, prior victim direction and 0..3 consecutive home-closing steps are observable before this simultaneous action.",
+  "split": "Exclude all 26 previously diagnosed map seeds and IDs. Seed hash modulo 10 gives train 0..6, validation 7, test 8..9. Victim policy identity hash modulo 5 zero withholds the entire victim policy from fitting, except Master6 is explicitly a training identity. Report both new maps with known victim identities and new maps with unseen victim identities; missing registry IDs use a common normalized victim name across appearances. Additional 8 are quarantined external validation, except any map previously used or excluded. Do not change thresholds after validation.",
+  "sampling": "Uniform per-map pseudo-random cap of 80 pair observations within each audit group; weight maps equally during fit and scoring. Identical seed cannot cross primary splits. Five-way softmax with ridge 0.02, fitted on simultaneous observed enemy action, no case-control calibration adjustment.",
+  "decision": "At most one collector per root. Only two-or-more prefix-legal choices with logit gap at most 1.1, unchanged other friendly orders after prefix re-decode, no risky friendly overlap or enemy base, lower enemy cargo cannot reach the alternative. Exclude our currently bankable valuable load from a detour. Score predicted enemy crossing weighted by victim load and home proximity, penalize our cargo delaying own delivery and abandoned collection. Switch only with at least 12 adjusted carbon advantage and at least .16 predicted crossing probability. Deterministic and no search.",
+  "interpretation": "Single fresh diagnostic map and both seats; complete regardless of outcomes. Not a formal-promotion or population-win-rate estimate. No tuning on this map; independently measured same-map parent result is provided by the other lane."
+}
