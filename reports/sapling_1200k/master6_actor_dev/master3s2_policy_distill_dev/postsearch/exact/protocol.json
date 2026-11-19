@@ -1,0 +1,10 @@
+{
+ "fit":[621704800,621704801,621758322,621758323,621758324,621758325],
+ "held":[621758326,621758327],
+ "integer_rng":["elite_role_mix_dev/recruit_only_dev/responses_621704800_0_*.json.gz","elite_role_mix_dev/recruit_only_dev/responses_621704801_1_*.json.gz"],
+ "mt_state":["two_turn_intercept_dev/pure/seat0","midgame_hold_dev/seat1","midgame_role_value_dev/seat1","midgame_lane_dev/seat0","harvest_contact_dev/seat1","freight_toll_route_dev/seat0"],
+ "arm_selection":"Use both frozen arms at each listed root, no prefix before the fixed joint root is eligible for labels. Each selected root must reproduce full native changed flags exactly on both arms, with every unchanged team command equal. No substitute if an alignment check fails. 340 has no signed pre-sample per-unit target and is diagnostic only.",
+ "optimizer":"Raw control versus matched whole-team and only changed-unit targets. All from original 1.206M Sapling weights, identical sample draws (48 updates x 8), CPU3 nice19, all initialized parameters and optimizer settings shared. Each residual arm uses 50% raw + 50% submitted one-hot on its masked decisions; all remaining decisions use raw only. Every arm uses identical denominator. This comparison identifies the effect of changing which labels receive supervision under that budget; it does not equalize their total gradient.",
+ "success":"On both held physical maps exact-unit arm must improve NLL on genuinely replaced units versus both raw and team controls, without >2 percentage points loss of agreement on unchanged units versus raw. Report all units and joint agreement, raw KL, count of units and distinct physical maps. Archived continuations are not new independent games.",
+ "updates":48,"batch":8,"lr":0.00008,"seed":912487,"residual_weight":0.5
+}
