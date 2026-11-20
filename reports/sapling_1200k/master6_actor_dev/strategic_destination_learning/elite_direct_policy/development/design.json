@@ -1,0 +1,102 @@
+{
+  "schema": "sapling-elite-policy-versus-frozen-bc/development-design/1",
+  "purpose": "Fresh normal-opening development test conditional on the preregistered action-imitation acceptance of the fixed elite student trained on five physical historical maps. Isolate the effect of replacing the Sapling weights in the deployed policy while both arms retain the same other components. No retraining, opponent injection or continuation-root reuse.",
+  "control_sha256": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "elite_sha256": "5e4f5da3fd63962ed559ba9efdeb788f454e3f6fb9ce617a3b5c877080795cb2",
+  "control_weights_sha256": "505a0ff3580262156c76dee2b9b288526d57d6fcd26412771f7c40009f47b108",
+  "elite_weights_sha256": "520906e0f34f6ebe73d7a2367ec7cf74e494f06d5156f04409f3acf7ecad21ff",
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "current_platform_guide_sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8",
+  "elite_training_protocol_sha256": "d373ccae0808919790786132824c893d762410747e95c45fea9fe4f333fd9aae",
+  "seeds": [
+    621758520,
+    621758521,
+    621758522,
+    621758523
+  ],
+  "physical_boards": {
+    "621758520": "9b203469bb7a561a391900c54ad79c3192fc48561033a8f0badc06accb93b81b",
+    "621758521": "b34a41ef2995be57bdaeaa0674045f003aa07000dbe67781404ee3208dfa9291",
+    "621758522": "ce905073f5b7900ed82b835650f7f41fa897076b4e77a6567f65da1bb80ac097",
+    "621758523": "73667e3603ad059f3f97b4839ca3b7c80e9c35bc41c10fa8aeac8ebcbb7ef055"
+  },
+  "arms": [
+    "control",
+    "elite"
+  ],
+  "schedule": [
+    {
+      "seed": 621758520,
+      "seat": 0,
+      "order": [
+        "control",
+        "elite"
+      ]
+    },
+    {
+      "seed": 621758520,
+      "seat": 1,
+      "order": [
+        "elite",
+        "control"
+      ]
+    },
+    {
+      "seed": 621758521,
+      "seat": 0,
+      "order": [
+        "elite",
+        "control"
+      ]
+    },
+    {
+      "seed": 621758521,
+      "seat": 1,
+      "order": [
+        "control",
+        "elite"
+      ]
+    },
+    {
+      "seed": 621758522,
+      "seat": 0,
+      "order": [
+        "control",
+        "elite"
+      ]
+    },
+    {
+      "seed": 621758522,
+      "seat": 1,
+      "order": [
+        "elite",
+        "control"
+      ]
+    },
+    {
+      "seed": 621758523,
+      "seat": 0,
+      "order": [
+        "elite",
+        "control"
+      ]
+    },
+    {
+      "seed": 621758523,
+      "seat": 1,
+      "order": [
+        "control",
+        "elite"
+      ]
+    }
+  ],
+  "expected_games": 16,
+  "examiner": "Original repository package from normal opening, both physical seats, the original adaptive 0.58s search and native unseeded T=1 orders, official termination and extinction scoring, no teacher injection or relabelling.",
+  "execution": "One physical seed-seat per hosted job, two cold starts on the same CPU set and host in the listed balanced order. Independent disconnected Python 3.12 / NumPy 1.26.4 Docker containers at 1.5 CPU / 512 MiB per agent. Count complete public request and parsed reply including turn zero; report both sides, init <=20s, base 1s, hard 3s, <=3 slow per party/game, <=5s cumulative excess, whole match <=1500s. Read back cgroups and report original actual depth, candidate count and deadlines.",
+  "estimands": {
+    "absolute": "Each arm 8 registered games; record both seats, W/D/L, observed wins over 8, and mean signed official terminal score difference. Draws are never wins. Report timeout forfeits and missing official numerical scores separately without fabricating a margin.",
+    "paired": "Within each seed and physical seat compare elite minus control for signed official margin and binary win indication. Average both seats equally within each of 4 physical maps and all maps equally across the batch. Return individual map changes and map-clustered two-sided 95% t interval (df=3) and exhaustively enumerate 4^4 whole-map bootstrap resamples for percentile sensitivity. Report only when all needed outcomes are available. Four maps may yield wide or degenerate intervals.",
+    "history": "Previous BC, parent, prior elite and alternate training development results, formal examination, training games and additional runs stay out of this batch. No selection/early stopping based on result, elapsed depth, physical seat or clock. Retain every missing ticket and timeout, never replace a game."
+  },
+  "activation": "Only after a fully released main commit binds the exact model, trainer, weights, evaluation and signed physical commands. Recompute >3/6 assessed terrain improvements on joint NLL, lower mean joint NLL, higher equally-map-weighted deployed entity accuracy, changed physical actions at both seats. Release a distinct frozen evaluation digest and use the previous exposure guard for one dispatch. Include all games, including pure losses, forfeits, and incomplete efforts; no replacements or score-based retries."
+}
