@@ -1,0 +1,87 @@
+name: Master3s2 derivative cold load and step-zero comparison
+run-name: Master3s2 cold probe ${{ inputs.protocol_sha }}
+on:
+  workflow_dispatch:
+    inputs:
+      protocol_sha:
+        description: SHA-256 of the four-map cold-start protocol
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: master3s2-cold-probe-${{ inputs.protocol_sha }}
+  cancel-in-progress: false
+jobs:
+  cold:
+    if: github.ref == 'refs/heads/main' && github.run_attempt == '1'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      LANE: reports/master3s2_derivative/cold_start/hosted_probe
+      ARENA: reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live
+      DIGEST: ${{ inputs.protocol_sha }}
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/master3s2-cold-start-probe.yml
+            /code/env_src/carbon_challenge-master/zerosum_env/
+            /sources/master3s2/master3s2.py
+            /reports/master3s2_derivative/cold_start/hosted_probe/probe.py
+            /reports/master3s2_derivative/cold_start/hosted_probe/protocol.json
+            /reports/master3s2_derivative/cold_start/candidate.py
+            /reports/master3s2_derivative/cold_start/release.json
+            /reports/master3s2_derivative/opponent_policy/candidate.py
+            /reports/master3s2_derivative/opponent_policy/protocol.json
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/*.py
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/Dockerfile
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/protocol.json
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz
+      - name: Guard one measurement per registered workload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "$DIGEST" =~ ^[0-9a-f]{64}$ ]]
+          query="repos/$GITHUB_REPOSITORY/actions/workflows/master3s2-cold-start-probe.yml/runs?event=workflow_dispatch&branch=main&per_page=100"
+          gh api --paginate --slurp "$query" > "$RUNNER_TEMP/previous.json"
+          prior=$(jq -r --arg title "Master3s2 cold probe $DIGEST" --argjson me "$GITHUB_RUN_ID" '.[] | .workflow_runs[] | select(.id<$me and .display_title==$title) | .id' "$RUNNER_TEMP/previous.json")
+          for id in $prior; do
+            gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs?per_page=100" > "$RUNNER_TEMP/jobs.json"
+            if jq -e 'any(.[] | .jobs[] | .steps[]; .name=="Measure eight fresh process pairs" and .status!="queued" and .status!="pending" and .conclusion!="skipped")' "$RUNNER_TEMP/jobs.json" > /dev/null; then
+              echo "Prior measurement in run $id"; exit 1
+            fi
+          done
+      - name: Verify frozen code and build the ladder image
+        run: |
+          set -euo pipefail
+          python3.12 -m venv "$RUNNER_TEMP/probe-python"
+          "$RUNNER_TEMP/probe-python/bin/pip" install --only-binary=:all: --disable-pip-version-check --index-url https://pypi.org/simple numpy==1.26.4 requests==2.32.5 jsonschema==4.25.1
+          "$RUNNER_TEMP/probe-python/bin/python" "$LANE/probe.py" check --digest "$DIGEST"
+          ctx="$RUNNER_TEMP/probe-image"
+          mkdir -p "$ctx/code/env_src/carbon_challenge-master" "$RUNNER_TEMP/measurements"
+          cp -r code/env_src/carbon_challenge-master/zerosum_env "$ctx/code/env_src/carbon_challenge-master/"
+          test "$(grep -cxF 'FROM python:3.12-slim' "$ARENA/Dockerfile")" = 1
+          sed 's|^FROM python:3.12-slim$|FROM python@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b|' "$ARENA/Dockerfile" > "$ctx/Dockerfile"
+          docker build --tag master3s2-cold-probe:registered "$ctx"
+      - name: Measure eight fresh process pairs
+        run: |
+          "$RUNNER_TEMP/probe-python/bin/python" "$LANE/probe.py" run --digest "$DIGEST" --image master3s2-cold-probe:registered --out "$RUNNER_TEMP/measurements"
+      - name: Verify all eight tickets
+        if: always()
+        run: |
+          "$RUNNER_TEMP/probe-python/bin/python" "$LANE/probe.py" verify --digest "$DIGEST" --out "$RUNNER_TEMP/measurements"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: master3s2-cold-probe-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/measurements/
+          if-no-files-found: error
