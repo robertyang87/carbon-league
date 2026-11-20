@@ -95,3 +95,12 @@ B 段（fp32 vec2 吞吐背靠背＋新线等价复核，DGX，复用种子块 9
 `tools/katago_m3s2/gate_vec2.py`（commit 7b845d66），**md5 73124545c5fdec0ab2878740d1173cc4**，策略组直读正本核验：--mean-shift-line 默认值 0.05→0.095（help 注明核准 76472417、旧默认退役），文首说明行同步改为 0.095 并注明重定依据（c4ecdf98、G4 零基线 bootstrap q95 0.094909）；其余判读线与闸逻辑未动，aux_delta 正式线 0.05 未动。默认重跑验证（DGX，消融同臂 A1 vs A2，--games 120，不带 flag）：**gate_pass=True，rc=0**，mean_margin 0.057356881608850746≤0.095，其余腿逐项同带 flag 重跑（KS 0.053763、win 0.010753、aux 0.0111/0.0103/0.0119、行均 0.0、schema 49/43 件各 55,614 行、problems 空）；重跑报告 `reports/gate_ablation_default095_20261120.json`（md5 2e0bc4db）。**旧闸 93557d15 即刻退役。** 现行闸即 73124545，为 Gen-6 生成的等价闸。已知 cosmetic：报告字段名 'mean_shift_NEW_pending_strategy' 仍带 pending 字样（值已是 0.095、不影响任何判读），下次碰闸时顺手改，不另开一轮。
 
 裁定 ②（§7.4 静默挂死有界跟踪项）实施已派：worker／server join 路径加超时与 server 存活检查，故障注入验证后报验销项。
+
+
+## §7.4 跟进项销项裁定：以修后件替换生产 vec1（2026-11-20 12:33，策略组裁定）
+
+核准件：修复报告 `reports/REPORT_VEC1_HANGFIX_20261120.md`（md5 fa7f6904）＋独立核验备忘（md5 cb2947bb）＋diff（md5 5ff20094，158 行）。策略组读过 diff 全文：仅故障路径四处——`queue`／`time` 导入；四常量＋`_pid_alive()`（读 /proc state，`Z` 计死，绕开 os.kill(pid,0) 对 zombie 的误判）；`forward` 的无界 `resp_q.get()` 改 30 s tick 轮询（死即 RuntimeError、累计超 300 s 无响应即 TimeoutError；assert／res is None 分支原样）；`main()` 的 worker join 改 5 s tick 轮询（服务器死时给 worker 60 s 自行退出宽限、超宽限 terminate，`server.join(timeout=60)`，超时 terminate 并记入 failed）；不设整跑绝对时限。超时依据：300 s 为批 2 包 verify 最坏步时 23.745 s 的 12 倍以上、p95 3.708 s 的 80 倍以上，不误杀健康慢轮。
+
+证据核验（核验备忘独立复核）：T2b 修前挂死证实（杀服务器后主进程 +20／+40／+60／+80／+100 s 快照均活、worker CPU 时间冻结）；T3 修后故障注入 35 s rc=1 响亮失败（stderr 原文逐字合、无残留进程、出盘为空）；T4 正常跑修前／修后分片**逐字节同**（e9deed0a…）；T5 超时两分支核验人本人在 DGX 重跑 PASS（活着永不响应 10.0 s 准时 TimeoutError；等待中杀服务器 4.0 s RuntimeError——测试用短超时值，非生产值）。T2 首次复现作废、server.join 超时分支未真实触发（防御性代码）、未在 GPU 上跑（故障路径与设备无关），均已如实记，不推翻结论。
+
+**裁定：以修后件替换生产 vec1。** 理由：修复经三面验证（挂死证实／响亮失败／正常路径逐字节同），正常路径输出未变（T4），替换是数据等价的；Gen-5 生成用 vec1，放着已验证的修复不用、让生产路径留一个已知静默挂死，是失职。执行：修后内容（md5 **2dbd1485**）晋升为生产路径 `tools/katago_m3s2/vec_selfplay.py`，旧件 e59f0700 退役；独立的 `vec_selfplay_hangfix.py` 副本晋升后删除（单份为准、不留双份漂移）；晋升后读回生产路径 md5＝2dbd1485 报策略组登记。DGX 镜像件（e59f0700）走正常镜像同步跟进，不手工改镜像。Gen-6 生成用 vec2 不变，本替换不堵任何在跑线。§7.4 跟进项凭本裁定＋晋升读回销项。
