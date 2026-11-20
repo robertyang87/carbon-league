@@ -1,0 +1,30 @@
+{
+  "format": "sapling-public-return-head/1",
+  "source_case_sha256": "cf018c0a6378bb43736d051abe60c02903b8a837ad74d59426615e381f9e7fc6",
+  "split_method": "lexicographic terrain SHA256 sorting, zero-based positions 0,3,6,9,12 held; all trajectories on each map stay in the same group",
+  "training_terrains": [
+    "0e68112eb5df11b217f3e2407f9d1caa7ca2aee27798c6a4ad26eebd767369fb",
+    "15f0cad1fee2f48eb3e76232cbfc4c327820a1bc7ae6551a4fe7c91920b1868d",
+    "30c61cdd6786d10b51a918031c383c7ad6425047113543f4a1acb4b9bb78fd08",
+    "3d7ff32f763fa20d5b85d6e50da9be5d306f3f89e66aad8652221d582ea13257",
+    "4d545488b89d7c2c19f42c1ebf30467cf8adf5095e368ccffbea85929b19c778",
+    "50d7da141c5b0809e5255e4da132f44a7031ef92fd26a2231e73805d7a5b05ab",
+    "6904d3a75a393cb9720ad1cdc7baf776eb1132f266d0d01cfe485d0aa0e0d4b2",
+    "b12417a1826757d2f8316a5b490000f71a279cdaca87e672097896883f16ae41",
+    "ebb1c0a454b56e3e67e0e4a951db89583e229c83c72c9b340a0cbf796255b6b3",
+    "ed2477ab358591427c5f92cb23051035c0d1e692752b25902874d194bf968ba0"
+  ],
+  "held_terrains": [
+    "094481cca13cd662a74cd5d20c584b941e3f966f34202d4032c91056eeb04e78",
+    "219a3b8f88d9bee784f42dee1de0510a82cf3847834282ec31ce336be4b38e30",
+    "3ebcf8c720f63bf0f857175c7c52ca8565593f35d6082781a240d25b8ad6c4d8",
+    "60a51f65ca34b239ab1558ae80d77e400c1f4b04fd7e842a9fa65de105dab887",
+    "d6305fd8592ade94f5534b4c18fc10d4a007c870f351831aa4521be0755e2c60"
+  ],
+  "unit": "native opponent collector with >=100 cargo at distance 2..10 to own closest base, top cargo/(1+distance), slot t40..240 by 10, all 885 unique prefix-public keys; selection never uses either same-step action",
+  "labels": "target UID first trip ordinary positive own-bank amount within ten joint transitions; binary amount>0; game end keeps observed 0; terminal ratings and tree/base-collision proceeds excluded",
+  "models": "two 12-hidden tanh networks, same literal initialization, two outputs (Bernoulli and log1p delivered amount conditional on payment), columns standardized on fit maps only, geometry masks everything except distance + log cargo, full uses public economic state, two warehouses, toroidal local pressure and routes, target prior 1/3/5/10-step cargo/home trajectory. 10-map fit, five frozen same-competition held terrains",
+  "optimization": "full-batch AdamW lr .005, 100 updates, weight_decay .002, CPU torch single thread seed 621758490, no early stop, clamp standardized cols to +/-6. Per-map equal fit weights. Loss mean Bernoulli NLL plus 0.15 mean normalized conditional squared log1p positive amount, positives map-balanced among contributing maps; same widths, update counts and labeled cases",
+  "report": "map-equal primary Brier and NLL; fixed 5 bins width .2 and classification threshold .5, correct->wrong and wrong->correct with denominator. Predicted cash=p*expm1(conditional log prediction), diagnostic mean absolute error, including zeros. Capped log predictions to [0, log1p(max training payment)] and clipping as registered; this is a plug-in cash forecast, not a calibrated expectation of amounts. 10000 map bootstrap seed 4752, no claim of game causality",
+  "external": "Freeze executable inputs and weights before accessing 16 new BC vs 8da4 comparison games on 621758510..513; replay exact same public history and target selection, no tuning or refit; missing/corrupt matches reported."
+}
