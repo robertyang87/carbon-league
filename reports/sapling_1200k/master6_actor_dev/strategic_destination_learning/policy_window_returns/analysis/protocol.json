@@ -1,0 +1,29 @@
+{
+  "schema": "sapling-public-eight-turn-policy-selector/1",
+  "purpose": "Prospective learning and conditional root evaluation on eight previously registered development terrains. The five fitting and three held maps each contain a BC-source trajectory in the registered seat, comparing an eight-turn BC vs an eight-turn elite Sapling window from t256 and separately t280. Both arms then resume BC. The map is the unit. These are 16 paired roots at most, not 16 independent games or 16 maps.",
+  "bc_sha256": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "elite_sha256": "5e4f5da3fd63962ed559ba9efdeb788f454e3f6fb9ce617a3b5c877080795cb2",
+  "clearance_sha256": "3b203a782f22747ca3f47c91b7aee1c25bcf370703fa0c56f0a30e8053431e5b",
+  "fit_seeds": [
+    621758540,
+    621758541,
+    621758542,
+    621758543,
+    621758544
+  ],
+  "held_seeds": [
+    621758545,
+    621758546,
+    621758547
+  ],
+  "window_starts": [
+    256,
+    280
+  ],
+  "duration": 8,
+  "schedule": "Use BC from opening. At t256 use only the visible state to predict delta. If score>0, use elite for 256..263 then return to BC and lock out t280. If t256 selected BC, consider t280 on the natural BC prefix and invoke elite for 280..287 only if its own prediction is positive. At most one elite window per game. No seed, opening hash or opponent identity selects a window; both true nets emit their complete greedy orders. If neither window chosen the full policy is BC. An additional metric averages two alternative independent conditional decisions across the two roots and cannot be used to sum interventions.",
+  "features": "A linear neural gate with four fitted coefficients. Features are [1,(step-268)/12,tanh((credit_own-credit_rival)/500),tanh((own_cash-rival_cash)/1500 + (live_own_trees-live_rival_trees)/6)]. For each visible collector add carried carbon/(1+home_distance/5) to that side's credit if it can reach its nearest base by t299; use toroidal Manhattan distance. No map identity, time-bank, opponent private state, future state or return enters the gate. The full public observation is still passed through the selected real network and its original decoder/guard each action. Ties (score<=0) select BC.",
+  "fit": "Fit on five map clusters only. y=(elite official margin - BC official margin)/1000, uncapped. For an identical physical policy window on both branches, set structural target to zero; report raw clock/noise difference separately. If on an identical board before any own changed order the simultaneous rival order diverges, or a rival divergence coincides with the first own difference, the batch cannot attribute the difference to the network; omit this root alone from gradient, retain as unpriced in reports. Same for unreachable roots. Fit map-equal ridge with lambda=0.5 on every coefficient including intercept, minimizing mean_map(mean_root((xw-y)^2))+lambda*||w||^2. No CV, manual tuning or refitting on held. Require usable data on >=3 train maps, >=4 clean roots with actual own action divergence. Otherwise fit exactly zeros and leave a structural-insufficiency receipt. Only complete verified tapes eligible; failures retained and never rerun by this analysis.",
+  "blind": "Write and hash weights, then generate all three held-map decisions for both roots using only source public observations. Freeze prediction manifest before loading any held-branch returns. Unreachable roots are allocated as no effect for an intervention that cannot occur; report excluded regimes, absent results and physical masks. Audit normal public entry against the selected network through every recorded 8-turn branch; package outside the window follows BC.",
+  "screen": "Prospective development screen only. For all 3 held maps report (i) two single-root conditional choices averaged per map, versus always BC and always elite at those same roots; (ii) one-window deployment schedule, 256 if positive else 280 if positive else BC, compared to always BC, always elite@256 and always elite@280. For (ii) root-relative increments are measured on distinct native branches and do not form a direct head-to-head score under a shared whole-game stream. Retain each raw and causal effect, signed wins/draws, physical action sequences, common-state rival noise and unreachable roots. Require (i) strictly positive map-equal structural margin improvement vs both baselines and nonnegative mean win differences vs both; (ii) strictly positive mean structural margin increment vs each of the three precommitted strategies, nonnegative win increments vs each, at least one strict positive map vs each, >=2 clean different physical intervention windows across >=2 held maps, >=2 distinct deployed outcomes across held maps (elite@256, elite@280, always BC), successful training support and public-entry parity. All registered roots consumed; any unresolved or contaminated root prohibits advancement (describe allocation and known zero effects). Report leave-one-map-out ranges descriptively. Three maps cannot certify stable wins; no formal exam or ladder submission from here."
+}
