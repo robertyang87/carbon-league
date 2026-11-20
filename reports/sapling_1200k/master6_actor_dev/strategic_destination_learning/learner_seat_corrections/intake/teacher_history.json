@@ -1,0 +1,55 @@
+{
+  "source_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "github_exemplar_path": "sources/master3s2/master3s2.py",
+  "git_blob": "9c46f6fa4ff401b05939150054c2f88f549c2f7e",
+  "source_revision": "99ec3fed8f48158b85399f6887bf62036205dabe",
+  "source_facts": {
+    "actual_public_history": "574–579,625 initialize persistent seat-specific tracker and RNG; prev is the last actual observed players. 99–103 populate previous-positions feature planes 14–17. 620 and 1302 pass this previous observed board into search.",
+    "intended_action_history": "624 records post-search order; 226–231 maps every currently owned worker to its intended destination (default NONE). 223,385,402–449 use this map when a friendly worker disappears, including attribution of enemy casualties, where carbon was dropped, and cells excluded from regrowth (492–499).",
+    "independent_randomness_and_cost": "553,574–577,589–599: _SEED=None and a private RandomState sampled for bases and workers. 1267–1278,1320–1322 and 1394: search uses local tactical seeds and live measured cost for its time-budget decisions.",
+    "public_abi": "629–636 accepts only observation and configuration; no executable-order feedback argument. Exceptions can return {} before cache advancement; 618–623 can swallow search failure. Capture telemetry and reject a missed teacher transition instead of assuming {} means successful execution."
+  },
+  "conclusion": {
+    "unsynchronized_public_shadow": "Feeding only causal learner observations can leave the teacher believing that its proposed action was executed. An observed dead worker has no public next position from which to infer that last order.",
+    "valid_training_adapter": "Call one persistent, isolated original per learner seat/trajectory on every pre-action observation to get its natural proposal. Preserve it and its search telemetry. Once the actual own order is finalized, call _ST[\"tr\"].set_actions(before_players, actual_order) on this same instance before the next public observation. Preserve _ST[\"prev\"], live policy RNG, real search wall clocks, and other state. Assert expected intended destinations from independent physical torus arithmetic each time.",
+    "scope": "This aligns the action-conditioned belief to executed behavior at each successful step without modifying the source. It is an explicit white-box training adapter, not the public interface alone. Its labels are conditional on learner-visited histories; independent original self-play returns, entropy draws, costs, and exact repeatable choices do not follow."
+  },
+  "fixture": {
+    "seed": 621758460,
+    "actor_seat": 1,
+    "role": "The recorded original controlled this seat throughout. No new match, rollouts or original inference.",
+    "steps": 299,
+    "executed_worker_destination_checks": 2774,
+    "identical_action_rewrite_all_steps": true,
+    "matched_final_belief": true,
+    "data": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/delivery_interception/native_response/outputs/621758460_0",
+    "source_sha256": {
+      "prefix.jsonl.gz": "ffc8697c52942361e8f3fd701f357b133a808852e5c67bbef2582ab0b227eae5",
+      "A.jsonl.gz": "c405c485da3060e467a9f41abfd4088dc7aeadf8d19b1786ff8cab76c4309824",
+      "native_requests.json.gz": "861ac7cee5db9adedc29fadf1552da6a5bd628ce4ceed068b93b9755f52ac2a4"
+    },
+    "different_action_case": {
+      "step": 33,
+      "physical_seat": 1,
+      "uid": "player-1-worker-1",
+      "disappears_at": 34,
+      "executed_original_action": "RIGHT",
+      "illustrative_unissued_action": "UP",
+      "actual_destination": 42,
+      "alternative_destination": 26,
+      "public_next_hash": "ac53bb4373de00c97c23af5431a7cf0879a056cd793ef5c7390654d3624d2e9f",
+      "original_request_id": 33,
+      "physical_before_public_hash": "c89965cf8b70c8f5682746099a3ac4b2e76126f49e972cf75cf4b08275c764bc",
+      "changed_next_estimate_cells_actual_vs_uncorrected": [
+        [
+          26,
+          8.192,
+          7.953
+        ]
+      ],
+      "corrected_estimate_and_internal_belief_match": true,
+      "caveat": "The differing order is a deliberately injected legal direction on the recorded original path, not a measured shadow teacher proposal."
+    }
+  },
+  "checker_sha256": "534497905737f12a689bd4c76b2cfd532f65b87c68ff1a7cf50fbd888baafca1"
+}
