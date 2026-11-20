@@ -171,6 +171,8 @@ def main():
             reference=fit(rr,len(runtime.REFERENCE)),full=fit(rr,len(runtime.FEATURES)))
         print("weights",dump(args.out/"weights.json",weights),len(rr),flush=True)
     weights_raw=(args.out/"weights.json").read_bytes()
+    if args.split != "train" and register.sha(weights_raw) != "c7a21bb50bdeedb40032029ecf7b71c37c58a842bd55f92b881d2a8a12c4e8fd":
+        raise ValueError("Held grading requires the frozen train-only weight bytes")
     weights=json.loads(weights_raw)
     if weights["maps"]!=msha or weights["protocol"]!=PROTOCOL:
         raise ValueError("Wrong fitted weights")
