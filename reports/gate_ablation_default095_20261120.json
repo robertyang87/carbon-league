@@ -1,0 +1,98 @@
+{
+ "gate_md5": "73124545c5fdec0ab2878740d1173cc4",
+ "gate_file": "gate_vec2_fixed3.py",
+ "lines": {
+  "tol_hard_FORWARD_TOL_magnitude": 0.25,
+  "tol_report_NEW_pending_strategy": 0.02,
+  "ks_margin_null_crit_alpha05": 0.176,
+  "mean_shift_NEW_pending_strategy": 0.095,
+  "win_shift_NEW_pending_strategy": 0.02,
+  "searched_shift_NEW_pending_strategy": 0.01,
+  "rpg_rel_REPORT_ONLY_pending_recalibration": 0.01,
+  "aux_delta_ks_FORMAL": 0.05,
+  "aux_delta_ks_source": "own formal line 0.05, decoupled from margin KS line (ruling 5fbbad47)"
+ },
+ "schema_old": {
+  "files": 49,
+  "rows": 55614,
+  "problems": []
+ },
+ "schema_new": {
+  "files": 43,
+  "rows": 55614,
+  "problems": []
+ },
+ "distributions": {
+  "margin": {
+   "mean_old": -63.42666699809413,
+   "mean_new": -25.18693578884166,
+   "sd_old": 678.7514524907064,
+   "sd_new": 654.4230393719249,
+   "q_old": [
+    -922.5900268554688,
+    -36.79999923706055,
+    745.1500244140625
+   ],
+   "q_new": [
+    -791.9099731445312,
+    -17.58500051498413,
+    742.3099975585938
+   ],
+   "ks_D": 0.05376344086021512,
+   "ks_line": 0.176,
+   "ks_line_games": 120,
+   "ks_line_formula": "1.36*sqrt((n+m)/(n*m)), n=m=games (alpha=0.05, ruling 5fbbad47)",
+   "mean_shift_over_pooled_sd": 0.057356881608850746
+  },
+  "win_rate": {
+   "old": 0.4731182795698925,
+   "new": 0.4838709677419355,
+   "shift": 0.010752688172043001
+  },
+  "searched_frac": {
+   "old": 0.0,
+   "new": 0.0,
+   "shift": 0.0
+  },
+  "aux_delta_ks_D": {
+   "h1": 0.011058366598338532,
+   "h2": 0.01033912324234909,
+   "h3": 0.011867515373826742
+  },
+  "aux_delta_line": {
+   "value": 0.05,
+   "form": "two-sample KS D <= line, per horizon (h1/h2/h3)",
+   "source": "own formal line 0.05 (--ks-line), decoupled from the margin KS line per ruling 5fbbad47",
+   "status": "FORMAL (confirmed 2026-11-20 05:06)"
+  },
+  "rows_per_game": {
+   "old": 463.45,
+   "new": 463.45,
+   "rel_shift": 0.0,
+   "line": 0.01,
+   "blocking": false,
+   "status": "REPORT-ONLY (ruling 5fbbad47: the 0.01 line is uncalibrated for cross-seed comparison; recalibration pending)"
+  },
+  "verdicts": {
+   "ks_margin": true,
+   "mean_margin": true,
+   "win_rate": true,
+   "searched_frac": true,
+   "aux_delta_h1": true,
+   "aux_delta_h2": true,
+   "aux_delta_h3": true
+  },
+  "pass": true,
+  "failure_points": []
+ },
+ "failure_points": [],
+ "claim_scope": {
+  "forward_tags_covered": null,
+  "value_scale_mode": "not gate-run: (b) compared pre-generated shard dirs; their value-scale is the producer config of those shards",
+  "schema": "mechanical identity vs SHARD_KEYS/SCHEMA only",
+  "src_boundary": "master3s2 source md5 57f9a594cce4f2ec9e3573d8d9d26ca1 (--src default); fix3 and other chassis are OUTSIDE this claim",
+  "text": "equivalence claim is limited to (actually-run tags) x (actually-run value-scale mode) x (schema mechanical identity), src bounded to master3s2 as above"
+ },
+ "gate_pass": true,
+ "verdict": "PASS"
+}
