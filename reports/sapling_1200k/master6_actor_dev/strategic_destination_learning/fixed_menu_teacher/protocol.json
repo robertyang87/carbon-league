@@ -1,0 +1,22 @@
+{
+  "schema": "sapling/fixed-menu-native-teacher/1",
+  "intent": "Test whether the expert search ranks complete student actions that already have true terminal comparisons. This is strictly an offline label-quality experiment. No embedded expert weights, simulated elite wins or new games.",
+  "root_registry": "e7cc2fd7042a14f4065ee74a15a7f54417562036b056bad4e85317591e789d61",
+  "terminal_registry": "f30f03153e995504cc9e6675d392baf96710beb7854dda808eea35c6bd823a69",
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "expected": {
+    "train": [
+      14,
+      80
+    ],
+    "held": [
+      4,
+      28
+    ]
+  },
+  "selection": "All 108 distinct registered paired response cases, including repeated stochastic continuations, assigned their existing terrain split. Never pick a root using either terminal outcome or future action.",
+  "ranking": "Recover original BeliefTracker on learner side from visible history and actual prior learner orders. Use original _search scorer object with its own two-network role interface, estimate of hidden carbon, shared prospective root enemy action from original model, original depth 8, original shared rollout RNG, M=1, MMAX=1, EPS=0 and 0.58s adaptive clock. Externally fix act0 to recorded parent and only deviation to recorded alternative. Native _S_REC supplies compared candidate scores and depths. Previously observed concurrent root opponent and either terminal return available only to independent evaluation. No actual root opponent supplied. Never deploy teacher.",
+  "decision": "Use higher first-rollout native Q if both completed the common depth min(8,299-t), otherwise abstain to signed parent. On exact tie choose parent. Primary estimand is map-equal observed terminal margin of chosen branch minus signed parent. Report fixed-alternative baseline, coverage, per-map results, conditional correctness on nonzero differences, split by roles and validation seats. Each case is one realized suffix per action except explicit repeat rows; do not claim expected causal effect or mapped target win rate.",
+  "promotion": "Do not generate teacher labels at scale unless at least 3/4 held maps have strictly positive mean gain over signed parent, unweighted mean of held-map gains exceeds both constant baseline choices (parent and alternate), and at least one complete-depth non-tied decision in each physical seat. When passed seek prospective original responses on actual policy-generated menus before scaling.",
+  "check": "Swap order of the first registered assessable two-action menu per split and check equal-depth scores to 2e-4 after realignment. Terminal exact when min(8,299-t) applies, compare via the native terminal scoring mapping. Every official public root digest must match signed evidence. Only diagnostic CPU timing; original full-game opponent stays a separate immutable source."
+}
