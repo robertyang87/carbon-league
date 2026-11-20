@@ -1,5 +1,7 @@
 # Sapling 对 Master3s2 的九成胜率实验
 
+用户于 2026-11-20 将九成胜率主线切换至 Master3s2 源码派生版。本页保留已执行的 Sapling 训练及对局。后续派生版以独立目录中的源码、冻结包和实战为准。[Master3s2 派生版台账](../master3s2_derivative/README.md)
+
 ## 当前胜绩与验收
 
 多动作 Sapling 包 `e830229d` 仍以神经网产生整队命令，96 个验证时点均有至少三条合法选项，四张图中有两张改善专家实发动作的预测。训练资格要求三张。另三张历史图上用原版实发敌令核了 712 个单步转移，交仓、保货、截击和树权都未取得登记的跨图改善。这一包的八场开发赛未派发。[动作训练](master6_actor_dev/strategic_destination_learning/native_action_policy/README.md) · [单步攻防得失](master6_actor_dev/strategic_destination_learning/native_action_policy_economy/README.md)
