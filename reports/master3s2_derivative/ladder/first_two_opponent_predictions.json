@@ -1,0 +1,216 @@
+[
+  {
+    "match": "d2880896ec571ddbb703822d2a677905",
+    "game": 1,
+    "seat": 0,
+    "opponent": "CarbonEdge-Eco",
+    "replay_sha256": "eb39a1b33ce507413d3401a822b323dbf4744efcaa3389e032fa5498f1956f85",
+    "parent_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+    "deployed_sha256": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+    "scores_by_seat": [
+      9163.94,
+      4605.36
+    ],
+    "latent_input_parity": {
+      "roots": 299,
+      "parent_and_deployed_pre_readout_logits_bitwise_equal_every_root": true,
+      "network": "_WinoNet"
+    },
+    "coverage": {
+      "predicted_roots": 299,
+      "true_server_readout_and_depth_count": null
+    },
+    "joint": {
+      "parent_correct": 4,
+      "deployed_correct": 4,
+      "changed": 26,
+      "gained": 0,
+      "lost": 0
+    },
+    "entity_metrics": {
+      "base": {
+        "count": 598,
+        "parent_correct": 554,
+        "deployed_correct": 554,
+        "changed": 0,
+        "gained": 0,
+        "lost": 0,
+        "parent_mean_raw_logit_nll": 6.298393276835713,
+        "deployed_mean_raw_logit_nll": 5.881013120100871
+      },
+      "worker": {
+        "count": 2766,
+        "parent_correct": 1696,
+        "deployed_correct": 1699,
+        "changed": 29,
+        "gained": 12,
+        "lost": 9,
+        "parent_mean_raw_logit_nll": 5.482678906578261,
+        "deployed_mean_raw_logit_nll": 5.40841193258127
+      },
+      "collector": {
+        "count": 2200,
+        "parent_correct": 1403,
+        "deployed_correct": 1403,
+        "changed": 13,
+        "gained": 4,
+        "lost": 4,
+        "parent_mean_raw_logit_nll": 5.574587904978761,
+        "deployed_mean_raw_logit_nll": 5.496639316590521
+      },
+      "planter": {
+        "count": 566,
+        "parent_correct": 293,
+        "deployed_correct": 296,
+        "changed": 16,
+        "gained": 8,
+        "lost": 5,
+        "parent_mean_raw_logit_nll": 5.1254354498978865,
+        "deployed_mean_raw_logit_nll": 5.065478637845682
+      },
+      "actual_contested_worker_destination": {
+        "count": 31,
+        "parent_correct": 19,
+        "deployed_correct": 19,
+        "changed": 2,
+        "gained": 1,
+        "lost": 1,
+        "parent_mean_raw_logit_nll": 3.9835167752692167,
+        "deployed_mean_raw_logit_nll": 3.8309208514904487
+      },
+      "collector_cargo_at_least_200": {
+        "count": 57,
+        "parent_correct": 34,
+        "deployed_correct": 35,
+        "changed": 1,
+        "gained": 1,
+        "lost": 0,
+        "parent_mean_raw_logit_nll": 5.7370731508354655,
+        "deployed_mean_raw_logit_nll": 5.692811115785528
+      },
+      "loaded_200_issued_to_base": {
+        "count": 3,
+        "parent_correct": 3,
+        "deployed_correct": 3,
+        "changed": 0,
+        "gained": 0,
+        "lost": 0,
+        "parent_mean_raw_logit_nll": 9.947598300641403e-14,
+        "deployed_mean_raw_logit_nll": 8.763360407707903e-14
+      }
+    },
+    "limits": [
+      "Offline all pre-action roots. The ladder replay does not expose where the native candidate menu collapsed or search time ran out, and does not contain the enemy prediction chosen by the server. These are the two frozen models simulated here, conditioning on the public trajectory.",
+      "Replayed the root opponent model only, rollout 0 using its deterministic shared seed; _sample applies roster and occupancy constraints. True commands for both teams were consulted after predictions; only previously issued own commands update the observer belief. Rows use in-order roster and own-seat masked carbon. Results are descriptive for one game against CarbonEdge-Eco.",
+      "Raw logit NLL is unit-level pre-constraint softmax; the denominators and physical issued-order samples are separate. Actual contested destination uses both issued orders after predicting. High-cargo-to-base counts the issued order, with no inference that the carbon was delivered.",
+      "The frozen parent did not play this replay. Prediction quality cannot isolate a causal contribution to the final margin from the opponent layer or the deployed warm-up change."
+    ]
+  },
+  {
+    "match": "0a3195c1e8eaa6617c0bc9488037a15e",
+    "game": 1,
+    "seat": 0,
+    "opponent": "CaiV3",
+    "replay_sha256": "eb92bc446058b86b87d11e52dbc1e8aa45b173f933583bd78b66ad6e4ff73265",
+    "parent_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+    "deployed_sha256": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+    "scores_by_seat": [
+      10471.45,
+      4656.55
+    ],
+    "latent_input_parity": {
+      "roots": 299,
+      "parent_and_deployed_pre_readout_logits_bitwise_equal_every_root": true,
+      "network": "_WinoNet"
+    },
+    "coverage": {
+      "predicted_roots": 299,
+      "true_server_readout_and_depth_count": null
+    },
+    "joint": {
+      "parent_correct": 8,
+      "deployed_correct": 8,
+      "changed": 26,
+      "gained": 0,
+      "lost": 0
+    },
+    "entity_metrics": {
+      "base": {
+        "count": 598,
+        "parent_correct": 546,
+        "deployed_correct": 547,
+        "changed": 1,
+        "gained": 1,
+        "lost": 0,
+        "parent_mean_raw_logit_nll": 6.716942962784269,
+        "deployed_mean_raw_logit_nll": 6.301481098638906
+      },
+      "worker": {
+        "count": 2609,
+        "parent_correct": 1381,
+        "deployed_correct": 1369,
+        "changed": 28,
+        "gained": 6,
+        "lost": 18,
+        "parent_mean_raw_logit_nll": 7.25176754818315,
+        "deployed_mean_raw_logit_nll": 7.1462934779825495
+      },
+      "collector": {
+        "count": 2183,
+        "parent_correct": 1164,
+        "deployed_correct": 1154,
+        "changed": 20,
+        "gained": 3,
+        "lost": 13,
+        "parent_mean_raw_logit_nll": 7.668587126206282,
+        "deployed_mean_raw_logit_nll": 7.55527147839405
+      },
+      "planter": {
+        "count": 426,
+        "parent_correct": 217,
+        "deployed_correct": 215,
+        "changed": 8,
+        "gained": 3,
+        "lost": 5,
+        "parent_mean_raw_logit_nll": 5.1158118232429945,
+        "deployed_mean_raw_logit_nll": 5.050521236437387
+      },
+      "actual_contested_worker_destination": {
+        "count": 37,
+        "parent_correct": 13,
+        "deployed_correct": 13,
+        "changed": 0,
+        "gained": 0,
+        "lost": 0,
+        "parent_mean_raw_logit_nll": 11.941035686408064,
+        "deployed_mean_raw_logit_nll": 11.508556844945756
+      },
+      "collector_cargo_at_least_200": {
+        "count": 14,
+        "parent_correct": 6,
+        "deployed_correct": 6,
+        "changed": 0,
+        "gained": 0,
+        "lost": 0,
+        "parent_mean_raw_logit_nll": 8.117651353375086,
+        "deployed_mean_raw_logit_nll": 8.015992125853721
+      },
+      "loaded_200_issued_to_base": {
+        "count": 3,
+        "parent_correct": 3,
+        "deployed_correct": 3,
+        "changed": 0,
+        "gained": 0,
+        "lost": 0,
+        "parent_mean_raw_logit_nll": 0.0,
+        "deployed_mean_raw_logit_nll": 0.0
+      }
+    },
+    "limits": [
+      "Offline all pre-action roots. The ladder replay does not expose where the native candidate menu collapsed or search time ran out, and does not contain the enemy prediction chosen by the server. These are the two frozen models simulated here, conditioning on the public trajectory.",
+      "Replayed the root opponent model only, rollout 0 using its deterministic shared seed; _sample applies roster and occupancy constraints. True commands for both teams were consulted after predictions; only previously issued own commands update the observer belief. Rows use in-order roster and own-seat masked carbon. Results are descriptive for one game against CaiV3.",
+      "Raw logit NLL is unit-level pre-constraint softmax; the denominators and physical issued-order samples are separate. Actual contested destination uses both issued orders after predicting. High-cargo-to-base counts the issued order, with no inference that the carbon was delivered.",
+      "The frozen parent did not play this replay. Prediction quality cannot isolate a causal contribution to the final margin from the opponent layer or the deployed warm-up change."
+    ]
+  }
+]
