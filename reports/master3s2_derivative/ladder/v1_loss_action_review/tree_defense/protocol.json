@@ -1,0 +1,8 @@
+{
+  "target": "On every fifth action t, among existing trees reachable by an enemy planter by t+5, estimate the probability of at least one observed ownership transfer to that opponent in the next five transitions. Death by age is not a transfer. A recapture does not cancel a prior transfer.",
+  "population": "All living trees at pre-action frames t=0,5,...,290 on completed 299-transition games, minimum enemy planter distance <=4. Both seats in the pre-existing 24 training and 8 holdout terrain tickets in ladder/tree_payback/maps.json. Only the v1 seat in all 33 publicly observed placement games, reported separately; no ladder game fits weights.",
+  "baseline": "Smoothed transfer frequency conditional on exact enemy distance 0..4 and whether tree remaining life is at most five, trained on exactly the same training games.",
+  "model": "Balanced per-map observation mass, unbalanced natural event prevalence; ridge logistic regression lambda 0.01 on standardized pre-action features. Finite weighted regression with no holdout tuning. No private carbon, future opponent orders or map ID inputs.",
+  "readout": "Brier score and log loss weighted equally over physical maps with reachable trees. Report coverage, all observed positives and by map. For a ranking diagnostic select the highest-risk quarter of reachable trees within each match when pooling its scheduled observations; ties break by chronological scan order. This diagnostic does not simulate deployment or defender intervention.",
+  "criterion": "Retain as an offline prioritizer only if both map-average Brier and log loss improve on eight held terrains against the distance baseline. Changes to actual play require a separate parent-versus-challenger experiment with responsive opponents."
+}
