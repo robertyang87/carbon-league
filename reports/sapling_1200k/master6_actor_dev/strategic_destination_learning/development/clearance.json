@@ -1,0 +1,863 @@
+{
+  "by_seed": {
+    "621758500": "8fc8e01bf6ba1f0c3e83d9eb20b39d4ef8a830b00b77f2000ab087e3946e2d30",
+    "621758501": "0bf05476f34cadb3c9df32b17549cace5b5575878ec45ac323f128293c1814d2"
+  },
+  "census_implementation": {
+    "adaptation": "Use the authoritative count from reading every canonical top-five validation_maps ledger before applying its uniqueness check; template expected 1637, current expected 1647; set registered snapshot, group/seeds and exact standalone seed regex for 621758500 and 621758501.",
+    "repo_file": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/clearance.py",
+    "sha256": "8b1848a3a986c93228a01859c232cc8d6b3f5f08735d0d7990230a837d891106"
+  },
+  "checked_current_canonical_ledgers": {
+    "reports/sapling_1200k/all_top5/appendix_0137949d/validation_maps.jsonl.gz": "4695431bbbe7ef4530b2829049fd1329bd8cf3908d2f81c97e02e9f37c1e09bc",
+    "reports/sapling_1200k/all_top5/appendix_1fdacb1b/validation_maps.jsonl.gz": "daa7bf522361e236512e84add7a50bd0a1597a2807467bc3b37bccc151944697",
+    "reports/sapling_1200k/all_top5/appendix_25e5cef2/validation_maps.jsonl.gz": "25c219636d3feb2ff78be545fe01c514a964be0d7db6e62535512c598a7c221e",
+    "reports/sapling_1200k/all_top5/appendix_2cc7c358/validation_maps.jsonl.gz": "85f0fe7f779d971d52112f16c8cd200cb6bdb5b393de1a2608fea7dee96123c3",
+    "reports/sapling_1200k/all_top5/appendix_32b555ee/validation_maps.jsonl.gz": "dfca0a4b932b06d9a05ed84b7029312ca757bf753ba761590f72a6e8deb89ae1",
+    "reports/sapling_1200k/all_top5/appendix_336e8b8c/validation_maps.jsonl.gz": "cc6aac171fc7df3bda72cdea2b735023b99ccdfe7afe0c2eeb07410c7bb97c05",
+    "reports/sapling_1200k/all_top5/appendix_39a745e0/validation_maps.jsonl.gz": "beb2853261896c73d370b2528ff3b8537ac04bc53f5728fdfb888ac9e7d63b35",
+    "reports/sapling_1200k/all_top5/appendix_41e4177e/validation_maps.jsonl.gz": "e2e35768c31307347ac8638335ee645339bd629383b04ea1f21bb2236e6371d0",
+    "reports/sapling_1200k/all_top5/appendix_499886f1/validation_maps.jsonl.gz": "707d8c302ccb4ff7f8eb9106d503a6cfaa0208c5a42b3ae02f4ac5cdd5606e4e",
+    "reports/sapling_1200k/all_top5/appendix_4a4677c9/validation_maps.jsonl.gz": "7a650d8c51fbf3fa601029859c56d6c8598ce1e2e5276d3384be51b15ebf94c5",
+    "reports/sapling_1200k/all_top5/appendix_4bfdabf5/validation_maps.jsonl.gz": "a91e9aedf5ea1597edfb49b35e50d0c2f7d7c7c93cfc6fd8655fcc67fc59e58a",
+    "reports/sapling_1200k/all_top5/appendix_5484590b/validation_maps.jsonl.gz": "bfe927f552e97c0f00b5cb528c0fcb4591988dd675f293a6c02e8d2a2aae9ca8",
+    "reports/sapling_1200k/all_top5/appendix_5554f20f/validation_maps.jsonl.gz": "8be93ad07c40622e5e2b6a1d137f5039c5154dabdd93bf1c71260cff3ff1ae3f",
+    "reports/sapling_1200k/all_top5/appendix_555c0c56/validation_maps.jsonl.gz": "a4bd7b2cf6998a13b292f40f10e25361ba832604bec53147909c781f7c91ee2f",
+    "reports/sapling_1200k/all_top5/appendix_559ba262/validation_maps.jsonl.gz": "d9ad6e330d9560a1529eba16edf3094ec6416059050013787036b95ac5db442a",
+    "reports/sapling_1200k/all_top5/appendix_56e1e613/validation_maps.jsonl.gz": "4e5ff61d38cb0b1d1b2602fe2146921e03f4c67f21dc163897e7b378df8b6c5d",
+    "reports/sapling_1200k/all_top5/appendix_628e28d0/validation_maps.jsonl.gz": "6fefb2d334da141c97eb4602c19f6f8f37aaa65550648e6acfa755f3261b5d81",
+    "reports/sapling_1200k/all_top5/appendix_651f4a9f/validation_maps.jsonl.gz": "52a670b93b70f0e0418e6f918c9378469f54ee5556809ec9ae88518503e4382f",
+    "reports/sapling_1200k/all_top5/appendix_6d2bb648/validation_maps.jsonl.gz": "84c8572c411b839c661743d8d976ef43636b98cf780b75df9923c46af5592b83",
+    "reports/sapling_1200k/all_top5/appendix_726b9c3b/validation_maps.jsonl.gz": "7796b4d33bc87bf6a52a952460f89817f1b9768e36360c0389ce86a13590245f",
+    "reports/sapling_1200k/all_top5/appendix_8753397f/validation_maps.jsonl.gz": "7d11f3c597db52f3e98afd9dd31ba9bc543a864346698b76e4653bae4ce5c714",
+    "reports/sapling_1200k/all_top5/appendix_87688aac/validation_maps.jsonl.gz": "844a012b1141edc289efc9aa95ef3d6e3274e2e79d5780cf623845fb0cab7710",
+    "reports/sapling_1200k/all_top5/appendix_8ce29872/validation_maps.jsonl.gz": "3460e4124b3089898a47920b89f975203bfd02ca5f5cf5831814389d6a6c4866",
+    "reports/sapling_1200k/all_top5/appendix_97de1ebc/unscored/validation_maps.jsonl.gz": "1c54cf6cb6c04a0d915d765716b96677efe026014f393636a191a562c4c8e3d5",
+    "reports/sapling_1200k/all_top5/appendix_97de1ebc/validation_maps.jsonl.gz": "dc9deea42c69a5dcec1450f909c1f3360db821187665786fa05acf597b35aa92",
+    "reports/sapling_1200k/all_top5/appendix_99919cbf/validation_maps.jsonl.gz": "3bead9600549941d6e9fabae6ec9ddf7d9ada820a87901658a3d1c1ad0b75f25",
+    "reports/sapling_1200k/all_top5/appendix_9e2a81cf/validation_maps.jsonl.gz": "c7fbf4ae8ff2de85f933c7c27e2b5eda674fa3111bc124ec2c48476c60346f8a",
+    "reports/sapling_1200k/all_top5/appendix_9fa795ff/validation_maps.jsonl.gz": "8a9bc8be7fad62298ad9af45490d12900f02a9d770a622280b4f77de99f4b1c4",
+    "reports/sapling_1200k/all_top5/appendix_aca9b8a3/validation_maps.jsonl.gz": "f1fcadb2f43d09e4d3b4ce8fd698ca14f118d1b9a51411e1ce9711864e3a045f",
+    "reports/sapling_1200k/all_top5/appendix_afc3951b/validation_maps.jsonl.gz": "3b796cbbe2783ad636e2cdc41a4f193ecb18aa184947279004e6404dd48ebb20",
+    "reports/sapling_1200k/all_top5/appendix_b243ff82/validation_maps.jsonl.gz": "764850422851e38960c79b8bc5c440cf7ddbb1bb4e76ef24e367cf8a39df870d",
+    "reports/sapling_1200k/all_top5/appendix_b5e6a7f8/validation_maps.jsonl.gz": "84ff909b303c09a2ea7480efb022d6d2e0f46c81519a557a5b929287473fc697",
+    "reports/sapling_1200k/all_top5/appendix_bd3c0021/validation_maps.jsonl.gz": "cdc468c2fc14dde0b402d050749d4de08b60af1a0b3794d6be9538ebdf8139b3",
+    "reports/sapling_1200k/all_top5/appendix_bec6a010/validation_maps.jsonl.gz": "f86ac270ee21bd623df7e6efcc63ac7ec5fe1581541fd42536265f442ddab0c1",
+    "reports/sapling_1200k/all_top5/appendix_bf049043/validation_maps.jsonl.gz": "bba356c4bfd2af6e2c2a038d80213e509e5a22feb63e32b71eafb7d29101356f",
+    "reports/sapling_1200k/all_top5/appendix_bf5fc508/validation_maps.jsonl.gz": "a02bcb8d9443cdfe34e865e937e773e1040cf6b070de92a3fbc0c22c09104a4e",
+    "reports/sapling_1200k/all_top5/appendix_c5c8cf8d/validation_maps.jsonl.gz": "35655624bcbb15b0a9dba28ea1cdb50dff590e20749bb8e9bd205eae202959ec",
+    "reports/sapling_1200k/all_top5/appendix_c8236c8c/validation_maps.jsonl.gz": "8fc94a23e9d815b0ead12dc6224c2448d1c471b7f79525e1766e49428aea99f7",
+    "reports/sapling_1200k/all_top5/appendix_cbd6d545/validation_maps.jsonl.gz": "3de415cbbabbf89472d494ee44655bfc792cc9a48b1346218302a18acd102d49",
+    "reports/sapling_1200k/all_top5/appendix_d20b957a/validation_maps.jsonl.gz": "770f0d719e84330be1968e1eff3eba630542036b041795b88b58486005a2dbbc",
+    "reports/sapling_1200k/all_top5/appendix_d944673f/validation_maps.jsonl.gz": "76ee17b3e91b3c6f783f990f0bc3190965c71c23604a0142a676ae8cd5a754d1",
+    "reports/sapling_1200k/all_top5/appendix_ea224932/validation_maps.jsonl.gz": "d121949713221e08d3a22afcbe62b6509e54ca014a403b2231118ea14150607f",
+    "reports/sapling_1200k/all_top5/appendix_f7109df6/validation_maps.jsonl.gz": "d556e38bb665a0847ca7eaa16fc2cbfca96bb5f70fadf24d0cd3298204c764f9",
+    "reports/sapling_1200k/all_top5/appendix_fb965ca9/validation_maps.jsonl.gz": "b7fb9e412711a7fc77aa89571e742f138438e0d07fdffcab7b6fdbb5240d4ee0",
+    "reports/sapling_1200k/all_top5/validation_maps.jsonl.gz": "c70e0f7953ac7b4adc04e1a768b9a72c69f6057d6eca8f5f8cb58ffb9072f486"
+  },
+  "conservative_prior_physical_layouts": 5767,
+  "conservative_prior_seed_ids": 3258,
+  "formal_seed_half_open": [
+    1887000000,
+    1888000000
+  ],
+  "groups": {
+    "fresh_development": [
+      621758500,
+      621758501
+    ]
+  },
+  "input_manifest_sha256": "1937d50e698fc476b857f7da3d74a6aa71a34bdc8f504e172fff0e10d10283cd",
+  "k0_seed_block_files": {
+    "data/k0_calib/budget_match_seed_blocks_20261118.json": "f4c24de584ca88af739b27f14e7048b3417502257fdde0a696a0688c62a51d97",
+    "data/k0_calib/independent_shape_screen_seed_blocks_20261118.json": "c847ecfb047f012125b2fbfcf94bf560911d8cf1062138f179b4259382eaf327",
+    "data/k0_calib/loop0_calibration_seed_blocks_20261118.json": "54c8e2c4c2e715e10569682f7f6454dc6b163f6277267814058866ffa4a88bdc",
+    "data/k0_calib/loop2_seed_blocks_20261118.json": "dc3d60e0b5d10702d2038e87e38809864ecb212f9888782d162848abf7b1812a",
+    "data/k0_calib/rl_staged_verify_seed_blocks_20261119.json": "9d20a7abbcff9ea2bd313897e65e141be914ef6b6818d49abf5aa387a6e690b8",
+    "data/k0_calib/snap70_vs_m3s2_seed_blocks_20261119.json": "544a81975ea4bf18e05833d1a1b97aa16d1418e5ffae15eef7cc399e983eae1e"
+  },
+  "physical_boards": {
+    "621758500": "8fc8e01bf6ba1f0c3e83d9eb20b39d4ef8a830b00b77f2000ab087e3946e2d30",
+    "621758501": "0bf05476f34cadb3c9df32b17549cace5b5575878ec45ac323f128293c1814d2"
+  },
+  "physical_intersections": [],
+  "previous_full_clearance_sha256": "7df29cd8b4323dcc49f5018645e679a9d19295e6ab2f571adffc65e7da64b840",
+  "previously_recorded_opening_digests": 1692,
+  "purpose": "Two development terrains for parent/child/zero-feature real Master3s2 comparison from step zero. Permanently excluded from training and the independent final examination.",
+  "remaining_range_collisions": [],
+  "schema": "sapling-strategic-destination-development-clearance/1",
+  "score_changes_including_mirrors": {
+    "after": {
+      "distinct": 13231,
+      "indices": 351,
+      "references": 32791
+    },
+    "before": {
+      "distinct": 13180,
+      "indices": 351,
+      "references": 32699
+    },
+    "changed_score_indices": [
+      "data/ansheng-n23_matches.json",
+      "data/ce001_matches.json",
+      "data/echo10_corpus_missing_20261120.json",
+      "data/echo10_matches.json",
+      "data/echo9_corpus_missing_20261120.json",
+      "data/echo9_matches.json",
+      "data/fable6_matches.json",
+      "data/fablev7_matches.json",
+      "data/fablev8_matches.json",
+      "data/hakimi-base_matches.json",
+      "data/hakimi3pro_matches.json",
+      "data/it720preview_matches.json",
+      "data/it920evo31_matches.json",
+      "data/k4v3_matches.json",
+      "data/k4v4_matches.json",
+      "data/krypton-cloudsearch_matches.json",
+      "data/krypton-csplant_matches.json",
+      "data/krypton-m144_matches.json",
+      "data/krypton_matches.json",
+      "data/lite-v8_matches.json",
+      "data/master3_matches.json",
+      "data/master3s2_matches.json",
+      "data/xiaofeiyu5-d5_matches.json",
+      "data/xiaofeiyu5_matches.json"
+    ],
+    "compared_ids_including_mirrors": [
+      "011da445d233e2eaf25bbcdf84397970-1",
+      "077e08e35f7917a33da8fe1be2382630-1",
+      "0f203344ad7c6e9c52edc5c39e9a063e-1",
+      "10222b05404f5a078be8277234b22bb8-1",
+      "14d7ede98bcd36deabb97d5438b07b0f-1",
+      "1819bef82cf05c7d99e316210ec0b8c1-1",
+      "1aaa8965e3f287730bda354a05b2a3b6-1",
+      "1c989743796735be3d65b6c602686a86-1",
+      "1cdd726ef54f66516e0d315693c85bf1-1",
+      "225d0d6dc6a09db0d51c96721f3081d6-1",
+      "2433ac5a6dbc6e866747791e04cd58c5-1",
+      "257964777b5dab551f8600956952127a-1",
+      "257ebac3a11ca07e8790648503ccbd86-1",
+      "28393f10a717a02c213790730a008a67-1",
+      "2d29096aaa80483362db1bdfacd00e30-1",
+      "2fee29e83fb0d3492f1c8e17e38164da-1",
+      "31170920b21ff46c67124ef1e70ff63a-1",
+      "3859f27bebca0a25268e143aafde893b-1",
+      "3b30579b0abe7e0b6e887a8c680bb215-1",
+      "42ae2e2810e687653c52e320861dcb57-1",
+      "43cc051bf86f64e397e96e9e79aa83ac-1",
+      "49ae8fa18b58a63b1394c0a33cefa4f7-1",
+      "4c883bd27b2baa77f72757fe1ef04885-1",
+      "4d684a532e208e8360381598d19f6f05-1",
+      "4e24bb17878fe0c446918f9fc2292ff2-1",
+      "56ac9f5741d60476d58564ee3d190e9c-1",
+      "59276abc83c340ebc786f531e5a2430d-1",
+      "5b10dd2fe60ca8f90fd090e371299e9f-1",
+      "5b54154b82a39993d61299e935317714-1",
+      "629d65d273ca31e2e111fd98e1e7e75d-1",
+      "6609a9061165c4f46c74710c8b4aa517-1",
+      "687aab8977b8bf3e6f34c4e204fdebcc-1",
+      "6b09e8a7cba83aaa6beaac72d7f2094a-1",
+      "6b78f27647128ac9f828bbd101b4ca3d-1",
+      "6cf47206d09657ce2fbb8047c084da96-1",
+      "6d2689e60e9f6c88f1988cd104faf921-1",
+      "75f386ad1dbd913aab7e764362e07dd6-1",
+      "76811aad272b7ec3c9089f752765bc6c-1",
+      "7831dd1fe0b4f3e4521d556a3a734541-1",
+      "7e70ef84a067020c5d844cde37800cc1-1",
+      "8056c2af47a3e8d89781ae2819fc1e57-1",
+      "8b9175c3f2f4a515dd63f10c16c5a9b9-1",
+      "8bd97a8913f6998d1063fd8d103daf28-1",
+      "916619ca54d5c656dc00ba94abf7ee37-1",
+      "95b112faf10aca033592ba530f6f19b5-1",
+      "9be5bfab7ffdba47a5d521ddde389611-1",
+      "9d3458a8d16b191af68969e88a58b596-1",
+      "a2d323392406c392889a2bef41cea667-1",
+      "ac958746a0f8a7880a70f375400c9934-1",
+      "b2861d72d184aa2d1e68ba5b43cbf6fa-1",
+      "b3a296babbe3e479b750a01990b24038-1",
+      "b86983f9f34408e9ea4bc26ca579256e-1",
+      "bb1a02f3d426f6d3da7bf1e8eefb1fa2-1",
+      "bf500ea35711f345166b433c6092d1dd-1",
+      "c19e7fd36558d6d03f75aa8c4a61dfaf-1",
+      "c277aaf3fe6275c199da98b6eff2f1a8-1",
+      "c3213fe385bd71a1f888cfddbc85d273-1",
+      "c3dca595f6116534e9f2e4a89ae219d4-1",
+      "c4d80ca26a960eec5165cb868f30e298-1",
+      "c9dfac46b3892e37d03135aba78a6f2d-1",
+      "cd1fb3784046faab26a5dc6382ca2375-1",
+      "cfbaf33c2a902e572c1b52a5c16c7c87-1",
+      "cfbdf29ce2484ed0720b13c3194753b4-1",
+      "d049ba4dfee886db2fd96133813e2b2e-1",
+      "d09dbc25b30d6ea8e3e8128da5a614dd-1",
+      "d62d704e696daac92c3ae4ef950367b7-1",
+      "d9bfe5d6fcd22adec7046233b4dc7028-1",
+      "d9fb7f437ea8192d5fd710be19f87762-1",
+      "da721b511ae530543f107cd4b15d6576-1",
+      "dd08a437669794077c5324288a61eac9-1",
+      "de78caaa0a8c1600332b4f912f1c2f9d-1",
+      "e268c99d4c88475e225f39e4e96c4fcf-1",
+      "e6bcbcbf92c0d3b2466cad0d2a6e6ea9-1",
+      "ea065a7cff661001ccc3d90dfc734642-1",
+      "ea368d9769af9643242d89f7aeede065-1",
+      "ebad0bb3515bf095133053ed00626a25-1",
+      "f6fd3f14397c18f756d09172f4185e95-1",
+      "f7e74de9a94a7ba57befa3d78e31ff1c-1",
+      "fdd5d80e85686dcb42149c4bab119a8d-1",
+      "fe2a185e9c2097ef49e80f395fc3d31e-1",
+      "fec7dc25f8f7ef022389058036d96bb3-1"
+    ],
+    "end": "e0916a448e36b37e87537bebd5b67ca026a548f0",
+    "first_seen_top5": [
+      "257964777b5dab551f8600956952127a-1",
+      "59276abc83c340ebc786f531e5a2430d-1"
+    ],
+    "new_reference_ids": 81,
+    "new_references": 92,
+    "newly_seen_score_ids": [
+      "011da445d233e2eaf25bbcdf84397970-1",
+      "0f203344ad7c6e9c52edc5c39e9a063e-1",
+      "10222b05404f5a078be8277234b22bb8-1",
+      "14d7ede98bcd36deabb97d5438b07b0f-1",
+      "1aaa8965e3f287730bda354a05b2a3b6-1",
+      "1c989743796735be3d65b6c602686a86-1",
+      "2433ac5a6dbc6e866747791e04cd58c5-1",
+      "257964777b5dab551f8600956952127a-1",
+      "257ebac3a11ca07e8790648503ccbd86-1",
+      "2fee29e83fb0d3492f1c8e17e38164da-1",
+      "31170920b21ff46c67124ef1e70ff63a-1",
+      "3b30579b0abe7e0b6e887a8c680bb215-1",
+      "42ae2e2810e687653c52e320861dcb57-1",
+      "59276abc83c340ebc786f531e5a2430d-1",
+      "5b54154b82a39993d61299e935317714-1",
+      "687aab8977b8bf3e6f34c4e204fdebcc-1",
+      "6b09e8a7cba83aaa6beaac72d7f2094a-1",
+      "6b78f27647128ac9f828bbd101b4ca3d-1",
+      "6d2689e60e9f6c88f1988cd104faf921-1",
+      "76811aad272b7ec3c9089f752765bc6c-1",
+      "7831dd1fe0b4f3e4521d556a3a734541-1",
+      "7e70ef84a067020c5d844cde37800cc1-1",
+      "8b9175c3f2f4a515dd63f10c16c5a9b9-1",
+      "8bd97a8913f6998d1063fd8d103daf28-1",
+      "916619ca54d5c656dc00ba94abf7ee37-1",
+      "95b112faf10aca033592ba530f6f19b5-1",
+      "9d3458a8d16b191af68969e88a58b596-1",
+      "a2d323392406c392889a2bef41cea667-1",
+      "b3a296babbe3e479b750a01990b24038-1",
+      "b86983f9f34408e9ea4bc26ca579256e-1",
+      "bb1a02f3d426f6d3da7bf1e8eefb1fa2-1",
+      "bf500ea35711f345166b433c6092d1dd-1",
+      "c19e7fd36558d6d03f75aa8c4a61dfaf-1",
+      "c277aaf3fe6275c199da98b6eff2f1a8-1",
+      "c3213fe385bd71a1f888cfddbc85d273-1",
+      "c9dfac46b3892e37d03135aba78a6f2d-1",
+      "d049ba4dfee886db2fd96133813e2b2e-1",
+      "d09dbc25b30d6ea8e3e8128da5a614dd-1",
+      "d62d704e696daac92c3ae4ef950367b7-1",
+      "d9bfe5d6fcd22adec7046233b4dc7028-1",
+      "d9fb7f437ea8192d5fd710be19f87762-1",
+      "da721b511ae530543f107cd4b15d6576-1",
+      "de78caaa0a8c1600332b4f912f1c2f9d-1",
+      "e268c99d4c88475e225f39e4e96c4fcf-1",
+      "ea065a7cff661001ccc3d90dfc734642-1",
+      "ea368d9769af9643242d89f7aeede065-1",
+      "ebad0bb3515bf095133053ed00626a25-1",
+      "f7e74de9a94a7ba57befa3d78e31ff1c-1",
+      "fdd5d80e85686dcb42149c4bab119a8d-1",
+      "fe2a185e9c2097ef49e80f395fc3d31e-1",
+      "fec7dc25f8f7ef022389058036d96bb3-1"
+    ],
+    "start": "8698707c2c58065c7ce2d728013d10fa0cab4a6d"
+  },
+  "score_replay_openings": [
+    {
+      "game": "011da445d233e2eaf25bbcdf84397970-1",
+      "seed": 1262426577,
+      "sha256": "d52ea734ec5f26a1886a68ef5ce3924dd24ae10bf41207347dc7b9db5deb40a4",
+      "source": "https://117.72.210.134/replay/011da445d233e2eaf25bbcdf84397970/1",
+      "terrain": "d7f7ad406691beb817179499be30bc340d52e841d2ae18814ea35d71c4430a18"
+    },
+    {
+      "game": "077e08e35f7917a33da8fe1be2382630-1",
+      "seed": 1351686365,
+      "sha256": "8b612675b474fdfa059a39694807498cbdc37e145788b906a5a6fdd58c78a9f9",
+      "source": "https://117.72.210.134/replay/077e08e35f7917a33da8fe1be2382630/1",
+      "terrain": "8d907e506fc5339eb8c5118b751092c1224678ee9823f9b4383824cbd668f213"
+    },
+    {
+      "game": "0f203344ad7c6e9c52edc5c39e9a063e-1",
+      "seed": 635649918,
+      "sha256": "a33b2c026c237e569530c69ae0281ef5f10452ec2019567f68cba4355748874b",
+      "source": "data/echo10_corpus/0f203344ad7c6e9c52edc5c39e9a063e-1.json.gz",
+      "terrain": "14b53a0a59e3bae7a42687a5dbbac88f6f87f51b558c0be64c0baa4b9bb5418d"
+    },
+    {
+      "game": "10222b05404f5a078be8277234b22bb8-1",
+      "seed": 1962025599,
+      "sha256": "00b5afaea68d7b9e1ea81f093445d497524ab65c1257838711abb171f7455f36",
+      "source": "https://117.72.210.134/replay/10222b05404f5a078be8277234b22bb8/1",
+      "terrain": "3ce9677bbab8b9dc10744439227627ecf187068c941e193beb30d634b25b85c4"
+    },
+    {
+      "game": "14d7ede98bcd36deabb97d5438b07b0f-1",
+      "seed": 1079495711,
+      "sha256": "2d7a43d316a378d6c2358ca4e0b2cdbc0d22f5a160f8223ed5e8578e23aa1610",
+      "source": "data/echo10_corpus/14d7ede98bcd36deabb97d5438b07b0f-1.json.gz",
+      "terrain": "90ce939dbd59307b73eed3e5671cbf68482c5bcb1f671491865fa1fc708667a1"
+    },
+    {
+      "game": "1819bef82cf05c7d99e316210ec0b8c1-1",
+      "seed": 1957341443,
+      "sha256": "fc0a8422c2d943533758df103a97787c5a5e9ce1f518f21f469550881bfccdee",
+      "source": "https://117.72.210.134/replay/1819bef82cf05c7d99e316210ec0b8c1/1",
+      "terrain": "d5c4b80f5044b1d4ba3aab747d914f2c59fd85d6d074a5d27b18ec99b3b75c65"
+    },
+    {
+      "game": "1aaa8965e3f287730bda354a05b2a3b6-1",
+      "seed": 1496583927,
+      "sha256": "e1b16b6eaf43b73d6466a5e2c28a6f8f217bf865ca02deffcb0e28b8174c9235",
+      "source": "data/echo9_corpus/1aaa8965e3f287730bda354a05b2a3b6-1.json.gz",
+      "terrain": "bd271bd577e1d6ea77d00c657205154e49c6033409588109c20fed7a2de5ab5c"
+    },
+    {
+      "game": "1c989743796735be3d65b6c602686a86-1",
+      "seed": 1966358048,
+      "sha256": "b72490dcd14bc8539a74b9826cce229173238d4e4b1439e5206ef19b8b427b4f",
+      "source": "data/echo10_corpus/1c989743796735be3d65b6c602686a86-1.json.gz",
+      "terrain": "2c90cae53993f112548a6e7dfd18bcb541b328188aeb41f457a951697aa36bc1"
+    },
+    {
+      "game": "1cdd726ef54f66516e0d315693c85bf1-1",
+      "seed": 500401851,
+      "sha256": "00c35bb51163ee4590a1a274483df6adc60c43b8ce9c377be541b1ab50d9bac5",
+      "source": "https://117.72.210.134/replay/1cdd726ef54f66516e0d315693c85bf1/1",
+      "terrain": "a844bc4f407d52c3208b3684bbf8e5aa874684bb974aa62170c361c2c892b5ea"
+    },
+    {
+      "game": "225d0d6dc6a09db0d51c96721f3081d6-1",
+      "seed": 624249453,
+      "sha256": "042370396f830f1e53de704f66d2434feb028181f938ac2cff4237544d94d008",
+      "source": "https://117.72.210.134/replay/225d0d6dc6a09db0d51c96721f3081d6/1",
+      "terrain": "e8cee779c1e9c869bc5772897f0d115b4e5a8b14a105985abb8f2e1c93a0b6d4"
+    },
+    {
+      "game": "2433ac5a6dbc6e866747791e04cd58c5-1",
+      "seed": 1140421615,
+      "sha256": "13e4ce3f3ee16d8cb7c98c2fb23a9b035d412108de24f6063bcc1c60ef57b883",
+      "source": "data/echo10_corpus/2433ac5a6dbc6e866747791e04cd58c5-1.json.gz",
+      "terrain": "a28b846b930c3a506c055a7e1e61223bd90761c29ac6351fd1237f70a205bc92"
+    },
+    {
+      "game": "257964777b5dab551f8600956952127a-1",
+      "seed": 532723769,
+      "sha256": "c2e8704e886771bb7fc6b1f5f310dcc3fde126700cb2b96ee425d262f4c29135",
+      "source": "https://117.72.210.134/replay/257964777b5dab551f8600956952127a/1",
+      "terrain": "08c8c2cdc549ae2fede7a7f4080e5eb83d23fb834d5138f3a114f752756e24bc"
+    },
+    {
+      "game": "257ebac3a11ca07e8790648503ccbd86-1",
+      "seed": 1805474323,
+      "sha256": "e8d772780bebfb792703e99be9a8b12f1abe3066de7c66a3edaeeda6bf4869e2",
+      "source": "data/echo9_corpus/257ebac3a11ca07e8790648503ccbd86-1.json.gz",
+      "terrain": "4b9d433c14c5125d84c1497cbe10a713095f484a0d7e615bcf1c63fac8b55e5a"
+    },
+    {
+      "game": "28393f10a717a02c213790730a008a67-1",
+      "seed": 1411295978,
+      "sha256": "d20a58864e36373abc841532f71620ec1f41149183124cd1cb5828443ab41368",
+      "source": "https://117.72.210.134/replay/28393f10a717a02c213790730a008a67/1",
+      "terrain": "b3df854c15fe855a13c70a56f5b5846cebbd1dd376f77a82111c6cdf321b994d"
+    },
+    {
+      "game": "2d29096aaa80483362db1bdfacd00e30-1",
+      "seed": 1416685919,
+      "sha256": "15a065e902247601d39b8c7c7570c209f8867b03a849582936439488c414cc04",
+      "source": "local public replay validated against the frozen scored card",
+      "terrain": "af743e385a3d37ca94e9dac3726635404d9063c98cd52e8b2a8fd8433c4e15e0"
+    },
+    {
+      "game": "2fee29e83fb0d3492f1c8e17e38164da-1",
+      "seed": 24087790,
+      "sha256": "b36252f91d64592e7f5bf2de91db030761f727b1094d79d24926039b227a8e22",
+      "source": "data/echo10_corpus/2fee29e83fb0d3492f1c8e17e38164da-1.json.gz",
+      "terrain": "957f3f41004d37c60af591d9ebddbb4b0ba44afaae1704ee68c9625656b40f58"
+    },
+    {
+      "game": "31170920b21ff46c67124ef1e70ff63a-1",
+      "seed": 555561988,
+      "sha256": "b582c71dbfff0f2e8b4399ea0c123acaea253e84adf3c933ddb723953b8ba2ca",
+      "source": "data/echo9_corpus/31170920b21ff46c67124ef1e70ff63a-1.json.gz",
+      "terrain": "31d478dc45ebe2393c0101cf2decd45539ee271ea66869676ec7b1299aff26ce"
+    },
+    {
+      "game": "3859f27bebca0a25268e143aafde893b-1",
+      "seed": 661368114,
+      "sha256": "b69b54c6b9dd0e72ddbecc057125b804944017695fbce194bc5230c25d78d13f",
+      "source": "https://117.72.210.134/replay/3859f27bebca0a25268e143aafde893b/1",
+      "terrain": "da89c3885c84b31aba72a872dd3203602b99a9db7add532ecdfafb85df2b072b"
+    },
+    {
+      "game": "3b30579b0abe7e0b6e887a8c680bb215-1",
+      "seed": 592190061,
+      "sha256": "08715c8911e126a12d79c000788629b8bd423f320295179f8b2ca8cead11edfd",
+      "source": "https://117.72.210.134/replay/3b30579b0abe7e0b6e887a8c680bb215/1",
+      "terrain": "7dd819cc38e3cf064b76ae89f9afdf4cbe585f3faa2fb3c463773f26d98f46a4"
+    },
+    {
+      "game": "42ae2e2810e687653c52e320861dcb57-1",
+      "seed": 1022699116,
+      "sha256": "0ea1afb8fcb0e2f5e70b286dcd06bc565531027eb9dc5adf96bb1309da65db78",
+      "source": "data/echo9_corpus/42ae2e2810e687653c52e320861dcb57-1.json.gz",
+      "terrain": "ff4f17dd67d22020bd49ac9f9c4ae60ef4c2e06dd4afeab7c43e8b60b3dede4f"
+    },
+    {
+      "game": "43cc051bf86f64e397e96e9e79aa83ac-1",
+      "seed": 1717358533,
+      "sha256": "780ea5476825965b42b37a72964f7bce8a9c1356dab885e5934d105bede209e5",
+      "source": "https://117.72.210.134/replay/43cc051bf86f64e397e96e9e79aa83ac/1",
+      "terrain": "e9fe3b4add80579fa0fc05074bd3fb2c0c93c4954b3f56f043a7d4b2d51bf826"
+    },
+    {
+      "game": "49ae8fa18b58a63b1394c0a33cefa4f7-1",
+      "seed": 1938383623,
+      "sha256": "7ad7ce344387cf56157b9ec5a19edb7e51822bd5576a2bdce3e88ede45e8b0a8",
+      "source": "data/echo10_corpus/49ae8fa18b58a63b1394c0a33cefa4f7-1.json.gz",
+      "terrain": "d500c03bd20be50204533739e12117c18f0e73cbcc01b300d8ecfe0c05b7bcc0"
+    },
+    {
+      "game": "4c883bd27b2baa77f72757fe1ef04885-1",
+      "seed": 1323516739,
+      "sha256": "0cd4eecc3a8bd446926dd4720509c35f2fcb373e86015267f5debf7617b0ef5d",
+      "source": "https://117.72.210.134/replay/4c883bd27b2baa77f72757fe1ef04885/1",
+      "terrain": "b6ad695de9f47a34537af4e4af13580f47b93501137d19a60aad6b458a922bcb"
+    },
+    {
+      "game": "4d684a532e208e8360381598d19f6f05-1",
+      "seed": 2130840965,
+      "sha256": "82a26f4bf90405bd5f5c3ae8964ff74faea8a9c39f46f860ca9a767993341d44",
+      "source": "https://117.72.210.134/replay/4d684a532e208e8360381598d19f6f05/1",
+      "terrain": "106968752352932a2b7a9d9a38e2ec3e143a92e999a65591ec5b058bda3df430"
+    },
+    {
+      "game": "4e24bb17878fe0c446918f9fc2292ff2-1",
+      "seed": 1169002862,
+      "sha256": "fe393978f75f3393e2a46a366c385f28c8f1765b2c1d6d824de5751ae0120f7d",
+      "source": "https://117.72.210.134/replay/4e24bb17878fe0c446918f9fc2292ff2/1",
+      "terrain": "3741fc38675ed110f5140c35b77b6e45f38583ffe1c1de932b2e45688433b798"
+    },
+    {
+      "game": "56ac9f5741d60476d58564ee3d190e9c-1",
+      "seed": 95154022,
+      "sha256": "a665f77fa9b8d629851d0670027ac22a598f8d0f516e26eb6dce2ea52e3d5723",
+      "source": "https://117.72.210.134/replay/56ac9f5741d60476d58564ee3d190e9c/1",
+      "terrain": "749c030decf233b993c4c0aaf6f6273cccc9f4e775a19b716383273f3b44f43b"
+    },
+    {
+      "game": "59276abc83c340ebc786f531e5a2430d-1",
+      "seed": 1418346230,
+      "sha256": "529cb101ef1cf7c2d6a25067ba72971b704de57c761753260a0ef9a3fe35d553",
+      "source": "https://117.72.210.134/replay/59276abc83c340ebc786f531e5a2430d/1",
+      "terrain": "ef65350b5dce6ecdda27034451fce8f4464968a0eef2077c2225ccfb41512ae2"
+    },
+    {
+      "game": "5b10dd2fe60ca8f90fd090e371299e9f-1",
+      "seed": 918688765,
+      "sha256": "97abdd7cc02afa5d9312e140592838869502a06ffd90e800ddfeea25e4c7eb25",
+      "source": "https://117.72.210.134/replay/5b10dd2fe60ca8f90fd090e371299e9f/1",
+      "terrain": "9949e8835692a5b845b222f8b2e0fdb6c56b0fed283921365e72fa9dcf04e32a"
+    },
+    {
+      "game": "5b54154b82a39993d61299e935317714-1",
+      "seed": 1915696816,
+      "sha256": "1cfdb7b2fcd05ec6b76063e2b945f3cebee988eabb56f5fee3486b3105c03cd0",
+      "source": "https://117.72.210.134/replay/5b54154b82a39993d61299e935317714/1",
+      "terrain": "5024fd42ce82cf33ef969684115f1eb8d167b5125db5357ed88872b9913fdc31"
+    },
+    {
+      "game": "629d65d273ca31e2e111fd98e1e7e75d-1",
+      "seed": 614442625,
+      "sha256": "e485a03cc55aa1d34674751f59e37ed5ec1e29d032d72b06f9bc9dc0ee6571a0",
+      "source": "https://117.72.210.134/replay/629d65d273ca31e2e111fd98e1e7e75d/1",
+      "terrain": "e13a79f6355c4550891cc7de7aec9822a0f0d5270b12f835076b610d3d4c1d72"
+    },
+    {
+      "game": "6609a9061165c4f46c74710c8b4aa517-1",
+      "seed": 1852404583,
+      "sha256": "aa176eabda9bf0df304dabc4d1b609e1db2d29a93569d940967cded3cca23dc6",
+      "source": "data/echo10_corpus/6609a9061165c4f46c74710c8b4aa517-1.json.gz",
+      "terrain": "13ff7555a799e95dea4414663cfc5ee80085b57b774bbb7d39ae7839962c31ad"
+    },
+    {
+      "game": "687aab8977b8bf3e6f34c4e204fdebcc-1",
+      "seed": 1702479189,
+      "sha256": "b21b96bcbf910ccdbcf29b5bc9176804672a64669c4641b843baadb236c426b0",
+      "source": "data/echo10_corpus/687aab8977b8bf3e6f34c4e204fdebcc-1.json.gz",
+      "terrain": "8c28603efd7a6df3185c9547e2d984a7f097d3e15ce2d29cce3841d4df52ea09"
+    },
+    {
+      "game": "6b09e8a7cba83aaa6beaac72d7f2094a-1",
+      "seed": 1369626008,
+      "sha256": "8e4643a745cf7822e2abe822a1c2426ce2ca2ca551a58e11b71e8a1ba48eb025",
+      "source": "data/echo10_corpus/6b09e8a7cba83aaa6beaac72d7f2094a-1.json.gz",
+      "terrain": "0743478ebea105d53fee2c6a8c7bcc87774b08fccf758f87fce60211c49bfa95"
+    },
+    {
+      "game": "6b78f27647128ac9f828bbd101b4ca3d-1",
+      "seed": 1888080279,
+      "sha256": "11bc0210550ce5d748e500194cca8be1d5fd62f33f6053650173ab5c3e934cad",
+      "source": "https://117.72.210.134/replay/6b78f27647128ac9f828bbd101b4ca3d/1",
+      "terrain": "ed17ec9765dfee8ed348d3489ce4b0b6cd6a60b104cb8753cd453ec134e18d63"
+    },
+    {
+      "game": "6cf47206d09657ce2fbb8047c084da96-1",
+      "seed": 128495300,
+      "sha256": "5299e39661e069c086f3146a09fdbe7ec4281bb9034635a9d0c5b1c9bc252be2",
+      "source": "https://117.72.210.134/replay/6cf47206d09657ce2fbb8047c084da96/1",
+      "terrain": "b4c18e40a0a4ca18571e08fedd2d7262e6019524af71651161ceac6a4cbccc9c"
+    },
+    {
+      "game": "6d2689e60e9f6c88f1988cd104faf921-1",
+      "seed": 1515024589,
+      "sha256": "58b8267da58c03ef7141cdfd4a4405fd3d7a4491a411769c719ef3f3cbcb9117",
+      "source": "https://117.72.210.134/replay/6d2689e60e9f6c88f1988cd104faf921/1",
+      "terrain": "38174c1141f48f7009762e5c5f5e78485b0968f541424a867e5102be283a540f"
+    },
+    {
+      "game": "75f386ad1dbd913aab7e764362e07dd6-1",
+      "seed": 1357411425,
+      "sha256": "c015d3158d18204c63b23296c2e7855bb0a162a8715593235ebaf036a6f600ae",
+      "source": "https://117.72.210.134/replay/75f386ad1dbd913aab7e764362e07dd6/1",
+      "terrain": "25874dc42235340d063ebe1dc35e5178e9c738010a2649e9fbc26ee6172d5e3e"
+    },
+    {
+      "game": "76811aad272b7ec3c9089f752765bc6c-1",
+      "seed": 888582929,
+      "sha256": "2afb33da202102ca9a4657071a8ac080439bc9d65928277a5ec79826d405d2a3",
+      "source": "data/echo9_corpus/76811aad272b7ec3c9089f752765bc6c-1.json.gz",
+      "terrain": "9008d39c3af5920598fc8f14d2fff4e5f7bb73c1ecb7d2e91af0d853c7019884"
+    },
+    {
+      "game": "7831dd1fe0b4f3e4521d556a3a734541-1",
+      "seed": 393703820,
+      "sha256": "6f63174fbd733ab312e534ba1c58ddc2c2b2bad463a55aec4bd4ac69668ae4fb",
+      "source": "https://117.72.210.134/replay/7831dd1fe0b4f3e4521d556a3a734541/1",
+      "terrain": "019d2ce034f7d591b318f42964551d6f34164f29f4636d3dbf7caaaaed6b9e9d"
+    },
+    {
+      "game": "7e70ef84a067020c5d844cde37800cc1-1",
+      "seed": 309114647,
+      "sha256": "92ce0f09740effb57a3eed76493ec1a81cedf221323a72e8ba15b0d9be61e11e",
+      "source": "https://117.72.210.134/replay/7e70ef84a067020c5d844cde37800cc1/1",
+      "terrain": "a205513bdaab9fcfef1b065125b995364a1dba57882d39f20601c31abafbff1c"
+    },
+    {
+      "game": "8056c2af47a3e8d89781ae2819fc1e57-1",
+      "seed": 1897595313,
+      "sha256": "abc4a6fd4eabcaa7ef51fe984da7607cdd86ca31e20e407acf9314a760a3033e",
+      "source": "https://117.72.210.134/replay/8056c2af47a3e8d89781ae2819fc1e57/1",
+      "terrain": "a6cce2baf69bf1378c39cfcdd2371d0cde19aa7f0d77b50aa4526dedb9185c50"
+    },
+    {
+      "game": "8b9175c3f2f4a515dd63f10c16c5a9b9-1",
+      "seed": 1962695701,
+      "sha256": "86e3589ce4457f39a5c2dcaeb25ff1df97bfb9bf6376081c1874b8797c9c19d4",
+      "source": "https://117.72.210.134/replay/8b9175c3f2f4a515dd63f10c16c5a9b9/1",
+      "terrain": "f0f816e17be995f8bc662ef29a333247fed01f40912ce87609e6672add181423"
+    },
+    {
+      "game": "8bd97a8913f6998d1063fd8d103daf28-1",
+      "seed": 552520105,
+      "sha256": "37d67eecd727e8b5ea14694a590c5c0f0c363db1bfdeb3176f90306c2f705813",
+      "source": "https://117.72.210.134/replay/8bd97a8913f6998d1063fd8d103daf28/1",
+      "terrain": "8840cc4bac89029380ab99bca8e4233398eaa4159ff29562111870e375b2f702"
+    },
+    {
+      "game": "916619ca54d5c656dc00ba94abf7ee37-1",
+      "seed": 1313564522,
+      "sha256": "978defc09612e1d662abd2eb217db6e2dcd0e20b4689bf439d30539c28da5893",
+      "source": "data/echo9_corpus/916619ca54d5c656dc00ba94abf7ee37-1.json.gz",
+      "terrain": "b83f22245fd73beeb889a24695b47671ddc2ef3164de2fe016ade26abe71555b"
+    },
+    {
+      "game": "95b112faf10aca033592ba530f6f19b5-1",
+      "seed": 1769750845,
+      "sha256": "9967a9354f86a78a92539c32e0e7ec895054d4287aed9db8f5dbaec2a2466896",
+      "source": "data/echo9_corpus/95b112faf10aca033592ba530f6f19b5-1.json.gz",
+      "terrain": "86602f848d7df1b35505cbd617ce77fc31bd6f9e04f33010c8fc143864097f18"
+    },
+    {
+      "game": "9be5bfab7ffdba47a5d521ddde389611-1",
+      "seed": 999652474,
+      "sha256": "8c844970a83d43dbaadaed9a72aff93cdcd95769ef847ff37725d40829c2e180",
+      "source": "https://117.72.210.134/replay/9be5bfab7ffdba47a5d521ddde389611/1",
+      "terrain": "4a8f401e65bdcf7eed68b1d24b51f2552c3440fbe690d2992350aaaa3d4b88e4"
+    },
+    {
+      "game": "9d3458a8d16b191af68969e88a58b596-1",
+      "seed": 228657447,
+      "sha256": "62227db5c9f13b788e7b6645de3c2383075a76c12dd08a6a44aedde4b66325a9",
+      "source": "data/echo9_corpus/9d3458a8d16b191af68969e88a58b596-1.json.gz",
+      "terrain": "21856a35c0e42162aa88231bebdd8b5fc68b78b1802ab1c926bbc28d6777fae1"
+    },
+    {
+      "game": "a2d323392406c392889a2bef41cea667-1",
+      "seed": 1029606768,
+      "sha256": "a376987dcf02e0977bdcffd0946eca89407df7dd44d9d4129db93415c0a25bf2",
+      "source": "data/echo10_corpus/a2d323392406c392889a2bef41cea667-1.json.gz",
+      "terrain": "129810b391699d45dd49203f9804f515244a12327e5cb6c5c9415d40c88990e4"
+    },
+    {
+      "game": "ac958746a0f8a7880a70f375400c9934-1",
+      "seed": 1103160055,
+      "sha256": "08104776f1a2480bd382635bfa5f406e6f2e83f702d799f7170e6d7ba4ec2af6",
+      "source": "data/echo7_corpus/ac958746a0f8a7880a70f375400c9934-1.json.gz",
+      "terrain": "d2ff732eb9b1fcf1c295954597241b3ad04eb23b372612f72f6404242d311851"
+    },
+    {
+      "game": "b2861d72d184aa2d1e68ba5b43cbf6fa-1",
+      "seed": 1799047589,
+      "sha256": "f4e5250b6b6f6ca40be0c7a9804014e35e0371783f56af4a79bd3c7248446296",
+      "source": "https://117.72.210.134/replay/b2861d72d184aa2d1e68ba5b43cbf6fa/1",
+      "terrain": "3db7e9ffcf0b8747667889056c7b2bac1a812216e1ba4aa02b5c432b182abbd9"
+    },
+    {
+      "game": "b3a296babbe3e479b750a01990b24038-1",
+      "seed": 1453030290,
+      "sha256": "b3dc539e4996a09494732bc377bff3f419b3ca680854d17130a972b2f2e06da3",
+      "source": "data/echo9_corpus/b3a296babbe3e479b750a01990b24038-1.json.gz",
+      "terrain": "7c1e3f8688aaa7b8810e33ac4fe8920099d601237d874300234a779679aef825"
+    },
+    {
+      "game": "b86983f9f34408e9ea4bc26ca579256e-1",
+      "seed": 229331873,
+      "sha256": "758a8f2943d23b68d46570db11d2ec3ed7121495de9349fd304abce6aadfccdd",
+      "source": "https://117.72.210.134/replay/b86983f9f34408e9ea4bc26ca579256e/1",
+      "terrain": "892b752ef8eab482c34a234bc7ffd25c2fb3f7ad66f2daab3990ced9a3cb4b1c"
+    },
+    {
+      "game": "bb1a02f3d426f6d3da7bf1e8eefb1fa2-1",
+      "seed": 1487179052,
+      "sha256": "f9fbddd1678eddf91820b82bad6ac7ad021ba8fd01086883dd3405b48f05cfed",
+      "source": "data/echo10_corpus/bb1a02f3d426f6d3da7bf1e8eefb1fa2-1.json.gz",
+      "terrain": "16914c2c8508875f1d77ec6e7eaff48d32c3adc2c1ef911a208251b0806062e9"
+    },
+    {
+      "game": "bf500ea35711f345166b433c6092d1dd-1",
+      "seed": 736417441,
+      "sha256": "15d2e6f7d06de0f17281a4f30fb2d00890ab3fa2b5c2f31e844489350e26f6bc",
+      "source": "https://117.72.210.134/replay/bf500ea35711f345166b433c6092d1dd/1",
+      "terrain": "7c35729582b365ad8f1a6a8a206cb3694bd7cd9800e832f0824757aeb9cc7449"
+    },
+    {
+      "game": "c19e7fd36558d6d03f75aa8c4a61dfaf-1",
+      "seed": 2016426332,
+      "sha256": "8d981cd965344e01b6a32e781fc4a0b0c2f7224315ae9d47c71e87792de46d03",
+      "source": "https://117.72.210.134/replay/c19e7fd36558d6d03f75aa8c4a61dfaf/1",
+      "terrain": "54a369d9ae0bb6554fa06b7dfc919555f6f8426da28015a0868857d7b70b9f6b"
+    },
+    {
+      "game": "c277aaf3fe6275c199da98b6eff2f1a8-1",
+      "seed": 649005100,
+      "sha256": "3aff32c785066825c491fde7dfa6f96908cc00f6a51b5bc6fea8af4441673f20",
+      "source": "https://117.72.210.134/replay/c277aaf3fe6275c199da98b6eff2f1a8/1",
+      "terrain": "3ac2d93dd29b8b8dd8fc86379a199dfb2b87a2df507378532d07076e4496be2f"
+    },
+    {
+      "game": "c3213fe385bd71a1f888cfddbc85d273-1",
+      "seed": 890183541,
+      "sha256": "78fa9dc5339235dd56665d98fdecfe7fdf4a9be257cd0bff8aabdaf138e885fb",
+      "source": "https://117.72.210.134/replay/c3213fe385bd71a1f888cfddbc85d273/1",
+      "terrain": "085afffb0fbbf5de4289cb8b395b54bdd360c9f0bf6d2ec4daeb8f1c68a5b1ef"
+    },
+    {
+      "game": "c3dca595f6116534e9f2e4a89ae219d4-1",
+      "seed": 1743726242,
+      "sha256": "becd88f5b54e58cb532be3ee3b53b4dce8d8be215f32e867bf3b25237f1a0fc3",
+      "source": "local public replay validated against the frozen scored card",
+      "terrain": "c6bac843e5b47bbc38e269725027c5f50c62c7e985e823865368ce9d5d40023c"
+    },
+    {
+      "game": "c4d80ca26a960eec5165cb868f30e298-1",
+      "seed": 313844079,
+      "sha256": "e92c0abf5cddc956c15cf917ec361a58475b12e2f00069f02e9802c2dc6aef29",
+      "source": "https://117.72.210.134/replay/c4d80ca26a960eec5165cb868f30e298/1",
+      "terrain": "b01e2bd96351d12cd817cb719c3ab315b140a195ff4d061830910f75c24a2717"
+    },
+    {
+      "game": "c9dfac46b3892e37d03135aba78a6f2d-1",
+      "seed": 868180225,
+      "sha256": "cc6ea378655ff612b09f7aa0bc43f9fc3227cf6ff53948d431e40ff2b4c73c49",
+      "source": "https://117.72.210.134/replay/c9dfac46b3892e37d03135aba78a6f2d/1",
+      "terrain": "c0cb9702644d66fd05cc272f7851a47f5c37fbf4669b5aab04288043d430523e"
+    },
+    {
+      "game": "cd1fb3784046faab26a5dc6382ca2375-1",
+      "seed": 415547758,
+      "sha256": "efdbc2fa98c54fff6014ebffe85cf4de4c5b956fd0eff3cc17beb38442db4310",
+      "source": "data/echo10_corpus/cd1fb3784046faab26a5dc6382ca2375-1.json.gz",
+      "terrain": "9e938b9d0ef16cfa9a193990ac4aff5c2411b8ec53e08487cdf40492b2fd781a"
+    },
+    {
+      "game": "cfbaf33c2a902e572c1b52a5c16c7c87-1",
+      "seed": 177281947,
+      "sha256": "890f692de86a6ab597e7fdd165d6f64a403494d2fd8ece0e002e30bfe3b7d00f",
+      "source": "data/xiaofeiyu5-late1_corpus/cfbaf33c2a902e572c1b52a5c16c7c87-1.json.gz",
+      "terrain": "ad3d82ba651362b77235cfed8b19f641fe0e75335b67b73ae46a786d4ac556e1"
+    },
+    {
+      "game": "cfbdf29ce2484ed0720b13c3194753b4-1",
+      "seed": 2120972659,
+      "sha256": "3db6258c8390d373b431fe3ac73b9f810641d2bb4854e5af5440ba93fe1992d6",
+      "source": "https://117.72.210.134/replay/cfbdf29ce2484ed0720b13c3194753b4/1",
+      "terrain": "74eb63b552a8e2d2c3ba53cd9424fce8cb238f2803640b06f234c34f15f6ecd2"
+    },
+    {
+      "game": "d049ba4dfee886db2fd96133813e2b2e-1",
+      "seed": 344443443,
+      "sha256": "fed32b791fbdf1785f899f07391a3d35e0d8671217551e7d6a621b28723ef166",
+      "source": "data/echo9_corpus/d049ba4dfee886db2fd96133813e2b2e-1.json.gz",
+      "terrain": "d8ab287388d0b4f76aac36780ae0fa0b609aaa8d09a995af5c9f68729743a579"
+    },
+    {
+      "game": "d09dbc25b30d6ea8e3e8128da5a614dd-1",
+      "seed": 1778854312,
+      "sha256": "8796562a432eb75cd68688915fa621af980f2ee9f4a775b36ea24d96b4e63064",
+      "source": "data/echo9_corpus/d09dbc25b30d6ea8e3e8128da5a614dd-1.json.gz",
+      "terrain": "68777644c30944cfe6d87c550035dab685c4191705fd9a64b331cd7969f5227d"
+    },
+    {
+      "game": "d62d704e696daac92c3ae4ef950367b7-1",
+      "seed": 1322793412,
+      "sha256": "39da45789d5f7d99e4b91906ec43b43599689aa6e055269727db004772e41617",
+      "source": "https://117.72.210.134/replay/d62d704e696daac92c3ae4ef950367b7/1",
+      "terrain": "9321d0f178ef2d7c4f091bb7c2e952128f9b1e364d158a8a71b2b499ebd43470"
+    },
+    {
+      "game": "d9bfe5d6fcd22adec7046233b4dc7028-1",
+      "seed": 278890859,
+      "sha256": "9247dfd83c52b34f23f5bccd7b2afec7d8da78578a38a1193927f939b388464e",
+      "source": "https://117.72.210.134/replay/d9bfe5d6fcd22adec7046233b4dc7028/1",
+      "terrain": "7315960782d81c2654fbd72bbefa78cbce5b13dc042042778046ac81cc9fd325"
+    },
+    {
+      "game": "d9fb7f437ea8192d5fd710be19f87762-1",
+      "seed": 1665417006,
+      "sha256": "8bee42ab8f4fcc2b97e6d0f4b0dab443dedee6a005557e5ce593a59aa9e2abb1",
+      "source": "https://117.72.210.134/replay/d9fb7f437ea8192d5fd710be19f87762/1",
+      "terrain": "8c878c44f6cdfc720ee30ecd9882977981f046cbcd3f8752f39a5be0e6ce0269"
+    },
+    {
+      "game": "da721b511ae530543f107cd4b15d6576-1",
+      "seed": 2054559875,
+      "sha256": "c67c4d5b8a39a7c13b783eb971fa4c1ede47b841d7b1ef71b71af9c59b84db5b",
+      "source": "data/echo9_corpus/da721b511ae530543f107cd4b15d6576-1.json.gz",
+      "terrain": "94a0492908746d43001b90012db47fccca73af36a561f5782593deaa8cf935e1"
+    },
+    {
+      "game": "dd08a437669794077c5324288a61eac9-1",
+      "seed": 688115540,
+      "sha256": "d0dbffb34d50dc9dfaeb475c3d532c03d67e3885ea67b938b8176a17ab58ab5c",
+      "source": "https://117.72.210.134/replay/dd08a437669794077c5324288a61eac9/1",
+      "terrain": "9fde2d77dde4b24110f0bf0cd63792fd8246e43d8271b8b6a7f6d925c3dfbf0e"
+    },
+    {
+      "game": "de78caaa0a8c1600332b4f912f1c2f9d-1",
+      "seed": 1052219255,
+      "sha256": "d7aefafced5360eaaa1d62cef41c097022226e7256e77acc9550017618dbdf4e",
+      "source": "https://117.72.210.134/replay/de78caaa0a8c1600332b4f912f1c2f9d/1",
+      "terrain": "f80371c81d750db524d195339ce8bebfe93a5f1763c1a157d730ee43df910945"
+    },
+    {
+      "game": "e268c99d4c88475e225f39e4e96c4fcf-1",
+      "seed": 1818605316,
+      "sha256": "c74bffeab0d60f0fa818902d43492aa967406ea976d48653e0974531f336ef8d",
+      "source": "data/echo9_corpus/e268c99d4c88475e225f39e4e96c4fcf-1.json.gz",
+      "terrain": "1af6802563a7d79ce90140ade76761540afc7398dcf35b8679da2432142485be"
+    },
+    {
+      "game": "e6bcbcbf92c0d3b2466cad0d2a6e6ea9-1",
+      "seed": 2012294782,
+      "sha256": "7f5f36c169217011ee75f05f29e534ced13f512fd8d78b223931a8c97cfa8e8c",
+      "source": "https://117.72.210.134/replay/e6bcbcbf92c0d3b2466cad0d2a6e6ea9/1",
+      "terrain": "ea399ee96d962e21f062fd352263ed8f404c6de37795c752a25e3a1bc5e441b4"
+    },
+    {
+      "game": "ea065a7cff661001ccc3d90dfc734642-1",
+      "seed": 735356999,
+      "sha256": "bd1a542929ef8fd33cc0674ed9d61aa335cfe29e71d07a88e47510340661a554",
+      "source": "https://117.72.210.134/replay/ea065a7cff661001ccc3d90dfc734642/1",
+      "terrain": "55af54c519eef298b4735035e84d4b9d0fed30b198fca5849db043a305bd10c0"
+    },
+    {
+      "game": "ea368d9769af9643242d89f7aeede065-1",
+      "seed": 466749851,
+      "sha256": "79cdc3d0611ca789b86ad06952d318006beed04dcac879471cfbff49c1def442",
+      "source": "data/echo10_corpus/ea368d9769af9643242d89f7aeede065-1.json.gz",
+      "terrain": "459ff136f1e43aafc161c40ca1ad21928259139d171d96a270b38a656b0a848a"
+    },
+    {
+      "game": "ebad0bb3515bf095133053ed00626a25-1",
+      "seed": 936358820,
+      "sha256": "f02a27ca77456047cdde78b59b762cd861d730700f81abde80491ff3f726a3fb",
+      "source": "data/echo9_corpus/ebad0bb3515bf095133053ed00626a25-1.json.gz",
+      "terrain": "210ab6f88f09037db6bf6f577b8e29ea109f591f81b4c4d1d8edd55ecdb2bc53"
+    },
+    {
+      "game": "f6fd3f14397c18f756d09172f4185e95-1",
+      "seed": 1502121157,
+      "sha256": "e390c96ba2287060fb7b6107eb49bda6ee9d40a2b6075cee6966ba8ec69a00ea",
+      "source": "https://117.72.210.134/replay/f6fd3f14397c18f756d09172f4185e95/1",
+      "terrain": "01ce008e58ac8c0eac5bce71b87a8343024adabc15dacdf75c85d62eab54f32e"
+    },
+    {
+      "game": "f7e74de9a94a7ba57befa3d78e31ff1c-1",
+      "seed": 1541933517,
+      "sha256": "859174b453e65a29970766004c3c54da0514e921e5fc1537e259e4ed5b7e3a1f",
+      "source": "data/echo10_corpus/f7e74de9a94a7ba57befa3d78e31ff1c-1.json.gz",
+      "terrain": "5c342c30a666f02332bc1bd88ce26d417359480d71bc19eea73945b13d13f6ad"
+    },
+    {
+      "game": "fdd5d80e85686dcb42149c4bab119a8d-1",
+      "seed": 1157525873,
+      "sha256": "05460da54833fa85321c60f46d1b634226b4daf85aaf1a858f72fdc9320f6635",
+      "source": "data/echo10_corpus/fdd5d80e85686dcb42149c4bab119a8d-1.json.gz",
+      "terrain": "47c9d4ec459dd06b91e394d5b6694e9c62d5ca5248fe714ccbc3ed5fb7415e71"
+    },
+    {
+      "game": "fe2a185e9c2097ef49e80f395fc3d31e-1",
+      "seed": 7898462,
+      "sha256": "a2d924b6430d8e0e68681beff2ad0cf08e5446536c8d8339967d9a9cb3f7b48a",
+      "source": "https://117.72.210.134/replay/fe2a185e9c2097ef49e80f395fc3d31e/1",
+      "terrain": "e5baf50c91a2ba97a332b841158d075008d55e695bd645c06c9be632fe969388"
+    },
+    {
+      "game": "fec7dc25f8f7ef022389058036d96bb3-1",
+      "seed": 196709878,
+      "sha256": "e3d19f1e2b54bee1a5eda05fe1709cdf67b5d947623cc62992f181689e4aa2c0",
+      "source": "data/echo10_corpus/fec7dc25f8f7ef022389058036d96bb3-1.json.gz",
+      "terrain": "24246e0c3d92bfe7520423909484854cf00ea6e74205a9c58c1f1e6340c5800b"
+    }
+  ],
+  "seed_intersections": [],
+  "seeds": [
+    621758500,
+    621758501
+  ],
+  "source_counts": {
+    "localized_top5_volumes_covered_by_ledgers": 59,
+    "repo_paths": 23857,
+    "structured_members": 10676,
+    "top5_ledgers": 45
+  },
+  "source_snapshot": "e0916a448e36b37e87537bebd5b67ca026a548f0",
+  "source_tree": "5cd04b3bb215055747fa7772dcc8b828dcbd0d89",
+  "top5_faults": [
+    "aa09f48ff29f3b228d4cba21ffb5cc61-1"
+  ],
+  "top5_games_scored": 1646,
+  "top5_unique_openings": 1647,
+  "unique_structured_blobs": 9606,
+  "verified_engines": [
+    "FastCarbon",
+    "zerosum_env official carbon"
+  ]
+}

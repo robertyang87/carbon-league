@@ -1,0 +1,150 @@
+name: Sapling strategic destination on two new maps against original Master3s2
+
+on:
+  workflow_dispatch:
+    inputs:
+      matrix_sha:
+        description: SHA-256 of the frozen frozen 12-game strategic development protocol.json
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: sapling-strategic-development-single-dispatch
+  cancel-in-progress: false
+
+env:
+  CARGO: reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev
+  LANE: reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development
+  DIGEST: ${{ inputs.matrix_sha }}
+  OPENBLAS_NUM_THREADS: '1'
+  OMP_NUM_THREADS: '1'
+  MKL_NUM_THREADS: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  matrix:
+    if: github.ref == 'refs/heads/main' && github.run_attempt == '1'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    outputs:
+      pairs: ${{ steps.plan.outputs.pairs }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/*.py
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/*.json
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/*.sha256
+      - id: plan
+        name: Check frozen strategic training release and generate map-seat schedule
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3.12 "$LANE/workflow_cli.py" prepare --digest "$DIGEST"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          python3.12 "$LANE/matrix.py" check --matrix-sha "$DIGEST"
+          python3.12 "$LANE/matrix.py" list --matrix-sha "$DIGEST" > "$RUNNER_TEMP/matrix.json"
+          python3.12 - <<'PY'
+          import json, os, pathlib
+          m=json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"matrix.json").read_bytes())
+          pairs=[(x["seed"],x["seat"]) for x in m["include"]]
+          seeds={p[0] for p in pairs}
+          if (seeds!={621758500,621758501} or len(pairs)!=4 or any(type(s) is not int or type(p) is not int for s,p in pairs)
+              or len(pairs)!=len(set(pairs)) or set(pairs)!={(s,p) for s in seeds for p in (0,1)}):
+              raise SystemExit("Incomplete or duplicate frozen map/seat schedule")
+          with open(os.environ["GITHUB_OUTPUT"],"a") as f:print("pairs="+json.dumps(m,separators=(",",":")),file=f)
+          PY
+
+  pair:
+    needs: matrix
+    runs-on: ubuntu-24.04
+    timeout-minutes: 115
+    name: strategic-dev-${{ matrix.seed }}-${{ matrix.seat }}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.matrix.outputs.pairs) }}
+    env:
+      SEED: ${{ matrix.seed }}
+      SEAT: ${{ matrix.seat }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/sapling-strategic-destination-development.yml
+            /code/env_src/carbon_challenge-master/zerosum_env/
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/*.py
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/*.json
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/*.sha256
+      - name: Freeze dependencies and reject a previously exposed map-seat ticket
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/receipts"
+          python3.12 "$LANE/workflow_cli.py" prepare --digest "$DIGEST"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          python3.12 "$LANE/matrix.py" check --matrix-sha "$DIGEST"
+          python3.12 "$LANE/workflow_cli.py" guard --seed "$SEED" --seat "$SEAT"
+
+      - name: Build pinned Python 3.12 and NumPy 1.26.4 execution image
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          python3.12 -m venv "$RUNNER_TEMP/carbon-env"
+          "$RUNNER_TEMP/carbon-env/bin/python" -m pip install --only-binary=:all: --disable-pip-version-check --index-url https://pypi.org/simple numpy==1.26.4 requests==2.32.5 jsonschema==4.25.1
+          echo "$RUNNER_TEMP/carbon-env/bin" >> "$GITHUB_PATH"
+          ctx="$RUNNER_TEMP/image-context"
+          mkdir -p "$ctx/code/env_src/carbon_challenge-master"
+          cp -r code/env_src/carbon_challenge-master/zerosum_env "$ctx/code/env_src/carbon_challenge-master/"
+          test "$(grep -cxF 'FROM python:3.12-slim' "$CARGO/ladder_live/Dockerfile")" = 1
+          sed 's|^FROM python:3.12-slim$|FROM python@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b|' "$CARGO/ladder_live/Dockerfile" > "$ctx/Dockerfile"
+          docker build --tag sapling-native-actor:registered "$ctx"
+          docker image inspect sapling-native-actor:registered --format '{{.Id}}' > "$RUNNER_TEMP/receipts/container_image_id.txt"
+
+      - name: Play three frozen strategic agents
+        id: games
+        timeout-minutes: 85
+        run: |
+          python "$LANE/matrix.py" play --matrix-sha "$DIGEST" --seed "$SEED" --seat "$SEAT" --out "$RUNNER_TEMP/receipts" --image sapling-native-actor:registered
+
+      - name: Independently verify complete games and timing
+        if: always() && steps.games.outcome != 'skipped' && steps.games.outcome != ''
+        run: |
+          set -euo pipefail
+          python "$LANE/matrix.py" verify --matrix-sha "$DIGEST" --seed "$SEED" --seat "$SEAT" --out "$RUNNER_TEMP/receipts" | tee "$RUNNER_TEMP/receipts/verification.json"
+
+      - name: Retain run identity and exposure evidence
+        if: always()
+        env:
+          PAIR_STATUS: ${{ steps.games.outcome }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/receipts"
+          mkdir -p "$out"
+          jq -n --arg status "$PAIR_STATUS" --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" --arg commit "$GITHUB_SHA" --arg protocol "$DIGEST" --argjson seed "$SEED" --argjson seat "$SEAT" '{pair_step_outcome:$status,run_id:$run,attempt:$attempt,commit:$commit,protocol_sha256:$protocol,seed:$seed,seat:$seat}' > "$out/pair_status.json"
+          python3.12 "$LANE/workflow_cli.py" exposure --out "$out" --seed "$SEED" --seat "$SEAT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: exposure-strategic-dev-${{ matrix.seed }}-${{ matrix.seat }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/receipts/exposure.json
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: strategic-dev-${{ matrix.seed }}-${{ matrix.seat }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/receipts/
+          if-no-files-found: error

@@ -86,8 +86,9 @@ def analyze(hosted, plan):
             for field in ("signed_account_by_seat", "physical_cash_by_seat", "cash_margin_by_state",
                           "phases", "end_assets_by_physical_seat", "last30_tree_and_cargo", "opponent_lead"):
                 game[field] = None
-    return dict(run_id=doc["run_id"], commit=doc["commit"], settlement_sha256=ledger.sha(settlement.read_bytes()),
-                plan_sha256=doc["plan_sha256"], analyzer_sha256=ledger.sha(Path(__file__).read_bytes()),
+    return dict(run_id=doc.get("workflow_run", doc.get("run_id")), commit=doc["commit"],
+                settlement_sha256=ledger.sha(settlement.read_bytes()),
+                plan_sha256=doc.get("protocol_sha256", doc.get("plan_sha256")), analyzer_sha256=ledger.sha(Path(__file__).read_bytes()),
                 replay_source_sha256=ledger.sha((BASE/"economy.py").read_bytes()),
                 environment_config_sha256=ledger.CFG_HASH,
                 semantics=dict(margin="Learner official score minus original opponent; punitive scoring kept separate from cash.",
@@ -115,7 +116,7 @@ def main():
         frozen = HERE / "protocol.json"
         plan = json.loads(frozen.read_bytes())
         settled = json.loads((hosted / "settlement.json").read_bytes())
-        ledger.require(settled["plan_sha256"] == ledger.sha(frozen.read_bytes()), "Settlement for a different protocol")
+        ledger.require(settled["protocol_sha256"] == ledger.sha(frozen.read_bytes()), "Settlement for a different protocol")
         ledger.require(plan["arms"] == ["parent", "bc", "joint"] and plan["seeds"] == [621758500, 621758501],
                        "Unexpected development registration")
     result = analyze(hosted, plan)
@@ -124,6 +125,16 @@ def main():
         for key, data in result["comparisons"].items():
             ledger.check_equal(data["all"]["mean_over_all_planned"], old_means[key]["mean_over_fixed_maps"], key)
     else:
+        for key, data in result["comparisons"].items():
+            registered = settled["results"]["paired"][key.replace(" minus ", "_minus_")]
+            actual = {(p["seed"], p["seat"]): p.get("official_margin_delta") for p in data["map_seats"]}
+            for ticket in registered["tickets"]:
+                value = actual[ticket["seed"], ticket["seat"]]
+                reference = ticket["paired_margin_change"]
+                if value is None or reference is None:
+                    ledger.require(value is reference, "Missing-score coverage differs")
+                else:
+                    ledger.check_equal(value, reference, "Same seat official contrast")
         ledger.write(hosted / "economy.json.gz", result, compressed=True)
     for key, row in result["comparisons"].items():
         print(key, row["all"].get("mean_over_all_planned"),
