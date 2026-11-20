@@ -2,6 +2,8 @@
 
 ## 当前胜绩与验收
 
+训练方向的资料复核已核对 KataGo 作者代码、PPO 与仓内真实对照。文档说明为什么保留前五回放作示范、用原版实际响应检验新动作，以及怎样把 CPU 花在有用的终局样本上。[资料与训练建议](KATAGO_RL_TRAINING_REVIEW_20261120.md)
+
 冻结对照 `ede48ad9` 在另八张预登记的训练与留用地图上对原版 **0 胜 0 平 8 负，平均官方分差 −1,450.14**。两席各 0/4。这批每图只打一席，单独记账；跑满的 32 条条件续弈也另列。分差中，正常交仓每局少 828.38 分，地面树租少 600.83 分。用五张图的真实终局训练「何时切换为另一张 Sapling 网络」后，拟合结果在三个留图的全部公开状态上都决定沿用对照，实际 897 拍逐令相同。正式考试仍保留 100 张全新地图。[实战逐局官方分与原版搜索深度](master6_actor_dev/strategic_destination_learning/policy_window_returns/hosted/README.md) · [抢货至回款与全部分支](master6_actor_dev/strategic_destination_learning/policy_window_returns/economy/FINDINGS.md) · [训练与盲测](master6_actor_dev/strategic_destination_learning/policy_window_returns/analysis/README.md)
 
 将 44 场 Sapling 开发实战与 30 场前五对同名 Master3s2 的天梯记录同刻对齐，第 100 步 Sapling 本方累计交仓 1,745，前五为 1,706；同场对手累计交仓则分别为 1,820 与 1,457。每组均保留败局、两个席位和不同对手。两组地图与运行条件不同，这个差异用于确定实验时段。早中盘的新对照在 234 张另分的历史训练图上学习，比较按后续二十步现金差给示范加权与各示范等权两种做法。[对齐的双方工程账](master6_actor_dev/strategic_destination_learning/opponent_matched_economy/README.md) · [早中盘训练登记](master6_actor_dev/strategic_destination_learning/midgame_economic_policy/protocol.json)
