@@ -1,0 +1,16 @@
+{
+  "seeds": [
+    621758607
+  ],
+  "seats": [
+    0,
+    1
+  ],
+  "ticket_budget": 2,
+  "root_window": "All archived V3 roots t=270..294, one highest-ranked feasible per seat. If none, keep missing. These maps and their earlier aggregate cash losses are exposed. Root selection uses only actor-seat public observations at t and t-1, actor own previously executed root command. No archived opponent root command or future outcome.",
+  "rule": "Consider enemy collectors with positive cargo, 1\u20135 toroidal steps to nearest own base. Forecast their shortest returning action, continue previous motion on ties then smallest landing cell. Do not camp on an enemy base. Own collector with cargo strictly less than enemy, at most 100, can reach predicted nonbase point this turn on a different action, without ally destination conflicts (including base recruit), or stepping on friendly/hostile base. Rank decreasing (enemy cargo - own cargo), least t, opponent ID, blocker ID in that order.",
+  "expectation": "Historical V3 full joint command vs one modified collector move. Original Master3s2 computes new actual root action shared across both variants at temperature one / search .58, after root both run full public V3 and unmodified original to official score. Paired shared reconstruction and new private RNG; historical internal RNG and budgets unknown. Opponent and actor public histories verified, seat-complete step receipts with income and timing. Original public outputs may differ under wall clock; local CPU diagnostic.",
+  "order": "seat0 parent/blocked, seat1 blocked/parent; both CPU isolated and one thread. Derived RNG int.from_bytes(sha256(f\"{seed}/{seat}/{step}/return-turn/v1\")[:4],\"big\"), rival XOR 0x7d4a1f6b.",
+  "source": "hosted/economy.json.gz and receipts signed in hosted/settlement.json",
+  "known_at_registration": "Full historic cash series and worst 3/5/10 windows, but no new response output. Old development map only."
+}
