@@ -1,0 +1,119 @@
+{
+ "gate_md5": "1a9a7a26f9e1e7581f219031e330fc3a",
+ "gate_file": "gate_vec2.py",
+ "lines": {
+  "tol_hard_FORWARD_TOL_magnitude": 0.25,
+  "tol_report_NEW_pending_strategy": 0.02,
+  "ks_NEW_pending_strategy": 0.05,
+  "mean_shift_NEW_pending_strategy": 0.05,
+  "win_shift_NEW_pending_strategy": 0.02,
+  "searched_shift_NEW_pending_strategy": 0.01,
+  "rpg_rel_NEW_pending_strategy": 0.01,
+  "aux_delta_ks_PROVISIONAL_pending_calibration": 0.05,
+  "aux_delta_ks_source": "inherited (b) margin KS convention, same form/value"
+ },
+ "schema_old": {
+  "files": 49,
+  "rows": 55614,
+  "problems": []
+ },
+ "schema_new": {
+  "files": 50,
+  "rows": 53820,
+  "problems": []
+ },
+ "distributions": {
+  "margin": {
+   "mean_old": -27.74962463173815,
+   "mean_new": -42.131943578190274,
+   "sd_old": 710.7978145006247,
+   "sd_new": 1164.7426999921493,
+   "q_old": [
+    -946.0599975585938,
+    -21.605000495910645,
+    862.4199829101562
+   ],
+   "q_new": [
+    -955.3629882812315,
+    -80.83499908447266,
+    840.6630249023173
+   ],
+   "ks_D": 0.06272401433691754,
+   "mean_shift_over_pooled_sd": 0.014906322350341849
+  },
+  "win_rate": {
+   "old": 0.4838709677419355,
+   "new": 0.4722222222222222,
+   "shift": 0.011648745519713288
+  },
+  "searched_frac": {
+   "old": 0.0,
+   "new": 0.0,
+   "shift": 0.0
+  },
+  "aux_delta_ks_D": {
+   "h1": 0.006297574951151408,
+   "h2": 0.006563694992867464,
+   "h3": 0.0085530022416418
+  },
+  "aux_delta_line": {
+   "value": 0.05,
+   "form": "two-sample KS D <= line, per horizon (h1/h2/h3)",
+   "source": "inherited: (b) section margin KS convention (lines['ks'])",
+   "status": "PROVISIONAL pending calibration \uff08\u6682\u884c\u3001\u5f85\u6821\u51c6\uff09"
+  },
+  "rows_per_game": {
+   "old": 463.45,
+   "new": 448.5,
+   "rel_shift": 0.03225806451612901
+  },
+  "verdicts": {
+   "ks_margin": false,
+   "mean_margin": true,
+   "win_rate": true,
+   "searched_frac": true,
+   "rows_per_game": false,
+   "aux_delta_h1": true,
+   "aux_delta_h2": true,
+   "aux_delta_h3": true
+  },
+  "pass": false,
+  "failure_points": [
+   {
+    "check": "distributions",
+    "metric": "ks_margin",
+    "measured": 0.06272401433691754,
+    "line": 0.05
+   },
+   {
+    "check": "distributions",
+    "metric": "rows_per_game",
+    "measured": 0.03225806451612901,
+    "line": 0.01
+   }
+  ]
+ },
+ "failure_points": [
+  {
+   "check": "distributions",
+   "metric": "ks_margin",
+   "measured": 0.06272401433691754,
+   "line": 0.05
+  },
+  {
+   "check": "distributions",
+   "metric": "rows_per_game",
+   "measured": 0.03225806451612901,
+   "line": 0.01
+  }
+ ],
+ "claim_scope": {
+  "forward_tags_covered": null,
+  "value_scale_mode": "not gate-run: (b) compared pre-generated shard dirs; their value-scale is the producer config of those shards",
+  "schema": "mechanical identity vs SHARD_KEYS/SCHEMA only",
+  "src_boundary": "master3s2 source md5 57f9a594cce4f2ec9e3573d8d9d26ca1 (--src default); fix3 and other chassis are OUTSIDE this claim",
+  "text": "equivalence claim is limited to (actually-run tags) x (actually-run value-scale mode) x (schema mechanical identity), src bounded to master3s2 as above"
+ },
+ "gate_pass": false,
+ "verdict": "FAIL -> DISCARD vec_selfplay2 (bypass artifact; no iterative repair loop)"
+}
