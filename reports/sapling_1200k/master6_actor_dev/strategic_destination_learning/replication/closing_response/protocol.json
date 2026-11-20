@@ -1,0 +1,85 @@
+{
+  "schema": "sapling-exposed-513-closing-paired-suffix/1",
+  "source_run": 44646376344,
+  "decision_before_outcomes": "Condition on the historically observed winning full game, selected specifically after reviewing its t288 LEFT/RIGHT divergence for worker47/48. All eight new suffixes on this spent board are a retrospective diagnostic; none may enter training, map selection or full-game win numerators.",
+  "seed": 621758513,
+  "seat": 0,
+  "root_step": 288,
+  "terminal_step": 299,
+  "terrain": "6bd81d14135d93e0ffce28276253c312f5847881d2461a528471b55a6662b13c",
+  "zip_sha256": "25f2e6b5f695a94e6094962f785dc39ffbe7a0b9516f1d83bada11226e4236e6",
+  "turns_sha256": "87efda47531849d64fee235856e766e9d65f17ee50c58005cd864b8f063dc051",
+  "comparator_source_sha256": "4494e2e98129783bcc0853550ffc5f1d606962062af22b077fac92e860a86ec3",
+  "root_public_sha256": [
+    "75769e131dbab4ed39b6367a3b10a6d9215ba76ecc12f47b8ba11205a17c85b3",
+    "a8e00ff8037dc4f860b416ae583537da56fd1e1937689e2f7bd943acd587d83b"
+  ],
+  "bc_sha256": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "parent_sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "anchor_orders": {
+    "bc_order": {
+      "player-0-worker-44": "UP",
+      "player-0-worker-46": "RIGHT",
+      "player-0-worker-15": "RIGHT",
+      "player-0-worker-47": "LEFT",
+      "player-0-worker-2": "RIGHT",
+      "player-0-worker-34": "UP",
+      "player-0-worker-48": "RIGHT"
+    },
+    "parent_order": {
+      "player-0-worker-44": "UP",
+      "player-0-worker-46": "RIGHT",
+      "player-0-worker-15": "RIGHT",
+      "player-0-worker-47": "DOWN",
+      "player-0-worker-2": "RIGHT",
+      "player-0-worker-34": "UP",
+      "player-0-worker-48": "DOWN"
+    },
+    "enemy": {
+      "player-1-worker-20": "RIGHT",
+      "player-1-worker-40": "LEFT",
+      "player-1-worker-45": "UP",
+      "player-1-worker-36": "DOWN",
+      "player-1-worker-46": "RIGHT",
+      "player-1-worker-43": "RIGHT"
+    }
+  },
+  "comparison": "Only the entire player-0 order at t288 changes. A sends the published BC order, B the exact parent output on the same BC history. Player 1 gets the actual hosted enemy order at t288 in both arms. Starting at t289 both arms are controlled by the frozen BC agent versus the complete original public T=1, 0.58s search, responding to each live branch until official terminal.",
+  "recovery": "Reconstruct full official state and actual worker IDs by replaying all 288 archived physical joint orders from the official initial map; verify both hosted request hashes every step. Re-evaluate original enemy public policy on the whole observed enemy prefix. After recording each output correct original last_dest using original tracker.set_actions with actual logged enemy order and independently verify destinations. This reconstructs physical/observation/belief history, not past hosted timing or private RNG. Keep newly measured local search cost estimates. Snapshot local warmed original private state after t288, replace only the private sampling state with each fixed experimental stream, clone identically across both arms. Restore complete official RNG, ID counters, clock budget and warmed Sapling feature/trunk history. Wall-clock decisions are regenerated, hence equal states and seeds need not imply equal later search.",
+  "pairs": [
+    {
+      "pair": 0,
+      "stream_seed": 290631764,
+      "order": [
+        "bc_order",
+        "parent_order"
+      ]
+    },
+    {
+      "pair": 1,
+      "stream_seed": 1015840377,
+      "order": [
+        "parent_order",
+        "bc_order"
+      ]
+    },
+    {
+      "pair": 2,
+      "stream_seed": 176529044,
+      "order": [
+        "bc_order",
+        "parent_order"
+      ]
+    },
+    {
+      "pair": 3,
+      "stream_seed": 3740116585,
+      "order": [
+        "parent_order",
+        "bc_order"
+      ]
+    }
+  ],
+  "endpoints": "For all four BC-minus-parent pairs report official final scores, signed margin paired changes, wins/draws/losses for suffixes only, range and all pair values. Report each worker47 deposit, other relevant income, clock receipt, depth and available compute. Use a genuine fixed archived enemy root command and separately report its hosted timing; non-root original commands each have independent real public search clocks, CPU affinity local diagnosis only. Both arms of all four pairs must be retained without rerolling or selecting on score. Four same-map pairs cannot estimate map-level strength."
+}
