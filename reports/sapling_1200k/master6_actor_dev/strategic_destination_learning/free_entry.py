@@ -129,8 +129,9 @@ def main():
         raise ValueError("Incomplete historical evaluation roster")
     rows = []
     for c in cards:
-        rows.extend(evaluate_tape(c, models))
-        print(c["split"], c["seed"], c["expert_seat"], len(rows), flush=True)
+        tape_rows = evaluate_tape(c, models)
+        rows.extend(tape_rows)
+        print(c["split"], c["seed"], c["expert_seat"], len(rows), rates(tape_rows)["pairs"], flush=True)
     results = {}
     for split in ("val", "dev"):
         selection = [r for r in rows if r["split"] == split]
