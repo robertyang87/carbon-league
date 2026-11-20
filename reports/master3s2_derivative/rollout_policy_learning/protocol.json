@@ -1,0 +1,68 @@
+{
+  "schema": "role-conditioned-one-transition-motion-residual/v1",
+  "prior": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+  "temperature_sha": "84a50f0f6d6c4cd3651877680ef7240463b752daa5bdde598185fd8cec0fc0a7",
+  "original_archived_matrix": "79f726215aa3a8a8d6c72e915b2bfed2f7f2ec754f0ce3c7bd571d10b1897eef",
+  "external_selection": "First settled game per distinct registration ID in chronological order of the 32 archived v1 ladder games; six opponent identities; chosen without selecting score, deterministic prior to fitting.",
+  "external": [
+    {
+      "match": "d2880896ec571ddbb703822d2a677905",
+      "seat": 0,
+      "opponent": "CarbonEdge-Eco",
+      "opponent_id": "d3164db37b8b4e51c115c6d578cbbb9c",
+      "path": "ladder/replays/d2880896ec571ddbb703822d2a677905-1.json.gz",
+      "sha256": "5ba2a5009d3bc9107abce9970b4167d3e3eb4dc4fe4e499b2d41710bc3716597",
+      "official_map": "196dbf124870961e6db219443dc775991f29ec8c05c489d122d37ecf118793c7"
+    },
+    {
+      "match": "0a3195c1e8eaa6617c0bc9488037a15e",
+      "seat": 0,
+      "opponent": "CaiV3",
+      "opponent_id": "7fc8f00f95a61eb4ccc99a38092e7c4c",
+      "path": "ladder/replays/0a3195c1e8eaa6617c0bc9488037a15e-1.json.gz",
+      "sha256": "eb92bc446058b86b87d11e52dbc1e8aa45b173f933583bd78b66ad6e4ff73265",
+      "official_map": "ed031dc1fc50d9c55a453f67f2a97590c898cc97b7d16c30dd27073b8add98e0"
+    },
+    {
+      "match": "fe5a96da743f0fdc1e37b46df5913050",
+      "seat": 0,
+      "opponent": "probe-test-11793602358",
+      "opponent_id": "71ede1223797d8054890a05ab2756bcd",
+      "path": "ladder/replays/fe5a96da743f0fdc1e37b46df5913050-1.json.gz",
+      "sha256": "d2b13e332d66930ed57bc2f3286d817138e8ada7b9b4cdfff1c88a8b607fc163",
+      "official_map": "faaa450492945f37d52ca95571038f5d79e638bae9bf921cbcb11ff6833776c2"
+    },
+    {
+      "match": "b1c3ba3c1975dac4425f14ce32390c44",
+      "seat": 1,
+      "opponent": "Kimi-Clark-Public-Gloria-v7",
+      "opponent_id": "a0febce445f7a89026c4774de4035954",
+      "path": "ladder/replays/b1c3ba3c1975dac4425f14ce32390c44-1.json.gz",
+      "sha256": "f38a88f187f67464fdb27461ad3ac11f164c5c50dce765e8a6b9f87964222918",
+      "official_map": "6543ce4f9bf715ad21d25f594673243371b6d5beb478484c700d02edba32cd2a"
+    },
+    {
+      "match": "86c93a4bbff6d17fbceede90b062a2a7",
+      "seat": 0,
+      "opponent": "安生N8",
+      "opponent_id": "80d18bd689c5adbc8f4ab47ca702131e",
+      "path": "ladder/replays/86c93a4bbff6d17fbceede90b062a2a7-1.json.gz",
+      "sha256": "0669daebaba08cadfc0a3853df7266d6d0344ccd520518149b81e79a0cb63a18",
+      "official_map": "383f3132226d2e4b217e29046c920078c17abf012c7be2fea713a0fb686b1a31"
+    },
+    {
+      "match": "214b08ce1b5dc743a6a79ac4a57da51f",
+      "seat": 0,
+      "opponent": "Krypton-Light3s2-v3",
+      "opponent_id": "bf5e67ec2e55dac4c0e35d230cddf27b",
+      "path": "ladder/replays/214b08ce1b5dc743a6a79ac4a57da51f-1.json.gz",
+      "sha256": "0d6208b300d5fb6189844ebaf1c03d99391a0ec4cb59952948088b48e3da1466",
+      "official_map": "021e208b3fa71b3696452f429c78a9a4ade30270f0528ea134e88ca5eb0ee4ba"
+    }
+  ],
+  "roots": "Use step 3+5k (up to 293) on both domains exactly as previous next-action calibration. Train only its 2 original maps. Held old four maps and all six external opponents after coefficient freeze.",
+  "single_model": "Fixed published role temperature. Each worker role gets four fitted logits offsets for continuing, reversing, staying after motion, and staying after a stationary predecessor; lateral moves zero. New arrivals unadjusted. Mean one-hot cross entropy by map plus 0.02/2 squared weight penalty per role, bounds [-4,4]. Eight weights total.",
+  "decode": "Common preregistered 16 natural native draws per root & method. Compare physical destinations with real next orders after joint decoding. Report all roots, per-role counts, rival recruitment consumes native budget, actual team equality and physical-event Brier.",
+  "qualification": "Map-equal worker Brier strictly lower than both raw and published role-temp on original held and external; at least 3/4 and 4/6 groups improve vs role-temp; one-draw complete-team agreement cannot fall vs role-temp in either domain pooled across registered 16 draws. No match or candidate build in this experiment.",
+  "limits": "Topologies and archived ladder matches are previously seen development data but held out of this fit; no formal exam."
+}

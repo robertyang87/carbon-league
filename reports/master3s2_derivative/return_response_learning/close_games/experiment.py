@@ -8,7 +8,6 @@ import importlib.util
 import json
 import os
 from pathlib import Path
-import pickle
 import sys
 import tempfile
 import zipfile
@@ -115,8 +114,6 @@ def meaning(players,seat,a,b):
         if before!=after or same_a!=same_b:
             reasons.append(dict(uid=uid,cargo=v[1],position=v[0],first=first[uid],alternate=next_[uid],home_distance=[int(before),int(after)],conflicts=[same_a,same_b]))
     return reasons
-def privfile(ticket):
-    return Path(tempfile.gettempdir())/f"carbon-close-pair-{LOCK[:8]}-{ticket['seed']}-{ticket['seat']}-{ticket['step']}.pkl"
 def rng(r):
     return int.from_bytes(hashlib.sha256(f"{r['seed']}/{r['seat']}/{r['step']}/close-returns-v1".encode()).digest()[:4],'big')
 def menu(r,subj):
@@ -136,7 +133,9 @@ def menu(r,subj):
         changed=meaning(ob['players'],s,cmd,cs[i])
         if not changed:continue
         snapshot=copy.deepcopy(F.original_state.dynamic(subj))
-        with privfile(r).open('wb') as fp:pickle.dump(dict(pre=prefix_hash,entropy=entropy_hash,post=snapshot,post_h=F.original_state.h(snapshot),cfg_cache=subj._RX_CFG[1]),fp,protocol=5)
+        from snapshot import encode
+        saved=dict(pre=prefix_hash,entropy=entropy_hash,post=snapshot,post_h=F.original_state.h(snapshot),cfg_cache=subj._RX_CFG[1])
+        dump(f"state/{r['seed']}_{r['seat']}_{r['step']}.json.gz",encode(saved))
         doc.update(status='qualified',reason=None,players=ob['players'],orders=[cmd,cs[i]],indices=[chosen,i],
                    dep=[dep[chosen],dep[i]],native=[mean[chosen],mean[i]],rank_B=j,native_top_two=j==2,
                    tags=['within_registered_7a1270e3_domain' if j==2 else 'extrapolation_non_top_two'],changed=changed,

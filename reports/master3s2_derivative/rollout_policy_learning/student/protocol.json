@@ -1,0 +1,12 @@
+{
+  "schema":"three_block_local_convolution_distillation/1",
+  "source":"65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "maps":"Original, frozen 24 train and 4 physically disjoint validation maps from ../../opponent_policy/protocol.json, both seats. These are already exposed development maps. No new games.",
+  "steps":[35,72,155,215],
+  "depths":[1,2,4,6],
+  "branches":2,
+  "units":"All enemy workers and both enemy bases. Original target logits and physically sampled joint action from the actual 0.58s simulator step. Own and enemy IDs remain distinct. Drop duplicate enemy inputs only within physical terrain.",
+  "architecture":"Original frozen stem and first three of six full residual blocks, then action readout as a 3x3 toroidal convolution applied only at occupied sites, plus whole-board mean. 64 hidden channels, 64x64 second layer, ReLU, 8 outputs. Learn residual around original worker/base heads directly applied to block three, unitwise whitening from train only. No real opponent labels, no validation model selection.",
+  "fit":"Seed 761105, CPU1 thread, AdamW fixed 55 epochs with cosine learning rate 0.0012 to 0.00012, weight decay 0.001, batch 256 units, role-balanced teacher KL at T1 and T2 plus 0.015 smooth L1 centered logit distances. Final epoch only.",
+  "comparison":"Teacher, untrained original heads on block3, prior trained 2-block linear head on the same exact rows, new CNN. Identical native RNG and constrained team decoders. Report teacher->student KL, worker/base/joint physical agreement including loaded groups. Existing gate requires KL <=0.04 per head, joint >=80%, worker >=94%, base>=97%. Benchmark frozen genuine minibatches of same tensors with independent fixed H and report cost per workload, not new matches."
+}
