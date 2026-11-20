@@ -159,8 +159,7 @@ def summary(records):
         for row in rows:
             p=row['predictions'][model];y=row['label']['positive'];groups[min(4,int(5*p))].append((p,y))
             brier.append((p-y)**2)
-            clipped=max(1e-7,min(1-1e-7,p))
-            losses.append(-math.log(clipped if y else 1-clipped));correct+=int((p>=.5)==bool(y))
+            losses.append(-math.log(max(1e-12,p if y else 1-p)));correct+=int((p>=.5)==bool(y))
             cash.append(abs(row['predictions'][model+'_cash']-row['label']['amount']))
         result[model]=dict(brier=mean(brier) if rows else None,nll=mean(losses) if rows else None,
             cash_mae=mean(cash) if rows else None,threshold_correct=correct,
@@ -178,6 +177,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--settlement',type=Path,default=REP/'hosted/settlement.json');args=parser.parse_args()
     from predict import PublicReturn
+    import numpy as np
+    from metrics import evaluate
+    require(hfile(HERE/'release.json')=='f540b4abc48a5a147a4361f219b8b7bb07ed7e4c13a92a9a9d65f6bfe36b4596','Different preregistered prediction model')
     model=PublicReturn()
     freeze={f:hfile(HERE/f) for f in ('weights.npz','predict.py','release.json','protocol.json')}
     expected=read(HERE/'protocol.json')
@@ -209,6 +211,14 @@ def main():
     equal={model:{k:mean(z[model][k] for z in maps.values()) if all(z[model][k] is not None for z in maps.values()) else None
                   for k in error_metrics} for model in MODELS}
     unique_rows,dups=unique(rows)
+    registered_metrics=None
+    if unique_rows and len({r['seed'] for r in unique_rows})==len(SEEDS):
+        values=[dict(amount=r['label']['amount'],terrain=r['terrain'],seed=r['seed']) for r in unique_rows]
+        predictions={k:(np.array([r['predictions'][k] for r in unique_rows]),
+                        np.array([r['predictions'][k+'_cash'] for r in unique_rows])) for k in MODELS}
+        registered_metrics=evaluate(values,predictions)
+        require(all(abs(registered_metrics['summary'][k][metric]-equal[k][metric])<1e-10
+                    for k in MODELS for metric in error_metrics),'Map-equal metrics disagree')
     record=historical.write(HERE/'external_roots.json.gz',dict(rows=rows),compressed=True)
     result=dict(scope='Frozen public probability of the selected native opponent carrying worker making its first ordinary own-base deposit over the next 10 turns. External-only evaluation, no fitting or game action changes.',
         frozen_inputs=freeze,source_sha256=hfile(args.settlement),evaluation_sha256=hfile(Path(__file__)),
@@ -219,7 +229,8 @@ def main():
         by_arm={a:summary([r for r in rows if r['arm']==a]) for a in ARMS},
         by_seat={str(p):summary([r for r in rows if r['seat']==p]) for p in (0,1)},
         by_map_arm={f'{s}_{a}':summary([r for r in rows if r['arm']==a and r['seed']==s]) for s in SEEDS for a in ARMS},
-        by_ticket=per_ticket,nll_clip=1e-7,
+        by_ticket=per_ticket,nll_clip=1e-12,registered_map_evaluation=registered_metrics,
+        metric_program_sha256=hfile(HERE/'metrics.py'),
         deduplication='Within each reported cohort keep its first eligible occurrence in registered (map,seat,parent/bc) order, keyed by terrain, seat, step, preceding joint actions and public frame; preserve all occurrences and report any conflicting outcomes.',
         right_censoring='Normal official game end closes the horizon at its recorded last turn. In incomplete matches the final fewer-than-10-step windows are enumerated and excluded.',
         target_selection='t=40,50,...,240. Active enemy collector cargo>=100 and distance 2..10 to nearest enemy base; maximum cargo/(1+distance), UID tiebreaker; no current orders used.')
