@@ -991,6 +991,24 @@
    "md5": "0b21367c0cb4f508d395e23281175a74",
    "owner_line": "engineering",
    "status": "final"
+  },
+  {
+   "name": "vec1_hangfix_variant",
+   "kind": "vec1 inference-server silent-hang fix (bounded tracking item)",
+   "detail": "策略组裁定 ②（76472417）：vec1 推理服务器静默挂死修复。修后件 vec_selfplay_hangfix.py md5 2dbd1485（原 e59f0700 原地不动，替换与否待策略组／作战室裁定）：ServerClient.forward 无界 resp_q.get() 改 30 s tick 轮询＋/proc 存活检查（死即 RuntimeError）＋300 s 超时（TimeoutError）；main join 改 5 s tick 轮询，服务器死时 worker 60 s 宽限后 terminate，server.join(timeout=60)。验证：T2b 修前挂死证实（主进程杀后 +100 s 仍活）；T3 故障注入修后 35 s rc=1 响亮失败、无残留；T4 正常跑修前／修后分片逐字节同（e9deed0a）；T5 超时两分支主代理 DGX 重跑 PASS。Gen-6 生成用 vec2，本修复不堵任何在跑线。",
+   "locations": [
+    {
+     "machine": "repo",
+     "path": "tools/katago_m3s2/vec_selfplay_hangfix.py"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/vec1_hangfix/tree/tools/katago_m3s2/vec_selfplay.py"
+    }
+   ],
+   "md5": "2dbd1485784c87733f437e911e9c408a",
+   "owner_line": "engineering",
+   "status": "final"
   }
  ],
  "created": "2026-11-17",
