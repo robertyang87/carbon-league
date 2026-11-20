@@ -6,6 +6,7 @@ import json
 import math
 import os
 from pathlib import Path
+import platform
 import sys
 from tempfile import TemporaryDirectory
 import zipfile
@@ -83,6 +84,8 @@ def action_step(actor, public, cfg, issued, public_sha):
     observed = np.array([[r["probability"], r["prior_probability"]] for r in options], np.float64)
     require(np.isfinite(observed).all() and (mass > 0).all() and
             np.allclose(observed, mass[:, None], rtol=0, atol=1e-10), "Incorrect physical masses")
+    if len(mass) == 1:
+        mass[0] = 1.  # All legal routes collapse to this single physical order.
     require(features is None or
             (0 < step <= 294 and step % 6 == 0 and options[features["base_index"]]["action"] == trace["parent"]),
             "Pivot off schedule or parent misbound")
@@ -139,7 +142,8 @@ def complete_game(game, archive, archive_sha, terrain):
             [s.reward for s in env.states] == game["official_scores_by_seat"] and
             len(steps) == game["official_transitions"], "Numeric terminal does not reproduce")
     actor.diagnostics()
-    return steps
+    probe = receipt["probes"][seat]
+    return steps, {"python": probe["python"], "numpy": probe["numpy"], "image_id": receipt["image_id"]}
 
 
 def labels(game):
@@ -177,13 +181,50 @@ def extract(hosted):
         summary.update(terrain=terrain, wdl=wdl, official_margin=margin, u=u, steps=[],
                        gradient_eligible=False, archive_sha256=archives.get(key,{}).get("sha256"))
         if game["status"] == "complete":
-            archive = archives[key]
-            summary["steps"] = complete_game(game, hosted / (archive["blob_filename"]), archive["sha256"], terrain)
-            summary["gradient_eligible"] = True
+            try:
+                archive = archives[key]
+                summary["steps"], summary["acting_runtime"] = complete_game(
+                    game, hosted / archive["blob_filename"], archive["sha256"], terrain)
+            except (OSError, KeyError, ValueError, zipfile.BadZipFile) as exc:
+                summary["replay_error"] = str(exc)
+            else:
+                summary["gradient_eligible"] = True
         result.append(summary)
     return dict(schema="physical_order_onpolicy_v1", behavior_sha256=SAMPLER_SHA, weight_sha256=WEIGHT_SHA,
                 settlement_sha256=collect.sha_file(settled_path), source_commit=settlement["commit"],
-                source_run=settlement["run_id"], games=result)
+                source_run=settlement["run_id"], games=result,
+                probability_provenance="Same frozen package replayed locally on both-hash-verified public "
+                                       "histories. The selected command comes from the live action ledger. "
+                                       "The original worker recorded commands but did not record live logits.",
+                reconstruction_runtime={"python":platform.python_version(), "numpy":np.__version__,
+                                        "machine":platform.machine(), "blas_threads":1})
+
+
+def compare_kernel(first, second):
+    require(first["settlement_sha256"] == second["settlement_sha256"], "Different signed training census")
+    checks = []
+    for a, b in zip(first["games"], second["games"], strict=True):
+        require(a["gradient_eligible"] and b["gradient_eligible"] and
+                (a["seed"], a["receipt_sha256"]) == (b["seed"], b["receipt_sha256"]), "Missing or different episode")
+        largest_probability = largest_hidden = 0.
+        differing_menus = []
+        for r, s in zip(a["steps"], b["steps"], strict=True):
+            require(r["public_sha256"] == s["public_sha256"], "Changed public request")
+            def command_mass(x):
+                return {tuple(sorted(o["action"].items())):o["probability"] for o in x["orders"]}
+            p, q = command_mass(r), command_mass(s)
+            if p.keys() != q.keys():
+                differing_menus.append(r["step"])
+            largest_probability = max(largest_probability, *(abs(p.get(k,0.)-q.get(k,0.)) for k in p.keys() | q.keys()))
+            h, j = r["policy_features"], s["policy_features"]
+            if h is not None and j is not None and h["actions"] == j["actions"]:
+                largest_hidden = max(largest_hidden, float(np.abs(np.asarray(h["hidden"])-j["hidden"]).max()))
+        checks.append(dict(seed=a["seed"], transitions=len(a["steps"]), differing_support_steps=differing_menus,
+                           max_physical_probability_gap=largest_probability, max_aligned_hidden_gap=largest_hidden))
+    return dict(scope="Numeric sensitivity of full public replay under alternate OpenBLAS dispatch. "
+                      "The live transport did not retain the runtime's logits.",
+                source_sha256=collect.sha_file(HERE / "training_rows.json.gz"), forced_core=os.environ["OPENBLAS_CORETYPE"],
+                games=checks)
 
 
 def fixture():
@@ -217,12 +258,18 @@ def fixture():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fixture", action="store_true")
+    parser.add_argument("--check-core", action="store_true", help="Replay with OPENBLAS_CORETYPE set and compare to training_rows")
     args = parser.parse_args()
     check_sampler()
     if args.fixture:
         receipt = fixture()
         collect.write_json(HERE / "extract_fixture.json", receipt)
         print(receipt)
+    elif args.check_core:
+        require(bool(os.environ.get("OPENBLAS_CORETYPE")), "Set an alternate OpenBLAS core before launching Python")
+        original = json.loads(gzip.decompress((HERE / "training_rows.json.gz").read_bytes()))
+        receipt = compare_kernel(original, extract(HERE / "hosted"))
+        collect.write_json(HERE / "kernel_check.json", receipt)
     else:
         dataset = extract(HERE / "hosted")
         collect.write_gzip(HERE / "training_rows.json.gz", dataset)
