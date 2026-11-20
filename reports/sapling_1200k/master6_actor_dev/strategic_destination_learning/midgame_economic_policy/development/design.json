@@ -1,0 +1,65 @@
+{
+  "schema": "sapling-midgame-economic-development/1",
+  "parent_sha256": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "parent_weights_sha256": "505a0ff3580262156c76dee2b9b288526d57d6fcd26412771f7c40009f47b108",
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "guide_sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8",
+  "publicly_read_guide": "https://117.72.210.134/static/agent-guide.md",
+  "training_protocol_sha256": "0c593a5cda48f5a9596af2419ce2fb20c0ca5070bbcec0d4ffa941dfc8ef3c2c",
+  "seeds": [
+    621758550,
+    621758551
+  ],
+  "physical_boards": {
+    "621758550": "9ed8a91a49a9901f1bbfc760fbfc150eff8232d7ad68331360892bc279383d54",
+    "621758551": "ea3bf07bc2efeee0931d398ff051a151f8f9f980c509efc29b4fcf386a924374"
+  },
+  "arms": [
+    "parent",
+    "uniform",
+    "weighted"
+  ],
+  "schedule": [
+    {
+      "seed": 621758550,
+      "seat": 0,
+      "order": [
+        "uniform",
+        "weighted",
+        "parent"
+      ]
+    },
+    {
+      "seed": 621758550,
+      "seat": 1,
+      "order": [
+        "parent",
+        "weighted",
+        "uniform"
+      ]
+    },
+    {
+      "seed": 621758551,
+      "seat": 0,
+      "order": [
+        "weighted",
+        "parent",
+        "uniform"
+      ]
+    },
+    {
+      "seed": 621758551,
+      "seat": 1,
+      "order": [
+        "uniform",
+        "parent",
+        "weighted"
+      ]
+    }
+  ],
+  "expected_games": 12,
+  "primary": "weighted minus uniform official terminal score margin for each same-map same-seat match, equal weight to each map after averaging seats. Summarize each map and each arm W/D/L and seat rates. Each comparison reverses arm order across the two physical seats. Two maps are descriptive. Draws count as zero wins.",
+  "secondary": "weighted minus true training parent on the same metric; also report uniform minus parent. Account for timeouts and failures in the registered W/D/L denominator, omit nonexistent numeric margins from averages over all and report missing explicitly; never replace any game.",
+  "diagnostic": "At pre-action states t=60 and 100, record each side current cash, cumulative normal own-bank deliveries, ground-carbon tree rent without cargo tax and the team-minus-opponent difference. Report both seat-paired and map-equal contrasts; diagnosed games with missing state have null at this point. These accounting endpoints do not decide the winner.",
+  "execution": "Original unmodified public entry at t0, T=1 and unseeded native 0.58 s search, natural independent RNG across arms. Separate offline CPU-only Python3.12/NumPy1.26.4 containers each at 1.5 CPU and 512MiB, per-game cold init and bidirectional parsed I/O timing including step0, ranked limits, external clock, memory and search diagnostic, no filtering on outcome or depth. All arm games in a seed-seat are serial on the same host and affinity. No comparisons to the latest eight training boards, no official exam."
+}
