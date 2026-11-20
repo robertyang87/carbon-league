@@ -1,0 +1,20 @@
+{
+  "schema": "sapling-strategic-destination-original-development/1",
+  "endpoint": "12 fresh-development games from the normal opening: score all three frozen agents on each seed and physical seat versus sources/master3s2/master3s2.py. Win, draw and loss for each arm and seat; draw is not a win. Report official terminal margins including extinction, timeout outcomes (no invented margin), and incremental BC minus parent, joint minus BC, joint minus parent within each map and seat. With two independent maps, report each map's seat-averaged contrast and leave-one-map estimates; these are descriptive, not a formal win-rate estimate. Preserve all failures without replacements, score-based stopping or depth-based exclusions. Formal exam untouched.",
+  "parent_sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "parent_npz_sha256": "7a677b76f30769eb097162a42d355b13b21acf3bab9ae7e22bfe2e4148ff9923",
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "current_platform_guide_sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8",
+  "normal_behavior": "Frozen 8da4 greedy two-network parent, immediate-action behavior-cloning arm, and same training schedule plus 12-step strategic displacement/survival auxiliary targets. All published serving code and the it50 partner remain unchanged; the two arms differ via trained Sapling payload. Original opponent begins at step 0 with its full unseeded T1 and 0.58 second adaptive search. No force, opening prefix, fixed enemy command, midgame injection, or search setting override.",
+  "seeds": [621758500,621758501],
+  "physical_boards": {"621758500":"8fc8e01bf6ba1f0c3e83d9eb20b39d4ef8a830b00b77f2000ab087e3946e2d30","621758501":"0bf05476f34cadb3c9df32b17549cace5b5575878ec45ac323f128293c1814d2"},
+  "arms": ["parent","bc","joint"],
+  "schedule": [
+    {"seed":621758500,"seat":0,"order":["parent","bc","joint"]},
+    {"seed":621758500,"seat":1,"order":["bc","joint","parent"]},
+    {"seed":621758501,"seat":0,"order":["joint","parent","bc"]},
+    {"seed":621758501,"seat":1,"order":["joint","bc","parent"]}
+  ],
+  "expected_games": 12,
+  "execution": "One hosted job per seed-seat. Three starts in the registered serial order on that same host/CPU set; separate containers and true 1.5-core/512MiB limits per agent, CPU-only disconnected Python 3.12/NumPy 1.26.4, cold start <=20 seconds, public step 0...last round clock includes request/response I/O and parsing. Soft 1 second, hard 3 seconds, <=3 slow per agent per game, <=5 seconds cumulative excess and <=1500 seconds overall. Archive both players' time and memory tails and original search telemetry, including zero-depth and deadline returns."
+}
