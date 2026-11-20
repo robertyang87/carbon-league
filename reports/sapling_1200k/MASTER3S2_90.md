@@ -2,6 +2,8 @@
 
 ## 当前胜绩与验收
 
+两张新开发图的同期双席对照共 12 场，父代、即时动作训练和十二步方向/存活联合训练均为 **0 胜 0 平 4 负**，平均官方分差分别为 **−1,890.14、−1,306.66、−1,630.48**。即时动作训练相对父代在两张图上分别提高 609.99、556.96 分；联合目标两图均落后于即时动作对照。12 场全部按天梯限额打满，双方慢步 0。正式 100 图继续封存。[同场比分、训练权重与分席证据](master6_actor_dev/strategic_destination_learning/README.md)
+
 用原版真实回报训练的 `da9919ad`，在预登记新图 470、471 对原版 **0 胜 0 平 4 负、场均 −1511.21**；同采样父代 **0 胜 0 平 4 负、−1230.12**。两个地图簇的配对变化为 −560.72、−1.46。双方全程符合限额。新网不晋级，100 张正式地图继续封存。另一个保持完整行动支持的神经评分头在离线六图留一中仅两图改善，未送考。[八场全部官方分及原始证据](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/hosted/settlement.json) · [训练、攻防研究与支出分解](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/README.md)
 
 来自同一原版考官的防守预测头已训练并留图核验。在 17,962 个留出动作上，预测敌采集工下一步去向的命中率从 57.32% 升至 59.78%。以同一套采样方式比较含历史和仅几何的权重，86 个有两份备选令的时点中，首选整队命令改变 0 次。该头独立保存，尚无独立整局胜率收益；另一次在旧训练图打满的自然局是 6921.60 比 7605.95，Sapling 负。[防守网络、对照与失败例](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/opponent_contact/README.md) · [树工被截与交仓对照](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/economy_proposals/terminal_intake/README.md)
