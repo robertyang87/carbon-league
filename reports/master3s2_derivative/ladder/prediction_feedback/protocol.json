@@ -1,0 +1,29 @@
+{
+  "schema": "online-opponent-collector-two-offset/1",
+  "subject": "Opponent collector root action prediction, not a win-rate or whole-game trial.",
+  "tainted_matches": "This agent has not consumed an action, label, score or outcome from the next two opponent replays before registration.",
+  "parent": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+  "our_id": "b99742a4a510a4de5dc99639b3c85604",
+  "train": [
+    {
+      "id": "d2880896ec571ddbb703822d2a677905",
+      "game": 1,
+      "seat": 0,
+      "opponent": "CarbonEdge-Eco",
+      "original_gzip_sha256": "5ba2a5009d3bc9107abce9970b4167d3e3eb4dc4fe4e499b2d41710bc3716597"
+    },
+    {
+      "id": "0a3195c1e8eaa6617c0bc9488037a15e",
+      "game": 1,
+      "seat": 0,
+      "opponent": "CaiV3",
+      "original_gzip_sha256": "eb92bc446058b86b87d11e52dbc1e8aa45b173f933583bd78b66ad6e4ff73265"
+    }
+  ],
+  "held": "First already-matched placement game for ds-pro-v1 against each of probe-test-11793602358 and Kimi-Clark-Public-Gloria-v7. Lock match and seat metadata immediately when known, never choose by results. No substitutes. Separate games and new opponents; check initial available physical map hash versus train; any overlap or missing/invalid ticket => INDETERMINATE.",
+  "features": "Use neural root opponent probability before joint decoder exactly as served by V2 (same weights, masked-carbon native belief from our seat, previous public board and previous executed own command). For opponent COLLECTOR units only, add b0 to NONE logit and add b1*min(observed_cargo/200,1)*(torus distance to closest own base before - distance after proposed action) for each of 5 actions. Use V2 native move table/FEAT_DIST. No ID, future actions, future receipt, full carbon, game result, board seed, opponent name, or hidden state in features. No policy/search override, no base/planter/actor adjustment. Both coefficients shared across games. Same-step target is the actual next-frame opposing command, missing unit id signifies NONE.",
+  "objective": "Minimize equal-weight mean of the two per-game mean collector preconstraint softmax NLLs plus .04*(b0^2+b1^2)/2. Fixed box [-1.5,1.5], zero initialization, float64 objective/gradient with L-BFGS-B, fixed optimizer tolerances; freeze float32 coefficients before opening any test replay. No step/feature/threshold search. Capture all recorded public roots including none or single candidate; offline hypothetical root, independently note unknown server branch admission.",
+  "physical": "Use native V2 _sample with its first-roll seed (1000003*(t+1)+17*our_seat) mod 2^31 + 7, on entire opponent team; compare baseline and corrected against actual individual collector and whole-team orders. Report numbers fixed, broken and net. Same-stage target strictly after constructing menus. Unit argmax may also be reported, separately from constrained sampled orders.",
+  "gate": "Exactly both held maps with complete replay, correct sites, original deployed package identity, forward/runtime parity, valid observation chronology, distinct terrain and opponent identities. On each map collector NLL must not increase (tolerance 1e-9), paired game-mean NLL must strictly decrease, and net actual collector order corrections from native decoded orders must be >0 pooled. Report >=200 pre-action cargo subgroup on each game with denominator, NLL and fixes/losses, and signed mean changes; no subgroup PASS required. Outcome does not enter training/testing. Failure cannot be promoted via held tuning; two maps are descriptive.",
+  "budget": "Local single CPU, no new games, no submission. This freezes a two-parameter apply function and weights usable in V2 opponent readout. New full-package deployment or ladder submission requires a new decision."
+}
