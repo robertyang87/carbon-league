@@ -54,3 +54,5 @@ v1 的全部定位赛为 26 胜 0 平 7 负。七场败局均已从开局逐拍�
 ## v3 前的两版对照
 
 北京时间 15:38 同时拉取两版已计分赛卡，v1 定位 26 胜 7 负、普通天梯 4 胜 1 负，v2 定位 17 胜 5 负、普通天梯 4 胜 1 负。共 14 场败局。v2 对同一注册 ID 的天梯 Master3s2 两局一胜一负，换席和地图都变。针对明确能复现的重货返航漏洞，v3 让原搜索多比较一条提前截货路线。长程树经营和己方交货仍是后续训练问题。[两版同刻官方统计](pre_v3_cutoff/README.md) · [v1 逐场](v1_loss_action_review/README.md) · [v2 逐场](v2_loss_review/README.md) · [v3 下载及验证](../v3_release/README.md)
+
+北京时间 15:49:59，ds-pro-v3 提交请求超时，账号名册与公开榜只读复查尚未取得该版本的策略 ID。[提交状态](ds-pro-v3-attempt.json) · [开发赛比分和限时](../v3_release/development/README.md)
