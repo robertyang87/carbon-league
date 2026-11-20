@@ -39,10 +39,12 @@ def analyze(hosted, plan):
     arms = plan["arms"]
     seeds = plan["seeds"]
     keys = {(seed, seat, arm) for seed in seeds for seat in (0, 1) for arm in arms}
-    ledger.require(len(keys) == len(doc["games"]) == 12 and doc["records_reconciled"], "Incomplete settlement")
+    ledger.require(len(keys) == len(doc["games"]) == 12, "Different planned denominator")
     cards = {(g["seed"], g["seat"], g["arm"]): g for g in doc["games"]}
     ledger.require(set(cards) == keys, "Incorrect seed/seat/arm roster")
-    ledger.require(len(doc["archives"]) == 4, "Expected four paired host receipts")
+    block_keys = {(b["seed"], b["seat"]) for b in doc["archives"]}
+    ledger.require(len(block_keys) == len(doc["archives"]) and block_keys <= {(s, p) for s in seeds for p in (0, 1)},
+                   "Unexpected or repeated host block")
     cfg = ledger.config()
     games = {}
     for block in doc["archives"]:
@@ -53,6 +55,8 @@ def analyze(hosted, plan):
             for arm in arms:
                 key = (seed, seat, arm)
                 card = cards[key]
+                if card.get("receipt_sha256") is None:
+                    continue
                 ledger.require(key not in games and card["terrain"] == plan["physical_boards"][str(seed)],
                                "Duplicate game or different registered terrain")
                 game = ledger.replay(card, archive, cfg)
@@ -65,7 +69,17 @@ def analyze(hosted, plan):
                 game["turn_references"] = trace_pivots(game["cash_margin_by_state"], {arm: used})
                 game["_used_turns"] = used
                 games[key] = game
-    ledger.require(set(games) == keys, "Missing archive")
+    for key in keys - games.keys():
+        seed, seat, arm = key
+        card = cards[key]
+        ledger.require(not doc["records_reconciled"] and card.get("official_scores_by_seat") is None,
+                       "Omitted a scored or verified game")
+        games[key] = dict(seed=seed, seat=seat, arm=arm, status=card["status"],
+                          counted=card.get("counted"), winner_seat=card.get("winner_seat"),
+                          terrain=plan["physical_boards"][str(seed)], official_scores_by_seat=None,
+                          official_margin=None, observed_flow=False, reason=card.get("reason"),
+                          executed_transitions=None, cash_margin_by_state=[], transitions=[],
+                          turn_references={}, _used_turns=set())
     comparisons = {}
     for trial, control in ((arms[1], arms[0]), (arms[2], arms[1]), (arms[2], arms[0])):
         pair_name = trial + " minus " + control
@@ -87,7 +101,8 @@ def analyze(hosted, plan):
                           "phases", "end_assets_by_physical_seat", "last30_tree_and_cargo", "opponent_lead"):
                 game[field] = None
     return dict(run_id=doc.get("workflow_run", doc.get("run_id")), commit=doc["commit"],
-                settlement_sha256=ledger.sha(settlement.read_bytes()),
+                settlement_sha256=ledger.sha(settlement.read_bytes()), records_reconciled=doc["records_reconciled"],
+                upstream_verification_errors=doc.get("verification_errors", []),
                 plan_sha256=doc.get("protocol_sha256", doc.get("plan_sha256")), analyzer_sha256=ledger.sha(Path(__file__).read_bytes()),
                 replay_source_sha256=ledger.sha((BASE/"economy.py").read_bytes()),
                 environment_config_sha256=ledger.CFG_HASH,

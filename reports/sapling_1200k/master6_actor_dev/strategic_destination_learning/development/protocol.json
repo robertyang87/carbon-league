@@ -1,0 +1,241 @@
+{
+  "schema": "sapling-strategic-development/frozen/1",
+  "endpoint": "12 fresh-development games from the normal opening: score all three frozen agents on each seed and physical seat versus sources/master3s2/master3s2.py. Win, draw and loss for each arm and seat; draw is not a win. Report official terminal margins including extinction, timeout outcomes (no invented margin), and incremental BC minus parent, joint minus BC, joint minus parent within each map and seat. With two independent maps, report each map's seat-averaged contrast and leave-one-map estimates; these are descriptive, not a formal win-rate estimate. Preserve all failures without replacements, score-based stopping or depth-based exclusions. Formal exam untouched.",
+  "parent_sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "parent_npz_sha256": "7a677b76f30769eb097162a42d355b13b21acf3bab9ae7e22bfe2e4148ff9923",
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "current_platform_guide_sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8",
+  "normal_behavior": "Frozen 8da4 greedy two-network parent, immediate-action behavior-cloning arm, and same training schedule plus 12-step strategic displacement/survival auxiliary targets. All published serving code and the it50 partner remain unchanged; the two arms differ via trained Sapling payload. Original opponent begins at step 0 with its full unseeded T1 and 0.58 second adaptive search. No force, opening prefix, fixed enemy command, midgame injection, or search setting override.",
+  "seeds": [
+    621758500,
+    621758501
+  ],
+  "physical_boards": {
+    "621758500": "8fc8e01bf6ba1f0c3e83d9eb20b39d4ef8a830b00b77f2000ab087e3946e2d30",
+    "621758501": "0bf05476f34cadb3c9df32b17549cace5b5575878ec45ac323f128293c1814d2"
+  },
+  "arms": [
+    "parent",
+    "bc",
+    "joint"
+  ],
+  "schedule": [
+    {
+      "seed": 621758500,
+      "seat": 0,
+      "order": [
+        "parent",
+        "bc",
+        "joint"
+      ]
+    },
+    {
+      "seed": 621758500,
+      "seat": 1,
+      "order": [
+        "bc",
+        "joint",
+        "parent"
+      ]
+    },
+    {
+      "seed": 621758501,
+      "seat": 0,
+      "order": [
+        "joint",
+        "parent",
+        "bc"
+      ]
+    },
+    {
+      "seed": 621758501,
+      "seat": 1,
+      "order": [
+        "joint",
+        "bc",
+        "parent"
+      ]
+    }
+  ],
+  "expected_games": 12,
+  "execution": "One hosted job per seed-seat. Three starts in the registered serial order on that same host/CPU set; separate containers and true 1.5-core/512MiB limits per agent, CPU-only disconnected Python 3.12/NumPy 1.26.4, cold start <=20 seconds, public step 0...last round clock includes request/response I/O and parsing. Soft 1 second, hard 3 seconds, <=3 slow per agent per game, <=5 seconds cumulative excess and <=1500 seconds overall. Archive both players' time and memory tails and original search telemetry, including zero-depth and deadline returns.",
+  "platform": {
+    "per_candidate_cpu": 1.5,
+    "per_candidate_memory_bytes": 536870912,
+    "swap_headroom_bytes": 0,
+    "network": "none",
+    "containers": 2,
+    "python": "3.12",
+    "numpy": "1.26.4",
+    "opponent_required_torch": "2.5.1+cpu",
+    "source_limit_bytes": 10000000,
+    "init_seconds": 20,
+    "step_soft_seconds": 1,
+    "step_hard_seconds": 3,
+    "slow_steps_per_player": 3,
+    "overage_seconds_per_player": 5,
+    "task_seconds": 1500
+  },
+  "files": {
+    "parent": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.py",
+      "bytes": 6075585,
+      "sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac"
+    },
+    "parent_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/candidate.npz",
+      "bytes": 4861598,
+      "sha256": "7a677b76f30769eb097162a42d355b13b21acf3bab9ae7e22bfe2e4148ff9923"
+    },
+    "opponent": {
+      "path": "sources/master3s2/master3s2.py",
+      "bytes": 2897684,
+      "sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5"
+    },
+    "ladder_runner": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/live.py",
+      "bytes": 16011,
+      "sha256": "928646196266fdfb40e60be052f82b733d0d95c495a974dab4c1fe492dfa5a80"
+    },
+    "worker": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/worker.py",
+      "bytes": 4185,
+      "sha256": "146e4afd9fd2e695fe6bd887e70e11b229e7616e648c0a230b1b90b1943a32b9"
+    },
+    "base_registration": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/protocol.json",
+      "bytes": 3234,
+      "sha256": "8bc6122533b139c626323955c0aa0b4dbd8ef771ab04d086df275e5d1641751a"
+    },
+    "container": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/ladder_live/Dockerfile",
+      "bytes": 1072,
+      "sha256": "f2e862c3e26bd080969f280018f6bae85d93440fae66de96dcbb65d804bf947e"
+    },
+    "original_game_configuration": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/direct_original/games/candidate/raw_621758346_1.json.gz",
+      "bytes": 10094,
+      "sha256": "7a5967383c78324d248f4b228541d7eb30f3ac3d39bf18e74f81a011a78c4631"
+    },
+    "current_guide": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/platform_guide.md",
+      "bytes": 11469,
+      "sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8"
+    },
+    "match_runner": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/play.py",
+      "bytes": 5815,
+      "sha256": "17695a8b5f055ef9ae9cc14674b20efe0b776bce0b72365a4336dea393d525d2"
+    },
+    "replayer": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/territory_sequence/fresh_original/verify_pair.py",
+      "bytes": 10621,
+      "sha256": "a8f42ded66c694c2f9668cfe7c6785b08ae02c231b83d3f4440bf5296cc82051"
+    },
+    "native_timing_audit": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/settle.py",
+      "bytes": 17426,
+      "sha256": "a613e02f4dfc1b8f66c12d9802f32adcb82b35d614c8fe79bc09d575d8e894b5"
+    },
+    "previous_exposure_guard": {
+      "path": "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/natural_original/fresh_repeat/workflow_cli.py",
+      "bytes": 5944,
+      "sha256": "061c4e2e42329dd2f424edddedcbe2e20c578d465c0041fcdef3319c62023794"
+    },
+    "design": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/design.json",
+      "bytes": 2744,
+      "sha256": "18e949898c1898dd207439be6fdb0ff11ea3a42548f1d79ac1e418d037e75b48"
+    },
+    "clearance": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/clearance.json",
+      "bytes": 44928,
+      "sha256": "cf068982fe07c9ee8047fb7611039b589251c038bf83ba4076fc52977a2e50c9"
+    },
+    "clearance_increment": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/clearance_increment.json",
+      "bytes": 10689,
+      "sha256": "60fd373d7c2754ce9fbf951789940071bf994d1ab6b9726b1ad267bfbf9e6bb0"
+    },
+    "release": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/release.json",
+      "bytes": 664,
+      "sha256": "b1f6c526878bd74d8b2d1f72ca17c1da771d6a37e3e353fd89224469d9fc3aff"
+    },
+    "matrix": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/matrix.py",
+      "bytes": 12040,
+      "sha256": "5eebaa26ec5769cb5869b37e0222471b8ea01a4a3e51196508a02aa1c80e03ab"
+    },
+    "cli": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/development/workflow_cli.py",
+      "bytes": 2427,
+      "sha256": "067d88d4212a2a63f4b9bb4226bf3eaedef1b7929971a3b9c8a9d4aee58e1c39"
+    },
+    "workflow": {
+      "path": ".github/workflows/sapling-strategic-destination-development.yml",
+      "bytes": 7407,
+      "sha256": "c7176145ca357c50ca3109606f0c94ef90ae264a7c57fc34fc0298fa402d73d5"
+    },
+    "training": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/learning.json",
+      "bytes": 3459,
+      "sha256": "97f5cad8d56c07f21020560df5ad0d5e180d4176179461890071b7763bda21a7"
+    },
+    "fit": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/fit.json",
+      "bytes": 8652,
+      "sha256": "cd81f5d5dc0f3aa891a2ca8657fa24bd3d6fa724c14f8ba88ee686efcc62e86d"
+    },
+    "training_map_inventory": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/sources.json",
+      "bytes": 117251,
+      "sha256": "f476fc829bc9ccb991d00d3066c1befce37f4bb2225578442b71763d8e2def34"
+    },
+    "trainer": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/train.py",
+      "bytes": 15814,
+      "sha256": "1dee3526940d98f6a8a2ea79c8a160aa1223dbc7fa24825bfee8e2257fec3635"
+    },
+    "data_receipt": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/data.json",
+      "bytes": 51104,
+      "sha256": "374821bbad9dd87f598a15f805eef29a1248a6874c3ac47aa86880bfdcaa1352"
+    },
+    "bc": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/bc.py",
+      "bytes": 6075249,
+      "sha256": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0"
+    },
+    "bc_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/bc.npz",
+      "bytes": 4861598,
+      "sha256": "505a0ff3580262156c76dee2b9b288526d57d6fcd26412771f7c40009f47b108"
+    },
+    "joint": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/joint.py",
+      "bytes": 6075117,
+      "sha256": "197fe38e7579484626ea74d7dc4f5b048d1f028d74e3712f33595ac0c5397218"
+    },
+    "joint_weights": {
+      "path": "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/joint.npz",
+      "bytes": 4861598,
+      "sha256": "d5e2dc92c744bddfee0600cd309b46bd18795d18f5da317db1712e9622d9cd22"
+    },
+    "rules": {
+      "path": "reports/agent-guide.md",
+      "bytes": 9120,
+      "sha256": "ea9276c2c12b61a0425690f121e91306b2ab2780b91f1781f8f99b7d58d9e3c1"
+    },
+    "environment": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/carbon.py",
+      "bytes": 11755,
+      "sha256": "72f1f3b561a8715927b809d0e45d621651f9c2c50aaf0109c18a18123a03cc60"
+    },
+    "official_helpers": {
+      "path": "code/env_src/carbon_challenge-master/zerosum_env/envs/carbon/helpers.py",
+      "bytes": 51161,
+      "sha256": "f53af62b7a49d23f800aaf3f3a7f81c215218b4ba9b90355bf5855b154fe16ae"
+    }
+  }
+}

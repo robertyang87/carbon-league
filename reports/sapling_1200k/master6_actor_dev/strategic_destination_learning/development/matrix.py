@@ -50,6 +50,10 @@ def contract():
     clearing=read(HERE/"clearance.json")
     require(clearing["by_seed"]==design["physical_boards"] and not clearing["seed_intersections"]
             and not clearing["physical_intersections"],"Development map not cleared")
+    more=read(HERE/"clearance_increment.json")
+    require(more["source_clearance_sha256"]==sha(HERE/"clearance.json") and
+            more["physical_boards"]==design["physical_boards"] and not more["seed_and_opening_intersections"]
+            and not more["current_unresolved_incremental_replay_faults"], "Fresh replay increment unavailable or overlapping")
     sources=read(TRAIN/"sources.json")
     selected=sources["maps"]
     require(not {row["seed"] for row in selected}.intersection(design["seeds"]) and
@@ -68,6 +72,7 @@ def contract():
            "original_game_configuration":CARGO/"direct_original/games/candidate/raw_621758346_1.json.gz",
            "current_guide":NATURAL/"platform_guide.md","match_runner":MATCH/"play.py","replayer":MATCH/"verify_pair.py",
            "native_timing_audit":NATURAL/"settle.py","previous_exposure_guard":NATURAL/"fresh_repeat/workflow_cli.py","design":HERE/"design.json","clearance":HERE/"clearance.json",
+           "clearance_increment":HERE/"clearance_increment.json",
            "release":HERE/"release.json","matrix":Path(__file__).resolve(),"cli":HERE/"workflow_cli.py",
            "workflow":ROOT/".github/workflows"/WORKFLOW,"training":TRAIN/"learning.json","fit":TRAIN/"fit.json",
            "training_map_inventory":TRAIN/"sources.json","trainer":TRAIN/"train.py","data_receipt":TRAIN/"data.json"}
