@@ -1,0 +1,100 @@
+{
+  "schema": "sapling-frozen-bc-four-map-replication/design/1",
+  "purpose": "Independent normal-opening development replication of the previously trained immediate-action student; no fit, selection or exposure to the new maps before registration. The old two-map development readout stays separate.",
+  "reference_registration_sha256": "551171013eada2e4e8c3b0cff9585456c38c6f3b16208c8c9752ef97f891d142",
+  "reference_run": 44643996163,
+  "parent_sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "bc_sha256": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "current_platform_guide_sha256": "97adbc81e39ef2b1834af96e261cd10e76424352abde5e04868b3467c2a5cec8",
+  "seeds": [
+    621758510,
+    621758511,
+    621758512,
+    621758513
+  ],
+  "physical_boards": {
+    "621758510": "83849925d141843cb3e31d360383e3a4087db8a64a1047b3e2b5d0c52ec741a2",
+    "621758511": "3bc8cbd4715187257ebaba1cdf7a43b4796483909e65ea24f48cb8fb6c209072",
+    "621758512": "a20c31d5ce05a1bc9d9b3e49bfbe79efcec67c99484959945cc0628558b25030",
+    "621758513": "6bd81d14135d93e0ffce28276253c312f5847881d2461a528471b55a6662b13c"
+  },
+  "arms": [
+    "parent",
+    "bc"
+  ],
+  "schedule": [
+    {
+      "seed": 621758510,
+      "seat": 0,
+      "order": [
+        "parent",
+        "bc"
+      ]
+    },
+    {
+      "seed": 621758510,
+      "seat": 1,
+      "order": [
+        "bc",
+        "parent"
+      ]
+    },
+    {
+      "seed": 621758511,
+      "seat": 0,
+      "order": [
+        "bc",
+        "parent"
+      ]
+    },
+    {
+      "seed": 621758511,
+      "seat": 1,
+      "order": [
+        "parent",
+        "bc"
+      ]
+    },
+    {
+      "seed": 621758512,
+      "seat": 0,
+      "order": [
+        "parent",
+        "bc"
+      ]
+    },
+    {
+      "seed": 621758512,
+      "seat": 1,
+      "order": [
+        "bc",
+        "parent"
+      ]
+    },
+    {
+      "seed": 621758513,
+      "seat": 0,
+      "order": [
+        "bc",
+        "parent"
+      ]
+    },
+    {
+      "seed": 621758513,
+      "seat": 1,
+      "order": [
+        "parent",
+        "bc"
+      ]
+    }
+  ],
+  "expected_games": 16,
+  "examiner": "Original repository package from normal opening, both physical seats, the original adaptive 0.58s search and native unseeded T=1 orders, official termination and extinction scoring, no teacher injection or relabelling.",
+  "execution": "One physical seed-seat per hosted job, two cold starts on the same CPU set and host in the listed balanced order. Independent disconnected Python 3.12 / NumPy 1.26.4 Docker containers at 1.5 CPU / 512 MiB per agent. Count complete public request and parsed reply including turn zero; report both sides, init <=20s, base 1s, hard 3s, <=3 slow per party/game, <=5s cumulative excess, whole match <=1500s. Read back cgroups and report original actual depth, candidate count and deadlines.",
+  "estimands": {
+    "absolute": "Each arm 8 registered games; record both seats, W/D/L, observed wins over 8, and mean signed official terminal score difference. Draws are never wins. Report timeout forfeits and missing official numerical scores separately without fabricating a margin.",
+    "paired": "Within each seed and physical seat compare BC minus parent for signed official margin and binary win indication. Average both seats equally within each of 4 physical maps and all maps equally across the batch. Return individual map changes and map-clustered two-sided 95% t interval (df=3) and exhaustively enumerate 4^4 whole-map bootstrap resamples for percentile sensitivity. Report only when all needed outcomes are available. Four maps may yield wide or degenerate intervals.",
+    "history": "Previous development results, formal examination, training games and additional runs stay out of this batch. No selection/early stopping based on result, elapsed depth, physical seat or clock. Retain every missing ticket and timeout, never replace a game."
+  }
+}
