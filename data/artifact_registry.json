@@ -973,6 +973,24 @@
    "md5": "08571aaefc1b5f4d80940d48ebe5cecb",
    "owner_line": "engineering",
    "status": "final"
+  },
+  {
+   "name": "vec2_ablation_g4_zerobase",
+   "kind": "vec2 closed-loop ablation + G4 zero baseline + line recalibration",
+   "detail": "vec2 闭环消融（策略组 a33b73c6）＋G4 零基线与 mean_margin 线重定（裁定二 c4ecdf98）：匹配对手口径下消融闸 mean_margin 0.057357（旧线 0.05 FAIL，唯一不过腿；其余腿全过：KS 0.053763、win 0.010753、aux 0.0111/0.0103/0.0119、rpg 0.0 REPORT-ONLY）；G4 零基线 m0=0.025156（vec1 对 vec1，A1 复用），bootstrap 20,000 次 q95=0.094909 ⇒ 拟重定线 0.095（PROPOSED，待策略组核准；核准后消融判读 PASS）；hof 抽样口径差假说在代码层＋分片指纹层双重证伪；D1 诊断 vec1 非确定性＝并行时序抖动、分布稳定 ⇒ 已知良性属性（单 worker 双跑逐字节同；vec2 跨跑 43 件逐字节同）；187 s 两阶段 vec1 墙钟经 DGX 时间戳复核为两次独立实测（186.91／187.57 s）；§7.4 鲁棒性观察（服务器死后静默挂死、无超时）随件报策略组酌定，不立缺陷件。Gen-5 生成维持 vec1。",
+   "locations": [
+    {
+     "machine": "repo",
+     "path": "reports/REPORT_ABLATION_VEC2_20261120.md"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/vec2_ablation/"
+    }
+   ],
+   "md5": "0b21367c0cb4f508d395e23281175a74",
+   "owner_line": "engineering",
+   "status": "final"
   }
  ],
  "created": "2026-11-17",
