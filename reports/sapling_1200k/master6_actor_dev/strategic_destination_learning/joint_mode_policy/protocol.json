@@ -1,0 +1,18 @@
+{
+  "parent": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "data": "374821bbad9dd87f598a15f805eef29a1248a6874c3ac47aa86880bfdcaa1352",
+  "sources": "f476fc829bc9ccb991d00d3066c1befce37f4bb2225578442b71763d8e2def34",
+  "fit": "24 historic train maps, 1536 public roots both seats, actual original final joint orders. Four old validation maps/192 and four separate old development maps/192 remain unused in optimization. No formal or new window maps.",
+  "models": [
+    "joint",
+    "independent"
+  ],
+  "method": "Three learned latent team modes share the actual Sapling context, the 75/25 partner/Sapling logits and public per-role legal move features. Joint model marginalizes one mode across the entire autoregressive demonstration and updates its posterior as each action is emitted at inference. Independent control marginalizes modes separately for each slot with identical tensors, init, training order and cost. Frozen old guard is retained on the public entry. Compare full on-support team likelihood and actual normal free orders.",
+  "seed": 4112803,
+  "modes": 3,
+  "epochs": 4,
+  "batch": 32,
+  "lr": 0.002,
+  "anchor": 0.001,
+  "gate": "Require held historical development map-equal mean team NLL lower than both reference and equally sized independent control, lower than control on >=3/4 maps, joint exact matches higher than parent (and at least control), unit accuracy >= parent on both seats; at least two changed independent-control orders. Else stop this version without new matches. Historical imitation metrics cannot certify win rate. One final fixed epoch, no blind tuning."
+}
