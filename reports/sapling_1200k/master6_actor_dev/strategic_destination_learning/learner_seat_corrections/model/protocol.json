@@ -1,0 +1,21 @@
+{
+  "schema": "sapling.learner-seat-joint-ce.v1",
+  "parent": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "parent_weights": "505a0ff3580262156c76dee2b9b288526d57d6fcd26412771f7c40009f47b108",
+  "fit_seeds": [620224310,620106812,620106811,621481220],
+  "held_seeds": [621704802,621455920],
+  "seat": [0,1],
+  "times": "Every turn 0..31 on each registered behavior trajectory.",
+  "objective": "For complete representable teacher team orders, sum the negative log conditional probability of every actionable slot under the full logged teacher prefix. Also sum KL(parent||current) on the same masked legal menus. Average across roots in the minibatch, counting inactive but representable roots with zero terms; omit entire unrepresentable roots from likelihood, retain all in deployed-action evaluation. Parent's guard route is evaluated at the root for fitting, and each quantized deployment's own actual free guard route is recomputed for held NLL.",
+  "seed": 621758515,
+  "epochs": 1,
+  "batch": 8,
+  "learning_rate": 0.0001,
+  "kl": 0.5,
+  "weight_decay": 0.0001,
+  "clip": 1.0,
+  "update": "Single seeded permutation of all 256 roots, one pass in 32 batches, last step only. AdamW on all existing student policy/encoder tensors, frozen value heads, it50, mixture, economic residual, guard and code. No auxiliary objective, deployment rule or temperature change.",
+  "qualification": "Require 12 intact registered traces, complete action-independent 0..31 history and per-row checked acting-seat visible observations, exact teacher package and physical-action order. Teacher inference must have run on the acting seat with history consistent with the registered shadow protocol; if provenance verification fails, do not fit. Holdout never used for fitting. Check centered legal deployed-vs-Torch logit parity <0.003 on all unmodified training roots and per-root physical label round-trip.",
+  "assessment": "All 128 held roots from both physical seats on two held training terrains, all living workers and bases, including teacher orders outside the student's autoregressive support. Show target representability, complete-order NLL, conditional-NLL per supported slot, whole-order and worker/base command hits, gained/lost/changed-wrong decisions, contingent on same teacher prefix only for NLL. Compare ordinary public greedy package commands from step 0 on the same visible records. Worth another original trial only if NLL strictly improves on both held maps, both see physical full-order changes and combined exact per-entity gained exceeds lost. No win-rate claim.",
+  "scope": "Teacher-output imitation on learner-visited states. A shadow recommendation was never applied to the archived game and has no counterfactual terminal return."
+}
