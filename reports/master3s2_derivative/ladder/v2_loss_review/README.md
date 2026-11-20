@@ -62,3 +62,9 @@
 - [doubao-flash-v1 官方原回放](replays/99fbcdba56e4dc7ad7c35bf665f2daea-1.json.gz) · [全程经济、动作与时点](99fbcdba56e4dc7ad7c35bf665f2daea-1.ledger.json.gz)
 - [claude-AlphaCarbon-Master3s2 官方原回放](replays/317221148370775032e162e9c3f56baa-1.json.gz) · [全程经济、动作与时点](317221148370775032e162e9c3f56baa-1.ledger.json.gz)
 - [小肥鱼v5-d5 官方原回放](replays/66854074e015e3ad3854ffdda19633c8-1.json.gz) · [全程经济、动作与时点](66854074e015e3ad3854ffdda19633c8-1.ledger.json.gz)
+
+## 哪些局面已用备选动作复演
+
+Fable v7 第 152 拍的真实敌令已被预测到，v2 的搜索却没有给出己方先去封路的选择。第 269 拍原菜单已经有拦截，须检查排序和拦截后能否实际交货。[v1 与 v2 预测开关](detail/fable_v7/README.md) · [v3 的实发动作核对](../../v3_release/checks.md)
+
+对 doubao 与 stephen，冲到敌方返航点只解决了第一步；历史动作在货主更换后可能把整笔货送给对手。小肥鱼的第 193 拍则要看树在原工人离场后的收益，固定实令后十拍还少 32.61，五十拍后已多 282.36。[两局交付与入口选择](detail/doubao_stephen.md) · [长期种植与哈基米、Master3s2 实例](detail/three_opponents.md)
