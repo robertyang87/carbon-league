@@ -1,0 +1,44 @@
+name: Archive the completed two-response development receipts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: master3s2-two-response-archive
+  cancel-in-progress: false
+
+jobs:
+  publish-receipts:
+    if: github.ref == 'refs/heads/main' && github.run_attempt == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /reports/master3s2_derivative/two_response_dev/protocol.json
+            /reports/master3s2_derivative/two_response_dev/transfer.py
+      - name: Verify and transfer original artifact ZIP bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 reports/master3s2_derivative/two_response_dev/transfer.py
+      - name: Publish the exact receipts to main
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse -- reports/master3s2_derivative/two_response_dev/hosted/
+          git diff --quiet --cached && exit 0
+          git commit -m "Archive the eight original signed two-response match receipts"
+          for retry in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch --depth=100 origin main
+            git rebase origin/main
+          done
+          exit 1
