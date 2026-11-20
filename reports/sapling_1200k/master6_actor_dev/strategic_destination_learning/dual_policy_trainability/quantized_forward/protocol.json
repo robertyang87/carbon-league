@@ -1,0 +1,10 @@
+{
+  "parent": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "protocol": "1de8f866702b4a3f14acdfd3a47da4219ea6112010d07d426d233d74807fd141",
+  "training": "The previously frozen 32 historical training roots and their 11 authentic disagreement labels. Fix the parent-chosen return/no-return route and all previous native unit decisions once, identical for both arms at all updates.",
+  "diagnostic": "The next 32 historical roots of the same two training maps and their 12 disagreement labels, never used to change this recipe. Observe all joint actions on both panels.",
+  "optimization": "Same 4 AdamW full-batch steps, lr 5e-5, betas .9/.999, eps 1e-8, zero decay; float32 parameter storage, identical starting tensors, train both existing owned policy networks. No shuffling, schedules, scale learning, swaps, retries or outcome-dependent tuning.",
+  "intervention": "fp uses raw FP32 tensors in its forward. qat uses CNet2 production packer transform before every tower forward: tensors with ndim>=2 and size>=4096, per leading row maximum absolute /127 (zero -> 1), nearest even, clip [-127,127], dequantize. Identity gradient w.r.t. stored weights; no scale gradient. Other tensors unchanged.",
+  "control": "Step 1 must produce identical updates, since parent is exactly representable. Every train-forward verifies actual fake-quantized tensor values against the NumPy production packer. A non-equal training/shadow forward causes rejection.",
+  "result": "Every step log both training forward and final-service-equivalent fixed-prefix NLL. Predeclared final export after step 4; report physical orders and fixed-prefix actual NumPy NLL by train versus later same-map diagnostic roots. No ladder, generalization or game-strength claims."
+}
