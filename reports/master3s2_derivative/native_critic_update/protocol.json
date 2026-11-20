@@ -1,0 +1,1029 @@
+{
+  "excluded_seeds": [
+    621461120,
+    621472120,
+    621476121,
+    621591808,
+    621704802,
+    621704803,
+    621704821,
+    621758322,
+    621758323,
+    621758326,
+    621758327,
+    621758592,
+    621758593,
+    621758594,
+    621758595,
+    621758600,
+    621758602,
+    621758603,
+    621758604,
+    621758606,
+    621758607
+  ],
+  "excluded_terrain": [
+    "0e95d0ba66b9127c6a354b2f661d4d8abb868b5eee9ec708797059b0bdc5844d",
+    "2491e274a30cab0a92677dc6f8b2af401c4e2f945847e3b85b9257b71baeea7e",
+    "2b04bc13ae6de64b05d5a169037ceafdac68ae94ff29ab68735cec13f9f1ecfd",
+    "3548e3753453f840002ee855ed53d3e044102625f18af8e4c6d2aaf36d924664",
+    "3c86bc36dd38d4d48f81b34c72b2b909724b3b98bbe8be364e814739763ffb76",
+    "3ebcf8c720f63bf0f857175c7c52ca8565593f35d6082781a240d25b8ad6c4d8",
+    "4298b376e333fee30f73c3a608d1340bc32c644b83ba52be07b097460b738138",
+    "45b67a55b3f841cc004d2913cf6791438fbb0446369ce5f10480899172d05170",
+    "531c7450144c2a0d63d8675ad99e9b5c9ba6d570c0aabf5a306338d8ea14e2a0",
+    "536d0b4f28b2846b9c4808c7b613e0f7b6f040d8b0e6cc0bb6d2c398f995a8a5",
+    "577d9325ba336b85451624392af8a10c9888232e0a4c423f7925821fa1bfd7dd",
+    "6a71e8754f4fec39920f245c63877211c3b0d81f5e07985a5f4c6c2283448171",
+    "6de64b54fb9ce1605fba14a507988b0d299e61b6d297e52502f06d14d1ac7600",
+    "821423fefde96e5a274916c1fa34c87bce0eadb92422107f291966ed0d85de6e",
+    "9b2175ed9e256fa6fe89a1436eebc5dcd16a85d14230955ee9cf04f1719ca9fd",
+    "aaa61580f7a26fd7114a3ff673d6587c8c79a7006af02ed84a09e4b80ed40d62",
+    "b175213b7d73669e17ca146fb15939c7c956556a9005820bcc172b0165f83ef1",
+    "c3e8e5a181fa99f1fb3000fe6f746beea66ce98ef9ac71252ffd310438bc8a29",
+    "c9395632ee339cb8a2a6ba78660b3f33d69dfc2df70acee30606efa6d10bb377",
+    "cb72dc15eb58716d59312fb1fae75c5465776dda0d508bac1bd180a772e6e692",
+    "f242a154ba386fe94ec77061e402a15695e21eea4db1f572bfefcb3e255cf5d8"
+  ],
+  "inputs": "Observed own seat belief from prior actual own commands and public carbon, actual public players and previous players; set known=all ones exactly like search look, quantize 54 planes and use the native five scalars. No full-carbon, next actions or opposing actual commands. This is a proxy for a simulated state's estimated map; paired true H8 search leaf evaluation is independent.",
+  "objective": "On the frozen policy's native 96x225 h, update six float32 v1/v2/v3 tensors from v4. Each terrain equal, then each game, seat and registered available time. Full-batch Huber delta=0.75 to official terminal +0.5 MSE to initial native critic. Adam lr=.0003, no decay, 40 steps, no early stopping/no hyperparameter search. Store float16 as parent and score that model.",
+  "parent": "cd230d40a08f7dea07e261202b865f951b88b3b030febc9828627aa5f47c7d2a",
+  "steps": [
+    6,
+    21,
+    36,
+    51,
+    66,
+    81,
+    96,
+    111,
+    126,
+    141,
+    156,
+    171,
+    186,
+    201,
+    216,
+    231,
+    246,
+    261,
+    276,
+    291
+  ],
+  "target": "Native _terminal: clip(own official margin/3000,-2.5,2.5)+.5*sign(margin).",
+  "test": "Held maps reported separately for exact original H2H and official ladder. Primary all-source map-equal MAE strictly below original and no H2H MAE regression. Show MSE/signed bias/sign accuracy, mean outcome per fixed predicted value bin, 3 phases, map-cluster intervals and each map. Evaluate actual commands with known afterstate pairs separately. Actor unchanged, both backends. No new matches.",
+  "tickets": [
+    {
+      "domain": "ladder",
+      "name": "probe-test-11793602358",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "fe5a96da743f0fdc1e37b46df5913050",
+      "seats": [
+        0
+      ],
+      "seed": 1257445392,
+      "sha256": "d2b13e332d66930ed57bc2f3286d817138e8ada7b9b4cdfff1c88a8b607fc163",
+      "source": "reports/master3s2_derivative/ladder/replays/fe5a96da743f0fdc1e37b46df5913050-1.json.gz",
+      "split": "fit",
+      "terrain": "c76ffc973b2010666886417d1c2595cc33dc8ecabf8ac49cba9d1494e66b0411"
+    },
+    {
+      "domain": "ladder",
+      "name": "小肥鱼v5",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "fa8fd4926f8f7d5a7327152cbde42452",
+      "seats": [
+        1
+      ],
+      "seed": 115096790,
+      "sha256": "883255ed6518bb081754f11ca093060bbdbe3464531c1c9608272f5a51901aa3",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/fa8fd4926f8f7d5a7327152cbde42452-1.json.gz",
+      "split": "fit",
+      "terrain": "9a7662acdefac61741b01950ab68bf32996909faf3f2e19bc9e1224f73be7c88"
+    },
+    {
+      "domain": "ladder",
+      "name": "AgyCarbon-P2C-Godslayer-CVI",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "0f23cfeb5520d490632d66b296f1a904",
+      "seats": [
+        0
+      ],
+      "seed": 2124468699,
+      "sha256": "6578bfc2e333cfc86206e1320860c30eb316f9c7f22d76f84d117726f591b6df",
+      "source": "reports/master3s2_derivative/ladder/replays/0f23cfeb5520d490632d66b296f1a904-1.json.gz",
+      "split": "fit",
+      "terrain": "e4d59005b9d50f4593fc20d1ddb68a8279196d4fd3e0341053d670cdaddf4dc4"
+    },
+    {
+      "domain": "ladder",
+      "name": "Krypton-M3s2-EarlyHome",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "607a31eaa16dc915f7071024d7fc0125",
+      "seats": [
+        1
+      ],
+      "seed": 1217440900,
+      "sha256": "92263d7046f87a557f9e34d5156b9948084ae81ce4515a1e4e2bff4cb3392429",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/607a31eaa16dc915f7071024d7fc0125-1.json.gz",
+      "split": "fit",
+      "terrain": "df69adedd72b30914320f8de0083ebd5f6ae93c47381cb8310e4875b2910cd11"
+    },
+    {
+      "domain": "ladder",
+      "name": "哈基米 v3",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "6925323f6c0fdef46e05ea42679d2f8c",
+      "seats": [
+        1
+      ],
+      "seed": 90350583,
+      "sha256": "f25838008873ab24369f3c32de8ae81d959bc7771b07c10a5863d3e77b8168e7",
+      "source": "reports/master3s2_derivative/ladder/v2_loss_review/replays/6925323f6c0fdef46e05ea42679d2f8c-1.json.gz",
+      "split": "fit",
+      "terrain": "a6d0afd1bad5b09fa582d581510c2f91156e4295d3f12066048edd496bb6a337"
+    },
+    {
+      "domain": "ladder",
+      "name": "claude-opus55-cloud-Echo11",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "fb0741263d549b8146ad740abfd05b70",
+      "seats": [
+        0
+      ],
+      "seed": 1383659097,
+      "sha256": "80deccc4770be33af18b42e7021b711c8c2dd8dbba080407534652c00551c9c0",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/fb0741263d549b8146ad740abfd05b70-1.json.gz",
+      "split": "fit",
+      "terrain": "0925e19574d75f1edb296659bb6f96b512e70f827af471985bbef20437fb534a"
+    },
+    {
+      "domain": "ladder",
+      "name": "stephen-K4TacSearch-v3",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "90d9d4c87bca59dee4ccb8f301058fe4",
+      "seats": [
+        0
+      ],
+      "seed": 1643351304,
+      "sha256": "3ec5145e4d2c554454d1d13e10b04feb32988b4478c416a93fdc3d7f1f0c5375",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/90d9d4c87bca59dee4ccb8f301058fe4-1.json.gz",
+      "split": "fit",
+      "terrain": "13bb3bbfcbb87f94d3ee7a2d3583553af0425b40cdc0a914c03e67c1ec5b2725"
+    },
+    {
+      "domain": "ladder",
+      "name": "First111-1",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "11c1f5ecfb227da3fb005866d5ad3902",
+      "seats": [
+        1
+      ],
+      "seed": 1591749896,
+      "sha256": "6737450babd9c0a6312b036bebe149a54cd78a4380e2de6cedc8601408105f25",
+      "source": "reports/master3s2_derivative/ladder/replays/11c1f5ecfb227da3fb005866d5ad3902-1.json.gz",
+      "split": "fit",
+      "terrain": "7df7fae4f965664f14cafc9e8acd8c18bf7b1cf853d1e5460b5103f531ad9f48"
+    },
+    {
+      "domain": "ladder",
+      "name": "der包 v2",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "a5665baf5956682b741854ddea25b6ed",
+      "seats": [
+        1
+      ],
+      "seed": 558787499,
+      "sha256": "c88ee2d4e0bd73f8797bdae14423fb6917ea07c0087c6357fa4ce1a6da07b2c9",
+      "source": "reports/master3s2_derivative/ladder/replays/a5665baf5956682b741854ddea25b6ed-1.json.gz",
+      "split": "fit",
+      "terrain": "50a9ad3cc4dfa90e6121122d45d4c79b143d97e7c161e3e95a835e5040705a6b"
+    },
+    {
+      "domain": "ladder",
+      "name": "RyanX-AIPowercore-it720-preview",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "ffb3d312918eb0c4d49a9912ce4f77f7",
+      "seats": [
+        0
+      ],
+      "seed": 1087887768,
+      "sha256": "b2db8b051c92cc174078fd45e28fabff5aeba604ea31305cf21e426d393a915b",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/ffb3d312918eb0c4d49a9912ce4f77f7-1.json.gz",
+      "split": "fit",
+      "terrain": "a7b44037ac8f45cc9cffce76b747c6f847cbe63c233d114aed3bbec436d20598"
+    },
+    {
+      "domain": "ladder",
+      "name": "Kimi-Clark-Public-Gloria-v7",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "b1c3ba3c1975dac4425f14ce32390c44",
+      "seats": [
+        1
+      ],
+      "seed": 1692974616,
+      "sha256": "f38a88f187f67464fdb27461ad3ac11f164c5c50dce765e8a6b9f87964222918",
+      "source": "reports/master3s2_derivative/ladder/replays/b1c3ba3c1975dac4425f14ce32390c44-1.json.gz",
+      "split": "fit",
+      "terrain": "7b798a356c65d6f60b0b5e6681456ed4a3870b422a6a6b50250e23acc5073fcf"
+    },
+    {
+      "domain": "ladder",
+      "name": "LJM-TidalSearch-v1",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "96a07c0594225847b34dcf4ffc12c0d0",
+      "seats": [
+        1
+      ],
+      "seed": 337392182,
+      "sha256": "140b8d2bfbb610af583cd6a885d122342f38e5334271d4fdc14eccb14e67ca2e",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/96a07c0594225847b34dcf4ffc12c0d0-1.json.gz",
+      "split": "fit",
+      "terrain": "f1ebfd362ab97891bf0ad731a0099faaded7b987834d5852c61e427dd5c417dd"
+    },
+    {
+      "domain": "ladder",
+      "name": "qwen4-ernie5.5-mixmax-t04",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "769826ecffbc8f71243c028e07df3023",
+      "seats": [
+        0
+      ],
+      "seed": 2093781957,
+      "sha256": "325474cc4de713cbaf363d87973d16a86d86449edd3554049e6525804eda1b05",
+      "source": "reports/master3s2_derivative/ladder/replays/769826ecffbc8f71243c028e07df3023-1.json.gz",
+      "split": "fit",
+      "terrain": "ee5f83a99f5bc78dc63f59d05012e4279b5c10e0fbf05c3b52a780e4dcf27594"
+    },
+    {
+      "domain": "ladder",
+      "name": "Carago-V2微调",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "796b579ad81fc2404ad8a05f7028f8fc",
+      "seats": [
+        0
+      ],
+      "seed": 601740741,
+      "sha256": "1831698a4653913c1cc0fe76bae014d3f912314211a645f8c2283a3819b794e6",
+      "source": "reports/master3s2_derivative/ladder/replays/796b579ad81fc2404ad8a05f7028f8fc-1.json.gz",
+      "split": "fit",
+      "terrain": "b883a938b1642434201173a9f78fbefabd08ffc1a92920860ec28e4625dd2822"
+    },
+    {
+      "domain": "ladder",
+      "name": "1C-Test",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "e60b1bc558a0a37800947be2fbeea44f",
+      "seats": [
+        1
+      ],
+      "seed": 1279328439,
+      "sha256": "61e2d338cda494a77d43e451af388fd5667fc8d5f9c19826fee98a73955ff2da",
+      "source": "reports/master3s2_derivative/ladder/replays/e60b1bc558a0a37800947be2fbeea44f-1.json.gz",
+      "split": "fit",
+      "terrain": "cc421d8743a150864ae4ebb34303599940a064c3371bd76d879746132516a3b6"
+    },
+    {
+      "domain": "ladder",
+      "name": "CaiV3",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "0a3195c1e8eaa6617c0bc9488037a15e",
+      "seats": [
+        0
+      ],
+      "seed": 1869053240,
+      "sha256": "eb92bc446058b86b87d11e52dbc1e8aa45b173f933583bd78b66ad6e4ff73265",
+      "source": "reports/master3s2_derivative/ladder/replays/0a3195c1e8eaa6617c0bc9488037a15e-1.json.gz",
+      "split": "fit",
+      "terrain": "cf00b84660f86534074418cd22bf42963916ca3ef1588dfa24a2db5c4f637ad9"
+    },
+    {
+      "domain": "ladder",
+      "name": "Makabaka-v1.3",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "160624b76d6278dfb1e6ae1d145edce0",
+      "seats": [
+        1
+      ],
+      "seed": 999538198,
+      "sha256": "d6e327fa8846419a895bba9b0af8469eb188b4cd1a0057be68947c4be23807e2",
+      "source": "reports/master3s2_derivative/ladder/replays/160624b76d6278dfb1e6ae1d145edce0-1.json.gz",
+      "split": "fit",
+      "terrain": "a75d729641e6eb617b7f98672a4a621eee7c6349d87cceb988cc89a04fc6f9c6"
+    },
+    {
+      "domain": "ladder",
+      "name": "CarbonEdge-Eco",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "d2880896ec571ddbb703822d2a677905",
+      "seats": [
+        0
+      ],
+      "seed": 1605201552,
+      "sha256": "5ba2a5009d3bc9107abce9970b4167d3e3eb4dc4fe4e499b2d41710bc3716597",
+      "source": "reports/master3s2_derivative/ladder/replays/d2880896ec571ddbb703822d2a677905-1.json.gz",
+      "split": "fit",
+      "terrain": "2afca901ec65b8577e376c6c1992a06d30a906995bc0524f3ece601a62cf6320"
+    },
+    {
+      "domain": "ladder",
+      "name": "小肥鱼v5-d5",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "4a3dc96034a40fad17f2221ab06fe30f",
+      "seats": [
+        0
+      ],
+      "seed": 1980853001,
+      "sha256": "a1e4e95659c6b893e2563cbc207d46b6e614ba372c28b09dd322127168ceb5dd",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/4a3dc96034a40fad17f2221ab06fe30f-1.json.gz",
+      "split": "fit",
+      "terrain": "34e9c474d43c6a72733afa287d0a1e0d55b446bcf3113ea4f2388c8ae336aaaf"
+    },
+    {
+      "domain": "ladder",
+      "name": "stephen-K4TacSearch-v6",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "9d9b347721f259e12e4da4403e8ff7b8",
+      "seats": [
+        1
+      ],
+      "seed": 224000783,
+      "sha256": "2fd05e22b416c353164238a64092027b9df3f8fa892703c311ef4c804def0339",
+      "source": "reports/master3s2_derivative/ladder/v2_loss_review/replays/9d9b347721f259e12e4da4403e8ff7b8-1.json.gz",
+      "split": "fit",
+      "terrain": "d28d8cc6d3b4f390206f6fb8c3972c14a03a2fa9ca5ee400acab258f9de21012"
+    },
+    {
+      "domain": "ladder",
+      "name": "ClaudeFable5.2-v7",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "7743f8c734513424f976e1248195478d",
+      "seats": [
+        1
+      ],
+      "seed": 2022533769,
+      "sha256": "99e0cbbef668cfdd16e27f02612c721b131891896de2a7b360568a9515e9dcb7",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/7743f8c734513424f976e1248195478d-1.json.gz",
+      "split": "held",
+      "terrain": "4bc77c9dc3adff1c6afc045936a7817959977dfa11642105cf50c1aeeb00f5f9"
+    },
+    {
+      "domain": "ladder",
+      "name": "claude-AlphaCarbon-Master2s",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "629c2912ff470a26ebd11d1d45b515f9",
+      "seats": [
+        0
+      ],
+      "seed": 403615411,
+      "sha256": "5aac17600fcc70a6782cb13e7484b17925a165a594371855a4ae979cc9dfb393",
+      "source": "reports/master3s2_derivative/ladder/replays/629c2912ff470a26ebd11d1d45b515f9-1.json.gz",
+      "split": "held",
+      "terrain": "e89c1c6d92a2eb8090cf68d835a173ad6cf9e5b65896057e66f827c74874376f"
+    },
+    {
+      "domain": "ladder",
+      "name": "安生N27",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "4f97e17b6a190b493abac35ddb19f7dc",
+      "seats": [
+        1
+      ],
+      "seed": 397186669,
+      "sha256": "6d1165c4483ffa8c5c4ed5b4c1f53ed53d30e75a08ef0cffa894bfeee3e9572e",
+      "source": "reports/master3s2_derivative/ladder/replays/4f97e17b6a190b493abac35ddb19f7dc-1.json.gz",
+      "split": "held",
+      "terrain": "e0c125c79867f8d7182268ef1d311917c1e49dbfd5ca617db6d816159cab3740"
+    },
+    {
+      "domain": "ladder",
+      "name": "doubao-flash-v2",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "099ac9b2de77ba4e3d43fdc63642cac4",
+      "seats": [
+        0
+      ],
+      "seed": 596068173,
+      "sha256": "5468511e5c4cf1d8fc1575a868ecfcac72f1f9168f5f67196973e34081412a80",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/099ac9b2de77ba4e3d43fdc63642cac4-1.json.gz",
+      "split": "held",
+      "terrain": "0e4447c76ee4dc785972b31d3a22e5202e18263cd3453f93a3d6f1e5e297fc9f"
+    },
+    {
+      "domain": "ladder",
+      "name": "Fable5.2-Max-V9",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "cc9d17e7f3c77324526c9f2ac5e3e7cc",
+      "seats": [
+        0
+      ],
+      "seed": 303037116,
+      "sha256": "78c5bf28efa1076a3e9dc34f13fdb8e84e3c3313d2344d9ec5b7474c74d2dc69",
+      "source": "reports/master3s2_derivative/ladder/replays/cc9d17e7f3c77324526c9f2ac5e3e7cc-1.json.gz",
+      "split": "held",
+      "terrain": "94d9875d77c7495e8da540bfcfb4d67534edd746f951251618433b1e9aa883d3"
+    },
+    {
+      "domain": "ladder",
+      "name": "claude-AlphaCarbon-Master3s2",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "317221148370775032e162e9c3f56baa",
+      "seats": [
+        1
+      ],
+      "seed": 2142303870,
+      "sha256": "0b35e71a481951cf73a2b8832e3d915806ad613112bff5885384ce9aaca1c792",
+      "source": "reports/master3s2_derivative/ladder/v2_loss_review/replays/317221148370775032e162e9c3f56baa-1.json.gz",
+      "split": "held",
+      "terrain": "fca51d555556bb44496594ce554556afd949e53a84b40de7100212a5bf27e0a2"
+    },
+    {
+      "domain": "ladder",
+      "name": "安生N33",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "252efe19dfcab9e2fc8c3c4fb4f29457",
+      "seats": [
+        0
+      ],
+      "seed": 38387169,
+      "sha256": "ff5f98dadf848803aec00ad97cde689a382cba0e2f3b70f555deec753d37bca8",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/252efe19dfcab9e2fc8c3c4fb4f29457-1.json.gz",
+      "split": "held",
+      "terrain": "d284edf1cf9d8c930e268e6e64b915a745b85b6b1f93581994ec56d17aac358c"
+    },
+    {
+      "domain": "ladder",
+      "name": "doubao-flash-v1",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "f16b985a992c4aae70434a3b60535908",
+      "seats": [
+        1
+      ],
+      "seed": 1228477557,
+      "sha256": "4608388a88fadd8680d2a94871d1f15d0b766bddf23396c2c62d8484dfd26560",
+      "source": "reports/master3s2_derivative/ladder/nn_patch_cutoff/replays/f16b985a992c4aae70434a3b60535908-1.json.gz",
+      "split": "held",
+      "terrain": "e3c6a743017f88e5b2d77cacf156d59d37403a78dbc1920cb508850e745c52d0"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "dev1",
+      "own": "245b5814d1855c5449435ee6bd4a53560017a8cc7a46d08729fa9dfdc13e9654",
+      "repeat": "opponent_policy",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758580,
+      "sha256": "eb71131eaca2828c6b3aa92aaf3f7f4a5894be44dbda025a81e2d7d302346924",
+      "source": "reports/master3s2_derivative/dev1/hosted/14598619528.zip",
+      "split": "fit",
+      "terrain": "1f86c595f06b096eac526dad027ef0704a7b913c343a245318ee8c18bc7b0945"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "dev1",
+      "own": "245b5814d1855c5449435ee6bd4a53560017a8cc7a46d08729fa9dfdc13e9654",
+      "repeat": "opponent_policy",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758580,
+      "sha256": "84039a9a2d9671a720c5bf9f61938da8698232b4f34ca11e78cd52d34af34b68",
+      "source": "reports/master3s2_derivative/dev1/hosted/14599278734.zip",
+      "split": "fit",
+      "terrain": "1f86c595f06b096eac526dad027ef0704a7b913c343a245318ee8c18bc7b0945"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "dev1",
+      "own": "245b5814d1855c5449435ee6bd4a53560017a8cc7a46d08729fa9dfdc13e9654",
+      "repeat": "opponent_policy",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758581,
+      "sha256": "d1e8888817ea44bdfe22ec8b10ff8a13c0740cd558db142b5a5b6e1b151311a2",
+      "source": "reports/master3s2_derivative/dev1/hosted/14599790673.zip",
+      "split": "fit",
+      "terrain": "0e93532f4330b1443f13afc6887438baeb89b0e8b1487ce5fd86166e62518368"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "dev1",
+      "own": "245b5814d1855c5449435ee6bd4a53560017a8cc7a46d08729fa9dfdc13e9654",
+      "repeat": "opponent_policy",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758581,
+      "sha256": "d2d9b2f73d9ae410887eec6399a5a801967bb89fa31c39d77110784d2980ca84",
+      "source": "reports/master3s2_derivative/dev1/hosted/14598619585.zip",
+      "split": "fit",
+      "terrain": "0e93532f4330b1443f13afc6887438baeb89b0e8b1487ce5fd86166e62518368"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "dev1",
+      "own": "245b5814d1855c5449435ee6bd4a53560017a8cc7a46d08729fa9dfdc13e9654",
+      "repeat": "opponent_policy",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758582,
+      "sha256": "8cd5993689066140931ea2e84f983cb3d7906d397585fa65a4b39dcdebcfca66",
+      "source": "reports/master3s2_derivative/dev1/hosted/14599224449.zip",
+      "split": "held",
+      "terrain": "872cf2a613dd0eae18adcb8d0fa2d80973b8eacca412469634686272cbea6702"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "dev1",
+      "own": "245b5814d1855c5449435ee6bd4a53560017a8cc7a46d08729fa9dfdc13e9654",
+      "repeat": "opponent_policy",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758583,
+      "sha256": "c72940cf89967c36dbd9a8671f48d934710149960f54f612d5ce7d07267295b8",
+      "source": "reports/master3s2_derivative/dev1/hosted/14599179695.zip",
+      "split": "fit",
+      "terrain": "8f7697095c57ae03ea6ad78cb5be6efbb7c5bf139720f0a39d3fa5a5b7c5472e"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "dev1",
+      "own": "245b5814d1855c5449435ee6bd4a53560017a8cc7a46d08729fa9dfdc13e9654",
+      "repeat": "opponent_policy",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758583,
+      "sha256": "dd99d9a31e2feb38281344dfcfd2a6cd1a5e0fa86e7f62b584d44f2eff767033",
+      "source": "reports/master3s2_derivative/dev1/hosted/14599965896.zip",
+      "split": "fit",
+      "terrain": "8f7697095c57ae03ea6ad78cb5be6efbb7c5bf139720f0a39d3fa5a5b7c5472e"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "cold_start/development",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "cold_repair",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758590,
+      "sha256": "5da6e2ce2fe788e225dd27eff33bcd0dd15a5f4d91f6b20c8be778c2cf82403f",
+      "source": "reports/master3s2_derivative/cold_start/development/hosted/14600909205.zip",
+      "split": "held",
+      "terrain": "f996e0caf4bc8e8bd21ec45ffac34c352afa3ea675b66b26a595c1a4d6ed8f25"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "cold_start/development",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "cold_repair",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758590,
+      "sha256": "bfc274a9d082d6939afa8f35cd525a5f20c76e6f381c2aa31c28badc73fbd0ba",
+      "source": "reports/master3s2_derivative/cold_start/development/hosted/14601720219.zip",
+      "split": "held",
+      "terrain": "f996e0caf4bc8e8bd21ec45ffac34c352afa3ea675b66b26a595c1a4d6ed8f25"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "cold_start/development",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "cold_repair",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758591,
+      "sha256": "e76babefa2f7de9641af1bf3bb598a65739f40c2dcd16a7786e7b3286e6a91c8",
+      "source": "reports/master3s2_derivative/cold_start/development/hosted/14600284765.zip",
+      "split": "fit",
+      "terrain": "4e75fe4d3bba7f536bf725bb724791a09aeb9b8cab565bd703ff053de0fa7085"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "cold_start/development",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "cold_repair",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758591,
+      "sha256": "20bff9378f903158ff7079793b8439e604b29cc9baff69c280f423a7db9feb56",
+      "source": "reports/master3s2_derivative/cold_start/development/hosted/14601625563.zip",
+      "split": "fit",
+      "terrain": "4e75fe4d3bba7f536bf725bb724791a09aeb9b8cab565bd703ff053de0fa7085"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "identity_replication_dev",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "parent",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758605,
+      "sha256": "f65755a2ed28456c9c2948243b2dcbba35119885527581db98a2ed5625a7d18b",
+      "source": "reports/master3s2_derivative/identity_replication_dev/hosted/14610322667.zip",
+      "split": "fit",
+      "terrain": "0d52dc225f0b1aa5be5c5d02c7f26aadbabf3fd7102730c59540e022457807a9"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "identity_replication_dev",
+      "own": "f6059243925aaa65044a0e93b260a5b43b560f93d7ddec40c740d27862fd130d",
+      "repeat": "challenger",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758605,
+      "sha256": "f65755a2ed28456c9c2948243b2dcbba35119885527581db98a2ed5625a7d18b",
+      "source": "reports/master3s2_derivative/identity_replication_dev/hosted/14610322667.zip",
+      "split": "fit",
+      "terrain": "0d52dc225f0b1aa5be5c5d02c7f26aadbabf3fd7102730c59540e022457807a9"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "identity_replication_dev",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "parent",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758605,
+      "sha256": "ae47717ec0cb9008d47826b5c9ea8c685eddfb0c3538dae1cade571665634265",
+      "source": "reports/master3s2_derivative/identity_replication_dev/hosted/14610128780.zip",
+      "split": "fit",
+      "terrain": "0d52dc225f0b1aa5be5c5d02c7f26aadbabf3fd7102730c59540e022457807a9"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "identity_replication_dev",
+      "own": "f6059243925aaa65044a0e93b260a5b43b560f93d7ddec40c740d27862fd130d",
+      "repeat": "challenger",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758605,
+      "sha256": "ae47717ec0cb9008d47826b5c9ea8c685eddfb0c3538dae1cade571665634265",
+      "source": "reports/master3s2_derivative/identity_replication_dev/hosted/14610128780.zip",
+      "split": "fit",
+      "terrain": "0d52dc225f0b1aa5be5c5d02c7f26aadbabf3fd7102730c59540e022457807a9"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "paired_improvement_dev",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "parent",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758598,
+      "sha256": "9ef607dcacf50c48e362805423220bcdc29164264e3c926476c550e7bf2aed31",
+      "source": "reports/master3s2_derivative/paired_improvement_dev/hosted/14609486564.zip",
+      "split": "fit",
+      "terrain": "554b98df6ca80fb6db5bc897eb41419db7e9e5f8fc67a3edceea4c30e6a4eb08"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "paired_improvement_dev",
+      "own": "f6059243925aaa65044a0e93b260a5b43b560f93d7ddec40c740d27862fd130d",
+      "repeat": "challenger",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758598,
+      "sha256": "9ef607dcacf50c48e362805423220bcdc29164264e3c926476c550e7bf2aed31",
+      "source": "reports/master3s2_derivative/paired_improvement_dev/hosted/14609486564.zip",
+      "split": "fit",
+      "terrain": "554b98df6ca80fb6db5bc897eb41419db7e9e5f8fc67a3edceea4c30e6a4eb08"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "paired_improvement_dev",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "parent",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758598,
+      "sha256": "512d30207f77f4ce0afccd92c3479df6246b979a9629a96c58ae92d2f7694b35",
+      "source": "reports/master3s2_derivative/paired_improvement_dev/hosted/14610170068.zip",
+      "split": "fit",
+      "terrain": "554b98df6ca80fb6db5bc897eb41419db7e9e5f8fc67a3edceea4c30e6a4eb08"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "paired_improvement_dev",
+      "own": "f6059243925aaa65044a0e93b260a5b43b560f93d7ddec40c740d27862fd130d",
+      "repeat": "challenger",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758598,
+      "sha256": "512d30207f77f4ce0afccd92c3479df6246b979a9629a96c58ae92d2f7694b35",
+      "source": "reports/master3s2_derivative/paired_improvement_dev/hosted/14610170068.zip",
+      "split": "fit",
+      "terrain": "554b98df6ca80fb6db5bc897eb41419db7e9e5f8fc67a3edceea4c30e6a4eb08"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "paired_improvement_dev",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "parent",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758599,
+      "sha256": "ada089c9d1396c22ef97404652b8a76ebf3454e938e539381c6a8f819bb43de6",
+      "source": "reports/master3s2_derivative/paired_improvement_dev/hosted/14609501367.zip",
+      "split": "fit",
+      "terrain": "1dd01bb769032f96d7795fe5790799d0992304b2bec3c442a28b75e38422d330"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "paired_improvement_dev",
+      "own": "f6059243925aaa65044a0e93b260a5b43b560f93d7ddec40c740d27862fd130d",
+      "repeat": "challenger",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758599,
+      "sha256": "ada089c9d1396c22ef97404652b8a76ebf3454e938e539381c6a8f819bb43de6",
+      "source": "reports/master3s2_derivative/paired_improvement_dev/hosted/14609501367.zip",
+      "split": "fit",
+      "terrain": "1dd01bb769032f96d7795fe5790799d0992304b2bec3c442a28b75e38422d330"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "paired_improvement_dev",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "parent",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758599,
+      "sha256": "52f95db4f8d1a1ca6347900a32ba789ff0ecc2cc000e01a8b9ad5c0d8eb33d75",
+      "source": "reports/master3s2_derivative/paired_improvement_dev/hosted/14609422351.zip",
+      "split": "fit",
+      "terrain": "1dd01bb769032f96d7795fe5790799d0992304b2bec3c442a28b75e38422d330"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "paired_improvement_dev",
+      "own": "f6059243925aaa65044a0e93b260a5b43b560f93d7ddec40c740d27862fd130d",
+      "repeat": "challenger",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758599,
+      "sha256": "52f95db4f8d1a1ca6347900a32ba789ff0ecc2cc000e01a8b9ad5c0d8eb33d75",
+      "source": "reports/master3s2_derivative/paired_improvement_dev/hosted/14609422351.zip",
+      "split": "fit",
+      "terrain": "1dd01bb769032f96d7795fe5790799d0992304b2bec3c442a28b75e38422d330"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "calibration_improvement_dev",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "parent",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758601,
+      "sha256": "f9ce6e995820434e3a8ca9969743ecfd0cfaeccc5001c2abce62f5353ecb98cf",
+      "source": "reports/master3s2_derivative/calibration_improvement_dev/hosted/14609937479.zip",
+      "split": "fit",
+      "terrain": "c5b492091f86a4ad479c364c9c7335374ced0f13db6b89fce0a134a2cbabd5b0"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "calibration_improvement_dev",
+      "own": "2cf0c9ac5066b19d8375e82140a991ecc85d0a660d1e5a361ed2a184993cea58",
+      "repeat": "challenger",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758601,
+      "sha256": "f9ce6e995820434e3a8ca9969743ecfd0cfaeccc5001c2abce62f5353ecb98cf",
+      "source": "reports/master3s2_derivative/calibration_improvement_dev/hosted/14609937479.zip",
+      "split": "fit",
+      "terrain": "c5b492091f86a4ad479c364c9c7335374ced0f13db6b89fce0a134a2cbabd5b0"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "calibration_improvement_dev",
+      "own": "7cf5c6c91fc59b46b2a38924c4c5ab56143fb1242d082f9426303af7336ac3ed",
+      "repeat": "parent",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758601,
+      "sha256": "2a1c5cd769768e6b7a538c1de5613b996462fcfaadfa8a9d7df1e89d1901f0a5",
+      "source": "reports/master3s2_derivative/calibration_improvement_dev/hosted/14609997431.zip",
+      "split": "fit",
+      "terrain": "c5b492091f86a4ad479c364c9c7335374ced0f13db6b89fce0a134a2cbabd5b0"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "calibration_improvement_dev",
+      "own": "2cf0c9ac5066b19d8375e82140a991ecc85d0a660d1e5a361ed2a184993cea58",
+      "repeat": "challenger",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758601,
+      "sha256": "2a1c5cd769768e6b7a538c1de5613b996462fcfaadfa8a9d7df1e89d1901f0a5",
+      "source": "reports/master3s2_derivative/calibration_improvement_dev/hosted/14609997431.zip",
+      "split": "fit",
+      "terrain": "c5b492091f86a4ad479c364c9c7335374ced0f13db6b89fce0a134a2cbabd5b0"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "nn_policy_development",
+      "own": "cd230d40a08f7dea07e261202b865f951b88b3b030febc9828627aa5f47c7d2a",
+      "repeat": "new_vs_original",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758608,
+      "sha256": "55dfc3fc818a7e35af98dc52c1fb37a3126977080edb3a580749857fa48190c6",
+      "source": "reports/master3s2_derivative/nn_policy_development/hosted/14613499593.zip",
+      "split": "fit",
+      "terrain": "f453f450061428bd6ad27d70a1b845b33ae01faf8022bfd289d831471941e7ac"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "nn_policy_development",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "v2_vs_original",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758608,
+      "sha256": "55dfc3fc818a7e35af98dc52c1fb37a3126977080edb3a580749857fa48190c6",
+      "source": "reports/master3s2_derivative/nn_policy_development/hosted/14613499593.zip",
+      "split": "fit",
+      "terrain": "f453f450061428bd6ad27d70a1b845b33ae01faf8022bfd289d831471941e7ac"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "nn_policy_development",
+      "own": "cd230d40a08f7dea07e261202b865f951b88b3b030febc9828627aa5f47c7d2a",
+      "repeat": "new_vs_original",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758608,
+      "sha256": "80828f7c1c912282b08480278679edcf6cdf08e87370208ec613a1ec2ac08cfb",
+      "source": "reports/master3s2_derivative/nn_policy_development/hosted/14614371391.zip",
+      "split": "fit",
+      "terrain": "f453f450061428bd6ad27d70a1b845b33ae01faf8022bfd289d831471941e7ac"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "nn_policy_development",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "v2_vs_original",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758608,
+      "sha256": "80828f7c1c912282b08480278679edcf6cdf08e87370208ec613a1ec2ac08cfb",
+      "source": "reports/master3s2_derivative/nn_policy_development/hosted/14614371391.zip",
+      "split": "fit",
+      "terrain": "f453f450061428bd6ad27d70a1b845b33ae01faf8022bfd289d831471941e7ac"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "nn_policy_development",
+      "own": "cd230d40a08f7dea07e261202b865f951b88b3b030febc9828627aa5f47c7d2a",
+      "repeat": "new_vs_original",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758609,
+      "sha256": "20eb5ecfbd7acb22bedf4e0a01d64eed7a0c0498529c3bcd3d6989f46003fb25",
+      "source": "reports/master3s2_derivative/nn_policy_development/hosted/14613074157.zip",
+      "split": "held",
+      "terrain": "b05981a85b94a67df168ac83084fc1b790e39181f050a01446ebe5b9fc50ba26"
+    },
+    {
+      "candidate": 0,
+      "domain": "h2h",
+      "name": "nn_policy_development",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "v2_vs_original",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758609,
+      "sha256": "20eb5ecfbd7acb22bedf4e0a01d64eed7a0c0498529c3bcd3d6989f46003fb25",
+      "source": "reports/master3s2_derivative/nn_policy_development/hosted/14613074157.zip",
+      "split": "held",
+      "terrain": "b05981a85b94a67df168ac83084fc1b790e39181f050a01446ebe5b9fc50ba26"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "nn_policy_development",
+      "own": "cd230d40a08f7dea07e261202b865f951b88b3b030febc9828627aa5f47c7d2a",
+      "repeat": "new_vs_original",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758609,
+      "sha256": "b0da4d6a50a66ed265f9748c4ba7bcbb749ca8db32357c840b5543594e680bd7",
+      "source": "reports/master3s2_derivative/nn_policy_development/hosted/14613937028.zip",
+      "split": "held",
+      "terrain": "b05981a85b94a67df168ac83084fc1b790e39181f050a01446ebe5b9fc50ba26"
+    },
+    {
+      "candidate": 1,
+      "domain": "h2h",
+      "name": "nn_policy_development",
+      "own": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+      "repeat": "v2_vs_original",
+      "seats": [
+        0,
+        1
+      ],
+      "seed": 621758609,
+      "sha256": "b0da4d6a50a66ed265f9748c4ba7bcbb749ca8db32357c840b5543594e680bd7",
+      "source": "reports/master3s2_derivative/nn_policy_development/hosted/14613937028.zip",
+      "split": "held",
+      "terrain": "b05981a85b94a67df168ac83084fc1b790e39181f050a01446ebe5b9fc50ba26"
+    }
+  ]
+}
