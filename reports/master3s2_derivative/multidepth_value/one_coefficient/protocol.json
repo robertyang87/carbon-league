@@ -1,0 +1,169 @@
+{
+  "schema": "native-multidepth-paired-one-coefficient/1",
+  "purpose": "Offline fixed action-pair ranking diagnostic; no package or new games.",
+  "source_ticket_registration_sha256": "1d8b72c3eb39ac0d91119bacbdc3ec6912db66b6a14818da819e53fb5cd2d2c5",
+  "tickets": [
+    {
+      "ordinal": 0,
+      "split": "train",
+      "terrain": "2b04bc13ae6de64b05d5a169037ceafdac68ae94ff29ab68735cec13f9f1ecfd",
+      "seed": 621704802,
+      "seat": 0,
+      "step": 279,
+      "policy_rng": 3702978576,
+      "arm_order": [
+        "first",
+        "second"
+      ]
+    },
+    {
+      "ordinal": 1,
+      "split": "train",
+      "terrain": "2fc040e96bf7b56c08d8ddce34eb34850db2633a6ea793e7588acc0f32c0d32c",
+      "seed": 621455920,
+      "seat": 0,
+      "step": 285,
+      "policy_rng": 2004852647,
+      "arm_order": [
+        "second",
+        "first"
+      ]
+    },
+    {
+      "ordinal": 2,
+      "split": "train",
+      "terrain": "3c86bc36dd38d4d48f81b34c72b2b909724b3b98bbe8be364e814739763ffb76",
+      "seed": 621476121,
+      "seat": 1,
+      "step": 279,
+      "policy_rng": 2834760663,
+      "arm_order": [
+        "first",
+        "second"
+      ]
+    },
+    {
+      "ordinal": 3,
+      "split": "train",
+      "terrain": "3ebcf8c720f63bf0f857175c7c52ca8565593f35d6082781a240d25b8ad6c4d8",
+      "seed": 621461120,
+      "seat": 1,
+      "step": 285,
+      "policy_rng": 3852110044,
+      "arm_order": [
+        "second",
+        "first"
+      ]
+    },
+    {
+      "ordinal": 4,
+      "split": "train",
+      "terrain": "45b67a55b3f841cc004d2913cf6791438fbb0446369ce5f10480899172d05170",
+      "seed": 621591808,
+      "seat": 0,
+      "step": 279,
+      "policy_rng": 653226432,
+      "arm_order": [
+        "first",
+        "second"
+      ]
+    },
+    {
+      "ordinal": 5,
+      "split": "train",
+      "terrain": "536d0b4f28b2846b9c4808c7b613e0f7b6f040d8b0e6cc0bb6d2c398f995a8a5",
+      "seed": 621704803,
+      "seat": 0,
+      "step": 285,
+      "policy_rng": 3385637863,
+      "arm_order": [
+        "second",
+        "first"
+      ]
+    },
+    {
+      "ordinal": 6,
+      "split": "train",
+      "terrain": "577d9325ba336b85451624392af8a10c9888232e0a4c423f7925821fa1bfd7dd",
+      "seed": 621704821,
+      "seat": 1,
+      "step": 279,
+      "policy_rng": 3111948488,
+      "arm_order": [
+        "first",
+        "second"
+      ]
+    },
+    {
+      "ordinal": 7,
+      "split": "train",
+      "terrain": "6a71e8754f4fec39920f245c63877211c3b0d81f5e07985a5f4c6c2283448171",
+      "seed": 621472120,
+      "seat": 1,
+      "step": 285,
+      "policy_rng": 2860302986,
+      "arm_order": [
+        "second",
+        "first"
+      ]
+    },
+    {
+      "ordinal": 8,
+      "split": "held",
+      "terrain": "531c7450144c2a0d63d8675ad99e9b5c9ba6d570c0aabf5a306338d8ea14e2a0",
+      "seed": 621758323,
+      "seat": 0,
+      "step": 279,
+      "policy_rng": 4010810630,
+      "arm_order": [
+        "first",
+        "second"
+      ]
+    },
+    {
+      "ordinal": 9,
+      "split": "held",
+      "terrain": "821423fefde96e5a274916c1fa34c87bce0eadb92422107f291966ed0d85de6e",
+      "seed": 621758327,
+      "seat": 0,
+      "step": 285,
+      "policy_rng": 3561731879,
+      "arm_order": [
+        "second",
+        "first"
+      ]
+    },
+    {
+      "ordinal": 10,
+      "split": "held",
+      "terrain": "b175213b7d73669e17ca146fb15939c7c956556a9005820bcc172b0165f83ef1",
+      "seed": 621758326,
+      "seat": 1,
+      "step": 279,
+      "policy_rng": 2000097976,
+      "arm_order": [
+        "first",
+        "second"
+      ]
+    },
+    {
+      "ordinal": 11,
+      "split": "held",
+      "terrain": "f242a154ba386fe94ec77061e402a15695e21eea4db1f572bfefcb3e255cf5d8",
+      "seed": 621758322,
+      "seat": 1,
+      "step": 285,
+      "policy_rng": 1988816285,
+      "arm_order": [
+        "second",
+        "first"
+      ]
+    }
+  ],
+  "units": "Use identical existing V2 arms [first,second] and the original scalar leaf-V-return scale at H1,H4,H8. All three stages must be values for those same final two physical orders and the same registered roll(s), actor/seat, Sim, belief and native continuation RNG. If exact terminal arises, use the official native terminal rule. No score head refit or extra weights. To compare current decision, original H8 pair scores must reproduce archive within 1e-5 and yield the same first choice, tie to first.",
+  "features": "For every root i use dH=V_H(first)-V_H(second), x=(d1+d4)/2-d8, y=T(margin_first)-T(margin_second), predicted difference=d8+lambda*x. T(m)=clip(m/3000,-2.5,2.5)+0.5*sign(m), from complete official response suffixes at same root with paired opponent root action, cloned common RNG at fork and independently reacting game after fork. Different post-root random consumption is allowed; do not call sample paths identical. No private information, clipping of labels, seat interaction, intercept or separate depth weights beyond native T.",
+  "train_eligibility": "All 8 registered training tickets retained, one predesignated source per distinct map. Fit only existing scored/replay-verified pairs, expect 7; no substitutions. Require at least 7 such distinct maps, and complete verified H1/H4/H8 for all eligible training pairs. An archivally coalesced root has the same full H8 native critic operands/leaf inputs for both orders, not merely a score tie. Require exact-reconstructible signals and at least one of the three known coalescences to give |(d1+d4)/2| > 1e-6. If none, or verification insufficient, return INDETERMINATE, no lambda fit and no holdout access.",
+  "objective": "Aggregate equally over training maps. a=sum(x*x)/n, a single mean-map information penalty about lambda=0. lambda=clip(sum(x*(y-d8))/(sum(x*x)+a),0,1); if sum(x*x)<=1e-12 report unidentifiable. This is squared error of within-root terminal contrasts plus a*lambda^2, no intercept. Ridge penalty, range and depth weights are fixed before holdout; no grid search. If lambda is zero, freeze it and report no actionable change. Write signed training feature/label identities and coefficient before opening any holdout outcome.",
+  "held_gate": "Exactly 4 registered maps with both verified official terminal outcomes, eligible finalist features, identities and H8 parity. Missing/invalid/map-incomplete -> INDETERMINATE, no replacement. Select first for signed difference >= -1e-8, second otherwise. Report paired terminal-contrast squared error, choices, official scores and win/draw/loss for both arms, effects by map and for all four. For PASS require strict decrease in average contrast squared error; at least one change choosing strictly higher observed T; positive mean change in raw official margin; and no single-map downgrade of actual outcome from win to draw/loss or draw to loss. Otherwise FAIL; a verified identical predictor is NO_CHANGE. This is a descriptive pilot, not an independent deployment-performance certificate. Report absolute and relative changes including negative evidence, saturation and raw-margin ties separately.",
+  "isolation": "No holdout features, outcome, existing fitted heads or maps chosen by outcome to choose shrinkage/coefficient. Preserve the original intake train/held split despite these being historical development maps. Freeze this protocol before reading held results for this experiment. No new training framework or gameplay."
+}
