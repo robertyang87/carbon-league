@@ -1,0 +1,14 @@
+{
+  "schema": "native-enemy-rollout-readout/1",
+  "source": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "source_protocol_sha256": "16e77a290cfe1c22503981f34cff934aa3fccd6fc69b0ba41d9383e1e078e502",
+  "split": "Use all 24 historical train physical maps and four existing validation maps, both source observers per map. No external policy weights, outcomes, or real enemy future actions as targets. Select nothing by score or policy agreement.",
+  "root_steps": [72,215],
+  "selection": "At every specified root call the newly reconstructed native public entry with original trained weights, temperature 1 and actual 0.58 s clock, paired deterministic own RNG for diagnosis. For each simulated depth 1,2,4,6 retain the first two successful calls to native enemy _sample in execution order. The root prediction is excluded. Exact duplicate enemy inputs within map removed after capture; retain omissions and checked depth. Rebuild only from the simulated branch's estimated carbon, players and previous players.",
+  "depths": [1,2,4,6],
+  "limit_per_depth": 2,
+  "architecture": "Two real original residual blocks, then per-cell independent linear (96+1)x5 and (96+1)x3 trainable readouts. Original source teacher logits at every active enemy worker and base on the actual simulated rows. No critic or own decision is approximated.",
+  "fit": "Without reading held outcomes, fit one worker and one base head with deterministic L-BFGS (temperature 1 teacher KL, 100 iteration cap, standardized activations, L2 0.0001 on standardized weights, maps and roots equally weighted per head). Fold normalization into float32 776 parameters before held check. Original final heads on two-block inputs form the untrained ablation.",
+  "physical_check": "On validation maps: exact teacher-vs-readout native joint order with the teacher's own rollout RNG state. Subgroups: carrying collector >=50; collector within 2 own base steps; worker with another worker within toroidal distance 2. Presence of same-cell contacts using simultaneous own simulated moves reported. All changed orders retained.",
+  "screen": "Engineering screen for continued optimization only: all four held maps represented and both seats all returned roots; map-equal teacher KL <=0.04 per role, each better than the unchanged final-layer-on-two-block ablation; held joint exact >=0.80, workerdestination >=0.94, base command >=0.97. Loaded, near-home, crowded worker groups each require >=30 observations and >=0.90 agreement. No selection on held. If negative, retain evidence without starting matches."
+}

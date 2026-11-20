@@ -1,0 +1,12 @@
+{
+  "source_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+  "roots": "Use all 12 old training roots (two terrains, both seats, steps 20,85,215), in the frozen order and with the exact private incoming root seed and four incoming search costs from opponent_policy/compute/measurements.json.gz. No changed output or outcome filter.",
+  "work": "Capture every actually issued Winograd tensor call in the source 0.58s run, split by original _search, look(both true/false), and other. Freeze actual feature tensors, shapes, module, and counts before measuring. Replay identical recorded work for all three arms. No full game, altered search menu, or terminal measurement.",
+  "arms": ["original", "shared", "separate"],
+  "affinity": [4],
+  "torch_threads": 1,
+  "block_index": 2,
+  "head": "Original six-block head coefficients reused as placeholder after block two for identical-shape timing. Full six-block teacher emitted separately; shallow fidelity or utility is not scored as training.",
+  "repetitions": 6,
+  "sequence": "Six permutations of the three arms, rotated by root index. One prewarm per arm on the same complete captured stream. Wall and CPU times sum all neural calls at real recorded shapes. Estimate end-to-end fixed-work with original measured residual; distinct from adaptive production performance."
+}
