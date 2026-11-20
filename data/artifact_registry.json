@@ -911,6 +911,15 @@
    "status": "final",
    "owner_line": "engineering",
    "detail": "输局旁路 ② 行权重通道落仓（2026-11-20 ~10:48）：train2_w.py cab1d22a20c34bfbe6d4e3b361a021b8（commit c9b0eca3）、attach_row_weights.py 3483ef22e0b9e0e75ab1657bff68730f（commit 9f136e45）、深审 REVIEW_ROW_WEIGHTS_20261120.md 937a4e57fb3b5cd729e5e8cc2b4b4896（commit 0def9588）。等价闸①：探针六损失项全 bit-identical、端到端 A1/A2/B 55/55 张量位级同；生效闸②探针级：P2 相对差 0.0、P3 梯度比 0.5/0.5。深审（非作者线，DGX 独立复跑）审项 1-4 PASS、审项 5 探针级 PASS，无作废级实质问题。语义：被压制局行 policy ×0.5、value 1.0，其余行 1.0/1.0；缺失权重键缺省全 1.0。现行件零改动（train2 06e3c87c、train.py ab3953d2、设计 bf1e869d）。待补核：作者 REPORT.md（C-B 全表）到后补核最终总判；Q1 两次 exec 失败未说明、留档。用途：Gen-5 训练用行权重通道，训练使用以 Gen-5 定版件全文核准为准。"
+  },
+  {
+   "name": "valuespec_gate_final",
+   "kind": "value-spectrum AB gate report (equivalence + bridge + phase 1)",
+   "md5": "67cd8ee2a4cca2f0ec2d00efdfe3063e",
+   "size_bytes": 6842,
+   "status": "final",
+   "owner_line": "engineering",
+   "detail": "价值谱 A/B 合并闸报告落仓（2026-11-20 ~11:12）：GATE_FINAL_USPECTRUM_20261120.md（原件 md5 67cd8ee2…，commit 见落仓件；落仓件含主代理核验头）。两闸过齐时刻 2026-11-20 10:52 CST（等价闸 10:35–10:37 PASS：3 步＋48 步损失逐字同、npz/state_dict 位级同；§5 桥验证新口径 f90af57d 10:52 PASS：网格 2.626e-09、孪生 2.020e-09、打包 0.0、逆残差 2.220e-16，饱和探针 B(_U_AT_CLAMP)=B(±1)=±1.5 精确，退役点 B(0.9999999)=1.333333269443889 与精确复合误差 0.0）。阶段一验 10:39–10:51：吞吐 3.60 步/秒（均值 0.2775 s，p95 0.280 s），内存 torch 峰值 1.13 GB／主进程 RSS 峰值 30.34 GB／系统可用最低 86,283 MB；跨座抽查 PASS（L20 CPU：损失差 ≤0.0013、npz 最大差 2.678e-03＝0.134 容差、超容 0）。封印核对 3,575,143 行／2,788 件／抽样 md5 119/119。正式训刻度 300 已发车（20,949 步，init gen1r，fpw 1.0）；发车记录更正：报告所记首发 PID 735946（10:55:31）已不在册，现行 PID 1898309（10:58:38 起），主代理 11:11 直读已进 GPU 训练步（step 200，2.28 步/秒，GPU 96%），首发失效原因待执行人确认后补入。U′ 进 Gen-5/Gen-6 以两闸过齐时刻与 Gen-5 开训时刻先后为准（作战室时钟）。"
   }
  ],
  "created": "2026-11-17",
@@ -923,5 +932,5 @@
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
  "version": "5.1",
- "updated": "2026-11-20T10:48:00+08:00"
+ "updated": "2026-11-20T11:12:00+08:00"
 }
