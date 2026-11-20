@@ -1,0 +1,228 @@
+{
+  "protocol_sha256": "1de8f866702b4a3f14acdfd3a47da4219ea6112010d07d426d233d74807fd141",
+  "parent_sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "sources": {
+    "manifest_sha256": "0b9c563f84f8aef9e3dbf7db15222d5915b62b699b842b55e6f080437e7c58b0",
+    "protocol_sha256": "0eb415eb6858dd90d180cfb39c4a5fef54be7f0f9d22af9dda3be088d4337d75",
+    "builder_sha256": "8f7edd803e38db5cb3c4256aac47dcdc0c40529139396b0251d0e3d030030e4f",
+    "original_sha256": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+    "cards": [
+      {
+        "gid": 0,
+        "seed": 621704800,
+        "terrain": "8e8cab1f5e6af0ad4d13a61e344eaac483e50ff1d0943380128fd3c09adc64ca",
+        "seat": 1,
+        "arm": "candidate",
+        "first_step": 156,
+        "last_step": 298,
+        "split": "fit",
+        "steps": 143,
+        "changed": 96,
+        "changed_units": 139,
+        "trainable_changes": 139,
+        "repaired": 0,
+        "source": "reports/sapling_1200k/master6_actor_dev/first_win_dev/games/candidate/raw_621704800_0.json.gz",
+        "source_sha256": "8fa2eabe60e70669fd7172ab6c214a079477de34cdab46d7d333d5fa70f9a886",
+        "rng_source": "reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/recruit_only_dev/responses_621704800_0_candidate.json.gz",
+        "rng_source_sha256": "635cb1f83f3d5b23e0d77ec49e751bc97e5289a665d5573c5ae5ea9531027c6a",
+        "response": "reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/recruit_only_dev/responses_621704800_0_candidate.json.gz",
+        "response_sha256": "635cb1f83f3d5b23e0d77ec49e751bc97e5289a665d5573c5ae5ea9531027c6a",
+        "file": "shards/00_621704800_candidate.npz",
+        "sha256": "eb525dbd7b406cf5394da5bc2a3847f061ade8c8952189ca12841622641c248d"
+      },
+      {
+        "gid": 2,
+        "seed": 621704801,
+        "terrain": "d96ec0dec1e737160c82f4d4340030a03fef43dbeee58469f3ad9e0367363ff6",
+        "seat": 0,
+        "arm": "candidate",
+        "first_step": 191,
+        "last_step": 298,
+        "split": "fit",
+        "steps": 108,
+        "changed": 74,
+        "changed_units": 118,
+        "trainable_changes": 118,
+        "repaired": 0,
+        "source": "reports/sapling_1200k/master6_actor_dev/first_win_dev/games/candidate/raw_621704801_1.json.gz",
+        "source_sha256": "82c35a9ef2ddb83054b4e43f3e65369666ecf6b75f1b18eba31925d3378d9921",
+        "rng_source": "reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/recruit_only_dev/responses_621704801_1_candidate.json.gz",
+        "rng_source_sha256": "030c418f115727b334aacf91028c24cbd4db54d55fc8353b6cdd205fdf7a605f",
+        "response": "reports/sapling_1200k/master6_actor_dev/elite_role_mix_dev/recruit_only_dev/responses_621704801_1_candidate.json.gz",
+        "response_sha256": "030c418f115727b334aacf91028c24cbd4db54d55fc8353b6cdd205fdf7a605f",
+        "file": "shards/02_621704801_candidate.npz",
+        "sha256": "ba1ddf66d264e0211cbcc320a8f8d9b4b2dc92eee14bbd01c559cc37aa26daec"
+      }
+    ],
+    "implementation": {
+      "code/cnet2_feat.py": "7a3f1aca5d967e79d90eb6f7414a73c7a8623ed7c792eed3c0fcd0a78214ff80",
+      "code/fastsim.py": "1f59c01e81dbd9f24747b5ee5770a17a581633790647d131f128b0125284f9ac"
+    }
+  },
+  "inputs": {
+    "train.py": "4c93c8865f17d7eac2f0408408e9437219be3a1620a43be85aa2b81934627161",
+    "runtime.py": "cbb8093905e330347c5e0fded8eb526eb55875c8d4bc9b0a394c197339c2008e",
+    "corpus.py": "86771c00ccf2387c1a6f99be8928ef6b4bfbce379e663405a216f8ec3468dfd2"
+  },
+  "exact_zero_update_quantized_roundtrip": true,
+  "initial": {
+    "legal_logits": 6562,
+    "exact_legal_logits": 2457,
+    "max_abs_error": 1.9073486328125e-05,
+    "max_centered_error": 1.1444091796875e-05,
+    "branch_orders_compared": 128,
+    "complete_equal": 64,
+    "best_branch_counts": {
+      "baseline": 0,
+      "residual": 64
+    }
+  },
+  "train_labels": 11,
+  "initial_teacher_NLL": 2.2865072563290596,
+  "post_step_fixed_prefix_NLL": {
+    "parent": {
+      "fit": {
+        "n": 11,
+        "mean_NLL": 2.2865074045057776
+      },
+      "probe": {
+        "n": 12,
+        "mean_NLL": 1.9992929714011443
+      }
+    },
+    "updated_fp32": {
+      "fit": {
+        "n": 11,
+        "mean_NLL": 1.706214514473716
+      },
+      "probe": {
+        "n": 12,
+        "mean_NLL": 1.8654773955905837
+      }
+    },
+    "updated_int8": {
+      "fit": {
+        "n": 11,
+        "mean_NLL": 2.255517560306673
+      },
+      "probe": {
+        "n": 12,
+        "mean_NLL": 1.9848544725034207
+      }
+    }
+  },
+  "update_wall_seconds": 1.7080016219988465,
+  "gradient_towers": {
+    "own_it50": {
+      "tensors": 186,
+      "parameters": 3480775,
+      "nonzero_gradient_parameters": 3405913,
+      "gradient_l2": 20.70880737331812,
+      "stem_gradient_l2": 13.386364066392378,
+      "changed_fp32": 3405911,
+      "changed_exported": 3303250
+    },
+    "sapling": {
+      "tensors": 105,
+      "parameters": 1206476,
+      "nonzero_gradient_parameters": 1112984,
+      "gradient_l2": 1.9825203589281117,
+      "stem_gradient_l2": 1.2755257161407276,
+      "changed_fp32": 1112983,
+      "changed_exported": 1111241
+    }
+  },
+  "action_changes": {
+    "fit": {
+      "parent_to_updated_fp32": {
+        "roots": 32,
+        "different_full_orders": 9,
+        "changed_physical_unit_orders": 9
+      },
+      "parent_to_updated_int8": {
+        "roots": 32,
+        "different_full_orders": 0,
+        "changed_physical_unit_orders": 0
+      },
+      "updated_fp32_to_updated_int8": {
+        "roots": 32,
+        "different_full_orders": 9,
+        "changed_physical_unit_orders": 9
+      }
+    },
+    "probe": {
+      "parent_to_updated_fp32": {
+        "roots": 32,
+        "different_full_orders": 4,
+        "changed_physical_unit_orders": 5
+      },
+      "parent_to_updated_int8": {
+        "roots": 32,
+        "different_full_orders": 1,
+        "changed_physical_unit_orders": 2
+      },
+      "updated_fp32_to_updated_int8": {
+        "roots": 32,
+        "different_full_orders": 3,
+        "changed_physical_unit_orders": 3
+      }
+    }
+  },
+  "diagnostic_warm_timing": {
+    "native_recorded_before": {
+      "n": 64,
+      "mean_ms": 48.153066688428225,
+      "p95_ms": 57.95946105281473,
+      "max_ms": 70.11593399511185
+    },
+    "torch_before": {
+      "n": 64,
+      "mean_ms": 52.71501162610548,
+      "p95_ms": 68.01997554794069,
+      "max_ms": 129.99505100015085
+    },
+    "parent_numpy_decoder": {
+      "n": 64,
+      "mean_ms": 45.616111125127645,
+      "p95_ms": 57.37640143925091,
+      "max_ms": 64.88829100271687
+    },
+    "updated_fp32_numpy_decoder": {
+      "n": 64,
+      "mean_ms": 40.76816248380055,
+      "p95_ms": 46.414792452560505,
+      "max_ms": 56.54575199878309
+    },
+    "updated_int8_numpy_decoder": {
+      "n": 64,
+      "mean_ms": 38.36353924953073,
+      "p95_ms": 41.28048124985071,
+      "max_ms": 42.14385699015111
+    }
+  },
+  "patch": {
+    "file": "int8_delta.bin",
+    "sha256": "c63845c2eeef81aa14cb78712c768dbf44f90c828d845d79206417d3937ce7b0",
+    "towers": [
+      {
+        "tower": "own_it50",
+        "start": 0,
+        "length": 97183,
+        "raw_sha256": "5bd627f0e9558ee396ecc857d94d39c81795747a99838ce86190af2daecef758",
+        "original_raw_sha256": "47dfce840dbef32e45aa5ca3a7fed20e1103b37593adde8653173449a03c056c"
+      },
+      {
+        "tower": "sapling",
+        "start": 97183,
+        "length": 44518,
+        "raw_sha256": "9e4c2c28a0b09eec67706e660d96d41b49074bbc99084ad9da9a64ac8d5fe00a",
+        "original_raw_sha256": "dce4e6756c8cc893f7c041e45781756f7aa506296ee96c37b81c26f5a9eb61f8"
+      }
+    ]
+  },
+  "cpu_affinity": [
+    4
+  ],
+  "original_decoder_sha256": "4cb01ee595f1c8d2aae38efdd4140fd89f70950da555e627188765657463b2c0",
+  "orders_sha256": "de31568d0580cfbeeda37fd7f29980f5b425a1b018524846f1c76019dc07e3d6"
+}

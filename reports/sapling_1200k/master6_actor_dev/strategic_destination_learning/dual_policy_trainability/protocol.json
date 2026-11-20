@@ -1,0 +1,12 @@
+{
+  "scope": "Historical train maps only. Technical gradient/parity check, no new game, strength estimate or deployment.",
+  "parent_sha256": "8da4b465f7fa6e601e51bd7c2e81f25825cb59b9b5ab285f7f56d0f6bbfe1cac",
+  "exact_manifest_sha256": "0b9c563f84f8aef9e3dbf7db15222d5915b62b699b842b55e6f080437e7c58b0",
+  "gids": [0, 2],
+  "fit": "Per gid first 16 consecutive previously registered fit roots; only original post-search changed units with authentic legal target, matching all active earlier physical actions on the chosen parent branch, and teacher target unequal to parent's action. Refuse empty.",
+  "probe": "Per gid next 16 consecutive training-map roots; no gradient or tuning; evaluate original, FP32 and exported int8 action on all fit and probe roots.",
+  "loss": "One pooled mean negative conditional log probability on eligible expert replacements under parent deployment's selected branch. Both complete own policy towers trainable. Fixed encoder, GRU, logits computation as in frozen architecture; no gradient through argmax or arbitration.",
+  "optimizer": "One AdamW step lr 0.00005, betas 0.9/0.999, eps 1e-8, weight_decay 0. No retries, tune or restart on outcomes.",
+  "parity_gate": "All complete initial orders and both free-decoder paths match the native deployer on 64 historical roots; entire legal support and legal logits compared (report exact bit agreement, allow 1e-4 FP32 categorical margin). A zero-update repack must reproduce all original quantized payload values before interpreting an updated pack.",
+  "clock": "Single thread, warm CPU, local compute only; report runtime by comparator. No ladder timing certificate."
+}
