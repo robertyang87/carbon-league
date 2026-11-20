@@ -1,0 +1,44 @@
+name: Archive the completed active embedding development receipts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: master3s2-active-embedding-archive
+  cancel-in-progress: false
+
+jobs:
+  publish-receipts:
+    if: github.ref == 'refs/heads/main' && github.run_attempt == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /reports/master3s2_derivative/active_embedding_dev/protocol.json
+            /reports/master3s2_derivative/active_embedding_dev/transfer.py
+      - name: Verify and transfer original artifact ZIP bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 reports/master3s2_derivative/active_embedding_dev/transfer.py --run 44739373906 --commit 1614eb832d3d51611a4b61b5452c10af58272c0b --protocol cd8cf03a07ea69a1e1601056ff13fdb7a0ca6891f597e523f4a492e62d1b8ec8
+      - name: Publish the exact receipts to main
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --sparse -- reports/master3s2_derivative/active_embedding_dev/hosted/
+          git diff --quiet --cached && exit 0
+          git commit -m "Archive the eight original signed active embedding match receipts"
+          for retry in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch --depth=100 origin main
+            git rebase origin/main
+          done
+          exit 1
