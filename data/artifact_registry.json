@@ -993,13 +993,13 @@
    "status": "final"
   },
   {
-   "name": "vec1_hangfix_variant",
+   "name": "vec1_hangfix_production",
    "kind": "vec1 inference-server silent-hang fix (bounded tracking item)",
-   "detail": "策略组裁定 ②（76472417）：vec1 推理服务器静默挂死修复。修后件 vec_selfplay_hangfix.py md5 2dbd1485（原 e59f0700 原地不动，替换与否待策略组／作战室裁定）：ServerClient.forward 无界 resp_q.get() 改 30 s tick 轮询＋/proc 存活检查（死即 RuntimeError）＋300 s 超时（TimeoutError）；main join 改 5 s tick 轮询，服务器死时 worker 60 s 宽限后 terminate，server.join(timeout=60)。验证：T2b 修前挂死证实（主进程杀后 +100 s 仍活）；T3 故障注入修后 35 s rc=1 响亮失败、无残留；T4 正常跑修前／修后分片逐字节同（e9deed0a）；T5 超时两分支主代理 DGX 重跑 PASS。Gen-6 生成用 vec2，本修复不堵任何在跑线。",
+   "detail": "策略组裁定 ②（76472417）＋晋升裁定 9b4f2cf8：vec1 推理服务器静默挂死修复已晋升为生产件 tools/katago_m3s2/vec_selfplay.py md5 2dbd1485（旧件 e59f0700 退役；变体副本已删，单份为准）。ServerClient.forward 无界 resp_q.get() 改 30 s tick 轮询＋/proc 存活检查（死即 RuntimeError）＋300 s 超时（TimeoutError）；main join 改 5 s tick 轮询，服务器死时 worker 60 s 宽限后 terminate，server.join(timeout=60)。验证：T2b 修前挂死证实（+100 s 仍活）；T3 故障注入修后 35 s rc=1 响亮失败、无残留；T4 正常跑修前／修后分片逐字节同（e9deed0a）；T5 超时两分支主代理 DGX 重跑 PASS。晋升读回 md5 2dbd1485（commit b058e7ff），§7.4 跟进项凭裁定＋晋升读回销项。DGX 镜像件走正常镜像同步跟进。",
    "locations": [
     {
      "machine": "repo",
-     "path": "tools/katago_m3s2/vec_selfplay_hangfix.py"
+     "path": "tools/katago_m3s2/vec_selfplay.py"
     },
     {
      "machine": "DGX",
