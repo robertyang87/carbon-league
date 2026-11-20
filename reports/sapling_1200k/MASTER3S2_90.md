@@ -1,6 +1,6 @@
 # Sapling 对 Master3s2 的九成胜率实验
 
-用户于 2026-11-20 将九成胜率主线切换至 Master3s2 源码派生版。本页保留已执行的 Sapling 训练及对局。后续派生版以独立目录中的源码、冻结包和实战为准。[Master3s2 派生版台账](../master3s2_derivative/README.md) 天梯正在用 ds-pro 测试账户验证本线的 v1 和 v2，续跑先按平台策略编号核实已经结算和正在进行的比赛。[当前提交、真实赛果和待验证模型](../master3s2_derivative/ladder/README.md)
+用户于 2026-11-20 将九成胜率主线切换至 Master3s2 源码派生版。本页保留已执行的 Sapling 训练及对局。后续派生版以独立目录中的源码、冻结包和实战为准。[Master3s2 派生版台账](../master3s2_derivative/README.md) 天梯正在用 ds-pro 测试账户验证本线的 v1 和 v2，续跑先按平台策略编号核实已经结算和正在进行的比赛。按所有者 13:31 的决定，多观察不同对手和头部实战，后续候选保留本地；向所有者报过多局证据后再决定上梯。[当前提交、真实赛果和待验证模型](../master3s2_derivative/ladder/README.md)
 
 ## 当前胜绩与验收
 
