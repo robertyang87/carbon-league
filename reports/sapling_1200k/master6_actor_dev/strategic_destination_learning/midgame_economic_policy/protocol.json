@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "panel": "0ea7306a4f72907f66d8df636c4f31c58db97dbb9d10fbd7eb8026439dd3e35e",
+  "parent": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "weights": "505a0ff3580262156c76dee2b9b288526d57d6fcd26412771f7c40009f47b108",
+  "exclude_hashes": {
+    "top5_profile.json.gz": "1baab3b5d9dfe759649a135d599537bc8d9e333b59a54be2a055fb01379de5af",
+    "sapling_profile.json.gz": "65a431388dc59720ded01bee27795d6534f743c1569e1c4a8ffa4435a9b38cc8"
+  },
+  "excluded_by_split": {
+    "train": 6,
+    "val": 1,
+    "holdout": 1
+  },
+  "games_by_split": {
+    "holdout": 19,
+    "val": 19,
+    "train": 234
+  },
+  "times": [
+    30,
+    50,
+    70,
+    90,
+    110
+  ],
+  "future_horizon": 20,
+  "roots": "Use every registered clock with a complete future 20-step bank accounting in every remaining map without inspecting orders or returns for selection. Stop at official terminal. Entire expert legal team action in deterministic prefix order. Incomplete support stays in coverage and is omitted from imitation.",
+  "target": "Y = ([our official bank(t+20)−our bank(t)] − [their bank(t+20)−their bank(t)]); contains investments, tree income and delivery. Use only for weighting this realized demonstration, never for network inputs. Five folds by sorted physical terrain alternating; fit ridge on other training maps only and obtain one prediction per held-out training terrain. Predictions in validation/holdout come only from all training maps. Weight 1 + 0.75*tanh((Y−prediction)/max(1,training residual MAD scaled)), normalize within each physical map to equal map total. The other arm weight is identically one.",
+  "learner": "Freeze value-specific heads and normalization running stats, train common Sapling policy backbone/GRU/heads in two equal-budget arms starting from ede48. 75/25 production partner and guard untouched. Team loss is mean CE of all actionable commands in complete expert prefix; each physical map equally weighted, KL to frozen deployed parent on same menu. Fixed shuffled one pass, batch 16, AdamW, last step only.",
+  "lr": 9e-05,
+  "weight_decay": 0.0001,
+  "kl": 0.35,
+  "clip": 1,
+  "seed": 2026112035,
+  "ridge": 2,
+  "roots_assessment": "Source panel val and holdout, excluding all 30 studied ladder boards and every physical terrain of 44 official development games. Assess both ordinary release actions on their own complete legal prefixes and observational teacher agreement by split, physical seat, scenarios. Report returns as observational. Do not select model by accuracy.",
+  "native_gate": "Freeze and bind both final single-file releases. Eligibility for limited contemporaneous native original development only if same public observation/guard behavior path and quantization validated, both packages give valid complete executable commands, and the two trained arms actually issue different teams on the held historical public frames at t30–110. Replay imitation metrics are descriptive only. Prespecified native treatment = advantage-weighted, matched comparator = uniform and if resource allows original ede48; both physical seats, predetermined unused development board(s); the coordinator launches only one batch. No formal win or resource certification claim."
+}
