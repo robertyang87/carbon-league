@@ -1,0 +1,16 @@
+{
+  "schema": "sapling-native-action-probability/1",
+  "parent": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "sources": "f476fc829bc9ccb991d00d3066c1befce37f4bb2225578442b71763d8e2def34",
+  "data": "All train (24 terrain, two expert seats per terrain) and val (4 terrain, both seats) source cards. Per card take a preregistered hash draw of one t per 12 equal strata of the eligible complete six-step clock. No development or formal maps in gradient. Opponent is the immutable original; demonstrations are the original expert's actual orders, not labels for unchosen terminal responses.",
+  "sample_steps": "6 through 294, multiples of 6, per game. All other steps send the current BC deterministic guarded full team.",
+  "pivot": "Prefer role (collector, planter, base) by round-robin decision index, fall back to all active slots with at least two legal actions; highest native rooted entropy, earlier decoder slot on ties. Public pre-state only, both original guard routes compared for each forced pivot. No additional own-worker or spawn conflict allowed versus the guarded parent. Aggregate restored or duplicate physical commands.",
+  "model": "Frozen incumbent neural networks plus trainable 24-hidden tanh action readout. Input current native action logits and physical Prefix move/unit/global features. The proposal distributes 50% fixed mass to the parent's physical team, 50% softmax over pivot actions at temperature one with learned corrections. The output is aggregated after all guard/fallback paths.",
+  "objective": "Supervise the observed expert pivot only when earlier active workers match the parent's actual prefix and at least one postguard team can realize that pivot. Train physical log probability (including collapsed paths) for each root. Equal physical-map weights; weak centered residual penalty. Held accuracy is diagnostic of demonstrated actions, not an independent terminal gain.",
+  "seed": 672341,
+  "epochs": 18,
+  "batch": 48,
+  "lr": 0.004,
+  "residual_l2": 0.02,
+  "eligibility": "No held selection or retuning. Four-map mean held physical-pivot NLL lower than the untrained matched sampler, at least 3/4 held terrains improving eligible-root NLL; at least 8 distinct held roots across two terrains with three or more postguard physical orders, every sampler distribution normalized, parent command represented, ordinary/sampler source parity; plus independent same-state immediate official opponent-response mechanism review before additional live spending. Strength needs separate original game pairs."
+}
