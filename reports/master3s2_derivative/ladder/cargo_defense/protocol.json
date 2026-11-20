@@ -1,0 +1,79 @@
+{
+  "maps": {
+    "train": [
+      {
+        "opponent": "CarbonEdge-Eco",
+        "match_id": "d2880896ec571ddbb703822d2a677905",
+        "seat": 0,
+        "source": "replays/d2880896ec571ddbb703822d2a677905-1.json.gz",
+        "sha256": "5ba2a5009d3bc9107abce9970b4167d3e3eb4dc4fe4e499b2d41710bc3716597"
+      },
+      {
+        "opponent": "CaiV3",
+        "match_id": "0a3195c1e8eaa6617c0bc9488037a15e",
+        "seat": 0,
+        "source": "replays/0a3195c1e8eaa6617c0bc9488037a15e-1.json.gz",
+        "sha256": "eb92bc446058b86b87d11e52dbc1e8aa45b173f933583bd78b66ad6e4ff73265"
+      },
+      {
+        "opponent": "安生N8",
+        "match_id": "86c93a4bbff6d17fbceede90b062a2a7",
+        "seat": 0,
+        "source": "replays/86c93a4bbff6d17fbceede90b062a2a7-1.json.gz",
+        "sha256": "0669daebaba08cadfc0a3853df7266d6d0344ccd520518149b81e79a0cb63a18"
+      },
+      {
+        "opponent": "Krypton-Light3s2-v3",
+        "match_id": "214b08ce1b5dc743a6a79ac4a57da51f",
+        "seat": 0,
+        "source": "replays/214b08ce1b5dc743a6a79ac4a57da51f-1.json.gz",
+        "sha256": "0d6208b300d5fb6189844ebaf1c03d99391a0ec4cb59952948088b48e3da1466"
+      }
+    ],
+    "held": [
+      {
+        "opponent": "probe-test-11793602358",
+        "match_id": "fe5a96da743f0fdc1e37b46df5913050",
+        "seat": 0,
+        "source": "replays/fe5a96da743f0fdc1e37b46df5913050-1.json.gz",
+        "sha256": "d2b13e332d66930ed57bc2f3286d817138e8ada7b9b4cdfff1c88a8b607fc163"
+      },
+      {
+        "opponent": "Kimi-Clark-Public-Gloria-v7",
+        "match_id": "b1c3ba3c1975dac4425f14ce32390c44",
+        "seat": 1,
+        "source": "replays/b1c3ba3c1975dac4425f14ce32390c44-1.json.gz",
+        "sha256": "f38a88f187f67464fdb27461ad3ac11f164c5c50dce765e8a6b9f87964222918"
+      },
+      {
+        "opponent": "qwen4-ernie5.5-mixmax-t04",
+        "match_id": "769826ecffbc8f71243c028e07df3023",
+        "seat": 0,
+        "source": "replays/769826ecffbc8f71243c028e07df3023-1.json.gz",
+        "sha256": "325474cc4de713cbaf363d87973d16a86d86449edd3554049e6525804eda1b05"
+      },
+      {
+        "opponent": "Krypton-DeepSeek-M7-DEEP",
+        "match_id": "44bf12cfbac0bcaba72d7584ef3f6625",
+        "seat": 0,
+        "source": "replays/44bf12cfbac0bcaba72d7584ef3f6625-1.json.gz",
+        "sha256": "74c31482abcc2dfaced5b0925640b2f6085f0ddd7aff1d5e5d28891c4969764a"
+      }
+    ],
+    "exposed": [
+      {
+        "opponent": "Makabaka-v1.3",
+        "match_id": "160624b76d6278dfb1e6ae1d145edce0",
+        "seat": 1,
+        "source": "replays/160624b76d6278dfb1e6ae1d145edce0-1.json.gz",
+        "sha256": "d6e327fa8846419a895bba9b0af8469eb188b4cd1a0057be68947c4be23807e2"
+      }
+    ]
+  },
+  "method": "One pre-action conditional softmax model for each light or equal enemy collector within 2 of a focal DS collector. Normalize across all 5 primitive enemy orders, then compute focal-cell danger by 1 minus the product of independent no-contact probabilities. A separate frozen base-recruit baseline at an enemy base only when cash>=30 and quota permits is estimated on TRAIN available opportunities with Laplace smoothing. All alternative actions scored and no actual pending or later orders, full carbon, winner, or opponent ID in inputs. Additional ally risk is reported separately. Train only against actually issued enemy directions on training encounters using equal map weights, ridge .025 sum(w^2), at most 80 L-BFGS iterations, standard-free bounded physical features; one set of coefficients for all maps. No guard or runtime candidate changes.",
+  "features": "For each enemy primitive action, use a bounded vector of move/stay, distance change to the current focal collector, targeting its present/reachable cell, movement relative to the two sides’ bases, whether it enters each base, load ratio and gap interactions, phase/time, pre-observed occupancy/neighbourhood of its own other workers and of other DS workers, and its previous observed displacement if known. Deltas use the 15x15 torus. Train with all DS collectors that can be killed, including zero cargo ties, avoiding duplicate commands per (focal,enemy) by once per root. This learns which response an opponent is likely to take; individual candidates subsequently inherit that probability by destination. Newborn recruitment risk, joint collisions and dependence across enemy units are approximations of the deployed probabilities and will be disclosed.",
+  "labels": "On every decision of all 9 games (t=0..298) substitute one DS collector order at a time in [NONE,UP,RIGHT,DOWN,LEFT] holding both sides other submitted moves constant. Ground truth positive if it would survive allies alone but dies with enemy present. Enemy uniquely winning the hypothetical same tile receives the focal collector cargo before subsequent tree tax; this is an inventory transfer, not cash. Include actual action survival parity against the next observation. Completely tied enemy/ally multi-collisions are not mislabeled as won cargo. All known future actions used strictly for labels. No Makabaka example included in any fit or selection.",
+  "primary": "Held four physical maps, equal map-weighted risk Brier ON loaded >=200, geometrically threatened candidate cells (uniform baseline>0), compared with independent uniform primitive enemy orders (1−0.8^n; same train-only base recruit prior in both predictors). Require lower mean Brier and at least 3/4 maps lower plus no lower mean within-root positive/negative ranking for heavy candidates where BOTH compared cells have nonzero geometric risk, with positives and negatives on at least 3 maps; insufficient coverage is indeterminate. Report NLL and AUC tied half, all candidates and all/separate positive-load/heavy. Other conditional tactical checks are descriptive: on recorded action with risk>=.25, rescue diagnostic may change to min-risk cell only if at least .10 lower and no pre-action other friendly can enter; tie by minimum distance home then fixed action order. Count avoided and newly induced losses, unnecessary detours, alternative actual loot/retained cargo, and disagreements; a saved step is not a measured win. No threshold tuning.",
+  "exposed": "Makabaka is known prior loss; all its 299 decisions used only as diagnostic after fitting and scoring the four held opponents. Report full 5 options at step 138 worker3 /140 worker11 with forecast probabilities next to realized responses. Full-game causal inference requires separately registered original opponents and economic returns.",
+  "temporal": "Freeze before extracting these training rows or scoring the held. Model is deployable CPU NumPy weights plus public feature extraction; four held games are historical and may have been used by prior distinct studies, not a prospective ladder test."
+}
