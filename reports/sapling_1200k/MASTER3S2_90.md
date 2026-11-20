@@ -2,6 +2,8 @@
 
 ## 当前胜绩与验收
 
+即时动作神经网络 `ede48ad9` 在新开发图 621758513 席 0 以 **10,441.92 比 10,423.86** 胜原版。最新四图双席复验 **1 胜 0 平 7 负，平均官方分差 −1,445.37**；同期父代 0 胜 8 负，−1,376.27。新版相对父代平均 −69.10，初测改善未复现。四图树相关净现金改善 294.81 分，正常交仓差恶化 296.40 分。全部 16 场双方无慢步。独立正式考卷尚未启用，目标仍为同批至少 180/200 胜、平均官方分差至少 +500。[完整比分、两席转折与天梯时钟](master6_actor_dev/strategic_destination_learning/replication/README.md)
+
 两张新开发图的同期双席对照共 12 场，父代、即时动作训练和十二步方向/存活联合训练均为 **0 胜 0 平 4 负**，平均官方分差分别为 **−1,890.14、−1,306.66、−1,630.48**。即时动作训练相对父代在两张图上分别提高 609.99、556.96 分；联合目标两图均落后于即时动作对照。12 场全部按天梯限额打满，双方慢步 0。正式 100 图继续封存。[同场比分、训练权重与分席证据](master6_actor_dev/strategic_destination_learning/README.md)
 
 用原版真实回报训练的 `da9919ad`，在预登记新图 470、471 对原版 **0 胜 0 平 4 负、场均 −1511.21**；同采样父代 **0 胜 0 平 4 负、−1230.12**。两个地图簇的配对变化为 −560.72、−1.46。双方全程符合限额。新网不晋级，100 张正式地图继续封存。另一个保持完整行动支持的神经评分头在离线六图留一中仅两图改善，未送考。[八场全部官方分及原始证据](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/validation/hosted/settlement.json) · [训练、攻防研究与支出分解](master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/README.md)
