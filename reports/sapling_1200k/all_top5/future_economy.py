@@ -7,10 +7,10 @@ import json
 from pathlib import Path
 
 if __package__:
-    from .context import Corpus, Game, HERE, digest
+    from .context import Corpus, Game, HERE, digest, registered_context_receipts
     from .economy_extract import reconstruct
 else:
-    from context import Corpus, Game, HERE, digest
+    from context import Corpus, Game, HERE, digest, registered_context_receipts
     from economy_extract import reconstruct
 
 HORIZONS = (10, 30)
@@ -18,9 +18,8 @@ HORIZONS = (10, 30)
 
 def registered_indexes():
     """Discover the base and any published appendix by its independent context receipt."""
-    receipts = [HERE / "context_receipt.json", *sorted(HERE.glob("context_appendix_*_receipt.json"))]
     indexes = []
-    for receipt in receipts:
+    for receipt, _ in registered_context_receipts():
         index = receipt.with_name(receipt.name.removesuffix("_receipt.json") + "_index.tsv.gz")
         expected = json.loads(receipt.read_bytes())["index_sha256"]
         if digest(index.read_bytes()) != expected:
@@ -40,7 +39,10 @@ def open_game(game_id, replay_cache=None):
         return corpus.open(game_id)
     # Same escrowed source; the unpacked cache avoids re-reading large Git tar blobs.
     item = corpus.rows[game_id]
-    blob = (Path(replay_cache) / (game_id + ".json.gz")).read_bytes()
+    cached = Path(replay_cache) / (game_id + ".json.gz")
+    if not cached.is_file():
+        return corpus.open(game_id)
+    blob = cached.read_bytes()
     if digest(blob) != item["replay_sha256"]:
         raise ValueError("unpacked replay digest differs from catalog")
     game = Game(json.loads(gzip.decompress(blob)))

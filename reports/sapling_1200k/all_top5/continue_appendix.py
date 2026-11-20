@@ -162,6 +162,7 @@ def verify(prior_dir, revision):
             out.write("\n[双方转折前后的动作与结算](turn_actions.json.gz)\n")
     run("future_economy_check.py", "--replay-cache", fetch.CACHE / "replays", "--expect-games",
         manifest["accumulated_games"], "--out", current / "future_economy_check.json")
+    run("verify_appendix_turns.py", current)
     return current
 
 

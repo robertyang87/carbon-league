@@ -31,6 +31,14 @@ def git_blob(root, spec):
     return subprocess.check_output(["git","-C",str(root),"-c","protocol.allow=never","cat-file","blob",spec],env=env)
 
 
+def registered_context_receipts():
+    for receipt in sorted(HERE.glob("context_*receipt.json")):
+        batch = receipt.stem.removeprefix("context").removesuffix("_receipt").lstrip("_")
+        yield receipt, HERE / batch / "manifest.json"
+    for receipt in sorted(HERE.glob("appendix_*/context_receipt.json")):
+        yield receipt, receipt.parent / "manifest.json"
+
+
 class Corpus:
     """Resolve a decision by tuple or dense ordinal. Each opened game is independently hash checked."""
 
@@ -51,10 +59,9 @@ class Corpus:
                 # Each published receipt binds the index bytes to its batch; copies can be renamed.
                 fingerprint=digest(data)
                 matches=[]
-                for receipt in sorted(HERE.glob("context_*receipt.json")):
+                for receipt, batch_manifest in registered_context_receipts():
                     if json.loads(receipt.read_bytes())["index_sha256"]==fingerprint:
-                        batch=receipt.stem.removeprefix("context").removesuffix("_receipt").lstrip("_")
-                        matches.append(HERE/batch/"manifest.json")
+                        matches.append(batch_manifest)
                 if len(matches)>1:
                     raise ValueError("decision index belongs to multiple registered batches")
                 if matches:

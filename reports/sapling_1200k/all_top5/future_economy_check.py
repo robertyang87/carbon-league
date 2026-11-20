@@ -105,7 +105,7 @@ def main():
                 for denominator in (counts,subtotal):
                     denominator[str(h)]["full"]+=valid
                     denominator[str(h)]["censored"]+=2*n-valid
-        by_batch[path.name]={"games":len(c.rows),"decision_seats":c.size,"coverage":subtotal}
+        by_batch[path.relative_to(HERE).as_posix()]={"games":len(c.rows),"decision_seats":c.size,"coverage":subtotal}
     audit=[]
     for gid,roots in cases.items():
         game=open_game(gid,args.replay_cache)
@@ -141,7 +141,7 @@ def main():
     report=dict(index_game_count=n_games,decision_seats=sum(c.size for c in catalogs),coverage=counts,coverage_by_batch=by_batch,
                 coverage_method="Counts from the registered and hash-verified catalogs; direct cross-implementation values checked only for the listed fixtures.",
                 fixtures=audit,absolute_cash_tolerance=0.0000011,
-                source_hashes={f:sha256((HERE/f).read_bytes()).hexdigest() for f in (*(i.name for i in indexes),"future_economy.py","future_economy_check.py")})
+                source_hashes={f:sha256((HERE/f).read_bytes()).hexdigest() for f in (*(i.relative_to(HERE).as_posix() for i in indexes),"future_economy.py","future_economy_check.py")})
     encoded=json.dumps(report,indent=2,ensure_ascii=False,allow_nan=False)
     if args.out:
         args.out.write_text(encoded+"\n")
