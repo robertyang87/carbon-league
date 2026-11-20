@@ -63,7 +63,9 @@ import argparse
 import glob
 import json
 import os
+import queue
 import sys
+import time
 
 import numpy as np
 
@@ -74,6 +76,34 @@ import layout
 DEEP_TAU = 1.0
 DEEP_K = 24
 DEEP_D2 = 6
+
+# --- Inference-server liveness bounds (Strategy ruling 76472417 item 2) ---
+# Failure path only: a dead inference server must fail LOUDLY (nonzero exit
+# + explicit error line), never hang workers on resp_q.get() / main on
+# join() silently (D1 observation, ablation report SS7.4).  Nothing on the
+# normal path changes: same requests, same batching, same responses.
+# Timeout basis (DGX wall-clock step times, batch-2 pack verify): mean
+# 1.669 s / p95 3.708 s / max 23.745 s per step under contention; one
+# forward response is a fraction of one step.  _RESP_TIMEOUT_SECS = 300 s
+# is >12x the worst observed step and >80x p95, so it cannot false-trip
+# a healthy-but-slow round, while bounding any hang to minutes.
+# Env overrides exist only so the timeout branch can be unit-tested
+# without waiting 300 s; production runs use the defaults.
+_RESP_POLL_SECS = float(os.environ.get('VEC1_RESP_POLL_SECS', '30'))
+_RESP_TIMEOUT_SECS = float(os.environ.get('VEC1_RESP_TIMEOUT_SECS', '300'))
+_SERVER_JOIN_TIMEOUT_SECS = float(os.environ.get('VEC1_SERVER_JOIN_TIMEOUT_SECS', '60'))
+_WORKER_JOIN_GRACE_SECS = float(os.environ.get('VEC1_WORKER_JOIN_GRACE_SECS', '60'))
+
+
+def _pid_alive(pid):
+    """True iff pid names a living (non-zombie) process.  A zombie still
+    answers os.kill(pid, 0), so read /proc state: 'Z' counts as dead."""
+    try:
+        with open('/proc/%d/stat' % pid, 'rb') as f:
+            state = f.read().rsplit(b')', 1)[1].split()[0]
+        return state != b'Z'
+    except (FileNotFoundError, ProcessLookupError, PermissionError, IndexError):
+        return False
 # the chassis' own candidate temperature table (_S_GEN in master3s2.py)
 GEN_TABLE = ((2.5, 8), (1.0, 3), (3.5, 8), (0.0, 6), (5.0, 8))
 AUX_HORIZONS = (15, 40, 80)
@@ -166,21 +196,41 @@ def _server_main(req_q, resp_qs, cfg):
 class ServerClient:
     """Worker-side handle to the inference server."""
 
-    def __init__(self, wid, req_q, resp_q):
+    def __init__(self, wid, req_q, resp_q, server_pid=None):
         self.wid = wid
         self.req_q = req_q
         self.resp_q = resp_q
+        self.server_pid = server_pid
         self.rid = 0
 
     def forward(self, tag, X, SC):
         self.rid += 1
         self.req_q.put((self.wid, self.rid, tag, np.ascontiguousarray(X, np.float32),
                         np.ascontiguousarray(SC, np.float32)))
-        rid, res = self.resp_q.get()
-        assert rid == self.rid
-        if res is None:
-            raise RuntimeError('inference server stopped')
-        return res
+        # Bounded wait (was an unbounded resp_q.get()): poll in short
+        # ticks; a dead server fails fast via the liveness check, a live
+        # but unresponsive server fails after _RESP_TIMEOUT_SECS.  Either
+        # way the worker exits nonzero and main reports SELFPLAY FAILED
+        # instead of hanging silently.
+        t0 = time.monotonic()
+        while True:
+            try:
+                rid, res = self.resp_q.get(timeout=_RESP_POLL_SECS)
+            except queue.Empty:
+                if self.server_pid is not None and not _pid_alive(self.server_pid):
+                    raise RuntimeError(
+                        'inference server died (pid %d) while waiting for '
+                        'response rid %d' % (self.server_pid, self.rid))
+                if time.monotonic() - t0 > _RESP_TIMEOUT_SECS:
+                    raise TimeoutError(
+                        'inference server unresponsive for %.0f s '
+                        '(rid %d, server pid %s)'
+                        % (_RESP_TIMEOUT_SECS, self.rid, self.server_pid))
+                continue
+            assert rid == self.rid
+            if res is None:
+                raise RuntimeError('inference server stopped')
+            return res
 
 
 # --------------------------------------------------------------------------
@@ -510,9 +560,9 @@ def write_shard(path, rows):
         np.savez_compressed(f, **arrs)
 
 
-def _worker_main(wid, game_ids, args, req_q, resp_q):
+def _worker_main(wid, game_ids, args, req_q, resp_q, server_pid=None):
     mod = layout.load_module(args['src'], 'sp_src_%d' % wid)
-    client = ServerClient(wid, req_q, resp_q)
+    client = ServerClient(wid, req_q, resp_q, server_pid)
     hof_tags = ['hof%d' % i for i in range(len(args['hof']))]
     buf, n_shards = [], 0
     for gid in game_ids:
@@ -583,20 +633,45 @@ def main():
     for wid in range(args.workers):
         ids = list(range(wid, args.games, args.workers))
         worker_ids.append(ids)
-        p = ctx.Process(target=_worker_main, args=(wid, ids, argd, req_q, resp_qs[wid]))
+        p = ctx.Process(target=_worker_main, args=(wid, ids, argd, req_q, resp_qs[wid],
+                                                   server.pid))
         p.start()
         procs.append(p)
-    for p in procs:
-        p.join()
+    # Bounded joins (were unbounded p.join() / server.join()): poll the
+    # workers; if the server died, workers self-terminate through their
+    # liveness check -- give them _WORKER_JOIN_GRACE_SECS, then terminate
+    # any stragglers instead of hanging.  A run takes hours, so there is
+    # deliberately NO absolute cap on a healthy run -- only on waiting for
+    # a dead server's workers.
+    failed = []
+    server_dead_deadline = None
+    while any(p.is_alive() for p in procs):
+        for p in procs:
+            p.join(timeout=5)
+        if not server.is_alive():
+            if server_dead_deadline is None:
+                server_dead_deadline = time.monotonic() + _WORKER_JOIN_GRACE_SECS
+            elif time.monotonic() > server_dead_deadline:
+                for p in procs:
+                    if p.is_alive():
+                        p.terminate()
+                for p in procs:
+                    p.join(timeout=5)
+                break
+        else:
+            server_dead_deadline = None
     req_q.put('STOP')
-    server.join()
+    server.join(timeout=_SERVER_JOIN_TIMEOUT_SECS)
+    if server.is_alive():
+        server.terminate()
+        server.join(timeout=10)
+        failed.append('inference server did not stop after STOP (terminated)')
     # Worker failure must propagate: a worker that exited nonzero, or that
     # had games assigned but produced no shard, fails the whole run --
     # never report 'selfplay done' over dead workers.  (Stage-1 smoke,
     # 2026-11-19: all 8 workers died on a NaN and the driver still printed
     # 'selfplay done'.  run_loop.sh runs under set -e, so this exit code
     # is what stops the generation loop.)
-    failed = []
     for wid, p in enumerate(procs):
         n_shards = len(glob.glob(os.path.join(args.out, 'shard_w%d_*.npz' % wid)))
         if p.exitcode != 0 or (worker_ids[wid] and n_shards == 0):
