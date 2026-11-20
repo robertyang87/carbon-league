@@ -154,5 +154,5 @@ def summarize(rows):
         grouped[mid] = dict(opponent=opponent, seat=seat, groups=_groups(parts))
     totals = _groups([r for parts in by_match.values() for r in parts])
     return dict(schema="one-step-enemy-collision-metrics/1",by_match=grouped,pooled=totals,
-                primary="cargo_ge_200.geometric_actions.risk_minus_baseline.mean_root_auc",
+                primary="Equal-map Brier on heavy, geometrically threatened choices (mean lower, at least 3 of 4 maps lower), plus noninferior within-root AUC with coverage on at least 3 maps. See outer primary and verdict.",
                 notes="Ranks compare positive/negative candidate actions within the same worker and turn; exact scores tie at 0.5. NLL clips the event likelihood at 1e-12. Change in risk minus baseline, lower NLL/Brier, higher AUC. Geometry selects baseline>0. Empty denominators are null. Decision diagnostics keep the observed other unit moves fixed and describe immediate collision and cargo effects; the distance difference is not a realized delay or final return.")
