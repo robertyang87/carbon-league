@@ -2,6 +2,12 @@
 
 ## 当前胜绩与验收
 
+冻结对照 `ede48ad9` 在另八张预登记的训练与留用地图上对原版 **0 胜 0 平 8 负，平均官方分差 −1,450.14**。两席各 0/4。这批每图只打一席，单独记账；跑满的 32 条条件续弈也另列。分差中，正常交仓每局少 828.38 分，地面树租少 600.83 分。用五张图的真实终局训练「何时切换为另一张 Sapling 网络」后，拟合结果在三个留图的全部公开状态上都决定沿用对照，实际 897 拍逐令相同。正式考试仍保留 100 张全新地图。[实战逐局官方分与原版搜索深度](master6_actor_dev/strategic_destination_learning/policy_window_returns/hosted/README.md) · [抢货至回款与全部分支](master6_actor_dev/strategic_destination_learning/policy_window_returns/economy/FINDINGS.md) · [训练与盲测](master6_actor_dev/strategic_destination_learning/policy_window_returns/analysis/README.md)
+
+将 44 场 Sapling 开发实战与 30 场前五对同名 Master3s2 的天梯记录同刻对齐，第 100 步 Sapling 本方累计交仓 1,745，前五为 1,706；同场对手累计交仓则分别为 1,820 与 1,457。每组均保留败局、两个席位和不同对手。两组地图与运行条件不同，这个差异用于确定实验时段。早中盘的新对照在 234 张另分的历史训练图上学习，比较按后续二十步现金差给示范加权与各示范等权两种做法。[对齐的双方工程账](master6_actor_dev/strategic_destination_learning/opponent_matched_economy/README.md) · [早中盘训练登记](master6_actor_dev/strategic_destination_learning/midgame_economic_policy/protocol.json)
+
+在已曝光图 521 的一次真实防守复演中，敌重载工有两条等长归路。我方选择守一路时，另一名空载敌工当拍击毁守方，目标货物四条续弈全部按时交仓。两种原版自然响应流中，这次留守使终局分差分别下降 1,004.83 和 406.50。另在 28 个历史留图局面上，让原版只对两个有终局记录的完全队令打分，选中终局较好路线 14 次。三种新的策略网络分别尝试用终局差直接更新权重、只纠正首个可执行偏差、学习同队共享的行动模式；各自留图未过登记条件，归档失败样例。[防守实证](master6_actor_dev/strategic_destination_learning/elite_direct_policy/development/defense_response/README.md) · [原版标签检验](master6_actor_dev/strategic_destination_learning/fixed_menu_teacher/README.md) · [终局训练](master6_actor_dev/strategic_destination_learning/paired_terminal_policy/README.md) · [纠错训练](master6_actor_dev/strategic_destination_learning/free_prefix_training/README.md) · [联合动作网络](master6_actor_dev/strategic_destination_learning/joint_mode_policy/README.md)
+
 使用前五直接对局训练的新包 `5e4f5da3` 在六张留图的动作命中率都提高，随后在四张新开发图换席对原版取得 **0 胜 8 负、平均官方分差 −2,143.19**。同期对照 `ede48ad9` 为 0 胜 8 负、−1,536.83。新版相对对照在三图落后，四图平均 −606.37，正常交仓差在四图均下降。16 场全部符合天梯时限。保留 `ede48ad9` 作为后续对照。该包在三批共十张不同开发地图双席的全体记录为 **1 胜 19 负、场均 −1,454.21**；正式 100 图仍封存。[最新整场、全部经济账和训练证据](master6_actor_dev/strategic_destination_learning/elite_direct_policy/development/README.md)
 
 即时动作神经网络 `ede48ad9` 在新开发图 621758513 席 0 以 **10,441.92 比 10,423.86** 胜原版。最新四图双席复验 **1 胜 0 平 7 负，平均官方分差 −1,445.37**；同期父代 0 胜 8 负，−1,376.27。新版相对父代平均 −69.10，初测改善未复现。四图树相关净现金改善 294.81 分，正常交仓差恶化 296.40 分。全部 16 场双方无慢步。独立正式考卷尚未启用，目标仍为同批至少 180/200 胜、平均官方分差至少 +500。[完整比分、两席转折与天梯时钟](master6_actor_dev/strategic_destination_learning/replication/README.md)
