@@ -902,6 +902,15 @@
      "path": "~/workspace/lossprobe3/run/"
     }
    ]
+  },
+  {
+   "name": "lossprobe2_row_weight_channel",
+   "kind": "row-weight channel (train2_w + attach_row_weights)",
+   "md5": "cab1d22a20c34bfbe6d4e3b361a021b8",
+   "size_bytes": 0,
+   "status": "final",
+   "owner_line": "engineering",
+   "detail": "输局旁路 ② 行权重通道落仓（2026-11-20 ~10:48）：train2_w.py cab1d22a20c34bfbe6d4e3b361a021b8（commit c9b0eca3）、attach_row_weights.py 3483ef22e0b9e0e75ab1657bff68730f（commit 9f136e45）、深审 REVIEW_ROW_WEIGHTS_20261120.md 937a4e57fb3b5cd729e5e8cc2b4b4896（commit 0def9588）。等价闸①：探针六损失项全 bit-identical、端到端 A1/A2/B 55/55 张量位级同；生效闸②探针级：P2 相对差 0.0、P3 梯度比 0.5/0.5。深审（非作者线，DGX 独立复跑）审项 1-4 PASS、审项 5 探针级 PASS，无作废级实质问题。语义：被压制局行 policy ×0.5、value 1.0，其余行 1.0/1.0；缺失权重键缺省全 1.0。现行件零改动（train2 06e3c87c、train.py ab3953d2、设计 bf1e869d）。待补核：作者 REPORT.md（C-B 全表）到后补核最终总判；Q1 两次 exec 失败未说明、留档。用途：Gen-5 训练用行权重通道，训练使用以 Gen-5 定版件全文核准为准。"
   }
  ],
  "created": "2026-11-17",
@@ -914,5 +923,5 @@
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
  "version": "5.1",
- "updated": "2026-11-20"
+ "updated": "2026-11-20T10:48:00+08:00"
 }
