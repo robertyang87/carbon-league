@@ -405,6 +405,17 @@ def settle(tickets, m, out):
             and pred["heads_sha256"] == sha((out / "heads.json").read_bytes()),
             "Mismatched forecast or weights",
         )
+        receipt = read(paths(t)["pair"])
+        require(
+            receipt["blind_forecast_sha256"] == sha(path.read_bytes())
+            and receipt["root_sha256"] == pred["root_sha256"],
+            "Held response not bound to the frozen pre-response prediction and root",
+        )
+        if "preds" in pred:
+            require(
+                receipt.get("leaf_sha256") == pred["leaf_sha256"],
+                "Held prediction compared to another leaf",
+            )
         y, missing = outcomes(t, m)
         if missing:
             skip.append(missing)
