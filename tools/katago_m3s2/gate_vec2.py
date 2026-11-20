@@ -41,19 +41,22 @@ may enter production training data):
     equivalence is checked through the rows-per-game identity and the
     step semantics, not through a length histogram the shards do not
     carry.
-    Lines (all NEW, 待策略组钉, chosen at the scale of run-to-run noise
-    for 200 games): two-sample KS statistic D <= 0.05 for margin;
-    |mean margin shift| <= 0.05 * pooled SD; |win-rate shift| <= 0.02;
-    |searched-fraction shift| <= 0.01; rows-per-game relative shift
-    <= 0.01.
+    Lines: margin two-sample KS statistic D <= D_crit, the two-sample
+    KS null critical value at alpha=0.05 computed from the arm game
+    counts (1.36*sqrt((n+m)/(n*m)); n=m=120 -> 0.176) per strategy
+    ruling 5fbbad47 -- the old constant 0.05 sat below the null mean
+    (~0.112 at n=m=120) and same-source comparisons almost always
+    crossed it; |mean margin shift| <= 0.05 * pooled SD; |win-rate
+    shift| <= 0.02; |searched-fraction shift| <= 0.01.  Rows-per-game
+    relative shift (line 0.01) is REPORT-ONLY in this round per ruling
+    5fbbad47 (uncalibrated for cross-seed comparison; recalibration
+    pending): its value is printed, it never blocks the verdict.
     aux_delta: the per-horizon (h1/h2/h3) two-sample KS statistics ARE
-    judged, with the SAME form and the SAME line value as the margin
-    KS above (D <= lines['ks'], i.e. --ks-line, default 0.05) -- the
-    (b) section's existing KS convention, inherited verbatim
-    （承袭惯例）.  This aux_delta line is PROVISIONAL, pending
-    calibration （暂行、待校准）: the measured per-horizon KS values are
-    recorded in the report as the calibration basis for 策略组's final
-    ruling (confirm / re-line / demote back to report-only).
+    judged against their OWN formal line D <= 0.05 (--ks-line, default
+    0.05; formal line confirmed 2026-11-20 05:06) -- DECOUPLED from the
+    margin KS line per ruling 5fbbad47 (the margin line is now computed,
+    the aux_delta line stays 0.05 and is never carried along by the
+    margin formula).
     Run mode (--run-games): the gate passes --value-scale and --threads
     through to BOTH generators verbatim, and the report records both
     generators' actual command lines (run_commands) plus the effective
@@ -170,6 +173,21 @@ def ks_statistic(a, b):
     return float(np.max(np.abs(ea - eb)))
 
 
+def ks_crit_005(n, m):
+    """Two-sample KS null critical value at alpha=0.05, from ARM GAME
+    counts (not row counts).
+
+    D_crit = 1.36 * sqrt((n + m) / (n * m)), rounded to 3 decimals.
+    Rows within one game are correlated, so the effective sample size
+    is the game count: at n=m=120 the null mean of D is ~0.112 and the
+    alpha=0.05 critical value is 0.176.  Strategy ruling 5fbbad47: the
+    old constant 0.05 line sat at 45% below that null mean, so
+    same-source comparisons almost always crossed it; the line is
+    therefore computed per run, never a constant.
+    """
+    return round(1.36 * float(np.sqrt((n + m) / float(n * m))), 3)
+
+
 def load_rows(d):
     cols = {k: [] for k in ('margin', 'win', 'searched', 'aux_delta')}
     for path in sorted(glob.glob(os.path.join(d, '*.npz'))):
@@ -191,6 +209,10 @@ def check_distributions(old_dir, new_dir, games, lines):
         'q_old': [float(np.quantile(mo, q)) for q in (0.1, 0.5, 0.9)],
         'q_new': [float(np.quantile(mn, q)) for q in (0.1, 0.5, 0.9)],
         'ks_D': ks_statistic(mo, mn),
+        'ks_line': ks_crit_005(games, games),
+        'ks_line_games': games,
+        'ks_line_formula': ('1.36*sqrt((n+m)/(n*m)), n=m=games '
+                            '(alpha=0.05, ruling 5fbbad47)'),
         'mean_shift_over_pooled_sd': float(abs(mo.mean() - mn.mean()) / pooled_sd),
     }
     out['win_rate'] = {'old': float(old['win'].mean()),
@@ -203,41 +225,45 @@ def check_distributions(old_dir, new_dir, games, lines):
     out['aux_delta_ks_D'] = {
         'h%d' % (i + 1): ks_statistic(old['aux_delta'][:, i], new['aux_delta'][:, i])
         for i in range(old['aux_delta'].shape[1])}
-    # aux_delta IS judged (strategy ruling d291d4c5): same form and same
-    # line value as the margin KS verdict -- the (b) section's existing
-    # KS convention (lines['ks'], --ks-line, default 0.05), inherited
-    # verbatim.  The line is PROVISIONAL, pending calibration
-    # （暂行、待校准）; the measured values above are the calibration
-    # basis for the final ruling.
+    # aux_delta IS judged (strategy ruling d291d4c5) against its OWN
+    # formal line (lines['aux_ks'], --ks-line, default 0.05; formal line
+    # confirmed 2026-11-20 05:06).  DECOUPLED from the margin KS line
+    # per ruling 5fbbad47: the margin line is now a computed null
+    # critical value, the aux_delta line stays 0.05 and is never
+    # carried along by the margin formula.
     out['aux_delta_line'] = {
-        'value': lines['ks'],
+        'value': lines['aux_ks'],
         'form': 'two-sample KS D <= line, per horizon (h1/h2/h3)',
-        'source': "inherited: (b) section margin KS convention (lines['ks'])",
-        'status': 'PROVISIONAL pending calibration （暂行、待校准）'}
+        'source': 'own formal line 0.05 (--ks-line), decoupled from the '
+                  'margin KS line per ruling 5fbbad47',
+        'status': 'FORMAL (confirmed 2026-11-20 05:06)'}
     rpg_old = len(mo) / float(games)
     rpg_new = len(mn) / float(games)
     out['rows_per_game'] = {'old': rpg_old, 'new': rpg_new,
-                            'rel_shift': float(abs(rpg_old - rpg_new) / rpg_old)}
+                            'rel_shift': float(abs(rpg_old - rpg_new) / rpg_old),
+                            'line': lines['rpg_rel'],
+                            'blocking': False,
+                            'status': 'REPORT-ONLY (ruling 5fbbad47: the 0.01 '
+                                      'line is uncalibrated for cross-seed '
+                                      'comparison; recalibration pending)'}
     verdicts = {
-        'ks_margin': out['margin']['ks_D'] <= lines['ks'],
+        'ks_margin': out['margin']['ks_D'] <= out['margin']['ks_line'],
         'mean_margin': out['margin']['mean_shift_over_pooled_sd'] <= lines['mean_shift'],
         'win_rate': out['win_rate']['shift'] <= lines['win_shift'],
         'searched_frac': out['searched_frac']['shift'] <= lines['searched_shift'],
-        'rows_per_game': out['rows_per_game']['rel_shift'] <= lines['rpg_rel'],
     }
     for hname, kval in out['aux_delta_ks_D'].items():
-        verdicts['aux_delta_%s' % hname] = kval <= lines['ks']
+        verdicts['aux_delta_%s' % hname] = kval <= lines['aux_ks']
     out['verdicts'] = verdicts
     out['pass'] = all(verdicts.values())
     measured = {
-        'ks_margin': (out['margin']['ks_D'], lines['ks']),
+        'ks_margin': (out['margin']['ks_D'], out['margin']['ks_line']),
         'mean_margin': (out['margin']['mean_shift_over_pooled_sd'], lines['mean_shift']),
         'win_rate': (out['win_rate']['shift'], lines['win_shift']),
         'searched_frac': (out['searched_frac']['shift'], lines['searched_shift']),
-        'rows_per_game': (out['rows_per_game']['rel_shift'], lines['rpg_rel']),
     }
     for hname, kval in out['aux_delta_ks_D'].items():
-        measured['aux_delta_%s' % hname] = (kval, lines['ks'])
+        measured['aux_delta_%s' % hname] = (kval, lines['aux_ks'])
     out['failure_points'] = [
         {'check': 'distributions', 'metric': k,
          'measured': measured[k][0], 'line': measured[k][1]}
@@ -369,11 +395,14 @@ def main():
     ap.add_argument('--deep-frac', type=float, default=0.25)
     ap.add_argument('--games', type=int, default=0,
                     help='games denominator for rows-per-game (default: --run-games)')
-    ap.add_argument('--ks-line', type=float, default=0.05)
+    ap.add_argument('--ks-line', type=float, default=0.05,
+                    help='aux_delta KS line (own formal line 0.05); the margin '
+                         'KS line is computed from games, not this flag')
     ap.add_argument('--mean-shift-line', type=float, default=0.05)
     ap.add_argument('--win-shift-line', type=float, default=0.02)
     ap.add_argument('--searched-shift-line', type=float, default=0.01)
-    ap.add_argument('--rpg-rel-line', type=float, default=0.01)
+    ap.add_argument('--rpg-rel-line', type=float, default=0.01,
+                    help='rows-per-game report-only reference value (ruling 5fbbad47)')
     ap.add_argument('--report', default='gate_report.json')
     args = ap.parse_args()
 
@@ -381,14 +410,14 @@ def main():
               'gate_file': os.path.basename(os.path.abspath(__file__)),
               'lines': {'tol_hard_FORWARD_TOL_magnitude': args.tol_hard,
                         'tol_report_NEW_pending_strategy': args.tol_report,
-                        'ks_NEW_pending_strategy': args.ks_line,
+                        'ks_margin_null_crit_alpha05': None,
                         'mean_shift_NEW_pending_strategy': args.mean_shift_line,
                         'win_shift_NEW_pending_strategy': args.win_shift_line,
                         'searched_shift_NEW_pending_strategy': args.searched_shift_line,
-                        'rpg_rel_NEW_pending_strategy': args.rpg_rel_line,
-                        'aux_delta_ks_PROVISIONAL_pending_calibration': args.ks_line,
-                        'aux_delta_ks_source': "inherited (b) margin KS "
-                                               "convention, same form/value"}}
+                        'rpg_rel_REPORT_ONLY_pending_recalibration': args.rpg_rel_line,
+                        'aux_delta_ks_FORMAL': args.ks_line,
+                        'aux_delta_ks_source': 'own formal line 0.05, decoupled '
+                                               'from margin KS line (ruling 5fbbad47)'}}
     ok = True
 
     if args.run_games > 0:
@@ -417,12 +446,14 @@ def main():
     if args.old_dir and args.new_dir:
         if not args.games:
             raise SystemExit('--games (or --run-games) is required for (b)')
-        lines = {'ks': args.ks_line, 'mean_shift': args.mean_shift_line,
+        lines = {'aux_ks': args.ks_line, 'mean_shift': args.mean_shift_line,
                  'win_shift': args.win_shift_line,
                  'searched_shift': args.searched_shift_line,
                  'rpg_rel': args.rpg_rel_line}
         report['distributions'] = check_distributions(
             args.old_dir, args.new_dir, args.games, lines)
+        report['lines']['ks_margin_null_crit_alpha05'] = \
+            report['distributions']['margin']['ks_line']
         ok = ok and report['distributions']['pass']
 
     if args.shard:
@@ -498,8 +529,13 @@ def main():
     if 'distributions' in report:
         dist = report['distributions']
         print('(b) 分布层：pass=%s verdicts=%s' % (dist.get('pass'), dist.get('verdicts')))
-        print('    aux_delta KS（逐 horizon，判线 %s，暂行、待校准）: %s'
+        print('    margin KS：D=%s 判线=%s（零分布 α=0.05 临界值，n=m=%s，裁决 5fbbad47）'
+              % (dist['margin']['ks_D'], dist['margin']['ks_line'],
+                 dist['margin']['ks_line_games']))
+        print('    aux_delta KS（逐 horizon，判线 %s，正式线）: %s'
               % (args.ks_line, dist.get('aux_delta_ks_D')))
+        print('    rows-per-game：相对差=%s（只报数、不阻断，裁决 5fbbad47）'
+              % dist['rows_per_game']['rel_shift'])
     for k in sorted(report):
         if k.startswith('schema'):
             print('(c) schema 层 [%s]: files=%s rows=%s problems=%s'
