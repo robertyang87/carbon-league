@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "source_sha": "f476fc829bc9ccb991d00d3066c1befce37f4bb2225578442b71763d8e2def34",
+  "parent": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+  "parent_weights": "505a0ff3580262156c76dee2b9b288526d57d6fcd26412771f7c40009f47b108",
+  "origin": "original Master3s2 physically acting seat, as signed by sources.json; expert action = published command after search. No extra games.",
+  "train_seeds": [
+    620098101,
+    620106812,
+    621455920,
+    621460121,
+    621472120,
+    621476121,
+    621481221,
+    621591809,
+    621704802,
+    621704805,
+    621704807,
+    621704821
+  ],
+  "held_seeds": [
+    621758322,
+    621758323,
+    621758326,
+    621758327
+  ],
+  "sample": "Each train card uses every second pre-registered time (16 of 32); each validation card uses all its registered times (24). Both physical seats. Preserve earliest mismatch including unrepresentable actions and guard route, never substitute subsequent mismatched labels.",
+  "method": "At each batch boundary freeze current student as quantized deployable package; freely decode the chosen post-guard orders. Find the first actual output differing from expert in the public decoder order. If the expert action is legal there, increase its score above the sent one with margin 0.25, otherwise abstain on that root. Drop ALL later slots from intervention and anchoring loss; use only old-parent KL on preceding correct slots and full correct roots. Validate current Numpy prefix logits against Torch in the first optimizer batch. The exact softplus ranking on a width-one frontier updates only the divergence, not an entire teacher-forced suffix. Preserve guard-rejected routes.",
+  "batch": 16,
+  "seed": 2026112001,
+  "lr": 0.00015,
+  "kl": 0.6,
+  "margin": 0.25,
+  "weight_decay": 0.0001,
+  "clip": 1.0,
+  "epochs": 1,
+  "decision": "Only promote for new native branch probes if map-equal first-match fraction increases on >=3/4 held validation terrains and in both physical seats, pooled count of wrong-to-correct workers exceeds correct-to-wrong workers, joint exact matches increase and at least one real action changes in each seat. Report all held maps, roles, unsupported and guard cases, actual changed commands and new errors; no native match result is inferred."
+}
