@@ -1,0 +1,16 @@
+{
+  "schema": "pairwise-neural-root-preference/1",
+  "parent": "8b4c4bafba2b3b2887139163bd6397b3f7d1acf178a43ea1756d8f80306efe43",
+  "train": {
+    "terminal_pair_replication/part0/rows.json.gz": "483f0674783c8373d7a5f114788c91a6ac2be1c3497c481dd16c6f580401af66",
+    "terminal_pair_replication/part1/rows.json.gz": "bc6dad7c274a812c350e01c5c6a35a63f7fca9f45ce0ccfe6e3f72ea6bb3138b",
+    "terminal_pair_replication/part2/rows.json.gz": "ac95630b5dd74e1976de60685328556ff1716c2679cce81ed1bbb513643963fd",
+    "terminal_pair_replication/part3/rows.json.gz": "2174362d196af17552a374e91bc7fee288fc16949a54aacf421e31f4e6283835"
+  },
+  "held_protocol": "80af964949f39e4222997ca11e79ab16fdf9f38dd32275cfb4bd21fa3060fd33",
+  "features": "Acting-seat root: original frozen 96 activations at entities, accumulated by action type and averaged by team size. Difference between action orders. Separate worker and base blocks.",
+  "fit": "Equal terrain weights. Regress (mean official first-minus-second margin)/3000 minus native score difference. No intercept. Scale all columns by one common weighted RMS; ridge 1.0.",
+  "decision": "Add correction capped at \u00b10.04 to the native difference. In a candidate, use a per-order \u00b10.02 cap. Compare the same two complete native finalists, first on ties.",
+  "promotion": "Positive map-equal official gain on the held panel with at least two changed, improved physical maps. No tune or refit based on held.",
+  "interpretation": "Training uses two true responses per root; held has one. Conditional suffixes only, using archived signed observation prefixes and no future or hidden features."
+}
