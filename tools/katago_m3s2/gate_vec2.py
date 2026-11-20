@@ -46,7 +46,10 @@ may enter production training data):
     counts (1.36*sqrt((n+m)/(n*m)); n=m=120 -> 0.176) per strategy
     ruling 5fbbad47 -- the old constant 0.05 sat below the null mean
     (~0.112 at n=m=120) and same-source comparisons almost always
-    crossed it; |mean margin shift| <= 0.05 * pooled SD; |win-rate
+    crossed it; |mean margin shift| <= 0.095 * pooled SD (line
+    re-determined 2026-11-20 per strategy ruling on reopening c4ecdf98:
+    G4 zero-baseline bootstrap q95 = 0.094909, rounded to 3 decimals;
+    old 0.05 retired per approval 76472417); |win-rate
     shift| <= 0.02; |searched-fraction shift| <= 0.01.  Rows-per-game
     relative shift (line 0.01) is REPORT-ONLY in this round per ruling
     5fbbad47 (uncalibrated for cross-seed comparison; recalibration
@@ -398,7 +401,9 @@ def main():
     ap.add_argument('--ks-line', type=float, default=0.05,
                     help='aux_delta KS line (own formal line 0.05); the margin '
                          'KS line is computed from games, not this flag')
-    ap.add_argument('--mean-shift-line', type=float, default=0.05)
+    ap.add_argument('--mean-shift-line', type=float, default=0.095,
+                    help='mean-margin line over pooled SD (re-determined 0.095 '
+                         'per strategy approval 76472417; old default 0.05 retired)')
     ap.add_argument('--win-shift-line', type=float, default=0.02)
     ap.add_argument('--searched-shift-line', type=float, default=0.01)
     ap.add_argument('--rpg-rel-line', type=float, default=0.01,
