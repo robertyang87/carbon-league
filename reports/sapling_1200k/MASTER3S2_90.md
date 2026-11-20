@@ -2,6 +2,10 @@
 
 ## 当前胜绩与验收
 
+多动作 Sapling 包 `e830229d` 仍以神经网产生整队命令，96 个验证时点均有至少三条合法选项，四张图中有两张改善专家实发动作的预测。训练资格要求三张。另三张历史图上用原版实发敌令核了 712 个单步转移，交仓、保货、截击和树权都未取得登记的跨图改善。这一包的八场开发赛未派发。[动作训练](master6_actor_dev/strategic_destination_learning/native_action_policy/README.md) · [单步攻防得失](master6_actor_dev/strategic_destination_learning/native_action_policy_economy/README.md)
+
+在另外四张训练图的第 258 步实测一次改令，之后统一由 BC 学生与原版 Master3s2 续弈到官方终局。备选令相对父令的终局分差变化为 +111.96、−44.57、+286.85、−569.99，四图平均 −53.94。八条分支皆负，新增独立开局为零。同一 BC 的 20 场原版对局训练出的价值网，把留地图终局分差预测的平均绝对误差从同席同期基线的 323.94 降至 258.73，但在这四组命令中只选对一组。唯一在两臂终局均未落盘前已发布预测的第 543 图也选错。该网限作价值基线。[原版双方逐步续弈](master6_actor_dev/strategic_destination_learning/native_action_return_intake/README.md) · [训练、冻结时间及动作预测](master6_actor_dev/strategic_destination_learning/native_action_return_intake/continuation_value/README.md)
+
 训练方向的资料复核已核对 KataGo 作者代码、PPO 与仓内真实对照。文档说明为什么保留前五回放作示范、用原版实际响应检验新动作，以及怎样把 CPU 花在有用的终局样本上。[资料与训练建议](KATAGO_RL_TRAINING_REVIEW_20261120.md)
 
 冻结对照 `ede48ad9` 在另八张预登记的训练与留用地图上对原版 **0 胜 0 平 8 负，平均官方分差 −1,450.14**。两席各 0/4。这批每图只打一席，单独记账；跑满的 32 条条件续弈也另列。分差中，正常交仓每局少 828.38 分，地面树租少 600.83 分。用五张图的真实终局训练「何时切换为另一张 Sapling 网络」后，拟合结果在三个留图的全部公开状态上都决定沿用对照，实际 897 拍逐令相同。正式考试仍保留 100 张全新地图。[实战逐局官方分与原版搜索深度](master6_actor_dev/strategic_destination_learning/policy_window_returns/hosted/README.md) · [抢货至回款与全部分支](master6_actor_dev/strategic_destination_learning/policy_window_returns/economy/FINDINGS.md) · [训练与盲测](master6_actor_dev/strategic_destination_learning/policy_window_returns/analysis/README.md)
