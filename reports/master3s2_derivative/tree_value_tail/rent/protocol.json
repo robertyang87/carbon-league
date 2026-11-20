@@ -1,0 +1,15 @@
+{
+  "name": "Original planter receipts beyond eight joint transitions",
+  "frozen_before_fitting": true,
+  "maps_sha256": "f4c2265d0f88843095e0fb12aec866314ceba631e10cb1959ba5298acf33701a",
+  "split": "Same 24 train, 8 held physical maps as ladder/tree_payback/maps.json. Both seats, all successful original plants using original usable rows. No action choice, candidate, alternative action outcome or action-pair labels.",
+  "features": "Re-use all 23 root-action-time public features, their ordering, and map/seat/t/uid identity from SHA-bound study records. Neither leaf observations nor future state used as inputs.",
+  "feature_table_sha256": {"train":"4f78b9f85a831a46b79437cf92da60fa1de21f8cfd78222e542a1ac4903e20ca","held":"3f646d4fb3f570c19998e761e4b9719a1a5c04053d534ad08dd5c5124df49755"},
+  "receipt_code_sha256": "fd19aa97a11087871a0b497e85e8ec51b97ee8bf899d5c4c0afe7bc959b3e63b",
+  "boundaries": "Successful root action t produces observation t+1, horizon H=8 ends at observation t+8. Sum post-leaf receipts on transitions whose pre-observation index >=t+8; count root as first transition. After first transfer or expiry no original-owner absorption. Earlier-in-transfer-action collision on that tree may still accrue to original holder. Keep zero for expired/horizon before t+8 and all zero tails. Exclude only previously unusable rows and report them.",
+  "response": "First-tenure retained late ground rent + late enemy-carried absorption + late direct collision cash. Store and report all three, count/sum direct collisions explicitly. Excludes earlier fees, early absorption, seized-tree or recapture income. Labels unit is official cash.",
+  "model": "Map-equal weight, then per-map equal row weight; standardize with train-only weighted means and deviations, denominator floor 0.05. One ridge sum(weight*(y-p)^2) + 0.1*||slope||^2, unpenalized intercept. Predict nonnegative; verified remaining root<=8 transitions gives exact zero. Report both unbounded linear and horizon-clipped predictions. No model/window/regularization selection.",
+  "baseline": "Compare training map-equal mean and MAE-optimal map-weighted median, both with same known horizon=>0. No score-based fitting. Publish train coefficients before opening held labels.",
+  "evaluation": "Per-map and macro MAE in cash, count strict per-map improvement vs train mean/median. Split label quantiles for rows and per-map median, zeros, three components and total; separate actual unprofitable first tenure. Counterexamples: highest over- and under-estimate on held; failure when model vs constant moves away. Descriptive only, usable as predictive evidence if held macro MAE improves vs both constants. No candidate or policy outcome.",
+  "limitations": "This is conditional on planting and actual actions by the historical players. No observations of alternative action payoff; future regrowth, displacement, opponent policy and other trees may change. No free conversion from wallet amount to normalized leaf values."
+}
