@@ -867,6 +867,41 @@
    ],
    "status": "superseded",
    "blob_sha": "fd45f35b13e1827a794e47aec4708ceee92043b8"
+  },
+  {
+   "name": "lossprobe3_search_correction_final",
+   "kind": "search-correction rows",
+   "md5": "571b2d0056d4728200875f0c5ac50da4",
+   "size_bytes": 843113,
+   "status": "final",
+   "owner_line": "engineering",
+   "detail": "输局旁路 ③ 全量重搜定版产物（2026-11-20）：58 局（Echo9 36＋Echo10 22）×299 位置＝17,342；阈值 adv_u＞0.15、分类线 N_over≥10 ∧ S_over≥2.0；错输局 47、被压制局 11；纠正行 963 行（仅错输局，merged data/lossprobe3/rows_correction.npz，行-局对照 rows_correction_games.json）；被压制局 72 行候选隔离于 rows_correction_suppressed.npz（md5 e3ac8b3986cbd449014761b8b3c7468f，隔离件、不得当纠正行消费）。检查点 gen3 708f8cca57f5674d00d1e5e56758e14c；仪表化包 gen3_fixed_u_lp3.py 9f915f00；设计件 DESIGN_SEARCH_CORRECTION_20261120.md（80566708）、深审 REVIEW_SEARCH_CORRECTION_20261120.md（0b506765，无作废级问题）。四数：一致率 0.2308；Studio 2,696.0 s／0.1803 s/位置、DGX 2,813.3 s／1.1761 s/位置（争用下）、合计 5,509.3 s；替换占比 5.55% 全步／6.85% 错输局内。塌方步优势分布（51 局）：均值 0.0435、中位 0.0255、p90 0.1409、超 0.15 者 4/51（7.84%）。分类表 data/lossprobe3/classification_table.json、处置表 data/lossprobe3/disposition_table.json（被压制局降权档 policy ×0.5 为提议档、待报批钉定）。主代理独立核验（VERIFY_SEARCH_CORRECTION_20261120.md）：58 局逐位置重算全合（depth 0 违例、issued 1,035、分类逐局合）；纠正行逐行与基行比对（仅 tw/tb/searched 变、searched 全 1、逐行动单元 one-hot）。执行事故 09:49 本机重启杀死 Studio 三会话，7 局逐局补跑收齐。收据 RECEIPT_SEARCH_CORRECTION_20261120.md（9bd78741）。",
+   "locations": [
+    {
+     "machine": "repo",
+     "path": "data/lossprobe3/rows_correction.npz"
+    },
+    {
+     "machine": "repo",
+     "path": "data/lossprobe3/rows_correction_suppressed.npz"
+    },
+    {
+     "machine": "repo",
+     "path": "data/lossprobe3/classification_table.json"
+    },
+    {
+     "machine": "repo",
+     "path": "data/lossprobe3/disposition_table.json"
+    },
+    {
+     "machine": "repo",
+     "path": "data/lossprobe3/collapse_adv_distribution.json"
+    },
+    {
+     "machine": "local",
+     "path": "~/workspace/lossprobe3/run/"
+    }
+   ]
   }
  ],
  "created": "2026-11-17",
@@ -879,5 +914,5 @@
   "R4 no unique copies in /tmp or on a single spot seat; durable paths only (k0_dist or repo)."
  ],
  "version": "5.1",
- "updated": "2026-11-18"
+ "updated": "2026-11-20"
 }
