@@ -1,0 +1,127 @@
+name: Sapling eight-step policy-return training against original Master3s2
+on:
+  workflow_dispatch:
+    inputs:
+      protocol_sha:
+        description: SHA-256 of the committed policy-window protocol
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: sapling-policy-return-540-547
+  cancel-in-progress: false
+
+env:
+  LANE: reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/policy_window_returns
+  EXPECTED_PROTOCOL: ${{ inputs.protocol_sha }}
+
+jobs:
+  tickets:
+    runs-on: ubuntu-24.04
+    outputs:
+      schedule: ${{ steps.bind.outputs.schedule }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/policy_window_returns/protocol.json
+      - name: Check frozen schedule and previous exposure
+        id: bind
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/main
+          test "$GITHUB_RUN_ATTEMPT" = 1
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib
+          raw=pathlib.Path(os.environ["LANE"],"protocol.json").read_bytes()
+          if hashlib.sha256(raw).hexdigest()!=os.environ["EXPECTED_PROTOCOL"]: raise SystemExit("Protocol digest mismatch")
+          plan=json.loads(raw)
+          tickets=plan["schedule"]
+          expected=[(621758540+i,i%2,"fit" if i<5 else "hold") for i in range(8)]
+          if [(x["seed"],x["seat"],x["role"]) for x in tickets]!=expected: raise SystemExit("Incomplete registered schedule")
+          with open(os.environ["GITHUB_OUTPUT"],"a") as f:print("schedule="+json.dumps({"include":tickets},separators=(",",":")),file=f)
+          PY
+          previous=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/sapling-policy-window-returns.yml/runs?per_page=100" --jq '.workflow_runs[].id')
+          for id in $previous; do
+            if [ "$id" -ge "$GITHUB_RUN_ID" ]; then continue; fi
+            if gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs?filter=all" --jq '.jobs[] | select(.name|startswith("window-")) | .steps[]? | select(.name=="Reserve map before original calls" and .started_at!=null and .conclusion!="skipped") | .name' | grep -q .; then
+              echo "A prior run started exposure for this collection: $id" >&2
+              exit 1
+            fi
+          done
+
+  play:
+    needs: tickets
+    runs-on: ubuntu-24.04
+    name: window-${{ matrix.role }}-${{ matrix.seed }}-${{ matrix.seat }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.tickets.outputs.schedule) }}
+    env:
+      SEED: ${{ matrix.seed }}
+      SEAT: ${{ matrix.seat }}
+      ROLE: ${{ matrix.role }}
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/sapling-policy-window-returns.yml
+            /sources/master3s2/master3s2.py
+            /code/env_src/carbon_challenge-master/
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/collect.py
+            /reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/live_curriculum/inprocess_snapshot/*.py
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/bc.py
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/elite_direct_policy/trained.py
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/policy_window_returns/*.json
+            /reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/policy_window_returns/runner/*.py
+      - name: Check registered software and install CPU runtime
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/receipts"
+          python3.12 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          lane=pathlib.Path(os.environ["LANE"]); raw=(lane/"protocol.json").read_bytes()
+          if hashlib.sha256(raw).hexdigest()!=os.environ["EXPECTED_PROTOCOL"]:raise SystemExit("Protocol changed")
+          plan=json.loads(raw)
+          for name,expected in plan["file_sha256"].items():
+              if hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest()!=expected:raise SystemExit("Changed dependency "+name)
+          tree=subprocess.check_output(["git","rev-parse","HEAD:code/env_src/carbon_challenge-master/zerosum_env"],text=True).strip()
+          if tree!=plan["official_engine_git_tree"]:raise SystemExit("Different Carbon engine")
+          PY
+          python3.12 -m venv "$RUNNER_TEMP/carbon-python"
+          "$RUNNER_TEMP/carbon-python/bin/pip" install --disable-pip-version-check --only-binary=:all: numpy==1.26.4 requests==2.32.5 jsonschema==4.25.1
+          "$RUNNER_TEMP/carbon-python/bin/pip" install --disable-pip-version-check --only-binary=:all: --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple torch==2.5.1+cpu
+          "$RUNNER_TEMP/carbon-python/bin/python" -c "import torch,numpy,sys; assert torch.__version__=='2.5.1+cpu' and numpy.__version__=='1.26.4' and sys.version_info[:2]==(3,12)"
+          echo "$RUNNER_TEMP/carbon-python/bin" >> "$GITHUB_PATH"
+      - name: Reserve map before original calls
+        run: |
+          jq -n --arg run "$GITHUB_RUN_ID" --arg commit "$GITHUB_SHA" --arg protocol "$EXPECTED_PROTOCOL" --argjson seed "$SEED" --argjson seat "$SEAT" --arg role "$ROLE" '{run:$run,commit:$commit,protocol:$protocol,seed:$seed,seat:$seat,role:$role}' > "$RUNNER_TEMP/receipts/dispatch.json"
+      - name: Collect one source and both registered intervention windows
+        run: |
+          set -euo pipefail
+          core=$(python -c 'import os; print(min(os.sched_getaffinity(0)))')
+          taskset -c "$core" python -u "$LANE/runner/run.py" --protocol "$LANE/protocol.json" --seed "$SEED" --seat "$SEAT" --out "$RUNNER_TEMP/receipts"
+      - name: Verify official source and branch tapes
+        run: python "$LANE/runner/verify.py" --protocol "$LANE/protocol.json" --out "$RUNNER_TEMP/receipts" --receipt "$RUNNER_TEMP/receipts/verified.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: policy-returns-${{ matrix.role }}-${{ matrix.seed }}-${{ matrix.seat }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/receipts
+          if-no-files-found: warn

@@ -1,0 +1,83 @@
+{
+  "schema": "sapling-eight-step-train-responses/v1",
+  "purpose": "Eight independent, previously unseen physical training/development maps. Collect official conditional returns for a future Sapling policy update. Formal competition is separate.",
+  "schedule": [
+    {
+      "seed": 621758540,
+      "seat": 0,
+      "role": "fit"
+    },
+    {
+      "seed": 621758541,
+      "seat": 1,
+      "role": "fit"
+    },
+    {
+      "seed": 621758542,
+      "seat": 0,
+      "role": "fit"
+    },
+    {
+      "seed": 621758543,
+      "seat": 1,
+      "role": "fit"
+    },
+    {
+      "seed": 621758544,
+      "seat": 0,
+      "role": "fit"
+    },
+    {
+      "seed": 621758545,
+      "seat": 1,
+      "role": "hold"
+    },
+    {
+      "seed": 621758546,
+      "seat": 0,
+      "role": "hold"
+    },
+    {
+      "seed": 621758547,
+      "seat": 1,
+      "role": "hold"
+    }
+  ],
+  "physical_boards": {
+    "621758540": "d6a8f432068157f2d779d8a6d29bd225a52a91a3b2c132d46423355ab471c700",
+    "621758541": "a48c6f01a0a6db113a22cd3549661d2e5463d505d67fb0df856651131214b891",
+    "621758542": "051499476c03df302e9c27f1fe7c0b566b1e02ec0ae339a4d4fe713aa681cfcb",
+    "621758543": "af744c099e4e4efca40f55f4486a644d68f16e3842834c3f8d3a10d946a3ed36",
+    "621758544": "82eaafb1f5de7e0fb4eb77596b53c6754c7ec089e455d168f31137e35f1489a8",
+    "621758545": "5bf2794de341706f1f17616720cbf1b4cfeefe22537ebc1d290287597be05f3e",
+    "621758546": "0cc4524a1ebd13e0f75785183e6e9fae14caf7172e6418a6f1f6b8d74eee21d1",
+    "621758547": "160413f219f1483021dcb4ebc7b7d92870f85354b0173885d0f51c4d7635a20a"
+  },
+  "clearance_through": "430b375bdd69270363b345f953845c54b7f27199",
+  "canonical_top5_openings": 1649,
+  "file_sha256": {
+    "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/policy_window_returns/clearance.json": "3b203a782f22747ca3f47c91b7aee1c25bcf370703fa0c56f0a30e8053431e5b",
+    "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/policy_window_returns/clearance_increment.json": "a51840a4880edb2b7428115e9b7966eaaa6a40679bbd52b076eda97446efbafd",
+    "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/bc.py": "ede48ad9770d357cbe4a4be6c24dafebc910be1e46a95c508c706e009fd713a0",
+    "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/elite_direct_policy/trained.py": "5e4f5da3fd63962ed559ba9efdeb788f454e3f6fb9ce617a3b5c877080795cb2",
+    "sources/master3s2/master3s2.py": "65f268b2919ce30fe19355115a928eada032a6beaa018d801662d434c083f2b5",
+    "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/collect.py": "5a0f57719a507864331044dbd6f04d39a290a63984c72cc3fa46f02462f734df",
+    "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/live_curriculum/inprocess_snapshot/official_state.py": "a9f490e92528757a7a0305e23abd6be80727e38d81c82a6779e22735f20d78b8",
+    "reports/sapling_1200k/master6_actor_dev/cargo_tree_action_learning_dev/native_actor_corpus/league_policy/native_return_intake/live_curriculum/inprocess_snapshot/original_state.py": "d7e146054d96bea887937d7ddca3e89f572846f41f37e17d105df969e4dc07c5",
+    "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/policy_window_returns/runner/run.py": "85c35635b8534bd8a68beaecaea7a5dc731fd15e889742f3704604fe9d47e3f2",
+    "reports/sapling_1200k/master6_actor_dev/strategic_destination_learning/policy_window_returns/runner/verify.py": "403bc122f1076f0dd6981fb1819c7edd0ea3b1b33f4c69af865917a8a8104581",
+    ".github/workflows/sapling-policy-window-returns.yml": "218d2b1425bdd65506442c0144383744d7b4900e9e21ba4429043d30a2e07dde"
+  },
+  "official_engine_git_tree": "ed96554751d64605ea8959eb4fc47660e05985b2",
+  "source_order": "One BC source game, original public examiner, original wall time 0.58 seconds, temperature one, unforced natural play to official terminal, also if extinction. Exactly one source game per map.",
+  "windows": [
+    256,
+    280
+  ],
+  "window_length": 8,
+  "treatment": "From the common source state, compare eight independently computed team orders from BC or elite. Then continue both arms with BC. One frozen original simultaneous root response, independent responsive examiner thereafter. Branches share the saved pre-window history, clocks and random state. Keep results when actions are identical or either source or suffix terminates early.",
+  "arm_order": "BC first iff (seed minus 621758540 plus zero-based window ordinal) is even. Alternate across roots and maps.",
+  "measure": "Elite minus BC official terminal margin and win, observed once per arm. Roots share a source game; group by physical map. Preserve source and all completed, unavailable and failed outcomes plus search and host timing. Timing is diagnostic shared-process collection, not a ladder candidate certificate.",
+  "protection": "Only fit maps may enter gradient or tuning. Hold three map identities (including both windows and all trajectories) reserved to assess the frozen learned model without adaptation. All eight permanently excluded from future independent strength exams.",
+  "failure": "No replacement maps or rerolls after first original exposure. Explicitly record aborted and unreachable windows, worker faults and resource issues. Reduce training denominator only with explicit front-to-back evidence; report all registered tickets."
+}
