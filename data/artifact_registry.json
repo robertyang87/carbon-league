@@ -929,6 +929,28 @@
    "status": "final",
    "owner_line": "engineering",
    "detail": "③ 第二批 gen4 包 --verify 裁定（2026-11-20 11:27）：前向 max abs err 0.0000（tol 0.25）PASS、确定性 1 局×2 runs IDENTICAL actions（final cash [8848.52, 8478.03]）PASS、步时 mean 1.669s／p95 3.708s／max 23.745s（limit 0.75s）FAIL。裁定：口径错套——0.75s 是天梯单步时限口径，定额纠正包从不去天梯，步时项 report-only，不挡 Studio 搜索触发；依据为设计件 L42–45 已裁过的第一批同款情形（步时 1.159s FAIL 下全量跑完定版）＋Echo8 前例。包 md5 gen4_fixed_u.py b4b55da0b1df7db49eae929cef15af16、仪表化版 5b2f5dcf2356a4c323ed65b706099844，即本批定版包，无需修。常设规则：定额纠正包 --verify 触发条件为前向 PASS ∧ 确定性 PASS。"
+  },
+  {
+   "name": "gen5_combo_trainer",
+   "kind": "trainer variant (combined)",
+   "detail": "train2_uspec_w.py = train2_w body + train2_uspec base (U-prime utility scale via --utility-scale, default 600) + per-row wpw/wvw channel; combo equivalence gate 4/4 PASS on DGX 2026-11-20 (scale600 raw/ones == train2 bit-identical 55/55; scale600 weighted == train2_w 55/55; scale300 == train2_uspec scale300 55/55); gate report reports/GATE_COMBO_TRAINER_20261120.md (DGX orig md5 bcca5818387ce7ba0578e4f1d93c5c82); train2_uspec.py also filed verbatim this round (was DGX/local only)",
+   "locations": [
+    {
+     "machine": "repo",
+     "path": "tools/katago_m3s2/train2_uspec_w.py"
+    },
+    {
+     "machine": "repo",
+     "path": "tools/katago_m3s2/train2_uspec.py"
+    },
+    {
+     "machine": "DGX",
+     "path": "/home/arm/junyang/lp2_weight/combo_gate/"
+    }
+   ],
+   "md5": "79321c672650bba728563d1c6fee381c",
+   "owner_line": "工程组",
+   "status": "present"
   }
  ],
  "created": "2026-11-17",
