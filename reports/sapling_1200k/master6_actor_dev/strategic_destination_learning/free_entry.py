@@ -3,11 +3,17 @@ import importlib.util
 from collections import Counter
 from pathlib import Path
 import sys
+import random
+
+import numpy as np
 
 HERE = Path(__file__).resolve().parent
 NATIVE = HERE.parent / "cargo_tree_action_learning_dev" / "native_actor_corpus"
 sys.path.insert(0, str(NATIVE))
-from common import PACK, iter_public, read, save, sha
+from common import PACK, ROOT, read, save, sha
+
+sys.path.insert(0, str(NATIVE / "expansion"))
+from replay import digest, official_rules
 
 ARMS = ("parent", "bc", "joint")
 PAIRS = (("bc", "parent"), ("joint", "parent"), ("joint", "bc"))
@@ -31,15 +37,38 @@ def load_models(fit, protocol):
     return identities, models
 
 
+def public_history(card):
+    source = ROOT/card["path"]
+    if sha(source) != card["sha256"]:
+        raise ValueError("Different original game")
+    tape = read(source)
+    seat, seed = card["expert_seat"], card["seed"]
+    cfg = tape["game_configuration"]
+    random.seed(seed)
+    np.random.seed(seed)
+    env = official_rules(ROOT)("carbon", configuration={**cfg, "randomSeed": seed})
+    cash = []
+    for t, joint in enumerate(tape["actions"]):
+        state = env.states[0].observation
+        cash.append([p[0] for p in state.players])
+        own = env.states[seat].observation
+        obs = dict(step=state.step, player=seat, carbon=own.carbon, players=state.players,
+                   trees=state.trees, remainingOverageTime=own.get("remainingOverageTime",60))
+        yield t, obs, cfg, joint[seat]
+        env.step(joint, [])
+    cash.append([p[0] for p in env.states[0].observation.players])
+    if not env.done or [st.reward for st in env.states] != tape["official_score_by_seat"] or digest(cash) != card["official_cash_path_sha256"]:
+        raise ValueError("Historical game did not reproduce")
+
+
 def evaluate_tape(card, models):
     selected = set(card["registered_times"])
     if len(selected) != 24 or not all(0 <= step < card["transitions"] for step in selected):
         raise ValueError("Invalid registered root list")
     rows = []
     seat = card["expert_seat"]
-    replay_card = dict(card, seat=card["candidate_seat"])
     steps = 0
-    for t, obs, cfg, expert, _ in iter_public(replay_card, 1):
+    for t, obs, cfg, expert in public_history(card):
         if t != steps or obs["step"] != t or obs["player"] != seat:
             raise ValueError("Observer history mismatch")
         public_cfg = {k: v for k, v in cfg.items() if k != "randomSeed"}

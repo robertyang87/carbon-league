@@ -32,6 +32,27 @@ class Future(nn.Module):
             nn.init.zeros_(parameter)
 
 
+def canonical_directions(direction, seats):
+    import cnet2_feat as feat
+    result = direction.copy()
+    if not np.isin(seats, (0, 1)).all() or not np.isin(direction, (-1, 0, 1, 2, 3, 4)).all():
+        raise ValueError("invalid raw direction or physical seat")
+    valid = (seats[:, None] == 1) & (direction >= 0)
+    result[valid] = feat.CANON_MOVE[direction[valid]]
+    return result
+
+
+def check_direction_frame():
+    import cnet2_feat as feat
+    # Test both directions across each axis at the wrap seam, standstill, and a masked worker.
+    cells = [(14, 0), (0, 14), (0, 210), (210, 0), (7, 7)]
+    source = [feat.move_between(a, b) for a, b in cells] + [-1]
+    expected = [feat.move_between(feat.CANON[a], feat.CANON[b]) for a, b in cells] + [-1]
+    actual = canonical_directions(np.array([source, source]), np.array([0, 1]))
+    if actual.tolist() != [source, expected] or expected != [4, 2, 1, 3, 0, -1]:
+        raise ValueError("direction target disagrees with the native seat-normalized movement frame")
+
+
 def read_split(split):
     """Read only the selected partition, with independently checkable bytes and equal maps."""
     summary = common.read(HERE / "data.json")
@@ -72,6 +93,7 @@ def read_split(split):
         raise ValueError("worker identity in auxiliary data")
     data["terrain"] = np.array(geography)
     data["seat"] = np.array(seats)
+    data["dst12"] = canonical_directions(direction, data["seat"])
     return data
 
 
@@ -291,6 +313,7 @@ if __name__ == "__main__":
     torch.set_num_interop_threads(1)
     torch.manual_seed(RULE["seed"])
     torch.use_deterministic_algorithms(True)
+    check_direction_frame()
     if args.stage == "fit":
         training()
     else:
