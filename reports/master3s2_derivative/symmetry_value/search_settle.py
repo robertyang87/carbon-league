@@ -47,8 +47,8 @@ def physical(row, actions):
     return results
 
 
-def main():
-    report=json.loads(gzip.decompress((HERE/"search_roots.json.gz").read_bytes()))
+def settlement(source=HERE/"search_roots.json.gz"):
+    report=json.loads(gzip.decompress(source.read_bytes()))
     rows=[]
     stage=Counter()
     hooks=[]
@@ -73,8 +73,8 @@ def main():
                  repeat_adjustments_gt_1e_5=sum(r["all_original_and_new_abs_gt_1e_5"] for r in rows),
                  mother_controls_equal=sum(r["arms"]["P1"]["issued"]==r["arms"]["P2"]["issued"] for r in report["roots"]),
                  roots=rows,protocol_gate=report["root_mechanism_pass"])
-    print(json.dumps(summary,indent=2,sort_keys=True,allow_nan=False))
+    return summary
 
 
 if __name__=="__main__":
-    main()
+    print(json.dumps(settlement(),indent=2,sort_keys=True,allow_nan=False))

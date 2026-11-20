@@ -56,15 +56,16 @@ def assess(rows):
                 both_committed=commits,attributable_changed=change)
 
 
-def main():
+def main(protocol_file=HERE/"search_protocol.json", expected_sha=PROTOCOL_SHA,
+         split="train", output_file=HERE/"search_roots.json.gz"):
     os.sched_setaffinity(0,{4})
     for key in ("OPENBLAS_NUM_THREADS","MKL_NUM_THREADS","OMP_NUM_THREADS","NUMEXPR_NUM_THREADS"):os.environ[key]="1"
     os.environ["CARBON_DEBUG"]="1"
     import torch
     torch.set_num_interop_threads(1)
     from original_policy import PROTOCOL,module,free_entry
-    pb=(HERE/"search_protocol.json").read_bytes()
-    assert sha(pb)==PROTOCOL_SHA
+    pb=protocol_file.read_bytes()
+    assert sha(pb)==expected_sha
     plan=json.loads(pb)
     parent=(HERE.parent/"cold_start/candidate.py").read_bytes()
     candidate=(HERE/"candidate.py").read_bytes()
@@ -77,7 +78,7 @@ def main():
     init=list(base._S_COST)
     indexed={r["path"]:{} for r in plan["roots"]}
     for r in plan["roots"]:indexed[r["path"]][r["step"]]=r
-    by_path={c["path"]:c for c in PROTOCOL["games"] if c["split"]=="train"}
+    by_path={c["path"]:c for c in PROTOCOL["games"] if c["split"]==split}
     allrows=[]
     for path,targets in indexed.items():
         card=by_path[path]; seat=card["expert_seat"]
@@ -117,12 +118,12 @@ def main():
             if marker.get("evaluated",0):admitted.append(arm["wall_s"])
     late=sum(t>.58 for t in admitted)
     counts={k:sum(r["assessment"][k] for r in allrows) for k in allrows[0]["assessment"]}
-    report=dict(protocol_sha256=PROTOCOL_SHA,candidate=CANDIDATE_SHA,parent=plan["base"],verifier=sha(Path(__file__).read_bytes()),
+    report=dict(protocol_sha256=expected_sha,candidate=CANDIDATE_SHA,parent=plan["base"],verifier=sha(Path(__file__).read_bytes()),
                 cpu_affinity=list(os.sched_getaffinity(0)),torch_threads=torch.get_num_threads(),torch_version=torch.__version__,host=platform.platform(),
                 cgroup_cpu=Path("/sys/fs/cgroup/cpu.max").read_text().strip(), measured_utc=time.strftime("%FT%TZ",time.gmtime()),
                 roots=allrows,counts=counts,stages=phases,admitted_calls=len(admitted),admitted_over_058=late,
                 max_admitted_public_s=max(admitted,default=None),root_mechanism_pass=counts["attributable_changed"]>0 and not late)
-    with (HERE/"search_roots.json.gz").open("xb") as f:
+    with output_file.open("xb") as f:
         f.write(gzip.compress((json.dumps(report,sort_keys=True,separators=(",",":"),allow_nan=False)+"\n").encode(),mtime=0))
     print(counts,phases,late,report["root_mechanism_pass"],flush=True)
 
